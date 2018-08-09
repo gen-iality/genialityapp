@@ -1,0 +1,14 @@
+.aside {
+  border-right: 1px solid #DEDEDE;
+  .item {
+    &:hover {
+      background-color: whitesmoke;
+      color: #363636;
+      cursor: pointer;
+    }
+  }
+  .active {
+    background-color: whitesmoke;
+    color: $link;
+  }
+}
