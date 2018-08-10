@@ -8,6 +8,7 @@ import General from "./general";
 import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
 import Agenda from "../agenda";
+import AgendaEdit from "../agenda/edit";
 Moment.locale('es');
 momentLocalizer();
 
@@ -57,7 +58,8 @@ class Event extends Component {
                                     <Route path={`${match.url}/general`} render={()=><General event={this.state.event} />}/>
                                     <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} />}/>
                                     <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
-                                    <Route path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
+                                    <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
+                                    <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                     <Route
                                         exact
                                         path={match.url}

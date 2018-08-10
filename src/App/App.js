@@ -16,7 +16,7 @@ class App extends Component {
             this.setState({ token: dataUrl.token });
             Cookie.set("evius_token", dataUrl.token);
             if (dataUrl.token){
-                axios.defaults.params = {}
+                axios.defaults.params = {};
                 axios.defaults.params['evius_token'] = dataUrl.token;
             }
         }
