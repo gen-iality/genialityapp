@@ -1,11 +1,17 @@
 import React, {Component} from 'react';
+import XLSX from "xlsx";
 import {Actions} from "../../helpers/request";
+import Loading from "../../containers/loading";
+import AddUser from "../shared/modal/addUser";
+import ImportUsers from "../shared/modal/importUser";
 
 class ListEventUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users:[]
+            users:      [],
+            addUser:    false,
+            importUser: false,
         }
     }
 
@@ -14,6 +20,28 @@ class ListEventUser extends Component {
         console.log(users);
         this.setState({ users });
     }
+
+    exportFile = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const data = parseData(this.state.users);
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+        XLSX.writeFile(wb, 'usuarios.xls');
+    };
+
+    modalUser = () => {
+        this.setState((prevState) => {
+            return {addUser:!prevState.addUser}
+        });
+    };
+
+    modalImport = () => {
+        this.setState((prevState) => {
+            return {importUser:!prevState.importUser}
+        });
+    };
 
     render() {
         return (
@@ -34,7 +62,7 @@ class ListEventUser extends Component {
                                 <div className="field">
                                     <p className="control has-icons-left">
                                         <input className="input" type="password" placeholder="Buscar"/>
-                                        <span className="icon is-small is-left"><i className="fas fa-search"></i></span>
+                                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
                                     </p>
                                 </div>
                             </div>
@@ -43,13 +71,13 @@ class ListEventUser extends Component {
                             <div className="navbar-item">
                                 <div className="field is-grouped">
                                     <p className="control">
-                                        <button className="button is-primary">Agregar</button>
+                                        <button className="button is-primary" onClick={this.modalUser}>Agregar</button>
                                     </p>
                                     <p className="control">
-                                        <button className="button is-primary">Importar</button>
+                                        <button className="button is-primary" onClick={this.modalImport}>Importar</button>
                                     </p>
                                     <p className="control">
-                                        <button className="button is-primary">Exportar</button>
+                                        <button className="button is-primary" onClick={this.exportFile}>Exportar</button>
                                     </p>
                                 </div>
                             </div>
@@ -58,18 +86,19 @@ class ListEventUser extends Component {
                 </nav>
                 <div className="main">
                     {
-                        this.state.users.length>0 && (
+                        this.state.users.length<=0 ?
+                            <Loading/> :
                             <table className="table is-fullwidth is-striped">
                                 <thead>
-                                <tr>
-                                    <th>Correo</th>
-                                    <th>Nombre</th>
-                                    <th>Estado</th>
-                                    <th>Rol</th>
-                                    <th>CheckIn</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>Correo</th>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+                                        <th>Rol</th>
+                                        <th>CheckIn</th>
+                                        <th/>
+                                        <th/>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 {
@@ -99,12 +128,26 @@ class ListEventUser extends Component {
                                 }
                                 </tbody>
                             </table>
-                        )
                     }
                 </div>
+                <AddUser handleModal={this.modalUser} modal={this.state.addUser}/>
+                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser}/>
             </React.Fragment>
         );
     }
 }
+
+const parseData = (data) => {
+    let info = [];
+    data.map((obj) => {
+        if(obj.user){
+            const name = obj.user.name ? obj.user.name : '';
+            const email = obj.user.email ? obj.user.email : '';
+            info.push({Nombre:name,Correo:email,Estado:obj.state.name,Rol:obj.rol.name})
+        }
+        return info
+    });
+    return info
+};
 
 export default ListEventUser;

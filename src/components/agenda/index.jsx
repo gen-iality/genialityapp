@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import Moment from "moment"
+import AddAgenda from "../shared/modal/addAgenda";
 Moment.locale('es');
 
 class Agenda extends Component {
@@ -12,6 +13,12 @@ class Agenda extends Component {
             modal:false
         }
     }
+
+    handleModal = () => {
+        this.setState((prevState) => {
+            return {modal:!prevState.modal}
+        });
+    };
 
     handleChange = (e) => {
         const {name} = e.target;
@@ -29,39 +36,9 @@ class Agenda extends Component {
         return (
             <React.Fragment>
                 <button className="button is-outlined" onClick={()=>{this.setState({modal:true})}}>Agregar </button>
-                <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
-                    <div className="modal-background"/>
-                    <div className="modal-card">
-                        <header className="modal-card-head">
-                            <p className="modal-card-title">Agenda</p>
-                            <button className="delete" aria-label="close" onClick={()=>{this.setState({modal:false})}}/>
-                        </header>
-                        <section className="modal-card-body">
-                            <div className="field is-horizontal">
-                                <div className="field-label is-normal">
-                                    <label className="label">Nombre</label>
-                                </div>
-                                <div className="field-body">
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className="input is-rounded" type="text" name={"name"} onChange={this.handleChange} placeholder="Evius.co"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <footer className="modal-card-foot">
-                            {
-                                this.state.create?<div>Creando...</div>:
-                                    <div>
-                                        <button className="button is-success" onClick={this.createAgenda} disabled={this.state.valid}>Crear</button>
-                                        <button className="button" onClick={(e)=>{this.setState({modal:false})}}>Cancel</button>
-                                    </div>
-                            }
-                            <p className="help is-danger">{this.state.msg}</p>
-                        </footer>
-                    </div>
-                </div>
+                <h3>Coming Soon:</h3>
+                <p>Lista de Agendas</p>
+                <AddAgenda modal={this.state.modal} handleModal={this.handleModal} createAgenda={this.createAgenda} change={this.handleChange}/>
             </React.Fragment>
         );
     }

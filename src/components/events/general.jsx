@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { DateTimePicker } from 'react-widgets'
 import Moment from "moment"
-import ImageInput from "../../shared/imageInput";
+import ImageInput from "../shared/imageInput";
 import {Actions} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
+import {EventUrl} from "../../helpers/constants";
 Moment.locale('es');
 
 class General extends Component {
@@ -48,9 +49,9 @@ class General extends Component {
                     },fileMsg:'Image uploaded successfull'
                 });
                 Actions.edit(
-                    this.props.getDataUrl,
+                    EventUrl,
                     {picture: res.data},
-                    this.props.urlParams.id)
+                    this.state.event._id)
                     .then((snap)=>{
                         console.log(snap)
                     });
@@ -84,7 +85,7 @@ class General extends Component {
             description: event.description
         };
         Actions.edit(
-            "/api/user/events/",
+            EventUrl,
             data,
             event._id
         ).then((result)=>{

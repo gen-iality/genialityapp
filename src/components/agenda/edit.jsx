@@ -56,7 +56,6 @@ class AgendaEdit extends Component {
                                     return <option key={key}>{Moment(day).format('DD/MM/YY')}</option>
                                 })
                             }
-
                             </select>
                         </div>
                     </div>

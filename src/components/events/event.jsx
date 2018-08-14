@@ -9,6 +9,7 @@ import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
 import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
+import {EventUrl} from "../../helpers/constants";
 Moment.locale('es');
 momentLocalizer();
 
@@ -22,7 +23,7 @@ class Event extends Component {
 
     async componentDidMount() {
         let eventId = this.props.match.params.event;
-        const event = await Actions.getOne('/api/user/events/',eventId);
+        const event = await Actions.getOne(EventUrl,eventId);
         event.hour = event.hour ? Moment(event.date_start + ' ' + event.hour).toDate() : Moment(event.date_start).toDate();
         event.date_start = Moment(event.date_start).toDate();
         event.date_end = Moment(event.date_end).toDate();
@@ -41,10 +42,10 @@ class Event extends Component {
                                     <Link to={`${match.url}/general`}>General</Link>
                                 </p>
                                 <p className="menu-label item">
-                                    <Link to={`${match.url}/users`}>Invitados</Link>
+                                    <Link to={`${match.url}/users`}>Usuarios</Link>
                                 </p>
                                 <ul className="menu-list">
-                                    <li><Link to={`${match.url}/rsvp`}>Invitados</Link></li>
+                                    <li><Link to={`${match.url}/rsvp`}>RSVP</Link></li>
                                 </ul>
                                 <p className="menu-label item">
                                     Contenido
