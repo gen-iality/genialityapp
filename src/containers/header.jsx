@@ -4,6 +4,8 @@ import  { Redirect } from 'react-router';
 import * as Cookie from "js-cookie";
 import { AuthUrl } from "../helpers/constants";
 import {Actions} from "../helpers/request";
+import TimeoutSession from "../components/shared/modal/timeoutSession";
+import axios from "axios";
 
 class Header extends Component {
     constructor(props) {
@@ -12,6 +14,7 @@ class Header extends Component {
             redirectToReferrer: false,
             name: 'user',
             user: false,
+            timeout: false,
             modal: false,
             loader: true,
             create: false,
@@ -23,19 +26,27 @@ class Header extends Component {
     async componentDidMount(){
         let evius_token = Cookie.get('evius_token');
         if(!evius_token) {
-            this.setState({user:false});
+            this.setState({user:false,loader:false});
         }
         else {
-            const user = await Actions.getOne('/auth/currentUser?evius_token=', evius_token);
-            const name = (user.displayName) ? user.displayName: user.email;
-            this.setState({name,user:true,cookie:evius_token});
+            axios.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
+                .then(({data}) => {
+                    console.log(data);
+                    const name = (data.displayName) ? data.displayName: data.email;
+                    this.setState({name,user:true,cookie:evius_token,loader:false});
+                })
+                .catch(error => {
+                    const {data} = error.response;
+                    console.log(data);
+                    this.setState({timeout:true});
+                });
         }
-        this.setState({loader:false})
     }
 
     logout = () => {
         Cookie.remove("token");
-        window.location.replace(`${AuthUrl}/`);
+        Cookie.remove("evius_token");
+        window.location.replace(`${AuthUrl}/logout`);
     };
 
     handleChange = (e) => {
@@ -63,7 +74,7 @@ class Header extends Component {
     };
 
     render() {
-        const { redirectToReferrer } = this.state;
+        const { redirectToReferrer, timeout } = this.state;
         if (redirectToReferrer) {
             return <Redirect to={this.state.route} />;
         }
@@ -148,6 +159,7 @@ class Header extends Component {
                         </footer>
                     </div>
                 </div>
+                <TimeoutSession modal={timeout} logout={this.logout}/>
             </React.Fragment>
         );
     }

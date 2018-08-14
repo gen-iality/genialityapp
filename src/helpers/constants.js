@@ -2,6 +2,7 @@
 export const ApiUrl  = 'http://dev.mocionsoft.com/evius/eviusapilaravel/public';
 //export const AuthUrl = 'http://dev.mocionsoft.com:3010';
 export const AuthUrl = 'http://localhost:3010';
+export const EventUrl = "api/user/events/";
 
 export const parseUrl = (url) => {
     try {

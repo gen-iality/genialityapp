@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {ApiUrl, AuthUrl} from './constants';
+import { ApiUrl } from './constants';
 import * as Cookie from 'js-cookie';
 
 axios.defaults.baseURL = ApiUrl;
 axios.defaults.withCredentials = true;
-axios.interceptors.response.use(function(response) {
+/*axios.interceptors.response.use(function(response) {
     // Do something with response data
     console.log(response);
     if (
@@ -19,7 +19,10 @@ axios.interceptors.response.use(function(response) {
     } else {
         return response;
     }
-});
+}, ( err ) => {
+    const { data } = err.response;
+    console.log(data);
+});*/
 let evius_token = Cookie.get('evius_token');
 console.log("evius_token");
 if (evius_token){
