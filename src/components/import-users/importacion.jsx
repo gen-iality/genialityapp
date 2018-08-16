@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import XLSX from "xlsx";
 import Dropzone from 'react-dropzone';
+import {Template} from "../../helpers/constants";
 
 class Importacion extends Component {
     constructor(props) {
@@ -44,6 +45,15 @@ class Importacion extends Component {
         reader.readAsBinaryString(f);
     }
 
+    downloadExcel = () => {
+        let a = document.createElement('A');
+        a.href = Template;
+        a.download = 'templatemocion.xls';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
     render() {
         return (
             <section className="section">
@@ -52,7 +62,7 @@ class Importacion extends Component {
                 <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
                     <button className="button is-rounded is-primary">Importar Excel</button>
                 </Dropzone>
-                <button className="button is-text">
+                <button className="button is-text" onClick={this.downloadExcel}>
                     <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
                     <span><ins>Descargar Template</ins></span>
                 </button>
