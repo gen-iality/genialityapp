@@ -8,11 +8,12 @@ class AddUser extends Component {
         this.state = {
             rolsList: [],
             statesList: [],
-            labelSelect: null,
             name: "",
             email: "",
+            rol: "",
+            state: "",
             emailError:false,
-            disabled: true,
+            valid: true,
             edit: false
         };
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -48,53 +49,44 @@ class AddUser extends Component {
         const snap = {
             name: this.state.name,
             email: this.state.email,
-            rol: this.state.selectedOption,
-            state: this.state.stateOption,
+            rol: this.state.rol.split(':')[0],
+            state: this.state.state.split(':')[0],
         };
         console.log(snap);
-        /*let {data} = await InviteOrAddUser.createUsers(
-            snap,
-            `${this.props.urlRequest}/${this.props.idParam}`
-        );
+        let data = await Actions.post(`/api/user/event_users/create/${this.props.eventId}`,snap);
         if (data) {
-            snap.rol = this.state.labelSelect;
-            snap.state = this.state.labelState;
             this.props.addToList(snap);
-            this.props.handleModal;
+            this.closeModal;
         } else {
-            this.props.handleModal;
             alert("User can`t be created");
-        }*/
+        }
     }
 
     handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        console.log(name, value);
         this.setState({[name]:value}, this.validForm)
-        console.log(this.state);
     };
+
+    selectChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        let split = value.split(':');
+        const label = 'label' + name;
+        this.setState({[name]:value, [label]:split[1]}, this.validForm);
+    }
 
     validForm = () => {
         const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         let state= this.state,
             emailValid = state.email.length > 5 && state.email.length < 61 && EMAIL_REGEX.test(state.email),
-            valid = !(emailValid && state.name.length>0 && state.selectedOption && state.stateOption);
+            valid = !(emailValid && state.name.length>0 && state.rol.length>0 && state.state.length>0);
         this.setState({emailError:!emailValid});
-        this.setState({disabled:valid})
+        this.setState({valid})
     };
 
-    selectChange = selectedOption => {
-        console.log(selectedOption);
-        if (selectedOption) {
-            this.setState({ selectedOption: selectedOption.value, labelSelect: selectedOption.label }, this.validForm);
-        }
-    };
-
-    changeState = selectedOption => {
-        if (selectedOption) {
-            this.setState({ stateOption: selectedOption.value, labelState: selectedOption.label }, this.validForm);
-        }
+    closeModal = () => {
+        this.setState({name: '', email: '', rol: '', state: ''},this.props.handleModal());
     };
 
     render() {
@@ -139,10 +131,11 @@ class AddUser extends Component {
                                 <div className="field">
                                     <div className="control">
                                         <div className="select">
-                                            <select value={this.state.selectedOption} onChange={this.selectChange}>
+                                            <select value={this.state.state} onChange={this.selectChange} name={'state'}>
+                                                <option value="">Seleccione....</option>
                                                 {
                                                     this.state.rolsList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
+                                                        return <option key={key} value={item.value + ':' + item.label}>{item.label}</option>
                                                     })
                                                 }
                                             </select>
@@ -159,10 +152,11 @@ class AddUser extends Component {
                                 <div className="field">
                                     <div className="control">
                                         <div className="select">
-                                            <select value={this.state.stateOption} onChange={this.changeState}>
+                                            <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
+                                                <option value="">Seleccione....</option>
                                                 {
                                                     this.state.statesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
+                                                        return <option key={key} value={item.value + ':' + item.label}>{item.label}</option>
                                                     })
                                                 }
                                             </select>
@@ -177,7 +171,7 @@ class AddUser extends Component {
                             this.state.create?<div>Creando...</div>:
                                 <div>
                                     <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>Crear</button>
-                                    <button className="button" onClick={this.props.handleModal}>Cancel</button>
+                                    <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
                         <p className="help is-danger">{this.state.msg}</p>

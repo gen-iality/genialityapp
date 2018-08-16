@@ -12,10 +12,18 @@ class ListEventUser extends Component {
             users:      [],
             addUser:    false,
             importUser: false,
-        }
+        };
+        this.addToList=this.addToList.bind(this)
     }
 
     async componentDidMount() {
+        let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        console.log(users);
+        this.setState({ users });
+    }
+
+    async addToList(user){
+        console.log(user);
         let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
         console.log(users);
         this.setState({ users });
@@ -130,7 +138,7 @@ class ListEventUser extends Component {
                             </table>
                     }
                 </div>
-                <AddUser handleModal={this.modalUser} modal={this.state.addUser}/>
+                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} addToList={this.addToList}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser}/>
             </React.Fragment>
         );
