@@ -23,9 +23,7 @@ class ListEventUser extends Component {
     }
 
     async addToList(user){
-        console.log(user);
         let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
-        console.log(users);
         this.setState({ users });
     }
 
@@ -122,9 +120,9 @@ class ListEventUser extends Component {
                                             </span>
                                             </td>
                                             <td width="5%">
-                                            <span className="icon has-text-info">
-                                                <i className="fas fa-edit"/>
-                                            </span>
+                                                <span className="icon has-text-info" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                    <i className="fas fa-edit"/>
+                                                </span>
                                             </td>
                                             <td width="5%">
                                             <span className="icon has-text-danger">
@@ -138,7 +136,7 @@ class ListEventUser extends Component {
                             </table>
                     }
                 </div>
-                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} addToList={this.addToList}/>
+                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} value={this.state.selectedUser} addToList={this.addToList}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser}/>
             </React.Fragment>
         );

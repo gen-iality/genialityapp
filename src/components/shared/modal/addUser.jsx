@@ -13,15 +13,22 @@ class AddUser extends Component {
             rol: "",
             state: "",
             emailError:false,
-            valid: true,
-            edit: false
+            valid: true
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.modal !== this.props.modal) {
-            this.setState({modal:nextProps.modal});
+        if (nextProps.value !== this.props.value) {
+            const value = nextProps.value;
+            console.log(value);
+            this.setState({
+                name:   value.user.name,
+                email:  value.user.email,
+                rol:    value.rol._id + ':' + value.rol.name,
+                state:  value.state._id + ':' + value.state.name,
+                edit: true
+            });
         }
     }
 
@@ -91,7 +98,7 @@ class AddUser extends Component {
 
     render() {
         return (
-            <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
+            <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
@@ -106,7 +113,7 @@ class AddUser extends Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input is-rounded" type="text" name={"name"} onChange={this.handleChange} placeholder="Evius.co"/>
+                                        <input className="input is-rounded" type="text" name={"name"} onChange={this.handleChange} value={this.state.name} placeholder="Evius.co"/>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +125,7 @@ class AddUser extends Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input is-rounded" type="email" name={"email"} onChange={this.handleChange} placeholder="evius@co"/>
+                                        <input className="input is-rounded" type="email" name={"email"} onChange={this.handleChange} value={this.state.email} placeholder="evius@co"/>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +177,7 @@ class AddUser extends Component {
                         {
                             this.state.create?<div>Creando...</div>:
                                 <div>
-                                    <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>Crear</button>
+                                    <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
                                     <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
