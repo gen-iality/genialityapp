@@ -5,8 +5,8 @@ class Preview extends Component {
         super(props);
         this.state = {
             head: [
-                {title:'Email',tag:'correo',used:false},
-                {title:'Nombre',tag:'nombre',used:false},
+                {title:'Email',tag:'email',used:false},
+                {title:'Nombre',tag:'name',used:false},
                 {title:'Nick',tag:'alias',used:false}
             ],
             list : [],
@@ -57,6 +57,7 @@ class Preview extends Component {
         const j = head.map(e=>{ return e.tag; }).indexOf(item.tag);
         head[j].used = true;
         list[key].used = true;
+        list[key].key = item.tag;
         auxHead.splice(i,1);
         this.setState({auxArr:auxHead,head,list});
         this.headExist(key);
@@ -65,7 +66,6 @@ class Preview extends Component {
     render() {
         const {list} = this.state;
         const self = this;
-        console.log(self.state);
         return (
             <React.Fragment>
                 <div className="columns preview-list">

@@ -7,13 +7,14 @@ class Result extends Component {
     }
 
     render() {
+        const { list } = this.props;
         return (
             <div>
                 <div className="columns">
                     <div className="column">
                         <div className="tags has-addons">
                             <span className="tag is-white">Total</span>
-                            <span className="tag">10</span>
+                            <span className="tag">{list.length}</span>
                         </div>
                     </div>
                     <div className="column">
