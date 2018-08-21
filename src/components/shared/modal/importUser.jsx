@@ -23,6 +23,13 @@ class ImportUsers extends Component {
         });
     };
 
+    importUsers = () => {
+        this.setState((prevState) => {
+            return {step:prevState.step+1}
+        });
+
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.modal !== this.props.modal) {
             this.setState({modal:nextProps.modal});
@@ -32,7 +39,7 @@ class ImportUsers extends Component {
     render() {
         const layout = [
             <Importacion handleXls={this.handleXls}/>,
-            <Preview list={this.state.list}/>,
+            <Preview list={this.state.list} importUsers={this.importUsers}/>,
             <Result/>];
         return (
             <div className={`modal ${this.state.modal ? "is-active" : ""}`}>

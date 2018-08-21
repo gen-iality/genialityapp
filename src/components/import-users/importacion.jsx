@@ -26,15 +26,15 @@ class Importacion extends Component {
             let finN = dimension[1].substring(1);
             inicio = abc.indexOf(inicio);
             fin = abc.indexOf(fin);
-            let fields = {};
+            let fields = [];
             for(let i = inicio; i < fin + 1; i++){
                 let key = sheetObj[abc[i]+1].w.trim();
-                fields[key] = [];
+                fields[i] = {key:key,list:[],used:false};
                 for(let j = 2; j < finN + 1; j++){
                     if(sheetObj[abc[i] + j] &&
                         sheetObj[abc[i] + j].w &&
                         sheetObj[abc[i] + j].w.trim().length > 0) {
-                        fields[key].push(sheetObj[abc[i] + j].w.trim())
+                        fields[i].list.push(sheetObj[abc[i] + j].w.trim())
                     }else{
                         break;
                     }

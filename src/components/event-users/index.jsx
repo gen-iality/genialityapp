@@ -11,6 +11,7 @@ class ListEventUser extends Component {
         this.state = {
             users:      [],
             addUser:    false,
+            loading:    true,
             importUser: false,
         };
         this.addToList=this.addToList.bind(this)
@@ -19,10 +20,10 @@ class ListEventUser extends Component {
     async componentDidMount() {
         let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
         console.log(users);
-        this.setState({ users });
+        this.setState({ users, loading:false });
     }
 
-    async addToList(user){
+    async addToList(){
         let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
         this.setState({ users });
     }
@@ -92,7 +93,7 @@ class ListEventUser extends Component {
                 </nav>
                 <div className="main">
                     {
-                        this.state.users.length<=0 ?
+                        this.state.loading ?
                             <Loading/> :
                             <table className="table is-fullwidth is-striped">
                                 <thead>

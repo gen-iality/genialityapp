@@ -59,11 +59,12 @@ class AddUser extends Component {
             rol: this.state.rol.split(':')[0],
             state: this.state.state.split(':')[0],
         };
-        console.log(snap);
+        this.setState({create:true});
         let data = await Actions.post(`/api/user/event_users/create/${this.props.eventId}`,snap);
         if (data) {
-            this.props.addToList(snap);
-            this.closeModal;
+            this.props.addToList();
+            this.setState({create:false});
+            this.closeModal();
         } else {
             alert("User can`t be created");
         }

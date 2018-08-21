@@ -4,83 +4,114 @@ class Preview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            head : [
-                {title:'Email',ln:['email','correo','mail']},
-                {title:'Nombre',ln:['nombre','name']},
-                {title:'Nick',ln:['nick','alias']}
+            head: [
+                {title:'Email',tag:'correo',used:false},
+                {title:'Nombre',tag:'nombre',used:false},
+                {title:'Nick',tag:'alias',used:false}
             ],
-            auxHead: []
+            list : [],
+            auxArr: []
         }
     }
 
-    componentDidMount(){}
-
-    handleList = () => {
+    componentDidMount(){
+        let llaves = [];
         const {list} = this.props;
-        const head = this.state.head;
-        const self = this;
-        let content = [];
-        Object.keys(list).map(function(key, index) {
-            return content.push(<div className="column" key={index}>
-                <div className="box">
-                    <div className="field is-grouped">
-                        <div className={`control ${self.headExist(key) ? "has-text-success" : "has-text-warning"}`}>
-                            {key}
-                        </div>
-                        {
-                            !self.headExist(key) && (
-                                <div className="dropdown is-hoverable">
-                                    <div className="control dropdown-trigger">
-                                        <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
-                                            <span className="icon is-small"><i className="fas fa-angle-down"/></span>
-                                        </button>
-                                    </div>
-                                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                                        <div className="dropdown-content">
-                                            {
-                                                head.map((head,key)=>{
-                                                    return <a className="dropdown-item" key={key}>{head.title}</a>
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-                    </div>
-                    <div>
-                        {list[key].slice(0,2).map((item,j)=>{
-                            return <p key={j}>
-                                {item}
-                            </p>
-                        })}
-                    </div>
-                </div>
-            </div>)
+        list.map(list => {
+            llaves.push(list.key)
         });
-        return content
+        this.renderHead(llaves, list);
+    }
+
+    renderHead = (llaves, list) => {
+        const a = llaves;
+        const b = this.state.head;
+        const comparer = (otherArray) => {
+            return ( current ) => {
+                return otherArray.filter( other => {
+                    if (other === current.tag){
+                        current.used = true;
+                        return true
+                    }else{ return false}
+                }).length === 0;
+            }
+        }
+        const onlyInB = b.filter(comparer(a));
+        this.setState({auxArr:onlyInB,head:b});
+        list.map(item=>{
+            item.used = this.headExist(item.key)
+        });
+        this.setState({list})
     }
 
     headExist = (key) => {
-        let auxHead = this.state.head;
-        let asd = false;
-        for(let i = 0; i < auxHead.length; i++){
-            let item = auxHead[i];
-            if(item.ln.indexOf(key)!==-1){
-                asd = true;
-                break;
-            }
-        }
-        return asd
+        let head = this.state.head;
+        const j = head.map(e=>{ return e.tag; }).indexOf(key);
+        return (j !== -1 ) ? head[j].used : false
     };
 
+    sChange = (item,key) => {
+        const auxHead = this.state.auxArr;
+        const {head, list} = this.state;
+        const i = auxHead.map(function(e) { return e.tag; }).indexOf(item.tag);
+        const j = head.map(e=>{ return e.tag; }).indexOf(item.tag);
+        head[j].used = true;
+        list[key].used = true;
+        auxHead.splice(i,1);
+        this.setState({auxArr:auxHead,head,list});
+        this.headExist(key);
+    }
+
     render() {
+        const {list} = this.state;
+        const self = this;
+        console.log(self.state);
         return (
             <React.Fragment>
                 <div className="columns preview-list">
-                    {this.handleList()}
+                    {
+                        list.map(function(item, index) {
+                            return <div className="column" key={index}>
+                                <div className="box">
+                                    <div className="field is-grouped">
+                                        <div className={`control ${item.used ? "has-text-success" : "has-text-warning"}`}>
+                                            {item.key}
+                                        </div>
+                                        {
+                                            (!item.used&&self.state.auxArr.length>0) && (
+                                                <div className="dropdown is-hoverable">
+                                                    <div className="control dropdown-trigger">
+                                                        <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
+                                                            <span className="icon is-small"><i className="fas fa-angle-down"/></span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                                                        <div className="dropdown-content">
+                                                            {
+                                                                self.state.auxArr.map((head,llave)=>{
+                                                                    return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.title}</a>
+                                                                })
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        {item.list.slice(0,2).map((item,j)=>{
+                                            return <p key={j}>
+                                                {item}
+                                            </p>
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        })
+                    }
                 </div>
-                <button className="button is-primary is-rounded">Importar</button>
+                {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan {self.state.auxArr.length} campos <b>Obligatorios</b></p>)}
+                <button className="button is-primary is-rounded" disabled={self.state.auxArr.length>0} onClick={this.props.importUsers}>Importar</button>
             </React.Fragment>
         );
     }

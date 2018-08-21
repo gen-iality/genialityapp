@@ -8,7 +8,34 @@ class Result extends Component {
 
     render() {
         return (
-            <div></div>
+            <div>
+                <div className="columns">
+                    <div className="column">
+                        <div className="tags has-addons">
+                            <span className="tag is-white">Total</span>
+                            <span className="tag">10</span>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <div className="tags has-addons">
+                            <span className="tag is-white">Importados</span>
+                            <span className="tag is-primary">7</span>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <div className="tags has-addons">
+                            <span className="tag is-white">Fallidos</span>
+                            <span className="tag is-danger">1</span>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <div className="tags has-addons">
+                            <span className="tag is-white">Actualizados</span>
+                            <span className="tag is-warning">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

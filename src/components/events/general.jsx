@@ -23,8 +23,6 @@ class General extends Component {
     };
 
     changeDate=(value,name)=>{
-        console.log(value);
-        console.log(name);
         this.setState({event:{...this.state.event,[name]:value}})
     };
 
@@ -95,7 +93,6 @@ class General extends Component {
 
     render() {
         const { event } = this.state;
-        console.log(event);
         return (
             <form onSubmit={this.submit}>
                 <div className="columns">
