@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import  { Link } from 'react-router-dom';
 import  { Redirect } from 'react-router';
 import * as Cookie from "js-cookie";
-import { AuthUrl } from "../helpers/constants";
+import {AuthUrl, BaseUrl} from "../helpers/constants";
 import {Actions} from "../helpers/request";
-import TimeoutSession from "../components/shared/modal/timeoutSession";
 import axios from "axios";
+import Dialog from "../components/shared/modal/twoAction";
 
 class Header extends Component {
     constructor(props) {
@@ -31,8 +31,9 @@ class Header extends Component {
         }
         else {
             axios.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
-                .then(({data}) => {
-                    console.log(data);
+                .then((resp) => {
+                    console.log(resp);
+                    const data = resp.data;
                     const name = (data.displayName) ? data.displayName: data.email;
                     this.setState({name,user:true,cookie:evius_token,loader:false});
                 })
@@ -65,10 +66,10 @@ class Header extends Component {
         this.setState({create:true});
         let result = await Actions.create(
             '/api/user/events',
-            {name:this.state.name}
+            {name:this.state.event}
         );
-        if(result.statusText === 'Created'){
-            this.setState({redirectToReferrer:true, route:"/mis_eventos/"+result.data._id,create:false})
+        if(result._id){
+            window.location.replace(`${BaseUrl}edit/${result._id}`);
         }else{
             this.setState({msg:'Cant Create',create:false})
         }
@@ -171,7 +172,10 @@ class Header extends Component {
                         </footer>
                     </div>
                 </div>
-                <TimeoutSession modal={timeout} logout={this.logout}/>
+                <Dialog modal={timeout} title={'Sesión Expiró'}
+                        content={<p>Tu sesión ha expirado. Inicia sesión de nuevo o sigue mirando eventos</p>}
+                        first={{title:'Iniciar Sesión',class:'is-info',action:this.logout}}
+                        second={{title:'Mirar eventos',class:'',action:this.closeModal}}/>
             </React.Fragment>
         );
     }

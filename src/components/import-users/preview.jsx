@@ -5,9 +5,9 @@ class Preview extends Component {
         super(props);
         this.state = {
             head: [
-                {title:'Email',tag:'email',used:false},
-                {title:'Nombre',tag:'name',used:false},
-                {title:'Nick',tag:'alias',used:false}
+                {tag:'email',used:false},
+                {tag:'name',used:false},
+                {tag:'alias',used:false}
             ],
             list : [],
             auxArr: []
@@ -89,7 +89,7 @@ class Preview extends Component {
                                                         <div className="dropdown-content">
                                                             {
                                                                 self.state.auxArr.map((head,llave)=>{
-                                                                    return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.title}</a>
+                                                                    return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
                                                                 })
                                                             }
                                                         </div>

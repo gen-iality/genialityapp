@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import {Actions} from "../../helpers/request";
 import {Link} from "react-router-dom";
 import Loading from "../../containers/loading";
+import Dialog from "../shared/modal/twoAction";
 
 class Events extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading:true
-        }
+        };
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -17,45 +19,60 @@ class Events extends Component {
         this.setState({events,loading:false});
     }
 
+    async deleteEvent() {
+        const result = await Actions.delete('/api/user/events/',this.state.eventId);
+        console.log(result);
+    }
+
+    closeModal = () => {
+        this.setState({modal:false})
+    };
+
     render() {
         return (
-            <section className="section">
-                {
-                    this.state.loading ? <Loading/>:
-                    <div className="columns is-multiline is-mobile">
-                        {
-                            this.state.events.map((event,key)=>{
-                                return <div className="column is-one-third" key={event._id}>
-                                    <div className="card">
-                                        <div className="card-image">
-                                            <figure className="image is-4by3">
-                                                <img src={event.picture} alt={event.name}/>
-                                            </figure>
-                                        </div>
-                                        <div className="card-content">
-                                            <div className="media">
-                                                <div className="media-content">
-                                                    <p className="title is-4">{event.name}</p>
-                                                    <p className="subtitle is-6">{event.location}</p>
+            <React.Fragment>
+                <section className="section">
+                    {
+                        this.state.loading ? <Loading/>:
+                            <div className="columns is-multiline is-mobile">
+                                {
+                                    this.state.events.map((event,key)=>{
+                                        return <div className="column is-one-third" key={event._id}>
+                                            <div className="card">
+                                                <div className="card-image">
+                                                    <figure className="image is-4by3">
+                                                        <img src={event.picture} alt={event.name}/>
+                                                    </figure>
                                                 </div>
-                                            </div>
-                                            <div className="content">
-                                                {event.description}
-                                                <br/>
-                                                <time dateTime="2016-1-1">{event.date_start}</time>
+                                                <div className="card-content">
+                                                    <div className="media">
+                                                        <div className="media-content">
+                                                            <p className="title is-4">{event.name}</p>
+                                                            <p className="subtitle is-6">{event.location}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="content">
+                                                        {event.description}
+                                                        <br/>
+                                                        <time dateTime="2016-1-1">{event.date_start}</time>
+                                                    </div>
+                                                </div>
+                                                <footer className="card-footer">
+                                                    <Link className="card-footer-item" to={'/edit/'+event._id}>Edit</Link>
+                                                    <a className="card-footer-item" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>Delete</a>
+                                                </footer>
                                             </div>
                                         </div>
-                                        <footer className="card-footer">
-                                            <Link className="card-footer-item" to={'/edit/'+event._id}>Edit</Link>
-                                            <a className="card-footer-item">Delete</a>
-                                        </footer>
-                                    </div>
-                                </div>
-                            })
-                        }
-                    </div>
-                }
-            </section>
+                                    })
+                                }
+                            </div>
+                    }
+                </section>
+                <Dialog modal={this.state.modal} title={'Borrar Evento'}
+                        content={<p>Seguro de borrar este evento?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+            </React.Fragment>
         );
     }
 }

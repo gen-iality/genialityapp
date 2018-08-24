@@ -26,6 +26,13 @@ class General extends Component {
         this.setState({event:{...this.state.event,[name]:value}})
     };
 
+    selectChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        value = (value === 'true');
+        this.setState({event:{...this.state.event,[name]:value}})
+    }
+
     handleFileChange  = (files) => {
         const file = files[0];
         file ? this.setState({imageFile: file}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
@@ -80,6 +87,7 @@ class General extends Component {
             date_start : Moment(event.date_start).format('YYYY-MM-DD'),
             date_end : Moment(event.date_end).format('YYYY-MM-DD'),
             hour : Moment(event.hour).format('HH:mm'),
+            public: event.public,
             description: event.description
         };
         Actions.edit(
@@ -181,6 +189,17 @@ class General extends Component {
                                     <ImageInput picture={event.picture} handleFileChange={ this.handleFileChange}
                                                 imageFile={this.state.imageFile} uploadImg={this.uploadImg}
                                                 cancelImg={this.cancelImg} changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Visibilidad</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={event.public} onChange={this.selectChange} name={'public'}>
+                                            <option value={true}>Público</option>
+                                            <option value={false}>Privado</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

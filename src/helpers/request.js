@@ -32,7 +32,7 @@ if (evius_token){
 
 export const Actions = {
     create: function(url, data) {
-        return axios.post(url, data).then(data);
+        return axios.post(url, data).then(({data})=>data);
     },
     delete: (url, id) => {
         return axios.delete(`${url}${id}`);
