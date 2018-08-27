@@ -23,7 +23,7 @@ class Importacion extends Component {
             const dimension = sheetObj["!ref"].split(":");
             let inicio = dimension[0].substring(0, 1);
             let fin = dimension[1].substring(0, 1);
-            let finN = dimension[1].substring(1);
+            let finN = parseInt(dimension[1].substring(1),10);
             inicio = abc.indexOf(inicio);
             fin = abc.indexOf(fin);
             let fields = [];
@@ -36,9 +36,10 @@ class Importacion extends Component {
                         sheetObj[abc[i] + j].w.trim().length > 0) {
                         fields[i].list.push(sheetObj[abc[i] + j].w.trim())
                     }else{
-                        break;
+                        fields[i].list.push('')
                     }
                 }
+                fields[i].list.slice(0,finN-1);
             }
             self.props.handleXls(fields)
         };

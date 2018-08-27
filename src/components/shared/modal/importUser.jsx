@@ -14,12 +14,7 @@ class ImportUsers extends Component {
         }
     }
 
-    nextStep = (i) => {
-        this.setState({step:i})
-    };
-
     handleXls = (list) => {
-        console.log(list);
         this.setState((prevState) => {
             return {list,step:prevState.step+1}
         });
@@ -78,7 +73,7 @@ class ImportUsers extends Component {
         const layout = [
             <Importacion handleXls={this.handleXls}/>,
             <Preview list={this.state.list} importUsers={this.importUsers}/>,
-            <Result list={this.state.toImport}/>];
+            <Result list={this.state.toImport} eventId={this.props.eventId}/>];
         return (
             <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
@@ -90,9 +85,9 @@ class ImportUsers extends Component {
                     <section className="modal-card-body">
                         <div className="tabs is-fullwidth">
                             <ul>
-                                <li className={`${this.state.step === 0 ? "is-active" : ""}`}><a onClick={(e)=>{this.nextStep(0)}}>1. Importación</a></li>
-                                <li className={`${this.state.step === 1 ? "is-active" : ""}`}><a onClick={(e)=>{this.nextStep(1)}}>2. Previsualización</a></li>
-                                <li className={`${this.state.step === 2 ? "is-active" : ""}`}><a onClick={(e)=>{this.nextStep(2)}}>3. Resultado</a></li>
+                                <li className={`${this.state.step === 0 ? "is-active" : ""}`}><a>1. Importación</a></li>
+                                <li className={`${this.state.step === 1 ? "is-active" : ""}`}><a>2. Previsualización</a></li>
+                                <li className={`${this.state.step === 2 ? "is-active" : ""}`}><a>3. Resultado</a></li>
                             </ul>
                         </div>
                         {
