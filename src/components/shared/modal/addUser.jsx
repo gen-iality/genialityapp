@@ -60,8 +60,9 @@ class AddUser extends Component {
             state: this.state.state.split(':')[0],
         };
         this.setState({create:true});
-        let data = await Actions.post(`/api/user/event_users/create/${this.props.eventId}`,snap);
-        if (data) {
+        let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
+        console.log(resp);
+        if (resp.message === 'OK' && resp.status === 'CREATED') {
             this.props.addToList();
             this.setState({create:false});
             this.closeModal();

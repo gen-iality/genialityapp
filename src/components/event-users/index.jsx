@@ -18,13 +18,14 @@ class ListEventUser extends Component {
     }
 
     async componentDidMount() {
-        let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
-        console.log(users);
+        const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        const users = resp.data;
         this.setState({ users, loading:false });
     }
 
     async addToList(){
-        let users = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        const users = resp.data;
         this.setState({ users });
     }
 
@@ -113,8 +114,8 @@ class ListEventUser extends Component {
                                         return <tr key={key}>
                                             <td>{item.user.email?item.user.email:''}</td>
                                             <td>{item.user.name?item.user.name:''}</td>
-                                            <td>{item.state.name?item.state.name:''}</td>
-                                            <td>{item.rol.name?item.rol.name:''}</td>
+                                            <td>{item.state?item.state.name:''}</td>
+                                            <td>{item.rol?item.rol.name:''}</td>
                                             <td width="5%">
                                             <span className="icon">
                                                 <i className="far fa-square"/>
@@ -138,7 +139,7 @@ class ListEventUser extends Component {
                     }
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} value={this.state.selectedUser} addToList={this.addToList}/>
-                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser}/>
+                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.eventId}/>
             </React.Fragment>
         );
     }

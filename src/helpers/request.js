@@ -41,7 +41,7 @@ export const Actions = {
         return axios.put(`${url}${id}`, data).then(data);
     },
     post: (url, data) => {
-        return axios.post(url,data).then(data);
+        return axios.post(url,data).then(({data})=>data);
     },
     getOne: (url, id) => {
         return axios.get(`${url}${id}`).then(({data})=>data);
