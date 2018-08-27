@@ -94,6 +94,14 @@ class ImportUsers extends Component {
                             layout[this.state.step]
                         }
                     </section>
+                    {
+                        this.state.step === 2 && (
+                            <footer className="modal-card-foot">
+                                <button className="button is-success" onClick={this.closeModal}>Finalizar</button>
+                                <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
+                            </footer>
+                        )
+                    }
                 </div>
             </div>
         );
