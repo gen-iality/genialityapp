@@ -60,7 +60,7 @@ class Result extends Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <div className="columns">
                     <div className="column">
                         <div className="tags has-addons">
@@ -110,7 +110,7 @@ class Result extends Component {
                             </tbody>
                         </table>
                 }
-            </div>
+            </React.Fragment>
         );
     }
 }

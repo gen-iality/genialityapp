@@ -57,7 +57,7 @@ class Importacion extends Component {
 
     render() {
         return (
-            <section className="section">
+            <React.Fragment>
                 <p>Para importar los usuarios de tu evento debes cargar un archivo excel con las columnas organizadas (cómo se muestra en el siguiente ejemplo) o para mayor facilidad <strong>descarga nuestro template</strong>.</p>
                 <p>Las columnas mínimas que deben existir para importar usuarios son: <strong>nombre</strong> y <strong>correo</strong></p>
                 <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
@@ -67,7 +67,7 @@ class Importacion extends Component {
                     <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
                     <span><ins>Descargar Template</ins></span>
                 </button>
-            </section>
+            </React.Fragment>
         );
     }
 }
