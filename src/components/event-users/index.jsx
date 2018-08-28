@@ -5,6 +5,7 @@ import Loading from "../../containers/loading";
 import AddUser from "../shared/modal/addUser";
 import ImportUsers from "../shared/modal/importUser";
 import SearchComponent from "../shared/searchTable";
+import Dialog from "../shared/modal/twoAction";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -14,12 +15,14 @@ class ListEventUser extends Component {
             addUser:    false,
             loading:    true,
             importUser: false,
+            message:    {class:'', content:''}
         };
         this.addToList=this.addToList.bind(this)
     }
 
     async componentDidMount() {
         const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        console.log(resp);
         const users = resp.data;
         this.setState({ users, auxArr:users, loading:false });
     }
@@ -54,6 +57,10 @@ class ListEventUser extends Component {
         this.setState((prevState) => {
             return {importUser:!prevState.importUser}
         });
+    };
+
+    closeModal = () => {
+        this.setState({modal:false})
     };
 
     render() {
@@ -122,14 +129,14 @@ class ListEventUser extends Component {
                                             </span>
                                             </td>
                                             <td width="5%">
-                                                <span className="icon has-text-info" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                <span className="icon has-text-info action_pointer" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
                                                     <i className="fas fa-edit"/>
                                                 </span>
                                             </td>
                                             <td width="5%">
-                                            <span className="icon has-text-danger">
-                                                <i className="fas fa-trash"/>
-                                            </span>
+                                                <span className="icon has-text-danger action_pointer" onClick={(e)=>{this.setState({modal:true})}}>
+                                                    <i className="fas fa-trash"/>
+                                                </span>
                                             </td>
                                         </tr>
                                     })
@@ -140,6 +147,11 @@ class ListEventUser extends Component {
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} value={this.state.selectedUser} addToList={this.addToList}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.eventId}/>
+                <Dialog modal={this.state.modal} title={'Borrar Usuario'}
+                        content={<p>Seguro de borrar este usuario?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </React.Fragment>
         );
     }
