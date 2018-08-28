@@ -106,7 +106,7 @@ class Header extends Component {
                         </div>
                         <div className="navbar-end">
                             <div className="navbar-item">
-                                <button className="button is-primary" onClick={(e)=>{this.setState({modal:true})}} disabled={this.state.loader}>Crear Evento</button>
+                                <button className="button is-primary" onClick={(e)=>{this.setState({modal:true})}} disabled={!this.state.user}>Crear Evento</button>
                             </div>
                             {
                                 this.state.loader ?
