@@ -4,6 +4,7 @@ import {Actions} from "../../helpers/request";
 import Loading from "../../containers/loading";
 import AddUser from "../shared/modal/addUser";
 import ImportUsers from "../shared/modal/importUser";
+import SearchComponent from "../shared/searchTable";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -20,7 +21,7 @@ class ListEventUser extends Component {
     async componentDidMount() {
         const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
         const users = resp.data;
-        this.setState({ users, loading:false });
+        this.setState({ users, auxArr:users, loading:false });
     }
 
     async addToList(){
@@ -28,6 +29,10 @@ class ListEventUser extends Component {
         const users = resp.data;
         this.setState({ users });
     }
+
+    searchResult = (data) => {
+        !data ? this.setState({users:this.state.auxArr}) : this.setState({users:data})
+    };
 
     exportFile = (e) => {
         e.preventDefault();
@@ -67,12 +72,7 @@ class ListEventUser extends Component {
                                 </div>
                             </div>
                             <div className="navbar-item">
-                                <div className="field">
-                                    <p className="control has-icons-left">
-                                        <input className="input" type="password" placeholder="Buscar"/>
-                                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
-                                    </p>
-                                </div>
+                                <SearchComponent  data={this.state.users} searchResult={this.searchResult} columns={columns}/>
                             </div>
                         </div>
                         <div className="navbar-end">

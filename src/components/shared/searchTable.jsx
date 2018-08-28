@@ -1,0 +1,69 @@
+import React, {Component} from 'react';
+
+class SearchComponent extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            showMessage: false,
+            auxArr: [],
+            message: ""
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data !== this.props.data) {
+            this.setState({auxArr:nextProps.data});
+        }
+    }
+
+    filterByAllColums(value) {
+        let arrAux = this.props.data.filter(item =>
+            item.user.name.search(new RegExp(value, 'i')) >= 0 ||
+            item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+            item.state.name.search(new RegExp(value, 'i')) >= 0 ||
+            item.rol.name.search(new RegExp(value, 'i')) >= 0);
+        return arrAux
+    }
+
+    handleFilter = (input) => {
+        let value = input.target.value;
+        if (value.length >= 3) {
+            let filtered = this.filterByAllColums(value);
+            if (filtered.length > 0) {
+                this.setState({ showMessage: false, message: "" });
+            } else {
+                this.setState({ showMessage: true, message: "No hay resultados" });
+            }
+            this.props.searchResult(filtered);
+            console.log(filtered);
+        }
+        if (value.length <= 2) {
+            if (value.length === 0) {
+                this.setState({ showMessage: false, message: "" });
+            } else {
+                this.setState({
+                    showMessage: true,
+                    message: "Para buscar porfavor ingrese mas de 2 caracteres"
+                });
+            }
+            this.props.searchResult(false);
+        }
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <div className="field">
+                    <p className="control has-icons-left">
+                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter}/>
+                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+                    </p>
+                    {this.state.showMessage && (<p className="help is-danger">{this.state.message}</p>)}
+                </div>
+            </React.Fragment>
+        );
+    }
+}
+
+export default SearchComponent;
