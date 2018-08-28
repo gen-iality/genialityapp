@@ -27,12 +27,12 @@ class Events extends Component {
         const result = await Actions.delete('/api/user/events/',this.state.eventId);
         console.log(result);
         if(result.data === "True"){
-            this.setState({message:{...this.state.message,class:'is-success',content:'Evento borrado'}});
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'}});
             setTimeout(()=>{
                 this.setState({modal:false});
             },1500)
         }else{
-            this.setState({message:{...this.state.message,class:'is-danger',content:'Evento no borrado'}})
+            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'}})
         }
     }
 

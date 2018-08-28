@@ -22,9 +22,9 @@ class Dialog extends Component {
                         <button className={`button ${first.class}`} onClick={first.action}>{first.title}</button>
                         <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
                     </footer>
-                    {
-                        message&&(<p className={`help ${message.class}`}>{message.content}</p>)
-                    }
+                    <div className={"msg"}>
+                        <p className={`help ${message.class}`}>{message.content}</p>
+                    </div>
                 </div>
             </div>
         );

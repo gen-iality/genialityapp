@@ -8,6 +8,7 @@ class AddUser extends Component {
         this.state = {
             rolsList: [],
             statesList: [],
+            message: {},
             name: "",
             email: "",
             rol: "",
@@ -59,13 +60,19 @@ class AddUser extends Component {
             rol: this.state.rol.split(':')[0],
             state: this.state.state.split(':')[0],
         };
+        let message = {};
         this.setState({create:true});
         let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
         console.log(resp);
-        if (resp.message === 'OK' && resp.status === 'CREATED') {
+        if (resp.message === 'OK'){
             this.props.addToList();
-            this.setState({create:false});
-            this.closeModal();
+            message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
+            message.content = 'USER '+resp.status;
+            console.log(message);
+            this.setState({create: false, message});
+            setTimeout(()=>{
+                this.closeModal();
+            },1000)
         } else {
             alert("User can`t be created");
         }
@@ -140,7 +147,7 @@ class AddUser extends Component {
                                 <div className="field">
                                     <div className="control">
                                         <div className="select">
-                                            <select value={this.state.state} onChange={this.selectChange} name={'state'}>
+                                            <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
                                                 <option value="">Seleccione....</option>
                                                 {
                                                     this.state.rolsList.map((item,key)=>{
@@ -161,7 +168,7 @@ class AddUser extends Component {
                                 <div className="field">
                                     <div className="control">
                                         <div className="select">
-                                            <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
+                                            <select value={this.state.state} onChange={this.selectChange} name={'state'}>
                                                 <option value="">Seleccione....</option>
                                                 {
                                                     this.state.statesList.map((item,key)=>{
@@ -183,8 +190,10 @@ class AddUser extends Component {
                                     <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
-                        <p className="help is-danger">{this.state.msg}</p>
                     </footer>
+                    <div className={"msg"}>
+                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+                    </div>
                 </div>
             </div>
         );

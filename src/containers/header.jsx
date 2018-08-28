@@ -175,7 +175,8 @@ class Header extends Component {
                 <Dialog modal={timeout} title={'Sesión Expiró'}
                         content={<p>Tu sesión ha expirado. Inicia sesión de nuevo o sigue mirando eventos</p>}
                         first={{title:'Iniciar Sesión',class:'is-info',action:this.logout}}
-                        second={{title:'Mirar eventos',class:'',action:this.closeModal}}/>
+                        second={{title:'Mirar eventos',class:'',action:this.closeModal}}
+                        message={{class:'',content:''}}/>
             </React.Fragment>
         );
     }
