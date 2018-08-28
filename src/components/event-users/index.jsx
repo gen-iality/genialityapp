@@ -72,7 +72,7 @@ class ListEventUser extends Component {
                                 </div>
                             </div>
                             <div className="navbar-item">
-                                <SearchComponent  data={this.state.users} searchResult={this.searchResult} columns={columns}/>
+                                <SearchComponent  data={this.state.users} searchResult={this.searchResult}/>
                             </div>
                         </div>
                         <div className="navbar-end">
