@@ -190,10 +190,10 @@ class AddUser extends Component {
                                     <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
+                        <div className={"msg"}>
+                            <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+                        </div>
                     </footer>
-                    <div className={"msg"}>
-                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-                    </div>
                 </div>
             </div>
         );

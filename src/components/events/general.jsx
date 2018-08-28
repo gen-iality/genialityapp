@@ -45,17 +45,16 @@ class General extends Component {
             self = this;
         data.append('file',this.state.imageFile);
         Actions.post(url, data)
-            .then((res) => {
-                console.log(res);
+            .then((image) => {
                 self.setState({
                     formValues: {
                         ...self.state.formValues,
-                        picture: res.data
+                        picture: image
                     },fileMsg:'Image uploaded successfull'
                 });
                 Actions.edit(
                     EventUrl,
-                    {picture: res.data},
+                    {picture: image},
                     this.state.event._id)
                     .then((snap)=>{
                         console.log(snap)
@@ -68,7 +67,7 @@ class General extends Component {
     changeImg = (files) => {
         const file = files[0];
         file ? this.setState({imageFile: file,
-            formValues:{...this.state.formValues, picture: null}}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
+            event:{...this.state.event, picture: null}}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
     };
 
     cancelImg = (e) => {
@@ -87,6 +86,7 @@ class General extends Component {
             date_start : Moment(event.date_start).format('YYYY-MM-DD'),
             date_end : Moment(event.date_end).format('YYYY-MM-DD'),
             hour : Moment(event.hour).format('HH:mm'),
+            picture: 'https://storage.googleapis.com/herba-images/evius/events/ryD968oYNEBQA5k4qiXTyddS3nD1HciSJ0socZbA.png',
             public: event.public,
             description: event.description
         };
@@ -190,6 +190,7 @@ class General extends Component {
                                                 imageFile={this.state.imageFile} uploadImg={this.uploadImg}
                                                 cancelImg={this.cancelImg} changeImg={this.changeImg} errImg={this.state.errImg}/>
                                 </div>
+                                {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                             </div>
                             <div className="field">
                                 <label className="label">Visibilidad</label>
