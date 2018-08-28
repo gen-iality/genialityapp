@@ -38,8 +38,8 @@ class Header extends Component {
                     this.setState({name,user:true,cookie:evius_token,loader:false});
                 })
                 .catch(error => {
-                    const {data} = error.response;
-                    console.log(data);
+                    console.log(error);
+                    console.log(error.response);
                     this.setState({timeout:true});
                 });
         }
