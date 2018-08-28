@@ -5,7 +5,7 @@ import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
 import {Actions} from "../helpers/request";
 import axios from "axios";
-import Dialog from "../components/shared/modal/twoAction";
+import Dialog from "../components/modal/twoAction";
 
 class Header extends Component {
     constructor(props) {

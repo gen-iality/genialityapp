@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import Moment from "moment"
-import AddAgenda from "../shared/modal/addAgenda";
+import AddAgenda from "../modal/addAgenda";
 Moment.locale('es');
 
 class Agenda extends Component {

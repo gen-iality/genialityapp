@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Actions} from "../../../helpers/request";
+import {Actions} from "../../helpers/request";
 
 class AddUser extends Component {
     constructor(props) {

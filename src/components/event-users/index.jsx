@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import XLSX from "xlsx";
 import {Actions} from "../../helpers/request";
 import Loading from "../../containers/loading";
-import AddUser from "../shared/modal/addUser";
-import ImportUsers from "../shared/modal/importUser";
+import AddUser from "../modal/addUser";
+import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
-import Dialog from "../shared/modal/twoAction";
+import Dialog from "../modal/twoAction";
 
 class ListEventUser extends Component {
     constructor(props) {

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Actions} from "../../helpers/request";
 import {Link} from "react-router-dom";
 import Loading from "../../containers/loading";
-import Dialog from "../shared/modal/twoAction";
+import Dialog from "../modal/twoAction";
 
 class Events extends Component {
     constructor(props) {

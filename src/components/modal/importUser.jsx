@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import Importacion from "../../import-users/importacion";
-import Preview from "../../import-users/preview";
-import Result from "../../import-users/result";
+import Importacion from "../import-users/importacion";
+import Preview from "../import-users/preview";
+import Result from "../import-users/result";
 import Async from "async";
 
 class ImportUsers extends Component {
@@ -52,9 +52,10 @@ class ImportUsers extends Component {
                 cb(items)
             }
         ],function (result) {
-            self.setState((prevState) => {
+            console.log(result);
+            /*self.setState((prevState) => {
                 return {step:prevState.step+1,toImport:result}
-            });
+            });*/
         });
     };
 
@@ -72,7 +73,7 @@ class ImportUsers extends Component {
     render() {
         const layout = [
             <Importacion handleXls={this.handleXls}/>,
-            <Preview list={this.state.list} importUsers={this.importUsers}/>,
+            <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers}/>,
             <Result list={this.state.toImport} eventId={this.props.eventId}/>];
         return (
             <div className={`modal ${this.state.modal ? "is-active" : ""}`}>

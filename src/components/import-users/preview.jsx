@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Actions} from "../../helpers/request";
 
 class Preview extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ class Preview extends Component {
             ],
             list : [],
             auxArr: []
-        }
+        };
+        this.addField = this.addField.bind(this)
     }
 
     componentDidMount(){
@@ -61,7 +63,18 @@ class Preview extends Component {
         auxHead.splice(i,1);
         this.setState({auxArr:auxHead,head,list});
         this.headExist(key);
-    }
+    };
+
+    async addField(item, key) {
+        console.log(item);
+        const { list } = this.state;
+        let resp = await Actions.post(`/api/user/events/${this.props.eventId}/addUserProperty`,{name:item.key});
+        console.log(resp);
+        if(resp){
+            list[key].used = true;
+            this.setState({ list });
+        }
+    };
 
     render() {
         const {list} = this.state;
@@ -96,6 +109,12 @@ class Preview extends Component {
                                                     </div>
                                                 </div>
                                             )
+                                        }
+                                        {
+                                            (!item.used&&self.state.auxArr.length<=0) && (
+                                                <span className="icon action_pointer tooltip" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
+                                                    <i className="fas fa-plus"/>
+                                                </span>)
                                         }
                                     </div>
                                     <div>
