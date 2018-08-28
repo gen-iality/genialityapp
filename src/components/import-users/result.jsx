@@ -26,10 +26,11 @@ class Result extends Component {
         let imported = [];
         Async.forEachOf(users,(user,key,cb)=>{
             Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,user)
-                .then(({data})=>{
-                    if(data.message === 'OK'){
-                        imported[key] = {name:user.name,email:user.email,status:data.status};
-                        if(data.status === 'UPDATED'){
+                .then((resp)=>{
+                    console.log(resp);
+                    if(resp.message === 'OK'){
+                        imported[key] = {name:user.name,email:user.email,status:resp.status};
+                        if(resp.status === 'UPDATED'){
                             self.setState((prevState) => {
                                 return {updated:prevState.updated+1}
                             });
@@ -86,31 +87,29 @@ class Result extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="main">
-                    {
-                        this.state.imported.length>0 &&
-                            <table className="table is-fullwidth is-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Correo</th>
-                                        <th>Nombre</th>
-                                        <th>Estado</th>
+                {
+                    this.state.imported.length>0 &&
+                        <table className="table is-fullwidth is-striped">
+                            <thead>
+                                <tr>
+                                    <th>Correo</th>
+                                    <th>Nombre</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {
+                                this.state.imported.map((item,key)=>{
+                                    return <tr key={key}>
+                                        <td>{item.email}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.status}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    this.state.imported.map((item,key)=>{
-                                        return <tr key={key}>
-                                            <td>{item.email}</td>
-                                            <td>{item.name}</td>
-                                            <td>{item.status}</td>
-                                        </tr>
-                                    })
-                                }
-                                </tbody>
-                            </table>
-                    }
-                </div>
+                                })
+                            }
+                            </tbody>
+                        </table>
+                }
             </div>
         );
     }

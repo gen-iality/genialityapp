@@ -8,7 +8,11 @@ class Events extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:true
+            loading:true,
+            message:{
+                class:'',
+                content:''
+            }
         };
         this.deleteEvent = this.deleteEvent.bind(this);
     }
@@ -22,6 +26,14 @@ class Events extends Component {
     async deleteEvent() {
         const result = await Actions.delete('/api/user/events/',this.state.eventId);
         console.log(result);
+        if(result.data === "True"){
+            this.setState({message:{...this.state.message,class:'is-success',content:'Evento borrado'}});
+            setTimeout(()=>{
+                this.setState({modal:false});
+            },1500)
+        }else{
+            this.setState({message:{...this.state.message,class:'is-danger',content:'Evento no borrado'}})
+        }
     }
 
     closeModal = () => {
@@ -71,6 +83,7 @@ class Events extends Component {
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}
                         content={<p>Seguro de borrar este evento?</p>}
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </React.Fragment>
         );

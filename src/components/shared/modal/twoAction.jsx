@@ -7,7 +7,7 @@ class Dialog extends Component {
     }
 
     render() {
-        const {first,second} = this.props;
+        const {first,second,message} = this.props;
         return (
             <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
                 <div className="modal-background"></div>
@@ -22,6 +22,9 @@ class Dialog extends Component {
                         <button className={`button ${first.class}`} onClick={first.action}>{first.title}</button>
                         <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
                     </footer>
+                    {
+                        message&&(<p className={`help ${message.class}`}>{message.content}</p>)
+                    }
                 </div>
             </div>
         );
