@@ -129,12 +129,12 @@ class ListEventUser extends Component {
                                             </span>
                                             </td>
                                             <td width="5%">
-                                                <span className="icon has-text-info action_pointer" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
                                                     <i className="fas fa-edit"/>
                                                 </span>
                                             </td>
                                             <td width="5%">
-                                                <span className="icon has-text-danger action_pointer" onClick={(e)=>{this.setState({modal:true})}}>
+                                                <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
                                                     <i className="fas fa-trash"/>
                                                 </span>
                                             </td>
