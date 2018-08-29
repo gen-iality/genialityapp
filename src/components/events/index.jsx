@@ -66,7 +66,7 @@ class Events extends Component {
                                                     <div className="content">
                                                         {event.description}
                                                         <br/>
-                                                        <time dateTime="2016-1-1">{event.date_start}</time>
+                                                        <time dateTime="2016-1-1">{event.hour} - {event.date_start}</time>
                                                     </div>
                                                 </div>
                                                 <footer className="card-footer">

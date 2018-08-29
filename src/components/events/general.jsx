@@ -85,6 +85,7 @@ class General extends Component {
             name: event.name,
             date_start : Moment(event.date_start).format('YYYY-MM-DD'),
             date_end : Moment(event.date_end).format('YYYY-MM-DD'),
+            location: event.location,
             hour : Moment(event.hour).format('HH:mm'),
             picture: 'https://storage.googleapis.com/herba-images/evius/events/ryD968oYNEBQA5k4qiXTyddS3nD1HciSJ0socZbA.png',
             public: event.public,

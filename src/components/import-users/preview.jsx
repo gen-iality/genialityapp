@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Actions} from "../../helpers/request";
+import {EventUrl} from "../../helpers/constants";
+import Moment from "moment";
 
 class Preview extends Component {
     constructor(props) {
@@ -7,18 +9,24 @@ class Preview extends Component {
         this.state = {
             head: [
                 {tag:'email',used:false},
-                {tag:'name',used:false},
-                {tag:'alias',used:false}
+                {tag:'name',used:false}
             ],
+            loading: true,
             list : [],
             auxArr: []
         };
         this.addField = this.addField.bind(this)
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         let llaves = [];
-        const {list} = this.props;
+        const {list, eventId} = this.props;
+        const event = await Actions.getOne(EventUrl,eventId);
+        event.user_properties.map(item => {
+            this.setState(prevState => ({
+                head: [...prevState.head, {tag:item.name,used:false}]
+            }))
+        });
         list.map(list => {
             llaves.push(list.key)
         });
@@ -43,7 +51,7 @@ class Preview extends Component {
         list.map(item=>{
             item.used = this.headExist(item.key)
         });
-        this.setState({list})
+        this.setState({list,loading:false})
     }
 
     headExist = (key) => {
@@ -81,54 +89,59 @@ class Preview extends Component {
         const self = this;
         return (
             <React.Fragment>
-                <div className="columns preview-list">
-                    {
-                        list.map(function(item, index) {
-                            return <div className="column" key={index}>
-                                <div className="box">
-                                    <div className="field is-grouped">
-                                        <div className={`control ${item.used ? "has-text-success" : "has-text-warning"}`}>
-                                            {item.key}
-                                        </div>
-                                        {
-                                            (!item.used&&self.state.auxArr.length>0) && (
-                                                <div className="dropdown is-hoverable">
-                                                    <div className="control dropdown-trigger">
-                                                        <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
-                                                            <span className="icon is-small"><i className="fas fa-angle-down"/></span>
-                                                        </button>
-                                                    </div>
-                                                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                                                        <div className="dropdown-content">
-                                                            {
-                                                                self.state.auxArr.map((head,llave)=>{
-                                                                    return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
-                                                                })
-                                                            }
-                                                        </div>
-                                                    </div>
+                {
+                    this.state.loading ?
+                        <div>Parsing excel</div> :
+                        <div className="columns preview-list">
+                            {
+                                list.map(function(item, index) {
+                                    return <div className="column" key={index}>
+                                        <div className="box">
+                                            <div className="field is-grouped">
+                                                <div className={`control ${item.used ? "has-text-success" : "has-text-warning"}`}>
+                                                    {item.key}
                                                 </div>
-                                            )
-                                        }
-                                        {
-                                            (!item.used&&self.state.auxArr.length<=0) && (
-                                                <span className="icon action_pointer tooltip" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
-                                                    <i className="fas fa-plus"/>
-                                                </span>)
-                                        }
+                                                {
+                                                    (!item.used&&self.state.auxArr.length>0) && (
+                                                        <div className="dropdown is-hoverable">
+                                                            <div className="control dropdown-trigger">
+                                                                <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
+                                                                    <span className="icon is-small"><i className="fas fa-angle-down"/></span>
+                                                                </button>
+                                                            </div>
+                                                            <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                                                                <div className="dropdown-content">
+                                                                    {
+                                                                        self.state.auxArr.map((head,llave)=>{
+                                                                            return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
+                                                                        })
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
+                                                {
+                                                    (!item.used&&self.state.auxArr.length<=0) && (
+                                                        <span className="icon action_pointer tooltip" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
+                                                            <i className="fas fa-plus"/>
+                                                        </span>)
+                                                }
+                                            </div>
+                                            <div>
+                                                {item.list.slice(0,2).map((item,j)=>{
+                                                    return <p key={j}>
+                                                        {item}
+                                                    </p>
+                                                })}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        {item.list.slice(0,2).map((item,j)=>{
-                                            return <p key={j}>
-                                                {item}
-                                            </p>
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-                        })
-                    }
-                </div>
+                                })
+                            }
+                        </div>
+
+                }
                 {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan {self.state.auxArr.length} campos <b>Obligatorios</b></p>)}
                 <button className="button is-primary is-rounded" disabled={self.state.auxArr.length>0} onClick={this.props.importUsers}>Importar</button>
             </React.Fragment>
