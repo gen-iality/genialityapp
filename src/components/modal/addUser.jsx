@@ -70,7 +70,9 @@ class AddUser extends Component {
             message.content = 'USER '+resp.status;
             console.log(message);
             this.setState({create: false, message});
+            message.class = message.content = '';
             setTimeout(()=>{
+                this.setState({message});
                 this.closeModal();
             },1000)
         } else {

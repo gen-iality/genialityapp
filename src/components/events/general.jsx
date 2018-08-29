@@ -209,7 +209,10 @@ class General extends Component {
                 </div>
                 <div className="field">
                     <div className="control">
-                        <button type={"submit"} className={`button is-outlined is-success${this.state.loading ? "is-loading" : ""}`}>Save!</button>
+                        {
+                            this.state.loading? <p>Saving...</p>
+                            :<button type={"submit"} className={`button is-outlined is-success`}>Save!</button>
+                        }
                     </div>
                 </div>
             </form>
