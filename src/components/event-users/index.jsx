@@ -111,12 +111,11 @@ class ListEventUser extends Component {
                         this.state.loading ?
                             <Loading/> :
                             <React.Fragment>
-                                <p onClick={this.enableDelete}>
-                                    Enable Delete User
-                                    <span className="icon has-text-danger">
-                                            {this.state.deleteUser?1:2}
-                                    </span>
-                                </p>
+                                <div className="field">
+                                    <input className="is-checkradio is-danger" id="deleteUser"
+                                           type="checkbox" name="deleteUser" checked={this.state.deleteUser} onClick={this.enableDelete}/>
+                                    <label htmlFor="deleteUser">Enable Delete User</label>
+                                </div>
                                 <table className="table is-fullwidth is-striped">
                                     <thead>
                                     <tr>
