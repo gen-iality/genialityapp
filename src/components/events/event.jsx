@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Link } from "react-router-dom";
+import { Route, Link, Redirect } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../../containers/loading";
@@ -57,15 +57,11 @@ class Event extends Component {
                             <div className="column is-10">
                                 <section className="section">
                                     <Route path={`${match.url}/general`} render={()=><General event={this.state.event} />}/>
-                                    <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} />}/>
+                                    <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
                                     <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                     <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                    <Route
-                                        exact
-                                        path={match.url}
-                                        render={() => <h3>Please select a module.</h3>}
-                                    />
+                                    <Redirect exact from={match.url} to={`${match.url}/general`} />
                                 </section>
                             </div>
                         </section>
