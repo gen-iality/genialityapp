@@ -68,8 +68,9 @@ class Header extends Component {
             '/api/user/events',
             {name:this.state.event}
         );
+        console.log(result);
         if(result._id){
-            window.location.replace(`${BaseUrl}edit/${result._id}`);
+            window.location.replace(`${BaseUrl}edit/${result._id}/general`);
         }else{
             this.setState({msg:'Cant Create',create:false})
         }

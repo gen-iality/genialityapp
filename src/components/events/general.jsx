@@ -13,7 +13,6 @@ class General extends Component {
         this.state = {
             event : this.props.event
         }
-        this.submit = this.submit.bind(this)
     }
 
     handleChange = (e) => {
@@ -77,7 +76,8 @@ class General extends Component {
         e.stopPropagation();
     };
 
-    async submit(e) {
+    submit = (e) => {
+        this.setState({loading:true});
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
@@ -97,6 +97,7 @@ class General extends Component {
             event._id
         ).then((result)=>{
             console.log(result);
+            this.setState({loading:false});
         });
     }
 
@@ -208,7 +209,7 @@ class General extends Component {
                 </div>
                 <div className="field">
                     <div className="control">
-                        <button type={"submit"} className="button is-outlined is-success">Save!</button>
+                        <button type={"submit"} className={`button is-outlined is-success${this.state.loading ? "is-loading" : ""}`}>Save!</button>
                     </div>
                 </div>
             </form>

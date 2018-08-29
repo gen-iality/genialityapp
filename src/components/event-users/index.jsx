@@ -13,6 +13,7 @@ class ListEventUser extends Component {
         this.state = {
             users:      [],
             addUser:    false,
+            deleteUser: false,
             loading:    true,
             importUser: false,
             message:    {class:'', content:''}
@@ -63,6 +64,12 @@ class ListEventUser extends Component {
         this.setState({modal:false})
     };
 
+    enableDelete = () => {
+        this.setState((prevState) => {
+            return {deleteUser:!prevState.deleteUser}
+        });
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -103,46 +110,54 @@ class ListEventUser extends Component {
                     {
                         this.state.loading ?
                             <Loading/> :
-                            <table className="table is-fullwidth is-striped">
-                                <thead>
+                            <React.Fragment>
+                                <p onClick={this.enableDelete}>
+                                    Enable Delete User
+                                    <span className="icon has-text-danger">
+                                            {this.state.deleteUser?1:2}
+                                    </span>
+                                </p>
+                                <table className="table is-fullwidth is-striped">
+                                    <thead>
                                     <tr>
+                                        <th>CheckIn</th>
+                                        <th/>
+                                        {this.state.deleteUser&&(<th/>)}
                                         <th>Correo</th>
                                         <th>Nombre</th>
                                         <th>Estado</th>
                                         <th>Rol</th>
-                                        <th>CheckIn</th>
-                                        <th/>
-                                        <th/>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    this.state.users.map((item,key)=>{
-                                        return <tr key={key}>
-                                            <td>{item.user.email?item.user.email:''}</td>
-                                            <td>{item.user.name?item.user.name:''}</td>
-                                            <td>{item.state?item.state.name:''}</td>
-                                            <td>{item.rol?item.rol.name:''}</td>
-                                            <td width="5%">
-                                            <span className="icon">
-                                                <i className="far fa-square"/>
-                                            </span>
-                                            </td>
-                                            <td width="5%">
-                                                <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
-                                                    <i className="fas fa-edit"/>
-                                                </span>
-                                            </td>
-                                            <td width="5%">
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        this.state.users.map((item,key)=>{
+                                            return <tr key={key}>
+                                                <td width="5%">
+                                                    <span className="icon">
+                                                        <i className="far fa-square"/>
+                                                    </span>
+                                                </td>
+                                                <td width="5%">
+                                                    <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                        <i className="fas fa-edit"/>
+                                                    </span>
+                                                </td>
+                                                {this.state.deleteUser&&(<td width="5%">
                                                 <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
                                                     <i className="fas fa-trash"/>
                                                 </span>
-                                            </td>
-                                        </tr>
-                                    })
-                                }
-                                </tbody>
-                            </table>
+                                                </td>)}
+                                                <td>{item.user.email?item.user.email:''}</td>
+                                                <td>{item.user.name?item.user.name:''}</td>
+                                                <td>{item.state?item.state.name:''}</td>
+                                                <td>{item.rol?item.rol.name:''}</td>
+                                            </tr>
+                                        })
+                                    }
+                                    </tbody>
+                                </table>
+                            </React.Fragment>
                     }
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} value={this.state.selectedUser} addToList={this.addToList}/>

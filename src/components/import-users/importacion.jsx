@@ -49,7 +49,7 @@ class Importacion extends Component {
     downloadExcel = () => {
         let a = document.createElement('A');
         a.href = Template;
-        a.download = 'templatemocion.xls';
+        a.download = 'usertemplate.xls'; //userstemplate+nombreevento+ddmmyy
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -59,7 +59,7 @@ class Importacion extends Component {
         return (
             <React.Fragment>
                 <p>Para importar los usuarios de tu evento debes cargar un archivo excel con las columnas organizadas (cómo se muestra en el siguiente ejemplo) o para mayor facilidad <strong>descarga nuestro template</strong>.</p>
-                <p>Las columnas mínimas que deben existir para importar usuarios son: <strong>nombre</strong> y <strong>correo</strong></p>
+                <p>Las columnas requeridas que deben existir para importar usuarios son: <strong>nombre</strong> y <strong>correo</strong></p>
                 <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
                     <button className="button is-rounded is-primary">Importar Excel</button>
                 </Dropzone>

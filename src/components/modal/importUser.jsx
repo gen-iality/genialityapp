@@ -53,9 +53,9 @@ class ImportUsers extends Component {
             }
         ],function (result) {
             console.log(result);
-            /*self.setState((prevState) => {
+            self.setState((prevState) => {
                 return {step:prevState.step+1,toImport:result}
-            });*/
+            });
         });
     };
 
