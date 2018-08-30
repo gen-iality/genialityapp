@@ -70,19 +70,19 @@ class AddUser extends Component {
                 this.props.addToList();
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
                 message.content = 'USER '+resp.status;
-                message.class = message.content = '';
-                setTimeout(()=>{
-                    this.setState({message});
-                    this.closeModal();
-                },1000)
             } else {
                 alert("User can`t be created/updated");
             }
         } catch (err) {
+            console.log(err.response);
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
-        this.setState({create: false, message});
+        this.setState({message,create:false});
+        setTimeout(()=>{
+            message.class = message.content = '';
+            this.closeModal();
+        },1000)
     }
 
     handleChange = (event) => {

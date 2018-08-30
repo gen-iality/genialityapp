@@ -18,9 +18,13 @@ class Events extends Component {
     }
 
     async componentDidMount() {
-        const events = await Actions.getAll('/api/user/events');
+        const events = await this.getAllEvents();
         console.log(events);
         this.setState({events,loading:false});
+    }
+
+    async getAllEvents() {
+        return await Actions.getAll('/api/user/events');
     }
 
     async deleteEvent() {
@@ -28,8 +32,9 @@ class Events extends Component {
         console.log(result);
         if(result.data === "True"){
             this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'}});
+            const events = await this.getAllEvents();
             setTimeout(()=>{
-                this.setState({modal:false});
+                this.setState({modal:false,events});
             },1500)
         }else{
             this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'}})
