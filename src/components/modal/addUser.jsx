@@ -9,12 +9,11 @@ class AddUser extends Component {
             rolsList: [],
             statesList: [],
             message: {},
-            name: "",
-            email: "",
+            user: {},
             rol: "",
             state: "",
             emailError:false,
-            valid: true
+            valid: false
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -23,9 +22,12 @@ class AddUser extends Component {
         if (nextProps.value !== this.props.value) {
             const value = nextProps.value;
             console.log(value);
+            let user = {};
+            {Object.keys(value.properties).map((obj, i) => (
+                user[obj] = value.properties[obj]
+            ))}
             this.setState({
-                name:   value.user.name,
-                email:  value.user.email,
+                user,
                 rol:    value.rol._id + ':' + value.rol.name,
                 state:  value.state._id + ':' + value.state.name,
                 edit: true
@@ -55,14 +57,14 @@ class AddUser extends Component {
         e.preventDefault();
         e.stopPropagation();
         const snap = {
-            name: this.state.name,
-            email: this.state.email,
+            properties: this.state.user,
             rol: this.state.rol.split(':')[0],
             state: this.state.state.split(':')[0],
         };
+        console.log(snap);
         let message = {};
         this.setState({create:true});
-        let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
+        /*let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
         console.log(resp);
         if (resp.message === 'OK'){
             this.props.addToList();
@@ -77,13 +79,13 @@ class AddUser extends Component {
             },1000)
         } else {
             alert("User can`t be created");
-        }
+        }*/
     }
 
     handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        this.setState({[name]:value}, this.validForm)
+        this.setState({user:{...this.state.user,[name]:value}})
     };
 
     selectChange = (e) => {
@@ -117,7 +119,23 @@ class AddUser extends Component {
                         <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
                     </header>
                     <section className="modal-card-body">
-                        <div className="field is-horizontal">
+                        {
+                            Object.keys(this.state.user).map((obj, i)=>{
+                                return <div className="field is-horizontal" key={obj}>
+                                    <div className="field-label is-normal">
+                                        <label className="label">{obj}</label>
+                                    </div>
+                                    <div className="field-body">
+                                        <div className="field">
+                                            <div className="control">
+                                                <input className="input is-rounded" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            })
+                        }
+                        {/*<div className="field is-horizontal">
                             <div className="field-label is-normal">
                                 <label className="label">Nombre</label>
                             </div>
@@ -140,7 +158,7 @@ class AddUser extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
                         <div className="field is-horizontal">
                             <div className="field-label is-normal">
                                 <label className="label">Rol</label>
