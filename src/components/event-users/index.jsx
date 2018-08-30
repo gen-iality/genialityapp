@@ -12,26 +12,32 @@ class ListEventUser extends Component {
         super(props);
         this.state = {
             users:      [],
+            extraFields:[],
             addUser:    false,
             deleteUser: false,
             loading:    true,
             importUser: false,
             message:    {class:'', content:''}
         };
-        this.addToList=this.addToList.bind(this)
+        this.addToList   = this.addToList.bind(this);
+        this.modalImport = this.modalImport.bind(this);
     }
 
     async componentDidMount() {
-        const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
+        const { event } = this.props;
+        const resp = await this.getUsers();
         console.log(resp);
         const users = resp.data;
-        this.setState({ users, auxArr:users, loading:false });
+        this.setState({ users, auxArr:users, loading:false, extraFields: event.user_properties });
     }
 
-    async addToList(){
-        const resp = await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
-        const users = resp.data;
-        this.setState({ users });
+    async addToList() {
+        const {data} = await this.getUsers();
+        this.setState({ users: data });
+    }
+
+    async getUsers() {
+        return await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
     }
 
     searchResult = (data) => {
@@ -54,9 +60,10 @@ class ListEventUser extends Component {
         });
     };
 
-    modalImport = () => {
+    async modalImport() {
+        const {data} = await this.getUsers();
         this.setState((prevState) => {
-            return {importUser:!prevState.importUser}
+            return {importUser:!prevState.importUser,users:data}
         });
     };
 
@@ -116,46 +123,54 @@ class ListEventUser extends Component {
                                            type="checkbox" name="deleteUser" checked={this.state.deleteUser} onClick={this.enableDelete}/>
                                     <label htmlFor="deleteUser">Enable Delete User</label>
                                 </div>
-                                <table className="table is-fullwidth is-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>CheckIn</th>
-                                        <th/>
-                                        {this.state.deleteUser&&(<th/>)}
-                                        <th>Correo</th>
-                                        <th>Nombre</th>
-                                        <th>Estado</th>
-                                        <th>Rol</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {
-                                        this.state.users.map((item,key)=>{
-                                            return <tr key={key}>
-                                                <td width="5%">
+                                <div className="preview-list">
+                                    <table className="table is-fullwidth is-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>CheckIn</th>
+                                            <th/>
+                                            {this.state.deleteUser&&(<th/>)}
+                                            <th>Correo</th>
+                                            <th>Nombre</th>
+                                            {
+                                                this.state.extraFields.map((extra,key)=>{
+                                                    return <th key={key}>{extra.name}</th>
+                                                })
+                                            }
+                                            <th>Estado</th>
+                                            <th>Rol</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {
+                                            this.state.users.map((item,key)=>{
+                                                return <tr key={key}>
+                                                    <td width="5%">
                                                     <span className="icon">
                                                         <i className="far fa-square"/>
                                                     </span>
-                                                </td>
-                                                <td width="5%">
+                                                    </td>
+                                                    <td width="5%">
                                                     <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
                                                         <i className="fas fa-edit"/>
                                                     </span>
-                                                </td>
-                                                {this.state.deleteUser&&(<td width="5%">
-                                                <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
-                                                    <i className="fas fa-trash"/>
-                                                </span>
-                                                </td>)}
-                                                <td>{item.user.email?item.user.email:''}</td>
-                                                <td>{item.user.name?item.user.name:''}</td>
-                                                <td>{item.state?item.state.name:''}</td>
-                                                <td>{item.rol?item.rol.name:''}</td>
-                                            </tr>
-                                        })
-                                    }
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                    {this.state.deleteUser&&(<td width="5%">
+                                                        <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
+                                                            <i className="fas fa-trash"/>
+                                                        </span>
+                                                    </td>)}
+                                                    {Object.keys(item.properties).map((obj, i) => (
+                                                        <td key={i}>{item.properties[obj]}</td>
+                                                    ))}
+                                                    <td>{item.state?item.state.name:''}</td>
+                                                    <td>{item.rol?item.rol.name:''}</td>
+                                                </tr>
+                                            })
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
                             </React.Fragment>
                     }
                 </div>
