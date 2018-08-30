@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Actions} from "../../helpers/request";
-import {EventUrl} from "../../helpers/constants";
+import { Actions, EventsApi } from "../../helpers/request";
 import Moment from "moment";
 
 class Preview extends Component {
@@ -21,7 +20,7 @@ class Preview extends Component {
     async componentDidMount(){
         let llaves = [];
         const {list, eventId} = this.props;
-        const event = await Actions.getOne(EventUrl,eventId);
+        const event = await EventsApi.getOne(eventId);
         event.user_properties.map(item => {
             this.setState(prevState => ({
                 head: [...prevState.head, {tag:item.name,used:false}]

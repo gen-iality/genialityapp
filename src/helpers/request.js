@@ -54,7 +54,13 @@ export const EventsApi = {
     getAll: async () => {
         return await Actions.getAll('/api/user/events')
     },
+    getOne: async (id) => {
+        return await Actions.getOne('/api/user/events/', id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/user/events/', data, id)
+    },
     deleteOne: async (id) => {
         return await Actions.delete('/api/user/events/', id);
-    }
+    },
 };

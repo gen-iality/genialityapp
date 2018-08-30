@@ -4,7 +4,6 @@ export const Template = 'data:application/vnd.openxmlformats-officedocument.spre
 //export const AuthUrl = 'http://dev.mocionsoft.com:3010';
 export const AuthUrl = 'http://localhost:3010';
 export const BaseUrl = 'http://localhost:3000/';
-export const EventUrl = "api/user/events/";
 
 export const parseUrl = (url) => {
     try {

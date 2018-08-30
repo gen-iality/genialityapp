@@ -3,13 +3,12 @@ import { Route, Link } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../../containers/loading";
-import {Actions} from "../../helpers/request";
+import { EventsApi } from "../../helpers/request";
 import General from "./general";
 import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
 import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
-import {EventUrl} from "../../helpers/constants";
 Moment.locale('es');
 momentLocalizer();
 
@@ -23,7 +22,7 @@ class Event extends Component {
 
     async componentDidMount() {
         let eventId = this.props.match.params.event;
-        const event = await Actions.getOne(EventUrl,eventId);
+        const event = await EventsApi.getOne(eventId);
         event.hour = event.hour ? Moment(event.date_start + ' ' + event.hour).toDate() : Moment(event.date_start).toDate();
         event.date_start = Moment(event.date_start).toDate();
         event.date_end = Moment(event.date_end).toDate();

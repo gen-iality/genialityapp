@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import { DateTimePicker } from 'react-widgets'
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions} from "../../helpers/request";
+import {Actions, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
-import {EventUrl} from "../../helpers/constants";
 Moment.locale('es');
 
 class General extends Component {
@@ -12,7 +11,9 @@ class General extends Component {
         super(props);
         this.state = {
             event : this.props.event
-        }
+        };
+        this.submit = this.submit.bind(this);
+        this.uploadImg = this.uploadImg().bind(this)
     }
 
     handleChange = (e) => {
@@ -37,7 +38,7 @@ class General extends Component {
         file ? this.setState({imageFile: file}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
     };
 
-    uploadImg = (e) => {
+    async uploadImg(e) {
         console.log('MAKE THE AXIOS REQUEST');
         let data = new FormData();
         const url = '/api/files/upload',
@@ -51,13 +52,13 @@ class General extends Component {
                         picture: image
                     },fileMsg:'Image uploaded successfull'
                 });
-                Actions.edit(
-                    EventUrl,
-                    {picture: image},
-                    this.state.event._id)
-                    .then((snap)=>{
-                        console.log(snap)
-                    });
+                try {
+                    const result = EventsApi.editOne({picture:image},this.state.event._id);
+                    console.log(result);
+                } catch (e) {
+                    console.log('Some error');
+                    console.log(e)
+                }
             });
         e.preventDefault();
         e.stopPropagation();
@@ -76,7 +77,7 @@ class General extends Component {
         e.stopPropagation();
     };
 
-    submit = (e) => {
+    async submit(e) {
         this.setState({loading:true});
         e.preventDefault();
         e.stopPropagation();
@@ -91,14 +92,14 @@ class General extends Component {
             public: event.public,
             description: event.description
         };
-        Actions.edit(
-            EventUrl,
-            data,
-            event._id
-        ).then((result)=>{
+        try {
+            const result = await EventsApi.editOne(data, event._id);
             console.log(result);
             this.setState({loading:false});
-        });
+        } catch (e) {
+            console.log('Some error')
+            console.log(e)
+        }
     }
 
     render() {
