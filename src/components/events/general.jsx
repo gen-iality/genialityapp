@@ -13,7 +13,7 @@ class General extends Component {
             event : this.props.event
         };
         this.submit = this.submit.bind(this);
-        this.uploadImg = this.uploadImg().bind(this)
+        this.uploadImg = this.uploadImg.bind(this)
     }
 
     handleChange = (e) => {
