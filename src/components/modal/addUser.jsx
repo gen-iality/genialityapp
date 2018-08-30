@@ -61,25 +61,28 @@ class AddUser extends Component {
             rol: this.state.rol.split(':')[0],
             state: this.state.state.split(':')[0],
         };
-        console.log(snap);
         let message = {};
         this.setState({create:true});
-        /*let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
-        console.log(resp);
-        if (resp.message === 'OK'){
-            this.props.addToList();
-            message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
-            message.content = 'USER '+resp.status;
-            console.log(message);
-            this.setState({create: false, message});
-            message.class = message.content = '';
-            setTimeout(()=>{
-                this.setState({message});
-                this.closeModal();
-            },1000)
-        } else {
-            alert("User can`t be created");
-        }*/
+        try {
+            let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
+            console.log(resp);
+            if (resp.message === 'OK'){
+                this.props.addToList();
+                message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
+                message.content = 'USER '+resp.status;
+                message.class = message.content = '';
+                setTimeout(()=>{
+                    this.setState({message});
+                    this.closeModal();
+                },1000)
+            } else {
+                alert("User can`t be created/updated");
+            }
+        } catch (err) {
+            message.class = 'msg_error';
+            message.content = 'ERROR...TRYING LATER';
+        }
+        this.setState({create: false, message});
     }
 
     handleChange = (event) => {
