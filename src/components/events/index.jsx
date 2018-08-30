@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Actions} from "../../helpers/request";
+import { EventsApi } from "../../helpers/request";
 import {Link} from "react-router-dom";
 import Loading from "../../containers/loading";
 import Dialog from "../modal/twoAction";
@@ -18,21 +18,17 @@ class Events extends Component {
     }
 
     async componentDidMount() {
-        const events = await this.getAllEvents();
+        const events = await EventsApi.getAll();
         console.log(events);
         this.setState({events,loading:false});
     }
 
-    async getAllEvents() {
-        return await Actions.getAll('/api/user/events');
-    }
-
     async deleteEvent() {
-        const result = await Actions.delete('/api/user/events/',this.state.eventId);
+        const result = await EventsApi.deleteOne(this.state.eventId);
         console.log(result);
         if(result.data === "True"){
             this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'}});
-            const events = await this.getAllEvents();
+            const events = await EventsApi.getAll();
             setTimeout(()=>{
                 this.setState({modal:false,events});
             },1500)

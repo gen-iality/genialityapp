@@ -50,3 +50,11 @@ export const Actions = {
         return axios.get(`${url}`).then(({data})=>data);
     }
 };
+export const EventsApi = {
+    getAll: async () => {
+        return await Actions.getAll('/api/user/events')
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete('/api/user/events/', id);
+    }
+};
