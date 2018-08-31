@@ -58,7 +58,7 @@ class Header extends Component {
     };
 
     isValid = () => {
-        const valid = !(this.state.name && this.state.name.length > 0);
+        const valid = !(this.state.event && this.state.event.length > 0);
         this.setState({valid})
     };
 
@@ -70,7 +70,7 @@ class Header extends Component {
         );
         console.log(result);
         if(result._id){
-            window.location.replace(`${BaseUrl}edit/${result._id}/general`);
+            window.location.replace(`${BaseUrl}/edit/${result._id}/general`);
         }else{
             this.setState({msg:'Cant Create',create:false})
         }
@@ -155,7 +155,7 @@ class Header extends Component {
                                 <div className="field-body">
                                     <div className="field">
                                         <div className="control">
-                                            <input className="input is-rounded" type="text" name={"name"} onChange={this.handleChange} placeholder="Evius.co"/>
+                                            <input className="input is-rounded" type="text" name={"event"} onChange={this.handleChange} placeholder="Evius.co"/>
                                         </div>
                                     </div>
                                 </div>
