@@ -15,9 +15,11 @@ class ImportUsers extends Component {
     }
 
     handleXls = (list) => {
-        this.setState((prevState) => {
-            return {list,step:prevState.step+1}
-        });
+        if(!list.length>=2) {
+            this.setState((prevState) => {
+                return {list,step:prevState.step+1}
+            });
+        }
     };
 
     importUsers = () => {

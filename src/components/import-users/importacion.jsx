@@ -20,28 +20,36 @@ class Importacion extends Component {
             const workbook = XLSX.read(data, { type: "binary" });
             const sheetName = workbook.SheetNames[0];
             const sheetObj = workbook.Sheets[sheetName];
-            const dimension = sheetObj["!ref"].split(":");
-            let inicio = dimension[0].substring(0, 1);
-            let fin = dimension[1].substring(0, 1);
-            let finN = parseInt(dimension[1].substring(1),10);
-            inicio = abc.indexOf(inicio);
-            fin = abc.indexOf(fin);
-            let fields = [];
-            for(let i = inicio; i < fin + 1; i++){
-                let key = sheetObj[abc[i]+1].w.trim();
-                fields[i] = {key:key,list:[],used:false};
-                for(let j = 2; j < finN + 1; j++){
-                    if(sheetObj[abc[i] + j] &&
-                        sheetObj[abc[i] + j].w &&
-                        sheetObj[abc[i] + j].w.trim().length > 0) {
-                        fields[i].list.push(sheetObj[abc[i] + j].w.trim())
-                    }else{
-                        fields[i].list.push('')
+            if(sheetObj["!ref"]) {
+                const dimension = sheetObj["!ref"].split(":");
+                let inicio = dimension[0].substring(0, 1);
+                let fin = dimension[1].substring(0, 1);
+                let finN = parseInt(dimension[1].substring(1), 10);
+                inicio = abc.indexOf(inicio);
+                fin = abc.indexOf(fin);
+                let fields = [];
+                for (let i = inicio; i < fin + 1; i++) {
+                    if(!sheetObj[abc[i] + 1] || !sheetObj[abc[i] + 1].w){
+                        this.setState({errMsg:'Excel sin formato adecuado'});
+                        break;
                     }
+                    let key = sheetObj[abc[i] + 1].w.trim();
+                    fields[i] = {key: key, list: [], used: false};
+                    for (let j = 2; j < finN + 1; j++) {
+                        if (sheetObj[abc[i] + j] &&
+                            sheetObj[abc[i] + j].w &&
+                            sheetObj[abc[i] + j].w.trim().length > 0) {
+                            fields[i].list.push(sheetObj[abc[i] + j].w.trim())
+                        } else {
+                            fields[i].list.push('')
+                        }
+                    }
+                    fields[i].list.slice(0, finN - 1);
                 }
-                fields[i].list.slice(0,finN-1);
+                self.props.handleXls(fields)
+            }else{
+                this.setState({errMsg:'Excel en blanco'})
             }
-            self.props.handleXls(fields)
         };
         reader.readAsBinaryString(f);
     }
@@ -63,6 +71,7 @@ class Importacion extends Component {
                 <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
                     <button className="button is-rounded is-primary">Importar Excel</button>
                 </Dropzone>
+                <p className="help is-danger">{this.state.errMsg}</p>
                 <button className="button is-text" onClick={this.downloadExcel}>
                     <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
                     <span><ins>Descargar Template</ins></span>
