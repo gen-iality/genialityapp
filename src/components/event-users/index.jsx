@@ -71,6 +71,19 @@ class ListEventUser extends Component {
         this.setState({modal:false})
     };
 
+    checkIn = (user,position) => {
+        const users = this.state.users;
+        user.checkin = !user.checkin;
+        users[position] = user;
+        /*Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
+            .then((response)=>{
+                console.log(response);
+            });*/
+        this.setState((prevState) => {
+            return {data:users,change:!prevState.change}
+        })
+    };
+
     enableDelete = () => {
         this.setState((prevState) => {
             return {deleteUser:!prevState.deleteUser}
@@ -119,9 +132,9 @@ class ListEventUser extends Component {
                             <Loading/> :
                             <React.Fragment>
                                 <div className="field">
-                                    <input className="is-checkradio is-danger" id="deleteUser"
+                                    <input className="is-checkradio is-danger is-block" id="deleteUser"
                                            type="checkbox" name="deleteUser" checked={this.state.deleteUser} onClick={this.enableDelete}/>
-                                    <label htmlFor="deleteUser">Enable Delete User</label>
+                                    <label htmlFor="deleteUser">{this.state.deleteUser?'Disable Delete User':'Enable Delete User'}</label>
                                 </div>
                                 <div className="preview-list">
                                     <table className="table is-fullwidth is-striped">
@@ -146,20 +159,22 @@ class ListEventUser extends Component {
                                             this.state.users.map((item,key)=>{
                                                 return <tr key={key}>
                                                     <td width="5%">
-                                                    <span className="icon">
-                                                        <i className="far fa-square"/>
-                                                    </span>
+                                                        <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id}
+                                                               type="checkbox" name={"checkinUser"+item._id} checked={item.checkin} onClick={(e)=>{this.checkIn(item,key)}}/>
+                                                        <label htmlFor={"checkinUser"+item._id}/>
                                                     </td>
                                                     <td width="5%">
-                                                    <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
-                                                        <i className="fas fa-edit"/>
-                                                    </span>
-                                                    </td>
-                                                    {this.state.deleteUser&&(<td width="5%">
-                                                        <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
-                                                            <i className="fas fa-trash"/>
+                                                        <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                            <i className="fas fa-edit"/>
                                                         </span>
-                                                    </td>)}
+                                                    </td>
+                                                    {this.state.deleteUser&&(
+                                                        <td width="5%">
+                                                            <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
+                                                                <i className="fas fa-trash"/>
+                                                            </span>
+                                                        </td>
+                                                    )}
                                                     {Object.keys(item.properties).map((obj, i) => (
                                                         <td key={i}>{item.properties[obj]}</td>
                                                     ))}
