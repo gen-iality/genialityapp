@@ -18,6 +18,25 @@ class AddUser extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
+    componentDidMount() {
+        const self = this,
+            rols = Actions.getAll('/api/rols'),
+            states = Actions.getAll('/api/states');
+        let user = {name: '', email: ''};
+        axios.all([rols, states])
+            .then(axios.spread(function (roles, estados) {
+                let rolData = roles.map(rol => ({
+                    value: rol._id,
+                    label: rol.name
+                }));
+                let stateData = estados.map(state => ({
+                    value: state._id,
+                    label: state.name
+                }));
+                self.setState({ rolsList: rolData, statesList: stateData, user });
+            }))
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.value !== this.props.value) {
             const value = nextProps.value;
@@ -33,24 +52,6 @@ class AddUser extends Component {
                 edit: true
             });
         }
-    }
-
-    componentDidMount() {
-        const self = this,
-            rols = Actions.getAll('/api/rols'),
-            states = Actions.getAll('/api/states');
-        axios.all([rols, states])
-            .then(axios.spread(function (roles, estados) {
-                let rolData = roles.map(rol => ({
-                    value: rol._id,
-                    label: rol.name
-                }));
-                let stateData = estados.map(state => ({
-                    value: state._id,
-                    label: state.name
-                }));
-                self.setState({ rolsList: rolData, statesList: stateData });
-            }))
     }
 
     async handleSubmit(e) {
