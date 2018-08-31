@@ -13,7 +13,8 @@ class General extends Component {
             event : this.props.event
         };
         this.submit = this.submit.bind(this);
-        this.uploadImg = this.uploadImg.bind(this)
+        this.uploadImg = this.uploadImg.bind(this);
+        this.imgToEvent = this.imgToEvent.bind(this);
     }
 
     handleChange = (e) => {
@@ -52,17 +53,21 @@ class General extends Component {
                         picture: image
                     },fileMsg:'Image uploaded successfull'
                 });
-                try {
-                    const result = EventsApi.editOne({picture:image},this.state.event._id);
-                    console.log(result);
-                } catch (e) {
-                    console.log('Some error');
-                    console.log(e)
-                }
+                this.imgToEvent(image,this.state.event._id)
             });
         e.preventDefault();
         e.stopPropagation();
     };
+
+    async imgToEvent(image,id) {
+        try {
+            const result = await EventsApi.editOne({picture:image},id);
+            console.log(result);
+        } catch (e) {
+            console.log('Some error');
+            console.log(e)
+        }
+    }
 
     changeImg = (files) => {
         const file = files[0];
@@ -88,7 +93,6 @@ class General extends Component {
             date_end : Moment(event.date_end).format('YYYY-MM-DD'),
             location: event.location,
             hour : Moment(event.hour).format('HH:mm'),
-            picture: 'https://storage.googleapis.com/herba-images/evius/events/ryD968oYNEBQA5k4qiXTyddS3nD1HciSJ0socZbA.png',
             public: event.public,
             description: event.description
         };

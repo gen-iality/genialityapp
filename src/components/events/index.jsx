@@ -3,6 +3,8 @@ import { EventsApi } from "../../helpers/request";
 import {Link} from "react-router-dom";
 import Loading from "../../containers/loading";
 import Dialog from "../modal/twoAction";
+import * as Cookie from "js-cookie";
+import {AuthUrl} from "../../helpers/constants";
 
 class Events extends Component {
     constructor(props) {
@@ -25,16 +27,22 @@ class Events extends Component {
 
     async deleteEvent() {
         this.setState({isLoading:'Wait....'});
-        const result = await EventsApi.deleteOne(this.state.eventId);
-        console.log(result);
-        if(result.data === "True"){
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
-            const events = await EventsApi.getAll();
-            setTimeout(()=>{
-                this.setState({modal:false,events});
-            },500)
-        }else{
-            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+        try {
+            const result = await EventsApi.deleteOne(this.state.eventId);
+            console.log(result);
+            if(result.data === "True"){
+                this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+                const events = await EventsApi.getAll();
+                setTimeout(()=>{
+                    this.setState({modal:false,events});
+                },500)
+            }else{
+                this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+            }
+        }catch (e) {
+            Cookie.remove("token");
+            Cookie.remove("evius_token");
+            window.location.replace(`${AuthUrl}/logout`);
         }
     }
 

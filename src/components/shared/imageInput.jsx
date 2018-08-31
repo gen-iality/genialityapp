@@ -13,7 +13,7 @@ export default class ImageInput extends Component {
                             <img src={props.picture} alt={'Imagen Perfil'}/>
                             <div className="field is-grouped is-grouped-right">
                                 <div className="control">
-                                    <Dropzone accept="image/*" onDrop={props.changeImg} style={estilos.zone}>
+                                    <Dropzone accept="image/*" onDrop={props.changeImg} style={{}}>
                                         <button className="button is-outlined is-primary">Change</button>
                                     </Dropzone>
                                 </div>
@@ -28,12 +28,9 @@ export default class ImageInput extends Component {
                                 <button className="button is-outlined is-primary" onClick={props.uploadImg}>Upload!</button>
                                 <button className="button is-outlined is-warning" onClick={props.cancelImg}>Cancel</button>
                             </div>
-                            :<div style={estilos.block}>
-                                <Dropzone accept="image/*" onDrop={props.handleFileChange} style={estilos.zone}>
-                                    <div style={estilos.info}>
-                                        <div>.png/.jpeg</div>
-                                        <div>Upload new picture.</div>
-                                    </div>
+                            :<div >
+                                <Dropzone accept="image/*" onDrop={props.handleFileChange} >
+                                    <div>Subir foto</div>
                                 </Dropzone>
                                 <span>{props.errImg}</span>
                             </div>
@@ -42,8 +39,3 @@ export default class ImageInput extends Component {
         );
     }
 }
-
-const estilos = {
-    block : {marginTop: '1rem'}, zone  : {width: '30%'},
-    info  : {display: 'flex', border: '2px solid blue', borderRadius: '2px', flex: 1, fontSize: '12px', height: '2.125rem', cursor: 'pointer'}
-};

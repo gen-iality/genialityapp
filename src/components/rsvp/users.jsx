@@ -8,7 +8,11 @@ class UsersRsvp extends Component {
 
     render() {
         return (
-            <div></div>
+            <div className="columns">
+                <div className="column">Eventos</div>
+                <div className="column">Usuarios</div>
+                <div className="column">Para Enviar</div>
+            </div>
         );
     }
 }
