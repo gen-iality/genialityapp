@@ -24,16 +24,17 @@ class Events extends Component {
     }
 
     async deleteEvent() {
+        this.setState({isLoading:'Wait....'});
         const result = await EventsApi.deleteOne(this.state.eventId);
         console.log(result);
         if(result.data === "True"){
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'}});
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
             const events = await EventsApi.getAll();
             setTimeout(()=>{
                 this.setState({modal:false,events});
-            },1500)
+            },500)
         }else{
-            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'}})
+            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
         }
     }
 
@@ -88,7 +89,7 @@ class Events extends Component {
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}
                         content={<p>Seguro de borrar este evento?</p>}
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
-                        message={this.state.message}
+                        message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </React.Fragment>
         );

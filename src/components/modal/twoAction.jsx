@@ -3,8 +3,16 @@ import React, {Component} from 'react';
 class Dialog extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            isLoading:false
+        }
     }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.isLoading !== this.props.isLoading){
+            this.setState({isLoading:nextProps.isLoading})
+        }
+    };
 
     render() {
         const {first,second,message} = this.props;
@@ -19,11 +27,17 @@ class Dialog extends Component {
                         {this.props.content}
                     </section>
                     <footer className="modal-card-foot">
-                        <button className={`button ${first.class}`} onClick={first.action}>{first.title}</button>
-                        <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
-                        <div className={"msg"}>
-                            <p className={`help ${message.class}`}>{message.content}</p>
-                        </div>
+                        {
+                            this.state.isLoading ?
+                                <div>{this.state.isLoading}</div>:
+                                <React.Fragment>
+                                    <button className={`button ${first.class}`} onClick={first.action}>{first.title}</button>
+                                    <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
+                                    <div className={"msg"}>
+                                        <p className={`help ${message.class}`}>{message.content}</p>
+                                    </div>
+                                </React.Fragment>
+                        }
                     </footer>
                 </div>
             </div>
