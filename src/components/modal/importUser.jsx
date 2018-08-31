@@ -74,7 +74,7 @@ class ImportUsers extends Component {
 
     render() {
         const layout = [
-            <Importacion handleXls={this.handleXls}/>,
+            <Importacion handleXls={this.handleXls} extraFields={this.props.extraFields}/>,
             <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers}/>,
             <Result list={this.state.toImport} eventId={this.props.eventId}/>];
         return (
