@@ -56,7 +56,7 @@ class ListEventUser extends Component {
 
     modalUser = () => {
         this.setState((prevState) => {
-            return {addUser:!prevState.addUser}
+            return {addUser:!prevState.addUser,edit:false}
         });
     };
 
@@ -167,7 +167,7 @@ class ListEventUser extends Component {
                                                                 <label htmlFor={"checkinUser"+item._id}/>
                                                             </td>
                                                             <td width="5%">
-                                                        <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item})}}>
+                                                        <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item,edit:true})}}>
                                                             <i className="fas fa-edit"/>
                                                         </span>
                                                             </td>
@@ -194,7 +194,9 @@ class ListEventUser extends Component {
                             </React.Fragment>
                     }
                 </div>
-                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId} value={this.state.selectedUser} addToList={this.addToList}/>
+                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
+                         value={this.state.selectedUser} addToList={this.addToList}
+                         extraFields={this.state.extraFields} edit={this.state.edit}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.eventId} extraFields={this.state.extraFields}/>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}

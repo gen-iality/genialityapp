@@ -22,7 +22,6 @@ class AddUser extends Component {
         const self = this,
             rols = Actions.getAll('/api/rols'),
             states = Actions.getAll('/api/states');
-        let user = {name: '', email: ''};
         axios.all([rols, states])
             .then(axios.spread(function (roles, estados) {
                 let rolData = roles.map(rol => ({
@@ -33,24 +32,23 @@ class AddUser extends Component {
                     value: state._id,
                     label: state.name
                 }));
-                self.setState({ rolsList: rolData, statesList: stateData, user });
+                self.setState({ rolsList: rolData, statesList: stateData });
             }))
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.value !== this.props.value) {
+        if (nextProps.edit) {
             const value = nextProps.value;
-            console.log(value);
             let user = {};
-            {Object.keys(value.properties).map((obj, i) => (
-                user[obj] = value.properties[obj]
-            ))}
+            {Object.keys(value.properties).map((obj, i) => (user[obj] = value.properties[obj]))}
             this.setState({
-                user,
-                rol:    value.rol._id + ':' + value.rol.name,
-                state:  value.state._id + ':' + value.state.name,
-                edit: true
+                user, rol: value.rol._id + ':' + value.rol.name,
+                state: value.state._id + ':' + value.state.name, edit: true
             });
+        }else {
+            let user = {name: '', email: ''};
+            {nextProps.extraFields.map((obj, i) => (user[obj.name] = ''))}
+            this.setState({user,  edit: false});
         }
     }
 
@@ -103,14 +101,14 @@ class AddUser extends Component {
     validForm = () => {
         const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         let state= this.state,
-            emailValid = state.email.length > 5 && state.email.length < 61 && EMAIL_REGEX.test(state.email),
-            valid = !(emailValid && state.name.length>0 && state.rol.length>0 && state.state.length>0);
+            emailValid = state.user.email.length > 5 && state.user.email.length < 61 && EMAIL_REGEX.test(state.user.email),
+            valid = !(emailValid && state.user.name.length>0 && state.rol.length>0 && state.state.length>0);
         this.setState({emailError:!emailValid});
         this.setState({valid})
     };
 
     closeModal = () => {
-        this.setState({name: '', email: '', rol: '', state: ''},this.props.handleModal());
+        this.setState({user:{}, rol: '', state: ''},this.props.handleModal());
     };
 
     render() {
@@ -119,7 +117,7 @@ class AddUser extends Component {
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">Usuario</p>
+                        <p className="modal-card-title">{`${this.state.edit?'Edición':'Nuevo'} Usuario`}</p>
                         <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
                     </header>
                     <section className="modal-card-body">
