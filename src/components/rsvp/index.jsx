@@ -13,7 +13,7 @@ class RSVP extends Component {
 
     render() {
         const layout = [
-            <UsersRsvp/>,
+            <UsersRsvp event={this.props.event}/>,
             <SendRsvp/>,
             <ConfirmRsvp/>
         ];
