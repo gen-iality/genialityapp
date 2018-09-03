@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import XLSX from "xlsx";
-import {Actions} from "../../helpers/request";
+import {Actions, UsersApi} from "../../helpers/request";
 import Loading from "../../containers/loading";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
@@ -25,19 +25,15 @@ class ListEventUser extends Component {
 
     async componentDidMount() {
         const { event } = this.props;
-        const resp = await this.getUsers();
+        const resp = await UsersApi.getAll(this.props.eventId);
         console.log(resp);
         const users = resp.data;
         this.setState({ users, auxArr:users, loading:false, extraFields: event.user_properties });
     }
 
     async addToList() {
-        const {data} = await this.getUsers();
+        const {data} = await UsersApi.getAll(this.props.eventId);
         this.setState({ users: data });
-    }
-
-    async getUsers() {
-        return await Actions.getOne(`/api/user/event_users/`,this.props.eventId);
     }
 
     searchResult = (data) => {
@@ -61,7 +57,7 @@ class ListEventUser extends Component {
     };
 
     async modalImport() {
-        const {data} = await this.getUsers();
+        const {data} = await UsersApi.getAll(this.props.eventId);
         this.setState((prevState) => {
             return {importUser:!prevState.importUser,users:data}
         });

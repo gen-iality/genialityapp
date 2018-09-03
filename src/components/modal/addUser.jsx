@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-import {Actions} from "../../helpers/request";
+import {Actions, UsersApi} from "../../helpers/request";
 
 class AddUser extends Component {
     constructor(props) {
@@ -63,7 +63,7 @@ class AddUser extends Component {
         let message = {};
         this.setState({create:true});
         try {
-            let resp = await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,snap);
+            let resp = await UsersApi.editOne(snap,this.props.eventId);
             console.log(resp);
             if (resp.message === 'OK'){
                 this.props.addToList();

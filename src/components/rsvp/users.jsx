@@ -10,7 +10,7 @@ class UsersRsvp extends Component {
         return (
             <div className="columns">
                 <div className="column">Eventos</div>
-                <div className="column">Usuarios</div>
+                <div className="column is-8">Usuarios</div>
                 <div className="column">Para Enviar</div>
             </div>
         );
