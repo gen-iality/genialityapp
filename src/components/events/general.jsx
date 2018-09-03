@@ -18,19 +18,13 @@ class General extends Component {
     }
 
     handleChange = (e) => {
-      const {name} = e.target;
-      const {value} = e.target;
-      this.setState({event:{...this.state.event,[name]:value}})
+        const {name, value} = e.target;
+        this.setState({event:{...this.state.event,[name]:value}})
     };
 
     changeDate=(value,name)=>{
         this.setState({event:{...this.state.event,[name]:value}})
     };
-
-    selectChange = (e) => {
-        let {name, value} = e.target;
-        this.setState({event:{...this.state.event,[name]:value}})
-    }
 
     handleFileChange  = (files) => {
         const file = files[0];
@@ -201,7 +195,7 @@ class General extends Component {
                                 <label className="label">Visibilidad</label>
                                 <div className="control">
                                     <div className="select">
-                                        <select value={event.visibility} onChange={this.selectChange} name={'visibility'}>
+                                        <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
                                             <option>Selecciona...</option>
                                             <option value={'PUBLIC'}>Público</option>
                                             <option value={'ORGANIZATION'}>Privado</option>
