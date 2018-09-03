@@ -11,10 +11,16 @@ class RSVP extends Component {
         }
     }
 
+    userTab = (selection) => {
+        this.setState((prevState)=>{
+            return {selection,step:prevState.step+1}
+        })
+    }
+
     render() {
         const layout = [
-            <UsersRsvp event={this.props.event}/>,
-            <SendRsvp/>,
+            <UsersRsvp event={this.props.event} userTab={this.userTab}/>,
+            <SendRsvp event={this.props.event} selection={this.state.selection}/>,
             <ConfirmRsvp/>
         ];
         return (

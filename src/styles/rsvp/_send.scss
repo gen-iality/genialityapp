@@ -1,0 +1,11 @@
+div.sendrsvp {
+  height: 100%;
+  div.rsvpusers {
+    overflow: auto;
+    height: 250px;
+    p.selection{
+      border-bottom: 1px solid gray;
+      margin: 3px
+    }
+  }
+}

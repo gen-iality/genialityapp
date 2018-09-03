@@ -145,28 +145,21 @@ class UsersRsvp extends Component {
                 <div className="column is-3">
                     <div className="box">
                         <strong>Seleccionados {this.state.selection.length}</strong>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th>Correo</th>
-                                <th/>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.selection.map((item,key)=>{
-                                        return <tr key={key}>
-                                            <td>{item.email}</td>
-                                            <td width="5%">
-                                                <span className="icon has-text-danger" onClick={(e)=>{this.removeThis(item)}}>
-                                                  <i className="fas fa-ban"/>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    })
-                                }
-                            </tbody>
-                        </table>
+                        <button className="button is-rounded is-primary is-outlined is-small"
+                                disabled={this.state.selection.length<=0}
+                                onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                            Siguiente
+                        </button>
+                        {
+                            this.state.selection.map((item,key)=>{
+                                return <div key={key}>
+                                    <p>{item.email}</p>
+                                    <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
+                                      <i className="fas fa-ban"/>
+                                    </span>
+                                </div>
+                            })
+                        }
                     </div>
                 </div>
             </div>
