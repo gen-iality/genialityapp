@@ -1,12 +1,18 @@
 import React, {Component} from 'react';
 import XLSX from "xlsx";
+import Moment from "moment"
+import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
 import {Template} from "../../helpers/constants";
+Moment.locale('es');
+momentLocalizer();
 
 class Importacion extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            showMsg:false
+        };
         this.handleXlsFile = this.handleXlsFile.bind(this) // properly bound once
     }
 
@@ -57,10 +63,16 @@ class Importacion extends Component {
     downloadExcel = () => {
         let a = document.createElement('A');
         a.href = Template;
-        a.download = 'usertemplate.xls'; //userstemplate+nombreevento+ddmmyy
+        a.download = `usertemplate${Moment().format('DDMMYY')}.xls`; //userstemplate+nombreevento+ddmmyy
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (!nextProps.extraFields.length <= 0) {
+            this.setState({showMsg:true})
+        }
     }
 
     render() {
@@ -69,7 +81,7 @@ class Importacion extends Component {
                 <p>Para importar los usuarios de tu evento debes cargar un archivo excel con las columnas organizadas (cómo se muestra en el siguiente ejemplo) o para mayor facilidad <strong>descarga nuestro template</strong>.</p>
                 <p>Las columnas requeridas que deben existir para importar usuarios son: <strong>nombre</strong> y <strong>correo</strong></p>
                 {
-                    this.props.extraFields.length>0 && (
+                    this.state.showMsg && (
                         <p>Las columnas adicionales para este evento son:
                             {this.props.extraFields.map((extra,key)=>{
                                 return <strong key={key}>{extra.name}, </strong>

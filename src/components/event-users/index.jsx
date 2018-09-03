@@ -51,7 +51,7 @@ class ListEventUser extends Component {
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-        XLSX.writeFile(wb, 'usuarios.xls');
+        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
     };
 
     modalUser = () => {
@@ -210,11 +210,14 @@ class ListEventUser extends Component {
 
 const parseData = (data) => {
     let info = [];
-    data.map((obj) => {
-        if(obj.user){
-            const name = obj.user.name ? obj.user.name : '';
-            const email = obj.user.email ? obj.user.email : '';
-            info.push({Nombre:name,Correo:email,Estado:obj.state.name,Rol:obj.rol.name})
+    data.map((item,key) => {
+        info[key] = {};
+        if(item.user){
+            Object.keys(item.properties).map((obj, i) => (
+                info[key][obj] = item.properties[obj]
+            ));
+            info[key]['estado'] = item.state.name;
+            info[key]['rol'] = item.rol.name;
         }
         return info
     });
