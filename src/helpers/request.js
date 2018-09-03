@@ -66,10 +66,10 @@ export const EventsApi = {
 };
 export const UsersApi = {
     getAll: async (id) => {
-        Actions.getOne(`/api/user/event_users/`,id)
+        return await Actions.getOne(`/api/user/event_users/`,id)
     },
     editOne: async (data, id) => {
-        Actions.post(`/api/eventUser/createUserAndAddtoEvent/${id}`,data)
+        return await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${id}`,data)
     },
     deleteOne: async (user, id) => {
         return await Actions.delete(`/api/user/events/${id}`, user);

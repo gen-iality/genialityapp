@@ -28,9 +28,7 @@ class General extends Component {
     };
 
     selectChange = (e) => {
-        let name = e.target.name;
-        let value = e.target.value;
-        value = (value === 'true');
+        let {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}})
     }
 
@@ -93,7 +91,7 @@ class General extends Component {
             date_end : Moment(event.date_end).format('YYYY-MM-DD'),
             location: event.location,
             hour : Moment(event.hour).format('HH:mm'),
-            public: event.public,
+            visibility: event.visibility,
             description: event.description
         };
         try {
@@ -203,9 +201,10 @@ class General extends Component {
                                 <label className="label">Visibilidad</label>
                                 <div className="control">
                                     <div className="select">
-                                        <select value={event.public} onChange={this.selectChange} name={'public'}>
-                                            <option value={true}>Público</option>
-                                            <option value={false}>Privado</option>
+                                        <select value={event.visibility} onChange={this.selectChange} name={'visibility'}>
+                                            <option>Selecciona...</option>
+                                            <option value={'PUBLIC'}>Público</option>
+                                            <option value={'ORGANIZATION'}>Privado</option>
                                         </select>
                                     </div>
                                 </div>
