@@ -11,6 +11,7 @@
     "bulma-tooltip": "^2.0.1",
     "js-cookie": "^2.2.0",
     "moment": "^2.22.2",
+    "moment-with-locales-es6": "^1.0.1",
     "react": "^16.4.2",
     "react-datetime": "^2.15.0",
     "react-dom": "^16.4.2",

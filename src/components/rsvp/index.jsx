@@ -15,13 +15,19 @@ class RSVP extends Component {
         this.setState((prevState)=>{
             return {selection,step:prevState.step+1}
         })
-    }
+    };
+
+    rsvpTab = (rsvp) => {
+        this.setState((prevState)=>{
+            return {rsvp,step:prevState.step+1}
+        })
+    };
 
     render() {
         const layout = [
             <UsersRsvp event={this.props.event} userTab={this.userTab}/>,
-            <SendRsvp event={this.props.event} selection={this.state.selection}/>,
-            <ConfirmRsvp/>
+            <SendRsvp event={this.props.event} selection={this.state.selection} rsvpTab={this.rsvpTab}/>,
+            <ConfirmRsvp rsvp={this.state.rsvp} selection={this.state.selection}/>
         ];
         return (
             <React.Fragment>
