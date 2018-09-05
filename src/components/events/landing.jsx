@@ -35,19 +35,26 @@ class Landing extends Component {
                                 Por: ...
                             </div>
                             <div className="item is-italic">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis...
                             </div>
                             <div className="item">
                                 <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>
                                 Aforo
                             </div>
-                            <div className="item">
-                                <div className="columns is-mobile">
-                                    <div className="column is-4 is-offset-8">
-                                        <div className="fab-button has-text-weight-bold"><span className="is-size-3">+</span></div>
+                            {
+                                !this.state.showFull && (
+                                    <div className="item">
+                                        <div className="columns is-mobile">
+                                            <div className="column is-4 is-offset-8">
+                                                <div className="fab-button has-text-weight-bold"
+                                                    onClick={(e)=>{this.setState({showFull:true})}}>
+                                                    <span className="is-size-3">+</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                )
+                            }
                         </div>
                         <div className="column">
                             <figure className="image is-3by2">
@@ -55,6 +62,25 @@ class Landing extends Component {
                             </figure>
                         </div>
                     </div>
+                    {
+                        this.state.showFull && (
+                            <div className="info show-full">
+                                <div className="item is-italic">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus efficitur rhoncus. Praesent congue felis sit amet facilisis vestibulum. Proin rutrum molestie est. Etiam tristique urna vel porta commodo. Cras egestas purus risus, at vestibulum neque molestie vitae. Nulla venenatis feugiat blandit. Aliquam mi nulla, fringilla nec semper id, bibendum ut ipsum. Quisque a diam ex. Mauris sit amet nibh varius, cursus lorem a, tristique ligula. Vestibulum porttitor malesuada urna, vel efficitur dui pellentesque in. Fusce maximus molestie pharetra. Donec pretium tellus justo, et malesuada ante accumsan venenatis. Etiam vehicula eros eget justo consectetur, id lacinia eros sagittis. Sed nisl tellus, viverra ac mi ac, laoreet mattis lacus.
+                                </div>
+                                <div className="item">
+                                    <div className="columns is-mobile">
+                                        <div className="column is-4 is-offset-8">
+                                            <div className="fab-button has-text-weight-bold"
+                                                 onClick={(e)=>{this.setState({showFull:false})}}>
+                                                <span className="is-size-3">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
                 </div>
                 <div className="hero-body">
                     <div className="container has-text-centered">
