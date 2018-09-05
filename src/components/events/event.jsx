@@ -44,7 +44,7 @@ class Event extends Component {
                                     <Link to={`${match.url}/users`}>Usuarios</Link>
                                 </p>
                                 <ul className="menu-list">
-                                    <li><Link to={`${match.url}/rsvp`}>RSVP</Link></li>
+                                    <li><Link to={`${match.url}/invitations`}>Invitaciones</Link></li>
                                 </ul>
                                 <p className="menu-label item">
                                     Contenido
@@ -57,7 +57,7 @@ class Event extends Component {
                                 <section className="section">
                                     <Route path={`${match.url}/general`} render={()=><General event={this.state.event} />}/>
                                     <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                    <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
+                                    <Route path={`${match.url}/invitations`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                     <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                     <Route

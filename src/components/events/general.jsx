@@ -79,13 +79,18 @@ class General extends Component {
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
+        const hour_start = Moment(event.hour_start).format('HH:mm');
+        const date_start = Moment(event.date_start).format('YYYY-MM-DD');
+        const hour_end = Moment(event.hour_end).format('HH:mm');
+        const date_end = Moment(event.date_end).format('YYYY-MM-DD');
+        const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
+        const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
         const data = {
             name: event.name,
-            date_start : Moment(event.date_start).format('YYYY-MM-DD'),
-            date_end : Moment(event.date_end).format('YYYY-MM-DD'),
+            datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
+            datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             location: event.location,
-            hour : Moment(event.hour).format('HH:mm'),
-            visibility: event.visibility,
+            visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description
         };
         try {
@@ -140,10 +145,10 @@ class General extends Component {
                                         <label className="label">Hora Inicio</label>
                                         <div className="control">
                                             <DateTimePicker
-                                                value={event.hour}
+                                                value={event.hour_start}
                                                 step={60}
                                                 date={false}
-                                                onChange={value => this.changeDate(value,"hour")}/>
+                                                onChange={value => this.changeDate(value,"hour_start")}/>
                                         </div>
                                     </div>
                                 </div>
@@ -163,14 +168,14 @@ class General extends Component {
                                 </div>
                                 <div className="column">
                                     <div className="field">
-                                        <label className="label">Hora Fin?</label>
-                                        {/*<div className="control">
+                                        <label className="label">Hora Fin</label>
+                                        <div className="control">
                                             <DateTimePicker
-                                                value={event.hour}
+                                                value={event.hour_end}
                                                 step={60}
                                                 date={false}
-                                                onChange={value => this.changeDate(value)}/>
-                                        </div>*/}
+                                                onChange={value => this.changeDate(value,"hour_end")}/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
