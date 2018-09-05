@@ -10,8 +10,7 @@ class ContentContainer extends Component {
         return (
             <main className="main container">
                 <Route exact path="/" component={ Home } />
-                <Route path="/evento" component={ Landing }/>
-                <Route path="/landing/:event" component={ Landing }/>
+                <Route path="/evento/:event" component={ Landing }/>
                 <Route path="/mis_eventos" component={ Events }/>
                 <Route path="/edit/:event" component={ Event }/>
             </main>

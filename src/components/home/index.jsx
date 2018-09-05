@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from "react-router-dom";
 
 class Home extends Component {
     constructor(props) {
@@ -23,7 +24,9 @@ class Home extends Component {
                             <p className="is-size-7 has-text-white"># Categorías</p>
                         </div>
                     </div>
-                    <button className="button is-primary is-rounded img-see is-small">Ver ></button>
+                    <Link to={`evento/idevento`}>
+                        <button className="button is-primary is-rounded img-see is-small">Ver ></button>
+                    </Link>
                 </div>
                 <div className="card-content">
                     <div className="media">
