@@ -69,6 +69,10 @@ class Home extends Component {
                 </aside>
                 <div className="column">
                     <header>
+                        <div className="is-pulled-right field is-grouped">
+                            <p className="is-size-6">Ciudad</p>
+                            <p className="is-size-6">Fecha</p>
+                        </div>
                     </header>
                     <section className="section">
                         <div className="row columns home">
