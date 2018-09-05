@@ -6,6 +6,7 @@ import { parseUrl } from "../helpers/constants";
 
 import Header from "../containers/header";
 import ContentContainer from "../containers/content";
+import Footer from "../containers/footer";
 
 
 class App extends Component {
@@ -27,6 +28,7 @@ class App extends Component {
             <div>
                 <Header/>
                 <ContentContainer/>
+                <Footer/>
             </div>
         </Router>
         );
