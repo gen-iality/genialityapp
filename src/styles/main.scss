@@ -1,5 +1,7 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
 $font-path: '~react-widgets/lib/fonts';
 $img-path: '~react-widgets/lib/img';
+$family-sans-serif: "Monserrate", sans-serif;
 @import "../../node_modules/bulma/bulma";
 @import "../../node_modules/react-widgets/lib/scss/react-widgets";
 @import '../../node_modules/bulma-switch/src/sass/index';
