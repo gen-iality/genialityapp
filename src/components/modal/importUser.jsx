@@ -62,13 +62,13 @@ class ImportUsers extends Component {
     };
 
     closeModal = () => {
-        this.setState({step:0,list:[]});
+        this.setState({list:[]});
         this.props.handleModal()
     };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.modal !== this.props.modal) {
-            this.setState({modal:nextProps.modal});
+            this.setState({modal:nextProps.modal,step:0});
         }
     }
 
