@@ -27,20 +27,35 @@ class UsersRsvp extends Component {
         const events = await EventsApi.getAll();
         const eventId = this.props.event._id;
         const resp = await UsersApi.getAll(eventId);
-        const users = handleUsers(resp.data);
+        const users = this.handleUsers(resp.data,true);
         const pos = events.map(function(e) { return e._id; }).indexOf(eventId);
         const selection = [...this.state.selection, ...users];
         events.splice(pos,1);
         this.setState({events, loading:false,actualEvent:this.props.event, selection, auxArr: selection});
     }
 
+    //Solo agregar nombre, corre y id
+    handleUsers = (list,flag) => {
+        let users = [];
+        list.map(user=>{
+            if(flag) {
+                users.push({name:user.properties.name,email:user.properties.email,id:user._id})
+            }else{
+                let selection = this.state.selection;
+                const pos = selection.map(function(e) { return e.id; }).indexOf(user._id);
+                if(pos === -1){
+                    users.push({name:user.properties.name,email:user.properties.email,id:user._id})
+                }
+            }
+        });
+        return users;
+    };
+
     //Traer los usuarios del evento seleccionado
     async checkEvent(event) {
-        if(this.state.actualEvent._id === event._id){
-            this.setState({ actualEvent:{} })
-        }else{
+        if(this.state.actualEvent._id !== event._id){
             const resp = await UsersApi.getAll(event._id);
-            const users = handleUsers(resp.data);
+            const users = this.handleUsers(resp.data);
             const selection = [...this.state.selection, ...users];
             this.setState({ actualEvent:event, selection, auxArr: selection });
         }
@@ -190,14 +205,5 @@ class UsersRsvp extends Component {
         );
     }
 }
-
-//Solo agregar nombre, corre y id
-const handleUsers = (list) => {
-    let users = [];
-    list.map(user=>{
-        users.push({name:user.properties.name,email:user.properties.email,id:user._id})
-    });
-    return users;
-};
 
 export default UsersRsvp;
