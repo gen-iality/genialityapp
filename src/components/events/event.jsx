@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Link } from "react-router-dom";
+import { Route, NavLink } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../../containers/loading";
@@ -9,6 +9,7 @@ import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
 import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
+import Invitations from "../invitations";
 Moment.locale('es');
 momentLocalizer();
 
@@ -37,27 +38,33 @@ class Event extends Component {
                     this.state.loading ? <Loading/>:
                         <section className="section columns">
                             <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
-                                <p className="menu-label item">
-                                    <Link to={`${match.url}/general`}>General</Link>
+                                <p className="menu-label">
+                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/general`}>General</NavLink>
                                 </p>
-                                <p className="menu-label item">
-                                    <Link to={`${match.url}/users`}>Usuarios</Link>
+                                <p className="menu-label">
+                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/users`}>Usuarios</NavLink>
                                 </p>
                                 <ul className="menu-list">
-                                    <li><Link to={`${match.url}/invitations`}>Invitaciones</Link></li>
+                                    <li>
+                                        <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Invitaciones</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar Invitación</NavLink>
+                                    </li>
                                 </ul>
-                                <p className="menu-label item">
-                                    Contenido
-                                </p>
+                                <p className="menu-label item">Contenido</p>
                                 <ul className="menu-list">
-                                    <li><Link to={`${match.url}/agenda`}>Agenda</Link></li>
+                                    <li>
+                                        <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                    </li>
                                 </ul>
                             </aside>
                             <div className="column is-10">
                                 <section className="section">
                                     <Route path={`${match.url}/general`} render={()=><General event={this.state.event} />}/>
                                     <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                    <Route path={`${match.url}/invitations`} render={()=><RSVP event={this.state.event} />}/>
+                                    <Route path={`${match.url}/invitations`} render={()=><Invitations event={this.state.event} />}/>
+                                    <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                     <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                     <Route

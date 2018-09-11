@@ -1,6 +1,11 @@
 .aside {
   border-right: 1px solid #DEDEDE;
   .item {
+    border-radius: 2px;
+    font-weight: bold;
+    color: #4a4a4a;
+    display: block;
+    padding: 0.5em 0.75em;
     &:hover {
       background-color: whitesmoke;
       color: #363636;
@@ -8,7 +13,7 @@
     }
   }
   .active {
-    background-color: whitesmoke;
-    color: $link;
+    color: $primary;
+    border-left: 1px solid $primary;
   }
 }
