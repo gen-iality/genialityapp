@@ -49,7 +49,8 @@ class SendRsvp extends Component {
     };
 
     handleChange = (e) => {
-      const {name, value} = e.target;this.setState({
+      let {name, value} = e.target;
+        this.setState({
             rsvp:{...this.state.rsvp,[name]:value}
         })
     };
@@ -63,7 +64,7 @@ class SendRsvp extends Component {
                             <div className="field">
                                 <label className="label">Objeto del correo (Por defecto será el nombre del evento)</label>
                                 <div className="control">
-                                    <input className="input" type="text" name={"subject"} onClick={this.handleChange} value={this.state.rsvp.subject}/>
+                                    <input className="input" type="text" name="subject" onChange={this.handleChange} value={this.state.rsvp.subject}/>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +83,7 @@ class SendRsvp extends Component {
                             <div className="columns rsvpDate">
                                 <div className="column">
                                     <p>Fecha Inicio</p>
-                                    <p>{Moment(this.props.event.date_start).format('DD MMM, YYYY')}</p>
+                                    <p className="date">{Moment(this.props.event.datetime_from).format('DD MMM, YYYY')}</p>
                                 </div>
                                 <div className="column">
                                    <span className="icon is-large has-text-grey">
@@ -95,7 +96,7 @@ class SendRsvp extends Component {
                             <div className="columns">
                                 <div className="column">
                                     <p>Hora</p>
-                                    <p>{Moment(this.props.event.hour).format('HH:mm')}</p>
+                                    <p>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
                                 </div>
                                 <div className="column">
                                    <span className="icon is-large has-text-grey">
@@ -110,7 +111,7 @@ class SendRsvp extends Component {
                             <div className="columns rsvpDate">
                                 <div className="column">
                                     <p>Fecha Fin</p>
-                                    <p>{Moment(this.props.event.date_end).format('DD MMM, YYYY')}</p>
+                                    <p className="date">{Moment(this.props.event.datetime_to).format('DD MMM, YYYY')}</p>
                                 </div>
                                 <div className="column">
                                    <span className="icon is-large has-text-grey">
@@ -123,6 +124,7 @@ class SendRsvp extends Component {
                             <div className="columns">
                                 <div className="column">
                                     <p>Hora</p>
+                                    <p>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
                                 </div>
                                 <div className="column">
                                    <span className="icon is-large has-text-grey">
@@ -164,7 +166,7 @@ class SendRsvp extends Component {
                             <div className="field">
                                 <label className="label">Cuerpo de la invitación (Por defecto será la descripción del evento)</label>
                                 <div className="control">
-                                    <textarea className="textarea" value={this.state.rsvp.message} onClick={this.handleChange} name={"message"}/>
+                                    <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"}/>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +176,7 @@ class SendRsvp extends Component {
                             <div className="field">
                                 <label className="label">Pie de la invitación (Opcional)</label>
                                 <div className="control">
-                                    <input className="input" type={"text"} value={this.state.rsvp.footer} onClick={this.handleChange} name={"footer"}/>
+                                    <input className="input" type={"text"} value={this.state.rsvp.footer} onChange={this.handleChange} name={"footer"}/>
                                 </div>
                             </div>
                         </div>
@@ -194,7 +196,10 @@ class SendRsvp extends Component {
                             })
                         }
                     </div>
-                    <button className="button">Editar Seleccionados</button>
+                    <button className="button"
+                            onClick={(e)=>{this.props.prevTab()}}>
+                        Editar Seleccionados
+                    </button>
                 </div>
             </div>
         );

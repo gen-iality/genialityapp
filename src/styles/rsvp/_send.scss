@@ -11,6 +11,9 @@ div.sendrsvp {
 }
 div.rsvpDate{
   border-right: 1px solid gray;
+  .date{
+    text-transform: uppercase;
+  }
 }
 div.imgRsvp{
   position: relative;
