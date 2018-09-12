@@ -19,7 +19,6 @@ class ListEventUser extends Component {
             importUser: false,
             message:    {class:'', content:''}
         };
-        this.addToList   = this.addToList.bind(this);
         this.modalImport = this.modalImport.bind(this);
     }
 
@@ -31,10 +30,11 @@ class ListEventUser extends Component {
         this.setState({ users, auxArr:users, loading:false, extraFields: event.user_properties });
     }
 
-    async addToList() {
-        const {data} = await UsersApi.getAll(this.props.eventId);
-        this.setState({ users: data });
-    }
+    addToList = (user) => {
+        let users = this.state.users;
+        users.push(user);
+        this.setState({ users, auxArr:users });
+    };
 
     searchResult = (data) => {
         !data ? this.setState({users:this.state.auxArr}) : this.setState({users:data})

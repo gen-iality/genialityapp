@@ -66,7 +66,7 @@ class AddUser extends Component {
             let resp = await UsersApi.editOne(snap,this.props.eventId);
             console.log(resp);
             if (resp.message === 'OK'){
-                this.props.addToList();
+                this.props.addToList(resp.data);
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
                 message.content = 'USER '+resp.status;
             } else {

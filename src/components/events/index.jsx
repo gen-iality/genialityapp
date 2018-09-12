@@ -34,7 +34,7 @@ class Events extends Component {
                 this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
                 const events = await EventsApi.getAll();
                 setTimeout(()=>{
-                    this.setState({modal:false,events});
+                    this.setState({message:{},modal:false,events});
                 },500)
             }else{
                 this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
@@ -47,7 +47,7 @@ class Events extends Component {
     }
 
     closeModal = () => {
-        this.setState({modal:false})
+        this.setState({modal:false,message:{}})
     };
 
     render() {
