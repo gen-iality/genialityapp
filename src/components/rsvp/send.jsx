@@ -172,16 +172,6 @@ class SendRsvp extends Component {
                         </div>
                     </div>
                     <div className="columns">
-                        <div className="column is-half is-offset-one-quarter">
-                            <div className="field">
-                                <label className="label">Pie de la invitación (Opcional)</label>
-                                <div className="control">
-                                    <input className="input" type={"text"} value={this.state.rsvp.footer} onChange={this.handleChange} name={"footer"}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="columns">
                         <div className="column is-4 is-offset-8">
                             <button className="button is-success" onClick={(e)=>{this.props.rsvpTab(this.state.rsvp)}}>Enviar</button>
                         </div>

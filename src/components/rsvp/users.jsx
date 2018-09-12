@@ -19,7 +19,6 @@ class UsersRsvp extends Component {
             indeterminate: false
         };
         this.checkEvent = this.checkEvent.bind(this);
-        this.addToList = this.addToList.bind(this);
         this.modalImport = this.modalImport.bind(this);
     }
 
@@ -27,26 +26,17 @@ class UsersRsvp extends Component {
         const events = await EventsApi.getAll();
         const eventId = this.props.event._id;
         const resp = await UsersApi.getAll(eventId);
-        const users = this.handleUsers(resp.data,true);
+        const users = this.handleUsers(resp.data);
         const pos = events.map(function(e) { return e._id; }).indexOf(eventId);
-        const selection = [...this.state.selection, ...users];
         events.splice(pos,1);
-        this.setState({events, loading:false,actualEvent:this.props.event, selection, auxArr: selection});
+        this.setState({events,users,loading:false,actualEvent:this.props.event});
     }
 
     //Solo agregar nombre, corre y id
-    handleUsers = (list,flag) => {
+    handleUsers = (list) => {
         let users = [];
         list.map(user=>{
-            if(flag) {
-                users.push({name:user.properties.name,email:user.properties.email,id:user._id})
-            }else{
-                let selection = this.state.selection;
-                const pos = selection.map(function(e) { return e.id; }).indexOf(user._id);
-                if(pos === -1){
-                    users.push({name:user.properties.name,email:user.properties.email,id:user._id})
-                }
-            }
+            users.push({name:user.properties.name,email:user.properties.email,id:user._id})
         });
         return users;
     };
@@ -56,9 +46,46 @@ class UsersRsvp extends Component {
         if(this.state.actualEvent._id !== event._id){
             const resp = await UsersApi.getAll(event._id);
             const users = this.handleUsers(resp.data);
-            const selection = [...this.state.selection, ...users];
-            this.setState({ actualEvent:event, selection, auxArr: selection });
+            this.setState({ actualEvent:event, users });
+            this.refs.checkbox.checked = false;
         }
+    };
+
+    //Agregar todos los usuarios a seleccionados
+    toggleAll = () => {
+        const selectAll = !this.state.selectAll;
+        const selection = [];
+        if (selectAll) {
+            const currentRecords = this.state.users;
+            currentRecords.forEach(item => {
+                selection.push(item);
+            });
+        }
+        this.refs.checkbox.checked = selectAll;
+        this.setState({ selectAll, selection });
+    };
+
+    //Agregar o eliminar un usuario de seleccionados
+    toggleSelection = (user) => {
+        let selection = [...this.state.selection];
+        const keyIndex = selection.map(function(e) { return e.id; }).indexOf(user.id);
+        if (keyIndex >= 0) {
+            selection = [
+                ...selection.slice(0, keyIndex),
+                ...selection.slice(keyIndex + 1)
+            ];
+        } else {
+            selection.push(user);
+        }
+        this.refs.checkbox.indeterminate = selection.length < this.state.users.length;
+        this.refs.checkbox.checked = selection.length >= this.state.users.length;
+        this.setState({ selection });
+    };
+
+    //Revisar si usuario existe en seleccionados
+    isChecked = (id) => {
+        const pos = this.state.selection.map(function(e) { return e.id; }).indexOf(id);
+        return pos !== -1
     };
 
     //Remover usuario de seleccionados
@@ -84,10 +111,11 @@ class UsersRsvp extends Component {
         });
     };
 
-    async addToList() {
-        const {data} = await UsersApi.getAll(this.props.event._id);
-        this.setState({ users: data });
-    }
+    addToList = (user) => {
+        let users = this.state.users;
+        users.push(user);
+        this.setState({ users, auxArr:users });
+    };
 
     async modalImport() {
         const {data} = await UsersApi.getAll(this.props.event._id);
@@ -104,41 +132,47 @@ class UsersRsvp extends Component {
         return (
             <React.Fragment>
                 <div className="columns">
-                    <div className="column is-5">
-                        <strong>Eventos</strong>
-                        <div>
-                            <p>Evento Actual</p>
-                            <div className="field">
-                                <input className="is-checkradio is-link" id="thisEvent"
-                                       type="checkbox" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
-                                       checked={this.state.actualEvent._id === this.props.event._id}/>
-                                <label htmlFor="thisEvent">{this.props.event.name}</label>
-                            </div>
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <button className="button is-light is-rounded is-small" onClick={this.modalUser}>Agregar Usuario</button>
+                    <div className="column is-3">
+                        <div className="box">
+                            <strong>Eventos</strong>
+                            <div>
+                                <p>Evento Actual</p>
+                                <div className="field">
+                                    <input className="is-checkradio is-link" id="thisEvent"
+                                           type="checkbox" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
+                                           checked={this.state.actualEvent._id === this.props.event._id}/>
+                                    <label htmlFor="thisEvent">{this.props.event.name}</label>
                                 </div>
-                                <div className="control">
-                                    <button className="button is-light is-rounded is-small" onClick={this.modalImport}>Importar Excel</button>
-                                </div>
+                                {
+                                    this.state.actualEvent._id === this.props.event._id && (
+                                        <React.Fragment>
+                                            <div className="field control">
+                                                <button className="button is-light is-rounded is-small" onClick={this.modalUser}>Agregar Usuario</button>
+                                            </div>
+                                            <div className="field control">
+                                                <button className="button is-light is-rounded is-small" onClick={this.modalImport}>Importar Excel</button>
+                                            </div>
+                                        </React.Fragment>
+                                    )
+                                }
                             </div>
-                        </div>
-                        <div>
-                            <p>Otros Eventos</p>
-                            {
-                                this.state.events.map((event,key)=>{
-                                    return <div className="field" key={key}>
-                                        <input className="is-checkradio is-link" id={`event${event._id}`}
-                                               type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
-                                               checked={this.state.actualEvent._id === event._id}/>
-                                        <label htmlFor={`event${event._id}`} >{event.name}</label>
-                                    </div>
-                                })
-                            }
+                            <div>
+                                <p>Otros Eventos</p>
+                                {
+                                    this.state.events.map((event,key)=>{
+                                        return <div className="field" key={key}>
+                                            <input className="is-checkradio is-link" id={`event${event._id}`}
+                                                   type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
+                                                   checked={this.state.actualEvent._id === event._id}/>
+                                            <label htmlFor={`event${event._id}`} >{event.name}</label>
+                                        </div>
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
-                    {/*div className="column is-6">
-                        <strong>Usuarios</strong>
+                    <div className="column is-6">
+                        <strong className="is-5">{this.state.actualEvent.name}</strong>
                         <table className="table">
                             <thead>
                             <tr>
@@ -167,8 +201,8 @@ class UsersRsvp extends Component {
                             }
                             </tbody>
                         </table>
-                    </div>*/}
-                    <div className="column is-7">
+                    </div>
+                    <div className="column is-3">
                         <div className="box">
                             <div className="field">
                                 <strong>Seleccionados {this.state.selection.length}</strong>

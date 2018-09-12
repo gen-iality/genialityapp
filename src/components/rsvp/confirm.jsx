@@ -15,7 +15,7 @@ class ConfirmRsvp extends Component {
             users.push(item.id)
         });
         this.setState({dataMail:users});
-        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,footer:rsvp.footer,usersIds:users})
+        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,usersIds:users})
             .then((res) => {
                 console.log(res);
             });
