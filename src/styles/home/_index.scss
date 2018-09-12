@@ -5,6 +5,19 @@ header {
   }
 }
 
+footer {
+  .soc {
+    a {
+      margin: 10px;
+      text-decoration: none;
+    }
+  }
+  .icon-footer {
+    width:112px;
+    height:28px
+  }
+}
+
 .main{
   padding-top: 4rem;
 }
