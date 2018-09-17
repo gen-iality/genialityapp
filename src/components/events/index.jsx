@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import { EventsApi } from "../../helpers/request";
 import {Link} from "react-router-dom";
-import Loading from "../../containers/loading";
 import Dialog from "../modal/twoAction";
 import * as Cookie from "js-cookie";
 import {AuthUrl} from "../../helpers/constants";
+import LoadingEvent from "../loaders/loadevent";
 
 class Events extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ class Events extends Component {
             <React.Fragment>
                 <section className="section">
                     {
-                        this.state.loading ? <Loading/>:
+                        this.state.loading ? <LoadingEvent/>:
                             <div className="columns is-multiline is-mobile">
                                 {
                                     this.state.events.map((event,key)=>{

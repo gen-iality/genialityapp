@@ -1,22 +1,0 @@
-<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 511.95"><defs><style>.cls-1{fill:#fec9a3;}.cls-2{fill:#e08000;}.cls-3{fill:#999395;}.cls-4{fill:#333;}.cls-5{fill:#f7bb8f;}.cls-6{fill:#316d38;}
-#amarillo {
-    animation: rote 2s infinite ease-in-out;
-    transform-origin: 50% 50%;
-    animation-direction: alternate;
-}
-@keyframes rote {
-	0% {transform: rotate(-10deg)}
-	20%, 100% {transform: rotate(0deg)}
-	10% {transform: rotate(-10deg)}
-}
-#verde {
-    animation: rote1 2s infinite ease-in-out;
-    transform-origin: 50% 50%;
-    animation-direction: alternate;
-}
-@keyframes rote1 {
-	0% {transform: rotate(10deg)}
-	20%, 100% {transform: rotate(0deg)}
-	10% {transform: rotate(10deg)}
-}
-</style></defs><title>asesoramiento</title><g id="amarillo"><polygon id="hand3" class="cls-1" points="388.4 370.7 450.2 309 335.4 194.2 256 211.9 150.1 317.8 176.6 344.3 141.2 379.6 253.4 491.8 299.4 446.5 309.2 455.6 388.4 370.7"/><polygon id="arm" class="cls-2" points="344.3 132.4 512 300.1 512 0 476.7 0 344.3 132.4"/><path id="hand2" class="cls-1" d="M284.4,450.2a22,22,0,0,0-31-3.2c-.6.5-1.2,1-1.7,1.5a22.09,22.09,0,0,0-28.1-34.1,26.47,26.47,0,0,0-2.9,2.9,22.06,22.06,0,0,0-31.1-31.2,22,22,0,0,0-.1-31.2,12.17,12.17,0,0,0-1.7-1.5,23,23,0,0,0-30.4,2.4l-20.9,21a35.25,35.25,0,0,0,0,49.9l74.9,74.9a35.25,35.25,0,0,0,49.9,0h0l20.9-21A22.84,22.84,0,0,0,284.4,450.2Z"/><rect id="shirt" class="cls-3" x="385.49" y="152.79" width="50" height="162.2" transform="translate(-45.16 358.77) rotate(-45)"/><g id="shake"><path id="skae2" class="cls-3" d="M388.4,459V441.3a44.11,44.11,0,0,0,44.1-44.1h17.7A61.84,61.84,0,0,1,388.4,459Z"/><path id="shake1" class="cls-3" d="M388.4,503.1V485.4a88.26,88.26,0,0,0,88.3-88.3h17.7A106.05,106.05,0,0,1,388.4,503.1Z"/></g><path id="hand1" class="cls-1" d="M388.4,247.2l-53-53L256,211.9,150.1,317.8a49.94,49.94,0,0,0,70.6,2.2L256,282.5a69.48,69.48,0,0,0,79.4,15.4l8.8-6.6Z"/><circle id="boton" class="cls-4" cx="467.8" cy="185.4" r="17.7"/></g><g id="verde"><path id="hand" class="cls-5" d="M256,211.9l-79.4-17.7L61.8,309l70.6,70.6L268.1,501.1a23.09,23.09,0,0,0,30.5,2.4,22,22,0,0,0,3.3-30.9,12.88,12.88,0,0,0-1.6-1.7,22.06,22.06,0,0,0,31.2-31.2h0A22.06,22.06,0,0,0,363.2,409l-.5-.5a22.06,22.06,0,0,0,31.1.2c.6-.6,1.1-1.2,1.7-1.8a23,23,0,0,0-2.4-30.4l-21-21-54.2-55.2-17.7-79.4Z"/><polygon id="arm-2" data-name="arm" class="cls-6" points="167.7 132.4 0 300.1 0 0 35.3 0 167.7 132.4"/><rect id="shirt-2" data-name="shirt" class="cls-3" x="20.42" y="208.93" width="162.2" height="50" transform="translate(-135.68 140.3) rotate(-45)"/><g id="shake-2" data-name="shake"><path id="shake2" class="cls-3" d="M114.8,459A61.78,61.78,0,0,1,53,397.2H70.7a44.11,44.11,0,0,0,44.1,44.1Z"/><path id="shake1-2" data-name="shake1" class="cls-3" d="M114.8,503.1A105.88,105.88,0,0,1,8.9,397.2H26.6a88.26,88.26,0,0,0,88.3,88.3l-.1,17.6Z"/></g><circle id="boton-2" data-name="boton" class="cls-4" cx="44.1" cy="185.4" r="17.7"/></g></svg>

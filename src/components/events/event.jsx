@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Route, NavLink } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import Loading from "../../containers/loading";
+import Loading from "../loaders/loading";
 import { EventsApi } from "../../helpers/request";
 import General from "./general";
 import RSVP from "../rsvp";

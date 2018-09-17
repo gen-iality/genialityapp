@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import XLSX from "xlsx";
 import {Actions, UsersApi} from "../../helpers/request";
-import Loading from "../../containers/loading";
+import Loading from "../loaders/loading";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
