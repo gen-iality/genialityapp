@@ -40,14 +40,19 @@ class AddUser extends Component {
         if (nextProps.edit) {
             const value = nextProps.value;
             let user = {};
-            {Object.keys(value.properties).map((obj, i) => (user[obj] = value.properties[obj]))}
+            Object.keys(value.properties)
+                .map((obj) => (
+                    user[obj] = value.properties[obj]
+                ));
             this.setState({
                 user, rol: value.rol._id + ':' + value.rol.name,
                 state: value.state._id + ':' + value.state.name, edit: true
             });
         }else {
             let user = {name: '', email: ''};
-            {nextProps.extraFields.map((obj, i) => (user[obj.name] = ''))}
+            nextProps.extraFields
+                .map((obj) => (
+                    user[obj.name] = ''))
             this.setState({user,  edit: false});
         }
     }

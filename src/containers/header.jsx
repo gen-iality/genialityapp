@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import  { Link } from 'react-router-dom';
-import  { Redirect } from 'react-router';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
 import {Actions} from "../helpers/request";

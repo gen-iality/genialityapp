@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
-import Moment from "moment";
 
 class Preview extends Component {
     constructor(props) {

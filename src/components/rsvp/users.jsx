@@ -27,7 +27,7 @@ class UsersRsvp extends Component {
         const eventId = this.props.event._id;
         const resp = await UsersApi.getAll(eventId);
         const users = this.handleUsers(resp.data);
-        const pos = events.map(function(e) { return e._id; }).indexOf(eventId);
+        const pos = events.map((e)=> { return e._id; }).indexOf(eventId);
         events.splice(pos,1);
         this.setState({events,users,loading:false,actualEvent:this.props.event});
     }
@@ -47,51 +47,90 @@ class UsersRsvp extends Component {
             const resp = await UsersApi.getAll(event._id);
             const users = this.handleUsers(resp.data);
             this.setState({ actualEvent:event, users });
-            this.refs.checkbox.checked = false;
+            this.handleCheckBox(users,this.state.selection)
         }
     };
+
+    handleCheckBox = (users, selection) => {
+        let exist = 0,
+            unexist = 0;
+        for(let i=0;i<users.length;i++){
+            const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
+            (pos < 0) ?  unexist++ : exist++;
+        }
+        if(exist === users.length){
+            this.refs.checkbox.indeterminate = false;
+            this.refs.checkbox.checked = true;
+        }
+        else if(unexist === users.length){
+            this.refs.checkbox.indeterminate = false;
+            this.refs.checkbox.checked = false;
+        }
+        else {
+            this.refs.checkbox.indeterminate = true;
+            this.refs.checkbox.checked = false;
+        }
+    }
 
     //Agregar todos los usuarios a seleccionados
     toggleAll = () => {
         const selectAll = !this.state.selectAll;
-        const selection = [];
+        let selection = [...this.state.selection];
+        const currentRecords = this.state.users;
         if (selectAll) {
-            const currentRecords = this.state.users;
             currentRecords.forEach(item => {
                 selection.push(item);
             });
         }
-        this.refs.checkbox.checked = selectAll;
-        this.setState({ selectAll, selection });
+        else{
+            currentRecords.map(user=>{
+                const pos = selection.map((e)=> { return e.id; }).indexOf(user.id);
+                if (pos >= 0) {
+                    selection = [
+                        ...selection.slice(0, pos),
+                        ...selection.slice(pos + 1)
+                    ];
+                }
+            })
+        }
+        this.handleCheckBox(currentRecords,selection);
+        this.setState({ selectAll, selection, auxArr: selection });
     };
 
     //Agregar o eliminar un usuario de seleccionados
     toggleSelection = (user) => {
         let selection = [...this.state.selection];
-        const keyIndex = selection.map(function(e) { return e.id; }).indexOf(user.id);
+        let auxArr = [...this.state.auxArr];
+        const keyIndex = selection.map((e)=> { return e.id; }).indexOf(user.id);
         if (keyIndex >= 0) {
             selection = [
                 ...selection.slice(0, keyIndex),
                 ...selection.slice(keyIndex + 1)
             ];
+            auxArr = [
+                ...auxArr.slice(0, keyIndex),
+                ...auxArr.slice(keyIndex + 1)
+            ];
         } else {
             selection.push(user);
+            auxArr.push(user);
         }
-        this.refs.checkbox.indeterminate = selection.length < this.state.users.length;
-        this.refs.checkbox.checked = selection.length >= this.state.users.length;
-        this.setState({ selection });
+        this.handleCheckBox(this.state.users, selection);
+        this.setState({ selection, auxArr });
     };
 
     //Revisar si usuario existe en seleccionados
     isChecked = (id) => {
-        const pos = this.state.selection.map(function(e) { return e.id; }).indexOf(id);
-        return pos !== -1
+        if(this.state.selection.length>0){
+            const pos = this.state.selection.map((e)=> { return e.id; }).indexOf(id);
+            return pos !== -1
+        }
     };
 
     //Remover usuario de seleccionados
     removeThis = (user) => {
         let selection = [...this.state.selection];
-        const keyIndex = selection.map(function (e) {
+        const keyIndex = selection.map((e) => {
             return e.id;
         }).indexOf(user.id);
         selection = [
@@ -101,6 +140,7 @@ class UsersRsvp extends Component {
         if(selection.length <= 0 ){
             this.setState({actualEvent:{}})
         }
+        this.handleCheckBox(this.state.users,selection);
         this.setState({ selection, auxArr: selection });
     };
 
@@ -125,6 +165,7 @@ class UsersRsvp extends Component {
     };
 
     searchResult = (data) => {
+        console.log(data);
         !data ? this.setState({selection:this.state.auxArr}) : this.setState({selection:data})
     };
 

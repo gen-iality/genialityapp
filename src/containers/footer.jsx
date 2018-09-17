@@ -34,15 +34,15 @@ class Footer extends Component {
                             <div className="column">
                                 <p className="subtitle has-text-grey-darker">Contáctanos</p>
                                 <div className="soc">
-                                    <a href="#" className="icon is-small has-text-primary">
+                                    <Link to={"#"} className="icon is-small has-text-primary">
                                         <i className="fab fa-facebook-f fa-2x" aria-hidden="true"/>
-                                    </a>
-                                    <a href="#" className="icon is-small has-text-primary">
+                                    </Link>
+                                    <Link to={"#"} className="icon is-small has-text-primary">
                                         <i className="fab fa-twitter fa-2x" aria-hidden="true"/>
-                                    </a>
-                                    <a href="#" className="icon is-small has-text-primary">
+                                    </Link>
+                                    <Link to={"#"} className="icon is-small has-text-primary">
                                         <i className="fab fa-instagram fa-2x" aria-hidden="true"/>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

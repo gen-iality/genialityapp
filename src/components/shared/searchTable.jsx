@@ -43,7 +43,6 @@ class SearchComponent extends Component {
                 this.setState({ showMessage: true, message: "No hay resultados" });
             }
             this.props.searchResult(filtered);
-            console.log(filtered);
         }
         if (value.length <= 2) {
             if (value.length === 0) {
