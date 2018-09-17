@@ -38,6 +38,7 @@ class Event extends Component {
                     this.state.loading ? <Loading/>:
                         <section className="section columns">
                             <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
+                                <p className="subtitle event-name">{this.state.event.name}</p>
                                 <p className="menu-label">
                                     <NavLink className="item" activeClassName={"active"} to={`${match.url}/general`}>General</NavLink>
                                 </p>
@@ -56,6 +57,7 @@ class Event extends Component {
                                 <ul className="menu-list">
                                     <li>
                                         <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                        <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
                                     </li>
                                 </ul>
                             </aside>
