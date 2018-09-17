@@ -49,7 +49,8 @@ class Preview extends Component {
         list.map(item=>{
             item.used = this.headExist(item.key)
         });
-        this.setState({list,loading:false})
+        let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
+        this.setState({list,loading:false,auxList})
     }
 
     headExist = (key) => {
@@ -64,10 +65,11 @@ class Preview extends Component {
         const i = auxHead.map(function(e) { return e.tag; }).indexOf(item.tag);
         const j = head.map(e=>{ return e.tag; }).indexOf(item.tag);
         head[j].used = true;
-        list[key].used = true;
-        list[key].key = item.tag;
+        let listCopy = JSON.parse(JSON.stringify(list));
+        listCopy[key].used = true;
+        listCopy[key].key = item.tag;
         auxHead.splice(i,1);
-        this.setState({auxArr:auxHead,head,list});
+        this.setState({auxArr:auxHead,head,list:listCopy});
         this.headExist(key);
     };
 
@@ -80,6 +82,18 @@ class Preview extends Component {
             list[key].used = true;
             this.setState({ list });
         }
+    };
+
+    revertField = (item, position) => {
+        const auxHead = this.state.auxArr;
+        const list = JSON.parse(JSON.stringify(this.state.list));
+        const head = [...this.state.head];
+        const j = head.map(e=>{ return e.tag; }).indexOf(item.key);
+        head[j].used = false;
+        list[position].used = false;
+        list[position].key = this.state.auxList[position].key;
+        auxHead.push({tag:item.key,used:false});
+        this.setState({auxArr:auxHead,head,list});
     };
 
     render() {
@@ -100,7 +114,7 @@ class Preview extends Component {
                                                     {item.key}
                                                 </div>
                                                 {
-                                                    (!item.used&&self.state.auxArr.length>0) && (
+                                                    (!item.used&&self.state.auxArr.length>0) ?
                                                         <div className="dropdown is-hoverable">
                                                             <div className="control dropdown-trigger">
                                                                 <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -116,12 +130,14 @@ class Preview extends Component {
                                                                     }
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    )
+                                                        </div>:
+                                                        <span className="icon action_pointer tooltip is-small" data-tooltip="Change Field" onClick={(e)=>{self.revertField(item,index)}}>
+                                                            <i className="fas fa-redo"/>
+                                                        </span>
                                                 }
                                                 {
                                                     (!item.used&&self.state.auxArr.length<=0) && (
-                                                        <span className="icon action_pointer tooltip" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
+                                                        <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
                                                             <i className="fas fa-plus"/>
                                                         </span>)
                                                 }
@@ -138,7 +154,6 @@ class Preview extends Component {
                                 })
                             }
                         </div>
-
                 }
                 {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan {self.state.auxArr.length} campos <b>Obligatorios</b></p>)}
                 <button className="button is-primary is-rounded" disabled={self.state.auxArr.length>0} onClick={this.props.importUsers}>Importar</button>
