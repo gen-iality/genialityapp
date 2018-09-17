@@ -12,6 +12,7 @@ class UsersRsvp extends Component {
             events: [],
             users: [],
             selection: [],
+            auxArr: [],
             preselection: [],
             importUser: false,
             addUser:    false,
@@ -29,7 +30,9 @@ class UsersRsvp extends Component {
         const users = this.handleUsers(resp.data);
         const pos = events.map((e)=> { return e._id; }).indexOf(eventId);
         events.splice(pos,1);
+        if(this.props.selection.length>0) this.setState({selection:this.props.selection});
         this.setState({events,users,loading:false,actualEvent:this.props.event});
+        this.handleCheckBox(users,this.state.selection)
     }
 
     //Solo agregar nombre, corre y id

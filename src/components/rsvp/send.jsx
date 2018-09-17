@@ -3,6 +3,7 @@ import Moment from "moment"
 import 'moment/locale/es-us';
 import Dropzone from "react-dropzone";
 import {Actions} from "../../helpers/request";
+import Dialog from "../modal/twoAction";
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -53,6 +54,21 @@ class SendRsvp extends Component {
         this.setState({
             rsvp:{...this.state.rsvp,[name]:value}
         })
+    };
+
+    submit = () => {
+        const { event, selection } = this.props;
+        const { rsvp } = this.state;
+        const url = '/api/rsvp/sendeventrsvp/'+event._id;
+        let users = [];
+        selection.map(item=>{
+            users.push(item.id)
+        });
+        this.setState({dataMail:users});
+        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,usersIds:users})
+            .then((res) => {
+                console.log(res);
+            });
     };
 
     render() {
@@ -173,7 +189,7 @@ class SendRsvp extends Component {
                     </div>
                     <div className="columns">
                         <div className="column is-4 is-offset-8">
-                            <button className="button is-success" onClick={(e)=>{this.props.rsvpTab(this.state.rsvp)}}>Enviar</button>
+                            <button className="button is-success" onClick={(e)=>{this.setState({modal:true})}}>Enviar</button>
                         </div>
                     </div>
                 </div>
@@ -191,6 +207,11 @@ class SendRsvp extends Component {
                         Editar Seleccionados
                     </button>
                 </div>
+                <Dialog modal={this.state.modal} title={'Confirmación'}
+                        content={<p>Se van a enviar {this.props.selection.length} invitaciones</p>}
+                        first={{title:'Enviar',class:'is-info',action:this.submit}}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}
+                        message={{class:'',content:''}}/>
             </div>
         );
     }
