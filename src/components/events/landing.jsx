@@ -64,7 +64,7 @@ class Landing extends Component {
                     </div>
                     {
                         this.state.showFull && (
-                            <div className="info show-full">
+                            <div className="info show-full is-hidden-mobile">
                                 <div className="item is-italic">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus efficitur rhoncus. Praesent congue felis sit amet facilisis vestibulum. Proin rutrum molestie est. Etiam tristique urna vel porta commodo. Cras egestas purus risus, at vestibulum neque molestie vitae. Nulla venenatis feugiat blandit. Aliquam mi nulla, fringilla nec semper id, bibendum ut ipsum. Quisque a diam ex. Mauris sit amet nibh varius, cursus lorem a, tristique ligula. Vestibulum porttitor malesuada urna, vel efficitur dui pellentesque in. Fusce maximus molestie pharetra. Donec pretium tellus justo, et malesuada ante accumsan venenatis. Etiam vehicula eros eget justo consectetur, id lacinia eros sagittis. Sed nisl tellus, viverra ac mi ac, laoreet mattis lacus.
                                 </div>
@@ -84,12 +84,42 @@ class Landing extends Component {
                 </div>
                 <div className="hero-body">
                     <div className="container has-text-centered">
-                        <h1 className="title">
-                            Title
-                        </h1>
-                        <h2 className="subtitle">
-                            Subtitle
-                        </h2>
+                        <div className="columns">
+                            <div className="column is-7">
+                                <div className="has-shadow">
+                                    <p>Acciones</p>
+                                    <div className="field is-grouped">
+                                        <div className="control">
+                                            <button className="button is-primary is-small">
+                                                <span className="icon">
+                                                    <i className="fas fa-share"/>
+                                                </span>
+                                                <span>Compartir</span>
+                                            </button>
+                                        </div>
+                                        <div className="control">
+                                            <button className="button is-text is-small">
+                                                <span className="icon">
+                                                    <i className="fas fa-check"/>
+                                                </span>
+                                                <span>Asistiré</span>
+                                            </button>
+                                        </div>
+                                        <div className="control">
+                                            <button className="button is-text is-small">
+                                                <span className="icon">
+                                                    <i className="fas fa-hearth"/>
+                                                </span>
+                                                <span>Me gusta</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="column">
+                                Mapa
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
