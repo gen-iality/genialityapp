@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Redirect } from 'react-router-dom';
 import Moment from "moment"
 import 'moment/locale/es-us';
 import Dropzone from "react-dropzone";
@@ -16,7 +17,6 @@ class SendRsvp extends Component {
     }
 
     componentDidMount(){
-        console.log(this.props.event);
         this.setState({
             rsvp:{...this.state.rsvp,subject:this.props.event.name,message:this.props.event.description,image:this.props.event.picture}
         })
@@ -68,10 +68,12 @@ class SendRsvp extends Component {
         Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,usersIds:users})
             .then((res) => {
                 console.log(res);
+                this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/invitations'})
             });
     };
 
     render() {
+        if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <div className="columns">
                 <div className="column is-10">
