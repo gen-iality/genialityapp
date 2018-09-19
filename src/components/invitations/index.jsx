@@ -23,6 +23,7 @@ class Invitations extends Component {
     async componentDidMount() {
         const invitations = await Actions.getOne('/api/event/'+this.props.event._id+'/','rsvp');
         invitations.reverse();
+        console.log(invitations);
         this.setState({invitations});
     }
 
@@ -41,8 +42,8 @@ class Invitations extends Component {
 
     render() {
         const layout = [
-            <EmailPrev event={this.props.event} item={this.state.item}/>,
-            <MessageUser users={this.state.item.message_users}/>
+            <MessageUser users={this.state.item.message_users}/>,
+            <EmailPrev event={this.props.event} item={this.state.item}/>
         ];
         return (
             <div className={"invitations"}>
@@ -77,21 +78,18 @@ class Invitations extends Component {
                         </header>
                         <section className="modal-card-body">
                             <div className="content has-text-centered">
-                                {
-                                    this.state.item.message_users.length>0&&
-                                        <div className="tabs is-fullwidth">
-                                            <ul>
-                                                <li className={`${this.state.step === 0 ? "is-active" : ""}`}
-                                                    onClick={(e)=>{this.setState({step:0})}}>
-                                                    <a>Email</a>
-                                                </li>
-                                                <li className={`${this.state.step === 1 ? "is-active" : ""}`}
-                                                    onClick={(e)=>{this.setState({step:1})}}>
-                                                    <a>Users</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                }
+                                <div className="tabs is-fullwidth">
+                                    <ul>
+                                        <li className={`${this.state.step === 0 ? "is-active" : ""}`}
+                                            onClick={(e)=>{this.setState({step:0})}}>
+                                            <a>Users</a>
+                                        </li>
+                                        <li className={`${this.state.step === 1 ? "is-active" : ""}`}
+                                            onClick={(e)=>{this.setState({step:1})}}>
+                                            <a>Email</a>
+                                        </li>
+                                    </ul>
+                                </div>
                                 {
                                     layout[this.state.step]
                                 }

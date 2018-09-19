@@ -155,7 +155,7 @@ class Preview extends Component {
                             }
                         </div>
                 }
-                {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan {self.state.auxArr.length} campos <b>Obligatorios</b></p>)}
+                {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan  los siguientes campos <b>Obligatorios</b> {self.state.auxArr.map((item)=>{item})}</p>)}
                 <button className="button is-primary is-rounded" disabled={self.state.auxArr.length>0} onClick={this.props.importUsers}>Importar</button>
             </React.Fragment>
         );
