@@ -22,7 +22,6 @@ class Header extends Component {
             create: false,
             valid: true
         };
-        this.newEvent = this.newEvent.bind(this);
     }
 
     async componentDidMount(){
@@ -63,18 +62,10 @@ class Header extends Component {
         this.setState({valid})
     };
 
-    async newEvent() {
-        this.setState({create:true});
-        let result = await Actions.create(
-            '/api/user/events',
-            {name:this.state.event}
-        );
-        console.log(result);
-        if(result._id){
-            window.location.replace(`${BaseUrl}/edit/${result._id}/general`);
-        }else{
-            this.setState({msg:'Cant Create',create:false})
-        }
+    newEvent = () => {
+        this.setState((prevState)=>{
+            return {modal:!prevState.modal}
+        });
     };
 
     openMenu = () => {
@@ -182,40 +173,7 @@ class Header extends Component {
                         </div>
                     </nav>
                 </header>
-                {/*<div className={`modal ${this.state.modal ? "is-active" : ""}`}>
-                    <div className="modal-background"></div>
-                    <div className="modal-card">
-                        <header className="modal-card-head">
-                            <p className="modal-card-title">Nuevo Evento</p>
-                            <button className="delete" aria-label="close" onClick={(e)=>{this.setState({modal:false})}}></button>
-                        </header>
-                        <section className="modal-card-body">
-                            <div className="field is-horizontal">
-                                <div className="field-label is-normal">
-                                    <label className="label">Nombre</label>
-                                </div>
-                                <div className="field-body">
-                                    <div className="field">
-                                        <div className="control">
-                                            <input className="input is-rounded" type="text" name={"event"} onChange={this.handleChange} placeholder="Evius.co"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <footer className="modal-card-foot">
-                            {
-                                this.state.create?<div>Creando...</div>:
-                                    <div>
-                                        <button className="button is-success" onClick={this.newEvent} disabled={this.state.valid}>Crear</button>
-                                        <button className="button" onClick={(e)=>{this.setState({modal:false})}}>Cancel</button>
-                                    </div>
-                            }
-                            <p className="help is-danger">{this.state.msg}</p>
-                        </footer>
-                    </div>
-                </div>*/}
-                <NewEvent modal={this.state.modal}/>
+                <NewEvent modal={this.state.modal} newEvent={this.newEvent}/>
                 <Dialog modal={timeout} title={<FormattedMessage id="header.expired_title" defaultMessage="Sign In"/>}
                         content={<p>
                             <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
