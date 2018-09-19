@@ -156,14 +156,15 @@ class UsersRsvp extends Component {
 
     addToList = (user) => {
         let users = this.state.users;
-        users.push(user);
+        users.push({name:user.properties.name,email:user.properties.email,id:user._id});
         this.setState({ users, auxArr:users });
     };
 
     async modalImport() {
         const {data} = await UsersApi.getAll(this.props.event._id);
+        const users = this.handleUsers(data);
         this.setState((prevState) => {
-            return {importUser:!prevState.importUser,users:data}
+            return {importUser:!prevState.importUser,users}
         });
     };
 
