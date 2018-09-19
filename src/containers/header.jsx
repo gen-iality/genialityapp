@@ -5,6 +5,8 @@ import {AuthUrl, BaseUrl} from "../helpers/constants";
 import {Actions} from "../helpers/request";
 import axios from "axios";
 import Dialog from "../components/modal/twoAction";
+import NewEvent from "../components/events/newEvent";
+import {FormattedMessage} from 'react-intl';
 
 class Header extends Component {
     constructor(props) {
@@ -134,11 +136,17 @@ class Header extends Component {
                         </div>
                         <div id="navbarExampleTransparentExample" className={`navbar-menu ${this.state.open ? "is-active" : ""}`}>
                             <div className="navbar-start">
-                                <a className="navbar-item" href="https://google.com">Help</a>
+                                <a className="navbar-item" href="https://google.com">
+                                    <FormattedMessage id="header.help" defaultMessage="Help"/>
+                                </a>
                             </div>
                             <div className="navbar-end">
                                 <div className="navbar-item">
-                                    <button className="button is-primary" onClick={(e)=>{this.setState({modal:true})}} disabled={!this.state.user}>Crear Evento</button>
+                                    <button className="button is-primary"
+                                            onClick={(e)=>{this.setState({modal:true})}}
+                                            disabled={!this.state.user}>
+                                        <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                    </button>
                                 </div>
                                 {
                                     this.state.loader ?
@@ -165,14 +173,16 @@ class Header extends Component {
                                                 </div>
                                             </div>:
                                             <div className="navbar-item">
-                                                <button className="button is-link" onClick={this.logout}>Ingresar</button>
+                                                <button className="button is-link" onClick={this.logout}>
+                                                    <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                                </button>
                                             </div>
                                 }
                             </div>
                         </div>
                     </nav>
                 </header>
-                <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
+                {/*<div className={`modal ${this.state.modal ? "is-active" : ""}`}>
                     <div className="modal-background"></div>
                     <div className="modal-card">
                         <header className="modal-card-head">
@@ -204,9 +214,12 @@ class Header extends Component {
                             <p className="help is-danger">{this.state.msg}</p>
                         </footer>
                     </div>
-                </div>
-                <Dialog modal={timeout} title={'Sesión Expiró'}
-                        content={<p>Tu sesión ha expirado. Inicia sesión de nuevo o sigue mirando eventos</p>}
+                </div>*/}
+                <NewEvent modal={this.state.modal}/>
+                <Dialog modal={timeout} title={<FormattedMessage id="header.expired_title" defaultMessage="Sign In"/>}
+                        content={<p>
+                            <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
+                        </p>}
                         first={{title:'Iniciar Sesión',class:'is-info',action:this.logout}}
                         second={{title:'Mirar eventos',class:'',action:this.closeModal}}
                         message={{class:'',content:''}}/>
