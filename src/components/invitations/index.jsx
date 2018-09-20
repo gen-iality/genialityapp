@@ -52,6 +52,7 @@ class Invitations extends Component {
                         <tr>
                             <th>Subject</th>
                             <th>Fecha</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,6 +61,7 @@ class Invitations extends Component {
                                 return <tr key={key} className="tr-item" onClick={(e)=>{this.showModal(item)}}>
                                     <td>{item.subject}</td>
                                     <td>{Moment(item.created_at).format('ll')}</td>
+                                    <td>{item.number_of_recipients}</td>
                                 </tr>
                             })
                         }
