@@ -3,7 +3,6 @@ import XLSX from "xlsx";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Dropzone from 'react-dropzone';
-import {Template} from "../../helpers/constants";
 Moment.locale('es');
 momentLocalizer();
 
@@ -61,12 +60,15 @@ class Importacion extends Component {
     }
 
     downloadExcel = () => {
-        let a = document.createElement('A');
-        a.href = Template;
-        a.download = `usertemplate${Moment().format('DDMMYY')}.xls`; //userstemplate+nombreevento+ddmmyy
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        console.log(this.props);
+        let data = [{'name':'','email':''}];
+        this.props.extraFields.map((extra)=>{
+           data[0][extra.name] = ''
+        });
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template");
+        XLSX.writeFile(wb, `usertemplate${Moment().format('DDMMYY')}.xls`);
     };
 
     componentWillReceiveProps(nextProps) {
