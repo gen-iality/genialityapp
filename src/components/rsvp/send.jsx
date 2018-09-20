@@ -65,7 +65,7 @@ class SendRsvp extends Component {
             users.push(item.id)
         });
         this.setState({dataMail:users});
-        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,usersIds:users})
+        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users})
             .then((res) => {
                 console.log(res);
                 this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/invitations'})
