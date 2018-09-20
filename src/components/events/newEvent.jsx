@@ -11,6 +11,7 @@ class NewEvent extends Component {
         this.state = {
             event : {
                 name:'',
+                summary: '',
                 hour_start : Moment().toDate(),
                 date_start : Moment().toDate(),
                 hour_end : Moment().toDate(),
@@ -84,7 +85,7 @@ class NewEvent extends Component {
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: event.description
+            summary: event.summary
         };
         try {
             const result = await Actions.create('/api/user/events', data);
@@ -111,8 +112,8 @@ class NewEvent extends Component {
                         <p className="modal-card-title">Nuevo Evento</p>
                         <button className="delete" data-dismiss="quickview" onClick={(e)=>{this.props.newEvent()}}/>
                     </header>
-                    <form onSubmit={this.submit}>
-                        <section className="modal-card-body">
+                    <section className="modal-card-body">
+                        <div className="content">
                             <div className="columns">
                                 <div className="column">
                                     <div className="field">
@@ -188,9 +189,10 @@ class NewEvent extends Component {
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label">Descripción</label>
+                                        <label className="label">Descripción Corta ({event.summary.length}/500)</label>
                                         <div className="control">
-                                            <textarea className="textarea" name={"description"} placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
+                                        <textarea className="textarea" name={"summary"} maxLength={500}
+                                                  placeholder="Textarea" value={event.summary} onChange={this.handleChange}/>
                                         </div>
                                     </div>
                                 </div>
@@ -218,18 +220,18 @@ class NewEvent extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                        <footer className="modal-card-foot">
-                            <div className="field">
-                                <div className="control">
-                                    {
-                                        this.state.loading? <p>Saving...</p>
-                                            :<button type={"submit"} className={`button is-outlined is-success`}>Create</button>
-                                    }
-                                </div>
+                        </div>
+                    </section>
+                    <footer className="modal-card-foot">
+                        <div className="field">
+                            <div className="control">
+                                {
+                                    this.state.loading? <p>Saving...</p>
+                                        :<button onClick={this.submit} className={`button is-outlined is-success`}>Create</button>
+                                }
                             </div>
-                        </footer>
-                    </form>
+                        </div>
+                    </footer>
                 </div>
             </div>
         );
