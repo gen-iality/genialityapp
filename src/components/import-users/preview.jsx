@@ -97,7 +97,7 @@ class Preview extends Component {
     };
 
     render() {
-        const {list} = this.state;
+        const {list, auxArr} = this.state;
         const self = this;
         return (
             <React.Fragment>
@@ -114,7 +114,7 @@ class Preview extends Component {
                                                     {item.key}
                                                 </div>
                                                 {
-                                                    (!item.used&&self.state.auxArr.length>0) ?
+                                                    (!item.used&&auxArr.length>0) ?
                                                         <div className="dropdown is-hoverable">
                                                             <div className="control dropdown-trigger">
                                                                 <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -124,7 +124,7 @@ class Preview extends Component {
                                                             <div className="dropdown-menu" id="dropdown-menu" role="menu">
                                                                 <div className="dropdown-content">
                                                                     {
-                                                                        self.state.auxArr.map((head,llave)=>{
+                                                                        auxArr.map((head,llave)=>{
                                                                             return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
                                                                         })
                                                                     }
@@ -136,7 +136,7 @@ class Preview extends Component {
                                                         </span>
                                                 }
                                                 {
-                                                    (!item.used&&self.state.auxArr.length<=0) && (
+                                                    (!item.used&&auxArr.length<=0) && (
                                                         <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
                                                             <i className="fas fa-plus"/>
                                                         </span>)
@@ -155,8 +155,11 @@ class Preview extends Component {
                             }
                         </div>
                 }
-                {self.state.auxArr.length>0&&(<p className="has-text-danger">Faltan  los siguientes campos <b>Obligatorios</b> {self.state.auxArr.map((item)=>{item})}</p>)}
-                <button className="button is-primary is-rounded" disabled={self.state.auxArr.length>0} onClick={this.props.importUsers}>Importar</button>
+                {auxArr.length>0&&(
+                    <p className="has-text-danger">Faltan  los siguientes campos <b>Obligatorios: </b>
+                        {auxArr.map((item)=>{return <b key={item.tag}>{item.tag} </b>})}
+                    </p>)}
+                <button className="button is-primary is-rounded" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
             </React.Fragment>
         );
     }

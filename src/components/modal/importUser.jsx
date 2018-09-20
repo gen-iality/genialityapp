@@ -22,8 +22,7 @@ class ImportUsers extends Component {
         }
     };
 
-    importUsers = () => {
-        const users = this.state.list;
+    importUsers = (users) => {
         const self = this;
         Async.waterfall([
             function (cb) {
