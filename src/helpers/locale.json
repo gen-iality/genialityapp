@@ -4,13 +4,27 @@
     "header.create_event":    "Create Event",
     "header.login":           "Login",
     "header.expired_title":   "Session Expired",
-    "header.expired_content": "Your session expired. Sign in again or keep looking public events"
+    "header.expired_content": "Your session expired. Sign in again or keep looking public events",
+    "header.expired_signin":  "Sign In",
+    "header.expired_cancel":  "Look Events",
+    "header.profile":         "My Profile",
+    "header.events":          "My Events",
+    "header.org":             "My Organizations",
+    "header.logout":          "Log Out",
+    "global.cancel":          "Cancel"
   },
   "es":{
     "header.help":            "Ayuda",
     "header.create_event":    "Crear Evento",
     "header.login":           "Ingresar",
     "header.expired_title":   "Sesión Expiró",
-    "header.expired_content": "Tu sesión ha expirado. Inicia sesión de nuevo o sigue mirando eventos"
+    "header.expired_content": "Tu sesión ha expirado. Inicia sesión de nuevo o sigue mirando eventos",
+    "header.expired_signin":  "Iniciar Sesión",
+    "header.expired_cancel":  "Mirar Eventos",
+    "header.profile":         "Mi Perfil",
+    "header.events":          "Mis Eventos",
+    "header.org":             "Mis Organzaciones",
+    "header.logout":          "Salir",
+    "global.cancel":          "Cancelar"
   }
 }

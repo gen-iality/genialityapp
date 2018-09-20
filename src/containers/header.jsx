@@ -148,18 +148,18 @@ class Header extends Component {
                                                     {this.state.name}
                                                 </a>
                                                 <div className="navbar-dropdown is-boxed">
-                                                    <a className="navbar-item">
-                                                        Mi Perfil
-                                                    </a>
-                                                    <Link className="navbar-item" to={"/mis_eventos"}>
-                                                        Mis Eventos
+                                                    <Link className="navbar-item" to={"/my_profile"}>
+                                                        <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                                     </Link>
-                                                    <a className="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                                                        Mis Organizaciones
-                                                    </a>
+                                                    <Link className="navbar-item" to={"/my_events"}>
+                                                        <FormattedMessage id="header.events" defaultMessage="Events"/>
+                                                    </Link>
+                                                    <Link className="navbar-item" to={"/"}>
+                                                        <FormattedMessage id="header.org" defaultMessage="Org"/>
+                                                    </Link>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item" onClick={this.logout}>
-                                                        Salir
+                                                        <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
                                                     </a>
                                                 </div>
                                             </div>:
@@ -178,8 +178,12 @@ class Header extends Component {
                         content={<p>
                             <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
                         </p>}
-                        first={{title:'Iniciar Sesión',class:'is-info',action:this.logout}}
-                        second={{title:'Mirar eventos',class:'',action:this.closeModal}}
+                        first={{
+                            title:<FormattedMessage id="header.expired_signin" defaultMessage="Sign In"/>,
+                            class:'is-info',action:this.logout}}
+                        second={{
+                            title:<FormattedMessage id="header.expired_cancel" defaultMessage="Sign In"/>,
+                            class:'',action:this.closeModal}}
                         message={{class:'',content:''}}/>
             </React.Fragment>
         );
