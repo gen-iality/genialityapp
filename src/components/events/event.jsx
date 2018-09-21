@@ -24,9 +24,12 @@ class Event extends Component {
     async componentDidMount() {
         let eventId = this.props.match.params.event;
         const event = await EventsApi.getOne(eventId);
-        event.hour = event.hour ? Moment(event.date_start + ' ' + event.hour).toDate() : Moment(event.date_start).toDate();
-        event.date_start = Moment(event.date_start).toDate();
-        event.date_end = Moment(event.date_end).toDate();
+        const dateFrom = event.datetime_from.split(' ');
+        const dateTo = event.datetime_to.split(' ');
+        event.hour_start = Moment(dateFrom[1],'HH:mm').toDate();
+        event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
+        event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
+        event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
         this.setState({event,loading:false});
     }
 
