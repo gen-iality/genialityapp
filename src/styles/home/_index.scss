@@ -41,6 +41,9 @@ div.home {
       z-index: 2;
       div.dates {
         margin-left: 1.5rem;
+        time{
+            text-transform: uppercase;
+        }
       }
       div.cats {
         margin-right: 1.5rem;
