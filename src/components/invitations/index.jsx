@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 import {Actions} from "../../helpers/request";
-import Moment from "moment"
-import momentLocalizer from 'react-widgets-moment';
 import Pagination from "../shared/pagination";
 import MessageUser from "./messageUser";
 import EmailPrev from "./emailPreview";
-Moment.locale('es');
-momentLocalizer();
+import {FormattedDate, FormattedTime} from 'react-intl';
 
 class Invitations extends Component {
     constructor(props) {
@@ -60,7 +57,7 @@ class Invitations extends Component {
                             this.state.pageOfItems.map((item,key)=>{
                                 return <tr key={key} className="tr-item" onClick={(e)=>{this.showModal(item)}}>
                                     <td>{item.subject}</td>
-                                    <td>{Moment(item.created_at).format('ll')}</td>
+                                    <td><FormattedDate value={item.created_at}/> <FormattedTime value={item.created_at}/></td>
                                     <td>{item.number_of_recipients}</td>
                                 </tr>
                             })

@@ -32,7 +32,10 @@ class ListEventUser extends Component {
 
     addToList = (user) => {
         let users = this.state.users;
-        users.push(user);
+        let pos = users.map(function(e) { return e._id; }).indexOf(user._id);
+        if(pos >= 0){
+              users[pos] = user;
+        }else users.push(user);
         this.setState({ users, auxArr:users });
     };
 
