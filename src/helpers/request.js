@@ -54,6 +54,9 @@ export const EventsApi = {
     getPublic: async() => {
       return await Actions.getAll('/api/events')
     },
+    landingEvent: async(id) => {
+      return await Actions.getOne('/api/events/', id);
+    },
     getAll: async () => {
         return await Actions.getAll('/api/user/events')
     },

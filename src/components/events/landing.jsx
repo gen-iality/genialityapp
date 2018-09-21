@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Actions, EventsApi} from "../../helpers/request";
+import { EventsApi } from "../../helpers/request";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Loading from "../loaders/loading";
 
@@ -13,7 +13,7 @@ class Landing extends Component {
 
     async componentDidMount() {
         const id = this.props.match.params.event;
-        const event = await Actions.getOne('/api/events/', id);
+        const event = await EventsApi.landingEvent(id);
         console.log(event);
         this.setState({event,loading:false});
     }
@@ -51,7 +51,7 @@ class Landing extends Component {
                                             Por: {event.author.name}
                                         </div>
                                         <div className="item is-italic">
-                                            {event.summary}
+                                            {event.description}
                                         </div>
                                         <div className="item">
                                             <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>

@@ -78,7 +78,11 @@ class Events extends Component {
                                                         </div>
                                                     </div>
                                                     <div className="content">
-                                                        {event.summary}
+                                                        {
+                                                            event.description.length >= 80 ?
+                                                            event.description.substring(0,80)+'...':
+                                                            event.description
+                                                        }
                                                         <br/>
                                                         <time dateTime={event.datetime_from}>{event.datetime_from}</time>
                                                     </div>
