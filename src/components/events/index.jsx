@@ -20,9 +20,9 @@ class Events extends Component {
     }
 
     async componentDidMount() {
-        const events = await EventsApi.getAll();
-        console.log(events);
-        this.setState({events,loading:false});
+        const resp = await EventsApi.getAll();
+        console.log(resp);
+        this.setState({events:resp.data,loading:false});
     }
 
     async deleteEvent() {
@@ -74,11 +74,11 @@ class Events extends Component {
                                                     <div className="media">
                                                         <div className="media-content">
                                                             <p className="title is-4">{event.name}</p>
-                                                            <p className="subtitle is-6">{event.location}</p>
+                                                            <p className="subtitle is-6">{event.location.FormattedAddress}</p>
                                                         </div>
                                                     </div>
                                                     <div className="content">
-                                                        {event.description}
+                                                        {event.summary}
                                                         <br/>
                                                         <time dateTime={event.datetime_from}>{event.datetime_from}</time>
                                                     </div>

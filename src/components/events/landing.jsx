@@ -1,64 +1,82 @@
 import React, {Component} from 'react';
+import {Actions, EventsApi} from "../../helpers/request";
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import Loading from "../loaders/loading";
 
 class Landing extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            loading:true
+        }
+    }
+
+    async componentDidMount() {
+        const id = this.props.match.params.event;
+        const event = await Actions.getOne('/api/events/', id);
+        console.log(event);
+        this.setState({event,loading:false});
     }
 
     render() {
+        const { event } = this.state;
+        console.log(this.state);
         return (
             <section className="section hero landing">
                 <div className="hero-head">
                     <div className="columns is-gapless">
                         <div className="column is-4 info">
-                            <div className="item">
-                                Fecha
-                            </div>
-                            <div className="columns item">
-                                <div className="columns">
-                                    <div className="column is-one-fifth">
+                            {
+                                this.state.loading?<Loading/>:
+                                    <React.Fragment>
+                                        <div className="item">
+                                            Fecha
+                                        </div>
+                                        <div className="columns item">
+                                            <div className="columns">
+                                                <div className="column is-one-fifth">
                                        <span className="icon is-large has-text-grey">
                                            <i className="fas fa-map-marker-alt fa-2x"/>
                                        </span>
-                                    </div>
-                                    <div className="column">
-                                        <p className="subtitle is-pulled-left">
-                                            <p className="has-text-grey-darker has-text-weight-bold">Venue</p>
-                                            Location
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="item">
-                                <p className="title has-text-grey-darker has-text-weight-bold">Nombre evento</p>
-                                Por: ...
-                            </div>
-                            <div className="item is-italic">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis...
-                            </div>
-                            <div className="item">
-                                <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>
-                                Aforo
-                            </div>
-                            {
-                                !this.state.showFull && (
-                                    <div className="item">
-                                        <div className="columns is-mobile">
-                                            <div className="column is-4 is-offset-8">
-                                                <div className="fab-button has-text-weight-bold"
-                                                    onClick={(e)=>{this.setState({showFull:true})}}>
-                                                    <span className="is-size-3">+</span>
+                                                </div>
+                                                <div className="column">
+                                                    <p className="subtitle is-pulled-left">
+                                                        <p className="has-text-grey-darker has-text-weight-bold">{event.location.FormattedAddress}</p>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )
+                                        <div className="item">
+                                            <p className="title has-text-grey-darker has-text-weight-bold">{event.name}</p>
+                                            Por: {event.author.name}
+                                        </div>
+                                        <div className="item is-italic">
+                                            {event.summary}
+                                        </div>
+                                        <div className="item">
+                                            <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>
+                                            Aforo
+                                        </div>
+                                        {
+                                            !this.state.showFull && (
+                                                <div className="item">
+                                                    <div className="columns is-mobile">
+                                                        <div className="column is-4 is-offset-8">
+                                                            <div className="fab-button has-text-weight-bold"
+                                                                 onClick={(e)=>{this.setState({showFull:true})}}>
+                                                                <span className="is-size-3">+</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                    </React.Fragment>
                             }
                         </div>
                         <div className="column">
                             <figure className="image is-3by2">
-                                <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Evius.co"/>
+                                <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
                             </figure>
                         </div>
                     </div>
@@ -118,6 +136,17 @@ class Landing extends Component {
                             </div>
                             <div className="column">
                                 Mapa
+                                {
+                                    !this.state.loading&&(
+                                        <MyMapComponent
+                                            lat={event.location.Latitude} long={event.location.Longitude}
+                                            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                                            loadingElement={<div style={{height: `100%`}}/>}
+                                            containerElement={<div style={{height: `400px`}}/>}
+                                            mapElement={<div style={{height: `100%`}}/>}
+                                        />
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
@@ -126,5 +155,14 @@ class Landing extends Component {
         );
     }
 }
+
+const MyMapComponent = withGoogleMap((props) =>
+    <GoogleMap
+        defaultZoom={12}
+        defaultCenter={{ lat: props.lat, lng: props.long }}
+    >
+        <Marker position={{ lat: props.lat, lng: props.long }} />
+    </GoogleMap>
+)
 
 export default Landing;

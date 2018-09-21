@@ -82,7 +82,7 @@ class Home extends Component {
                                                                            <i className="fas fa-map-marker-alt"/>
                                                                        </span>
                                                                     </div>
-                                                                    <div className="column subtitle is-7 has-text-grey has-text-weight-bold">{event.location}</div>
+                                                                    <div className="column subtitle is-7 has-text-grey has-text-weight-bold">{event.location.FormattedAddress}</div>
                                                                 </div>
                                                             </div>
                                                             <div className="media-content">

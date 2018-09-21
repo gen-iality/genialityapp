@@ -1,6 +1,8 @@
+/*global google*/
 import React, {Component} from 'react';
 import { DateTimePicker } from 'react-widgets'
 import Moment from "moment"
+import Geosuggest from 'react-geosuggest'
 import ImageInput from "../shared/imageInput";
 import {Actions, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -91,7 +93,7 @@ class General extends Component {
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: event.description
+            summary: event.summary
         };
         try {
             const result = await EventsApi.editOne(data, event._id);
@@ -102,6 +104,38 @@ class General extends Component {
             console.log(e)
         }
     }
+
+    onSuggestSelect = (suggest) => {
+        if(suggest){
+            const place = suggest.gmaps;
+            const location = place.geometry && place.geometry.location ? {
+                Latitude: place.geometry.location.lat(),
+                Longitude: place.geometry.location.lng()
+            } : {};
+            const componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name'
+            };
+            const mapping = {
+                street_number: 'number',
+                route: 'street',
+                locality: 'city',
+                administrative_area_level_1: 'state'
+            };
+            for (let i = 0; i < place.address_components.length; i++) {
+                const addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    const val = place.address_components[i][componentForm[addressType]];
+                    location[mapping[addressType]] = val;
+                }
+            }
+            location.FormattedAddress = place.formatted_address;
+            location.PlaceId = place.place_id;
+            this.setState({event:{...this.state.event,location}})
+        }
+    };
 
     render() {
         const { event } = this.state;
@@ -121,10 +155,12 @@ class General extends Component {
                             <div className="field">
                                 <label className="label">Dirección</label>
                                 <div className="control">
-                                    <input className="input" name={"location"} type="text"
-                                           placeholder="Text input" value={event.location}
-                                           onChange={this.handleChange}
-                                    />
+                                    <Geosuggest
+                                        placeholder={'Dirección'}
+                                        onSuggestSelect={this.onSuggestSelect}
+                                        initialValue={event.location.FormattedAddress}
+                                        location={new google.maps.LatLng(event.location.Latitude,event.location.Longitude)}
+                                        radius="20"/>
                                 </div>
                             </div>
                             <div className="columns">
@@ -180,9 +216,10 @@ class General extends Component {
                                 </div>
                             </div>
                             <div className="field">
-                                <label className="label">Descripción</label>
+                                <label className="label">Descripción Corta ({event.summary.length}/500)</label>
                                 <div className="control">
-                                    <textarea className="textarea" name={"description"} placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
+                                        <textarea className="textarea" name={"summary"} maxLength={500}
+                                                  placeholder="Textarea" value={event.summary} onChange={this.handleChange}/>
                                 </div>
                             </div>
                         </div>

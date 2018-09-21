@@ -1,6 +1,8 @@
+/*global google*/
 import React, { Component } from 'react';
 import { DateTimePicker } from "react-widgets";
 import ImageInput from "../shared/imageInput";
+import Geosuggest from 'react-geosuggest'
 import { Actions } from "../../helpers/request";
 import Moment from "moment";
 import { BaseUrl } from "../../helpers/constants";
@@ -102,6 +104,39 @@ class NewEvent extends Component {
         }
     }
 
+    onSuggestSelect = (suggest) => {
+        if(suggest){
+            const place = suggest.gmaps;
+            const location = place.geometry && place.geometry.location ? {
+                Latitude: place.geometry.location.lat(),
+                Longitude: place.geometry.location.lng()
+            } : {};
+            const componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name'
+            };
+            const mapping = {
+                street_number: 'number',
+                route: 'street',
+                locality: 'city',
+                administrative_area_level_1: 'state'
+            };
+            for (let i = 0; i < place.address_components.length; i++) {
+                const addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    const val = place.address_components[i][componentForm[addressType]];
+                    location[mapping[addressType]] = val;
+                }
+            }
+            location.FormattedAddress = place.formatted_address;
+            location.PlaceId = place.place_id;
+            console.log(location);
+            this.setState({event:{...this.state.event,location}})
+        }
+    };
+
     render() {
         const { event } = this.state;
         return (
@@ -128,10 +163,15 @@ class NewEvent extends Component {
                                     <div className="field">
                                         <label className="label">Dirección</label>
                                         <div className="control">
-                                            <input className="input" name={"location"} type="text"
+                                            {/*<input className="input" name={"location"} type="text"
                                                    placeholder="Text input" value={event.location}
                                                    onChange={this.handleChange}
-                                            />
+                                            />*/}
+                                            <Geosuggest
+                                                placeholder={'Dirección'}
+                                                onSuggestSelect={this.onSuggestSelect}
+                                                location={new google.maps.LatLng(53.558572, 9.9278215)}
+                                                radius="20"/>
                                         </div>
                                     </div>
                                     <div className="columns">
