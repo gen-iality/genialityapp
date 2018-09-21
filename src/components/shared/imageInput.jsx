@@ -22,14 +22,9 @@ export default class ImageInput extends Component {
                                 </div>
                             </div>
                         </div>:
-                        props.imageFile ?
+                        !props.imageFile &&
                             <div>
-                                <img src={props.imageFile.preview} alt={'Imagen Perfil'}/>
-                                <button className="button is-outlined is-primary" onClick={props.uploadImg}>Upload!</button>
-                                <button className="button is-outlined is-warning" onClick={props.cancelImg}>Cancel</button>
-                            </div>
-                            :<div >
-                                <Dropzone accept="image/*" onDrop={props.handleFileChange} >
+                                <Dropzone accept="image/*" onDrop={props.changeImg} >
                                     <div>Subir foto</div>
                                 </Dropzone>
                                 <span>{props.errImg}</span>

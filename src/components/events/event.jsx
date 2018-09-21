@@ -43,7 +43,7 @@ class Event extends Component {
                             <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
                                 <p className="subtitle event-name">{this.state.event.name}</p>
                                 <p className="menu-label">
-                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/general`}>General</NavLink>
+                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/`}>General</NavLink>
                                 </p>
                                 <p className="menu-label">
                                     <NavLink className="item" activeClassName={"active"} to={`${match.url}/users`}>Usuarios</NavLink>
@@ -66,17 +66,12 @@ class Event extends Component {
                             </aside>
                             <div className="column is-10">
                                 <section className="section">
-                                    <Route path={`${match.url}/general`} render={()=><General event={this.state.event} />}/>
+                                    <Route exact path={`${match.url}`} render={()=><General event={this.state.event} />}/>
                                     <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
                                     <Route path={`${match.url}/invitations`} render={()=><Invitations event={this.state.event} />}/>
                                     <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                     <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                    <Route
-                                        exact
-                                        path={match.url}
-                                        render={() => <h3>Please select a module.</h3>}
-                                    />
                                 </section>
                             </div>
                         </section>

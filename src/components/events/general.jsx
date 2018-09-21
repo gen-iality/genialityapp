@@ -65,8 +65,26 @@ class General extends Component {
 
     changeImg = (files) => {
         const file = files[0];
-        file ? this.setState({imageFile: file,
-            event:{...this.state.event, picture: null}}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
+        if(!file){
+            this.setState({errImg:'Only images files allowed. Please try again (:'});
+        }else{
+            this.setState({imageFile: file,
+                event:{...this.state.event, picture: null}});
+            let data = new FormData();
+            const url = '/api/files/upload',
+                self = this;
+            data.append('file',file);
+            Actions.post(url, data)
+                .then((image) => {
+                    self.setState({
+                        formValues: {
+                            ...self.state.formValues,
+                            picture: image
+                        },fileMsg:'Image uploaded successfull'
+                    });
+                    this.imgToEvent(image,this.state.event._id)
+                });
+        }
     };
 
     cancelImg = (e) => {
@@ -93,7 +111,7 @@ class General extends Component {
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            summary: event.summary
+            description: event.description
         };
         try {
             const result = await EventsApi.editOne(data, event._id);
@@ -216,10 +234,10 @@ class General extends Component {
                                 </div>
                             </div>
                             <div className="field">
-                                <label className="label">Descripción Corta ({event.summary.length}/500)</label>
+                                <label className="label">Descripción</label>
                                 <div className="control">
-                                        <textarea className="textarea" name={"summary"} maxLength={500}
-                                                  placeholder="Textarea" value={event.summary} onChange={this.handleChange}/>
+                                        <textarea className="textarea" name={"description"}
+                                                  placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
                                 </div>
                             </div>
                         </div>

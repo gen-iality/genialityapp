@@ -13,7 +13,7 @@ class NewEvent extends Component {
         this.state = {
             event : {
                 name:'',
-                summary: '',
+                description: '',
                 hour_start : Moment().toDate(),
                 date_start : Moment().toDate(),
                 hour_end : Moment().toDate(),
@@ -21,7 +21,6 @@ class NewEvent extends Component {
             }
         };
         this.submit = this.submit.bind(this);
-        this.uploadImg = this.uploadImg.bind(this);
     }
 
     handleChange = (e) => {
@@ -33,34 +32,27 @@ class NewEvent extends Component {
         this.setState({event:{...this.state.event,[name]:value}})
     };
 
-    handleFileChange  = (files) => {
-        const file = files[0];
-        file ? this.setState({imageFile: file}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
-    };
-
-    async uploadImg(e) {
-        console.log('MAKE THE AXIOS REQUEST');
-        let data = new FormData();
-        const url = '/api/files/upload',
-            self = this;
-        data.append('file',this.state.imageFile);
-        Actions.post(url, data)
-            .then((image) => {
-                self.setState({
-                    event: {
-                        ...self.state.event,
-                        picture: image
-                    },fileMsg:'Image uploaded successfull'
-                });
-            });
-        e.preventDefault();
-        e.stopPropagation();
-    };
-
     changeImg = (files) => {
         const file = files[0];
-        file ? this.setState({imageFile: file,
-            event:{...this.state.event, picture: null}}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
+        if(!file){
+            this.setState({errImg:'Only images files allowed. Please try again (:'});
+        }else{
+            this.setState({imageFile: file,
+                event:{...this.state.event, picture: null}});
+            let data = new FormData();
+            const url = '/api/files/upload',
+                self = this;
+            data.append('file',this.state.imageFile);
+            Actions.post(url, data)
+                .then((image) => {
+                    self.setState({
+                        event: {
+                            ...self.state.event,
+                            picture: image
+                        },fileMsg:'Image uploaded successfull'
+                    });
+                });
+        }
     };
 
     cancelImg = (e) => {
@@ -85,16 +77,17 @@ class NewEvent extends Component {
             name: event.name,
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+            picture: event.picture,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            summary: event.summary
+            description: event.description
         };
         try {
             const result = await Actions.create('/api/user/events', data);
             console.log(result);
             this.setState({loading:false});
             if(result._id){
-                window.location.replace(`${BaseUrl}/edit/${result._id}/general`);
+                window.location.replace(`${BaseUrl}/edit/${result._id}/`);
             }else{
                 this.setState({msg:'Cant Create',create:false})
             }
@@ -141,7 +134,7 @@ class NewEvent extends Component {
         const { event } = this.state;
         return (
             <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
-                <div className="modal-background"></div>
+                <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
                         <p className="modal-card-title">Nuevo Evento</p>
@@ -163,10 +156,6 @@ class NewEvent extends Component {
                                     <div className="field">
                                         <label className="label">Dirección</label>
                                         <div className="control">
-                                            {/*<input className="input" name={"location"} type="text"
-                                                   placeholder="Text input" value={event.location}
-                                                   onChange={this.handleChange}
-                                            />*/}
                                             <Geosuggest
                                                 placeholder={'Dirección'}
                                                 onSuggestSelect={this.onSuggestSelect}
@@ -229,10 +218,10 @@ class NewEvent extends Component {
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label">Descripción Corta ({event.summary.length}/500)</label>
+                                        <label className="label">Descripción</label>
                                         <div className="control">
-                                        <textarea className="textarea" name={"summary"} maxLength={500}
-                                                  placeholder="Textarea" value={event.summary} onChange={this.handleChange}/>
+                                        <textarea className="textarea" name={"description"}
+                                                  placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
                                         </div>
                                     </div>
                                 </div>
@@ -240,8 +229,7 @@ class NewEvent extends Component {
                                     <div className="field">
                                         <label className="label">Foto</label>
                                         <div className="control">
-                                            <ImageInput picture={event.picture} handleFileChange={ this.handleFileChange}
-                                                        imageFile={this.state.imageFile} uploadImg={this.uploadImg}
+                                            <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                                         cancelImg={this.cancelImg} changeImg={this.changeImg} errImg={this.state.errImg}/>
                                         </div>
                                         {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
