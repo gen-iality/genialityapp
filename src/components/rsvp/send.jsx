@@ -163,7 +163,7 @@ class SendRsvp extends Component {
                                <div className="column">
                                    Ubicación del evento
                                    <br/>
-                                   {this.props.event.location}
+                                   {this.props.event.location.FormattedAddress}
                                </div>
                            </div>
                        </div>

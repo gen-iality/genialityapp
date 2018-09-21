@@ -24,14 +24,14 @@ class UsersRsvp extends Component {
     }
 
     async componentDidMount() {
-        const events = await EventsApi.getAll();
+        const listEvents = await EventsApi.getAll();
         const eventId = this.props.event._id;
         const resp = await UsersApi.getAll(eventId);
         const users = this.handleUsers(resp.data);
-        const pos = events.map((e)=> { return e._id; }).indexOf(eventId);
-        events.splice(pos,1);
+        const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
+        listEvents.data.splice(pos,1);
         if(this.props.selection.length>0) this.setState({selection:this.props.selection});
-        this.setState({events,users,loading:false,actualEvent:this.props.event});
+        this.setState({events:listEvents.data,users,loading:false,actualEvent:this.props.event});
         this.handleCheckBox(users,this.state.selection)
     }
 
