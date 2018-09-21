@@ -13,7 +13,6 @@ class SendRsvp extends Component {
         this.state = {
             rsvp:{}
         };
-        this.uploadImg = this.uploadImg.bind(this)
     }
 
     componentDidMount(){
@@ -32,7 +31,7 @@ class SendRsvp extends Component {
         }
     };
 
-    async uploadImg() {
+    uploadImg = () => {
         console.log('MAKE THE AXIOS REQUEST');
         let data = new FormData();
         const url = '/api/files/upload',
