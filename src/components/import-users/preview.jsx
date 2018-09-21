@@ -21,12 +21,12 @@ class Preview extends Component {
         const {list, eventId} = this.props;
         const event = await EventsApi.getOne(eventId);
         event.user_properties.map(item => {
-            this.setState(prevState => ({
+            return this.setState(prevState => ({
                 head: [...prevState.head, {tag:item.name,used:false}]
             }))
         });
         list.map(list => {
-            llaves.push(list.key)
+            return llaves.push(list.key)
         });
         this.renderHead(llaves, list);
     }
@@ -47,7 +47,7 @@ class Preview extends Component {
         const onlyInB = b.filter(comparer(a));
         this.setState({auxArr:onlyInB,head:b});
         list.map(item=>{
-            item.used = this.headExist(item.key)
+            return item.used = this.headExist(item.key)
         });
         let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
         this.setState({list,loading:false,auxList})
