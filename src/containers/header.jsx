@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import  { Link } from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
-import {Actions} from "../helpers/request";
 import axios from "axios";
 import Dialog from "../components/modal/twoAction";
 import NewEvent from "../components/events/newEvent";
@@ -40,7 +39,7 @@ class Header extends Component {
                 .catch(error => {
                     console.log(error);
                     console.log(error.response);
-                    this.setState({timeout:true});
+                    this.setState({timeout:true,loader:false});
                 });
         }
     }
