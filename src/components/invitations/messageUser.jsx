@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Moment from "moment";
 
 class MessageUser extends Component {
     constructor(props) {
