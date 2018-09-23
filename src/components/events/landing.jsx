@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import { EventsApi } from "../../helpers/request";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import Moment from "moment"
+import momentLocalizer from 'react-widgets-moment';
+import { EventsApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
+Moment.locale('es');
+momentLocalizer();
 
 class Landing extends Component {
     constructor(props) {
@@ -15,6 +19,12 @@ class Landing extends Component {
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         console.log(event);
+        const dateFrom = event.datetime_from.split(' ');
+        const dateTo = event.datetime_to.split(' ');
+        event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();
+        event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
+        event.date_start = dateFrom[0];
+        event.date_end = dateTo[0];
         this.setState({event,loading:false});
     }
 
@@ -29,8 +39,17 @@ class Landing extends Component {
                             {
                                 this.state.loading?<Loading/>:
                                     <React.Fragment>
-                                        <div className="item">
-                                            Fecha
+                                        <div className="item columns fecha">
+                                            <div className="column fecha-uno">
+                                                <span className="title is-size-4">{Moment(event.date_start).format('DD MMM,YY')}</span>
+                                                <br/>
+                                                <span>Desde {Moment(event.hour_start).format('HH:mm')}</span>
+                                            </div>
+                                            <div className="column">
+                                                <span className="title is-size-4">{Moment(event.date_end).format('DD MMM,YY')}</span>
+                                                <br/>
+                                                <span>Hasta {Moment(event.hour_end).format('HH:mm')}</span>
+                                            </div>
                                         </div>
                                         <div className="columns item">
                                             <div className="columns">
@@ -51,14 +70,18 @@ class Landing extends Component {
                                             Por: {event.author.name}
                                         </div>
                                         <div className="item is-italic">
-                                            {event.description}
+                                            {
+                                                event.description.length >= 80 ?
+                                                event.description.substring(0,80)+'...':
+                                                event.description
+                                            }
                                         </div>
                                         <div className="item">
                                             <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>
                                             Aforo
                                         </div>
                                         {
-                                            !this.state.showFull && (
+                                            (event.description.length >= 80 && !this.state.showFull) && (
                                                 <div className="item">
                                                     <div className="columns is-mobile">
                                                         <div className="column is-4 is-offset-8">
@@ -84,7 +107,7 @@ class Landing extends Component {
                         this.state.showFull && (
                             <div className="info show-full is-hidden-mobile">
                                 <div className="item is-italic">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus efficitur rhoncus. Praesent congue felis sit amet facilisis vestibulum. Proin rutrum molestie est. Etiam tristique urna vel porta commodo. Cras egestas purus risus, at vestibulum neque molestie vitae. Nulla venenatis feugiat blandit. Aliquam mi nulla, fringilla nec semper id, bibendum ut ipsum. Quisque a diam ex. Mauris sit amet nibh varius, cursus lorem a, tristique ligula. Vestibulum porttitor malesuada urna, vel efficitur dui pellentesque in. Fusce maximus molestie pharetra. Donec pretium tellus justo, et malesuada ante accumsan venenatis. Etiam vehicula eros eget justo consectetur, id lacinia eros sagittis. Sed nisl tellus, viverra ac mi ac, laoreet mattis lacus.
+                                    <p>{event.description}</p>
                                 </div>
                                 <div className="item">
                                     <div className="columns is-mobile">

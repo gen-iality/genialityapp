@@ -3,6 +3,9 @@ section.landing{
     background-color: #b5b5b5;
     .item {
       margin: 1.2rem;
+      .fecha-uno {
+        border-right: 1px black solid;
+      }
     }
     .fab-button {
       background: #00d1b2;

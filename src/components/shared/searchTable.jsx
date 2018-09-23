@@ -20,11 +20,15 @@ class SearchComponent extends Component {
     filterByAllColums(value) {
         let arrAux;
         if (this.props.kind === 'user') {
-            arrAux = this.props.data.filter(item =>
-                item.user.name.search(new RegExp(value, 'i')) >= 0 ||
-                item.user.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.state.name.search(new RegExp(value, 'i')) >= 0 ||
-                item.rol.name.search(new RegExp(value, 'i')) >= 0);
+            arrAux = this.props.data.filter( (item) =>{
+                return (item.properties.email.search(new RegExp(value, 'i')) >= 0 ||
+                    item.properties.email.search(new RegExp(value, 'i')) >= 0);
+            }
+                /*item.properties['name'].search(new RegExp(value, 'i')) >= 0 ||
+                item.properties['email'].search(new RegExp(value, 'i')) >= 0 ||
+                item.state['name'].search(new RegExp(value, 'i')) >= 0 ||
+                item.rol['name'].search(new RegExp(value, 'i')) >= 0*/
+            );
         }else if(this.props.kind === 'invitation'){
             arrAux = this.props.data.filter(item =>
                 item.name.search(new RegExp(value, 'i')) >= 0 ||
