@@ -31,7 +31,7 @@ class UsersRsvp extends Component {
         const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
         listEvents.data.splice(pos,1);
         if(this.props.selection.length>0) this.setState({selection:this.props.selection});
-        this.setState({events:listEvents.data,users,loading:false,actualEvent:this.props.event});
+        this.setState({events:listEvents.data,users,userAux:users,loading:false,actualEvent:this.props.event});
         this.handleCheckBox(users,this.state.selection)
     }
 
@@ -49,7 +49,7 @@ class UsersRsvp extends Component {
         if(this.state.actualEvent._id !== event._id){
             const resp = await UsersApi.getAll(event._id);
             const users = this.handleUsers(resp.data);
-            this.setState({ actualEvent:event, users });
+            this.setState({ actualEvent:event, users, userAux:users });
             this.handleCheckBox(users,this.state.selection)
         }
     };
@@ -169,8 +169,11 @@ class UsersRsvp extends Component {
     };
 
     searchResult = (data) => {
-        console.log(data);
         !data ? this.setState({selection:this.state.auxArr}) : this.setState({selection:data})
+    };
+
+    searchUsers = (data) => {
+        !data ? this.setState({users:this.state.userAux}) : this.setState({users:data})
     };
 
     render() {
@@ -218,6 +221,7 @@ class UsersRsvp extends Component {
                     </div>
                     <div className="column is-6">
                         <strong className="is-5">{this.state.actualEvent.name}</strong>
+                        <SearchComponent  data={this.state.users} kind={'invitation'} searchResult={this.searchUsers}/>
                         <table className="table">
                             <thead>
                             <tr>
