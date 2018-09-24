@@ -87,7 +87,7 @@ class NewEvent extends Component {
             console.log(result);
             this.setState({loading:false});
             if(result._id){
-                window.location.replace(`${BaseUrl}/edit/${result._id}/`);
+                window.location.replace(`${BaseUrl}/edit/${result._id}`);
             }else{
                 this.setState({msg:'Cant Create',create:false})
             }

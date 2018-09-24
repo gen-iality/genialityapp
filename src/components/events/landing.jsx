@@ -16,6 +16,13 @@ class Landing extends Component {
     }
 
     async componentDidMount() {
+        const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
+            searchParams = new URLSearchParams( queryParamsString ),
+            attendee = searchParams.get("attendee"),
+            status = searchParams.get("status");
+        if(status === '5b859ed02039276ce2b996f0'){
+            this.setState({showConfirm:true})
+        }
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         console.log(event);
@@ -30,9 +37,16 @@ class Landing extends Component {
 
     render() {
         const { event } = this.state;
-        console.log(this.state);
         return (
             <section className="section hero landing">
+                {
+                    this.state.showConfirm && (
+                        <div className="notification is-success">
+                            <button className="delete" onClick={(e)=>{this.setState({showConfirm:false})}}/>
+                            Tu asistencia ha sido confirmada
+                        </div>
+                    )
+                }
                 <div className="hero-head">
                     <div className="columns is-gapless">
                         <div className="column is-4 info">
