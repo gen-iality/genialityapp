@@ -67,7 +67,7 @@ class Header extends Component {
             Cookie.remove("evius_token");
             window.location.replace(`${AuthUrl}/logout`);
         }else{
-            modal:true
+            this.setState({modal:true})
         }
     };
 
