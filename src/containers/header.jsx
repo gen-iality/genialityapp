@@ -61,6 +61,16 @@ class Header extends Component {
         this.setState({valid})
     };
 
+    createEvent = () => {
+        if(!this.state.user){
+            Cookie.remove("token");
+            Cookie.remove("evius_token");
+            window.location.replace(`${AuthUrl}/logout`);
+        }else{
+            modal:true
+        }
+    };
+
     newEvent = () => {
         this.setState((prevState)=>{
             return {modal:!prevState.modal}
@@ -133,8 +143,7 @@ class Header extends Component {
                             <div className="navbar-end">
                                 <div className="navbar-item">
                                     <button className="button is-primary"
-                                            onClick={(e)=>{this.setState({modal:true})}}
-                                            disabled={!this.state.user}>
+                                            onClick={this.createEvent}>
                                         <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
                                     </button>
                                 </div>

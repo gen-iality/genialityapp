@@ -62,8 +62,8 @@ class AddUser extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            rol: this.state.rol.split(':')[0],
-            state: this.state.state.split(':')[0],
+            role_id: this.state.rol.split(':')[0],
+            state_id: this.state.state.split(':')[0],
         };
         let message = {};
         this.setState({create:true});
@@ -142,30 +142,6 @@ class AddUser extends Component {
                                 </div>
                             })
                         }
-                        {/*<div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Nombre</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <input className="input is-rounded" type="text" name={"name"} onChange={this.handleChange} value={this.state.name} placeholder="Evius.co"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Email</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <input className="input is-rounded" type="email" name={"email"} onChange={this.handleChange} value={this.state.email} placeholder="evius@co"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*/}
                         <div className="field is-horizontal">
                             <div className="field-label is-normal">
                                 <label className="label">Rol</label>
