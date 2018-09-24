@@ -177,9 +177,13 @@ class ListEventUser extends Component {
                                                             </span>
                                                                 </td>
                                                             )}
-                                                            {Object.keys(item.properties).map((obj, i) => (
-                                                                <td key={i}>{item.properties[obj]}</td>
-                                                            ))}
+                                                            <td>{item.properties.email}</td>
+                                                            <td>{item.properties.name}</td>
+                                                            {
+                                                                this.state.extraFields.map((extra,key)=>{
+                                                                    return <td key={key}>{item.properties[extra.name]}</td>
+                                                                })
+                                                            }
                                                             <td>{item.state?item.state.name:''}</td>
                                                             <td>{item.rol?item.rol.name:''}</td>
                                                         </tr>

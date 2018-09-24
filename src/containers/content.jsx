@@ -9,7 +9,7 @@ import * as Cookie from "js-cookie";
 class ContentContainer extends Component {
     render() {
         return (
-            <main className="main container">
+            <main className="main">
                 <Route exact path="/" component={ Home } />
                 <Route path="/evento/:event" component={ Landing }/>
                 <PrivateRoute path="/my_events" component={ Events }/>
