@@ -17,7 +17,9 @@ class Event extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:true
+            loading:true,
+            userTab:true,
+            contentTab:true
         }
     }
 
@@ -45,24 +47,43 @@ class Event extends Component {
                                 <p className="menu-label">
                                     <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                 </p>
-                                <p className="menu-label">
-                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/users`}>Usuarios</NavLink>
+                                <p className="menu-label item" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                                    <span>Usuarios</span>
+                                    <span className="icon">
+                                        <i className={`${this.state.userTab?'up':'down'}`}/>
+                                    </span>
                                 </p>
-                                <ul className="menu-list">
-                                    <li>
-                                        <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Invitaciones</NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar Invitación</NavLink>
-                                    </li>
-                                </ul>
-                                <p className="menu-label item">Contenido</p>
-                                <ul className="menu-list">
-                                    <li>
-                                        <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                        <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
-                                    </li>
-                                </ul>
+                                {
+                                    this.state.userTab && (
+                                        <ul className="menu-list">
+                                            <li>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Invitaciones</NavLink>
+                                            </li>
+                                            <li>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar Invitación</NavLink>
+                                            </li>
+                                        </ul>
+                                    )
+                                }
+                                <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
+                                    <span>Contenido</span>
+                                    <span className="icon">
+                                        <i className={`${this.state.contentTab?'up':'down'}`}/>
+                                    </span>
+                                </p>
+                                {
+                                    this.state.contentTab && (
+                                        <ul className="menu-list">
+                                            <li>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
+                                            </li>
+                                        </ul>
+                                    )
+                                }
                             </aside>
                             <div className="column is-10">
                                 <section className="section">
