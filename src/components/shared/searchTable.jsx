@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {FormattedMessage} from "react-intl";
 
 class SearchComponent extends Component {
 
@@ -44,7 +45,7 @@ class SearchComponent extends Component {
             if (filtered.length > 0) {
                 this.setState({ showMessage: false, message: "" });
             } else {
-                this.setState({ showMessage: true, message: "No hay resultados" });
+                this.setState({ showMessage: true, message: "not" });
             }
             this.props.searchResult(filtered);
         }
@@ -54,7 +55,7 @@ class SearchComponent extends Component {
             } else {
                 this.setState({
                     showMessage: true,
-                    message: "Para buscar porfavor ingrese mas de 2 caracteres"
+                    message: "short"
                 });
             }
             this.props.searchResult(false);
@@ -69,7 +70,11 @@ class SearchComponent extends Component {
                         <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter}/>
                         <span className="icon is-small is-left"><i className="fas fa-search"/></span>
                     </p>
-                    {this.state.showMessage && (<p className="help is-danger">{this.state.message}</p>)}
+                    {this.state.showMessage && (
+                        <p className="help is-danger">
+                            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
+                        </p>
+                    )}
                 </div>
             </React.Fragment>
         );

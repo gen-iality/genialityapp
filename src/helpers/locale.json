@@ -11,7 +11,9 @@
     "header.events":          "My Events",
     "header.org":             "My Organizations",
     "header.logout":          "Log Out",
-    "global.cancel":          "Cancel"
+    "global.cancel":          "Cancel",
+    "global.search_short":    "To search, please enter more than 2 characters",
+    "global.search_not":      "No results found"
   },
   "es":{
     "header.help":            "Ayuda",
@@ -25,6 +27,8 @@
     "header.events":          "Mis Eventos",
     "header.org":             "Mis Organzaciones",
     "header.logout":          "Salir",
-    "global.cancel":          "Cancelar"
+    "global.cancel":          "Cancelar",
+    "global.search_short":    "Para buscar porfavor ingrese mas de 2 caracteres",
+    "global.search_not":      "No hay resultados"
   }
 }
