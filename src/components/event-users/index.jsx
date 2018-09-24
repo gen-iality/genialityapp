@@ -117,9 +117,13 @@ class ListEventUser extends Component {
                                     <p className="control">
                                         <button className="button is-primary" onClick={this.modalImport}>Importar</button>
                                     </p>
-                                    <p className="control">
-                                        <button className="button is-primary" onClick={this.exportFile}>Exportar</button>
-                                    </p>
+                                    {
+                                        this.state.users.length>0 && (
+                                            <p className="control">
+                                                <button className="button is-primary" onClick={this.exportFile}>Exportar</button>
+                                            </p>
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>
