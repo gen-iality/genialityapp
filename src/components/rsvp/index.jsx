@@ -29,6 +29,10 @@ class RSVP extends Component {
         })
     };
 
+    componentWillUnmount() {
+        this.setState({step:0})
+    }
+
     render() {
         const layout = [
             <UsersRsvp event={this.props.event} userTab={this.userTab} selection={this.state.selection}/>,
@@ -36,12 +40,6 @@ class RSVP extends Component {
         ];
         return (
             <React.Fragment>
-                <div className="tabs is-fullwidth">
-                    <ul>
-                        <li className={`${this.state.step === 0 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:0})}}><a>Usuarios</a></li>
-                        <li className={`${this.state.step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>RSVP</a></li>
-                    </ul>
-                </div>
                 {
                     layout[this.state.step]
                 }

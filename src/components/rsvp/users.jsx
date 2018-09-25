@@ -3,6 +3,8 @@ import {EventsApi, UsersApi} from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
+import {FormattedMessage} from "react-intl";
+import Dialog from "../modal/twoAction";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -17,6 +19,7 @@ class UsersRsvp extends Component {
             importUser: false,
             addUser:    false,
             checked: false,
+            ticket: false,
             indeterminate: false
         };
         this.checkEvent = this.checkEvent.bind(this);
@@ -39,7 +42,7 @@ class UsersRsvp extends Component {
     handleUsers = (list) => {
         let users = [];
         list.map(user=>{
-            users.push({name:user.properties.name,email:user.properties.email,id:user._id})
+            users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
         });
         return users;
     };
@@ -176,6 +179,12 @@ class UsersRsvp extends Component {
         !data ? this.setState({users:this.state.userAux}) : this.setState({users:data})
     };
 
+    sendTicket = () => {
+        this.setState((prevState)=>{
+            return {ticket:!prevState.ticket}
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -221,31 +230,52 @@ class UsersRsvp extends Component {
                     </div>
                     <div className="column is-6">
                         <strong className="is-5">{this.state.actualEvent.name}</strong>
-                        <SearchComponent  data={this.state.users} kind={'invitation'} searchResult={this.searchUsers}/>
+                        <div className="columns">
+                            <div className="column is-8">
+                                <SearchComponent  data={this.state.users} kind={'invitation'} searchResult={this.searchUsers}/>
+                            </div>
+                            <div className="column">
+                                <div className="navbar-item has-dropdown is-hoverable">
+                                    <a className="navbar-link">Estado</a>
+                                    <div className="navbar-dropdown is-boxed">
+                                        <a className="navbar-item">TODOS</a>
+                                        <a className="navbar-item">DRAFT</a>
+                                        <a className="navbar-item">CONFIRMED</a>
+                                        <a className="navbar-item">INVITED</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table className="table">
                             <thead>
-                            <tr>
-                                <th>Correo</th>
-                                <th>Nombre</th>
-                                <th>
-                                    <input className="is-checkradio is-info is-small" id={"checkallUser"}
-                                           type="checkbox" name={"checkallUser"} ref="checkbox" onClick={this.toggleAll}/>
-                                    <label htmlFor={"checkallUser"}/>
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th>
+                                        <input className="is-checkradio is-info is-small" id={"checkallUser"}
+                                               type="checkbox" name={"checkallUser"} ref="checkbox" onClick={this.toggleAll}/>
+                                        <label htmlFor={"checkallUser"}/>
+                                    </th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
                             </thead>
                             <tbody>
                             {
                                 this.state.users.map((item,key)=>{
-                                    return <tr key={key}>
-                                        <td>{item.email}</td>
-                                        <td>{item.name}</td>
-                                        <td width="5%">
+                                    return <div key={key} className="media">
+                                        <div className="media-left">
                                             <input className="is-checkradio is-info is-small" id={"checkinUser"+item.id}
                                                    type="checkbox" name={"checkinUser"+item.id} checked={this.isChecked(item.id)} onClick={(e)=>{this.toggleSelection(item)}}/>
                                             <label htmlFor={"checkinUser"+item.id}/>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                        <div className="media-content">
+                                            <p className="title is-5">{item.name}</p>
+                                            <p className="subtitle is-6">{item.email}</p>
+                                        </div>
+                                        <div className="media-right">
+                                            <small>{item.state}</small>
+                                        </div>
+                                    </div>
                                 })
                             }
                             </tbody>
@@ -255,11 +285,6 @@ class UsersRsvp extends Component {
                         <div className="box">
                             <div className="field">
                                 <strong>Seleccionados {this.state.selection.length}</strong>
-                                <button className="button is-rounded is-primary is-outlined is-small"
-                                        disabled={this.state.selection.length<=0}
-                                        onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                    Siguiente
-                                </button>
                             </div>
                             <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
                             {
@@ -277,6 +302,16 @@ class UsersRsvp extends Component {
                                     </div>
                                 })
                             }
+                            <button className="button is-rounded is-small"
+                                    disabled={this.state.selection.length<=0}
+                                    onClick={this.sendTicket}>
+                                Enviar Tiquete
+                            </button>
+                            <button className="button is-rounded is-primary is-small"
+                                    disabled={this.state.selection.length<=0}
+                                    onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                Enviar Invitaicón
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -284,6 +319,16 @@ class UsersRsvp extends Component {
                          value={this.state.selectedUser} addToList={this.addToList}
                          extraFields={this.props.event.user_properties} edit={false}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
+                <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
+                        content={<p>
+                            Está seguro de enviar {this.state.selection.length} tiquetes
+                        </p>}
+                        first={{
+                            title:'Enviar',
+                            class:'is-info',action:this.logout}}
+                        second={{
+                            title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
+                            class:'',action:this.sendTicket}}/>
             </React.Fragment>
         );
     }
