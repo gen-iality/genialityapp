@@ -121,7 +121,7 @@ class ListEventUser extends Component {
                                             <table className="table is-fullwidth is-striped">
                                                 <thead>
                                                 <tr>
-                                                    <th>CheckIn</th>
+                                                    <th>Check</th>
                                                     <th/>
                                                     {this.state.deleteUser&&(<th/>)}
                                                     <th>
