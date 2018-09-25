@@ -50,7 +50,7 @@ class Event extends Component {
                                 <p className="menu-label">
                                     <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>Tickets</NavLink>
                                 </p>
-                                <p className="menu-label item">
+                                <p className="menu-label">
                                     <NavLink className="item" activeClassName={'active'} to={`${match.url}/rsvp`}>Invitaciones</NavLink>
                                 </p>
                                 {
@@ -62,7 +62,7 @@ class Event extends Component {
                                         </ul>
                                     )
                                 }
-                                <p className="menu-label item">
+                                <p className="menu-label">
                                     <NavLink className="item" activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
                                 </p>
                                 <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
