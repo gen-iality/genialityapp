@@ -142,7 +142,7 @@ class Header extends Component {
                             </div>
                             <div className="navbar-end">
                                 <div className="navbar-item">
-                                    <button className="button is-primary"
+                                    <button className="button is-primary is-rounded"
                                             onClick={this.createEvent}>
                                         <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
                                     </button>
