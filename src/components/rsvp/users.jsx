@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {EventsApi, UsersApi} from "../../helpers/request";
+import {Actions, EventsApi, UsersApi} from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
@@ -179,10 +179,26 @@ class UsersRsvp extends Component {
         !data ? this.setState({users:this.state.userAux}) : this.setState({users:data})
     };
 
-    sendTicket = () => {
+    showTicket = () => {
         this.setState((prevState)=>{
             return {ticket:!prevState.ticket}
         })
+    }
+
+    sendTicket = () => {
+        const { event } = this.props;
+        const { selection } = this.state;
+        const url = '/api/eventUser/bookEventUsers/'+event._id;
+        let users = [];
+        selection.map(item=>{
+            users.push(item.id)
+        });
+        Actions.post(url, {eventUsersIds:users})
+            .then((res) => {
+                console.log(res);
+                this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/users'})
+            });
+
     }
 
     render() {
@@ -229,7 +245,12 @@ class UsersRsvp extends Component {
                         </div>
                     </div>
                     <div className="column is-6">
-                        <strong className="is-5">{this.state.actualEvent.name}</strong>
+                        <strong className="is-5">
+                            {
+                                this.state.actualEvent._id === this.props.event._id ?
+                                    'Usuarios Evento Actual' : 'Usuarios Otro Evento'
+                            }
+                        </strong>
                         <div className="columns">
                             <div className="column is-8">
                                 <SearchComponent  data={this.state.users} kind={'invitation'} searchResult={this.searchUsers}/>
@@ -304,7 +325,7 @@ class UsersRsvp extends Component {
                             }
                             <button className="button is-rounded is-small"
                                     disabled={this.state.selection.length<=0}
-                                    onClick={this.sendTicket}>
+                                    onClick={this.showTicket}>
                                 Enviar Tiquete
                             </button>
                             <button className="button is-rounded is-primary is-small"
@@ -325,10 +346,10 @@ class UsersRsvp extends Component {
                         </p>}
                         first={{
                             title:'Enviar',
-                            class:'is-info',action:this.logout}}
+                            class:'is-info',action:this.sendTicket}}
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
-                            class:'',action:this.sendTicket}}/>
+                            class:'',action:this.showTicket}}/>
             </React.Fragment>
         );
     }
