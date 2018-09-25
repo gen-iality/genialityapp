@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Actions} from "../../helpers/request";
 import Pagination from "../shared/pagination";
-import MessageUser from "./messageUser";
-import EmailPrev from "./emailPreview";
 import {FormattedDate, FormattedTime} from 'react-intl';
+import InvitationDetail from "./invitationDetail";
 
 class Invitations extends Component {
     constructor(props) {
@@ -11,9 +10,8 @@ class Invitations extends Component {
         this.state = {
             invitations:[],
             pageOfItems:[],
-            step:       0,
             item:       { message_users: [] },
-            modal:      false,
+            detail:     false,
         }
     }
 
@@ -24,78 +22,57 @@ class Invitations extends Component {
         this.setState({invitations});
     }
 
-    showModal = (item) => {
-        this.setState({modal:true,item})
+    showDetail = (item) => {
+        this.setState({detail:true,item})
     };
 
-    closeModal = () => {
+    closeDetail = () => {
         const item = { message_users:[] };
-        this.setState({modal:false,item,step:0})
+        this.setState({detail:false,item})
     };
 
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
     };
 
+    componentWillUnmount() {
+        this.setState({detail:false,item:{}})
+    }
+
     render() {
-        const layout = [
-            <MessageUser users={this.state.item.message_users}/>,
-            <EmailPrev event={this.props.event} item={this.state.item}/>
-        ];
         return (
             <div className={"invitations"}>
-                <table className="table is-fullwidth is-hoverable">
-                    <thead>
-                        <tr>
-                            <th>Subject</th>
-                            <th>Fecha</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.pageOfItems.map((item,key)=>{
-                                return <tr key={key} className="tr-item" onClick={(e)=>{this.showModal(item)}}>
-                                    <td>{item.subject}</td>
-                                    <td><FormattedDate value={item.created_at}/> <FormattedTime value={item.created_at}/></td>
-                                    <td>{item.number_of_recipients}</td>
+                {
+                    this.state.detail?
+                        <InvitationDetail event={this.props.event} close={this.closeDetail}
+                                          item={this.state.item} users={this.state.item.message_users}/>:
+                        <React.Fragment>
+                            <table className="table is-fullwidth is-hoverable">
+                                <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
                                 </tr>
-                            })
-                        }
-                    </tbody>
-                </table>
-                <Pagination
-                    items={this.state.invitations}
-                    onChangePage={this.onChangePage}
-                />
-                <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
-                    <div className="modal-background"/>
-                    <div className="modal-card">
-                        <header className="modal-card-head">
-                            <p className="modal-card-title">Detalles</p>
-                            <button className="delete" aria-label="close" onClick={(e)=>{this.closeModal()}}/>
-                        </header>
-                        <section className="modal-card-body">
-                            <div className="content has-text-centered">
-                                <div className="tabs is-fullwidth">
-                                    <ul>
-                                        <li className={`${this.state.step === 0 ? "is-active" : ""}`}
-                                            onClick={(e)=>{this.setState({step:0})}}>
-                                            <a>Users</a>
-                                        </li>
-                                        <li className={`${this.state.step === 1 ? "is-active" : ""}`}
-                                            onClick={(e)=>{this.setState({step:1})}}>
-                                            <a>Email</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                </thead>
+                                <tbody>
                                 {
-                                    layout[this.state.step]
+                                    this.state.pageOfItems.map((item,key)=>{
+                                        return <tr key={key} className="tr-item" onClick={(e)=>{this.showDetail(item)}}>
+                                            <td>{item.subject}</td>
+                                            <td><FormattedDate value={item.created_at}/> <FormattedTime value={item.created_at}/></td>
+                                            <td>{item.number_of_recipients}</td>
+                                        </tr>
+                                    })
                                 }
-                            </div>
-                        </section>
-                    </div>
-                </div>
+                                </tbody>
+                            </table>
+                            <Pagination
+                                items={this.state.invitations}
+                                onChangePage={this.onChangePage}
+                            />
+                        </React.Fragment>
+                }
             </div>
         );
     }
