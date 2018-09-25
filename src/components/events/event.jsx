@@ -47,27 +47,24 @@ class Event extends Component {
                                 <p className="menu-label">
                                     <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                 </p>
-                                <p className="menu-label item" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                                    <span>Usuarios</span>
-                                    <span className="icon">
-                                        <i className={`${this.state.userTab?'up':'down'}`}/>
-                                    </span>
+                                <p className="menu-label">
+                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>Tickets</NavLink>
+                                </p>
+                                <p className="menu-label item">
+                                    <NavLink className="item" activeClassName={'active'} to={`${match.url}/rsvp`}>Invitaciones</NavLink>
                                 </p>
                                 {
                                     this.state.userTab && (
                                         <ul className="menu-list">
                                             <li>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Invitaciones</NavLink>
-                                            </li>
-                                            <li>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar Invitación</NavLink>
+                                                <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Historial</NavLink>
                                             </li>
                                         </ul>
                                     )
                                 }
+                                <p className="menu-label item">
+                                    <NavLink className="item" activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
+                                </p>
                                 <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                     <span>Contenido</span>
                                     <span className="icon">
