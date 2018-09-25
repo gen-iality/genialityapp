@@ -61,7 +61,7 @@ class ListEventUser extends Component {
 
     checkIn = (user,position) => {
         const users = this.state.users;
-        user.checkin = !user.checkin;
+        user.checked_in = !user.checked_in;
         users[position] = user;
         Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
             .then((response)=>{
@@ -147,8 +147,8 @@ class ListEventUser extends Component {
                                                     this.state.users.map((item,key)=>{
                                                         return <tr key={key}>
                                                             <td width="5%">
-                                                                <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id}
-                                                                       type="checkbox" name={"checkinUser"+item._id} checked={item.checkin} onClick={(e)=>{this.checkIn(item,key)}}/>
+                                                                <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                                                       type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onClick={(e)=>{this.checkIn(item,key)}}/>
                                                                 <label htmlFor={"checkinUser"+item._id}/>
                                                             </td>
                                                             <td width="5%">
