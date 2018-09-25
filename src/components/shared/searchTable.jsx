@@ -23,7 +23,7 @@ class SearchComponent extends Component {
         if (this.props.kind === 'user') {
             arrAux = this.props.data.filter( (item) =>{
                 return (item.properties.email.search(new RegExp(value, 'i')) >= 0 ||
-                    item.properties.email.search(new RegExp(value, 'i')) >= 0);
+                    item.properties.name.search(new RegExp(value, 'i')) >= 0);
             }
                 /*item.properties['name'].search(new RegExp(value, 'i')) >= 0 ||
                 item.properties['email'].search(new RegExp(value, 'i')) >= 0 ||
@@ -33,7 +33,7 @@ class SearchComponent extends Component {
         }else if(this.props.kind === 'invitation'){
             arrAux = this.props.data.filter(item =>
                 item.name.search(new RegExp(value, 'i')) >= 0 ||
-                item.email.search(new RegExp(value, 'i')) >= 0);
+                item.state.search(new RegExp(value, 'i')) >= 0);
         }
         return arrAux
     }
