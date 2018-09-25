@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {FormattedDate, FormattedTime} from 'react-intl';
 import { Actions, UsersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import AddUser from "../modal/addUser";
@@ -84,15 +85,6 @@ class ListEventUser extends Component {
                 <nav className="navbar is-transparent">
                     <div className="navbar-menu">
                         <div className="navbar-start">
-                            <div className="navbar-item has-dropdown is-hoverable">
-                                <a className="navbar-link">Usuarios</a>
-                                <div className="navbar-dropdown is-boxed">
-                                    <a className="navbar-item">DRAFT</a>
-                                    <a className="navbar-item">CONFIRMED</a>
-                                    <a className="navbar-item">INVITED</a>
-                                    <a className="navbar-item">TODOS</a>
-                                </div>
-                            </div>
                             <div className="navbar-item">
                                 <SearchComponent  data={this.state.users} kind={'user'} searchResult={this.searchResult}/>
                             </div>
@@ -100,11 +92,18 @@ class ListEventUser extends Component {
                         <div className="navbar-end">
                             <div className="navbar-item">
                                 <div className="field is-grouped">
+                                    <div className="control">
+                                        <button className={`button is-rounded ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
+                                            <span className="icon is-small">
+                                              <i className="far fa-trash-alt"/>
+                                            </span>
+                                        </button>
+                                    </div>
                                     <p className="control">
-                                        <button className="button is-primary is-rounded" onClick={this.modalUser}>Leer Código QR</button>
+                                        <button className="button is-inverted is-rounded">Leer Código QR</button>
                                     </p>
                                     <p className="control">
-                                        <button className="button is-success is-rounded" onClick={this.modalUser}>Agregar</button>
+                                        <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
                                     </p>
                                 </div>
                             </div>
@@ -118,12 +117,6 @@ class ListEventUser extends Component {
                             <React.Fragment>
                                 {
                                     this.state.users.length>0 ?
-                                    <React.Fragment>
-                                        <div className="field">
-                                            <input className="is-checkradio is-danger is-block" id="deleteUser"
-                                                   type="checkbox" name="deleteUser" checked={this.state.deleteUser} onClick={this.enableDelete}/>
-                                            <label htmlFor="deleteUser">{this.state.deleteUser?'Disable Delete User':'Enable Delete User'}</label>
-                                        </div>
                                         <div className="preview-list">
                                             <table className="table is-fullwidth is-striped">
                                                 <thead>
@@ -131,15 +124,27 @@ class ListEventUser extends Component {
                                                     <th>CheckIn</th>
                                                     <th/>
                                                     {this.state.deleteUser&&(<th/>)}
-                                                    <th>Correo</th>
+                                                    <th>
+                                                        <div className="navbar-item has-dropdown is-hoverable">
+                                                            <a className="navbar-link">Estado</a>
+                                                            <div className="navbar-dropdown is-boxed">
+                                                                <a className="navbar-item">DRAFT</a>
+                                                                <a className="navbar-item">CONFIRMED</a>
+                                                                <a className="navbar-item">INVITED</a>
+                                                                <a className="navbar-item">TODOS</a>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th>Fecha</th>
+                                                    <th>Hora</th>
+                                                    <th>Rol</th>
                                                     <th>Nombre</th>
+                                                    <th>Correo</th>
                                                     {
                                                         this.state.extraFields.map((extra,key)=>{
                                                             return <th key={key}>{extra.name}</th>
                                                         })
                                                     }
-                                                    <th>Estado</th>
-                                                    <th>Rol</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -163,22 +168,24 @@ class ListEventUser extends Component {
                                                             </span>
                                                                 </td>
                                                             )}
-                                                            <td>{item.properties.email}</td>
+                                                            <td>{item.state?item.state.name:''}</td>
+                                                            <td><FormattedDate value={item.updated_at}/></td>
+                                                            <td><FormattedTime value={item.updated_at}/></td>
+                                                            <td>{item.rol?item.rol.name:''}</td>
                                                             <td>{item.properties.name}</td>
+                                                            <td>{item.properties.email}</td>
                                                             {
                                                                 this.state.extraFields.map((extra,key)=>{
                                                                     return <td key={key}>{item.properties[extra.name]}</td>
                                                                 })
                                                             }
-                                                            <td>{item.state?item.state.name:''}</td>
-                                                            <td>{item.rol?item.rol.name:''}</td>
                                                         </tr>
                                                     })
                                                 }
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </React.Fragment>: <h3>Not a single user...try add one or import</h3>
+                                        : <h3>Not a single user...try add one or import</h3>
                                 }
                             </React.Fragment>
                     }
