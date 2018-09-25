@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import XLSX from "xlsx";
-import { UsersApi } from "../../helpers/request";
+import { Actions, UsersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
@@ -43,16 +42,6 @@ class ListEventUser extends Component {
         !data ? this.setState({users:this.state.auxArr}) : this.setState({users:data})
     };
 
-    exportFile = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const data = parseData(this.state.users);
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
-    };
-
     modalUser = () => {
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:false}
@@ -74,10 +63,10 @@ class ListEventUser extends Component {
         const users = this.state.users;
         user.checkin = !user.checkin;
         users[position] = user;
-        /*Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
+        Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
             .then((response)=>{
                 console.log(response);
-            });*/
+            });
         this.setState((prevState) => {
             return {data:users,change:!prevState.change}
         })
@@ -112,18 +101,11 @@ class ListEventUser extends Component {
                             <div className="navbar-item">
                                 <div className="field is-grouped">
                                     <p className="control">
-                                        <button className="button is-primary" onClick={this.modalUser}>Agregar</button>
+                                        <button className="button is-primary is-rounded" onClick={this.modalUser}>Leer Código QR</button>
                                     </p>
                                     <p className="control">
-                                        <button className="button is-primary" onClick={this.modalImport}>Importar</button>
+                                        <button className="button is-success is-rounded" onClick={this.modalUser}>Agregar</button>
                                     </p>
-                                    {
-                                        this.state.users.length>0 && (
-                                            <p className="control">
-                                                <button className="button is-primary" onClick={this.exportFile}>Exportar</button>
-                                            </p>
-                                        )
-                                    }
                                 </div>
                             </div>
                         </div>
