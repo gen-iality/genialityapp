@@ -30,7 +30,7 @@ class ListEventUser extends Component {
         this.fetchData = this.fetchData.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
         const columns = this.state.columns;
@@ -126,8 +126,6 @@ class ListEventUser extends Component {
 
     fetchData(state, instance) {
         this.setState({ loading: true });
-
-        // Request the data however you want.  Here, we'll use our mocked service we created earlier
         requestData(
             this.state.userReq,
             this.props.eventId,
@@ -136,7 +134,6 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
-            console.log(res);
             const pageSize = Math.ceil(res.total/5);
             const page = Math.ceil(res.total/pageSize);
             this.setState({
@@ -286,44 +283,30 @@ class ListEventUser extends Component {
 
 const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
     return new Promise((resolve, reject) => {
-        console.log(users);
-        console.log(filtered);
-        console.log(page);
-        console.log(sorted);
-        console.log(pageSize);
         let filteredData = users;
-        let res = {
-            rows: filteredData.data,
-            pages: filteredData.meta.total
-        };
-        // You can use the filters in your request, but you are responsible for applying them.
+        let res = {rows: filteredData.data, pages: filteredData.meta.total};
+        let query = '?';
         if (filtered.length) {
-            axios.get(`/api/user/event_users/${eventId}?filtered=[{"id":"${filtered[0].id}","value":"${filtered[0].value}"}]&pageSize=5`).then(({data})=>{
-                filteredData = data;
-                resolve({
-                    rows: filteredData.data,
-                    total: filteredData.meta.total
-                })
+            let queryFilter = [];
+            filtered.map(filter=>{
+                if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value})
             });
-        }else{
-            resolve(res)
+            queryFilter = JSON.stringify(queryFilter);
+            query = query+`filtered=${queryFilter}`;
         }
-        /*
-        // You can also use the sorting in your request, but again, you are responsible for applying it.
-        const sortedData = _.orderBy(
-            filteredData,
-            sorted.map(sort => {
-                return row => {
-                    if (row[sort.id] === null || row[sort.id] === undefined) {
-                        return -Infinity;
-                    }
-                    return typeof row[sort.id] === "string"
-                        ? row[sort.id].toLowerCase()
-                        : row[sort.id];
-                };
-            }),
-            sorted.map(d => (d.desc ? "desc" : "asc"))
-        );*/
+        if (sorted.length) {
+            let querySort = [];
+            sorted.map(sort=>{
+                querySort.push({"id":sort.id,"value":sort.desc?"desc":"asc"})
+            });
+            querySort = JSON.stringify(querySort);
+            query = query+`&orderBy=${querySort}`;
+        }
+        axios.get(`/api/user/event_users/${eventId}${query}&pageSize=5`).then(({data})=>{
+            filteredData = data;
+            res = {rows: filteredData.data, total: filteredData.meta.total};
+            resolve(res)
+        });
 
     });
 };
