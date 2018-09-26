@@ -35,14 +35,18 @@ class ListEventUser extends Component {
         const properties = event.user_properties;
         const columns = this.state.columns;
         properties.map((extra,key)=>{
-            return columns.push(
-                {
-                    Header: `${extra.name}`,
-                    id: `${extra.name}`,
-                    accessor: d => d.properties[extra.name]
-                }
-            )
+            let pos = columns.map((e) => { return e.id; }).indexOf(extra.name);
+            if(pos>=0){
+                return columns.push(
+                    {
+                        Header: `${extra.name}`,
+                        id: `${extra.name}`,
+                        accessor: d => d.properties[extra.name]
+                    }
+                )
+            }
         });
+        columns.splice(0, 3);
         columns.unshift(
             {
                 Header: "Check",
@@ -111,17 +115,20 @@ class ListEventUser extends Component {
         this.setState({modal:false})
     };
 
-    checkIn = (user,position) => {
+    checkIn = (user) => {
         const users = this.state.users;
-        user.checked_in = !user.checked_in;
-        users[position] = user;
-        Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
-            .then((response)=>{
-                console.log(response);
-            });
-        this.setState((prevState) => {
-            return {data:users,change:!prevState.change}
-        })
+        let pos = users.map((e) => { return e._id; }).indexOf(user._id);
+        if(pos >= 0){
+            user.checked_in = !user.checked_in;
+            users[pos] = user;
+            Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
+                .then((response)=>{
+                    console.log(response);
+                });
+            this.setState((prevState) => {
+                return {data:users,change:!prevState.change}
+            })
+        }
     };
 
     fetchData(state, instance) {
@@ -188,83 +195,17 @@ class ListEventUser extends Component {
                     <div className="preview-list">
                         <ReactTable
                             columns={columns}
-                            manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+                            manual
                             data={users}
-                            pages={pages} // Display the total number of pages
-                            loading={loading} // Display the loading overlay when we need it
-                            onFetchData={this.fetchData} // Request new data when things change
+                            pages={pages}
+                            loading={loading}
+                            onFetchData={this.fetchData}
                             filterable
                             defaultFilterMethod={(filter, row) =>
                                 String(row[filter.id]) === filter.value}
                             pageSize={pageSize}
                             className="-highlight"
                         />
-                        {/*<table className="table is-fullwidth is-striped">
-                                        <thead>
-                                        <tr>
-                                            <th>Check</th>
-                                            <th/>
-                                            {this.state.deleteUser&&(<th/>)}
-                                            <th>
-                                                <div className="navbar-item has-dropdown is-hoverable">
-                                                    <a className="navbar-link">Estado</a>
-                                                    <div className="navbar-dropdown is-boxed">
-                                                        <a className="navbar-item">DRAFT</a>
-                                                        <a className="navbar-item">CONFIRMED</a>
-                                                        <a className="navbar-item">INVITED</a>
-                                                        <a className="navbar-item">TODOS</a>
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th>Fecha</th>
-                                            <th>Hora</th>
-                                            <th>Rol</th>
-                                            <th>Nombre</th>
-                                            <th>Correo</th>
-                                            {
-                                                this.state.extraFields.map((extra,key)=>{
-                                                    return <th key={key}>{extra.name}</th>
-                                                })
-                                            }
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {
-                                            this.state.users.map((item,key)=>{
-                                                return <tr key={key}>
-                                                    <td width="5%">
-                                                        <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                                                               type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onClick={(e)=>{this.checkIn(item,key)}}/>
-                                                        <label htmlFor={"checkinUser"+item._id}/>
-                                                    </td>
-                                                    <td width="5%">
-                                                <span className="icon has-text-info action_pointer tooltip" data-tooltip="Edit User" onClick={(e)=>{this.setState({addUser:true,selectedUser:item,edit:true})}}>
-                                                    <i className="fas fa-edit"/>
-                                                </span>
-                                                    </td>
-                                                    {this.state.deleteUser&&(
-                                                        <td width="5%">
-                                                    <span className="icon has-text-danger action_pointer tooltip" data-tooltip="Delete User" onClick={(e)=>{this.setState({modal:true})}}>
-                                                        <i className="fas fa-trash"/>
-                                                    </span>
-                                                        </td>
-                                                    )}
-                                                    <td>{item.state?item.state.name:''}</td>
-                                                    <td><FormattedDate value={item.updated_at}/></td>
-                                                    <td><FormattedTime value={item.updated_at}/></td>
-                                                    <td>{item.rol?item.rol.name:''}</td>
-                                                    <td>{item.properties.name}</td>
-                                                    <td>{item.properties.email}</td>
-                                                    {
-                                                        this.state.extraFields.map((extra,key)=>{
-                                                            return <td key={key}>{item.properties[extra.name]}</td>
-                                                        })
-                                                    }
-                                                </tr>
-                                            })
-                                        }
-                                        </tbody>
-                                    </table>*/}
                     </div>
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
@@ -312,6 +253,7 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
 };
 
 const columns = [
+    {},{},{},
     {
         Header: "Estado",
         id: "state_id",
