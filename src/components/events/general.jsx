@@ -252,11 +252,10 @@ class General extends Component {
                                 {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                             </div>
                             <div className="field">
-                                <label className="label">Visibilidad</label>
+                                <label className="label">Crear un evento: </label>
                                 <div className="control">
                                     <div className="select">
                                         <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
-                                            <option>Selecciona...</option>
                                             <option value={'PUBLIC'}>Público</option>
                                             <option value={'ORGANIZATION'}>Privado</option>
                                         </select>
