@@ -89,14 +89,16 @@ class Importacion extends Component {
                         </p>
                     )
                 }
-                <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
-                    <button className="button is-rounded is-primary">Importar Excel</button>
-                </Dropzone>
-                <p className="help is-danger">{this.state.errMsg}</p>
-                <button className="button is-text" onClick={this.downloadExcel}>
-                    <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
-                    <span><ins>Descargar Template</ins></span>
-                </button>
+                <div className="has-text-centered">
+                    <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
+                        <button className="button is-rounded is-primary">Importar Excel</button>
+                    </Dropzone>
+                    <p className="help is-danger">{this.state.errMsg}</p>
+                    <button className="button is-text is-primary" onClick={this.downloadExcel}>
+                        <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
+                        <span><ins>Descargar Template</ins></span>
+                    </button>
+                </div>
             </React.Fragment>
         );
     }
