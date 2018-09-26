@@ -19,9 +19,11 @@
     "react-geosuggest": "^2.8.0",
     "react-google-maps": "^9.4.5",
     "react-intl": "^2.6.0",
+    "react-resolver": "^3.1.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-table": "^6.8.6",
     "react-widgets": "^4.4.3",
     "react-widgets-moment": "^4.0.19",
     "xlsx": "^0.13.3"
