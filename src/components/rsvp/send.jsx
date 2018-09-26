@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import Moment from "moment"
 import 'moment/locale/es-us';
-import Dropzone from "react-dropzone";
 import {Actions} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import ImageInput from "../shared/imageInput";

@@ -204,20 +204,4 @@ class ListEventUser extends Component {
     }
 }
 
-const parseData = (data) => {
-    let info = [];
-    data.map((item,key) => {
-        info[key] = {};
-        if(item.user){
-            Object.keys(item.properties).map((obj, i) => (
-                info[key][obj] = item.properties[obj]
-            ));
-            info[key]['estado'] = item.state.name;
-            info[key]['rol'] = item.rol.name;
-        }
-        return info
-    });
-    return info
-};
-
 export default ListEventUser;
