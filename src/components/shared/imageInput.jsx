@@ -9,18 +9,11 @@ export default class ImageInput extends Component {
             <div key="file">
                 {
                     props.picture?
-                        <div>
+                        <div className="imgRsvp">
                             <img src={props.picture} alt={'Imagen Perfil'}/>
-                            <div className="field is-grouped is-grouped-right">
-                                <div className="control">
-                                    <Dropzone accept="image/*" onDrop={props.changeImg} style={{}}>
-                                        <button className="button is-outlined is-primary">Change</button>
-                                    </Dropzone>
-                                </div>
-                                <div className="control">
-                                    <button onClick={props.cancelImg} className="button is-outlined is-danger">Delete</button>
-                                </div>
-                            </div>
+                            <Dropzone accept="image/*" onDrop={props.changeImg} className="dropzone">
+                                <button className={`button is-link is-inverted is-outlined ${props.imageFile?'is-loading':''}`}>Cambiar foto</button>
+                            </Dropzone>
                         </div>:
                         !props.imageFile &&
                             <div>

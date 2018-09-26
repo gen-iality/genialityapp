@@ -24,15 +24,11 @@ class SearchComponent extends Component {
             arrAux = this.props.data.filter( (item) =>{
                 return (item.properties.email.search(new RegExp(value, 'i')) >= 0 ||
                     item.properties.name.search(new RegExp(value, 'i')) >= 0);
-            }
-                /*item.properties['name'].search(new RegExp(value, 'i')) >= 0 ||
-                item.properties['email'].search(new RegExp(value, 'i')) >= 0 ||
-                item.state['name'].search(new RegExp(value, 'i')) >= 0 ||
-                item.rol['name'].search(new RegExp(value, 'i')) >= 0*/
-            );
+            });
         }else if(this.props.kind === 'invitation'){
             arrAux = this.props.data.filter(item =>
                 item.name.search(new RegExp(value, 'i')) >= 0 ||
+                item.email.search(new RegExp(value, 'i')) >= 0 ||
                 item.state.search(new RegExp(value, 'i')) >= 0);
         }
         return arrAux

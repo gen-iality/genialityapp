@@ -5,6 +5,7 @@ import 'moment/locale/es-us';
 import Dropzone from "react-dropzone";
 import {Actions} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
+import ImageInput from "../shared/imageInput";
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -43,7 +44,8 @@ class SendRsvp extends Component {
                     rsvp: {
                         ...self.state.rsvp,
                         image: image
-                    }
+                    },
+                    imageFile: false
                 });
             });
     };
@@ -170,12 +172,8 @@ class SendRsvp extends Component {
                     <div className="columns">
                         <div className="column is-half is-offset-one-quarter">
                             <p>Sube una imagen (Por defecto será la del evento)</p>
-                            <div className="imgRsvp">
-                                <img src={this.state.rsvp.image} alt={'Imagen Perfil'}/>
-                                <Dropzone accept="image/*" onDrop={this.changeImg} className="dropzone">
-                                    <button className={`button is-link is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>
-                                </Dropzone>
-                            </div>
+                            <ImageInput picture={this.state.rsvp.image} imageFile={this.state.imageFile}
+                                        changeImg={this.changeImg} errImg={this.state.errImg}/>
                         </div>
                     </div>
                     <div className="columns">

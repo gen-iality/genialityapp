@@ -16,7 +16,6 @@ class General extends Component {
         };
         this.submit = this.submit.bind(this);
         this.uploadImg = this.uploadImg.bind(this);
-        this.imgToEvent = this.imgToEvent.bind(this);
     }
 
     handleChange = (e) => {
@@ -45,53 +44,22 @@ class General extends Component {
                     formValues: {
                         ...self.state.formValues,
                         picture: image
-                    },fileMsg:'Image uploaded successfull'
+                    },fileMsg:'Image uploaded successfull',
+                    imageFile: false
                 });
-                this.imgToEvent(image,this.state.event._id)
             });
         e.preventDefault();
         e.stopPropagation();
     };
 
-    async imgToEvent(image,id) {
-        try {
-            const result = await EventsApi.editOne({picture:image},id);
-            console.log(result);
-        } catch (e) {
-            console.log('Some error');
-            console.log(e)
-        }
-    }
-
     changeImg = (files) => {
         const file = files[0];
-        if(!file){
-            this.setState({errImg:'Only images files allowed. Please try again (:'});
+        if(file){
+            this.setState({imageFile:file});
+            this.uploadImg()
         }else{
-            this.setState({imageFile: file,
-                event:{...this.state.event, picture: null}});
-            let data = new FormData();
-            const url = '/api/files/upload',
-                self = this;
-            data.append('file',file);
-            Actions.post(url, data)
-                .then((image) => {
-                    self.setState({
-                        formValues: {
-                            ...self.state.formValues,
-                            picture: image
-                        },fileMsg:'Image uploaded successfull'
-                    });
-                    this.imgToEvent(image,this.state.event._id)
-                });
+            this.setState({errImg:'Only images files allowed. Please try again (:'});
         }
-    };
-
-    cancelImg = (e) => {
-        this.setState({imageFile:null,
-            formValues:{...this.state.formValues, picture: this.state.urlImg}});
-        e.preventDefault();
-        e.stopPropagation();
     };
 
     async submit(e) {
@@ -246,8 +214,7 @@ class General extends Component {
                                 <label className="label">Foto</label>
                                 <div className="control">
                                     <ImageInput picture={event.picture} handleFileChange={ this.handleFileChange}
-                                                imageFile={this.state.imageFile} uploadImg={this.uploadImg}
-                                                cancelImg={this.cancelImg} changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                                imageFile={this.state.imageFile} changeImg={this.changeImg} errImg={this.state.errImg}/>
                                 </div>
                                 {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                             </div>
