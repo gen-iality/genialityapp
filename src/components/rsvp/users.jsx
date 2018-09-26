@@ -207,9 +207,7 @@ class UsersRsvp extends Component {
                 <div className="columns">
                     <div className="column is-3">
                         <div className="box">
-                            <strong>Eventos</strong>
                             <div>
-                                <p>Evento Actual</p>
                                 <div className="field">
                                     <input className="is-checkradio is-link" id="thisEvent"
                                            type="checkbox" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
@@ -223,14 +221,14 @@ class UsersRsvp extends Component {
                                                 <button className="button is-light is-rounded is-small" onClick={this.modalUser}>Agregar Usuario</button>
                                             </div>
                                             <div className="field control">
-                                                <button className="button is-light is-rounded is-small" onClick={this.modalImport}>Importar Excel</button>
+                                                <button className="button is-light is-rounded is-small" onClick={this.modalImport}>Importar Usuarios</button>
                                             </div>
                                         </React.Fragment>
                                     )
                                 }
                             </div>
                             <div>
-                                <p>Otros Eventos</p>
+                                <p>Importar asistentes de eventos pasados</p>
                                 {
                                     this.state.events.map((event,key)=>{
                                         return <div className="field" key={key}>
@@ -267,40 +265,29 @@ class UsersRsvp extends Component {
                                 </div>
                             </div>
                         </div>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input className="is-checkradio is-info is-small" id={"checkallUser"}
-                                               type="checkbox" name={"checkallUser"} ref="checkbox" onClick={this.toggleAll}/>
-                                        <label htmlFor={"checkallUser"}/>
-                                    </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                this.state.users.map((item,key)=>{
-                                    return <div key={key} className="media">
-                                        <div className="media-left">
-                                            <input className="is-checkradio is-info is-small" id={"checkinUser"+item.id}
-                                                   type="checkbox" name={"checkinUser"+item.id} checked={this.isChecked(item.id)} onClick={(e)=>{this.toggleSelection(item)}}/>
-                                            <label htmlFor={"checkinUser"+item.id}/>
-                                        </div>
-                                        <div className="media-content">
-                                            <p className="title is-5">{item.name}</p>
-                                            <p className="subtitle is-6">{item.email}</p>
-                                        </div>
-                                        <div className="media-right">
-                                            <small>{item.state}</small>
-                                        </div>
+                        <div className="field">
+                            <input className="is-checkradio is-info is-small" id={"checkallUser"}
+                                   type="checkbox" name={"checkallUser"} ref="checkbox" onClick={this.toggleAll}/>
+                            <label htmlFor={"checkallUser"}>Seleccionar Todos</label>
+                        </div>
+                        {
+                            this.state.users.map((item,key)=>{
+                                return <div key={key} className="media">
+                                    <div className="media-left">
+                                        <input className="is-checkradio is-info is-small" id={"checkinUser"+item.id}
+                                               type="checkbox" name={"checkinUser"+item.id} checked={this.isChecked(item.id)} onClick={(e)=>{this.toggleSelection(item)}}/>
+                                        <label htmlFor={"checkinUser"+item.id}/>
                                     </div>
-                                })
-                            }
-                            </tbody>
-                        </table>
+                                    <div className="media-content">
+                                        <p className="subtitle is-6">{item.name}</p>
+                                        <p className="title is-5">{item.email}</p>
+                                    </div>
+                                    <div className="media-right">
+                                        <small>{item.state}</small>
+                                    </div>
+                                </div>
+                            })
+                        }
                     </div>
                     <div className="column is-3">
                         <div className="box">
@@ -323,12 +310,12 @@ class UsersRsvp extends Component {
                                     </div>
                                 })
                             }
-                            <button className="button is-rounded is-small"
+                            <button className="button is-rounded is-primary is-small"
                                     disabled={this.state.selection.length<=0}
                                     onClick={this.showTicket}>
                                 Enviar Tiquete
                             </button>
-                            <button className="button is-rounded is-primary is-small"
+                            <button className="button is-rounded is-small"
                                     disabled={this.state.selection.length<=0}
                                     onClick={(e)=>{this.props.userTab(this.state.selection)}}>
                                 Enviar Invitaicón
