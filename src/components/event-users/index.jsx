@@ -73,6 +73,7 @@ class ListEventUser extends Component {
                     <label htmlFor={"checkinUser"+props.value._id}/>
                 </div>,
                 width: 80,
+                sortable: false,
                 filterable: false,
             },
             {
@@ -293,6 +294,7 @@ const columns = [
         Header: "Estado",
         id: "state_id",
         accessor: d => d.state.name,
+        sortable: false,
         Filter: ({ filter, onChange }) =>
             <select
                 onChange={event => onChange(event.target.value)}
@@ -328,6 +330,7 @@ const columns = [
         Header: "Rol",
         id: "rol_id",
         accessor: d => d.rol.name,
+        sortable: false,
         Filter: ({ filter, onChange }) =>
             <select
                 onChange={event => onChange(event.target.value)}
