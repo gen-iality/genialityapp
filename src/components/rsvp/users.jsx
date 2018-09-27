@@ -5,6 +5,7 @@ import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import {FormattedMessage} from "react-intl";
 import Dialog from "../modal/twoAction";
+import axios from "axios";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class UsersRsvp extends Component {
             users: [],
             selection: [],
             auxArr: [],
+            state: 'all',
             preselection: [],
             importUser: false,
             addUser:    false,
@@ -171,6 +173,17 @@ class UsersRsvp extends Component {
         });
     };
 
+    handleChange = (event) => {
+        this.setState({state: event.target.value});
+        let queryFilter = (event.target.value!=='all') && [{"id":"state_id","value":event.target.value}];
+        queryFilter = JSON.stringify(queryFilter);
+        let query = `?filtered=${queryFilter}`;
+        axios.get(`/api/user/event_users/${this.state.actualEvent._id}${query}`).then(({data})=>{
+            const users = this.handleUsers(data.data);
+            this.setState({users})
+        });
+    };
+
     searchResult = (data) => {
         !data ? this.setState({selection:this.state.auxArr}) : this.setState({selection:data})
     };
@@ -253,17 +266,25 @@ class UsersRsvp extends Component {
                             <div className="column is-8">
                                 <SearchComponent  data={this.state.users} kind={'invitation'} searchResult={this.searchUsers}/>
                             </div>
-                            <div className="column">
-                                <div className="navbar-item has-dropdown is-hoverable">
-                                    <a className="navbar-link">Estado</a>
-                                    <div className="navbar-dropdown is-boxed">
-                                        <a className="navbar-item">TODOS</a>
-                                        <a className="navbar-item">DRAFT</a>
-                                        <a className="navbar-item">CONFIRMED</a>
-                                        <a className="navbar-item">INVITED</a>
+                            {
+                                this.state.actualEvent._id === this.props.event._id &&
+                                <div className="column">
+                                    <div className="field">
+                                        <label className="label">Estado</label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={this.state.state} onChange={this.handleChange}>
+                                                    <option value="all">TODOS</option>
+                                                    <option value="5b0efc411d18160bce9bc706">DRAFT</option>
+                                                    <option value="5b859ed02039276ce2b996f0">BOOKED</option>
+                                                    <option value="5ba8d200aac5b12a5a8ce748">RESERVED</option>
+                                                    <option value="5ba8d213aac5b12a5a8ce749">INVITED</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                         <div className="field">
                             <input className="is-checkradio is-info is-small" id={"checkallUser"}
@@ -285,9 +306,9 @@ class UsersRsvp extends Component {
                                     <div className="media-right">
                                         <small>{item.state}</small>
                                     </div>
-                                </div>
-                            })
-                        }
+                                })
+                            }
+                        </div>
                     </div>
                     <div className="column is-3">
                         <div className="box">
