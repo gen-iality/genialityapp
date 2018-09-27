@@ -1,10 +1,17 @@
 import axios from 'axios';
-import { ApiUrl } from './constants';
+import { ApiUrl, AuthUrl } from './constants';
 import * as Cookie from 'js-cookie';
 
-axios.defaults.baseURL = ApiUrl;
-axios.defaults.withCredentials = true;
-/*axios.interceptors.response.use(function(response) {
+const publicInstance = axios.create({
+    url: ApiUrl,
+    baseURL: ApiUrl,
+});
+const privateInstance = axios.create({
+    url: ApiUrl,
+    baseURL: ApiUrl,
+    withCredentials: true
+});
+privateInstance.interceptors.response.use(function(response) {
     // Do something with response data
     console.log(response);
     if (
@@ -13,7 +20,7 @@ axios.defaults.withCredentials = true;
         typeof response.data === 'string' &&
         response.data.indexOf(401) !== -1
     ) {
-        Cookie.remove('token');
+        Cookie.remove('evius_token');
         window.location.replace(`${AuthUrl}/logout`);
         return [];
     } else {
@@ -22,40 +29,47 @@ axios.defaults.withCredentials = true;
 }, ( err ) => {
     const { data } = err.response;
     console.log(data);
-});*/
+    window.location.replace(`${AuthUrl}/logout`);
+});
 let evius_token = Cookie.get('evius_token');
 console.log("evius_token");
 if (evius_token){
-    axios.defaults.params = {}
-    axios.defaults.params['evius_token'] = evius_token;
+    privateInstance.defaults.params = {}
+    privateInstance.defaults.params['evius_token'] = evius_token;
 }
 
 export const Actions = {
-    create: function(url, data) {
-        return axios.post(url, data).then(({data})=>data);
+    create: (url, data, unsafe) => {
+        if(unsafe) return publicInstance.post(url, data).then(({data})=>data);
+        return privateInstance.post(url, data).then(({data})=>data);
     },
-    delete: (url, id) => {
-        return axios.delete(`${url}${id}`);
+    delete: (url, id, unsafe) => {
+        if(unsafe) return publicInstance.delete(`${url}${id}`);
+        return privateInstance.delete(`${url}${id}`);
     },
-    edit: (url, data, id) => {
-        return axios.put(`${url}${id}`, data).then(data);
+    edit: (url, data, id, unsafe) => {
+        if(unsafe) return publicInstance.put(`${url}${id}`, data).then(data);
+        return privateInstance.put(`${url}${id}`, data).then(data);
     },
-    post: (url, data) => {
-        return axios.post(url,data).then(({data})=>data);
+    post: (url, data, unsafe) => {
+        if(unsafe) return publicInstance.post(url,data).then(({data})=>data);
+        return privateInstance.post(url,data).then(({data})=>data);
     },
-    getOne: (url, id) => {
-        return axios.get(`${url}${id}`).then(({data})=>data);
+    getOne: (url, id, unsafe) => {
+        if(unsafe) return publicInstance.get(`${url}${id}`).then(({data})=>data);
+        return privateInstance.get(`${url}${id}`).then(({data})=>data);
     },
-    getAll: (url) => {
-        return axios.get(`${url}`).then(({data})=>data);
+    getAll: (url, unsafe) => {
+        if(unsafe) return publicInstance.get(`${url}`).then(({data})=>data);
+        return privateInstance.get(`${url}`).then(({data})=>data);
     }
 };
 export const EventsApi = {
     getPublic: async() => {
-      return await Actions.getAll('/api/events')
+      return await Actions.getAll('/api/events',true)
     },
     landingEvent: async(id) => {
-      return await Actions.getOne('/api/events/', id);
+      return await Actions.getOne('/api/events/', id, true);
     },
     getAll: async () => {
         return await Actions.getAll('/api/user/events')
@@ -81,3 +95,4 @@ export const UsersApi = {
         return await Actions.delete(`/api/user/events/${id}`, user);
     }
 };
+export default privateInstance;

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
 import ReactTable from "react-table";
 import { resolve } from "react-resolver";
-import axios from "axios";
+import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
@@ -280,7 +280,7 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
             querySort = JSON.stringify(querySort);
             query = query+`&orderBy=${querySort}`;
         }
-        axios.get(`/api/user/event_users/${eventId}${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
+        API.get(`/api/user/event_users/${eventId}${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
             filteredData = data;
             res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
             resolve(res)
@@ -349,5 +349,5 @@ const columns = [
 export default resolve("userReq", function(props) {
     let eventId = props.eventId;
     const url = `/api/user/event_users/${eventId}`;
-    return axios.get(url).then(({data})=> data)
+    return API.get(url).then(({data})=> data)
 })(ListEventUser);

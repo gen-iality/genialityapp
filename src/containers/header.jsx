@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import  { Link } from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
-import axios from "axios";
+import API from "../helpers/request"
 import Dialog from "../components/modal/twoAction";
 import NewEvent from "../components/events/newEvent";
 import {FormattedMessage} from 'react-intl';
@@ -29,7 +29,7 @@ class Header extends Component {
             this.setState({user:false,loader:false});
         }
         else {
-            axios.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
+            API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
                 .then((resp) => {
                     console.log(resp);
                     const data = resp.data;
