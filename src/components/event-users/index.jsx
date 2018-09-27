@@ -22,8 +22,8 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
-            pages:      null,
-            pageSize:   Math.ceil(props.userReq.meta.total/5),
+            pages:      Math.ceil(props.userReq.meta.total/5),
+            pageSize:   props.userReq.meta.total/5,
             message:    {class:'', content:''},
             columns:    columns,
             sorted:     []
@@ -159,8 +159,8 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
-            const pageSize = Math.ceil(res.total/5);
-            const page = Math.ceil(res.total/pageSize);
+            const pageSize = res.total;
+            const page = Math.ceil(res.total/5);
             this.setState({
                 users: res.rows,
                 pages: page,
@@ -196,7 +196,8 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, pageSize, loading, columns, sorted} = this.state;
+        const {users, pages, pageSize, loading, columns} = this.state;
+        console.log(this.state);
         return (
             <React.Fragment>
                 <nav className="navbar is-transparent">
