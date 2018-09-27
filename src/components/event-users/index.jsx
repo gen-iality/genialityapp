@@ -275,7 +275,7 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
         if (sorted.length) {
             let querySort = [];
             sorted.map(sort=>{
-                querySort.push({"id":sort.id,"value":sort.desc?"desc":"asc"})
+                querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
             });
             querySort = JSON.stringify(querySort);
             query = query+`&orderBy=${querySort}`;
