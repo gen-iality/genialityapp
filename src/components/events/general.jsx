@@ -229,6 +229,29 @@ class General extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className="field">
+                                <label className="label">Tipo: </label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={event.kind} onChange={this.handleChange} name={'visibility'}>
+                                            <option value={'Free'}>Gratis</option>
+                                            <option value={'Payed'}>Pago</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Categoría: </label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={event.category} onChange={this.handleChange} name={'visibility'}>
+                                            <option value={'Music'}>Música</option>
+                                            <option value={'Culture'}>Cultura</option>
+                                            <option value={'Sport'}>Deporte</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                 </div>
                 <div className="field">
