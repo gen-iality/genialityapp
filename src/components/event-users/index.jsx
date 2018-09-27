@@ -310,22 +310,15 @@ const columns = [
             </select>
     },
     {
-        Header: "Fecha",
+        Header: "Actualizado",
         id: "updated_at",
         accessor: d => d.updated_at,
-        Cell: props => <FormattedDate value={props.value}/>,
+        Cell: props => <span>
+            <FormattedDate value={props.value}/> <FormattedTime value={props.value}/>
+        </span>,
         sortable: false,
         filterable: false,
-        width: 90
-    },
-    {
-        Header: "Hora",
-        id: "updated_at",
-        accessor: d => d.updated_at,
-        Cell: props => <FormattedTime value={props.value}/>,
-        sortable: false,
-        filterable: false,
-        width: 80
+        width: 180
     },
     {
         Header: "Rol",
