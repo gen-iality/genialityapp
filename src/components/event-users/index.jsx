@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
 import ReactTable from "react-table";
-import { Actions, UsersApi } from "../../helpers/request";
 import { resolve } from "react-resolver";
+import axios from "axios";
+import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import Dialog from "../modal/twoAction";
 import "react-table/react-table.css";
-import axios from "axios";
+import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -24,7 +25,8 @@ class ListEventUser extends Component {
             pages:      null,
             pageSize:   Math.ceil(props.userReq.meta.total/5),
             message:    {class:'', content:''},
-            columns:    columns
+            columns:    columns,
+            sorted:     []
         };
         this.modalImport = this.modalImport.bind(this);
         this.fetchData = this.fetchData.bind(this);
@@ -39,12 +41,25 @@ class ListEventUser extends Component {
             if(pos>=0){
                 return columns.push(
                     {
-                        Header: `${extra.name}`,
+                        ...this.genericHeaderArrows(),
+                        headerText: `${extra.name}`,
                         id: `${extra.name}`,
                         accessor: d => d.properties[extra.name]
                     }
                 )
             }
+        });
+        columns.push({
+                ...this.genericHeaderArrows(),
+                headerText: "Name",
+                id: "properties.name",
+                accessor: d => d.properties.name
+            },{
+            ...this.genericHeaderArrows(),
+            headerText: "Email",
+            id: "properties.email",
+            accessor: d => d.properties.email,
+            width: 200
         });
         columns.splice(0, 3);
         columns.unshift(
@@ -131,6 +146,7 @@ class ListEventUser extends Component {
         }
     };
 
+    //Table
     fetchData(state, instance) {
         this.setState({ loading: true });
         requestData(
@@ -151,7 +167,25 @@ class ListEventUser extends Component {
             });
         });
     }
-
+    getSortedComponent = (id) => {
+        // console.log('getSortedComponent sorted:',this.state.sorted);
+        let sortInfo = this.state.sorted.filter(item => item.id === id);
+        if (sortInfo.length) {
+            // console.log('getSortedComponent sortInfo:',sortInfo[0].desc);
+            if (sortInfo[0].desc === true) return <FaSortDown />;
+            if (sortInfo[0].desc === false) return <FaSortUp />;
+        }
+        return <FaSort />;
+    };
+    genericHeaderArrows = () => {
+        return {
+            Header: props => {
+                const Sorted = this.getSortedComponent(props.column.id);
+                return (<span>{props.column.headerText} {Sorted}</span>);
+            },
+            headerStyle: { boxShadow: "none" }
+        };
+    };
     enableDelete = () => {
         const cols = this.state.columns.map((col, i) => 2===i? {...col, show: !col.show}: col);
         this.setState((prevState) => {
@@ -160,7 +194,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, pageSize, loading, columns} = this.state;
+        const {users, pages, pageSize, loading, columns, sorted} = this.state;
         return (
             <React.Fragment>
                 <nav className="navbar is-transparent">
@@ -201,6 +235,7 @@ class ListEventUser extends Component {
                             loading={loading}
                             onFetchData={this.fetchData}
                             filterable
+                            onSortedChange={sorted => this.setState({ sorted })}
                             defaultFilterMethod={(filter, row) =>
                                 String(row[filter.id]) === filter.value}
                             pageSize={pageSize}
@@ -230,7 +265,7 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
         if (filtered.length) {
             let queryFilter = [];
             filtered.map(filter=>{
-                if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value})
+                if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
             });
             queryFilter = JSON.stringify(queryFilter);
             query = query+`filtered=${queryFilter}`;
@@ -304,17 +339,6 @@ const columns = [
                 <option value="5afaf657500a7104f77189ce">CheckIn</option>
                 <option value="5afaf644500a7104f77189cd">Attendee</option>
             </select>
-    },
-    {
-        Header: "Name",
-        id: "properties.name",
-        accessor: d => d.properties.name
-    },
-    {
-        Header: "Email",
-        id: "properties.email",
-        accessor: d => d.properties.email,
-        width: 200
     }
 ];
 

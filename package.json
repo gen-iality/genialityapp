@@ -18,6 +18,7 @@
     "react-dropzone": "^4.3.0",
     "react-geosuggest": "^2.8.0",
     "react-google-maps": "^9.4.5",
+    "react-icons": "^3.1.0",
     "react-intl": "^2.6.0",
     "react-resolver": "^3.1.2",
     "react-router": "^4.3.1",
