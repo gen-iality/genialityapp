@@ -291,20 +291,27 @@ class UsersRsvp extends Component {
                                    type="checkbox" name={"checkallUser"} ref="checkbox" onClick={this.toggleAll}/>
                             <label htmlFor={"checkallUser"}>Seleccionar Todos</label>
                         </div>
-                        {
-                            this.state.users.map((item,key)=>{
-                                return <div key={key} className="media">
-                                    <div className="media-left">
-                                        <input className="is-checkradio is-info is-small" id={"checkinUser"+item.id}
-                                               type="checkbox" name={"checkinUser"+item.id} checked={this.isChecked(item.id)} onClick={(e)=>{this.toggleSelection(item)}}/>
-                                        <label htmlFor={"checkinUser"+item.id}/>
-                                    </div>
-                                    <div className="media-content">
-                                        <p className="subtitle is-6">{item.name}</p>
-                                        <p className="title is-5">{item.email}</p>
-                                    </div>
-                                    <div className="media-right">
-                                        <small>{item.state}</small>
+                        <div style={{overflowY:'auto', height:'280px'}}>
+                            {
+                                this.state.users.map((item,key)=>{
+                                    return <div key={key} className="media">
+                                        <div className="media-left">
+                                            <input className="is-checkradio is-info is-small" id={"checkinUser"+item.id}
+                                                   type="checkbox" name={"checkinUser"+item.id} checked={this.isChecked(item.id)} onClick={(e)=>{this.toggleSelection(item)}}/>
+                                            <label htmlFor={"checkinUser"+item.id}/>
+                                        </div>
+                                        <div className="media-content">
+                                            <p className="subtitle is-6">{item.name}</p>
+                                            <p className="title is-5">{item.email}</p>
+                                        </div>
+                                        <div className="media-right">
+                                            <small>
+                                                {
+                                                    this.state.actualEvent._id === this.props.event._id?
+                                                        item.state:'Other Event'
+                                                }
+                                            </small>
+                                        </div>
                                     </div>
                                 })
                             }
