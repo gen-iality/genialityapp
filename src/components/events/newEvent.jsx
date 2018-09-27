@@ -235,13 +235,35 @@ class NewEvent extends Component {
                                         {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                     </div>
                                     <div className="field">
-                                        <label className="label">Visibilidad</label>
+                                        <label className="label">Crear un evento: </label>
                                         <div className="control">
                                             <div className="select">
                                                 <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
-                                                    <option>Selecciona...</option>
                                                     <option value={'PUBLIC'}>Público</option>
                                                     <option value={'ORGANIZATION'}>Privado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="field">
+                                        <label className="label">Tipo: </label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={event.kind} onChange={this.handleChange} name={'kind'}>
+                                                    <option value={'Free'}>Gratis</option>
+                                                    <option value={'Payed'}>Pago</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="field">
+                                        <label className="label">Categoría: </label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={event.category} onChange={this.handleChange} name={'category'}>
+                                                    <option value={'Music'}>Música</option>
+                                                    <option value={'Culture'}>Cultura</option>
+                                                    <option value={'Sport'}>Deporte</option>
                                                 </select>
                                             </div>
                                         </div>

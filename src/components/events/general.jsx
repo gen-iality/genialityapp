@@ -233,7 +233,7 @@ class General extends Component {
                                 <label className="label">Tipo: </label>
                                 <div className="control">
                                     <div className="select">
-                                        <select value={event.kind} onChange={this.handleChange} name={'visibility'}>
+                                        <select value={event.kind} onChange={this.handleChange} name={'kind'}>
                                             <option value={'Free'}>Gratis</option>
                                             <option value={'Payed'}>Pago</option>
                                         </select>
@@ -244,7 +244,7 @@ class General extends Component {
                                 <label className="label">Categoría: </label>
                                 <div className="control">
                                     <div className="select">
-                                        <select value={event.category} onChange={this.handleChange} name={'visibility'}>
+                                        <select value={event.category} onChange={this.handleChange} name={'category'}>
                                             <option value={'Music'}>Música</option>
                                             <option value={'Culture'}>Cultura</option>
                                             <option value={'Sport'}>Deporte</option>
