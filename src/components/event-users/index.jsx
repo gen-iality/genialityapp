@@ -197,7 +197,6 @@ class ListEventUser extends Component {
 
     render() {
         const {users, pages, pageSize, loading, columns} = this.state;
-        console.log(this.state);
         return (
             <React.Fragment>
                 <nav className="navbar is-transparent">
