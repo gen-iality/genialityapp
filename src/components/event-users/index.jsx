@@ -36,9 +36,22 @@ class ListEventUser extends Component {
         const { event } = this.props;
         const properties = event.user_properties;
         const columns = this.state.columns;
+        let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
+        if(pos<=0) columns.push({
+            ...this.genericHeaderArrows(),
+            headerText: "Name",
+            id: "properties.name",
+            accessor: d => d.properties.name
+        },{
+            ...this.genericHeaderArrows(),
+            headerText: "Email",
+            id: "properties.email",
+            accessor: d => d.properties.email,
+            width: 200
+        });
         properties.map((extra,key)=>{
             let pos = columns.map((e) => { return e.id; }).indexOf(extra.name);
-            if(pos>=0){
+            if(pos<=0){
                 return columns.push(
                     {
                         ...this.genericHeaderArrows(),
@@ -48,18 +61,6 @@ class ListEventUser extends Component {
                     }
                 )
             }
-        });
-        columns.push({
-                ...this.genericHeaderArrows(),
-                headerText: "Name",
-                id: "properties.name",
-                accessor: d => d.properties.name
-            },{
-            ...this.genericHeaderArrows(),
-            headerText: "Email",
-            id: "properties.email",
-            accessor: d => d.properties.email,
-            width: 200
         });
         columns.splice(0, 3);
         columns.unshift(
