@@ -22,8 +22,8 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
-            pages:      Math.ceil(props.userReq.meta.total/5),
-            pageSize:   props.userReq.meta.total/5,
+            pages:      Math.ceil(props.userReq.meta.total/25),
+            pageSize:   25,
             message:    {class:'', content:''},
             columns:    columns,
             sorted:     []
@@ -160,7 +160,7 @@ class ListEventUser extends Component {
             state.filtered
         ).then(res => {
             const pageSize = res.total;
-            const page = Math.ceil(res.total/5);
+            const page = Math.ceil(res.total/res.perPage);
             this.setState({
                 users: res.rows,
                 pages: page,
@@ -240,7 +240,7 @@ class ListEventUser extends Component {
                             onSortedChange={sorted => this.setState({ sorted })}
                             defaultFilterMethod={(filter, row) =>
                                 String(row[filter.id]) === filter.value}
-                            pageSize={pageSize}
+                            defaultPageSize={pageSize}
                             className="-highlight"
                         />
                     </div>
@@ -280,9 +280,9 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
             querySort = JSON.stringify(querySort);
             query = query+`&orderBy=${querySort}`;
         }
-        axios.get(`/api/user/event_users/${eventId}${query}&pageSize=5`).then(({data})=>{
+        axios.get(`/api/user/event_users/${eventId}${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
             filteredData = data;
-            res = {rows: filteredData.data, total: filteredData.meta.total};
+            res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
             resolve(res)
         });
 
