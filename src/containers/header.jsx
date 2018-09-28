@@ -32,9 +32,13 @@ class Header extends Component {
             API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
                 .then((resp) => {
                     console.log(resp);
-                    const data = resp.data;
-                    const name = (data.displayName) ? data.displayName: data.email;
-                    this.setState({name,user:true,cookie:evius_token,loader:false});
+                    if(resp.status === 200){
+                        const data = resp.data;
+                        const name = (data.displayName) ? data.displayName: data.email;
+                        this.setState({name,user:true,cookie:evius_token,loader:false});
+                    }else{
+                        this.setState({timeout:true,loader:false});
+                    }
                 })
                 .catch(error => {
                     console.log(error);

@@ -28,6 +28,7 @@ privateInstance.interceptors.response.use(function(response) {
     }
 }, ( err ) => {
     console.log(err.response);
+    return err.response;
     /*const { data } = err.response;
     console.log(data);
     window.location.replace(`${AuthUrl}/logout`);*/
