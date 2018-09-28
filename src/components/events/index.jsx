@@ -5,6 +5,7 @@ import Dialog from "../modal/twoAction";
 import * as Cookie from "js-cookie";
 import {AuthUrl} from "../../helpers/constants";
 import LoadingEvent from "../loaders/loadevent";
+import EventCard from "../shared/eventCard";
 
 class Events extends Component {
     constructor(props) {
@@ -56,43 +57,13 @@ class Events extends Component {
                 <section className="section">
                     {
                         this.state.loading ? <LoadingEvent/>:
-                            <div className="columns is-multiline is-mobile">
+                            <div className="columns home is-multiline is-mobile">
                                 {
                                     this.state.events.map((event,key)=>{
-                                        return <div className="column is-one-third" key={event._id}>
-                                            <div className="card">
-                                                <div className="card-image">
-                                                    <figure className="image is-3by2">
-                                                        {
-                                                            event.picture ?
-                                                                <img src={event.picture} alt={event.name}/>
-                                                                : <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Evius.co"/>
-                                                        }
-                                                    </figure>
-                                                </div>
-                                                <div className="card-content">
-                                                    <div className="media">
-                                                        <div className="media-content">
-                                                            <p className="title is-4">{event.name}</p>
-                                                            <p className="subtitle is-6">{event.location.FormattedAddress}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="content">
-                                                        {
-                                                            event.description.length >= 80 ?
-                                                            event.description.substring(0,80)+'...':
-                                                            event.description
-                                                        }
-                                                        <br/>
-                                                        <time dateTime={event.datetime_from}>{event.datetime_from}</time>
-                                                    </div>
-                                                </div>
-                                                <footer className="card-footer">
-                                                    <Link className="card-footer-item" to={'/edit/'+event._id}>Edit</Link>
-                                                    <a className="card-footer-item" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>Delete</a>
-                                                </footer>
-                                            </div>
-                                        </div>
+                                        return <EventCard event={event} key={key}
+                                                          action={{name:'Edit',url:`edit/${event._id}`}}
+                                                          rigth={''}
+                                        />
                                     })
                                 }
                             </div>
