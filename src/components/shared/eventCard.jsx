@@ -4,9 +4,9 @@ import {Link} from "react-router-dom";
 
 class EventCard extends Component {
     render() {
-        const {event,key,action,right} = this.props;
+        const {event,action,right} = this.props;
         return (
-            <div className="column is-one-third" key={key}>
+            <div className="column is-one-third">
                 <div className="card">
                     <div className="card-image">
                         <figure className="image is-3by2">
@@ -25,13 +25,17 @@ class EventCard extends Component {
                                 <p className="is-size-7 has-text-white"># Categorías</p>
                             </div>
                         </div>
-                        <Link to={`${action.url}`}>
-                            <button className="button is-primary is-rounded img-see is-small">{action.name}</button>
-                        </Link>
+                        {
+                            action&&(
+                                <Link to={`${action.url}`}>
+                                    <button className="button is-primary is-rounded img-see is-small">{action.name}</button>
+                                </Link>
+                            )
+                        }
                     </div>
                     <div className="card-content">
                         <div className="media">
-                            <div className="media-left">
+                            <div className="media-content">
                                 <p className="title is-6 has-text-grey-darker has-text-weight-bold">{event.name}</p>
                                 <div className="columns">
                                     <div className="column is-one-fifth">
@@ -42,7 +46,7 @@ class EventCard extends Component {
                                     <div className="column subtitle is-7 has-text-grey has-text-weight-bold">{event.location.FormattedAddress}</div>
                                 </div>
                             </div>
-                            <div className="media-content">
+                            <div className="media-right">
                                 {right}
                             </div>
                         </div>

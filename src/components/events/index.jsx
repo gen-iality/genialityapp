@@ -60,9 +60,12 @@ class Events extends Component {
                             <div className="columns home is-multiline is-mobile">
                                 {
                                     this.state.events.map((event,key)=>{
-                                        return <EventCard event={event} key={key}
-                                                          action={{name:'Edit',url:`edit/${event._id}`}}
-                                                          rigth={''}
+                                        return <EventCard event={event} key={event._id}
+                                                          action={''}
+                                                          right={
+                                                              <Link className="button is-text is-inverted is-primary" to={`edit/${event._id}`}>
+                                                                <span>Editar</span>
+                                                              </Link>}
                                         />
                                     })
                                 }

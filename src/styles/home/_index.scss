@@ -55,5 +55,12 @@ div.home {
       left: 70%;
       position: absolute;
     }
+    .card-content{
+      .media{
+        .media-content{
+          border-right: 2px solid $gray-darker;
+        }
+      }
+    }
   }
 }

@@ -50,7 +50,7 @@ class Home extends Component {
                                 <div className="columns home is-multiline">
                                     {
                                         this.state.events.map((event,key)=>{
-                                            return <EventCard key={key} event={event}
+                                            return <EventCard key={event._id} event={event}
                                                               action={{name:'Ver >',url:`evento/${event._id}`}}
                                                               right={<div className="actions is-pulled-right">
                                                                   <p className="is-size-7">Compartir</p>
