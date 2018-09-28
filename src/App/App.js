@@ -14,12 +14,7 @@ class App extends Component {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
             console.log(dataUrl);
-            this.setState({ token: dataUrl.token });
             Cookie.set("evius_token", dataUrl.token);
-            if (dataUrl.token){
-                axios.defaults.params = {};
-                axios.defaults.params['evius_token'] = dataUrl.token;
-            }
         }
     }
     render() {

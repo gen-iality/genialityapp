@@ -27,13 +27,12 @@ privateInstance.interceptors.response.use(function(response) {
         return response;
     }
 }, ( err ) => {
-    console.log(err);
-    const { data } = err.response;
+    console.log(err.response);
+    /*const { data } = err.response;
     console.log(data);
-    window.location.replace(`${AuthUrl}/logout`);
+    window.location.replace(`${AuthUrl}/logout`);*/
 });
 let evius_token = Cookie.get('evius_token');
-console.log("evius_token");
 if (evius_token){
     privateInstance.defaults.params = {}
     privateInstance.defaults.params['evius_token'] = evius_token;
