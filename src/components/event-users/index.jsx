@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
-import ReactTable from "react-table";
 import { resolve } from "react-resolver";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
@@ -8,8 +7,8 @@ import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import Dialog from "../modal/twoAction";
-import "react-table/react-table.css";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
+import Table from "../shared/table";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -229,7 +228,7 @@ class ListEventUser extends Component {
                 </nav>
                 <div className="main">
                     <div className="preview-list">
-                        <ReactTable
+                        {/*<ReactTable
                             columns={columns}
                             manual
                             data={users}
@@ -242,7 +241,20 @@ class ListEventUser extends Component {
                                 String(row[filter.id]) === filter.value}
                             defaultPageSize={pageSize}
                             className="-highlight"
-                        />
+                        />*/}
+                        <Table
+                            columns={columns}
+                            manual
+                            data={users}
+                            pages={pages}
+                            loading={loading}
+                            onFetchData={this.fetchData}
+                            filterable
+                            onSortedChange={sorted => this.setState({ sorted })}
+                            defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                            defaultPageSize={pageSize}
+                            className="-highlight"/>
                     </div>
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
