@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Actions, EventsApi, UsersApi} from "../../helpers/request";
+import { Redirect } from 'react-router-dom';
+import {EventsApi, UsersApi} from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import {FormattedMessage} from "react-intl";
 import Dialog from "../modal/twoAction";
-import axios from "axios";
+import API from "../../helpers/request"
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -178,7 +179,7 @@ class UsersRsvp extends Component {
         let queryFilter = (event.target.value!=='all') && [{"id":"state_id","value":event.target.value}];
         queryFilter = JSON.stringify(queryFilter);
         let query = `?filtered=${queryFilter}`;
-        axios.get(`/api/user/event_users/${this.state.actualEvent._id}${query}`).then(({data})=>{
+        API.get(`/api/user/event_users/${this.state.actualEvent._id}${query}`).then(({data})=>{
             const users = this.handleUsers(data.data);
             this.setState({users})
         });
@@ -206,15 +207,16 @@ class UsersRsvp extends Component {
         selection.map(item=>{
             users.push(item.id)
         });
-        Actions.post(url, {eventUsersIds:users})
+        API.post(url, {eventUsersIds:users})
             .then((res) => {
                 console.log(res);
-                this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/users'})
+                this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/invitations'})
             });
 
     }
 
     render() {
+        if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
                 <div className="columns">
@@ -308,7 +310,7 @@ class UsersRsvp extends Component {
                                             <small>
                                                 {
                                                     this.state.actualEvent._id === this.props.event._id?
-                                                        item.state:'Other Event'
+                                                        item.state:''
                                                 }
                                             </small>
                                         </div>
