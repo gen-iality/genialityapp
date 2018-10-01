@@ -103,7 +103,7 @@ class ListEventUser extends Component {
 
     addToList = (user) => {
         let users = this.state.users;
-        let pos = users.map(function(e) { return e._id; }).indexOf(user._id);
+        let pos = users.map((e) => { return e._id; }).indexOf(user._id);
         if(pos >= 0){
               users[pos] = user;
         }else users.push(user);
@@ -351,7 +351,7 @@ const columns = [
     }
 ];
 
-export default resolve("userReq", function(props) {
+export default resolve("userReq", (props) => {
     let eventId = props.eventId;
     const url = `/api/user/event_users/${eventId}`;
     return API.get(url).then(({data})=> data)

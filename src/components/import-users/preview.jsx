@@ -62,7 +62,7 @@ class Preview extends Component {
     sChange = (item,key) => {
         const auxHead = this.state.auxArr;
         const {head, list} = this.state;
-        const i = auxHead.map(function(e) { return e.tag; }).indexOf(item.tag);
+        const i = auxHead.map((e) => { return e.tag; }).indexOf(item.tag);
         const j = head.map(e=>{ return e.tag; }).indexOf(item.tag);
         head[j].used = true;
         let listCopy = JSON.parse(JSON.stringify(list));
@@ -106,7 +106,7 @@ class Preview extends Component {
                         <div>Parsing excel</div> :
                         <div className="columns preview-list">
                             {
-                                list.map(function(item, index) {
+                                list.map((item, index) => {
                                     return <div className="column" key={index}>
                                         <div className="box">
                                             <div className="field is-grouped">

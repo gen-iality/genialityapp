@@ -26,7 +26,7 @@ class ImportUsers extends Component {
         const self = this;
         Async.waterfall([
             function (cb) {
-                let newUsers =  users.filter(function(user) {
+                let newUsers =  users.filter((user) => {
                     return user.used;
                 });
                 cb(null, newUsers)
