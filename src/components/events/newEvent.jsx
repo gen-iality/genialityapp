@@ -1,11 +1,9 @@
-/*global google*/
 import React, { Component } from 'react';
-import { DateTimePicker } from "react-widgets";
-import ImageInput from "../shared/imageInput";
-import Geosuggest from 'react-geosuggest'
-import { Actions } from "../../helpers/request";
 import Moment from "moment";
+import { Actions } from "../../helpers/request";
 import { BaseUrl } from "../../helpers/constants";
+import FormEvent from "../shared/formEvent";
+import ImageInput from "../shared/imageInput";
 
 class NewEvent extends Component {
     constructor(props) {
@@ -13,7 +11,9 @@ class NewEvent extends Component {
         this.state = {
             event : {
                 name:'',
+                location:{},
                 description: '',
+                categories: [],
                 hour_start : Moment().toDate(),
                 date_start : Moment().toDate(),
                 hour_end : Moment().toDate(),
@@ -23,9 +23,19 @@ class NewEvent extends Component {
         this.submit = this.submit.bind(this);
     }
 
+    async componentDidMount(){
+        const resp = await Actions.getAll('api/category');
+        const categories = handleData(resp.data);
+        this.setState({categories})
+    }
+
     handleChange = (e) => {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}})
+    };
+
+    handleSelect = (selectedOption) => {
+        this.setState({ selectedOption });
     };
 
     changeDate=(value,name)=>{
@@ -73,6 +83,9 @@ class NewEvent extends Component {
         const date_end = Moment(event.date_end).format('YYYY-MM-DD');
         const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
         const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
+        const categories = this.state.selectedOption.map(item=>{
+            return item.value
+        })
         const data = {
             name: event.name,
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -80,7 +93,8 @@ class NewEvent extends Component {
             picture: event.picture,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: event.description
+            description: event.description,
+            category_ids: categories
         };
         try {
             const result = await Actions.create('/api/user/events', data);
@@ -131,7 +145,7 @@ class NewEvent extends Component {
     };
 
     render() {
-        const { event } = this.state;
+        const { event, categories } = this.state;
         return (
             <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
@@ -142,134 +156,17 @@ class NewEvent extends Component {
                     </header>
                     <section className="modal-card-body">
                         <div className="content">
-                            <div className="columns">
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Nombre</label>
-                                        <div className="control">
-                                            <input className="input" name={"name"} type="text"
-                                                   placeholder="Text input" value={event.name}
-                                                   onChange={this.handleChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Dirección</label>
-                                        <div className="control">
-                                            <Geosuggest
-                                                placeholder={'Dirección'}
-                                                onSuggestSelect={this.onSuggestSelect}
-                                                location={new google.maps.LatLng(53.558572, 9.9278215)}
-                                                radius="20"/>
-                                        </div>
-                                    </div>
-                                    <div className="columns">
-                                        <div className="column">
-                                            <div className="field">
-                                                <label className="label">Fecha Inicio</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.date_start}
-                                                        format={'DD/MM/YY'}
-                                                        time={false}
-                                                        onChange={value => this.changeDate(value,"date_start")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="column">
-                                            <div className="field">
-                                                <label className="label">Hora Inicio</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.hour_start}
-                                                        format={'HH:mm'}
-                                                        step={60}
-                                                        date={false}
-                                                        onChange={value => this.changeDate(value,"hour_start")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="columns">
-                                        <div className="column">
-                                            <div className="field">
-                                                <label className="label">Fecha Fin</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.date_end}
-                                                        format={'DD/MM/YY'}
-                                                        time={false}
-                                                        onChange={value => this.changeDate(value,"date_end")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="column">
-                                            <div className="field">
-                                                <label className="label">Hora Fin</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.hour_end}
-                                                        format={'HH:mm'}
-                                                        step={60}
-                                                        date={false}
-                                                        onChange={value => this.changeDate(value,"hour_end")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Descripción</label>
-                                        <div className="control">
-                                        <textarea className="textarea" name={"description"}
-                                                  placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Foto</label>
-                                        <div className="control">
-                                            <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                        cancelImg={this.cancelImg} changeImg={this.changeImg} errImg={this.state.errImg}/>
-                                        </div>
-                                        {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Crear un evento: </label>
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
-                                                    <option value={'PUBLIC'}>Público</option>
-                                                    <option value={'ORGANIZATION'}>Privado</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Tipo: </label>
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={event.kind} onChange={this.handleChange} name={'kind'}>
-                                                    <option value={'Free'}>Gratis</option>
-                                                    <option value={'Payed'}>Pago</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Categoría: </label>
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={event.category} onChange={this.handleChange} name={'category'}>
-                                                    <option value={'Music'}>Música</option>
-                                                    <option value={'Culture'}>Cultura</option>
-                                                    <option value={'Sport'}>Deporte</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <FormEvent event={event} categories={categories}
+                                       imgComp={<div className="field">
+                                           <label className="label">Foto</label>
+                                           <div className="control">
+                                               <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                                           changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                           </div>
+                                           {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                                       </div>}
+                                       handleChange={this.handleChange} handleSelect={this.handleSelect}
+                                       changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                         </div>
                     </section>
                     <footer className="modal-card-foot">
@@ -287,5 +184,13 @@ class NewEvent extends Component {
         );
     }
 }
+
+const handleData = (data) => {
+    let list = [];
+    data.map(item=>{
+        return list.push({value:item._id,label:item.name})
+    })
+    return list;
+};
 
 export default NewEvent;

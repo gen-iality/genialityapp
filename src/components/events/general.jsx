@@ -1,21 +1,31 @@
-/*global google*/
 import React, {Component} from 'react';
-import { DateTimePicker } from 'react-widgets'
 import Moment from "moment"
-import Geosuggest from 'react-geosuggest'
 import ImageInput from "../shared/imageInput";
 import {Actions, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
+import FormEvent from "../shared/formEvent";
 Moment.locale('es');
 
 class General extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            event : this.props.event
+            event : this.props.event,
+            selectedOption: []
         };
         this.submit = this.submit.bind(this);
-        this.uploadImg = this.uploadImg.bind(this);
+    }
+
+    async componentDidMount(){
+        const resp = await Actions.getAll('api/category');
+        const categories = handleData(resp.data);
+        const category_ids = this.state.event.category_ids;
+        let selectedOption = [];
+        categories.map(item=>{
+            let pos = category_ids.indexOf(item.value);
+            if(pos>=0){selectedOption.push(item)}
+        })
+        this.setState({categories,selectedOption})
     }
 
     handleChange = (e) => {
@@ -23,41 +33,34 @@ class General extends Component {
         this.setState({event:{...this.state.event,[name]:value}})
     };
 
+    handleSelect = (selectedOption) => {
+        this.setState({ selectedOption });
+    };
+
     changeDate=(value,name)=>{
         this.setState({event:{...this.state.event,[name]:value}})
-    };
-
-    handleFileChange  = (files) => {
-        const file = files[0];
-        file ? this.setState({imageFile: file}) : this.setState({errImg:'Only images files allowed. Please try again (:'});
-    };
-
-    async uploadImg(e) {
-        console.log('MAKE THE AXIOS REQUEST');
-        let data = new FormData();
-        const url = '/api/files/upload',
-            self = this;
-        data.append('file',this.state.imageFile);
-        Actions.post(url, data)
-            .then((image) => {
-                self.setState({
-                    formValues: {
-                        ...self.state.formValues,
-                        picture: image
-                    },fileMsg:'Image uploaded successfull',
-                    imageFile: false
-                });
-            });
-        e.preventDefault();
-        e.stopPropagation();
     };
 
     changeImg = (files) => {
         const file = files[0];
         if(file){
-            this.setState({imageFile:file});
-            this.uploadImg()
-        }else{
+            this.setState({imageFile: file,
+                event:{...this.state.event, picture: null}});
+            let data = new FormData();
+            const url = '/api/files/upload',
+                self = this;
+            data.append('file',this.state.imageFile);
+            Actions.post(url, data)
+                .then((image) => {
+                    self.setState({
+                        event: {
+                            ...self.state.event,
+                            picture: image
+                        },fileMsg:'Image uploaded successfull'
+                    });
+                });
+        }
+        else{
             this.setState({errImg:'Only images files allowed. Please try again (:'});
         }
     };
@@ -73,13 +76,18 @@ class General extends Component {
         const date_end = Moment(event.date_end).format('YYYY-MM-DD');
         const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
         const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
+        const categories = this.state.selectedOption.map(item=>{
+            return item.value
+        })
         const data = {
             name: event.name,
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+            picture: event.picture,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: event.description
+            description: event.description,
+            category_ids: categories
         };
         try {
             const result = await EventsApi.editOne(data, event._id);
@@ -124,136 +132,22 @@ class General extends Component {
     };
 
     render() {
-        const { event } = this.state;
+        const { event, categories, selectedOption } = this.state;
         return (
             <form onSubmit={this.submit}>
-                <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Nombre</label>
-                                <div className="control">
-                                    <input className="input" name={"name"} type="text"
-                                           placeholder="Text input" value={event.name}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="field">
-                                <label className="label">Dirección</label>
-                                <div className="control">
-                                    <Geosuggest
-                                        placeholder={'Dirección'}
-                                        onSuggestSelect={this.onSuggestSelect}
-                                        initialValue={event.location.FormattedAddress}
-                                        location={new google.maps.LatLng(event.location.Latitude,event.location.Longitude)}
-                                        radius="20"/>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Fecha Inicio</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.date_start}
-                                                format={'L'}
-                                                time={false}
-                                                onChange={value => this.changeDate(value,"date_start")}/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Hora Inicio</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.hour_start}
-                                                step={60}
-                                                date={false}
-                                                onChange={value => this.changeDate(value,"hour_start")}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="columns">
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Fecha Fin</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.date_end}
-                                                format={'L'}
-                                                time={false}
-                                                onChange={value => this.changeDate(value,"date_end")}/>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Hora Fin</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.hour_end}
-                                                step={60}
-                                                date={false}
-                                                onChange={value => this.changeDate(value,"hour_end")}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <label className="label">Descripción</label>
-                                <div className="control">
-                                        <textarea className="textarea" name={"description"}
-                                                  placeholder="Textarea" value={event.description} onChange={this.handleChange}/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Foto</label>
-                                <div className="control">
-                                    <ImageInput picture={event.picture} handleFileChange={ this.handleFileChange}
-                                                imageFile={this.state.imageFile} changeImg={this.changeImg} errImg={this.state.errImg}/>
-                                </div>
-                                {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                            </div>
-                            <div className="field">
-                                <label className="label">Crear un evento: </label>
-                                <div className="control">
-                                    <div className="select">
-                                        <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
-                                            <option value={'PUBLIC'}>Público</option>
-                                            <option value={'ORGANIZATION'}>Privado</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <label className="label">Tipo: </label>
-                                <div className="control">
-                                    <div className="select">
-                                        <select value={event.kind} onChange={this.handleChange} name={'kind'}>
-                                            <option value={'Free'}>Gratis</option>
-                                            <option value={'Payed'}>Pago</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <label className="label">Categoría: </label>
-                                <div className="control">
-                                    <div className="select">
-                                        <select value={event.category} onChange={this.handleChange} name={'category'}>
-                                            <option value={'Music'}>Música</option>
-                                            <option value={'Culture'}>Cultura</option>
-                                            <option value={'Sport'}>Deporte</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                </div>
+                <FormEvent event={event} categories={categories} selectedOption={selectedOption}
+                           imgComp={
+                               <div className="field">
+                                   <label className="label">Foto</label>
+                                   <div className="control">
+                                       <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                                   changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                   </div>
+                                   {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                               </div>
+                           }
+                           handleChange={this.handleChange} handleSelect={this.handleSelect}
+                           changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
                     <div className="control">
                         {
@@ -266,5 +160,13 @@ class General extends Component {
         );
     }
 }
+
+const handleData = (data) => {
+    let list = [];
+    data.map(item=>{
+        return list.push({value:item._id,label:item.name})
+    })
+    return list;
+};
 
 export default General;
