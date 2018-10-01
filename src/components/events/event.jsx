@@ -25,14 +25,23 @@ class Event extends Component {
 
     async componentDidMount() {
         let eventId = this.props.match.params.event;
-        const event = await EventsApi.getOne(eventId);
-        const dateFrom = event.datetime_from.split(' ');
-        const dateTo = event.datetime_to.split(' ');
-        event.hour_start = Moment(dateFrom[1],'HH:mm').toDate();
-        event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
-        event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
-        event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
-        this.setState({event,loading:false});
+        if(eventId === 'new_event'){
+            const event = {name:'New event',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            this.setState({newEvent:true,loading:false,event})
+        }else{
+            const event = await EventsApi.getOne(eventId);
+            const dateFrom = event.datetime_from.split(' ');
+            const dateTo = event.datetime_to.split(' ');
+            event.hour_start = Moment(dateFrom[1],'HH:mm').toDate();
+            event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
+            event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
+            event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
+            this.setState({event,loading:false});
+        }
+    }
+
+    componentWillUnmount(){
+        this.setState({newEvent:false})
     }
 
     render() {
@@ -44,41 +53,47 @@ class Event extends Component {
                         <section className="section columns">
                             <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
                                 <p className="subtitle event-name">{this.state.event.name}</p>
-                                <p className="menu-label">
-                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
-                                </p>
-                                <p className="menu-label">
-                                    <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>Tickets</NavLink>
-                                </p>
-                                <p className="menu-label">
-                                    <NavLink className="item" activeClassName={'active'} to={`${match.url}/rsvp`}>Invitaciones</NavLink>
-                                </p>
                                 {
-                                    this.state.userTab && (
-                                        <ul className="menu-list">
-                                            <li>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Historial</NavLink>
-                                            </li>
-                                        </ul>
-                                    )
-                                }
-                                <p className="menu-label">
-                                    <NavLink className="item" activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
-                                </p>
-                                <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
-                                    <span>Contenido</span>
-                                    <span className="icon">
+                                    !this.state.newEvent && (
+                                        <React.Fragment>
+                                            <p className="menu-label">
+                                                <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
+                                            </p>
+                                            <p className="menu-label">
+                                                <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>Tickets</NavLink>
+                                            </p>
+                                            <p className="menu-label">
+                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/rsvp`}>Invitaciones</NavLink>
+                                            </p>
+                                            {
+                                                this.state.userTab && (
+                                                    <ul className="menu-list">
+                                                        <li>
+                                                            <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Historial</NavLink>
+                                                        </li>
+                                                    </ul>
+                                                )
+                                            }
+                                            <p className="menu-label">
+                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
+                                            </p>
+                                            <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
+                                                <span>Contenido</span>
+                                                <span className="icon">
                                         <i className={`${this.state.contentTab?'up':'down'}`}/>
                                     </span>
-                                </p>
-                                {
-                                    this.state.contentTab && (
-                                        <ul className="menu-list">
-                                            <li>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                                <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
-                                            </li>
-                                        </ul>
+                                            </p>
+                                            {
+                                                this.state.contentTab && (
+                                                    <ul className="menu-list">
+                                                        <li>
+                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
+                                                        </li>
+                                                    </ul>
+                                                )
+                                            }
+                                        </React.Fragment>
                                     )
                                 }
                             </aside>

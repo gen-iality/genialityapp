@@ -4,6 +4,7 @@ import ImageInput from "../shared/imageInput";
 import {Actions, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
+import {BaseUrl} from "../../helpers/constants";
 Moment.locale('es');
 
 class General extends Component {
@@ -92,9 +93,21 @@ class General extends Component {
             category_ids: categories
         };
         try {
-            const result = await EventsApi.editOne(data, event._id);
-            console.log(result);
-            this.setState({loading:false});
+            if(event._id){
+                const result = await EventsApi.editOne(data, event._id);
+                console.log(result);
+                this.setState({loading:false});
+            }
+            else{
+                const result = await Actions.create('/api/user/events', data);
+                console.log(result);
+                this.setState({loading:false});
+                if(result._id){
+                    window.location.replace(`${BaseUrl}/event/${result._id}`);
+                }else{
+                    this.setState({msg:'Cant Create',create:false})
+                }
+            }
         } catch (e) {
             console.log('Some error')
             console.log(e)

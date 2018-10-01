@@ -4,7 +4,6 @@ import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
 import API from "../helpers/request"
 import Dialog from "../components/modal/twoAction";
-import NewEvent from "../components/events/newEvent";
 import {FormattedMessage} from 'react-intl';
 
 class Header extends Component {
@@ -146,10 +145,11 @@ class Header extends Component {
                             </div>
                             <div className="navbar-end">
                                 <div className="navbar-item">
-                                    <button className="button is-primary is-rounded"
-                                            onClick={this.createEvent}>
-                                        <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                    </button>
+                                    <Link to={'event/new_event'}>
+                                        <button className="button is-primary is-rounded">
+                                            <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                        </button>
+                                    </Link>
                                 </div>
                                 {
                                     this.state.loader ?
@@ -185,7 +185,6 @@ class Header extends Component {
                         </div>
                     </nav>
                 </header>
-                <NewEvent modal={this.state.modal} newEvent={this.newEvent}/>
                 <Dialog modal={timeout} title={<FormattedMessage id="header.expired_title" defaultMessage="Sign In"/>}
                         content={<p>
                             <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
