@@ -21,10 +21,12 @@ class General extends Component {
         const categories = handleData(resp.data);
         const category_ids = this.state.event.category_ids;
         let selectedOption = [];
-        categories.map(item=>{
-            let pos = category_ids.indexOf(item.value);
-            if(pos>=0){selectedOption.push(item)}
-        })
+        if(category_ids){
+            categories.map(item=>{
+                let pos = category_ids.indexOf(item.value);
+                if(pos>=0){selectedOption.push(item)}
+            });
+        }
         this.setState({categories,selectedOption})
     }
 
