@@ -206,7 +206,7 @@ class UsersRsvp extends Component {
     //Modal import
     async modalImport() {
         const {data} = await UsersApi.getAll(this.props.event._id);
-        const users = this.handleUsers(data);
+        const users = handleUsers(data);
         this.setState((prevState) => {
             return {importUser:!prevState.importUser,users}
         });
