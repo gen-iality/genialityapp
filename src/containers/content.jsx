@@ -11,9 +11,9 @@ class ContentContainer extends Component {
         return (
             <main className="main">
                 <Route exact path="/" component={ Home } />
-                <Route path="/evento/:event" component={ Landing }/>
+                <Route path="/landing/:event" component={ Landing }/>
                 <PrivateRoute path="/my_events" component={ Events }/>
-                <PrivateRoute path="/edit/:event" component={ Event }/>
+                <PrivateRoute path="/event/:event" component={ Event }/>
             </main>
         );
     }

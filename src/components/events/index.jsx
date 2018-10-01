@@ -63,7 +63,7 @@ class Events extends Component {
                                         return <EventCard event={event} key={event._id}
                                                           action={''}
                                                           right={
-                                                              <Link className="button is-text is-inverted is-primary" to={`edit/${event._id}`}>
+                                                              <Link className="button is-text is-inverted is-primary" to={`event/${event._id}`}>
                                                                 <span>Editar</span>
                                                               </Link>}
                                         />
