@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import Geosuggest from 'react-geosuggest'
 import { DateTimePicker } from 'react-widgets'
 import Select from 'react-select';
-import ImageInput from "../shared/imageInput";
 
 class FormEvent extends Component {
     render() {

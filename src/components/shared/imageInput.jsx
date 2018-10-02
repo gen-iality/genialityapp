@@ -6,7 +6,7 @@ export default class ImageInput extends Component {
     render() {
         const props = this.props;
         return (
-            <div key="file">
+            <div>
                 {
                     props.picture?
                         <div className="imgRsvp">
