@@ -5,6 +5,7 @@ import Landing from "../components/events/landing";
 import Events from "../components/events";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
+import OrgProfile from "../components/organizations/profile";
 
 class ContentContainer extends Component {
     render() {
@@ -14,6 +15,7 @@ class ContentContainer extends Component {
                 <Route path="/landing/:event" component={ Landing }/>
                 <PrivateRoute path="/my_events" component={ Events }/>
                 <PrivateRoute path="/event/:event" component={ Event }/>
+                <PrivateRoute path="/org/:org" component={ OrgProfile }/>
             </main>
         );
     }

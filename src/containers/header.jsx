@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import  { Link } from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
 import API from "../helpers/request"
@@ -51,33 +51,6 @@ class Header extends Component {
         Cookie.remove("token");
         Cookie.remove("evius_token");
         window.location.replace(`${AuthUrl}/logout`);
-    };
-
-    handleChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState({[name]:value},this.isValid)
-    };
-
-    isValid = () => {
-        const valid = !(this.state.event && this.state.event.length > 0);
-        this.setState({valid})
-    };
-
-    createEvent = () => {
-        if(!this.state.user){
-            Cookie.remove("token");
-            Cookie.remove("evius_token");
-            window.location.replace(`${AuthUrl}/logout`);
-        }else{
-            this.setState({modal:true})
-        }
-    };
-
-    newEvent = () => {
-        this.setState((prevState)=>{
-            return {modal:!prevState.modal}
-        });
     };
 
     openMenu = () => {
@@ -166,9 +139,11 @@ class Header extends Component {
                                                     <Link className="navbar-item" to={"/my_events"}>
                                                         <FormattedMessage id="header.events" defaultMessage="Events"/>
                                                     </Link>
-                                                    <Link className="navbar-item" to={"/"}>
+                                                    <hr className="navbar-divider"/>
+                                                    <p className="navbar-item">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
-                                                    </Link>
+                                                    </p>
+                                                    <NavLink activeClassName={'active'} to={`/org/create`}>+ Crear</NavLink>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>

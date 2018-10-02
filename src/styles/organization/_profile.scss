@@ -1,0 +1,38 @@
+.org-profile{
+  .org-data{
+    background-color: $gray-lighter;
+  }
+  .document-zone {
+    background-color: white;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .circle-img{
+    position: relative;
+    .avatar-img{
+      background-size: cover;
+      width: 170px;
+      border-radius: 50%;
+      height: 180px;
+    }
+    .change-img{
+      position: absolute !important;
+      top: 36%;
+      left: 26%;
+      z-index: 900;
+    }
+    &:after {
+      content: '\A';
+      position: absolute;
+      border-radius: 50%;
+      width: 63%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(0,0,0,0.6);
+      opacity: 1;
+    }
+  }
+}
