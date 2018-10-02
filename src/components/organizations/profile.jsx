@@ -2,7 +2,8 @@
 import React, {Component} from 'react';
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
-import {MdAttachFile} from 'react-icons/md'
+import {MdAttachFile, MdSave} from 'react-icons/md'
+import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
 import CircleImage from "../shared/circleImage";
 import {Actions} from "../../helpers/request";
 
@@ -55,6 +56,10 @@ class OrgProfile extends Component {
         else{
             this.setState({errImg:'Only images files allowed. Please try again (:'});
         }
+    };
+
+    showNetwork = (network) => {
+      this.setState({network})
     };
 
     render() {
@@ -112,10 +117,25 @@ class OrgProfile extends Component {
                                                 radius="20"/>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p>Redes</p>
-
+                                    <div className="field is-grouped">
+                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Facebook')}}><FaFacebook/></button>
+                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Twitter')}}><FaTwitter/></button>
+                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Instagram')}}><FaInstagram/></button>
+                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('LinkedIn')}}><FaLinkedinIn/></button>
                                     </div>
+                                    {
+                                        this.state.network&&(
+                                            <div className="field has-addons">
+                                                <div className="control">
+                                                    <input className="input is-small" type="url"
+                                                           placeholder={`${this.state.network} URL`}/>
+                                                </div>
+                                                <div className="control">
+                                                    <button className="button is-info is-outlined is-small"><MdSave/></button>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                                 <div className="column">
                                     <div className="field">
