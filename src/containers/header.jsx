@@ -118,7 +118,7 @@ class Header extends Component {
                             </div>
                             <div className="navbar-end">
                                 <div className="navbar-item">
-                                    <Link to={'event/new_event'}>
+                                    <Link to={'/event/new_event'}>
                                         <button className="button is-primary is-rounded">
                                             <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
                                         </button>
