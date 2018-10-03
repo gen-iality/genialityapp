@@ -12,7 +12,8 @@ class General extends Component {
         super(props);
         this.state = {
             event : this.props.event,
-            selectedOption: []
+            selectedOption: [],
+            valid: true
         };
         this.submit = this.submit.bind(this);
     }
@@ -33,7 +34,13 @@ class General extends Component {
 
     handleChange = (e) => {
         const {name, value} = e.target;
-        this.setState({event:{...this.state.event,[name]:value}})
+        this.setState({event:{...this.state.event,[name]:value}},this.valid)
+    };
+
+    valid = () => {
+        const {event} = this.state,
+            valid = (event.name.length>8 && event.description.length>5 && event.location.PlaceId);
+        this.setState({valid:!valid})
     };
 
     handleSelect = (selectedOption) => {
@@ -142,12 +149,12 @@ class General extends Component {
             }
             location.FormattedAddress = place.formatted_address;
             location.PlaceId = place.place_id;
-            this.setState({event:{...this.state.event,location}})
+            this.setState({event:{...this.state.event,location}},this.valid)
         }
     };
 
     render() {
-        const { event, categories, selectedOption } = this.state;
+        const { event, categories, selectedOption, valid } = this.state;
         return (
             <form onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} selectedOption={selectedOption}
@@ -167,7 +174,7 @@ class General extends Component {
                     <div className="control">
                         {
                             this.state.loading? <p>Saving...</p>
-                            :<button type={"submit"} className={`button is-outlined is-success`}>Save!</button>
+                            :<button type={"submit"} className={`button is-outlined is-success`} disabled={valid}>Save!</button>
                         }
                     </div>
                 </div>
