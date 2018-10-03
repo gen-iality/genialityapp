@@ -7,7 +7,6 @@ import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
 import {Actions, CategoriesApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
-import Select from 'react-select';
 import SelectInput from "../shared/selectInput";
 
 class OrgProfile extends Component {
@@ -16,9 +15,11 @@ class OrgProfile extends Component {
         this.state = {
             selectedOption: [],
             org: {
-                location:{}
+                location:{},
+                doc:{}
             }
-        }
+        };
+        this.saveForm = this.saveForm.bind(this);
     }
 
     async componentDidMount() {
@@ -32,12 +33,70 @@ class OrgProfile extends Component {
         }
     }
 
+    handleChange = (e) => {
+        const {name, value} = e.target;
+        this.setState({org:{...this.state.org,[name]:value}},this.valid)
+    };
+
+    //Doc
     docDrop=(files)=>{
         console.log('ARHIVO');
         const file = files[0];
         (!file)?
-            this.setState({documentos:{...this.state.documentos,error:{...this.state.documentos.error,rut:true},data:{...this.state.documentos.data,rut:file}}}) :
-            this.setState({documentos:{...this.state.documentos,data:{...this.state.documentos.data,rut:file},error:{...this.state.documentos.error,rut:false}}});
+            this.setState({org:{...this.state.org,doc:{...this.state.org.doc,flag:false,file:'',msg:'sólo archivos pdf permitidos'}}}) :
+            this.uploadFile(file);
+    };
+    uploadFile = (file) => {
+        let data = new FormData();
+        const url = '/api/files/upload',
+            self = this;
+        data.append('file',file);
+        Actions.post(url, data)
+            .then((file) => {
+                self.setState({
+                    org: {
+                        ...self.state.org,
+                        doc: {
+                            ...this.state.org.doc,
+                            flag:true,
+                            file,
+                            msg:'Upload successfully'
+                        }
+                    }
+                });
+            });
+    };
+
+    onSuggestSelect = (suggest) => {
+        if(suggest){
+            const place = suggest.gmaps;
+            const location = place.geometry && place.geometry.location ? {
+                Latitude: place.geometry.location.lat(),
+                Longitude: place.geometry.location.lng()
+            } : {};
+            const componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name'
+            };
+            const mapping = {
+                street_number: 'number',
+                route: 'street',
+                locality: 'city',
+                administrative_area_level_1: 'state'
+            };
+            for (let i = 0; i < place.address_components.length; i++) {
+                const addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    const val = place.address_components[i][componentForm[addressType]];
+                    location[mapping[addressType]] = val;
+                }
+            }
+            location.FormattedAddress = place.formatted_address;
+            location.PlaceId = place.place_id;
+            this.setState({event:{...this.state.event,location}},this.valid)
+        }
     };
 
     changeImg = (files) => {
@@ -71,6 +130,18 @@ class OrgProfile extends Component {
     handleSelect = (selectedOption) => {
         this.setState({ selectedOption });
     };
+
+    async saveForm() {
+        const { org } = this.state;
+        const categories = this.state.selectedOption.map(item=>{
+            return item.value
+        });
+        org.doc = org.doc.file;
+        org.category_ids = categories;
+        const resp = await Actions.create('/api/user/organizations',org);
+        console.log(org);
+        console.log(resp);
+    }
 
     render() {
         const { org, categories } = this.state;
@@ -167,9 +238,10 @@ class OrgProfile extends Component {
                                                 <p>Selecciona archivo <MdAttachFile className="has-text-primary"/></p>
                                             </div>
                                         </Dropzone>
+                                        <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
                                     </div>
                                     <div className="control">
-                                        <button className="button is-primary">Submit</button>
+                                        <button className="button is-primary" onClick={this.saveForm}>Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -181,13 +253,5 @@ class OrgProfile extends Component {
         );
     }
 }
-
-const handleData = (data) => {
-    let list = [];
-    data.map(item=>{
-        return list.push({value:item._id,label:item.name})
-    })
-    return list;
-};
 
 export default OrgProfile;
