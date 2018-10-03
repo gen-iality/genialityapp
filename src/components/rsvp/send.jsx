@@ -172,6 +172,9 @@ class SendRsvp extends Component {
                         <div className="column is-half is-offset-one-quarter">
                             <p>Sube una imagen (Por defecto será la del evento)</p>
                             <ImageInput picture={this.state.rsvp.image} imageFile={this.state.imageFile}
+                                        divClass={'imgRsvp'} content={<img src={this.state.rsvp.image} alt={'Imagen Perfil'}/>}
+                                        classDrop={'dropzone'} contentDrop={<button className={`button is-link is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                        contentZone={<div>Subir foto</div>}
                                         changeImg={this.changeImg} errImg={this.state.errImg}/>
                         </div>
                     </div>

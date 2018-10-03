@@ -4,8 +4,9 @@ import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import CircleImage from "../shared/circleImage";
 import {Actions} from "../../helpers/request";
+import ImageInput from "../shared/imageInput";
+import {TiArrowLoopOutline} from "react-icons/ti";
 
 class OrgProfile extends Component {
     constructor(props) {
@@ -69,11 +70,13 @@ class OrgProfile extends Component {
                 <div className="container org-profile">
                     <div className="columns">
                         <div className="column is-3">
-                            <CircleImage picture={org.picture} imageFile={this.state.imageFile}
-                                         changeImg={this.changeImg}/>
-                           {/* <figure className="image is-128x128">
-                                <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
-                            </figure>*/}
+                            <ImageInput picture={org.picture} imageFile={this.state.imageFile}
+                                        divClass={'circle-img'} content={<div style={{backgroundImage: `url(${org.picture?org.picture.preview:''})`}} className="avatar-img"/>}
+                                        classDrop={'change-img is-size-2'} contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
+                                        contentZone={<figure className="image is-128x128">
+                                            <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
+                                        </figure>} style={{}}
+                                        changeImg={this.changeImg}/>
                             <div className="field">
                                 <label className="label">Nombre Empresa</label>
                                 <div className="control">

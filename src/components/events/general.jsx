@@ -5,6 +5,7 @@ import {Actions, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
+import {TiArrowLoopOutline} from "react-icons/ti";
 Moment.locale('es');
 
 class General extends Component {
@@ -163,6 +164,9 @@ class General extends Component {
                                    <label className="label">Foto</label>
                                    <div className="control">
                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                                   divClass={'imgRsvp'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
+                                                   classDrop={'dropzone'} contentDrop={<button className={`button is-link is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                   contentZone={<div>Subir foto</div>}
                                                    changeImg={this.changeImg} errImg={this.state.errImg}/>
                                    </div>
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
