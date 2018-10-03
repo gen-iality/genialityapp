@@ -4,14 +4,17 @@ import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import {Actions} from "../../helpers/request";
+import {Actions, CategoriesApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
+import Select from 'react-select';
+import SelectInput from "../shared/selectInput";
 
 class OrgProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedOption: [],
             org: {
                 location:{}
             }
@@ -20,6 +23,8 @@ class OrgProfile extends Component {
 
     async componentDidMount() {
         let orgId = this.props.match.params.org;
+        const categories = await CategoriesApi.getAll();
+        this.setState({categories});
         if(orgId === 'create'){
             this.setState({create:true,loading:false})
         }else{
@@ -44,15 +49,15 @@ class OrgProfile extends Component {
             const url = '/api/files/upload',
                 self = this;
             data.append('file',this.state.imageFile);
-            self.setState({
-                org: {
-                    ...self.state.org,
-                    picture: file
-                },fileMsg:'Image uploaded successfull'
-            });
-            /*Actions.post(url, data)
+            Actions.post(url, data)
                 .then((image) => {
-                });*/
+                    self.setState({
+                        org: {
+                            ...self.state.org,
+                            picture: image
+                        },fileMsg:'Image uploaded successfull'
+                    });
+                });
         }
         else{
             this.setState({errImg:'Only images files allowed. Please try again (:'});
@@ -63,15 +68,19 @@ class OrgProfile extends Component {
       this.setState({network})
     };
 
+    handleSelect = (selectedOption) => {
+        this.setState({ selectedOption });
+    };
+
     render() {
-        const { org } = this.state;
+        const { org, categories } = this.state;
         return (
             <section className="section">
                 <div className="container org-profile">
                     <div className="columns">
                         <div className="column is-3">
                             <ImageInput picture={org.picture} imageFile={this.state.imageFile}
-                                        divClass={'circle-img'} content={<div style={{backgroundImage: `url(${org.picture?org.picture.preview:''})`}} className="avatar-img"/>}
+                                        divClass={'circle-img'} content={<div style={{backgroundImage: `url(${org.picture})`}} className="avatar-img"/>}
                                         classDrop={'change-img is-size-2'} contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                         contentZone={<figure className="image is-128x128">
                                             <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
@@ -95,6 +104,7 @@ class OrgProfile extends Component {
                                     />
                                 </div>
                             </div>
+                            <SelectInput handleSelect={this.handleSelect} options={categories}/>
                         </div>
                         <div className="column is-9 org-data">
                             <h1 className="title has-text-primary">Datos</h1>
@@ -171,5 +181,13 @@ class OrgProfile extends Component {
         );
     }
 }
+
+const handleData = (data) => {
+    let list = [];
+    data.map(item=>{
+        return list.push({value:item._id,label:item.name})
+    })
+    return list;
+};
 
 export default OrgProfile;

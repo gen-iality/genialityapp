@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import Geosuggest from 'react-geosuggest'
 import { DateTimePicker } from 'react-widgets'
-import Select from 'react-select';
+import SelectInput from "./selectInput";
 
 class FormEvent extends Component {
     render() {
@@ -114,21 +114,7 @@ class FormEvent extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="field">
-                        <label className="label">Categoría: </label>
-                        <div className="control">
-                            <Select
-                                isMulti
-                                value={selectedOption}
-                                menuPlacement="top"
-                                name="category"
-                                options={categories}
-                                onChange={this.props.handleSelect}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                            />
-                        </div>
-                    </div>
+                    <SelectInput handleSelect={this.props.handleSelect} options={categories}/>
                 </div>
             </div>
         );

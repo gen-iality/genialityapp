@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions, EventsApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
@@ -20,8 +20,7 @@ class General extends Component {
     }
 
     async componentDidMount(){
-        const resp = await Actions.getAll('api/category');
-        const categories = handleData(resp.data);
+        const categories = await CategoriesApi.getAll();
         const category_ids = this.state.event.category_ids;
         let selectedOption = [];
         if(category_ids){
@@ -186,13 +185,5 @@ class General extends Component {
         );
     }
 }
-
-const handleData = (data) => {
-    let list = [];
-    data.map(item=>{
-        return list.push({value:item._id,label:item.name})
-    })
-    return list;
-};
 
 export default General;

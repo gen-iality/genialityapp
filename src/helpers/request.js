@@ -96,4 +96,18 @@ export const UsersApi = {
         return await Actions.delete(`/api/user/events/${id}`, user);
     }
 };
+export const CategoriesApi = {
+    getAll: async () => {
+        const resp = await Actions.getAll('api/category');
+        return handleCat(resp.data)
+    }
+};
+const handleCat = (data) => {
+    let list = [];
+    data.map(item=>{
+        return list.push({value:item._id,label:item.name})
+    })
+    return list;
+};
+
 export default privateInstance;
