@@ -2,6 +2,15 @@
   cursor: pointer;
 }
 
+input{
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid $grey !important;
+  &:focus{
+    border-bottom: 1px solid $primary !important;
+  }
+}
+
 /**
  * The geosuggest module
  * NOTE: duplicated font-sizes' are for browsers which don't support rem (only IE 8)
