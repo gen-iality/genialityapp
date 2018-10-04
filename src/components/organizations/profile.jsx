@@ -48,6 +48,7 @@ class OrgProfile extends Component {
     };
     uploadFile = (file) => {
         let data = new FormData();
+        this.setState({org:{...this.state.org,doc:{...this.state.org.doc,loading:true}}});
         const url = '/api/files/upload',
             self = this;
         data.append('file',file);
@@ -60,7 +61,8 @@ class OrgProfile extends Component {
                             ...this.state.org.doc,
                             flag:true,
                             file,
-                            msg:'Upload successfully'
+                            msg:'Upload successfully',
+                            loading:false
                         }
                     }
                 });
@@ -233,12 +235,18 @@ class OrgProfile extends Component {
                                     </div>
                                     <div className="field">
                                         <label className="label">Cámara de Comercio</label>
-                                        <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
-                                            <div className="control has-text-centered">
-                                                <p>Selecciona archivo <MdAttachFile className="has-text-primary"/></p>
-                                            </div>
-                                        </Dropzone>
-                                        <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                        {
+                                         org.doc.loading?
+                                         <p>Subiendo archivo</p>:
+                                         <React.Fragment>
+                                             <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
+                                                 <div className="control has-text-centered">
+                                                     <p>Selecciona archivo <MdAttachFile className="has-text-primary"/></p>
+                                                 </div>
+                                             </Dropzone>
+                                             <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                         </React.Fragment>
+                                        }
                                     </div>
                                     <div className="control">
                                         <button className="button is-primary" onClick={this.saveForm}>Submit</button>
