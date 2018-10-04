@@ -163,7 +163,7 @@ class AddUser extends Component {
                                     <div className="field-body">
                                         <div className="field">
                                             <div className="control">
-                                                <input className="input is-rounded" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
+                                                <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
                                             </div>
                                         </div>
                                     </div>
