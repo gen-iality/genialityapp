@@ -5,7 +5,6 @@ import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import ImportUsers from "../modal/importUser";
-import SearchComponent from "../shared/searchTable";
 import Dialog from "../modal/twoAction";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 import Table from "../shared/table";
@@ -200,11 +199,6 @@ class ListEventUser extends Component {
             <React.Fragment>
                 <nav className="navbar is-transparent">
                     <div className="navbar-menu">
-                        <div className="navbar-start">
-                            <div className="navbar-item">
-                                <SearchComponent  data={this.state.users} kind={'user'} searchResult={this.searchResult}/>
-                            </div>
-                        </div>
                         <div className="navbar-end">
                             <div className="navbar-item">
                                 <div className="field is-grouped">
