@@ -78,16 +78,16 @@ class AddUser extends Component {
             } else {
                 alert("User can`t be created/updated");
             }
+            setTimeout(()=>{
+                message.class = message.content = '';
+                this.closeModal();
+            },1000)
         } catch (err) {
             console.log(err.response);
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
         this.setState({message,create:false});
-        setTimeout(()=>{
-            message.class = message.content = '';
-            this.closeModal();
-        },1000)
     }
 
     handleChange = (event) => {
@@ -112,7 +112,7 @@ class AddUser extends Component {
     };
 
     closeModal = () => {
-        this.setState({user:{}, rol: '', state: ''},this.props.handleModal());
+        this.setState({user:{}, valid:true},this.props.handleModal());
     };
 
     render() {
