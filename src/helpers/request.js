@@ -28,7 +28,7 @@ privateInstance.interceptors.response.use(function(response) {
     }
 }, ( err ) => {
     console.log(err.response);
-    window.location.replace(`${AuthUrl}/logout`);
+    //window.location.replace(`${AuthUrl}/logout`);
     /*const { data } = err.response;
     console.log(data);
     */
@@ -103,13 +103,16 @@ export const CategoriesApi = {
     }
 };
 export const OrganizationApi = {
-  mine: async () => {
+    mine: async () => {
       const resp = await Actions.getAll('api/me/organizations');
       let data = resp.data.map((item)=>{
           return {id:item._id,name:item.name}
       })
       return data
-  }
+    },
+    getOne: async (id) => {
+        return await Actions.getOne('/api/organizations/', id)
+    },
 };
 const handleCat = (data) => {
     let list = [];

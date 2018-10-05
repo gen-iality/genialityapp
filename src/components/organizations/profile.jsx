@@ -4,11 +4,13 @@ import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import {Actions, CategoriesApi} from "../../helpers/request";
+import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import SelectInput from "../shared/selectInput";
 import {BaseUrl} from "../../helpers/constants";
+import Moment from "moment";
+import Loading from "../loaders/loading";
 
 class OrgProfile extends Component {
     constructor(props) {
@@ -18,7 +20,8 @@ class OrgProfile extends Component {
             org: {
                 location:{},
                 doc:{}
-            }
+            },
+            loading: true
         };
         this.saveForm = this.saveForm.bind(this);
     }
@@ -30,7 +33,11 @@ class OrgProfile extends Component {
         if(orgId === 'create'){
             this.setState({create:true,loading:false})
         }else{
-            this.setState({loading:false});
+            const org = await OrganizationApi.getOne(orgId);
+            org.location = org.location? org.location: {};
+            org.doc = org.doc? org.doc: {};
+            console.log(org);
+            this.setState({org,loading:false});
         }
     }
 
@@ -141,10 +148,9 @@ class OrgProfile extends Component {
         });
         org.doc = org.doc.file;
         org.category_ids = categories;
-        const resp = await Actions.create('/api/user/organizations',org);
+        const resp = await Actions.create('/api/organizations',org);
         console.log(org);
         console.log(resp);
-        this.setState({loading:false});
         if(resp._id){
             window.location.replace(`${BaseUrl}/org/${resp._id}`);
         }else{
@@ -156,114 +162,133 @@ class OrgProfile extends Component {
         const { org, categories } = this.state;
         return (
             <section className="section">
-                <div className="container org-profile">
-                    <div className="columns">
-                        <div className="column is-3">
-                            <ImageInput picture={org.picture} imageFile={this.state.imageFile}
-                                        divClass={'circle-img'} content={<div style={{backgroundImage: `url(${org.picture})`}} className="avatar-img"/>}
-                                        classDrop={'change-img is-size-2'} contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
-                                        contentZone={<figure className="image is-128x128">
-                                            <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
-                                        </figure>} style={{}}
-                                        changeImg={this.changeImg}/>
-                            <div className="field">
-                                <label className="label">Nombre Empresa</label>
-                                <div className="control">
-                                    <input className="input" name={"name"} type="text"
-                                           placeholder="Text input" value={org.name}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="field">
-                                <label className="label">Correo Corporativo</label>
-                                <div className="control">
-                                    <input className="input" name={"email"} type="email"
-                                           placeholder="Text input" value={org.email}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                            <SelectInput handleSelect={this.handleSelect} options={categories}/>
-                        </div>
-                        <div className="column is-9 org-data">
-                            <h1 className="title has-text-primary">Datos</h1>
+                {
+                    this.state.loading ? <Loading/> :
+                        <div className="container org-profile">
                             <div className="columns">
-                                <div className="column">
+                                <div className="column is-3">
+                                    <ImageInput picture={org.picture} imageFile={this.state.imageFile}
+                                                divClass={'circle-img'}
+                                                content={<div style={{backgroundImage: `url(${org.picture})`}}
+                                                              className="avatar-img"/>}
+                                                classDrop={'change-img is-size-2'}
+                                                contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
+                                                contentZone={<figure className="image is-128x128">
+                                                    <img className="is-rounded"
+                                                         src="https://bulma.io/images/placeholders/128x128.png"/>
+                                                </figure>} style={{}}
+                                                changeImg={this.changeImg}/>
                                     <div className="field">
-                                        <label className="label">Nit</label>
+                                        <label className="label">Nombre Empresa</label>
                                         <div className="control">
-                                            <input className="input" name={"nit"} type="number"
-                                                   placeholder="Text input" value={org.nit}
+                                            <input className="input" name={"name"} type="text"
+                                                   placeholder="Text input" value={org.name}
                                                    onChange={this.handleChange}
                                             />
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label">Dirección</label>
+                                        <label className="label">Correo Corporativo</label>
                                         <div className="control">
-                                            <Geosuggest
-                                                placeholder={'Dirección'}
-                                                onSuggestSelect={this.onSuggestSelect}
-                                                initialValue={org.location.FormattedAddress}
-                                                location={new google.maps.LatLng(org.location.Latitude,org.location.Longitude)}
-                                                radius="20"/>
+                                            <input className="input" name={"email"} type="email"
+                                                   placeholder="Text input" value={org.email}
+                                                   onChange={this.handleChange}
+                                            />
                                         </div>
                                     </div>
-                                    <div className="field is-grouped">
-                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Facebook')}}><FaFacebook/></button>
-                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Twitter')}}><FaTwitter/></button>
-                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('Instagram')}}><FaInstagram/></button>
-                                        <button className={`is-text button`} onClick={(e)=>{this.showNetwork('LinkedIn')}}><FaLinkedinIn/></button>
-                                    </div>
-                                    {
-                                        this.state.network&&(
-                                            <div className="field has-addons">
+                                    <SelectInput handleSelect={this.handleSelect} options={categories}/>
+                                </div>
+                                <div className="column is-9 org-data">
+                                    <h1 className="title has-text-primary">Datos</h1>
+                                    <div className="columns">
+                                        <div className="column">
+                                            <div className="field">
+                                                <label className="label">Nit</label>
                                                 <div className="control">
-                                                    <input className="input is-small" type="url"
-                                                           placeholder={`${this.state.network} URL`}/>
-                                                </div>
-                                                <div className="control">
-                                                    <button className="button is-info is-outlined is-small"><MdSave/></button>
+                                                    <input className="input" name={"nit"} type="number"
+                                                           placeholder="Text input" value={org.nit}
+                                                           onChange={this.handleChange}
+                                                    />
                                                 </div>
                                             </div>
-                                        )
-                                    }
-                                </div>
-                                <div className="column">
-                                    <div className="field">
-                                        <label className="label">Celular o Teléfono</label>
-                                        <div className="control">
-                                            <input className="input" name={"phone"} type="tel"
-                                                   placeholder="Text input" value={org.phone}
-                                                   onChange={this.handleChange}
-                                            />
+                                            <div className="field">
+                                                <label className="label">Dirección</label>
+                                                <div className="control">
+                                                    <Geosuggest
+                                                        placeholder={'Dirección'}
+                                                        onSuggestSelect={this.onSuggestSelect}
+                                                        initialValue={org.location.FormattedAddress}
+                                                        location={new google.maps.LatLng(org.location.Latitude, org.location.Longitude)}
+                                                        radius="20"/>
+                                                </div>
+                                            </div>
+                                            <div className="field is-grouped">
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Facebook')
+                                                }}><FaFacebook/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Twitter')
+                                                }}><FaTwitter/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Instagram')
+                                                }}><FaInstagram/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('LinkedIn')
+                                                }}><FaLinkedinIn/></button>
+                                            </div>
+                                            {
+                                                this.state.network && (
+                                                    <div className="field has-addons">
+                                                        <div className="control">
+                                                            <input className="input is-small" type="url"
+                                                                   placeholder={`${this.state.network} URL`}/>
+                                                        </div>
+                                                        <div className="control">
+                                                            <button className="button is-info is-outlined is-small">
+                                                                <MdSave/></button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
-                                    </div>
-                                    <div className="field">
-                                        <label className="label">Cámara de Comercio</label>
-                                        {
-                                         org.doc.loading?
-                                         <p>Subiendo archivo</p>:
-                                         <React.Fragment>
-                                             <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
-                                                 <div className="control has-text-centered">
-                                                     <p>Selecciona archivo <MdAttachFile className="has-text-primary"/></p>
-                                                 </div>
-                                             </Dropzone>
-                                             <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
-                                         </React.Fragment>
-                                        }
-                                    </div>
-                                    <div className="control">
-                                        <button className="button is-primary" onClick={this.saveForm}>Submit</button>
+                                        <div className="column">
+                                            <div className="field">
+                                                <label className="label">Celular o Teléfono</label>
+                                                <div className="control">
+                                                    <input className="input" name={"phone"} type="tel"
+                                                           placeholder="Text input" value={org.phone}
+                                                           onChange={this.handleChange}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="field">
+                                                <label className="label">Cámara de Comercio</label>
+                                                {
+                                                    org.doc.loading ?
+                                                        <p>Subiendo archivo</p> :
+                                                        <React.Fragment>
+                                                            <Dropzone accept="application/pdf" className="document-zone"
+                                                                      onDrop={this.docDrop}>
+                                                                <div className="control has-text-centered">
+                                                                    <p>Selecciona archivo <MdAttachFile
+                                                                        className="has-text-primary"/></p>
+                                                                </div>
+                                                            </Dropzone>
+                                                            <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                                        </React.Fragment>
+                                                }
+                                            </div>
+                                            <div className="control">
+                                                <button className="button is-primary" onClick={this.saveForm}>Submit
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div>Content</div>
                         </div>
-                    </div>
-                    <div>Content</div>
-                </div>
+                }
             </section>
         );
     }
