@@ -197,10 +197,11 @@ class UsersRsvp extends Component {
     };
 
     //Add user to current list at middle column
-    addToList = (user) => {
-        let users = this.state.users;
-        users.push({name:user.properties.name,email:user.properties.email,id:user._id});
-        this.setState({ users, auxArr:users });
+    async addToList(user){
+        console.log(user);
+        const {data} = await UsersApi.getAll(this.props.event._id);
+        const users = handleUsers(data);
+        this.setState({ users });
     };
 
     //Modal import

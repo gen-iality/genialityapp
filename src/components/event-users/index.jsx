@@ -99,12 +99,10 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
     }
 
-    addToList = (user) => {
-        let users = this.state.users;
-        let pos = users.map((e) => { return e._id; }).indexOf(user._id);
-        if(pos >= 0){
-              users[pos] = user;
-        }else users.push(user);
+    async addToList(user) {
+        console.log(user);
+        const {data} = await UsersApi.getAll(this.props.event._id);
+        const users = handleUsers(data);
         this.setState({ users });
     };
 
