@@ -102,8 +102,7 @@ class ListEventUser extends Component {
     async addToList(user) {
         console.log(user);
         const {data} = await UsersApi.getAll(this.props.event._id);
-        const users = handleUsers(data);
-        this.setState({ users });
+        this.setState({ users:data });
     };
 
     modalUser = () => {
