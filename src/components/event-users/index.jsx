@@ -286,7 +286,7 @@ const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
             querySort = JSON.stringify(querySort);
             query = query+`&orderBy=${querySort}`;
         }
-        API.get(`/api/user/event_users/${eventId}${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
+        API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
             filteredData = data;
             res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
             resolve(res)
@@ -347,6 +347,6 @@ const columns = [
 
 export default resolve("userReq", (props) => {
     let eventId = props.eventId;
-    const url = `/api/user/event_users/${eventId}`;
+    const url = `/api/events/${eventId}/eventUsers`;
     return API.get(url).then(({data})=> data)
 })(ListEventUser);

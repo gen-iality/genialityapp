@@ -87,7 +87,7 @@ export const EventsApi = {
 };
 export const UsersApi = {
     getAll: async (id) => {
-        return await Actions.getOne(`/api/user/event_users/`,id)
+        return await Actions.getAll(`/api/events/${id}/eventUsers`)
     },
     editOne: async (data, id) => {
         return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`,data)
