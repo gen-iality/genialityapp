@@ -105,11 +105,7 @@ class ListEventUser extends Component {
         if(pos >= 0){
               users[pos] = user;
         }else users.push(user);
-        this.setState({ users, auxArr:users });
-    };
-
-    searchResult = (data) => {
-        !data ? this.setState({users:this.state.auxArr}) : this.setState({users:data})
+        this.setState({ users });
     };
 
     modalUser = () => {
