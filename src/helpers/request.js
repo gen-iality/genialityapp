@@ -28,10 +28,10 @@ privateInstance.interceptors.response.use(function(response) {
     }
 }, ( err ) => {
     console.log(err.response);
-    return err.response;
+    window.location.replace(`${AuthUrl}/logout`);
     /*const { data } = err.response;
     console.log(data);
-    window.location.replace(`${AuthUrl}/logout`);*/
+    */
 });
 let evius_token = Cookie.get('evius_token');
 if (evius_token){
@@ -101,6 +101,15 @@ export const CategoriesApi = {
         const resp = await Actions.getAll('api/category');
         return handleCat(resp.data)
     }
+};
+export const OrganizationApi = {
+  mine: async () => {
+      const resp = await Actions.getAll('api/me/organizations');
+      let data = resp.data.map((item)=>{
+          return {id:item._id,name:item.name}
+      })
+      return data
+  }
 };
 const handleCat = (data) => {
     let list = [];

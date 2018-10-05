@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link, NavLink} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
-import API from "../helpers/request"
+import API, {OrganizationApi} from "../helpers/request"
 import Dialog from "../components/modal/twoAction";
 import {FormattedMessage} from 'react-intl';
 
@@ -11,6 +11,7 @@ class Header extends Component {
         super(props);
         this.state = {
             selection: [],
+            organizations: [],
             name: 'user',
             user: false,
             open: false,
@@ -20,9 +21,10 @@ class Header extends Component {
             create: false,
             valid: true
         };
+        this.openMenu = this.openMenu.bind(this);
     }
 
-    async componentDidMount(){
+    componentDidMount(){
         let evius_token = Cookie.get('evius_token');
         if(!evius_token) {
             this.setState({user:false,loader:false});
@@ -53,9 +55,10 @@ class Header extends Component {
         window.location.replace(`${AuthUrl}/logout`);
     };
 
-    openMenu = () => {
+    async openMenu() {
+        const organizations = await OrganizationApi.mine();
         this.setState((prevState) => {
-            return {open:!prevState.open}
+            return {open:!prevState.open,organizations}
         });
     };
 
@@ -128,7 +131,7 @@ class Header extends Component {
                                     this.state.loader ?
                                         <div>Wait...</div>:
                                         this.state.user ?
-                                            <div className="navbar-item has-dropdown is-hoverable">
+                                            <div className={`navbar-item has-dropdown ${this.state.open ? "is-active" : ""}`} onClick={this.openMenu}>
                                                 <a className="navbar-link">
                                                     {this.state.name}
                                                 </a>
@@ -143,6 +146,13 @@ class Header extends Component {
                                                     <p className="navbar-item">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
                                                     </p>
+                                                    {
+                                                        this.state.organizations.map((org,key)=>{
+                                                            return <Link className="navbar-item" to={`/org/${org.id}`} key={key}>
+                                                                    {org.name}
+                                                            </Link>
+                                                        })
+                                                    }
                                                     <NavLink activeClassName={'active'} to={`/org/create`}>+ Crear</NavLink>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item" onClick={this.logout}>
