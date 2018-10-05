@@ -25,7 +25,7 @@ class Result extends Component {
         const self = this;
         let imported = [];
         Async.forEachOf(users,(user,key,cb)=>{
-            Actions.post(`/api/eventUser/createUserAndAddtoEvent/${this.props.eventId}`,user)
+            Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`,user)
                 .then((resp)=>{
                     console.log(resp);
                     if(resp.message === 'OK'){

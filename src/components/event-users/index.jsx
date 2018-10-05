@@ -136,7 +136,7 @@ class ListEventUser extends Component {
         if(pos >= 0){
             user.checked_in = !user.checked_in;
             users[pos] = user;
-            Actions.edit('/api/eventUser/' + user._id + '/checkin','','')
+            Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
                 .then((response)=>{
                     console.log(response);
                 });

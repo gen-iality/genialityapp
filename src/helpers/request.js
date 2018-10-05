@@ -90,7 +90,7 @@ export const UsersApi = {
         return await Actions.getOne(`/api/user/event_users/`,id)
     },
     editOne: async (data, id) => {
-        return await Actions.post(`/api/eventUser/createUserAndAddtoEvent/${id}`,data)
+        return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`,data)
     },
     deleteOne: async (user, id) => {
         return await Actions.delete(`/api/user/events/${id}`, user);

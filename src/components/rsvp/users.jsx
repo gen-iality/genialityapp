@@ -226,7 +226,7 @@ class UsersRsvp extends Component {
     sendTicket = () => {
         const { event } = this.props;
         const { selection } = this.state;
-        const url = '/api/eventUser/bookEventUsers/'+event._id;
+        const url = '/api/eventUsers/bookEventUsers/'+event._id;
         let users = [];
         selection.map(item=>{
             users.push(item.id)
