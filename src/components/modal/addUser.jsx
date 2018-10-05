@@ -6,14 +6,14 @@ class AddUser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rolsList: [],
+            rolesList: [],
             statesList: [],
             message: {},
             user: {},
             rol: "",
             state: "",
             emailError:false,
-            valid: false
+            valid: true
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -28,11 +28,12 @@ class AddUser extends Component {
                     value: rol._id,
                     label: rol.name
                 }));
+                console.log(rolData);
                 let stateData = estados.map(state => ({
                     value: state._id,
                     label: state.name
                 }));
-                self.setState({ rolsList: rolData, statesList: stateData });
+                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
             }))
     }
 
@@ -62,8 +63,8 @@ class AddUser extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            role_id: this.state.rol.split(':')[0],
-            state_id: this.state.state.split(':')[0],
+            role_id: this.state.rol,
+            state_id: this.state.state,
         };
         let message = {};
         this.setState({create:true});
@@ -92,16 +93,14 @@ class AddUser extends Component {
     handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
-        this.setState({user:{...this.state.user,[name]:value}})
+        this.setState({user:{...this.state.user,[name]:value}}, this.validForm)
     };
 
     selectChange = (e) => {
         let name = e.target.name;
         let value = e.target.value;
-        let split = value.split(':');
-        const label = 'label' + name;
-        this.setState({[name]:value, [label]:split[1]}, this.validForm);
-    }
+        this.setState({[name]:value}, this.validForm);
+    };
 
     validForm = () => {
         const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -179,10 +178,9 @@ class AddUser extends Component {
                                     <div className="control">
                                         <div className="select">
                                             <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
-                                                <option value="">Seleccione....</option>
                                                 {
-                                                    this.state.rolsList.map((item,key)=>{
-                                                        return <option key={key} value={item.value + ':' + item.label}>{item.label}</option>
+                                                    this.state.rolesList.map((item,key)=>{
+                                                        return <option key={key} value={item.value}>{item.label}</option>
                                                     })
                                                 }
                                             </select>
@@ -200,10 +198,9 @@ class AddUser extends Component {
                                     <div className="control">
                                         <div className="select">
                                             <select value={this.state.state} onChange={this.selectChange} name={'state'}>
-                                                <option value="">Seleccione....</option>
                                                 {
                                                     this.state.statesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value + ':' + item.label}>{item.label}</option>
+                                                        return <option key={key} value={item.value}>{item.label}</option>
                                                     })
                                                 }
                                             </select>
