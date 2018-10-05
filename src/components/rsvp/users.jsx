@@ -353,7 +353,10 @@ class UsersRsvp extends Component {
                             <div className="field">
                                 <strong>Seleccionados {this.state.selection.length}</strong>
                             </div>
-                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
+                            {
+                                this.state.selection.length > 0 &&
+                                    <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
+                            }
                             {
                                 this.state.selection.map((item,key)=>{
                                     return <div key={key} className="media">
