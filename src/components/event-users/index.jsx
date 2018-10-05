@@ -21,7 +21,6 @@ class ListEventUser extends Component {
             loading:    true,
             importUser: false,
             pages:      Math.ceil(props.userReq.meta.total/25),
-            pageSize:   25,
             message:    {class:'', content:''},
             columns:    columns,
             sorted:     []
@@ -157,12 +156,10 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
-            const pageSize = res.total;
             const page = Math.ceil(res.total/res.perPage);
             this.setState({
                 users: res.rows,
                 pages: page,
-                pageSize: pageSize,
                 loading: false
             });
         });
@@ -194,7 +191,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, pageSize, loading, columns} = this.state;
+        const {users, pages, loading, columns} = this.state;
         return (
             <React.Fragment>
                 <nav className="navbar is-transparent">
@@ -222,20 +219,6 @@ class ListEventUser extends Component {
                 </nav>
                 <div className="main">
                     <div className="preview-list">
-                        {/*<ReactTable
-                            columns={columns}
-                            manual
-                            data={users}
-                            pages={pages}
-                            loading={loading}
-                            onFetchData={this.fetchData}
-                            filterable
-                            onSortedChange={sorted => this.setState({ sorted })}
-                            defaultFilterMethod={(filter, row) =>
-                                String(row[filter.id]) === filter.value}
-                            defaultPageSize={pageSize}
-                            className="-highlight"
-                        />*/}
                         <Table
                             columns={columns}
                             manual
@@ -247,7 +230,7 @@ class ListEventUser extends Component {
                             onSortedChange={sorted => this.setState({ sorted })}
                             defaultFilterMethod={(filter, row) =>
                                 String(row[filter.id]) === filter.value}
-                            defaultPageSize={pageSize}
+                            defaultPageSize={25}
                             className="-highlight"/>
                     </div>
                 </div>
