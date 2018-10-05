@@ -8,6 +8,7 @@ import {Actions, CategoriesApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import SelectInput from "../shared/selectInput";
+import {BaseUrl} from "../../helpers/constants";
 
 class OrgProfile extends Component {
     constructor(props) {
@@ -143,6 +144,12 @@ class OrgProfile extends Component {
         const resp = await Actions.create('/api/user/organizations',org);
         console.log(org);
         console.log(resp);
+        this.setState({loading:false});
+        if(resp._id){
+            window.location.replace(`${BaseUrl}/org/${resp._id}`);
+        }else{
+            this.setState({msg:'Cant Create',create:false})
+        }
     }
 
     render() {
