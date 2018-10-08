@@ -3,6 +3,7 @@ import {Actions} from "../../helpers/request";
 import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedTime} from 'react-intl';
 import InvitationDetail from "./invitationDetail";
+import LogOut from "../shared/logOut";
 
 class Invitations extends Component {
     constructor(props) {
@@ -16,10 +17,15 @@ class Invitations extends Component {
     }
 
     async componentDidMount() {
-        const invitations = await Actions.getOne('/api/event/'+this.props.event._id+'/','rsvp');
-        invitations.reverse();
-        console.log(invitations);
-        this.setState({invitations});
+        try {
+            const invitations = await Actions.getOne('/api/event/'+this.props.event._id+'/','rsvp');
+            invitations.reverse();
+            console.log(invitations);
+            this.setState({invitations});
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
     }
 
     showDetail = (item) => {
@@ -40,6 +46,7 @@ class Invitations extends Component {
     }
 
     render() {
+        const { detail, timeout } = this.state;
         return (
             <div className={"invitations"}>
                 {
@@ -72,6 +79,9 @@ class Invitations extends Component {
                                 onChangePage={this.onChangePage}
                             />
                         </React.Fragment>
+                }
+                {
+                    timeout&&(<LogOut/>)
                 }
             </div>
         );

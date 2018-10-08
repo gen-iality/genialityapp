@@ -11,6 +11,7 @@ import SelectInput from "../shared/selectInput";
 import {BaseUrl} from "../../helpers/constants";
 import Moment from "moment";
 import Loading from "../loaders/loading";
+import LogOut from "../shared/logOut";
 
 class OrgProfile extends Component {
     constructor(props) {
@@ -28,16 +29,21 @@ class OrgProfile extends Component {
 
     async componentDidMount() {
         let orgId = this.props.match.params.org;
-        const categories = await CategoriesApi.getAll();
-        this.setState({categories});
-        if(orgId === 'create'){
-            this.setState({create:true,loading:false})
-        }else{
-            const org = await OrganizationApi.getOne(orgId);
-            org.location = org.location? org.location: {};
-            org.doc = org.doc? org.doc: {};
-            console.log(org);
-            this.setState({org,loading:false});
+        try {
+            const categories = await CategoriesApi.getAll();
+            this.setState({categories});
+            if(orgId === 'create'){
+                this.setState({create:true,loading:false})
+            }else{
+                const org = await OrganizationApi.getOne(orgId);
+                org.location = org.location? org.location: {};
+                org.doc = org.doc? org.doc: {};
+                console.log(org);
+                this.setState({org,loading:false});
+            }
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
         }
     }
 
@@ -74,6 +80,10 @@ class OrgProfile extends Component {
                         }
                     }
                 });
+            })
+            .catch (e=> {
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
             });
     };
 
@@ -126,6 +136,10 @@ class OrgProfile extends Component {
                             picture: image
                         },fileMsg:'Image uploaded successfull'
                     });
+                })
+                .catch (e=> {
+                    console.log(e.response);
+                    this.setState({timeout:true,loader:false});
                 });
         }
         else{
@@ -148,22 +162,27 @@ class OrgProfile extends Component {
         });
         org.doc = org.doc.file;
         org.category_ids = categories;
-        const resp = await Actions.create('/api/organizations',org);
-        console.log(org);
-        console.log(resp);
-        if(resp._id){
-            window.location.replace(`${BaseUrl}/org/${resp._id}`);
-        }else{
-            this.setState({msg:'Cant Create',create:false})
+        try {
+            const resp = await Actions.create('/api/organizations',org);
+            console.log(org);
+            console.log(resp);
+            if(resp._id){
+                window.location.replace(`${BaseUrl}/org/${resp._id}`);
+            }else{
+                this.setState({msg:'Cant Create',create:false})
+            }
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
         }
     }
 
     render() {
-        const { org, categories } = this.state;
+        const { org, categories, loading, timeout } = this.state;
         return (
             <section className="section">
                 {
-                    this.state.loading ? <Loading/> :
+                    loading ? <Loading/> :
                         <div className="container org-profile">
                             <div className="columns">
                                 <div className="column is-3">
@@ -288,6 +307,9 @@ class OrgProfile extends Component {
                             </div>
                             <div>Content</div>
                         </div>
+                }
+                {
+                    timeout&&(<LogOut/>)
                 }
             </section>
         );
