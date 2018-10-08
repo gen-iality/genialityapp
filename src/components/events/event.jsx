@@ -51,7 +51,8 @@ class Event extends Component {
     }
 
     render() {
-        const { match, timeout } = this.props;
+        const { match } = this.props;
+        const { timeout } = this.state;
         return (
             <React.Fragment>
                 {
