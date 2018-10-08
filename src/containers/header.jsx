@@ -3,8 +3,8 @@ import {Link, NavLink} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl, BaseUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
-import Dialog from "../components/modal/twoAction";
 import {FormattedMessage} from 'react-intl';
+import LogOut from "../components/shared/logOut";
 
 class Header extends Component {
     constructor(props) {
@@ -49,12 +49,6 @@ class Header extends Component {
         }
     }
 
-    logout = () => {
-        Cookie.remove("token");
-        Cookie.remove("evius_token");
-        window.location.replace(`${AuthUrl}/logout`);
-    };
-
     async openMenu() {
         const organizations = await OrganizationApi.mine();
         this.setState((prevState) => {
@@ -62,14 +56,6 @@ class Header extends Component {
         });
     };
 
-    closeModal = () => {
-        Cookie.remove("token");
-        Cookie.remove("evius_token");
-        this.setState((prevState)=>{
-            return {timeout:!prevState.timeout,user:false}
-        });
-        window.location.replace(`${BaseUrl}`);
-    };
 
     render() {
         const { timeout } = this.state;
@@ -170,17 +156,7 @@ class Header extends Component {
                         </div>
                     </nav>
                 </header>
-                <Dialog modal={timeout} title={<FormattedMessage id="header.expired_title" defaultMessage="Sign In"/>}
-                        content={<p>
-                            <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
-                        </p>}
-                        first={{
-                            title:<FormattedMessage id="header.expired_signin" defaultMessage="Sign In"/>,
-                            class:'is-info',action:this.logout}}
-                        second={{
-                            title:<FormattedMessage id="header.expired_cancel" defaultMessage="Sign In"/>,
-                            class:'',action:this.closeModal}}
-                        message={{class:'',content:''}}/>
+                {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
     }
