@@ -56,6 +56,11 @@ class Header extends Component {
         });
     };
 
+    logout = () => {
+        Cookie.remove("token");
+        Cookie.remove("evius_token");
+        window.location.replace(`${AuthUrl}/logout`);
+    };
 
     render() {
         const { timeout } = this.state;
