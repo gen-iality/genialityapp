@@ -8,6 +8,7 @@ import ImportUsers from "../modal/importUser";
 import Dialog from "../modal/twoAction";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 import Table from "../shared/table";
+import LogOut from "../shared/logOut";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -101,8 +102,13 @@ class ListEventUser extends Component {
 
     async addToList(user) {
         console.log(user);
-        const {data} = await UsersApi.getAll(this.props.event._id);
-        this.setState({ users:data });
+        try{
+            const {data} = await UsersApi.getAll(this.props.event._id);
+            this.setState({ users:data });
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
     };
 
     modalUser = () => {
@@ -112,10 +118,15 @@ class ListEventUser extends Component {
     };
 
     async modalImport() {
-        const {data} = await UsersApi.getAll(this.props.eventId);
-        this.setState((prevState) => {
-            return {importUser:!prevState.importUser,users:data}
-        });
+        try{
+            const {data} = await UsersApi.getAll(this.props.eventId);
+            this.setState((prevState) => {
+                return {importUser:!prevState.importUser,users:data}
+            });
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true});
+        }
     };
 
     closeModal = () => {
@@ -131,6 +142,10 @@ class ListEventUser extends Component {
             Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
                 .then((response)=>{
                     console.log(response);
+                })
+                .catch(e=>{
+                    console.log(e.response);
+                    this.setState({timeout:true});
                 });
             this.setState((prevState) => {
                 return {data:users,change:!prevState.change}
@@ -141,7 +156,7 @@ class ListEventUser extends Component {
     //Table
     fetchData(state, instance) {
         this.setState({ loading: true });
-        requestData(
+        this.requestData(
             this.state.userReq,
             this.props.eventId,
             state.pageSize,
@@ -182,9 +197,41 @@ class ListEventUser extends Component {
             return {columns: cols, deleteUser: !prevState.deleteUser}
         })
     };
+    requestData = (users, eventId, pageSize, page, sorted, filtered) => {
+        return new Promise((resolve, reject) => {
+            let filteredData = users;
+            let res = {rows: filteredData.data, pages: filteredData.meta.total};
+            let query = '?';
+            if (filtered.length) {
+                let queryFilter = [];
+                filtered.map(filter=>{
+                    if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
+                });
+                queryFilter = JSON.stringify(queryFilter);
+                query = query+`filtered=${queryFilter}`;
+            }
+            if (sorted.length) {
+                let querySort = [];
+                sorted.map(sort=>{
+                    querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
+                });
+                querySort = JSON.stringify(querySort);
+                query = query+`&orderBy=${querySort}`;
+            }
+            API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
+                filteredData = data;
+                res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
+                resolve(res)
+            }).catch(e=>{
+                console.log(e.response);
+                this.setState({timeout:true});
+            });
+
+        });
+    };
 
     render() {
-        const {users, pages, loading, columns} = this.state;
+        const {users, pages, loading, columns, timeout} = this.state;
         return (
             <React.Fragment>
                 <nav className="navbar is-transparent">
@@ -236,40 +283,11 @@ class ListEventUser extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
     }
 }
-
-const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
-    return new Promise((resolve, reject) => {
-        let filteredData = users;
-        let res = {rows: filteredData.data, pages: filteredData.meta.total};
-        let query = '?';
-        if (filtered.length) {
-            let queryFilter = [];
-            filtered.map(filter=>{
-                if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
-            });
-            queryFilter = JSON.stringify(queryFilter);
-            query = query+`filtered=${queryFilter}`;
-        }
-        if (sorted.length) {
-            let querySort = [];
-            sorted.map(sort=>{
-                querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
-            });
-            querySort = JSON.stringify(querySort);
-            query = query+`&orderBy=${querySort}`;
-        }
-        API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
-            filteredData = data;
-            res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
-            resolve(res)
-        });
-
-    });
-};
 
 const columns = [
     {},{},{},

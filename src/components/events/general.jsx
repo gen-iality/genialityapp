@@ -6,6 +6,7 @@ import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
 import {TiArrowLoopOutline} from "react-icons/ti";
+import LogOut from "../shared/logOut";
 Moment.locale('es');
 
 class General extends Component {
@@ -20,16 +21,21 @@ class General extends Component {
     }
 
     async componentDidMount(){
-        const categories = await CategoriesApi.getAll();
-        const category_ids = this.state.event.category_ids;
-        let selectedOption = [];
-        if(category_ids){
-            categories.map(item=>{
-                let pos = category_ids.indexOf(item.value);
-                if(pos>=0){selectedOption.push(item)}
-            });
+        try{
+            const categories = await CategoriesApi.getAll();
+            const category_ids = this.state.event.category_ids;
+            let selectedOption = [];
+            if(category_ids){
+                categories.map(item=>{
+                    let pos = category_ids.indexOf(item.value);
+                    if(pos>=0){selectedOption.push(item)}
+                });
+            }
+            this.setState({categories,selectedOption})
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true});
         }
-        this.setState({categories,selectedOption})
     }
 
     handleChange = (e) => {
@@ -88,7 +94,7 @@ class General extends Component {
         const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
         const categories = this.state.selectedOption.map(item=>{
             return item.value
-        })
+        });
         const data = {
             name: event.name,
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -116,8 +122,9 @@ class General extends Component {
                 }
             }
         } catch (e) {
-            console.log('Some error')
-            console.log(e)
+            console.log('Some error');
+            console.log(e);
+            this.setState({timeout:true});
         }
     }
 
@@ -154,7 +161,7 @@ class General extends Component {
     };
 
     render() {
-        const { event, categories, selectedOption, valid } = this.state;
+        const { event, categories, selectedOption, valid, timeout } = this.state;
         return (
             <form onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} selectedOption={selectedOption}
@@ -181,6 +188,7 @@ class General extends Component {
                         }
                     </div>
                 </div>
+                {timeout&&(<LogOut/>)}
             </form>
         );
     }

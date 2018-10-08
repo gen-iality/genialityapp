@@ -10,6 +10,7 @@ import ListEventUser from "../event-users";
 import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
+import LogOut from "../shared/logOut";
 Moment.locale('es');
 momentLocalizer();
 
@@ -29,14 +30,19 @@ class Event extends Component {
             const event = {name:'New event',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             this.setState({newEvent:true,loading:false,event})
         }else{
-            const event = await EventsApi.getOne(eventId);
-            const dateFrom = event.datetime_from.split(' ');
-            const dateTo = event.datetime_to.split(' ');
-            event.hour_start = Moment(dateFrom[1],'HH:mm').toDate();
-            event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
-            event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
-            event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
-            this.setState({event,loading:false});
+            try {
+                const event = await EventsApi.getOne(eventId);
+                const dateFrom = event.datetime_from.split(' ');
+                const dateTo = event.datetime_to.split(' ');
+                event.hour_start = Moment(dateFrom[1],'HH:mm').toDate();
+                event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
+                event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
+                event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
+                this.setState({event,loading:false});
+            }catch (e) {
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
+            }
         }
     }
 
@@ -45,7 +51,7 @@ class Event extends Component {
     }
 
     render() {
-        const { match } = this.props;
+        const { match, timeout } = this.props;
         return (
             <React.Fragment>
                 {
@@ -109,6 +115,9 @@ class Event extends Component {
                                 </section>
                             </div>
                         </section>
+                }
+                {
+                    timeout&&(<LogOut/>)
                 }
             </React.Fragment>
         );

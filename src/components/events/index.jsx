@@ -6,6 +6,7 @@ import * as Cookie from "js-cookie";
 import {AuthUrl} from "../../helpers/constants";
 import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
+import LogOut from "../shared/logOut";
 
 class Events extends Component {
     constructor(props) {
@@ -21,9 +22,14 @@ class Events extends Component {
     }
 
     async componentDidMount() {
-        const resp = await EventsApi.mine();
-        console.log(resp);
-        this.setState({events:resp.data,loading:false});
+        try {
+            const resp = await EventsApi.mine();
+            console.log(resp);
+            this.setState({events:resp.data,loading:false});
+        }catch (e) {
+            console.log(e);
+            this.setState({timeout:true,loading:false});
+        }
     }
 
     async deleteEvent() {
@@ -52,6 +58,7 @@ class Events extends Component {
     };
 
     render() {
+        const {timeout} = this.state;
         return (
             <React.Fragment>
                 <section className="section">
@@ -77,6 +84,7 @@ class Events extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
     }
