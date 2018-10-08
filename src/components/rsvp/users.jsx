@@ -9,6 +9,7 @@ import Dialog from "../modal/twoAction";
 import API from "../../helpers/request"
 import Table from "../shared/table";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
+import LogOut from "../shared/logOut";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -39,63 +40,73 @@ class UsersRsvp extends Component {
     }
 
     async componentDidMount() {
-        const listEvents = await EventsApi.getAll();
-        const eventId = this.props.event._id;
-        const resp = await UsersApi.getAll(eventId);
-        const users = handleUsers(resp.data);
-        const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
-        listEvents.data.splice(pos,1);
-        if(this.props.selection.length>0) this.setState({selection:this.props.selection});
-        const columns = this.state.columns;
-        let index = columns.map((e) => { return e.id; }).indexOf('name');
-        if(index<=0) columns.push({
-            ...this.genericHeaderArrows(),
-            headerText: "Name",
-            id: "properties.name",
-            accessor: d => d.name
-        },{
-            ...this.genericHeaderArrows(),
-            headerText: "Email",
-            id: "properties.email",
-            accessor: d => d.email,
-            width: 200
-        });
-        columns.splice(0, 1);
-        columns.unshift(
-            {
-                Header: (
-                    <div className="field">
-                        <input className="is-checkradio is-info is-small" id={"checkallUser"}
-                               type="checkbox" name={"checkallUser"} onClick={this.toggleAll}/>
-                        <label htmlFor={"checkallUser"}>Todos</label>
-                    </div>
-                ),
-                id: "checked_in",
-                accessor: d => d,
-                Cell: props => <div>
-                    <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value.id}
-                           type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onClick={(e)=>{this.toggleSelection(props.value)}}/>
-                    <label htmlFor={"checkinUser"+props.value.id}/>
-                </div>,
-                width: 80,
-                sortable: false,
-                filterable: false,
-            }
-        );
-        this.setState({events:listEvents.data,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
-        this.handleCheckBox(users,this.state.selection)
+        try {
+            const listEvents = await EventsApi.getAll();
+            const eventId = this.props.event._id;
+            const resp = await UsersApi.getAll(eventId);
+            const users = handleUsers(resp.data);
+            const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
+            listEvents.data.splice(pos,1);
+            if(this.props.selection.length>0) this.setState({selection:this.props.selection});
+            const columns = this.state.columns;
+            let index = columns.map((e) => { return e.id; }).indexOf('name');
+            if(index<=0) columns.push({
+                ...this.genericHeaderArrows(),
+                headerText: "Name",
+                id: "properties.name",
+                accessor: d => d.name
+            },{
+                ...this.genericHeaderArrows(),
+                headerText: "Email",
+                id: "properties.email",
+                accessor: d => d.email,
+                width: 200
+            });
+            columns.splice(0, 1);
+            columns.unshift(
+                {
+                    Header: (
+                        <div className="field">
+                            <input className="is-checkradio is-info is-small" id={"checkallUser"}
+                                   type="checkbox" name={"checkallUser"} onClick={this.toggleAll}/>
+                            <label htmlFor={"checkallUser"}>Todos</label>
+                        </div>
+                    ),
+                    id: "checked_in",
+                    accessor: d => d,
+                    Cell: props => <div>
+                        <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value.id}
+                               type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onClick={(e)=>{this.toggleSelection(props.value)}}/>
+                        <label htmlFor={"checkinUser"+props.value.id}/>
+                    </div>,
+                    width: 80,
+                    sortable: false,
+                    filterable: false,
+                }
+            );
+            this.setState({events:listEvents.data,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
+            this.handleCheckBox(users,this.state.selection)
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
     }
 
     //Fetch user of selected event
     async checkEvent(event) {
         if(this.state.actualEvent._id !== event._id){
-            const resp = await UsersApi.getAll(event._id);
-            const users = handleUsers(resp.data);
-            const columns = this.state.columns;
-            let index = columns.map((e) => { return e.id; }).indexOf('state_id');
-            if(index>=0) columns.splice(index,1);
-            this.setState({ actualEvent:event, users, userAux:users });
-            this.handleCheckBox(users,this.state.selection)
+            try{
+                const resp = await UsersApi.getAll(event._id);
+                const users = handleUsers(resp.data);
+                const columns = this.state.columns;
+                let index = columns.map((e) => { return e.id; }).indexOf('state_id');
+                if(index>=0) columns.splice(index,1);
+                this.setState({ actualEvent:event, users, userAux:users });
+                this.handleCheckBox(users,this.state.selection)
+            }catch (e) {
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
+            }
         }
     };
 
@@ -199,18 +210,28 @@ class UsersRsvp extends Component {
     //Add user to current list at middle column
     async addToList(user){
         console.log(user);
-        const {data} = await UsersApi.getAll(this.props.event._id);
-        const users = handleUsers(data);
-        this.setState({ users });
+        try{
+            const {data} = await UsersApi.getAll(this.props.event._id);
+            const users = handleUsers(data);
+            this.setState({ users });
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
     };
 
     //Modal import
     async modalImport() {
-        const {data} = await UsersApi.getAll(this.props.event._id);
-        const users = handleUsers(data);
-        this.setState((prevState) => {
-            return {importUser:!prevState.importUser,users}
-        });
+        try{
+            const {data} = await UsersApi.getAll(this.props.event._id);
+            const users = handleUsers(data);
+            this.setState((prevState) => {
+                return {importUser:!prevState.importUser,users}
+            });
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
     };
 
     //Search records at third column
@@ -236,6 +257,10 @@ class UsersRsvp extends Component {
             .then((res) => {
                 console.log(res);
                 this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/invitations'})
+            })
+            .catch(e=>{
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
             });
 
     };
@@ -243,7 +268,7 @@ class UsersRsvp extends Component {
     //Table
     fetchData(state, instance) {
         this.setState({ loading: true });
-        requestData(
+        this.requestData(
             this.state.userReq,
             this.state.actualEvent._id,
             state.pageSize,
@@ -281,10 +306,45 @@ class UsersRsvp extends Component {
             headerStyle: { boxShadow: "none" }
         };
     };
+    requestData = (users, eventId, pageSize, page, sorted, filtered) => {
+        return new Promise((resolve, reject) => {
+            let filteredData = users;
+            let res = {rows: filteredData.data, pages: filteredData.meta.total};
+            let query = '?';
+            if (filtered.length) {
+                let queryFilter = [];
+                filtered.map(filter=>{
+                    if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
+                });
+                queryFilter = JSON.stringify(queryFilter);
+                query = query+`filtered=${queryFilter}`;
+            }
+            if (sorted.length) {
+                let querySort = [];
+                sorted.map(sort=>{
+                    querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
+                });
+                querySort = JSON.stringify(querySort);
+                query = query+`&orderBy=${querySort}`;
+            }
+            API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`)
+                .then(({data})=>{
+                filteredData = data;
+                const users = handleUsers(filteredData.data);
+                res = {rows: users, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
+                resolve(res)
+            })
+                .catch(e=>{
+                    console.log(e.response);
+                    this.setState({timeout:true,loader:false});
+                });
+
+        });
+    };
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        const {users, pages, pageSize, loading, columns} = this.state;
+        const {users, pages, pageSize, loading, columns, timeout} = this.state;
         return (
             <React.Fragment>
                 <div className="columns">
@@ -400,6 +460,7 @@ class UsersRsvp extends Component {
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
                             class:'',action:this.showTicket}}/>
+                {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
     }
@@ -412,37 +473,6 @@ const handleUsers = (list) => {
             users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
         });
         return users;
-};
-
-const requestData = (users, eventId, pageSize, page, sorted, filtered) => {
-    return new Promise((resolve, reject) => {
-        let filteredData = users;
-        let res = {rows: filteredData.data, pages: filteredData.meta.total};
-        let query = '?';
-        if (filtered.length) {
-            let queryFilter = [];
-            filtered.map(filter=>{
-                if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
-            });
-            queryFilter = JSON.stringify(queryFilter);
-            query = query+`filtered=${queryFilter}`;
-        }
-        if (sorted.length) {
-            let querySort = [];
-            sorted.map(sort=>{
-                querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
-            });
-            querySort = JSON.stringify(querySort);
-            query = query+`&orderBy=${querySort}`;
-        }
-        API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
-            filteredData = data;
-            const users = handleUsers(filteredData.data);
-            res = {rows: users, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
-            resolve(res)
-        });
-
-    });
 };
 
 const columns = [

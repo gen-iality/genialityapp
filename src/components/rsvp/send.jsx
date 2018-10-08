@@ -5,6 +5,7 @@ import 'moment/locale/es-us';
 import {Actions} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import ImageInput from "../shared/imageInput";
+import LogOut from "../shared/logOut";
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -46,6 +47,10 @@ class SendRsvp extends Component {
                     },
                     imageFile: false
                 });
+            })
+            .catch(e=>{
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
             });
     };
 
@@ -69,10 +74,15 @@ class SendRsvp extends Component {
             .then((res) => {
                 console.log(res);
                 this.setState({redirect:true,url_redirect:'/edit/'+event._id+'/invitations'})
+            })
+            .catch(e=>{
+                console.log(e.response);
+                this.setState({timeout:true,loader:false});
             });
     };
 
     render() {
+        const { timeout } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <div className="columns">
@@ -213,6 +223,7 @@ class SendRsvp extends Component {
                         first={{title:'Enviar',class:'is-info',action:this.submit}}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}
                         message={{class:'',content:''}}/>
+                {timeout&&(<LogOut/>)}
             </div>
         );
     }
