@@ -30,10 +30,10 @@ class LogOut extends Component {
                         <FormattedMessage id="header.expired_content" defaultMessage="Sign In"/>
                     </section>
                     <footer className="modal-card-foot">
-                        <button className={`button is-info`} onClick={(e)=>{this.logout}}>
+                        <button className={`button is-info`} onClick={this.logout}>
                             <FormattedMessage id="header.expired_signin" defaultMessage="Sign In"/>
                         </button>
-                        <button className={`button`} onClick={(e)=>{this.closeModal}}>
+                        <button className={`button`} onClick={this.closeModal}>
                             <FormattedMessage id="header.expired_cancel" defaultMessage="Sign In"/>
                         </button>
                     </footer>
