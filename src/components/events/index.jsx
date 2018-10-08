@@ -21,7 +21,7 @@ class Events extends Component {
     }
 
     async componentDidMount() {
-        const resp = await EventsApi.getAll();
+        const resp = await EventsApi.mine();
         console.log(resp);
         this.setState({events:resp.data,loading:false});
     }

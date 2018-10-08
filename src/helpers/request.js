@@ -72,17 +72,17 @@ export const EventsApi = {
     landingEvent: async(id) => {
       return await Actions.getOne('/api/events/', id, true);
     },
-    getAll: async () => {
-        return await Actions.getAll('/api/user/events')
+    mine: async () => {
+        return await Actions.getAll('/api/me/events')
     },
     getOne: async (id) => {
-        return await Actions.getOne('/api/user/events/', id)
+        return await Actions.getOne('/api/me/events/', id)
     },
     editOne: async (data, id) => {
-        return await Actions.edit('/api/user/events/', data, id)
+        return await Actions.edit('/api/me/events/', data, id)
     },
     deleteOne: async (id) => {
-        return await Actions.delete('/api/user/events/', id);
+        return await Actions.delete('/api/me/events/', id);
     },
 };
 export const UsersApi = {
@@ -98,7 +98,7 @@ export const UsersApi = {
 };
 export const CategoriesApi = {
     getAll: async () => {
-        const resp = await Actions.getAll('api/category');
+        const resp = await Actions.getAll('api/categories');
         return handleCat(resp.data)
     }
 };
