@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiUrl, AuthUrl } from './constants';
+import { ApiUrl } from './constants';
 import * as Cookie from 'js-cookie';
 
 const publicInstance = axios.create({
@@ -10,28 +10,6 @@ const privateInstance = axios.create({
     url: ApiUrl,
     baseURL: ApiUrl,
     withCredentials: true
-});
-privateInstance.interceptors.response.use(function(response) {
-    // Do something with response data
-    console.log(response);
-    if (
-        response &&
-        response.data &&
-        typeof response.data === 'string' &&
-        response.data.indexOf(401) !== -1
-    ) {
-        Cookie.remove('evius_token');
-        window.location.replace(`${AuthUrl}/logout`);
-        return [];
-    } else {
-        return response;
-    }
-}, ( err ) => {
-    console.log(err.response);
-    //window.location.replace(`${AuthUrl}/logout`);
-    /*const { data } = err.response;
-    console.log(data);
-    */
 });
 let evius_token = Cookie.get('evius_token');
 if (evius_token){

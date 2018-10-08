@@ -14,8 +14,8 @@ class App extends Component {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
             console.log(dataUrl);
-            Cookie.set("evius_token", dataUrl.token);
             if (dataUrl.token){
+                Cookie.set("evius_token", dataUrl.token);
                 privateInstance.defaults.params = {};
                 privateInstance.defaults.params['evius_token'] = dataUrl.token;
             }
