@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
+import LogOut from "../shared/logOut";
 
 class Preview extends Component {
     constructor(props) {
@@ -17,18 +18,23 @@ class Preview extends Component {
     }
 
     async componentDidMount(){
-        let llaves = [];
-        const {list, eventId} = this.props;
-        const event = await EventsApi.getOne(eventId);
-        event.user_properties.map(item => {
-            return this.setState(prevState => ({
-                head: [...prevState.head, {tag:item.name,used:false}]
-            }))
-        });
-        list.map(list => {
-            return llaves.push(list.key)
-        });
-        this.renderHead(llaves, list);
+        try {
+            let llaves = [];
+            const {list, eventId} = this.props;
+            const event = await EventsApi.getOne(eventId);
+            event.user_properties.map(item => {
+                return this.setState(prevState => ({
+                    head: [...prevState.head, {tag:item.name,used:false}]
+                }))
+            });
+            list.map(list => {
+                return llaves.push(list.key)
+            });
+            this.renderHead(llaves, list);
+        }catch (e) {
+            console.log(e);
+            this.setState({timeout: true});
+        }
     }
 
     renderHead = (llaves, list) => {
@@ -75,12 +81,17 @@ class Preview extends Component {
 
     async addField(item, key) {
         console.log(item);
-        const { list } = this.state;
-        let resp = await Actions.post(`/api/user/events/${this.props.eventId}/addUserProperty`,{name:item.key});
-        console.log(resp);
-        if(resp){
-            list[key].used = true;
-            this.setState({ list });
+        try {
+            const { list } = this.state;
+            let resp = await Actions.post(`/api/user/events/${this.props.eventId}/addUserProperty`,{name:item.key});
+            console.log(resp);
+            if(resp){
+                list[key].used = true;
+                this.setState({ list });
+            }
+        }catch (e) {
+            console.log(e);
+            this.setState({timeout: true});
         }
     };
 
@@ -97,7 +108,7 @@ class Preview extends Component {
     };
 
     render() {
-        const {list, auxArr} = this.state;
+        const {list, auxArr, timeout} = this.state;
         const self = this;
         return (
             <React.Fragment>
@@ -160,6 +171,7 @@ class Preview extends Component {
                         {auxArr.map((item)=>{return <b key={item.tag}>{item.tag} </b>})}
                     </p>)}
                 <button className="button is-primary is-rounded" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
+                {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
     }

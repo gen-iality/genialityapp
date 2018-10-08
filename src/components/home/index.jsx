@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import LoadingEvent from "../loaders/loadevent";
@@ -17,9 +16,13 @@ class Home extends Component {
     }
 
     async componentDidMount() {
-        const resp = await EventsApi.getPublic();
-        console.log(resp);
-        this.setState({events:resp.data,loading:false});
+        try{
+            const resp = await EventsApi.getPublic();
+            console.log(resp);
+            this.setState({events:resp.data,loading:false});
+        }catch (e) {
+            console.log(e);
+        }
     }
 
     render() {
