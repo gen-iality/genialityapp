@@ -4,7 +4,7 @@ import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import SelectInput from "../shared/selectInput";
@@ -44,6 +44,19 @@ class OrgProfile extends Component {
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loader:false});
+        }
+    }
+
+    async componentWillReceiveProps(nextProps) {
+        let orgId = nextProps.match.params.org;
+        if(orgId === 'create'){
+            this.setState({create:true,loading:false})
+        }else{
+            const org = await OrganizationApi.getOne(orgId);
+            org.location = org.location? org.location: {};
+            org.doc = org.doc? org.doc: {};
+            console.log(org);
+            this.setState({org,loading:false});
         }
     }
 
