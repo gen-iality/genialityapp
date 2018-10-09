@@ -33,7 +33,7 @@ class SelectInput extends Component {
         // business as usual, except we want to revert max flag on remove/clear
         const maxReached = selectedOptions.length >= MAX_OPTIONS;
         this.setState({ maxReached, selectedOptions });
-        this.props.handleSelect(selectedOptions);
+        this.props.selectOption(selectedOptions);
     };
     noOptionsMessage = ({ inputValue }) => {
         const { maxReached } = this.state;
@@ -43,14 +43,15 @@ class SelectInput extends Component {
     };
     render() {
         const { maxReached, selectedOptions, options } = this.state;
+        const { name, isMulti } = this.props;
         return (
             <div className="field">
-                <label className="label">Categoría: </label>
+                <label className="label">{name}</label>
                 <div className="control">
                     <Select
                         onChange={this.onChange}
                         options={maxReached ? selectedOptions : options}
-                        isMulti
+                        isMulti={isMulti}
                         noOptionsMessage={this.noOptionsMessage}
                         value={selectedOptions}
                         className="basic-multi-select"

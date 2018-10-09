@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions, CategoriesApi, EventsApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
@@ -15,7 +15,8 @@ class General extends Component {
         this.state = {
             event : this.props.event,
             selectedOption: [],
-            valid: true
+            selectedOrganizer: {},
+            valid: false
         };
         this.submit = this.submit.bind(this);
     }
@@ -23,15 +24,20 @@ class General extends Component {
     async componentDidMount(){
         try{
             const categories = await CategoriesApi.getAll();
+            let organizers = await OrganizationApi.mine();
             const category_ids = this.state.event.category_ids;
-            let selectedOption = [];
+            let selectedCategories = [];
+            organizers.unshift({id:'me',name:''});
+            organizers = organizers.map(item=>{
+                return {value:item.id,label:item.name}
+            });
             if(category_ids){
                 categories.map(item=>{
                     let pos = category_ids.indexOf(item.value);
-                    if(pos>=0){selectedOption.push(item)}
+                    if(pos>=0){selectedCategories.push(item)}
                 });
             }
-            this.setState({categories,selectedOption})
+            this.setState({categories,selectedCategories,organizers})
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true});
@@ -49,8 +55,12 @@ class General extends Component {
         this.setState({valid:!valid})
     };
 
-    handleSelect = (selectedOption) => {
-        this.setState({ selectedOption });
+    selectCategory = (selectedCategories) => {
+        this.setState({ selectedCategories });
+    };
+
+    selectOrganizer = (selectedOrganizer) => {
+        this.setState({ selectedOrganizer });
     };
 
     changeDate=(value,name)=>{
@@ -92,7 +102,7 @@ class General extends Component {
         const date_end = Moment(event.date_end).format('YYYY-MM-DD');
         const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
         const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
-        const categories = this.state.selectedOption.map(item=>{
+        const categories = this.state.selectedCategories.map(item=>{
             return item.value
         });
         const data = {
@@ -103,7 +113,8 @@ class General extends Component {
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description,
-            category_ids: categories
+            category_ids: categories,
+            organizer_id: this.state.selectedOrganizer.value
         };
         try {
             if(event._id){
@@ -112,7 +123,7 @@ class General extends Component {
                 this.setState({loading:false});
             }
             else{
-                const result = await Actions.create('/api/user/events', data);
+                const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
                 if(result._id){
@@ -161,10 +172,11 @@ class General extends Component {
     };
 
     render() {
-        const { event, categories, selectedOption, valid, timeout } = this.state;
+        const { event, categories, organizers, selectedCategories, valid, timeout } = this.state;
         return (
             <form onSubmit={this.submit}>
-                <FormEvent event={event} categories={categories} selectedOption={selectedOption}
+                <FormEvent event={event} categories={categories} organizers={organizers}
+                           selectedCategories={selectedCategories}
                            imgComp={
                                <div className="field">
                                    <label className="label">Foto</label>
@@ -178,7 +190,7 @@ class General extends Component {
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                </div>
                            }
-                           handleChange={this.handleChange} handleSelect={this.handleSelect}
+                           handleChange={this.handleChange} selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
                     <div className="control">

@@ -6,7 +6,7 @@ import SelectInput from "./selectInput";
 
 class FormEvent extends Component {
     render() {
-        const { event, categories, imgComp, selectedOption } = this.props;
+        const { event, categories, organizers, imgComp, selectedOption } = this.props;
         return (
             <div className="columns">
                 <div className="column">
@@ -103,6 +103,7 @@ class FormEvent extends Component {
                             </div>
                         </div>
                     </div>
+                    <SelectInput name={'Organizado por:'} isMulti={false} selectOption={this.props.selectOrganizer} options={organizers}/>
                     <div className="field">
                         <label className="label">Tipo: </label>
                         <div className="control">
@@ -114,7 +115,7 @@ class FormEvent extends Component {
                             </div>
                         </div>
                     </div>
-                    <SelectInput handleSelect={this.props.handleSelect} options={categories}/>
+                    <SelectInput name={'Categorías:'} isMulti={true} selectOption={this.props.selectCategory} options={categories}/>
                 </div>
             </div>
         );
