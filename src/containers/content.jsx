@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, withRouter } from "react-router-dom";
 import Home from "../components/home";
 import Landing from "../components/events/landing";
 import Events from "../components/events";
@@ -8,6 +8,9 @@ import * as Cookie from "js-cookie";
 import OrgProfile from "../components/organizations/profile";
 
 class ContentContainer extends Component {
+    componentWillMount(){
+        this.props.history.index=0
+    }
     render() {
         return (
             <main className="main">
@@ -39,4 +42,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     />
 );
 
-export default ContentContainer;
+export default withRouter(ContentContainer);
