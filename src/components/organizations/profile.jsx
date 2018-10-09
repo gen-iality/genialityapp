@@ -12,6 +12,8 @@ import {BaseUrl} from "../../helpers/constants";
 import Moment from "moment";
 import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
+import EventCard from "../shared/eventCard";
+import {Link} from "react-router-dom";
 
 class OrgProfile extends Component {
     constructor(props) {
@@ -22,6 +24,7 @@ class OrgProfile extends Component {
                 location:{},
                 doc:{}
             },
+            events: [],
             loading: true
         };
         this.saveForm = this.saveForm.bind(this);
@@ -36,14 +39,15 @@ class OrgProfile extends Component {
                 this.setState({create:true,loading:false})
             }else{
                 const org = await OrganizationApi.getOne(orgId);
+                const resp = await OrganizationApi.events(orgId);
                 org.location = org.location? org.location: {};
                 org.doc = org.doc? org.doc: {};
                 console.log(org);
-                this.setState({org,loading:false});
+                this.setState({org,loading:false,events:resp.data});
             }
         }catch (e) {
             console.log(e.response);
-            this.setState({timeout:true,loader:false});
+            this.setState({timeout:true,loading:false});
         }
     }
 
@@ -318,7 +322,22 @@ class OrgProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div>Content</div>
+                            <div>
+                                <h2>Eventos:</h2>
+                                <div className="columns home is-multiline is-mobile">
+                                    {
+                                        this.state.events.map((event,key)=>{
+                                            return <EventCard event={event} key={event._id}
+                                                              action={''}
+                                                              right={
+                                                                  <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
+                                                                      <span>Editar</span>
+                                                                  </Link>}
+                                            />
+                                        })
+                                    }
+                                </div>
+                            </div>
                         </div>
                 }
                 {

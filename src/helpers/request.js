@@ -91,6 +91,9 @@ export const OrganizationApi = {
     getOne: async (id) => {
         return await Actions.getOne('/api/organizations/', id)
     },
+    events: async (id) => {
+        return await Actions.getOne(`/api/organizations/${id}/`, 'events')
+    }
 };
 const handleCat = (data) => {
     let list = [];
