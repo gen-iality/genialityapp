@@ -28,7 +28,7 @@ class Events extends Component {
             this.setState({events:resp.data,loading:false});
         }catch (e) {
             console.log(e);
-            this.setState({timeout:true,loading:false});
+            this.setState({timeout:true,loading:false,events:[]});
         }
     }
 
