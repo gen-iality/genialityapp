@@ -41,7 +41,7 @@ class UsersRsvp extends Component {
 
     async componentDidMount() {
         try {
-            const listEvents = await EventsApi.getAll();
+            const listEvents = await EventsApi.mine();
             const eventId = this.props.event._id;
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
@@ -87,7 +87,7 @@ class UsersRsvp extends Component {
             this.setState({events:listEvents.data,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
             this.handleCheckBox(users,this.state.selection)
         }catch (e) {
-            console.log(e.response);
+            console.log(e);
             this.setState({timeout:true,loading:false,events:[],users:[]});
         }
     }
