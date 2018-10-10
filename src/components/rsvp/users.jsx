@@ -36,6 +36,7 @@ class UsersRsvp extends Component {
         };
         this.checkEvent = this.checkEvent.bind(this);
         this.modalImport = this.modalImport.bind(this);
+        this.addToList = this.addToList.bind(this);
         this.fetchData = this.fetchData.bind(this);
     }
 
