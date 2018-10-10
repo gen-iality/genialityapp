@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router-dom';
 import MessageUser from "./messageUser";
 import EmailPrev from "./emailPreview";
 
@@ -10,17 +11,22 @@ class InvitationDetail extends Component {
         }
     }
 
+    close = () => {
+        this.props.history.goBack()
+    }
+
     render() {
+        const {users,item} = this.props.location.state;
         const layout = [
-            <MessageUser users={this.props.users}/>,
-            <EmailPrev event={this.props.event} item={this.props.item}/>
+            <MessageUser users={users}/>,
+            <EmailPrev event={this.props.event} item={item}/>
         ];
         return (
             <section className="modal-card-body">
                 <div className="content has-text-centered">
                     <nav className="breadcrumb" aria-label="breadcrumbs">
                         <ul>
-                            <li onClick={(e)=>{this.props.close()}}>
+                            <li onClick={this.close}>
                                 <a>
                                     <span className="icon is-small">
                                         <i className="far fa-arrow-alt-circle-left"/>
@@ -46,4 +52,4 @@ class InvitationDetail extends Component {
     }
 }
 
-export default InvitationDetail;
+export default withRouter(InvitationDetail);

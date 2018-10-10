@@ -10,6 +10,7 @@ class Pagination extends Component {
     }
 
     componentWillReceiveProps = (next) => {
+        console.log(next);
         if (next.items !== this.props.items) {
             let auxArr = next.items;
             this.setPage(next.initialPage, auxArr);
