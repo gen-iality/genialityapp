@@ -36,7 +36,10 @@ class Header extends Component {
                     if(resp.status === 200){
                         const data = resp.data;
                         const name = (data.displayName) ? data.displayName: data.email;
-                        this.setState({name,user:true,cookie:evius_token,loader:false});
+                        OrganizationApi.mine()
+                            .then((organizations)=>{
+                                this.setState({name,user:true,cookie:evius_token,loader:false,organizations});
+                            });
                     }else{
                         this.setState({timeout:true,loader:false});
                     }
@@ -49,10 +52,9 @@ class Header extends Component {
         }
     }
 
-    async openMenu() {
-        const organizations = await OrganizationApi.mine();
+    openMenu() {
         this.setState((prevState) => {
-            return {open:!prevState.open,organizations}
+            return {open:!prevState.open}
         });
     };
 
