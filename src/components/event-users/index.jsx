@@ -26,8 +26,8 @@ class ListEventUser extends Component {
             columns:    columns,
             sorted:     []
         };
-        this.modalImport = this.modalImport.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.addToList = this.addToList.bind(this);
     }
 
     componentDidMount() {
@@ -106,7 +106,7 @@ class ListEventUser extends Component {
             const {data} = await UsersApi.getAll(this.props.event._id);
             this.setState({ users:data });
         }catch (e) {
-            console.log(e.response);
+            console.log(e);
             this.setState({timeout:true,loader:false});
         }
     };
@@ -115,18 +115,6 @@ class ListEventUser extends Component {
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:false}
         });
-    };
-
-    async modalImport() {
-        try{
-            const {data} = await UsersApi.getAll(this.props.eventId);
-            this.setState((prevState) => {
-                return {importUser:!prevState.importUser,users:data}
-            });
-        }catch (e) {
-            console.log(e.response);
-            this.setState({timeout:true});
-        }
     };
 
     closeModal = () => {
@@ -277,7 +265,6 @@ class ListEventUser extends Component {
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} addToList={this.addToList}
                          extraFields={this.state.extraFields} edit={this.state.edit}/>
-                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.eventId} extraFields={this.state.extraFields}/>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
