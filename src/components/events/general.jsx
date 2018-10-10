@@ -29,7 +29,7 @@ class General extends Component {
             let organizers = await OrganizationApi.mine();
             const category_ids = this.state.event.category_ids;
             let selectedCategories = [];
-            organizers.unshift({id:'me',name:''});
+            organizers.unshift({id:'me',name:'Me'});
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
@@ -179,11 +179,11 @@ class General extends Component {
     };
 
     render() {
-        const { event, categories, organizers, types, selectedCategories, valid, timeout } = this.state;
+        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
         return (
             <form onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} organizers={organizers} types={types}
-                           selectedCategories={selectedCategories}
+                           selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
                            imgComp={
                                <div className="field">
                                    <label className="label">Foto</label>

@@ -15,7 +15,7 @@ class SelectInput extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.options !== this.props.options) {
-            this.setState({options:nextProps.options});
+            this.setState({options:nextProps.options,selectedOptions:nextProps.selectedOptions});
         }
     }
 
