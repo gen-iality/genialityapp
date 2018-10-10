@@ -22,7 +22,12 @@ class EventCard extends Component {
                                 </p>
                             </div>
                             <div className="is-pulled-right cats">
-                                <p className="is-size-7 has-text-white"># Categorías</p>
+                                {
+                                    event.categories.length>=1&& <p className="is-size-6 has-text-white"># {event.categories[0].name}</p>
+                                }
+                                {
+                                    event.event_type&&<p className="is-size-7 has-text-white"># {event.event_type.name}</p>
+                                }
                             </div>
                         </div>
                         {
