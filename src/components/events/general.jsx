@@ -24,10 +24,12 @@ class General extends Component {
 
     async componentDidMount(){
         try{
+            const {event} = this.state;
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
-            const category_ids = this.state.event.category_ids;
+            const category_ids = event.category_ids;
+            const selectedOrganizer = (event.organizer_type==='App\\User') ? {value:'me',label:'Me'}:event.organizer_id;
             let selectedCategories = [];
             organizers.unshift({id:'me',name:'Me'});
             organizers = organizers.map(item=>{
@@ -39,7 +41,7 @@ class General extends Component {
                     if(pos>=0){selectedCategories.push(item)}
                 });
             }
-            this.setState({categories,selectedCategories,organizers,types})
+            this.setState({categories,selectedCategories,selectedOrganizer,organizers,types})
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true});
