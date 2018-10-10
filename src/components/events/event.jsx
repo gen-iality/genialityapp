@@ -41,7 +41,7 @@ class Event extends Component {
                 this.setState({event,loading:false});
             }catch (e) {
                 console.log(e.response);
-                this.setState({timeout:true,loader:false});
+                this.setState({timeout:true,loading:false});
             }
         }
     }
@@ -63,7 +63,7 @@ class Event extends Component {
                 this.setState({event,loading:false});
             }catch (e) {
                 console.log(e.response);
-                this.setState({timeout:true,loader:false});
+                this.setState({timeout:true,loading:false});
             }
         }
     }
