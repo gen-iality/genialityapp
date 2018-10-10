@@ -28,22 +28,14 @@ class General extends Component {
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
-            const category_ids = event.category_ids;
-            const selectedOrganizer = (event.organizer_type==='App\\User') ? {value:'me',label:'Me'}:event.organizer_id;
-            let selectedCategories = [];
             organizers.unshift({id:'me',name:'Me'});
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
-            if(category_ids){
-                categories.map(item=>{
-                    let pos = category_ids.indexOf(item.value);
-                    if(pos>=0){selectedCategories.push(item)}
-                });
-            }
-            this.setState({categories,selectedCategories,selectedOrganizer,organizers,types})
+            const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType})
         }catch (e) {
-            console.log(e.response);
+            console.log(e);
             this.setState({timeout:true});
         }
     }
@@ -214,6 +206,30 @@ class General extends Component {
             </form>
         );
     }
+}
+
+const handleFields = (organizers,types,categories,event) =>{
+    let selectedOrganizer = {};
+    let selectedCategories = [];
+    let selectedType = {};
+    const {category_ids,organizer_type,organizer_id,event_type_id} = event;
+    if(category_ids){
+        categories.map(item=>{
+            let pos = category_ids.indexOf(item.value);
+            if(pos>=0){selectedCategories.push(item)}
+        });
+    }
+    if(organizer_type==='App\\User'){
+        selectedOrganizer = {value:'me',label:'Me'};
+    }else{
+        const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
+        selectedOrganizer = organizers[pos];
+    }
+    if(event_type_id){
+        const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
+        selectedType = types[pos];
+    }
+    return {selectedOrganizer,selectedCategories,selectedType}
 }
 
 export default General;
