@@ -88,7 +88,7 @@ class UsersRsvp extends Component {
             this.handleCheckBox(users,this.state.selection)
         }catch (e) {
             console.log(e.response);
-            this.setState({timeout:true,loader:false});
+            this.setState({timeout:true,loading:false,events:[],users:[]});
         }
     }
 
