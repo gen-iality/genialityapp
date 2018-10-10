@@ -36,13 +36,13 @@ class OrgProfile extends Component {
             const categories = await CategoriesApi.getAll();
             this.setState({categories});
             if(orgId === 'create'){
-                this.setState({create:true,loading:false})
+                const org= {location:{}, doc:{}};
+                this.setState({create:true,loading:false,events:[],org})
             }else{
                 const org = await OrganizationApi.getOne(orgId);
                 const resp = await OrganizationApi.events(orgId);
                 org.location = org.location? org.location: {};
                 org.doc = org.doc? org.doc: {};
-                console.log(org);
                 this.setState({org,loading:false,events:resp.data});
             }
         }catch (e) {
@@ -54,13 +54,18 @@ class OrgProfile extends Component {
     async componentWillReceiveProps(nextProps) {
         let orgId = nextProps.match.params.org;
         if(orgId === 'create'){
-            this.setState({create:true,loading:false})
+            this.setState({loading:true});
+            setTimeout(()=>{
+                const org= {location:{}, doc:{}};
+                this.setState({create:true,loading:false,events:[],org})
+            },1000)
         }else{
+            this.setState({loading:true});
             const org = await OrganizationApi.getOne(orgId);
+            const resp = await OrganizationApi.events(orgId);
             org.location = org.location? org.location: {};
             org.doc = org.doc? org.doc: {};
-            console.log(org);
-            this.setState({org,loading:false});
+            this.setState({org,loading:false,events:resp.data});
         }
     }
 
@@ -195,7 +200,7 @@ class OrgProfile extends Component {
     }
 
     render() {
-        const { org, categories, loading, timeout } = this.state;
+        const { org, categories, loading, timeout, events } = this.state;
         return (
             <section className="section">
                 {
@@ -326,7 +331,7 @@ class OrgProfile extends Component {
                                 <h2>Eventos:</h2>
                                 <div className="columns home is-multiline is-mobile">
                                     {
-                                        this.state.events.map((event,key)=>{
+                                        events.map((event,key)=>{
                                             return <EventCard event={event} key={event._id}
                                                               action={''}
                                                               right={
