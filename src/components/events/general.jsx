@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
@@ -16,6 +16,7 @@ class General extends Component {
             event : this.props.event,
             selectedOption: [],
             selectedOrganizer: {},
+            selectedType: {},
             valid: false
         };
         this.submit = this.submit.bind(this);
@@ -24,6 +25,7 @@ class General extends Component {
     async componentDidMount(){
         try{
             const categories = await CategoriesApi.getAll();
+            const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
             const category_ids = this.state.event.category_ids;
             let selectedCategories = [];
@@ -37,7 +39,7 @@ class General extends Component {
                     if(pos>=0){selectedCategories.push(item)}
                 });
             }
-            this.setState({categories,selectedCategories,organizers})
+            this.setState({categories,selectedCategories,organizers,types})
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true});
@@ -61,6 +63,10 @@ class General extends Component {
 
     selectOrganizer = (selectedOrganizer) => {
         this.setState({ selectedOrganizer });
+    };
+
+    selectType = (selectedType) => {
+        this.setState({ selectedType });
     };
 
     changeDate=(value,name)=>{
@@ -114,7 +120,8 @@ class General extends Component {
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description,
             category_ids: categories,
-            organizer_id: this.state.selectedOrganizer.value
+            organizer_id: this.state.selectedOrganizer.value,
+            event_type_id : this.state.selectedType.value
         };
         try {
             if(event._id){
@@ -172,10 +179,10 @@ class General extends Component {
     };
 
     render() {
-        const { event, categories, organizers, selectedCategories, valid, timeout } = this.state;
+        const { event, categories, organizers, types, selectedCategories, valid, timeout } = this.state;
         return (
             <form onSubmit={this.submit}>
-                <FormEvent event={event} categories={categories} organizers={organizers}
+                <FormEvent event={event} categories={categories} organizers={organizers} types={types}
                            selectedCategories={selectedCategories}
                            imgComp={
                                <div className="field">
@@ -190,7 +197,8 @@ class General extends Component {
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                </div>
                            }
-                           handleChange={this.handleChange} selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer}
+                           handleChange={this.handleChange}
+                           selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
                     <div className="control">

@@ -80,6 +80,12 @@ export const CategoriesApi = {
         return handleCat(resp.data)
     }
 };
+export const TypesApi = {
+    getAll: async () => {
+        const resp = await Actions.getAll('api/eventTypes');
+        return handleCat(resp.data)
+    }
+};
 export const OrganizationApi = {
     mine: async () => {
       const resp = await Actions.getAll('api/me/organizations');
