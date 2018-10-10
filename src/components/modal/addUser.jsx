@@ -45,10 +45,7 @@ class AddUser extends Component {
                 .map((obj) => (
                     user[obj] = value.properties[obj]
                 ));
-            this.setState({
-                user, rol: value.rol._id + ':' + value.rol.name,
-                state: value.state._id + ':' + value.state.name, edit: true
-            });
+            this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
         }else {
             let user = {name: '', email: ''};
             nextProps.extraFields
@@ -69,14 +66,17 @@ class AddUser extends Component {
         let message = {};
         this.setState({create:true});
         try {
-            let resp = await UsersApi.editOne(snap,this.props.eventId);
+            let resp = this.state.edit ?
+                await UsersApi.editOne(snap,this.props.value._id):
+                await UsersApi.createOne(snap,this.props.eventId);
             console.log(resp);
             if (resp.message === 'OK'){
                 this.props.addToList(resp.data);
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
                 message.content = 'USER '+resp.status;
             } else {
-                alert("User can`t be created/updated");
+                message.class = 'msg_danger';
+                message.content = 'User can`t be updated';
             }
             setTimeout(()=>{
                 message.class = message.content = '';
