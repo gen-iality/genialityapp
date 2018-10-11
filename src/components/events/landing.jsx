@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Link } from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
@@ -81,7 +82,7 @@ class Landing extends Component {
                                         </div>
                                         <div className="item">
                                             <p className="title has-text-grey-darker has-text-weight-bold">{event.name}</p>
-                                            Por: {event.author.name}
+                                            Por: <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer_type}</Link>
                                         </div>
                                         <div className="item is-italic">
                                             {

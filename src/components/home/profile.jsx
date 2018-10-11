@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
+import { withRouter, Link } from 'react-router-dom';
 
 class HomeProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {}
+    }
+
+    componentDidMount(){
+        const search = this.props.location.search;
+        const params = new URLSearchParams(search);
+        const type = params.get('type');
+        console.log(type);
     }
 
     render() {
@@ -20,4 +28,4 @@ class HomeProfile extends Component {
     }
 }
 
-export default HomeProfile;
+export default withRouter(HomeProfile);
