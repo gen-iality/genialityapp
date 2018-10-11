@@ -36,9 +36,9 @@ class Home extends Component {
                 <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
                     <p className="menu-label">Eventos</p>
                     <ul className="menu-list">
-                        <li><a className="is-size-6">Lo más nuevo</a></li>
-                        <li><a className="is-size-6">Destacados</a></li>
-                        <li><a className="is-size-6">Recomendados</a></li>
+                        <li><a className="is-size-6">Lista</a></li>
+                        {/*<li><a className="is-size-6">Destacados</a></li>
+                        <li><a className="is-size-6">Recomendados</a></li>*/}
                     </ul>
                     <hr className="navbar-divider"/>
                     <p className="menu-label">Tipo de Evento</p>
@@ -60,12 +60,12 @@ class Home extends Component {
                     </ul>
                 </aside>
                 <div className="dynamic-content">
-                    <header>
+                    {/*<header>
                         <div className="is-pulled-right field is-grouped">
                             <p className="is-size-6">Ciudad</p>
                             <p className="is-size-6">Fecha</p>
                         </div>
-                    </header>
+                    </header>*/}
                     <section className="section">
                         {
                             this.state.loading ? <LoadingEvent/>:
