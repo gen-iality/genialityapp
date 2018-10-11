@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import LoadingEvent from "../loaders/loadevent";
-import {EventsApi} from "../../helpers/request";
 import EventCard from "../shared/eventCard";
+import {EventsApi} from "../../helpers/request";
 Moment.locale('es');
 momentLocalizer();
 
@@ -27,8 +27,8 @@ class Home extends Component {
 
     render() {
         return (
-            <section className="section columns">
-                <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
+            <section className="section home">
+                <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
                     <p className="menu-label">Eventos</p>
                     <ul className="menu-list">
                         <li><a className="is-size-6">Lo más nuevo</a></li>
@@ -40,7 +40,7 @@ class Home extends Component {
                     <hr className="navbar-divider"/>
                     <p className="menu-label">Categoría</p>
                 </aside>
-                <div className="column">
+                <div className="dynamic-content">
                     <header>
                         <div className="is-pulled-right field is-grouped">
                             <p className="is-size-6">Ciudad</p>

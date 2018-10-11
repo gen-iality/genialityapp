@@ -20,6 +20,21 @@ footer {
   padding-top: 4rem;
 }
 
+section.home{
+  aside{
+    left: 0;
+    position: fixed;
+    padding: .75rem;
+  }
+  div.dynamic-content{
+    left: 0;
+    margin-left: 143px;
+    min-height: 100%;
+    position: relative;
+    padding: .75rem;
+  }
+}
+
 div.home {
   .card {
     .card-image{
