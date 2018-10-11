@@ -17,7 +17,7 @@ class General extends Component {
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
-            valid: false
+            valid: true
         };
         this.submit = this.submit.bind(this);
     }
