@@ -82,7 +82,7 @@ class General extends Component {
                         event: {
                             ...self.state.event,
                             picture: image
-                        },fileMsg:'Image uploaded successfull'
+                        },fileMsg:'Image uploaded successfull',imageFile:null
                     });
                 });
         }
