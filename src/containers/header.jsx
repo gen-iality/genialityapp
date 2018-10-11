@@ -38,7 +38,7 @@ class Header extends Component {
                         const name = (data.displayName) ? data.displayName: data.email;
                         OrganizationApi.mine()
                             .then((organizations)=>{
-                                this.setState({name,user:true,cookie:evius_token,loader:false,organizations});
+                                this.setState({name,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
                             });
                     }else{
                         this.setState({timeout:true,loader:false});
@@ -129,11 +129,8 @@ class Header extends Component {
                                                     {this.state.name}
                                                 </a>
                                                 <div className="navbar-dropdown is-boxed">
-                                                    <Link className="navbar-item" to={"/my_profile"}>
+                                                    <Link className="navbar-item" to={`/profile/${this.state.id}?type=user`}>
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
-                                                    </Link>
-                                                    <Link className="navbar-item" to={"/my_events"}>
-                                                        <FormattedMessage id="header.events" defaultMessage="Events"/>
                                                     </Link>
                                                     <hr className="navbar-divider"/>
                                                     <p className="navbar-item">
@@ -141,12 +138,12 @@ class Header extends Component {
                                                     </p>
                                                     {
                                                         this.state.organizations.map((org,key)=>{
-                                                            return <Link className="navbar-item" to={`/org/${org.id}`} key={key}>
+                                                            return <Link className="navbar-item" to={`/profile/${org.id}?type=organization`} key={key}>
                                                                     {org.name}
                                                             </Link>
                                                         })
                                                     }
-                                                    <NavLink activeClassName={'active'} to={`/org/create`}>+ Crear</NavLink>
+                                                    <NavLink activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</NavLink>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>

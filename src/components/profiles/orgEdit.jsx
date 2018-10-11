@@ -1,21 +1,21 @@
 /*global google*/
 import React, {Component} from 'react';
+import { withRouter } from "react-router-dom";
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
+import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import SelectInput from "../shared/selectInput";
 import {BaseUrl} from "../../helpers/constants";
-import Moment from "moment";
 import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
 import EventCard from "../shared/eventCard";
 import {Link} from "react-router-dom";
 
-class OrgProfile extends Component {
+class OrgEditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,7 +31,7 @@ class OrgProfile extends Component {
     }
 
     async componentDidMount() {
-        let orgId = this.props.match.params.org;
+        let orgId = this.props.match.params.id;
         try {
             const categories = await CategoriesApi.getAll();
             this.setState({categories});
@@ -52,7 +52,7 @@ class OrgProfile extends Component {
     }
 
     async componentWillReceiveProps(nextProps) {
-        let orgId = nextProps.match.params.org;
+        let orgId = nextProps.match.params.id;
         if(orgId === 'create'){
             this.setState({loading:true});
             setTimeout(()=>{
@@ -353,4 +353,4 @@ class OrgProfile extends Component {
     }
 }
 
-export default OrgProfile;
+export default withRouter(OrgEditProfile);

@@ -5,8 +5,8 @@ import Landing from "../components/events/landing";
 import Events from "../components/events";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
-import OrgProfile from "../components/organizations/profile";
 import HomeProfile from "../components/home/profile";
+import MyProfile from "../components/profiles/myProfile";
 
 class ContentContainer extends Component {
     componentWillMount(){
@@ -16,11 +16,11 @@ class ContentContainer extends Component {
         return (
             <main className="main">
                 <Route exact path="/" component={ Home } />
-                <Route exact path="/profile/:id" component={ HomeProfile } />
+                <Route exact path="/page/:id" component={ HomeProfile } />
                 <Route path="/landing/:event" component={ Landing }/>
                 <PrivateRoute path="/my_events" component={ Events }/>
                 <PrivateRoute path="/event/:event" component={ Event }/>
-                <PrivateRoute path="/my_profile/:id" component={ OrgProfile }/>
+                <PrivateRoute path="/profile/:id" component={ MyProfile }/>
             </main>
         );
     }
