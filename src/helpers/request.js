@@ -50,6 +50,9 @@ export const EventsApi = {
     landingEvent: async(id) => {
       return await Actions.getOne('/api/events/', id, true);
     },
+    invitations: async(id) => {
+        return await Actions.getOne(`/api/events/${id}/`, 'invitations');
+    },
     mine: async () => {
         return await Actions.getAll('/api/me/events')
     },

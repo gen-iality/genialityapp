@@ -7,11 +7,7 @@ import InvitationsList from "./list";
 class Invitations extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            invitations:[],
-            pageOfItems:[],
-            item:       { message_users: [] }
-        }
+        this.state = {}
     }
 
     render() {

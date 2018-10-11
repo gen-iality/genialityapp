@@ -3,7 +3,7 @@ import {FormattedDate, FormattedTime} from "react-intl";
 import {Link,withRouter} from "react-router-dom";
 import {FaEye} from "react-icons/fa";
 import Pagination from "../shared/pagination";
-import {Actions} from "../../helpers/request";
+import {Actions, EventsApi} from "../../helpers/request";
 
 class InvitationsList extends Component {
     constructor(props) {
@@ -17,7 +17,8 @@ class InvitationsList extends Component {
 
     async componentDidMount() {
         try {
-            const invitations = await Actions.getOne('/api/event/'+this.props.eventId+'/','rsvp');
+            const invitations = await EventsApi.invitations(this.props.eventId);
+            console.log(invitations);
             invitations.reverse();
             console.log(invitations);
             this.setState({invitations});
