@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
+import { withRouter, Link } from 'react-router-dom';
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
 import {CategoriesApi, EventsApi, TypesApi} from "../../helpers/request";
+import API from "../../helpers/request";
 Moment.locale('es');
 momentLocalizer();
 
@@ -29,8 +31,34 @@ class Home extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        const search = nextProps.location.search;
+        const params = new URLSearchParams(search);
+        const type = params.get('type');
+        const category = params.get('category');
+        let query = '?';
+        let queryFilter = [];
+        if(type){
+            queryFilter.push({"id":"event_type_id","value":type,"comparator":"like"})
+        }
+        if(category){
+            queryFilter.push({"id":"category_ids","value":category,"comparator":"like"})
+        }
+        queryFilter = JSON.stringify(queryFilter);
+        query = query+`filtered=${queryFilter}`;
+        this.setState({loading:true});
+        API.get(`/api/events${query}`).then(({data})=>{
+            console.log(data);
+            this.setState({events:data.data,loading:false,type,category});
+        }).catch(e=>{
+            console.log(e.response);
+            this.setState({timeout:true,loading:false,events:[],type,category});
+        });
+    }
+
     render() {
-        const {categories,types} = this.state;
+        const {categories,types,category,type} = this.state;
+        const {match} = this.props;
         return (
             <section className="section home">
                 <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
@@ -45,7 +73,12 @@ class Home extends Component {
                     <ul className="menu-list">
                         {
                             types.map((item,key)=>{
-                                return <li key={key}><a className="is-size-6">{item.label}</a></li>
+                                return <li key={key}>
+                                    <Link className={`is-size-6 ${type===item.value?'active':''}`}
+                                          to={`${match.url}?type=${item.value}`}>
+                                        {item.label}
+                                    </Link>
+                                </li>
                             })
                         }
                     </ul>
@@ -54,7 +87,12 @@ class Home extends Component {
                     <ul className="menu-list">
                         {
                             categories.map((item,key)=>{
-                                return <li key={key}><a className="is-size-6">{item.label}</a></li>
+                                return <li key={key}>
+                                    <Link className={`is-size-6 ${category===item.value?'active':''}`}
+                                          to={`${match.url}?category=${item.value}`}>
+                                        {item.label}
+                                    </Link>
+                                </li>
                             })
                         }
                     </ul>
@@ -89,4 +127,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default withRouter(Home);
