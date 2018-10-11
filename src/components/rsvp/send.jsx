@@ -73,7 +73,7 @@ class SendRsvp extends Component {
         try{
             const data = {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users};
             const resp = await EventsApi.sendRsvp(data,event._id);
-            this.setState({redirect:true,url_redirect:'/event/'+event._id+'/invitations'})
+            this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages'})
         }catch (e) {
             console.log(e);
             this.setState({timeout:true,loader:false});

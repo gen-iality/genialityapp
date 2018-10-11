@@ -257,7 +257,7 @@ class UsersRsvp extends Component {
         API.post(url, {eventUsersIds:users})
             .then((res) => {
                 console.log(res);
-                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/invitations'})
+                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages'})
             })
             .catch(e=>{
                 console.log(e.response);

@@ -101,7 +101,7 @@ class Event extends Component {
                                                             <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Historial</NavLink>
+                                                            <NavLink activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
