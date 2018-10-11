@@ -3,7 +3,7 @@ import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
-import {EventsApi} from "../../helpers/request";
+import {CategoriesApi, EventsApi, TypesApi} from "../../helpers/request";
 Moment.locale('es');
 momentLocalizer();
 
@@ -11,21 +11,26 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:true
+            loading:true,
+            categories:[],
+            types:[]
         }
     }
 
     async componentDidMount() {
         try{
+            const categories = await CategoriesApi.getAll();
+            const types = await TypesApi.getAll();
             const resp = await EventsApi.getPublic();
             console.log(resp);
-            this.setState({events:resp.data,loading:false});
+            this.setState({events:resp.data,loading:false,categories,types});
         }catch (e) {
             console.log(e);
         }
     }
 
     render() {
+        const {categories,types} = this.state;
         return (
             <section className="section home">
                 <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
@@ -37,8 +42,22 @@ class Home extends Component {
                     </ul>
                     <hr className="navbar-divider"/>
                     <p className="menu-label">Tipo de Evento</p>
+                    <ul className="menu-list">
+                        {
+                            types.map((item,key)=>{
+                                return <li key={key}><a className="is-size-6">{item.label}</a></li>
+                            })
+                        }
+                    </ul>
                     <hr className="navbar-divider"/>
                     <p className="menu-label">Categoría</p>
+                    <ul className="menu-list">
+                        {
+                            categories.map((item,key)=>{
+                                return <li key={key}><a className="is-size-6">{item.label}</a></li>
+                            })
+                        }
+                    </ul>
                 </aside>
                 <div className="dynamic-content">
                     <header>
@@ -56,9 +75,7 @@ class Home extends Component {
                                             return <EventCard key={event._id} event={event}
                                                               action={{name:'Ver >',url:`landing/${event._id}`}}
                                                               right={<div className="actions is-pulled-right">
-                                                                  <p className="is-size-7">Compartir</p>
-                                                                  <p className="is-size-7">Asistiré</p>
-                                                                  <p className="is-size-7">Me gusta</p>
+                                                                  <p className="is-size-7"></p>
                                                               </div>}
                                             />
                                         })

@@ -235,9 +235,6 @@ class ListEventUser extends Component {
                                         </button>
                                     </div>
                                     <p className="control">
-                                        <button className="button is-inverted is-rounded">Leer Código QR</button>
-                                    </p>
-                                    <p className="control">
                                         <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
                                     </p>
                                 </div>
