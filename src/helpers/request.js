@@ -27,8 +27,8 @@ export const Actions = {
         return privateInstance.delete(`${url}${id}`);
     },
     edit: (url, data, id, unsafe) => {
-        if(unsafe) return publicInstance.put(`${url}${id}`, data).then(data);
-        return privateInstance.put(`${url}${id}`, data).then(data);
+        if(unsafe) return publicInstance.put(`${url}${id}`, data).then(({data})=>data);
+        return privateInstance.put(`${url}${id}`, data).then(({data})=>data);
     },
     post: (url, data, unsafe) => {
         if(unsafe) return publicInstance.post(url,data).then(({data})=>data);
@@ -68,7 +68,7 @@ export const UsersApi = {
         return await Actions.getAll(`/api/events/${id}/eventUsers`)
     },
     editOne: async (data, id) => {
-        return await Actions.edit(`/api/eventUsers/`,data,id)
+        return await Actions.edit(`/api/eventUsers/${id}/`,data,'withStatus')
     },
     createOne: async (data, id) => {
         return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`,data)
