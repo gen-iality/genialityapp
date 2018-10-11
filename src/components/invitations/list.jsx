@@ -23,31 +23,45 @@ class InvitationsList extends Component {
     async componentDidMount() {
         const { match } = this.props;
         let pos = columns.map((e) => { return e.id; }).indexOf('edit');
-        if(pos<=0) columns.push(
-            {
-                ...this.genericHeaderArrows(),
-                headerText: "Fecha",
-                id: "created_at",
-                accessor: d => d.created_at,
-                Cell: props => <span><FormattedDate value={props.value}/> <FormattedTime value={props.value}/></span>,
-                width: 180
-            },
-            {
-                ...this.genericHeaderArrows(),
-                headerText: "Total",
-                id: "number_of_recipients",
-                accessor: d => d.number_of_recipients,
-                width: 90
-            },
-            {
-            Header: "",
-            id: "edit",
-            accessor: d => d,
-            Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
-            width:50
+        if(pos<=0){
+            columns.push(
+                {
+                    ...this.genericHeaderArrows(),
+                    headerText: "Fecha",
+                    id: "created_at",
+                    accessor: d => d.created_at,
+                    Cell: props => <span><FormattedDate value={props.value}/> <FormattedTime value={props.value}/></span>,
+                    width: 180
+                },
+                {
+                    ...this.genericHeaderArrows(),
+                    headerText: "Total",
+                    id: "number_of_recipients",
+                    accessor: d => d.number_of_recipients,
+                    width: 90
+                },
+                {
+                    Header: "",
+                    id: "edit",
+                    accessor: d => d,
+                    Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
+                    width:50
+                }
+            )
+        }else{
+            columns[pos] = {
+                Header: "",
+                id: "edit",
+                accessor: d => d,
+                Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
+                width:50
             }
-        );
+        };
         this.setState({columns,loading:false});
+    }
+
+    componentWillUnmount(){
+        this.setState({invitations:[]})
     }
 
     //Table
