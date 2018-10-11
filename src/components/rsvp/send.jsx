@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import Moment from "moment"
 import 'moment/locale/es-us';
-import {Actions} from "../../helpers/request";
+import {Actions, EventsApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import ImageInput from "../shared/imageInput";
 import LogOut from "../shared/logOut";
@@ -14,6 +14,7 @@ class SendRsvp extends Component {
         this.state = {
             rsvp:{}
         };
+        this.submit = this.submit.bind(this);
     }
 
     componentDidMount(){
@@ -61,24 +62,22 @@ class SendRsvp extends Component {
         })
     };
 
-    submit = () => {
+    async submit() {
         const { event, selection } = this.props;
         const { rsvp } = this.state;
-        const url = '/api/rsvp/sendeventrsvp/'+event._id;
         let users = [];
         selection.map(item=>{
             users.push(item.id)
         });
         this.setState({dataMail:users});
-        Actions.post(url, {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users})
-            .then((res) => {
-                console.log(res);
-                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/invitations'})
-            })
-            .catch(e=>{
-                console.log(e.response);
-                this.setState({timeout:true,loader:false});
-            });
+        try{
+            const data = {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users};
+            const resp = await EventsApi.sendRsvp(data,event._id);
+            this.setState({redirect:true,url_redirect:'/event/'+event._id+'/invitations'})
+        }catch (e) {
+            console.log(e);
+            this.setState({timeout:true,loader:false});
+        }
     };
 
     render() {

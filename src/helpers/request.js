@@ -53,6 +53,9 @@ export const EventsApi = {
     invitations: async(id) => {
         return await Actions.getOne(`/api/events/${id}/`, 'invitations');
     },
+    sendRsvp:async (data, id) => {
+        return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data)
+    },
     mine: async () => {
         return await Actions.getAll('/api/me/events')
     },
