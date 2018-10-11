@@ -133,7 +133,7 @@ class Event extends Component {
                                 <section className="section">
                                     <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
                                     <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                    <Route path={`${match.url}/invitations`} render={()=><Invitations event={this.state.event} />}/>
+                                    <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
                                     <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                     <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
