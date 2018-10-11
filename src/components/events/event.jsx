@@ -88,15 +88,18 @@ class Event extends Component {
                                             <p className="menu-label">
                                                 <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
-                                            <p className="menu-label">
-                                                <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>Tickets</NavLink>
-                                            </p>
-                                            <p className="menu-label">
-                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/rsvp`}>Invitaciones</NavLink>
+                                            <p className="menu-label item" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                                                <span>Invitaciones</span>
+                                                <span className="icon">
+                                                    <i className={`${this.state.userTab?'up':'down'}`}/>
+                                                </span>
                                             </p>
                                             {
                                                 this.state.userTab && (
                                                     <ul className="menu-list">
+                                                        <li>
+                                                            <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                        </li>
                                                         <li>
                                                             <NavLink activeClassName={'active'} to={`${match.url}/invitations`}>Historial</NavLink>
                                                         </li>
