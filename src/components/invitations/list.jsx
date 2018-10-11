@@ -80,7 +80,7 @@ class InvitationsList extends Component {
                 querySort = JSON.stringify(querySort);
                 query = query+`&orderBy=${querySort}`;
             }
-            API.get(`/api/events/${eventId}/invitations${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
+            API.get(`/api/events/${eventId}/messages${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
                 filteredData = data;
                 let res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
                 resolve(res)
