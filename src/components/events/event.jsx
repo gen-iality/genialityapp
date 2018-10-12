@@ -107,7 +107,7 @@ class Event extends Component {
                                                 )
                                             }
                                             <p className="menu-label">
-                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/users`}>Asistentes</NavLink>
+                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
                                             <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span>Contenido</span>
@@ -132,7 +132,7 @@ class Event extends Component {
                             <div className="column is-10">
                                 <section className="section">
                                     <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
-                                    <Route path={`${match.url}/users`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
+                                    <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
                                     <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
                                     <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                     <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
