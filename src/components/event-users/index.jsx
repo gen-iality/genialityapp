@@ -5,9 +5,8 @@ import { resolve } from "react-resolver";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
-import ImportUsers from "../modal/importUser";
 import Dialog from "../modal/twoAction";
-import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
+import { FaSortUp, FaSortDown, FaSort, FaCamera} from "react-icons/fa";
 import Table from "../shared/table";
 import LogOut from "../shared/logOut";
 
@@ -25,7 +24,9 @@ class ListEventUser extends Component {
             pages:      Math.ceil(props.userReq.meta.total/25),
             message:    {class:'', content:''},
             columns:    columns,
-            sorted:     []
+            sorted:     [],
+            facingMode: 'user',
+            qrData:     {}
         };
         this.fetchData = this.fetchData.bind(this);
         this.addToList = this.addToList.bind(this);
@@ -144,13 +145,29 @@ class ListEventUser extends Component {
 
     handleScan = (data) => {
         if (data) {
-            this.setState({
-                result: data
-            });
+            console.log(data);
+            let pos = this.state.users.map(e=>{return e._id}).indexOf(data);
+            const qrData = {};
+            if(pos>=0) {
+                qrData.msg = 'User found';
+                qrData.user = this.state.users[pos];
+                this.setState({qrData});
+            }else{
+                qrData.msg = 'User not found';
+                qrData.user = null;
+                this.setState({qrData})
+            }
         }
     }
     handleError = (err) => {
         console.error(err);
+    }
+    readQr = () => {
+        let qrData = {
+            user: null,
+            msg: ''
+        };
+        this.setState({qrData})
     }
 
     //Table
@@ -231,7 +248,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, loading, columns, timeout} = this.state;
+        const {users, pages, loading, columns, timeout, facingMode, qrData} = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -277,18 +294,50 @@ class ListEventUser extends Component {
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
-                    <div className="modal-background"></div>
-                    <div className="modal-content">
-                        <QrReader
-                            delay={300}
-                            facingMode={'user'}
-                            onError={this.handleError}
-                            onScan={this.handleScan}
-                            style={{ width: "100%" }}
-                        />
-                        <h2 className="subtitle has-text-weight-bold has-text-white">{this.state.result}</h2>
+                    <div className="modal-background"/>
+                    <div className="modal-card">
+                        <header className="modal-card-head">
+                            <p className="modal-card-title">QR Reader</p>
+                            <button className="delete" aria-label="close" onClick={(e)=>{this.setState({qrModal:false})}}/>
+                        </header>
+                        <section className="modal-card-body">
+                            {
+                                qrData.user ?
+                                    <div>Usuario</div>:
+                                    <React.Fragment>
+                                        <div className="field">
+                                            <div className="control has-icons-left">
+                                                <div className="select">
+                                                    <select onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                        <option value="user">Selfie</option>
+                                                        <option value="environment">Rear</option>
+                                                    </select>
+                                                </div>
+                                                <div className="icon is-small is-left"><FaCamera/></div>
+                                            </div>
+                                        </div>
+                                        <QrReader
+                                            delay={500}
+                                            facingMode={facingMode}
+                                            onError={this.handleError}
+                                            onScan={this.handleScan}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </React.Fragment>
+                            }
+                            <p>{qrData.msg}</p>
+                        </section>
+                        <footer className="modal-card-foot">
+                            {
+                                qrData.user&&(
+                                    <React.Fragment>
+                                        <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                        <button className="button" onClick={this.readQr}>Read Other</button>
+                                    </React.Fragment>
+                                )
+                            }
+                        </footer>
                     </div>
-                    <button className="modal-close is-large" aria-label="close" onClick={(e)=>{this.setState({qrModal:false})}}></button>
                 </div>
                 {timeout&&(<LogOut/>)}
             </React.Fragment>
