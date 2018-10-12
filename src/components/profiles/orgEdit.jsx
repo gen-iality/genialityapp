@@ -186,10 +186,9 @@ class OrgEditProfile extends Component {
         org.category_ids = categories;
         try {
             const resp = await Actions.create('/api/organizations',org);
-            console.log(org);
             console.log(resp);
             if(resp._id){
-                window.location.replace(`${BaseUrl}/org/${resp._id}`);
+                window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
             }else{
                 this.setState({msg:'Cant Create',create:false})
             }
