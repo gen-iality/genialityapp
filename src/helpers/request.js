@@ -34,6 +34,14 @@ export const Actions = {
         if(unsafe) return publicInstance.post(url,data).then(({data})=>data);
         return privateInstance.post(url,data).then(({data})=>data);
     },
+    get: (url, unsafe) => {
+        if(unsafe) return publicInstance.get(url).then(({data})=>data);
+        return privateInstance.get(url).then(({data})=>data);
+    },
+    put: (url, data, unsafe) => {
+        if(unsafe) return publicInstance.put(url,data).then(({data})=>data);
+        return privateInstance.put(url,data).then(({data})=>data);
+    },
     getOne: (url, id, unsafe) => {
         if(unsafe) return publicInstance.get(`${url}${id}`).then(({data})=>data);
         return privateInstance.get(`${url}${id}`).then(({data})=>data);

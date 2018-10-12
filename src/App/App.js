@@ -6,7 +6,7 @@ import { parseUrl } from "../helpers/constants";
 import Header from "../containers/header";
 import ContentContainer from "../containers/content";
 import Footer from "../containers/footer";
-import privateInstance from "../helpers/request";
+import privateInstance, {Actions} from "../helpers/request";
 
 
 class App extends Component {
@@ -18,6 +18,12 @@ class App extends Component {
                 Cookie.set("evius_token", dataUrl.token);
                 privateInstance.defaults.params = {};
                 privateInstance.defaults.params['evius_token'] = dataUrl.token;
+            }
+            if(dataUrl.refresh_token){
+                Actions.put('/api/me/storeRefreshToken',{refresh_token:dataUrl.refresh_token})
+                    .then(resp=>{
+                        console.log(resp);
+                    })
             }
         }
     }
