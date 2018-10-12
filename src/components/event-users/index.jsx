@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
+import QrReader from "react-qr-reader";
 import { resolve } from "react-resolver";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
@@ -141,6 +142,17 @@ class ListEventUser extends Component {
         }
     };
 
+    handleScan = (data) => {
+        if (data) {
+            this.setState({
+                result: data
+            });
+        }
+    }
+    handleError = (err) => {
+        console.error(err);
+    }
+
     //Table
     fetchData(state, instance) {
         this.setState({ loading: true });
@@ -234,9 +246,12 @@ class ListEventUser extends Component {
                                             </span>
                                         </button>
                                     </div>
-                                    <p className="control">
+                                    <div className="control">
+                                        <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
+                                    </div>
+                                    <div className="control">
                                         <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
-                                    </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -267,6 +282,20 @@ class ListEventUser extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
+                    <div className="modal-background"></div>
+                    <div className="modal-content">
+                        <QrReader
+                            delay={300}
+                            facingMode={'user'}
+                            onError={this.handleError}
+                            onScan={this.handleScan}
+                            style={{ width: "100%" }}
+                        />
+                        <h2 className="subtitle has-text-weight-bold has-text-white">{this.state.result}</h2>
+                    </div>
+                    <button className="modal-close is-large" aria-label="close" onClick={(e)=>{this.setState({qrModal:false})}}></button>
+                </div>
                 {timeout&&(<LogOut/>)}
             </React.Fragment>
         );

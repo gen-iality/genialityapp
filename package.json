@@ -20,6 +20,7 @@
     "react-google-maps": "^9.4.5",
     "react-icons": "^3.1.0",
     "react-intl": "^2.6.0",
+    "react-qr-reader": "^2.1.1",
     "react-resolver": "^3.1.2",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
