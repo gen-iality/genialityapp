@@ -21,7 +21,6 @@ class Header extends Component {
             create: false,
             valid: true
         };
-        this.openMenu = this.openMenu.bind(this);
     }
 
     componentDidMount(){
@@ -51,12 +50,6 @@ class Header extends Component {
                 });
         }
     }
-
-    openMenu() {
-        this.setState((prevState) => {
-            return {open:!prevState.open}
-        });
-    };
 
     logout = () => {
         Cookie.remove("token");
@@ -124,7 +117,7 @@ class Header extends Component {
                                     this.state.loader ?
                                         <div>Wait...</div>:
                                         this.state.user ?
-                                            <div className={`navbar-item has-dropdown ${this.state.open ? "is-active" : ""}`} onClick={this.openMenu}>
+                                            <div className="navbar-item has-dropdown is-hoverable">
                                                 <a className="navbar-link">
                                                     {this.state.name}
                                                 </a>
