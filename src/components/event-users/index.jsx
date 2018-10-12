@@ -145,12 +145,12 @@ class ListEventUser extends Component {
 
     handleScan = (data) => {
         if (data) {
-            console.log(data);
             let pos = this.state.users.map(e=>{return e._id}).indexOf(data);
             const qrData = {};
             if(pos>=0) {
                 qrData.msg = 'User found';
                 qrData.user = this.state.users[pos];
+                console.log(qrData);
                 this.setState({qrData});
             }else{
                 qrData.msg = 'User not found';
@@ -303,12 +303,16 @@ class ListEventUser extends Component {
                         <section className="modal-card-body">
                             {
                                 qrData.user ?
-                                    <div>Usuario</div>:
+                                    <div>{
+                                        Object.keys(qrData.user.properties).map((obj,key)=>{
+                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>
+                                        })
+                                    }</div>:
                                     <React.Fragment>
                                         <div className="field">
                                             <div className="control has-icons-left">
                                                 <div className="select">
-                                                    <select onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                    <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
                                                         <option value="user">Selfie</option>
                                                         <option value="environment">Rear</option>
                                                     </select>
@@ -331,7 +335,10 @@ class ListEventUser extends Component {
                             {
                                 qrData.user&&(
                                     <React.Fragment>
-                                        <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                        {
+                                            !qrData.user.checked_in &&
+                                            <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                        }
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
                                 )
