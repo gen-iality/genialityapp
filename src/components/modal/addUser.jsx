@@ -39,12 +39,14 @@ class AddUser extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.edit) {
-            const value = nextProps.value;
+            const {value,extraFields} = nextProps;
             let user = {};
             Object.keys(value.properties)
-                .map((obj) => (
-                    user[obj] = value.properties[obj]
-                ));
+                .map((obj) => {
+                    let pos = extraFields.map((e)=>{return e.name}).indexOf(obj);
+                    if(pos<0) user[extraFields[pos].name] = '';
+                    return user[obj] = value.properties[obj]
+                });
             this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
         }else {
             let user = {name: '', email: ''};
