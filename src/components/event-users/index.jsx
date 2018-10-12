@@ -234,29 +234,23 @@ class ListEventUser extends Component {
         const {users, pages, loading, columns, timeout} = this.state;
         return (
             <React.Fragment>
-                <nav className="navbar is-transparent">
-                    <div className="navbar-menu">
-                        <div className="navbar-end">
-                            <div className="navbar-item">
-                                <div className="field is-grouped">
-                                    <div className="control">
-                                        <button className={`button is-rounded ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
-                                            <span className="icon is-small">
-                                              <i className="far fa-trash-alt"/>
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <div className="control">
-                                        <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
-                                    </div>
-                                    <div className="control">
-                                        <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
-                                    </div>
-                                </div>
-                            </div>
+                <header>
+                    <div className="field is-grouped is-pulled-right">
+                        <div className="control">
+                            <button className={`button is-rounded ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
+                                <span className="icon is-small">
+                                  <i className="far fa-trash-alt"/>
+                                </span>
+                            </button>
+                        </div>
+                        <div className="control">
+                            <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
+                        </div>
+                        <div className="control">
+                            <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
                         </div>
                     </div>
-                </nav>
+                </header>
                 <div className="main">
                     <div className="preview-list">
                         <Table
