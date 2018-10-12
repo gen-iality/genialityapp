@@ -44,7 +44,7 @@ class AddUser extends Component {
             Object.keys(value.properties)
                 .map((obj) => {
                     let pos = extraFields.map((e)=>{return e.name}).indexOf(obj);
-                    if(pos<0) user[extraFields[pos].name] = '';
+                    if(pos>=0) user[extraFields[pos].name] = '';
                     return user[obj] = value.properties[obj]
                 });
             this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
