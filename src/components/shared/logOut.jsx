@@ -17,7 +17,6 @@ class LogOut extends Component {
     };
     closeModal = () => {
         const element = document.getElementById("modal");
-        console.log(element.classList);
         element.classList.remove('is-active');
         Cookie.remove("token");
         Cookie.remove("evius_token");
