@@ -81,6 +81,9 @@ export const UsersApi = {
     getAll: async (id) => {
         return await Actions.getAll(`/api/events/${id}/eventUsers`)
     },
+    getProfile: async (id) => {
+        return await Actions.getOne('/api/users/', id)
+    },
     editOne: async (data, id) => {
         return await Actions.edit(`/api/eventUsers/${id}/`,data,'withStatus')
     },
