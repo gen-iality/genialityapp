@@ -11,6 +11,7 @@ import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
+import {FaAngleDown, FaAngleUp} from "react-icons/fa";
 Moment.locale('es');
 momentLocalizer();
 
@@ -19,6 +20,7 @@ class Event extends Component {
         super(props);
         this.state = {
             loading:true,
+            showMenu:true,
             userTab:true,
             contentTab:true
         }
@@ -80,10 +82,16 @@ class Event extends Component {
                 {
                     this.state.loading ? <Loading/>:
                         <section className="section columns">
-                            <aside className="column is-2 is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
-                                <p className="subtitle event-name">{this.state.event.name}</p>
+                            <aside className="column is-2 is-fullheight menu aside">
+                                <p className="subtitle event-name">
+                                    {this.state.event.name}
+                                    <span className="is-hidden-desktop" onClick={(e)=>{
+                                        this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
+                                        {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}
+                                    </span>
+                                </p>
                                 {
-                                    !this.state.newEvent && (
+                                    (!this.state.newEvent && this.state.showMenu) && (
                                         <React.Fragment>
                                             <p className="menu-label">
                                                 <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
