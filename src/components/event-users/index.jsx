@@ -131,6 +131,8 @@ class ListEventUser extends Component {
             Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
                 .then((response)=>{
                     console.log(response);
+                    const qrData = {user:null,msg:'Check In correct'};
+                    this.setState({qrData})
                 })
                 .catch(e=>{
                     console.log(e.response);
