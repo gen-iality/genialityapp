@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
-import {CategoriesApi, EventsApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
+import {BaseUrl} from "../../helpers/constants";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -16,38 +17,65 @@ class UserEditProfile extends Component {
             user: {},
             loading: true
         };
+        this.saveForm = this.saveForm.bind(this);
     }
 
     async componentDidMount() {
         let userId = this.props.match.params.id;
         try {
             const categories = await CategoriesApi.getAll();
-            this.setState({});
             const resp = await EventsApi.mine();
-            this.setState({loading:false,events:resp.data,categories});
+            const user = await UsersApi.getProfile(userId,true);
+            this.setState({loading:false,user,events:resp.data,categories});
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
         }
     }
 
-    async componentWillReceiveProps(nextProps) {
-        let userId = nextProps.match.params.id;
-        try {
-            const categories = await CategoriesApi.getAll();
-            this.setState({});
-            const resp = await EventsApi.mine();
-            this.setState({loading:false,events:resp.data,categories});
-        }catch (e) {
-            console.log(e.response);
-            this.setState({timeout:true,loading:false});
+    changeImg = (files) => {
+        const file = files[0];
+        if(file){
+            this.setState({imageFile: file,
+                user:{...this.state.user, picture: null}});
+            let data = new FormData();
+            const url = '/api/files/upload',
+                self = this;
+            data.append('file',this.state.imageFile);
+            Actions.post(url, data)
+                .then((image) => {
+                    self.setState({
+                        user: {
+                            ...self.state.user,
+                            picture: image
+                        },fileMsg:'Image uploaded successfull'
+                    });
+                })
+                .catch (e=> {
+                    console.log(e.response);
+                    this.setState({timeout:true,loader:false});
+                });
         }
-    }
+        else{
+            this.setState({errImg:'Only images files allowed. Please try again (:'});
+        }
+    };
 
     handleChange = (e) => {
         const {name, value} = e.target;
-        this.setState({org:{...this.state.org,[name]:value}},this.valid)
+        this.setState({user:{...this.state.user,[name]:value}},this.valid)
     };
+
+    async saveForm() {
+        const { user } = this.state;
+        try {
+            const resp = await UsersApi.editProfile(user,user._id);
+            console.log(resp);
+        }catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loader:false});
+        }
+    }
 
     render() {
         const { loading, timeout, events, user } = this.state;
@@ -86,6 +114,9 @@ class UserEditProfile extends Component {
                                                    onChange={this.handleChange}
                                             />
                                         </div>
+                                    </div>
+                                    <div className="control field">
+                                        <button className="button is-primary" onClick={this.saveForm}>Submit</button>
                                     </div>
                                 </div>
                                 <div className="column is-9 user-data">
