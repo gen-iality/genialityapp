@@ -139,7 +139,8 @@ class UsersRsvp extends Component {
         const currentRecords = this.state.users;
         if (selectAll) {
             currentRecords.forEach(item => {
-                selection.push(item);
+                const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
+                if(pos<=-1) selection.push(item);
             });
         }
         else{
