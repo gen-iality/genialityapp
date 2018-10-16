@@ -74,9 +74,7 @@ class Landing extends Component {
                                        </span>
                                                 </div>
                                                 <div className="column">
-                                                    <p className="subtitle is-pulled-left">
-                                                        <p className="has-text-grey-darker has-text-weight-bold">{event.location.FormattedAddress}</p>
-                                                    </p>
+                                                    <p className="subtitle is-pulled-left has-text-grey-darker has-text-weight-bold">{event.location.FormattedAddress}</p>
                                                 </div>
                                             </div>
                                         </div>
