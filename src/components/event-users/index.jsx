@@ -326,7 +326,7 @@ class ListEventUser extends Component {
                                             facingMode={facingMode}
                                             onError={this.handleError}
                                             onScan={this.handleScan}
-                                            style={{ width: "100%" }}
+                                            style={{ width: "60%" }}
                                         />
                                     </React.Fragment>
                             }
