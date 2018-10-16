@@ -82,7 +82,7 @@ class Landing extends Component {
                                         </div>
                                         <div className="item">
                                             <p className="title has-text-grey-darker has-text-weight-bold">{event.name}</p>
-                                            Por: <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer_type}</Link>
+                                            Por: <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link>
                                         </div>
                                         <div className="item is-italic">
                                             {
