@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
 import QrReader from "react-qr-reader";
-import { resolve } from "react-resolver";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
@@ -15,13 +14,13 @@ class ListEventUser extends Component {
         super(props);
         this.state = {
             users:      [],
-            userReq:    props.userReq,
+            userReq:    {},
             extraFields:[],
             addUser:    false,
             deleteUser: false,
             loading:    true,
             importUser: false,
-            pages:      Math.ceil(props.userReq.meta.total/25),
+            pages:      null,
             message:    {class:'', content:''},
             columns:    columns,
             sorted:     [],
@@ -217,7 +216,7 @@ class ListEventUser extends Component {
     requestData = (users, eventId, pageSize, page, sorted, filtered) => {
         return new Promise((resolve, reject) => {
             let filteredData = users;
-            let res = {rows: filteredData.data, pages: filteredData.meta.total};
+            let res = {};
             let query = '?';
             if (filtered.length) {
                 let queryFilter = [];
@@ -402,8 +401,4 @@ const columns = [
     }
 ];
 
-export default resolve("userReq", (props) => {
-    let eventId = props.eventId;
-    const url = `/api/events/${eventId}/eventUsers`;
-    return API.get(url).then(({data})=> data)
-})(ListEventUser);
+export default ListEventUser;
