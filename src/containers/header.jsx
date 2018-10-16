@@ -112,13 +112,16 @@ class Header extends Component {
                                 </a>
                             </div>
                             <div className="navbar-end">
-                                <div className="navbar-item">
-                                    <Link to={'/event/new_event'}>
-                                        <button className="button is-primary is-rounded">
-                                            <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                        </button>
-                                    </Link>
-                                </div>
+                                {
+                                    this.state.user &&
+                                        <div className="navbar-item">
+                                            <Link to={'/event/new_event'}>
+                                                <button className="button is-primary is-rounded">
+                                                    <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                                </button>
+                                            </Link>
+                                        </div>
+                                }
                                 {
                                     this.state.loader ?
                                         <div>Wait...</div>:
@@ -150,7 +153,7 @@ class Header extends Component {
                                                 </div>
                                             </div>:
                                             <div className="navbar-item">
-                                                <button className="button is-link" onClick={this.logout}>
+                                                <button className="button is-link is-rounded" onClick={this.logout}>
                                                     <FormattedMessage id="header.login" defaultMessage="Sign In"/>
                                                 </button>
                                             </div>
