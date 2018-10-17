@@ -83,8 +83,14 @@ class General extends Component {
                         event: {
                             ...self.state.event,
                             picture: image
-                        },fileMsg:'Image uploaded successfull',imageFile:null
+                        },fileMsg:'Image uploaded successfully',imageFile:null
                     });
+                    toast.success('Image uploaded successfully');
+                })
+                .catch (e=> {
+                    console.log(e.response);
+                    toast.error('Something wrong. Try again later');
+                    this.setState({timeout:true,loader:false});
                 });
         }
         else{
