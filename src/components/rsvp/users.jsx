@@ -50,9 +50,7 @@ class UsersRsvp extends Component {
             listEvents.data.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection});
             const columns = this.state.columns;
-            console.log(columns);
             let index = columns.map((e) => { return e.id; }).indexOf('properties.name');
-            console.log(index);
             if(index<=-1) columns.push({
                 ...this.genericHeaderArrows(),
                 headerText: "Name",
