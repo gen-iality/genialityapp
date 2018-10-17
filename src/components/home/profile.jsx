@@ -66,7 +66,7 @@ class HomeProfile extends Component {
                                 {
                                     events.map((event,key)=>{
                                     return <EventCard key={event._id} event={event}
-                                                      action={{name:'Ver >',url:`landing/${event._id}`}}
+                                                      action={{name:'Ver >',url:`/landing/${event._id}`}}
                                                       right={<div className="actions is-pulled-right">
                                                           <p className="is-size-7"></p>
                                                       </div>}/>})
