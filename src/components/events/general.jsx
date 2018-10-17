@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
-import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
-import { toast } from 'react-toastify';
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-widgets/lib/scss/react-widgets.scss'
 Moment.locale('es');
 
 class General extends Component {
