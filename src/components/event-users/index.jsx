@@ -8,6 +8,8 @@ import Dialog from "../modal/twoAction";
 import { FaSortUp, FaSortDown, FaSort, FaCamera} from "react-icons/fa";
 import Table from "../shared/table";
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -105,9 +107,11 @@ class ListEventUser extends Component {
         console.log(user);
         try{
             const {data} = await UsersApi.getAll(this.props.event._id);
+            toast.success('User created successfully');
             this.setState({ users:data });
         }catch (e) {
             console.log(e);
+            toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
         }
     };
@@ -132,11 +136,13 @@ class ListEventUser extends Component {
                 .then((response)=>{
                     console.log(response);
                     const qrData = {user:null,msg:'Check In correct'};
+                    toast.success('CheckIn made successfully');
                     this.setState({qrData})
                 })
                 .catch(e=>{
                     console.log(e.response);
                     this.setState({timeout:true});
+                    toast.error('Something wrong. Try again later');
                 });
             this.setState((prevState) => {
                 return {data:users,change:!prevState.change}
