@@ -450,7 +450,7 @@ class UsersRsvp extends Component {
                             <button className="button is-rounded is-small"
                                     disabled={this.state.selection.length<=0}
                                     onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                Enviar Invitaicón
+                                Enviar Invitación
                             </button>
                         </div>
                     </div>
