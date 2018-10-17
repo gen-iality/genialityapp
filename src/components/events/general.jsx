@@ -48,7 +48,7 @@ class General extends Component {
     valid = () => {
         const {event} = this.state,
             valid = (event.name.length>8 && event.description.length>5 && event.location.PlaceId);
-        this.setState({valid:!valid})
+        this.setState({valid:false})
     };
 
     selectCategory = (selectedCategories) => {
