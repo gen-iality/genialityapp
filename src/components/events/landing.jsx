@@ -89,10 +89,6 @@ class Landing extends Component {
                                                 event.description
                                             }
                                         </div>
-                                        <div className="item">
-                                            <p className="subtitle has-text-grey-darker has-text-weight-bold">150/400</p>
-                                            Aforo
-                                        </div>
                                         {
                                             (event.description.length >= 80 && !this.state.showFull) && (
                                                 <div className="item">
