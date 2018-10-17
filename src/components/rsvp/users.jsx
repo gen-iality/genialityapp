@@ -10,6 +10,8 @@ import API from "../../helpers/request"
 import Table from "../shared/table";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -215,9 +217,11 @@ class UsersRsvp extends Component {
         try{
             const {data} = await UsersApi.getAll(this.props.event._id);
             const users = handleUsers(data);
+            toast.success('User created successfully');
             this.setState({ users });
         }catch (e) {
             console.log(e.response);
+            toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
         }
     };
@@ -255,13 +259,16 @@ class UsersRsvp extends Component {
         selection.map(item=>{
             users.push(item.id)
         });
+        this.setState({disabled:true});
         API.post(url, {eventUsersIds:users})
             .then((res) => {
                 console.log(res);
-                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages'})
+                toast.success('Ticket sent successfully');
+                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages',disabled:false})
             })
             .catch(e=>{
                 console.log(e.response);
+                toast.error('Something wrong. Try again later');
                 this.setState({timeout:true,loader:false});
             });
 
@@ -346,7 +353,7 @@ class UsersRsvp extends Component {
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        const {users, pages, pageSize, loading, columns, timeout} = this.state;
+        const {users, pages, pageSize, loading, columns, timeout, disabled} = this.state;
         return (
             <React.Fragment>
                 <div className="columns">
@@ -457,7 +464,7 @@ class UsersRsvp extends Component {
                             Está seguro de enviar {this.state.selection.length} tiquetes
                         </p>}
                         first={{
-                            title:'Enviar',
+                            title:'Enviar',disabled:disabled,
                             class:'is-info',action:this.sendTicket}}
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,

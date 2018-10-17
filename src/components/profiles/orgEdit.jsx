@@ -14,6 +14,8 @@ import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
 import EventCard from "../shared/eventCard";
 import {Link} from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class OrgEditProfile extends Component {
     constructor(props) {
@@ -102,9 +104,11 @@ class OrgEditProfile extends Component {
                         }
                     }
                 });
+                toast.success('File uploaded successfully');
             })
             .catch (e=> {
                 console.log(e.response);
+                toast.error('Something wrong. Try again later');
                 this.setState({timeout:true,loader:false});
             });
     };
@@ -156,11 +160,13 @@ class OrgEditProfile extends Component {
                         org: {
                             ...self.state.org,
                             picture: image
-                        },fileMsg:'Image uploaded successfull'
+                        },fileMsg:'Image uploaded successfully'
                     });
+                    toast.success('Image uploaded successfully');
                 })
                 .catch (e=> {
                     console.log(e.response);
+                    toast.error('Something wrong. Try again later');
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -178,23 +184,30 @@ class OrgEditProfile extends Component {
     };
 
     async saveForm() {
-        const { org } = this.state;
+        const { org, create } = this.state;
         const categories = this.state.selectedOption.map(item=>{
             return item.value
         });
         org.doc = org.doc.file;
         org.category_ids = categories;
         try {
-            const resp = await Actions.create('/api/organizations',org);
+            const resp = create ? await Actions.create('/api/organizations',org) : await OrganizationApi.editOne(org,org._id);
             console.log(resp);
             if(resp._id){
-                window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
+                if(create) window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
+                else{
+                    org.doc = !(org.doc) && {};
+                    this.setState({msg:'Saved successfully',create:false, org});
+                    toast.success('All changes saved successfully');
+                }
             }else{
-                this.setState({msg:'Cant Create',create:false})
+                this.setState({msg:'Cant Create',create:false});
+                toast.error('Something wrong. Try again later');
             }
         }catch (e) {
             console.log(e.response);
-            this.setState({timeout:true,loader:false});
+            toast.error('Something wrong. Try again later');
+            this.setState({timeout:true,loader:false,org});
         }
     }
 
@@ -319,8 +332,7 @@ class OrgEditProfile extends Component {
                                                 }
                                             </div>
                                             <div className="control">
-                                                <button className="button is-primary" onClick={this.saveForm}>Submit
-                                                </button>
+                                                <button className="button is-primary" onClick={this.saveForm}>Submit</button>
                                             </div>
                                         </div>
                                     </div>

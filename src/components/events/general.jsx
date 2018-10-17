@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
-import 'react-widgets/lib/scss/react-widgets.scss'
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
-import {TiArrowLoopOutline} from "react-icons/ti";
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-widgets/lib/scss/react-widgets.scss'
 Moment.locale('es');
 
 class General extends Component {
@@ -48,7 +49,7 @@ class General extends Component {
     valid = () => {
         const {event} = this.state,
             valid = (event.name.length>8 && event.description.length>5 && event.location.PlaceId);
-        this.setState({valid:!valid})
+        this.setState({valid:false})
     };
 
     selectCategory = (selectedCategories) => {
@@ -82,8 +83,14 @@ class General extends Component {
                         event: {
                             ...self.state.event,
                             picture: image
-                        },fileMsg:'Image uploaded successfull',imageFile:null
+                        },fileMsg:'Image uploaded successfully',imageFile:null
                     });
+                    toast.success('Image uploaded successfully');
+                })
+                .catch (e=> {
+                    console.log(e.response);
+                    toast.error('Something wrong. Try again later');
+                    this.setState({timeout:true,loader:false});
                 });
         }
         else{
@@ -122,6 +129,7 @@ class General extends Component {
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
                 this.setState({loading:false});
+                toast.success("All changes saved")
             }
             else{
                 const result = await Actions.create('/api/events', data);
@@ -130,6 +138,7 @@ class General extends Component {
                 if(result._id){
                     window.location.replace(`${BaseUrl}/event/${result._id}`);
                 }else{
+                    toast.warn("Event can't create. Trying again later");
                     this.setState({msg:'Cant Create',create:false})
                 }
             }
@@ -137,6 +146,7 @@ class General extends Component {
             console.log('Some error');
             console.log(e);
             this.setState({timeout:true});
+            toast.error("Something wrong")
         }
     }
 

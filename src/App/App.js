@@ -7,6 +7,7 @@ import Header from "../containers/header";
 import ContentContainer from "../containers/content";
 import Footer from "../containers/footer";
 import privateInstance, {Actions} from "../helpers/request";
+import { ToastContainer } from 'react-toastify';
 
 
 class App extends Component {
@@ -34,6 +35,7 @@ class App extends Component {
                 <Header/>
                 <ContentContainer/>
                 <Footer/>
+                <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange/>
             </div>
         </Router>
         );

@@ -6,6 +6,8 @@ import {Actions, EventsApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import ImageInput from "../shared/imageInput";
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -69,19 +71,21 @@ class SendRsvp extends Component {
         selection.map(item=>{
             users.push(item.id)
         });
-        this.setState({dataMail:users});
+        this.setState({dataMail:users,disabled:true});
         try{
             const data = {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users};
             const resp = await EventsApi.sendRsvp(data,event._id);
-            this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages'})
+            toast.success('Email sent successfully');
+            this.setState({disabled:false,redirect:true,url_redirect:'/event/'+event._id+'/messages'})
         }catch (e) {
             console.log(e);
-            this.setState({timeout:true,loader:false});
+            toast.error('Something wrong. Try again later');
+            this.setState({disabled:false,timeout:true,loader:false});
         }
     };
 
     render() {
-        const { timeout } = this.state;
+        const { timeout, disabled } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <div className="columns">
@@ -219,7 +223,7 @@ class SendRsvp extends Component {
                 </div>
                 <Dialog modal={this.state.modal} title={'Confirmación'}
                         content={<p>Se van a enviar {this.props.selection.length} invitaciones</p>}
-                        first={{title:'Enviar',class:'is-info',action:this.submit}}
+                        first={{title:'Enviar',class:'is-info',action:this.submit,disabled:disabled}}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}
                         message={{class:'',content:''}}/>
                 {timeout&&(<LogOut/>)}
