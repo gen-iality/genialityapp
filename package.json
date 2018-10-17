@@ -26,6 +26,7 @@
     "react-scripts": "1.1.4",
     "react-select": "^2.0.0",
     "react-table": "^6.8.6",
+    "react-toastify": "^4.4.0",
     "react-widgets": "^4.4.3",
     "react-widgets-moment": "^4.0.19",
     "xlsx": "^0.13.3"
