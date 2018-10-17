@@ -255,10 +255,11 @@ class UsersRsvp extends Component {
         selection.map(item=>{
             users.push(item.id)
         });
+        this.setState({disabled:true});
         API.post(url, {eventUsersIds:users})
             .then((res) => {
                 console.log(res);
-                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages'})
+                this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages',disabled:false})
             })
             .catch(e=>{
                 console.log(e.response);
@@ -346,7 +347,7 @@ class UsersRsvp extends Component {
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        const {users, pages, pageSize, loading, columns, timeout} = this.state;
+        const {users, pages, pageSize, loading, columns, timeout, disabled} = this.state;
         return (
             <React.Fragment>
                 <div className="columns">
@@ -457,7 +458,7 @@ class UsersRsvp extends Component {
                             Está seguro de enviar {this.state.selection.length} tiquetes
                         </p>}
                         first={{
-                            title:'Enviar',
+                            title:'Enviar',disabled:disabled,
                             class:'is-info',action:this.sendTicket}}
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
