@@ -120,6 +120,9 @@ export const OrganizationApi = {
     getOne: async (id) => {
         return await Actions.getOne('/api/organizations/', id)
     },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/organizations/', data, id)
+    },
     events: async (id) => {
         return await Actions.getOne(`/api/organizations/${id}/`, 'events')
     }
