@@ -7,6 +7,8 @@ import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import {BaseUrl} from "../../helpers/constants";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -48,11 +50,13 @@ class UserEditProfile extends Component {
                         user: {
                             ...self.state.user,
                             picture: image
-                        },fileMsg:'Image uploaded successfull'
+                        },fileMsg:'Image uploaded successfully'
                     });
+                    toast.success('Image uploaded successfully');
                 })
                 .catch (e=> {
                     console.log(e.response);
+                    toast.error('Something wrong. Try again later');
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -71,8 +75,10 @@ class UserEditProfile extends Component {
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
+            toast.success('All changes saved successfully');
         }catch (e) {
             console.log(e.response);
+            toast.error('Something wrong. Try again later');
             this.setState({timeout:true,loader:false});
         }
     }
