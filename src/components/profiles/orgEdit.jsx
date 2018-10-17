@@ -14,6 +14,8 @@ import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
 import EventCard from "../shared/eventCard";
 import {Link} from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class OrgEditProfile extends Component {
     constructor(props) {
@@ -102,9 +104,11 @@ class OrgEditProfile extends Component {
                         }
                     }
                 });
+                toast.success('File uploaded successfully');
             })
             .catch (e=> {
                 console.log(e.response);
+                toast.error('Something wrong. Try again later');
                 this.setState({timeout:true,loader:false});
             });
     };
@@ -156,11 +160,13 @@ class OrgEditProfile extends Component {
                         org: {
                             ...self.state.org,
                             picture: image
-                        },fileMsg:'Image uploaded successfull'
+                        },fileMsg:'Image uploaded successfully'
                     });
+                    toast.success('Image uploaded successfully');
                 })
                 .catch (e=> {
                     console.log(e.response);
+                    toast.error('Something wrong. Try again later');
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -191,13 +197,16 @@ class OrgEditProfile extends Component {
                 if(create) window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
                 else{
                     org.doc = !(org.doc) && {};
-                    this.setState({msg:'Saved successfully',create:false, org})
+                    this.setState({msg:'Saved successfully',create:false, org});
+                    toast.success('All changes saved successfully');
                 }
             }else{
-                this.setState({msg:'Cant Create',create:false})
+                this.setState({msg:'Cant Create',create:false});
+                toast.error('Something wrong. Try again later');
             }
         }catch (e) {
             console.log(e.response);
+            toast.error('Something wrong. Try again later');
             this.setState({timeout:true,loader:false,org});
         }
     }
