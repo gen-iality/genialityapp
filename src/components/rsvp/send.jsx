@@ -6,6 +6,8 @@ import {Actions, EventsApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import ImageInput from "../shared/imageInput";
 import LogOut from "../shared/logOut";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -73,9 +75,11 @@ class SendRsvp extends Component {
         try{
             const data = {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users};
             const resp = await EventsApi.sendRsvp(data,event._id);
+            toast.success('Email sent successfully');
             this.setState({disabled:false,redirect:true,url_redirect:'/event/'+event._id+'/messages'})
         }catch (e) {
             console.log(e);
+            toast.error('Something wrong. Try again later');
             this.setState({disabled:false,timeout:true,loader:false});
         }
     };
