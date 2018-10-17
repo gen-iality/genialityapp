@@ -383,23 +383,6 @@ const columns = [
         sortable: false,
         filterable: false,
         width: 180
-    },
-    {
-        Header: "Rol",
-        id: "rol_id",
-        accessor: d => d.rol.name,
-        sortable: false,
-        Filter: ({ filter, onChange }) =>
-            <select
-                onChange={event => onChange(event.target.value)}
-                style={{ width: "100%" }}
-                value={filter ? filter.value : "all"}
-            >
-                <option value="all">TODOS</option>
-                <option value="5af21f366ccde22b0776929d">Admin</option>
-                <option value="5afaf657500a7104f77189ce">CheckIn</option>
-                <option value="5afaf644500a7104f77189cd">Attendee</option>
-            </select>
     }
 ];
 
