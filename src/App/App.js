@@ -35,7 +35,7 @@ class App extends Component {
                 <Header/>
                 <ContentContainer/>
                 <Footer/>
-                <ToastContainer autoClose={2000} newestOnTop/>
+                <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange/>
             </div>
         </Router>
         );
