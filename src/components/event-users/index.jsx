@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
 import QrReader from "react-qr-reader";
+import XLSX from "xlsx";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
@@ -114,6 +115,16 @@ class ListEventUser extends Component {
             toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
         }
+    };
+
+    exportFile = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const data = parseData(this.state.users);
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
     };
 
     modalUser = () => {
@@ -267,6 +278,18 @@ class ListEventUser extends Component {
                                 </span>
                             </button>
                         </div>
+                        {
+                            this.state.users.length>0 && (
+                                <div className="control">
+                                    <button className="button is-rounded" onClick={this.exportFile}>
+                                        <span className="icon">
+                                            <i className="fas fa-download"/>
+                                        </span>
+                                        <span>Exportar</span>
+                                    </button>
+                                </div>
+                            )
+                        }
                         <div className="control">
                             <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
                         </div>
@@ -391,5 +414,21 @@ const columns = [
         width: 180
     }
 ];
+
+const parseData = (data) => {
+    let info = [];
+    data.map((item,key) => {
+        info[key] = {};
+        if(item.user){
+            Object.keys(item.properties).map((obj, i) => (
+                info[key][obj] = item.properties[obj]
+            ));
+            info[key]['estado'] = item.state.name;
+            info[key]['rol'] = item.rol.name;
+        }
+        return info
+    });
+    return info
+};
 
 export default ListEventUser;
