@@ -16,6 +16,12 @@ class Landing extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.props.location === prevProps.location) {
+            window.scrollTo(0, 0)
+        }
+    }
+
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
