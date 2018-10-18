@@ -141,7 +141,7 @@ class OrgEditProfile extends Component {
             }
             location.FormattedAddress = place.formatted_address;
             location.PlaceId = place.place_id;
-            this.setState({event:{...this.state.event,location}},this.valid)
+            this.setState({org:{...this.state.org,location}},this.valid)
         }
     };
 
@@ -179,17 +179,9 @@ class OrgEditProfile extends Component {
       this.setState({network})
     };
 
-    handleSelect = (selectedOption) => {
-        this.setState({ selectedOption });
-    };
-
     async saveForm() {
         const { org, create } = this.state;
-        const categories = this.state.selectedOption.map(item=>{
-            return item.value
-        });
         org.doc = org.doc.file;
-        org.category_ids = categories;
         try {
             const resp = create ? await Actions.create('/api/organizations',org) : await OrganizationApi.editOne(org,org._id);
             console.log(resp);
@@ -249,7 +241,7 @@ class OrgEditProfile extends Component {
                                             />
                                         </div>
                                     </div>
-                                    <SelectInput handleSelect={this.handleSelect} options={categories}/>
+                                    {/*<SelectInput selectOption={this.handleSelect} name={'Categorías:'} options={categories}/>*/}
                                 </div>
                                 <div className="column is-9 org-data">
                                     <h1 className="title has-text-primary">Datos</h1>
