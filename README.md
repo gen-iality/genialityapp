@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 [Bulma](https://bulma.io) used as a UI Framework
 
+###Requirements
+- Node >= 6 on your local development machine
+- [nodemon](https://github.com/remy/nodemon) installed global
+
 ### How to...?
 - clone repo
 - npm install
