@@ -84,6 +84,12 @@ class SendRsvp extends Component {
         }
     };
 
+    closeModal = () => {
+        this.setState((prevState)=>{
+            return {modal:!prevState.modal}
+        })
+    };
+
     render() {
         const { timeout, disabled } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
