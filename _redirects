@@ -1,0 +1,2 @@
+/landing/* /landing/:splat
+/landing/* status=:status /landing/:splat/:status
