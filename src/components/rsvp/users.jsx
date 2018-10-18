@@ -20,6 +20,7 @@ class UsersRsvp extends Component {
             actualEvent:{},
             events: [],
             users: [],
+            totalUsers: [],
             selection: [],
             auxArr: [],
             state: 'all',
@@ -138,7 +139,7 @@ class UsersRsvp extends Component {
     toggleAll = () => {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
-        const currentRecords = this.state.users;
+        const currentRecords = this.state.totalUsers;
         if (selectAll) {
             currentRecords.forEach(item => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
@@ -287,9 +288,13 @@ class UsersRsvp extends Component {
         ).then(res => {
             console.log(res);
             const pageSize = res.total;
-            const page = Math.ceil(res.total/res.perPage);
+            const page = Math.ceil(res.total / 10);
+            //const page = Math.ceil(res.total/res.perPage);
+            const pager = this.getPager(page, res.total, state.page, 10);
+            let pageOfItems = (res.rows.length > 0) ? res.rows.slice(pager.startIndex, pager.endIndex + 1):[];
             this.setState({
-                users: (res.rows.length <=0) ? [{id:'',name:'',email:''}]:res.rows,
+                users: (res.rows.length <=0) ? [{id:'',name:'',email:''}]:pageOfItems,
+                totalUsers: res.rows,
                 pages: page,
                 pageSize: pageSize,
                 loading: false
@@ -336,7 +341,7 @@ class UsersRsvp extends Component {
                 querySort = JSON.stringify(querySort);
                 query = query+`&orderBy=${querySort}`;
             }
-            API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=1000`)
+            API.get(`/api/events/${eventId}/eventUsers${query}&page=1&pageSize=1000`)
                 .then(({data})=>{
                     filteredData = data;
                     const users = handleUsers(filteredData.data);
@@ -350,6 +355,18 @@ class UsersRsvp extends Component {
 
         });
     };
+    getPager = (totalPages, totalItems, currentPage, pageSize) => {
+        const startIndex = currentPage * pageSize;
+        const endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+        return {
+            totalItems: totalItems,
+            currentPage: currentPage,
+            pageSize: pageSize,
+            totalPages: totalPages,
+            startIndex: startIndex,
+            endIndex: endIndex
+        };
+    }
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
@@ -427,9 +444,10 @@ class UsersRsvp extends Component {
                                 this.state.selection.length > 0 &&
                                     <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
                             }
-                            {
-                                this.state.selection.map((item,key)=>{
-                                    return <div key={key} className="media">
+                            <div style={{overflowY: 'auto',height: '24rem'}}>
+                                {
+                                    this.state.selection.map((item,key)=>{
+                                        return <div key={key} className="media">
                                             <div className="media-left">
                                                 <span className="icon has-text-danger is-medium" onClick={(e)=>{this.removeThis(item)}}>
                                                     <i className="fas fa-ban"/>
@@ -439,9 +457,10 @@ class UsersRsvp extends Component {
                                                 <p className="title is-5">{item.name}</p>
                                                 <p className="subtitle is-6">{item.email}</p>
                                             </div>
-                                    </div>
-                                })
-                            }
+                                        </div>
+                                    })
+                                }
+                            </div>
                             <button className="button is-rounded is-primary is-small"
                                     disabled={this.state.selection.length<=0}
                                     onClick={this.showTicket}>
