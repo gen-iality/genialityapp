@@ -17,7 +17,10 @@ footer {
 }
 
 .main{
-  padding-top: 4rem;
+  padding-top: 6rem;
+  .columns {
+    margin: 0;
+  }
 }
 
 section.home{
@@ -27,8 +30,6 @@ section.home{
     padding: .75rem;
   }
   div.dynamic-content{
-    left: 0;
-    margin-left: 143px;
     min-height: 100%;
     position: relative;
     padding: .75rem;

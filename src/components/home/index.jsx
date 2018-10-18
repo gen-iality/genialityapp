@@ -60,8 +60,8 @@ class Home extends Component {
         const {categories,types,category,type} = this.state;
         const {match} = this.props;
         return (
-            <section className="section home">
-                <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
+            <div className="columns">
+                <aside className="menu aside column is-2 is-fullheight has-text-centered-mobile">
                     <p className="menu-label">Eventos</p>
                     <ul className="menu-list">
                         <li><a className="is-size-6">Lista</a></li>
@@ -75,7 +75,7 @@ class Home extends Component {
                             types.map((item,key)=>{
                                 return <li key={key}>
                                     <Link className={`is-size-6 ${type===item.value?'active':''}`}
-                                          to={`${match.url}?type=${item.value}`}>
+                                        to={`${match.url}?type=${item.value}`}>
                                         {item.label}
                                     </Link>
                                 </li>
@@ -89,7 +89,7 @@ class Home extends Component {
                             categories.map((item,key)=>{
                                 return <li key={key}>
                                     <Link className={`is-size-6 ${category===item.value?'active':''}`}
-                                          to={`${match.url}?category=${item.value}`}>
+                                        to={`${match.url}?category=${item.value}`}>
                                         {item.label}
                                     </Link>
                                 </li>
@@ -97,32 +97,35 @@ class Home extends Component {
                         }
                     </ul>
                 </aside>
-                <div className="dynamic-content">
-                    {/*<header>
-                        <div className="is-pulled-right field is-grouped">
-                            <p className="is-size-6">Ciudad</p>
-                            <p className="is-size-6">Fecha</p>
-                        </div>
-                    </header>*/}
-                    <section className="section">
-                        {
-                            this.state.loading ? <LoadingEvent/>:
-                                <div className="columns home is-multiline">
-                                    {
-                                        this.state.events.map((event,key)=>{
-                                            return <EventCard key={event._id} event={event}
-                                                              action={{name:'Ver >',url:`landing/${event._id}`}}
-                                                              right={<div className="actions is-pulled-right">
-                                                                  <p className="is-size-7"></p>
-                                                              </div>}
-                                            />
-                                        })
-                                    }
-                                </div>
-                        }
-                    </section>
-                </div>
-            </section>
+
+                <section className="section home column is-10">
+                    <div className="dynamic-content">
+                        {/*<header>
+                            <div className="is-pulled-right field is-grouped">
+                                <p className="is-size-6">Ciudad</p>
+                                <p className="is-size-6">Fecha</p>
+                            </div>
+                        </header>*/}
+                        <section className="section">
+                            {
+                                this.state.loading ? <LoadingEvent/>:
+                                    <div className="columns home is-multiline">
+                                        {
+                                            this.state.events.map((event,key)=>{
+                                                return <EventCard key={event._id} event={event}
+                                                                action={{name:'Ver >',url:`landing/${event._id}`}}
+                                                                right={<div className="actions is-pulled-right">
+                                                                    <p className="is-size-7"></p>
+                                                                </div>}
+                                                />
+                                            })
+                                        }
+                                    </div>
+                            }
+                        </section>
+                    </div>
+                </section>
+            </div>
         );
     }
 }
