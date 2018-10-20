@@ -38,7 +38,7 @@ class HomeProfile extends Component {
                     <div className="columns">
                         <div className="column is-4">
                             <figure className="image is-128x128">
-                                <img className="is-rounded"
+                                <img className="is-rounded" alt={`profile_${user.name}`}
                                      src="https://bulma.io/images/placeholders/128x128.png"/>
                             </figure>
                             <div>

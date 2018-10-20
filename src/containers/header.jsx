@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link, NavLink} from 'react-router-dom';
 import * as Cookie from "js-cookie";
-import {AuthUrl, BaseUrl} from "../helpers/constants";
+import {AuthUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
@@ -44,9 +44,21 @@ class Header extends Component {
                     }
                 })
                 .catch(error => {
-                    console.log(error);
-                    console.log(error.response);
-                    this.setState({timeout:true,loader:false});
+                    // Error
+                    if (error.response) {
+                        console.log(error.response);
+                        const {status} = error.response;
+                        if(status === 401) this.setState({timeout:true,loader:false});
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log('Error', error.message);
+                    }
+                    console.log(error.config);
                 });
         }
     }
