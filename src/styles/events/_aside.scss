@@ -1,10 +1,17 @@
 .aside {
-  border-right: 1px solid #DEDEDE;
+  background: #f9f9f9;
+  left: 0;
+  position: fixed;
+  padding: 4rem !important;
+  height: 100vh;
   .event-name{
     background-color: #00d1b2;
     font-size: 1.2rem;
   }
   .menu-label{
+    font-size: 1em;
+    text-transform: none;
+    letter-spacing: 0.1px;
     a.item{
       &:hover {
         background-color: whitesmoke;

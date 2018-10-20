@@ -118,57 +118,55 @@ class Header extends Component {
                             </div>
                         </div>
                         <div id="navbarExampleTransparentExample" className={`navbar-menu ${this.state.open ? "is-active" : ""}`}>
-                            <div className="navbar-start">
-                                <a className="navbar-item" href="https://google.com">
-                                    <FormattedMessage id="header.help" defaultMessage="Help"/>
-                                </a>
-                            </div>
                             <div className="navbar-end">
                                 {
                                     this.state.user &&
-                                        <div className="navbar-item">
-                                            <Link to={'/event/new_event'}>
-                                                <button className="button is-primary is-rounded">
-                                                    <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                                </button>
-                                            </Link>
-                                        </div>
+                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        <Link to={'/event/new_event'}>
+                                            <button className="button is-primary has-text-weight-bold">
+                                                <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                            </button>
+                                        </Link>
+                                    </div>
                                 }
+                                <a className="navbar-item has-text-weight-bold has-text-grey-light" href="#">
+                                    <FormattedMessage id="header.help" defaultMessage="Help"/>
+                                </a>
                                 {
                                     this.state.loader ?
-                                        <div>Wait...</div>:
-                                        this.state.user ?
-                                            <div className="navbar-item has-dropdown is-hoverable">
-                                                <a className="navbar-link">
-                                                    {this.state.name}
-                                                </a>
-                                                <div className="navbar-dropdown is-boxed">
-                                                    <Link className="navbar-item" to={`/profile/${this.state.id}?type=user`}>
-                                                        <FormattedMessage id="header.profile" defaultMessage="Profile"/>
+                                    <div>Wait...</div>:
+                                    this.state.user ?
+                                    <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold has-text-grey-light">
+                                        <a className="navbar-link">
+                                            {this.state.name}
+                                        </a>
+                                        <div className="navbar-dropdown is-boxed">
+                                            <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
+                                                <FormattedMessage id="header.profile" defaultMessage="Profile"/>
+                                            </Link>
+                                            <hr className="navbar-divider"/>
+                                            <p className="navbar-item has-text-weight-bold has-text-grey-light">
+                                                <FormattedMessage id="header.org" defaultMessage="Org"/>
+                                            </p>
+                                            {
+                                                this.state.organizations.map((org,key)=>{
+                                                    return <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
+                                                            {org.name}
                                                     </Link>
-                                                    <hr className="navbar-divider"/>
-                                                    <p className="navbar-item">
-                                                        <FormattedMessage id="header.org" defaultMessage="Org"/>
-                                                    </p>
-                                                    {
-                                                        this.state.organizations.map((org,key)=>{
-                                                            return <Link className="navbar-item" to={`/profile/${org.id}?type=organization`} key={key}>
-                                                                    {org.name}
-                                                            </Link>
-                                                        })
-                                                    }
-                                                    <NavLink activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</NavLink>
-                                                    <hr className="navbar-divider"/>
-                                                    <a className="navbar-item" onClick={this.logout}>
-                                                        <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
-                                                    </a>
-                                                </div>
-                                            </div>:
-                                            <div className="navbar-item">
-                                                <button className="button is-link is-rounded" onClick={this.logout}>
-                                                    <FormattedMessage id="header.login" defaultMessage="Sign In"/>
-                                                </button>
-                                            </div>
+                                                })
+                                            }
+                                            <NavLink activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</NavLink>
+                                            <hr className="navbar-divider"/>
+                                            <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
+                                                <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
+                                            </a>
+                                        </div>
+                                    </div>:
+                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
+                                            <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                        </button>
+                                    </div>
                                 }
                             </div>
                         </div>

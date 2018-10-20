@@ -60,71 +60,89 @@ class Home extends Component {
         const {categories,types,category,type} = this.state;
         const {match} = this.props;
         return (
-            <div className="columns">
-                <aside className="menu aside column is-2 is-fullheight has-text-centered-mobile">
-                    <p className="menu-label">Eventos</p>
-                    <ul className="menu-list">
-                        <li><a className="is-size-6">Lista</a></li>
-                        {/*<li><a className="is-size-6">Destacados</a></li>
-                        <li><a className="is-size-6">Recomendados</a></li>*/}
-                    </ul>
-                    <hr className="navbar-divider"/>
-                    <p className="menu-label">Tipo de Evento</p>
-                    <ul className="menu-list">
-                        {
-                            types.map((item,key)=>{
-                                return <li key={key}>
-                                    <Link className={`is-size-6 ${type===item.value?'active':''}`}
-                                        to={`${match.url}?type=${item.value}`}>
-                                        {item.label}
-                                    </Link>
-                                </li>
-                            })
-                        }
-                    </ul>
-                    <hr className="navbar-divider"/>
-                    <p className="menu-label">Categoría</p>
-                    <ul className="menu-list">
-                        {
-                            categories.map((item,key)=>{
-                                return <li key={key}>
-                                    <Link className={`is-size-6 ${category===item.value?'active':''}`}
-                                        to={`${match.url}?category=${item.value}`}>
-                                        {item.label}
-                                    </Link>
-                                </li>
-                            })
-                        }
-                    </ul>
-                </aside>
-
-                <section className="section home column is-10">
-                    <div className="dynamic-content">
-                        {/*<header>
-                            <div className="is-pulled-right field is-grouped">
-                                <p className="is-size-6">Ciudad</p>
-                                <p className="is-size-6">Fecha</p>
-                            </div>
-                        </header>*/}
-                        <section className="section">
-                            {
-                                this.state.loading ? <LoadingEvent/>:
-                                    <div className="columns home is-multiline">
-                                        {
-                                            this.state.events.map((event,key)=>{
-                                                return <EventCard key={event._id} event={event}
-                                                                action={{name:'Ver >',url:`landing/${event._id}`}}
-                                                                right={<div className="actions is-pulled-right">
-                                                                    <p className="is-size-7"></p>
-                                                                </div>}
-                                                />
-                                            })
-                                        }
-                                    </div>
-                            }
-                        </section>
+            <div>
+                <div className="filter-bar column is-3 is-offset-9">
+                    <div class="buttons is-right has-text-weight-bold">
+                        <p class="control">
+                            <a class="button is-white has-text-grey-light">
+                                <span class="icon is-small"><i class="fas fa-map-marker-alt"></i></span>
+                                <span>Ciudad</span>
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a class="button is-white has-text-grey-light">
+                                <span class="icon is-small"><i class="fas fa-calendar-alt"></i></span>
+                                <span>Fecha</span>
+                            </a>
+                        </p>
                     </div>
-                </section>
+                </div>
+                <div className="columns">
+                    <aside className="menu aside column is-3 is-fullheight has-text-centered-mobile has-text-weight-bold">
+                        <p className="menu-label">Eventos</p>
+                        <ul className="menu-list">
+                            <li><a className="is-size-6">Lo mas nuevo</a></li>
+                            {/*<li><a className="is-size-6">Destacados</a></li>
+                            <li><a className="is-size-6">Recomendados</a></li>*/}
+                        </ul>
+                        <hr className="navbar-divider"/>
+                        <p className="menu-label">Tipo de Evento</p>
+                        <ul className="menu-list">
+                            {
+                                types.map((item,key)=>{
+                                    return <li key={key}>
+                                        <Link className={`is-size-6 ${type===item.value?'active':''}`}
+                                            to={`${match.url}?type=${item.value}`}>
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                })
+                            }
+                        </ul>
+                        <hr className="navbar-divider"/>
+                        <p className="menu-label">Categoría</p>
+                        <ul className="menu-list">
+                            {
+                                categories.map((item,key)=>{
+                                    return <li key={key}>
+                                        <Link className={`is-size-6 ${category===item.value?'active':''}`}
+                                            to={`${match.url}?category=${item.value}`}>
+                                            {item.label}
+                                        </Link>
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    </aside>
+
+                    <section className="section home column is-9 is-offset-3">
+                        <div className="dynamic-content">
+                            {/*<header>
+                                <div className="is-pulled-right field is-grouped">
+                                    <p className="is-size-6">Ciudad</p>
+                                    <p className="is-size-6">Fecha</p>
+                                </div>
+                            </header>*/}
+                            <section className="section">
+                                {
+                                    this.state.loading ? <LoadingEvent/>:
+                                        <div className="columns home is-multiline">
+                                            {
+                                                this.state.events.map((event,key)=>{
+                                                    return <EventCard key={event._id} event={event}
+                                                                    action={{name:'Ver >',url:`landing/${event._id}`}}
+                                                                    right={<div className="actions is-pulled-right">
+                                                                        <p className="is-size-7"></p>
+                                                                    </div>}
+                                                    />
+                                                })
+                                            }
+                                        </div>
+                                }
+                            </section>
+                        </div>
+                    </section>
+                </div>
             </div>
         );
     }

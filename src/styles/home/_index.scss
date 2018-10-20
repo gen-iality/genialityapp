@@ -1,6 +1,6 @@
 div.icon-header {
-  width:112px;
-  height:28px
+  height: 20px;
+  width: 115px;
 }
 
 footer {
@@ -24,11 +24,6 @@ footer {
 }
 
 section.home{
-  aside{
-    left: 0;
-    position: fixed;
-    padding: .75rem;
-  }
   div.dynamic-content{
     min-height: 100%;
     position: relative;
@@ -79,4 +74,9 @@ div.home {
       }
     }
   }
+}
+
+.filter-bar {
+  padding: 1rem 2rem;
+  width: 100%;
 }
