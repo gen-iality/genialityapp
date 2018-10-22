@@ -1,4 +1,4 @@
-export const ApiUrl  = 'http://master-7rqtwti-xltfrs52r6yyg.us-2.platformsh.site/';
+export const ApiUrl  = 'https://master-7rqtwti-xltfrs52r6yyg.us-2.platformsh.site/';
 export const AuthUrl = process.env.REACT_APP_AUTH_URL;
 export const BaseUrl = process.env.REACT_APP_BASE_URL;
 
