@@ -9,12 +9,9 @@ class Pagination extends Component {
         };
     }
 
-    componentWillReceiveProps = (next) => {
-        console.log(next);
-        if (next.items !== this.props.items) {
-            let auxArr = next.items;
-            this.setPage(next.initialPage, auxArr);
-        }
+    componentDidMount() {
+        let auxArr =  this.props.items;
+        this.setPage( this.props.initialPage, auxArr);
     }
 
     setPage = (page, items) => {
@@ -29,6 +26,7 @@ class Pagination extends Component {
         } else {
             pageOfItems = [];
         }
+        console.log(pageOfItems);
 
         this.props.onChangePage(pageOfItems);
     }
@@ -84,16 +82,16 @@ class Pagination extends Component {
         }
         return (
             <nav className="pagination is-centered" role="navigation" aria-label="pagination">
-                <a onClick={() => this.setPage((pager.currentPage - 1), this.state.datos)} className={`button pagination-previous ${pager.currentPage === 1 ? 'disabled' : ''}`}>
+                <button onClick={() => this.setPage((pager.currentPage - 1), this.state.datos)} className={`button pagination-previous`} disabled={pager.currentPage === 1}>
                     <span className="icon">
                         <i className="fas fa-angle-double-left"/>
                     </span>
-                </a>
-                <a onClick={() => this.setPage((pager.currentPage + 1), this.state.datos)} className={`button pagination-next ${pager.currentPage === pager.totalPages ? 'disabled' : ''}`}>
+                </button>
+                <button onClick={() => this.setPage((pager.currentPage + 1), this.state.datos)} className={`button pagination-next`} disabled={pager.currentPage === pager.totalPages}>
                     <span className="icon">
                         <i className="fas fa-angle-double-right"/>
                     </span>
-                </a>
+                </button>
                 <ul className="pagination-list">
                     {pager.pages.map((page, index) =>
                         <li key={index} onClick={() => this.setPage(page, this.state.datos)}>
