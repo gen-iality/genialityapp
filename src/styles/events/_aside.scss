@@ -1,9 +1,8 @@
 .aside {
   background: #f9f9f9;
-  left: 0;
-  position: fixed;
   padding: 4rem !important;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   .event-name{
     background-color: #00d1b2;
     font-size: 1.2rem;
@@ -44,8 +43,7 @@
     }
   }
   .active {
-    color: $primary;
-    border-left: 1px solid $primary;
+    color: $primary !important;
   }
   // ul{
   //   li{

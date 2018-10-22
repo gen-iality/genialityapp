@@ -136,26 +136,28 @@ class Header extends Component {
                                     this.state.loader ?
                                     <div>Wait...</div>:
                                     this.state.user ?
-                                    <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold has-text-grey-light">
-                                        <a className="navbar-link">
+                                    <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
+                                        <a className="navbar-link has-text-grey-light">
                                             {this.state.name}
                                         </a>
-                                        <div className="navbar-dropdown is-boxed">
+                                        <div className="navbar-dropdown is-right">
                                             <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
                                                 <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                             </Link>
+
                                             <hr className="navbar-divider"/>
-                                            <p className="navbar-item has-text-weight-bold has-text-grey-light">
+
+                                            <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                 <FormattedMessage id="header.org" defaultMessage="Org"/>
                                             </p>
                                             {
                                                 this.state.organizations.map((org,key)=>{
-                                                    return <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
-                                                            {org.name}
-                                                    </Link>
+                                                    return  <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
+                                                                {org.name}
+                                                            </Link>
                                                 })
                                             }
-                                            <NavLink activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</NavLink>
+                                            <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</Link>
                                             <hr className="navbar-divider"/>
                                             <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                 <FormattedMessage id="header.logout" defaultMessage="Log Out"/>

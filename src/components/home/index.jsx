@@ -78,20 +78,20 @@ class Home extends Component {
                     </div>
                 </div>
                 <div className="columns">
-                    <aside className="menu aside column is-3 is-fullheight has-text-centered-mobile has-text-weight-bold">
-                        <p className="menu-label">Eventos</p>
+                    <aside className="menu aside column is-3 has-text-centered-mobile has-text-weight-bold">
+                        <p className="menu-label has-text-grey-dark">Eventos</p>
                         <ul className="menu-list">
-                            <li><a className="is-size-6">Lo mas nuevo</a></li>
-                            {/*<li><a className="is-size-6">Destacados</a></li>
-                            <li><a className="is-size-6">Recomendados</a></li>*/}
+                            <li><a className="is-size-6 has-text-grey-light">Lo mas nuevo</a></li>
+                            {/*<li><a className="is-size-6 has-text-grey-light">Destacados</a></li>
+                            <li><a className="is-size-6 has-text-grey-light">Recomendados</a></li>*/}
                         </ul>
                         <hr className="navbar-divider"/>
-                        <p className="menu-label">Tipo de Evento</p>
+                        <p className="menu-label has-text-grey-dark">Tipo de Evento</p>
                         <ul className="menu-list">
                             {
                                 types.map((item,key)=>{
                                     return <li key={key}>
-                                        <Link className={`is-size-6 ${type===item.value?'active':''}`}
+                                        <Link className={`has-text-grey-light is-size-6 ${type===item.value?'active':''}`}
                                             to={`${match.url}?type=${item.value}`}>
                                             {item.label}
                                         </Link>
@@ -100,12 +100,12 @@ class Home extends Component {
                             }
                         </ul>
                         <hr className="navbar-divider"/>
-                        <p className="menu-label">Categoría</p>
+                        <p className="menu-label has-text-grey-dark">Categoría</p>
                         <ul className="menu-list">
                             {
                                 categories.map((item,key)=>{
                                     return <li key={key}>
-                                        <Link className={`is-size-6 ${category===item.value?'active':''}`}
+                                        <Link className={`has-text-grey-light is-size-6 ${category===item.value?'active':''}`}
                                             to={`${match.url}?category=${item.value}`}>
                                             {item.label}
                                         </Link>
@@ -115,7 +115,7 @@ class Home extends Component {
                         </ul>
                     </aside>
 
-                    <section className="section home column is-9 is-offset-3">
+                    <section className="home column is-9">
                         <div className="dynamic-content">
                             {/*<header>
                                 <div className="is-pulled-right field is-grouped">
@@ -123,14 +123,14 @@ class Home extends Component {
                                     <p className="is-size-6">Fecha</p>
                                 </div>
                             </header>*/}
-                            <section className="section">
+                            <section className="">
                                 {
                                     this.state.loading ? <LoadingEvent/>:
                                         <div className="columns home is-multiline">
                                             {
                                                 this.state.events.map((event,key)=>{
                                                     return <EventCard key={event._id} event={event}
-                                                                    action={{name:'Ver >',url:`landing/${event._id}`}}
+                                                                    action={{name:'Ver',url:`landing/${event._id}`}}
                                                                     right={<div className="actions is-pulled-right">
                                                                         <p className="is-size-7"></p>
                                                                     </div>}

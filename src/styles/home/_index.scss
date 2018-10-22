@@ -24,52 +24,82 @@ footer {
 }
 
 section.home{
+  padding: 0 .75rem;
   div.dynamic-content{
     min-height: 100%;
     position: relative;
-    padding: .75rem;
-  }
-}
-
-div.home {
-  .card {
-    .card-image{
-      &:after {
-        content: '\A';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background: rgba(0,0,0,0.6);
-        opacity: 1;
-      }
-    }
-    .header-event {
-      position: absolute;
-      top: 7%;
-      width: 100%;
-      z-index: 2;
-      div.dates {
-        margin-left: 1.5rem;
-        time{
-            text-transform: uppercase;
+    padding: 0 .75rem;
+    .column {
+      padding: 0 .75rem 1.5rem .75rem;
+      .card {
+        box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.1);
+        .card-image{
+          &:after {
+            content: '\A';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.6);
+            opacity: 1;
+          }
         }
-      }
-      div.cats {
-        margin-right: 1.5rem;
-      }
-    }
-    .img-see {
-      z-index: 2;
-      top: 70%;
-      left: 70%;
-      position: absolute;
-    }
-    .card-content{
-      .media{
-        .media-content{
-          border-right: 2px solid $gray-darker;
+        .header-event {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: absolute;
+          top: 1rem;
+          width: 100%;
+          z-index: 2;
+          div.dates {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-left: 1rem;
+            time{
+              text-transform: uppercase;
+              font-weight: 900;
+            }
+            .vertical-line {
+              background-color: #ffffff;
+              margin: 0 0.75em;
+              height: 20PX;
+              width: 1px;
+            }
+          }
+          div.cats {
+            margin-right: 1rem;
+            p {
+              font-weight: 700;
+              font-size: 0.6rem;
+              font-style: italic;
+              text-decoration: underline;
+              &:nth-child(1) {
+                color: #ffffff;
+              }
+              &:nth-child(2) {
+                color: #e1f97c;
+              }
+            }
+          }
+        }
+        .img-see {
+          z-index: 2;
+          bottom: 2em;
+          right: 2em;
+          position: absolute;
+          .icon {
+            margin-left: 0.5em;
+          }
+        }
+        .card-content{
+          .media{
+            .media-content{
+              border-right: 2px solid $gray-darker;
+            }
+          }
         }
       }
     }

@@ -15,25 +15,33 @@ class EventCard extends Component {
                         <div className="header-event">
                             <div className="is-pulled-left dates">
                                 <p className="is-size-7 has-text-white">
-                                    <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD MMM,YYYY')}</time>
+                                    <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('DD')}</time><br/>
+                                    <time dateTime={event.datetime_from}>{Moment(event.datetime_from).format('MMM YYYY')}</time>
                                 </p>
+                                <div className="vertical-line"></div>
                                 <p className="is-size-7 has-text-white">
-                                    <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD MMM,YYYY')}</time>
+                                    <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('DD')}</time><br/>
+                                    <time dateTime={event.datetime_to}>{Moment(event.datetime_to).format('MMM YYYY')}</time>
                                 </p>
                             </div>
                             <div className="is-pulled-right cats">
                                 {
-                                    event.categories.length>=1&& <p className="is-size-6 has-text-white"># {event.categories[0].name}</p>
+                                    event.categories.length>=1&& <p># {event.categories[0].name}</p>
                                 }
                                 {
-                                    event.event_type&&<p className="is-size-7 has-text-white"># {event.event_type.name}</p>
+                                    event.event_type&&<p># {event.event_type.name}</p>
                                 }
                             </div>
                         </div>
                         {
                             action&&(
                                 <Link to={`${action.url}`}>
-                                    <button className="button is-primary is-rounded img-see is-small">{action.name}</button>
+                                    <button className="img-see button is-white is-small has-text-weight-bold">
+                                        {action.name}
+                                        <span class="icon is-small">
+                                            <i class="fas fa-angle-right"></i>
+                                        </span>
+                                    </button>
                                 </Link>
                             )
                         }
