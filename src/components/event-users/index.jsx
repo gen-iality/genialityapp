@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
 import QrReader from "react-qr-reader";
+import _ from "lodash";
 import XLSX from "xlsx";
 import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
@@ -17,7 +18,7 @@ class ListEventUser extends Component {
         super(props);
         this.state = {
             users:      [],
-            userReq:    {},
+            userReq:    [],
             extraFields:[],
             addUser:    false,
             deleteUser: false,
@@ -58,7 +59,7 @@ class ListEventUser extends Component {
                     {
                         ...this.genericHeaderArrows(),
                         headerText: `${extra.name}`,
-                        id: `${extra.name}`,
+                        id: `properties.${extra.name}`,
                         accessor: d => d.properties[extra.name]
                     }
                 )
@@ -101,7 +102,12 @@ class ListEventUser extends Component {
                 show:false
             }
         )
-        this.setState({ extraFields: properties });
+        API.get(`/api/events/${event._id}/eventUsers?pageSize=1000`).then(({data})=>{
+            this.setState({ extraFields: properties, userReq:data.data });
+        }).catch(e=>{
+            console.log(e.response);
+            this.setState({timeout:true});
+        });
     }
 
     async addToList(user) {
@@ -199,10 +205,9 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
-            const page = Math.ceil(res.total/res.perPage);
             this.setState({
                 users: res.rows,
-                pages: page,
+                pages: res.pages,
                 loading: false
             });
         });
@@ -235,38 +240,46 @@ class ListEventUser extends Component {
     requestData = (users, eventId, pageSize, page, sorted, filtered) => {
         return new Promise((resolve, reject) => {
             let filteredData = users;
-            let res = {};
-            let query = '?';
             if (filtered.length) {
-                let queryFilter = [];
                 filtered.map(filter=>{
-                    if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
+                    if(filter.value!=='all') {
+                        if(filter.id==='state_id'){
+                            filteredData = filtered.reduce((filteredSoFar, nextFilter) => {
+                                return filteredSoFar.filter(row => {
+                                    return (row[nextFilter.id] + "").includes(nextFilter.value);
+                                });
+                            }, filteredData);
+                        }else{
+                            const id = filter.id.split('.')[1];
+                            filteredData = filteredData.filter((item) =>{
+                                return (item.properties[id].search(new RegExp(filter.value, 'i')) >= 0);
+                            });
+                        }
+                    }
+                    //if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
                 });
-                queryFilter = JSON.stringify(queryFilter);
-                query = query+`filtered=${queryFilter}`;
             }
-            if (sorted.length) {
-                let querySort = [];
-                sorted.map(sort=>{
-                    querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
-                });
-                querySort = JSON.stringify(querySort);
-                query = query+`&orderBy=${querySort}`;
-            }
-            API.get(`/api/events/${eventId}/eventUsers${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
-                filteredData = data;
-                res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
-                resolve(res)
-            }).catch(e=>{
-                console.log(e.response);
-                this.setState({timeout:true});
-            });
-
+            const sortedData = _.orderBy(
+                filteredData,
+                sorted.map(sort => {
+                    return row => {
+                        const value = sort.id.split('.')[1];
+                        return (row.properties[value] === null || row.properties[value] === undefined)
+                            ? -Infinity: row.properties[value].toLowerCase();
+                    };
+                }),
+                sorted.map(d => (d.desc ? "desc" : "asc"))
+            );
+            const res = {
+                rows: sortedData.slice(pageSize * page, pageSize * page + pageSize),
+                pages: Math.ceil(filteredData.length / pageSize)
+            };
+            setTimeout(() => resolve(res), 500);
         });
     };
 
     render() {
-        const {users, pages, loading, columns, timeout, facingMode, qrData} = this.state;
+        const {users, pages, loading, columns, timeout, facingMode, qrData, userReq} = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -300,19 +313,22 @@ class ListEventUser extends Component {
                 </header>
                 <div className="main">
                     <div className="preview-list">
-                        <Table
-                            columns={columns}
-                            manual
-                            data={users}
-                            pages={pages}
-                            loading={loading}
-                            onFetchData={this.fetchData}
-                            filterable
-                            onSortedChange={sorted => this.setState({ sorted })}
-                            defaultFilterMethod={(filter, row) =>
-                                String(row[filter.id]) === filter.value}
-                            defaultPageSize={25}
-                            className="-highlight"/>
+                        {
+                         userReq.length>0&&
+                             <Table
+                                 columns={columns}
+                                 manual
+                                 data={users}
+                                 pages={pages}
+                                 loading={loading}
+                                 onFetchData={this.fetchData}
+                                 filterable
+                                 onSortedChange={sorted => this.setState({ sorted })}
+                                 defaultFilterMethod={(filter, row) =>
+                                     String(row[filter.id]) === filter.value}
+                                 defaultPageSize={25}
+                                 className="-highlight"/>
+                        }
                     </div>
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
@@ -388,6 +404,7 @@ const columns = [
         Header: "Estado",
         id: "state_id",
         accessor: d => d.state.name,
+        width: 120,
         sortable: false,
         Filter: ({ filter, onChange }) =>
             <select
