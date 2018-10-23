@@ -17,7 +17,7 @@ class Result extends Component {
 
     componentDidMount() {
         const { list } = this.props;
-        this.setState({list,total:list.length});
+        this.setState({list});
         this.uploadByOne(list)
     }
 
