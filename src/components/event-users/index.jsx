@@ -169,11 +169,11 @@ class ListEventUser extends Component {
 
     handleScan = (data) => {
         if (data) {
-            let pos = this.state.users.map(e=>{return e._id}).indexOf(data);
+            let pos = this.state.userReq.map(e=>{return e._id}).indexOf(data);
             const qrData = {};
             if(pos>=0) {
                 qrData.msg = 'User found';
-                qrData.user = this.state.users[pos];
+                qrData.user = this.state.userReq[pos];
                 console.log(qrData);
                 this.setState({qrData});
             }else{
