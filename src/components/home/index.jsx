@@ -62,16 +62,16 @@ class Home extends Component {
         return (
             <div>
                 <div className="filter-bar column is-3 is-offset-9">
-                    <div class="buttons is-right has-text-weight-bold">
-                        <p class="control">
-                            <a class="button is-white has-text-grey-light">
-                                <span class="icon is-small"><i class="fas fa-map-marker-alt"></i></span>
+                    <div className="buttons is-right has-text-weight-bold">
+                        <p className="control">
+                            <a className="button is-white has-text-grey-light">
+                                <span className="icon is-small"><i className="fas fa-map-marker-alt"></i></span>
                                 <span>Ciudad</span>
                             </a>
                         </p>
-                        <p class="control">
-                            <a class="button is-white has-text-grey-light">
-                                <span class="icon is-small"><i class="fas fa-calendar-alt"></i></span>
+                        <p className="control">
+                            <a className="button is-white has-text-grey-light">
+                                <span className="icon is-small"><i className="fas fa-calendar-alt"></i></span>
                                 <span>Fecha</span>
                             </a>
                         </p>
