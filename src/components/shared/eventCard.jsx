@@ -38,8 +38,8 @@ class EventCard extends Component {
                                 <Link to={`${action.url}`}>
                                     <button className="img-see button is-white is-small has-text-weight-bold">
                                         {action.name}
-                                        <span class="icon is-small">
-                                            <i class="fas fa-angle-right"></i>
+                                        <span className="icon is-small">
+                                            <i className="fas fa-angle-right"></i>
                                         </span>
                                     </button>
                                 </Link>
