@@ -24,7 +24,7 @@ class Result extends Component {
      uploadByOne = (users) => {
         const self = this;
         let imported = [];
-        Async.forEachOf(users,(user,key,cb)=>{
+        Async.eachOfSeries(users,(user,key,cb)=>{
             Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`,user)
                 .then((resp)=>{
                     console.log(resp);
@@ -32,26 +32,28 @@ class Result extends Component {
                         imported[key] = {name:user.name,email:user.email,status:resp.status};
                         if(resp.status === 'UPDATED'){
                             self.setState((prevState) => {
-                                return {updated:prevState.updated+1}
+                                return {updated:prevState.updated+1,total:prevState.total+1}
                             });
                         }
                         else{
                             self.setState((prevState) => {
-                                return {saved:prevState.saved+1}
+                                return {saved:prevState.saved+1,total:prevState.total+1}
                             });
                         }
                     }
+                    cb()
                 })
                 .catch(err => {
+                    console.log(err);
                     const {data} = err.response;
                     const msgE = data.email ? data.email[0] : '';
                     const msgN = data.name ? data.name[0] : '';
                     imported[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
                     self.setState((prevState) => {
-                        return {fails:prevState.fails+1}
+                        return {fails:prevState.fails+1,total:prevState.total+1}
                     });
+                    cb()
                 });
-            cb()
         }, (err)=> {
             self.setState({imported});
             if( err ) console.log('Error en la consulta de información');
