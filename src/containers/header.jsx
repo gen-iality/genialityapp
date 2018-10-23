@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, NavLink} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
@@ -9,6 +9,10 @@ import LogOut from "../components/shared/logOut";
 class Header extends Component {
     constructor(props) {
         super(props);
+        this.props.history.listen((location, action) => {
+            console.log("on route change");
+            this.setState({open:false})
+        });
         this.state = {
             selection: [],
             organizations: [],
@@ -111,7 +115,7 @@ class Header extends Component {
                             <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </Link>
-                            <div className="navbar-burger burger" data-target="navbarExampleTransparentExample" onClick={this.openMenu}>
+                            <div className={`navbar-burger burger ${this.state.open ? "is-active" : ""}`}  data-target="navbarExampleTransparentExample" onClick={this.openMenu}>
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -157,7 +161,7 @@ class Header extends Component {
                                                             </Link>
                                                 })
                                             }
-                                            <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" activeClassName={'active'} to={`/profile/create?type=organization`}>+ Crear</Link>
+                                            <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}>+ Crear</Link>
                                             <hr className="navbar-divider"/>
                                             <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                 <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
@@ -180,4 +184,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default withRouter(Header);
