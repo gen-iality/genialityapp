@@ -105,7 +105,7 @@ class AddUser extends Component {
     };
 
     validForm = () => {
-        const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
         let state= this.state,
             emailValid = state.user.email.length > 5 && state.user.email.length < 61 && EMAIL_REGEX.test(state.user.email),
             valid = !(emailValid && state.user.name.length>0 && state.rol.length>0 && state.state.length>0);
