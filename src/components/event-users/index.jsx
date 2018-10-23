@@ -126,7 +126,7 @@ class ListEventUser extends Component {
     exportFile = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const data = parseData(this.state.users);
+        const data = parseData(this.state.userReq);
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
@@ -442,6 +442,7 @@ const parseData = (data) => {
             ));
             info[key]['estado'] = item.state.name;
             info[key]['rol'] = item.rol.name;
+            info[key]['checkIn'] = item.checked_in?item.checked_in:'';
         }
         return info
     });
