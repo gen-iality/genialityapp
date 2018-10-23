@@ -45,10 +45,14 @@ class Result extends Component {
                 })
                 .catch(err => {
                     console.log(err);
-                    const {data} = err.response;
-                    const msgE = data.email ? data.email[0] : '';
-                    const msgN = data.name ? data.name[0] : '';
-                    imported[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
+                    if(err.response){
+                        const {data} = err.response;
+                        const msgE = data.email ? data.email[0] : '';
+                        const msgN = data.name ? data.name[0] : '';
+                        imported[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
+                    }else{
+                        imported[key] = {name:user.name,email:user.email,status:'ERROR '};
+                    }
                     self.setState((prevState) => {
                         return {fails:prevState.fails+1,total:prevState.total+1}
                     });
