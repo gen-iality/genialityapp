@@ -78,7 +78,7 @@ class Home extends Component {
                     </div>
                 </div>
                 <div className="columns">
-                    <aside className="menu aside column is-3 has-text-centered-mobile has-text-weight-bold">
+                    <aside className="menu aside column is-2 has-text-centered-mobile has-text-weight-bold">
                         <p className="menu-label has-text-grey-dark">Eventos</p>
                         <ul className="menu-list">
                             <li><a className="is-size-6 has-text-grey-light">Lo mas nuevo</a></li>
@@ -115,7 +115,7 @@ class Home extends Component {
                         </ul>
                     </aside>
 
-                    <section className="home column is-9">
+                    <section className="home column is-10">
                         <div className="dynamic-content">
                             {/*<header>
                                 <div className="is-pulled-right field is-grouped">
