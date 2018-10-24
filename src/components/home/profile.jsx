@@ -30,11 +30,11 @@ class HomeProfile extends Component {
     render() {
         const {events,user,loadingEvents} = this.state;
         return (
-            <section className="section home">
-                <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside">
+            <section className="section home columns">
+                <aside className="is-narrow-mobile is-fullheight menu is-hidden-mobile aside column is-2">
                     <p className="menu-label">Menú</p>
                 </aside>
-                <div className="dynamic-content">
+                <div className="dynamic-content column">
                     <div className="columns">
                         <div className="column is-4">
                             <figure className="image is-128x128">
