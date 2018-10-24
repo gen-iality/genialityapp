@@ -341,7 +341,7 @@ class UsersRsvp extends Component {
                 querySort = JSON.stringify(querySort);
                 query = query+`&orderBy=${querySort}`;
             }
-            API.get(`/api/events/${eventId}/eventUsers${query}&page=1&pageSize=1000`)
+            API.get(`/api/events/${eventId}/eventUsers${query}&page=1&pageSize=10000`)
                 .then(({data})=>{
                     filteredData = data;
                     const users = handleUsers(filteredData.data);

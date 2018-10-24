@@ -102,7 +102,7 @@ class ListEventUser extends Component {
                 show:false
             }
         )
-        API.get(`/api/events/${event._id}/eventUsers?pageSize=1000`).then(({data})=>{
+        API.get(`/api/events/${event._id}/eventUsers?pageSize=10000`).then(({data})=>{
             this.setState({ extraFields: properties, userReq:data.data });
         }).catch(e=>{
             console.log(e.response);
