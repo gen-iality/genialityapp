@@ -38,7 +38,7 @@ class Header extends Component {
                     console.log(resp);
                     if(resp.status === 200){
                         const data = resp.data;
-                        const name = (data.name) ? data.name: data.email;
+                        const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
                         OrganizationApi.mine()
                             .then((organizations)=>{
                                 this.setState({name,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
