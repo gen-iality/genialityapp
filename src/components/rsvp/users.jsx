@@ -370,7 +370,7 @@ class UsersRsvp extends Component {
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        const {users, pages, pageSize, loading, columns, timeout, disabled} = this.state;
+        const {users, pages, pageSize, loading, columns, timeout, disabled, events} = this.state;
         return (
             <React.Fragment>
                 <div className="columns">
@@ -396,19 +396,22 @@ class UsersRsvp extends Component {
                                     )
                                 }
                             </div>
-                            <div>
-                                <p>Importar asistentes de eventos pasados</p>
-                                {
-                                    this.state.events.map((event,key)=>{
-                                        return <div className="field" key={key}>
-                                            <input className="is-checkradio is-link" id={`event${event._id}`}
-                                                   type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
-                                                   checked={this.state.actualEvent._id === event._id}/>
-                                            <label htmlFor={`event${event._id}`} >{event.name}</label>
-                                        </div>
-                                    })
-                                }
-                            </div>
+                            {
+                                events.length>=1&&
+                                    <div>
+                                        <p>Importar asistentes de eventos pasados</p>
+                                        {
+                                            events.map((event,key)=>{
+                                                return <div className="field" key={key}>
+                                                    <input className="is-checkradio is-link" id={`event${event._id}`}
+                                                           type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
+                                                           checked={this.state.actualEvent._id === event._id}/>
+                                                    <label htmlFor={`event${event._id}`} >{event.name}</label>
+                                                </div>
+                                            })
+                                        }
+                                    </div>
+                            }
                         </div>
                     </div>
                     <div className="column is-6">
@@ -418,7 +421,7 @@ class UsersRsvp extends Component {
                                     'Usuarios Evento Actual' : 'Usuarios Otro Evento'
                             }
                         </strong>
-                        {users.length>=1&&(
+                        {users.length>=1?
                             <Table
                                 columns={columns}
                                 manual
@@ -433,7 +436,8 @@ class UsersRsvp extends Component {
                                 defaultPageSize={pageSize}
                                 showPageSizeOptions={false}
                                 className="-highlight"/>
-                        )}
+                            :<p>Not exist users yet. Try add an user or import from a excel</p>
+                        }
                     </div>
                     <div className="column is-3">
                         <div className="box">
