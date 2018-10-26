@@ -27,7 +27,8 @@ class OrgEditProfile extends Component {
                 doc:{}
             },
             events: [],
-            loading: true
+            loading: true,
+            wait: false,
         };
         this.saveForm = this.saveForm.bind(this);
     }
@@ -181,30 +182,34 @@ class OrgEditProfile extends Component {
 
     async saveForm() {
         const { org, create } = this.state;
+        this.setState({wait:true});
         org.doc = org.doc.file;
         try {
             const resp = create ? await Actions.create('/api/organizations',org) : await OrganizationApi.editOne(org,org._id);
             console.log(resp);
             if(resp._id){
-                if(create) window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
+                if(create) {
+                    toast.success('Organization created successfully');
+                    window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
+                }
                 else{
                     org.doc = !(org.doc) && {};
-                    this.setState({msg:'Saved successfully',create:false, org});
+                    this.setState({msg:'Saved successfully',create:false, org, wait:false});
                     toast.success('All changes saved successfully');
                 }
             }else{
-                this.setState({msg:'Cant Create',create:false});
+                this.setState({msg:'Cant Create',create:false, wait:false});
                 toast.error('Something wrong. Try again later');
             }
         }catch (e) {
             console.log(e.response);
             toast.error('Something wrong. Try again later');
-            this.setState({timeout:true,loader:false,org});
+            this.setState({timeout:true,loader:false,org, wait:false});
         }
     }
 
     render() {
-        const { org, categories, loading, timeout, events } = this.state;
+        const { org, categories, loading, timeout, events, wait } = this.state;
         return (
             <section className="section">
                 {
@@ -324,7 +329,7 @@ class OrgEditProfile extends Component {
                                                 }
                                             </div>
                                             <div className="control">
-                                                <button className="button is-primary" onClick={this.saveForm}>Submit</button>
+                                                <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Submit</button>
                                             </div>
                                         </div>
                                     </div>
