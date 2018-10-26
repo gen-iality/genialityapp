@@ -49,16 +49,15 @@ class EventCard extends Component {
                     <div className="card-content">
                         <div className="media">
                             <div className="media-content">
-                                <p className="title is-6 has-text-grey-darker has-text-weight-bold">{event.name}</p>
-                                <div className="columns">
-                                    <div className="column is-one-fifth">
-                                                                       <span className="icon is-small has-text-grey">
-                                                                           <i className="fas fa-map-marker-alt"/>
-                                                                       </span>
-                                    </div>
-                                    <div className="column subtitle is-7 has-text-grey has-text-weight-bold">{event.location.FormattedAddress}</div>
+                                <h2 className="title is-size-6 is-medium has-text-grey-dark">{event.name}</h2>
+                                <div className="subtitle">
+                                    <span className="icon is-small has-text-grey">
+                                        <i className="fas fa-map-marker-alt"/>
+                                    </span>
+                                    <span className="is-size-7 is-small has-text-grey-dark">{event.location.FormattedAddress}</span>
                                 </div>
                             </div>
+                            <div className="vertical-line"></div>
                             <div className="media-right">
                                 {right}
                             </div>

@@ -2,6 +2,13 @@
   cursor: pointer;
 }
 
+a {
+  &:hover {
+    background-color: transparent !important;
+    color: $primary !important;
+  }
+}
+
 input{
   background: transparent !important;
   border: none !important;
@@ -16,7 +23,12 @@ input{
   padding-left: 1.25em;
   padding-right: 1.25em;
   &.is-small {
-    border-radius: 5px;
+    border-radius: 8px;
+    transition: all ease 0.15s;
+    &:hover {
+      background: $primary;
+      color: #ffffff;
+    }
   }
 }
 
@@ -45,6 +57,30 @@ input{
   }
 }
 
+.footer {
+  background-color: #ffffff;
+  padding: 6rem 3rem;
+  .subtitle {
+    font-weight: 900;
+  }
+  .soc {
+    a {
+      margin: 10px 20px 10px 0;
+      text-decoration: none;
+      .icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
+  .copyright {
+    padding: 3rem;
+    .icon-footer {
+      margin: 1em auto;
+      height: 35px;
+      width: 200px;
+    }
+  }
+}
 
 /**
  * The geosuggest module

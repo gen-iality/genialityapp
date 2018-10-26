@@ -130,10 +130,27 @@ class Home extends Component {
                                             {
                                                 this.state.events.map((event,key)=>{
                                                     return <EventCard key={event._id} event={event}
-                                                                    action={{name:'Ver',url:`landing/${event._id}`}}
-                                                                    right={<div className="actions is-pulled-right">
-                                                                        <p className="is-size-7"></p>
-                                                                    </div>}
+                                                                      action={{name:'Ver',url:`landing/${event._id}`}}
+                                                                      right={<div className="actions">
+                                                                                <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-share"/>
+                                                                                    </span>
+                                                                                    <span>Compartir</span>
+                                                                                </p>
+                                                                                <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-check"/>
+                                                                                    </span>
+                                                                                    <span>Asistiré</span>
+                                                                                </p>
+                                                                                <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-heart"/>
+                                                                                    </span>
+                                                                                    <span>Me interesa</span>
+                                                                                </p>
+                                                                            </div>}
                                                     />
                                                 })
                                             }

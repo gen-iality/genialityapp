@@ -3,19 +3,6 @@ div.icon-header {
   width: 115px;
 }
 
-footer {
-  .soc {
-    a {
-      margin: 10px;
-      text-decoration: none;
-    }
-  }
-  .icon-footer {
-    width:112px;
-    height:28px
-  }
-}
-
 .main{
   padding-top: 6rem;
   .columns {
@@ -96,8 +83,43 @@ section.home{
         }
         .card-content{
           .media{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             .media-content{
-              border-right: 2px solid $gray-darker;
+              padding-right: 1em;
+              flex-basis: 60%;
+              width: 60%;
+              .title {
+                font-weight: 900;
+              }
+              .subtitle {
+                line-height: 1.5;  
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 100%;
+                .icon {
+                  margin-right: 10px;
+                }
+              }
+            }
+            .media-right {
+              display: none; //temporal
+              margin: 0;
+              padding-left: 1em;
+              flex-basis: 35%;
+              width: 35%;
+              .actions {
+                .icon {
+                  margin-right: 5px;
+                }
+              }
+            }
+            .vertical-line {
+              background: $grey-lighter;
+              height: 50px;
+              width: 1px; 
             }
           }
         }
@@ -107,6 +129,7 @@ section.home{
 }
 
 .filter-bar {
+  display: none; //temporal
   padding: 1rem 2rem;
   width: 100%;
 }
