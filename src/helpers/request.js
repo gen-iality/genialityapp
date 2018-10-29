@@ -19,6 +19,7 @@ if (evius_token){
 privateInstance.interceptors.response.use((response)=> {
     const {headers} = response;
     if(headers.new_token){
+        console.log('Se acabó la moneda');
         Cookie.set("evius_token", headers.new_token);
         privateInstance.defaults.params = {};
         privateInstance.defaults.params['evius_token'] = headers.new_token;
