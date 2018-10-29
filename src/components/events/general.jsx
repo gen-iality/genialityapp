@@ -35,9 +35,19 @@ class General extends Component {
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType})
-        }catch (e) {
-            console.log(e);
-            this.setState({timeout:true});
+        }catch (error) {
+            // Error
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     }
 

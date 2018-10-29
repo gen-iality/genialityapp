@@ -5,6 +5,7 @@ import {AuthUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
+import ErrorServe from "../components/modal/serverError";
 
 class Header extends Component {
     constructor(props) {
@@ -23,7 +24,8 @@ class Header extends Component {
             modal: false,
             loader: true,
             create: false,
-            valid: true
+            valid: true,
+            serverError: false,
         };
     }
 
@@ -53,14 +55,11 @@ class Header extends Component {
                         console.log(error.response);
                         const {status} = error.response;
                         if(status === 401) this.setState({timeout:true,loader:false});
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
+                        else this.setState({serverError:true,loader:false})
                     } else {
-                        // Something happened in setting up the request that triggered an Error
                         console.log('Error', error.message);
+                        if(error.request) console.log(error.request);
+                        this.setState({serverError:true,loader:false})
                     }
                     console.log(error.config);
                 });
@@ -80,7 +79,7 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout } = this.state;
+        const { timeout, serverError } = this.state;
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -179,6 +178,7 @@ class Header extends Component {
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }

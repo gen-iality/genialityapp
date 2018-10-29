@@ -16,6 +16,15 @@ if (evius_token){
     privateInstance.defaults.params = {}
     privateInstance.defaults.params['evius_token'] = evius_token;
 }
+privateInstance.interceptors.response.use((response)=> {
+    const {headers} = response;
+    if(headers.new_token){
+        Cookie.set("evius_token", headers.new_token);
+        privateInstance.defaults.params = {};
+        privateInstance.defaults.params['evius_token'] = headers.new_token;
+    }
+    return response
+})
 
 export const Actions = {
     create: (url, data, unsafe) => {
