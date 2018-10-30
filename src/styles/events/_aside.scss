@@ -51,3 +51,18 @@
   //   }
   // }
 }
+
+@media only screen and (max-width: 600px) {
+  .aside {
+    min-height: 0;
+  }
+  .button {
+    margin: 10px;
+   }
+   .field.is-grouped {
+    display: contents;
+  }
+  .section {
+    padding: 0%;
+  }
+}

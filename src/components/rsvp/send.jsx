@@ -115,8 +115,8 @@ class SendRsvp extends Component {
                             </p>
                         </div>
                     </div>
-                    <div className="columns">
-                        <div className="column is-offset-one-quarter">
+                    <div className="columns is-mobile is-centered is-offset-one-quarter">
+                        <div className="column is-offset-one-quarter-desktop">
                             <div className="columns rsvpDate">
                                 <div className="column">
                                     <p>Fecha Inicio</p>
@@ -143,8 +143,8 @@ class SendRsvp extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="columns">
-                        <div className="column is-offset-one-quarter">
+                    <div className="columns is-mobile is-centered is-offset-one-quarters">
+                        <div className="column is-offset-one-quarter-desktop">
                             <div className="columns rsvpDate">
                                 <div className="column">
                                     <p>Fecha Fin</p>
@@ -173,7 +173,7 @@ class SendRsvp extends Component {
                     </div>
                     <div className="columns">
                        <div className="column is-half is-offset-one-third">
-                           <div className="columns">
+                           <div className="columns is-mobile is-centered is-offset-one-quarter">
                                <div className="column is-one-fifth">
                                    <span className="icon is-large has-text-grey">
                                        <i className="fas fa-map-marker-alt fa-3x"/>
