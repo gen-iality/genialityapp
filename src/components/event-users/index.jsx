@@ -13,6 +13,7 @@ import Table from "../shared/table";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -40,6 +41,13 @@ class ListEventUser extends Component {
         const { event } = this.props;
         const properties = event.user_properties;
         const columns = this.state.columns;
+        const rols = Actions.getAll('/api/rols');
+        const states = Actions.getAll('/api/states');
+        axios.all([rols, states])
+            .then(axios.spread(function (roles, estados) {
+                console.log(roles);
+                console.log(estados);
+            }))
         let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
         if(pos<=0) columns.push({
             ...this.genericHeaderArrows(),
@@ -103,13 +111,14 @@ class ListEventUser extends Component {
                 show:false
             }
         );
-        const usersRef = firestore.collection('events').doc(event._id).collection('eventAttendees');
+        const usersRef = firestore.collection(`${event._id}_event_attendees`);
         this.setState({ extraFields: properties });
         usersRef.onSnapshot((listUsers)=> {
             let users = [];
             listUsers.forEach((doc)=> {
                 users.push(doc.data());
             });
+            console.log(users);
             //this.setState({ userReq:users });
         },(error => {
             console.log(error);
