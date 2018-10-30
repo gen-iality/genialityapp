@@ -92,6 +92,28 @@ class AddUser extends Component {
         this.setState({message,create:false});
     }
 
+    printUser = () => {
+        const {name, email} = this.state.user;
+        let oIframe = this.refs.ifrmPrint;
+        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+        if (oDoc.document) {
+            oDoc = oDoc.document
+        }
+        // Head
+        oDoc.write('<head><title>Usuario</title>');
+        oDoc.write('<link rel="stylesheet" type="text/css" href="/print.css" />');
+        oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+        // body
+        oDoc.write('<body onload="window.print()"><div class="main-print">');
+        // Datos
+        oDoc.write(`<div class="info"><h1>${name}</h1></div>`);
+        oDoc.write(`<div class="type">${email}</div>`);
+        oDoc.write('</div></div>'); // close .main-print .info
+        // Close body
+        oDoc.write('</body></html>');
+        oDoc.close()
+    }
+
     handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -217,6 +239,9 @@ class AddUser extends Component {
                             this.state.create?<div>Creando...</div>:
                                 <div>
                                     <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                    {
+                                        this.state.edit&& <button className="button" onClick={this.printUser}>Imprimir</button>
+                                    }
                                     <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
@@ -225,6 +250,7 @@ class AddUser extends Component {
                         </div>
                     </footer>
                 </div>
+                <iframe ref="ifrmPrint" style={{opacity:0}}/>
             </div>
         );
     }
