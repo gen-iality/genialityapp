@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
+import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import _ from "lodash";
 import XLSX from "xlsx";
@@ -101,7 +102,19 @@ class ListEventUser extends Component {
                 width:50,
                 show:false
             }
-        )
+        );
+        const usersRef = firestore.collection('events').doc(event._id).collection('eventAttendees');
+        this.setState({ extraFields: properties });
+        usersRef.onSnapshot((listUsers)=> {
+            let users = [];
+            listUsers.forEach((doc)=> {
+                users.push(doc.data());
+            });
+            //this.setState({ userReq:users });
+        },(error => {
+            console.log(error);
+            this.setState({timeout:true});
+        }));
         API.get(`/api/events/${event._id}/eventUsers?pageSize=10000`).then(({data})=>{
             this.setState({ extraFields: properties, userReq:data.data });
         }).catch(e=>{
@@ -205,6 +218,7 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
+            console.log(res);
             this.setState({
                 users: res.rows,
                 pages: res.pages,
