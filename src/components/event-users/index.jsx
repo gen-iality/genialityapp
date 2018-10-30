@@ -4,7 +4,6 @@ import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import _ from "lodash";
 import XLSX from "xlsx";
-import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import Dialog from "../modal/twoAction";
 import { FaSortUp, FaSortDown, FaSort, FaCamera} from "react-icons/fa";
@@ -104,11 +103,12 @@ class ListEventUser extends Component {
         );
         const usersRef = firestore.collection(`${event._id}_event_attendees`);
         this.setState({ extraFields: properties });
-        usersRef.onSnapshot((listUsers)=> {
+        usersRef.onSnapshot({ includeMetadataChanges: true },(listUsers)=> {
             let users = [];
             let user;
             listUsers.forEach((doc)=> {
                 user = doc.data();
+                user._id = doc.id;
                 user.state = {id:user.state_id,name:states[user.state_id]};
                 user.updated_at = user.updated_at.toDate();
                 users.push(user);
@@ -122,15 +122,15 @@ class ListEventUser extends Component {
 
     async addToList(user) {
         console.log(user);
-        try{
+        toast.success('User created successfully');
+        /*try{
             const {data} = await UsersApi.getAll(this.props.event._id);
-            toast.success('User created successfully');
             this.setState({ users:data });
         }catch (e) {
             console.log(e);
             toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
-        }
+        }*/
     };
 
     exportFile = (e) => {
@@ -154,12 +154,31 @@ class ListEventUser extends Component {
     };
 
     checkIn = (user) => {
+        console.log(user);
         const users = this.state.users;
+        const { event } = this.props;
+        const self = this;
         let pos = users.map((e) => { return e._id; }).indexOf(user._id);
         if(pos >= 0){
             user.checked_in = !user.checked_in;
             users[pos] = user;
-            Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
+            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
+            userRef.update({
+                checked_in: true
+            })
+            .then(function() {
+                console.log("Document successfully updated!");
+                toast.success('CheckIn made successfully');
+                self.setState((prevState) => {
+                    return {data:users,change:!prevState.change}
+                })
+            })
+            .catch(function(error) {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+                toast.error('Something wrong. Try again later');
+            });
+            /*Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
                 .then((response)=>{
                     console.log(response);
                     const qrData = {user:null,msg:'Check In correct'};
@@ -170,10 +189,7 @@ class ListEventUser extends Component {
                     console.log(e.response);
                     this.setState({timeout:true});
                     toast.error('Something wrong. Try again later');
-                });
-            this.setState((prevState) => {
-                return {data:users,change:!prevState.change}
-            })
+                });*/
         }
     };
 

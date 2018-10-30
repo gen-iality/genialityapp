@@ -13,5 +13,9 @@ const firestore = firebase.firestore();
 firestore.settings({
 timestampsInSnapshots: true
 });
+firestore.enablePersistence()
+    .catch((err)=> {
+        console.log(err);
+    });
 
 export {firebase,firestore};
