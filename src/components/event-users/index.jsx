@@ -4,7 +4,6 @@ import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import _ from "lodash";
 import XLSX from "xlsx";
-import API from "../../helpers/request"
 import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import Dialog from "../modal/twoAction";
@@ -13,7 +12,6 @@ import Table from "../shared/table";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from "axios";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -41,13 +39,6 @@ class ListEventUser extends Component {
         const { event } = this.props;
         const properties = event.user_properties;
         const columns = this.state.columns;
-        const rols = Actions.getAll('/api/rols');
-        const states = Actions.getAll('/api/states');
-        axios.all([rols, states])
-            .then(axios.spread(function (roles, estados) {
-                console.log(roles);
-                console.log(estados);
-            }))
         let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
         if(pos<=0) columns.push({
             ...this.genericHeaderArrows(),
@@ -115,21 +106,18 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
         usersRef.onSnapshot((listUsers)=> {
             let users = [];
+            let user;
             listUsers.forEach((doc)=> {
-                users.push(doc.data());
+                user = doc.data();
+                user.state = {id:user.state_id,name:states[user.state_id]};
+                user.updated_at = user.updated_at.toDate();
+                users.push(user);
             });
-            console.log(users);
-            //this.setState({ userReq:users });
+            this.setState({ userReq:users });
         },(error => {
             console.log(error);
             this.setState({timeout:true});
         }));
-        API.get(`/api/events/${event._id}/eventUsers?pageSize=10000`).then(({data})=>{
-            this.setState({ extraFields: properties, userReq:data.data });
-        }).catch(e=>{
-            console.log(e.response);
-            this.setState({timeout:true});
-        });
     }
 
     async addToList(user) {
@@ -454,6 +442,13 @@ const columns = [
         width: 180
     }
 ];
+
+const states = {
+    "5b0efc411d18160bce9bc706":"DRAFT",
+    "5b859ed02039276ce2b996f0":"BOOKED",
+    "5ba8d200aac5b12a5a8ce748":"RESERVED",
+    "5ba8d213aac5b12a5a8ce749":"INVITED"
+};
 
 const parseData = (data) => {
     let info = [];
