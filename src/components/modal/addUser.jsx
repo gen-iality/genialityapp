@@ -121,9 +121,9 @@ class AddUser extends Component {
         // body
         oDoc.write('<body onload="window.print()"><div class="main-print">');
         // Datos
-        oDoc.write(`<div class="info">${name} ${apellido}</div>`);
-        oDoc.write(`<div class="type">${Colegio}</div>`);
-        oDoc.write(`<div class="type">${CarreraInteres}</div>`);
+        oDoc.write(`<div class="info"><h1>${name} ${apellido}</h1></div>`);
+        oDoc.write(`<div class="info type">${Colegio}</div>`);
+        oDoc.write(`<div class="info type">${CarreraInteres}</div>`);
         oDoc.write('</div></div>'); // close .main-print .info
         // Close body
         oDoc.write('</body></html>');

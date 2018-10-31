@@ -185,7 +185,7 @@ class ListEventUser extends Component {
                 console.log("Document successfully updated!");
                 toast.success('CheckIn made successfully');
                 self.setState((prevState) => {
-                    return {data:users,change:!prevState.change}
+                    return {users,change:!prevState.change}
                 })
             })
             .catch(error => {

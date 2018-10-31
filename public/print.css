@@ -30,14 +30,6 @@ body h3 {
     font-size: 18px;
 }
 
-body .main-print {
-    margin-top: 20px;
-}
-
-body .main-print {
-
-}
-
 body .info {
     width: 300px;
     text-align: center;
@@ -47,28 +39,4 @@ body .type {
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bold;
-}
-
-body .qr img {
-    width: 70px;
-    height: 70px;
-}
-
-body .empresa {
-    font-family: 'Lato', sans-serif;
-    font-size: 14px;
-    color: #484848;
-}
-
-body #qrcode {
-    width: 70px;
-    height: 70px;
-    margin-top: 62px;
-    margin-left: 186px;
-    margin-bottom: 111px;
-}
-
-body #qrcode img {
-    width: 70px;
-    height: 70px;
 }
