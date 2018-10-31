@@ -11,6 +11,7 @@ import Table from "../shared/table";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {roles, states} from "../../helpers/constants";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -18,6 +19,7 @@ class ListEventUser extends Component {
         this.state = {
             users:      [],
             userReq:    [],
+            usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
             extraFields:[],
             addUser:    false,
             deleteUser: false,
@@ -31,13 +33,12 @@ class ListEventUser extends Component {
             qrData:     {}
         };
         this.fetchData = this.fetchData.bind(this);
-        this.addToList = this.addToList.bind(this);
     }
 
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        const columns = this.state.columns;
+        const {columns, usersRef} = this.state;
         let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
         if(pos<=0) columns.push({
             ...this.genericHeaderArrows(),
@@ -101,36 +102,49 @@ class ListEventUser extends Component {
                 show:false
             }
         );
-        const usersRef = firestore.collection(`${event._id}_event_attendees`);
         this.setState({ extraFields: properties });
-        usersRef.onSnapshot({ includeMetadataChanges: true },(listUsers)=> {
+        usersRef.onSnapshot((listUsers)=> {
             let users = [];
             let user;
             listUsers.forEach((doc)=> {
                 user = doc.data();
+                const state = states.find(x => x._id === user.state_id);
+                const rol = roles.find(x => x._id === user.rol_id);
                 user._id = doc.id;
-                user.state = {id:user.state_id,name:states[user.state_id]};
+                user.state = state;
+                user.rol = rol;
                 user.updated_at = user.updated_at.toDate();
                 users.push(user);
             });
-            this.setState({ userReq:users });
+            this.setState({ userReq:users, users });
         },(error => {
             console.log(error);
             this.setState({timeout:true});
         }));
     }
 
-    async addToList(user) {
-        console.log(user);
-        toast.success('User created successfully');
-        /*try{
-            const {data} = await UsersApi.getAll(this.props.event._id);
-            this.setState({ users:data });
-        }catch (e) {
+    addToList = () => {
+        const self = this;
+        this.state.usersRef.get().then(function(listUsers) {
+            let user;
+            let users = [];
+            listUsers.forEach((doc)=> {
+                user = doc.data();
+                const state = states.find(x => x._id === user.state_id);
+                const rol = roles.find(x => x._id === user.rol_id);
+                user._id = doc.id;
+                user.state = state;
+                user.rol = rol;
+                user.updated_at = user.updated_at.toDate();
+                users.push(user);
+            });
+            self.setState({ userReq:users, users });
+            toast.success('User created successfully');
+        }).catch (e => {
             console.log(e);
             toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
-        }*/
+        });
     };
 
     exportFile = (e) => {
@@ -166,15 +180,14 @@ class ListEventUser extends Component {
             userRef.update({
                 checked_in: true
             })
-            .then(function() {
+            .then(()=> {
                 console.log("Document successfully updated!");
                 toast.success('CheckIn made successfully');
                 self.setState((prevState) => {
                     return {data:users,change:!prevState.change}
                 })
             })
-            .catch(function(error) {
-                // The document probably doesn't exist.
+            .catch(error => {
                 console.error("Error updating document: ", error);
                 toast.error('Something wrong. Try again later');
             });
@@ -458,13 +471,6 @@ const columns = [
         width: 180
     }
 ];
-
-const states = {
-    "5b0efc411d18160bce9bc706":"DRAFT",
-    "5b859ed02039276ce2b996f0":"BOOKED",
-    "5ba8d200aac5b12a5a8ce748":"RESERVED",
-    "5ba8d213aac5b12a5a8ce749":"INVITED"
-};
 
 const parseData = (data) => {
     let info = [];

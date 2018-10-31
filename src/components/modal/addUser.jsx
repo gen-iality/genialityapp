@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Actions, UsersApi} from "../../helpers/request";
+import {firestore} from "../../helpers/firebase";
+import {roles,states} from "../../helpers/constants";
+import {toast} from "react-toastify";
 
 class AddUser extends Component {
     constructor(props) {
@@ -19,22 +22,16 @@ class AddUser extends Component {
     }
 
     componentDidMount() {
-        const self = this,
-            rols = Actions.getAll('/api/rols'),
-            states = Actions.getAll('/api/states');
-        axios.all([rols, states])
-            .then(axios.spread(function (roles, estados) {
-                let rolData = roles.map(rol => ({
-                    value: rol._id,
-                    label: rol.name
-                }));
-                console.log(rolData);
-                let stateData = estados.map(state => ({
-                    value: state._id,
-                    label: state.name
-                }));
-                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
-            }))
+        const self = this;
+        let rolData = roles.map(rol => ({
+            value: rol._id,
+            label: rol.name
+        }));
+        let stateData = states.map(state => ({
+            value: state._id,
+            label: state.name
+        }));
+        self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,32 +59,51 @@ class AddUser extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            role_id: this.state.rol,
+            rol_id: this.state.rol,
             state_id: this.state.state,
         };
+        const self = this;
         let message = {};
         this.setState({create:true});
-        try {
-            let resp = this.state.edit ?
-                await UsersApi.editOne(snap,this.props.value._id):
-                await UsersApi.createOne(snap,this.props.eventId);
-            console.log(resp);
-            if (resp.message === 'OK'){
-                this.props.addToList(resp.data);
-                message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
-                message.content = 'USER '+resp.status;
-            } else {
-                message.class = 'msg_danger';
-                message.content = 'User can`t be updated';
-            }
-            setTimeout(()=>{
-                message.class = message.content = '';
-                this.closeModal();
-            },1000)
-        } catch (err) {
-            console.log(err.response);
-            message.class = 'msg_error';
-            message.content = 'ERROR...TRYING LATER';
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        if(!this.state.edit){
+            snap.updated_at = new Date();
+            snap.created_at = new Date();
+            userRef.add(snap)
+                .then(docRef => {
+                    console.log("Document written with ID: ", docRef.id);
+                    self.props.addToList();
+                    message.class = 'msg_success';
+                    message.content = 'USER CREATED';
+                    setTimeout(()=>{
+                        message.class = message.content = '';
+                        self.closeModal();
+                    },1500)
+                })
+                .catch(error => {
+                    console.error("Error adding document: ", error);
+                    message.class = 'msg_danger';
+                    message.content = 'User can`t be created';
+                });
+        }
+        else{
+            message.class = 'msg_warning';
+            message.content = 'USER UPDATED';
+            userRef.doc(this.props.value._id).update(snap)
+                .then(() => {
+                    console.log("Document successfully updated!");
+                    message.class = 'msg_warning';
+                    message.content = 'USER UPDATED';
+                    setTimeout(()=>{
+                        message.class = message.content = '';
+                        self.closeModal();
+                    },1500)
+                })
+                .catch(error => {
+                    console.error("Error updating document: ", error);
+                    message.class = 'msg_danger';
+                    message.content = 'User can`t be updated';
+                });
         }
         this.setState({message,create:false});
     }
