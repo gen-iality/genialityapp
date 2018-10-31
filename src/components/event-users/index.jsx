@@ -73,7 +73,7 @@ class ListEventUser extends Component {
                 accessor: d => d,
                 Cell: props => <div>
                     <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value._id} disabled={props.value.checked_in}
-                           type="checkbox" name={"checkinUser"+props.value._id} checked={props.value.checked_in} onClick={(e)=>{this.checkIn(props.value)}}/>
+                           type="checkbox" name={"checkinUser"+props.value._id} checked={props.value.checked_in} onChange={(e)=>{this.checkIn(props.value)}}/>
                     <label htmlFor={"checkinUser"+props.value._id}/>
                 </div>,
                 width: 80,

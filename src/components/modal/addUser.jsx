@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {Actions, UsersApi} from "../../helpers/request";
 import {firestore} from "../../helpers/firebase";
 import {roles,states} from "../../helpers/constants";
-import {toast} from "react-toastify";
 
 class AddUser extends Component {
     constructor(props) {
