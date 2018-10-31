@@ -68,6 +68,7 @@ class AddUser extends Component {
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         if(!this.state.edit){
             snap.updated_at = new Date();
+            snap.checked_in = false;
             snap.created_at = new Date();
             userRef.add(snap)
                 .then(docRef => {
