@@ -178,6 +178,7 @@ class ListEventUser extends Component {
             users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
             userRef.update({
+                updated_at: new Date(),
                 checked_in: true
             })
             .then(()=> {

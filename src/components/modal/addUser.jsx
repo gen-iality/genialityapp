@@ -89,6 +89,7 @@ class AddUser extends Component {
         else{
             message.class = 'msg_warning';
             message.content = 'USER UPDATED';
+            snap.updated_at = new Date();
             userRef.doc(this.props.value._id).update(snap)
                 .then(() => {
                     console.log("Document successfully updated!");
@@ -122,7 +123,7 @@ class AddUser extends Component {
         // body
         oDoc.write('<body onload="window.print()"><div class="main-print">');
         // Datos
-        oDoc.write(`<div class="info"><h1>${name} ${apellido}</h1></div>`);
+        oDoc.write(`<div class="info">${name} ${apellido}</div>`);
         oDoc.write(`<div class="type">${Colegio}</div>`);
         oDoc.write(`<div class="type">${CarreraInteres}</div>`);
         oDoc.write('</div></div>'); // close .main-print .info
