@@ -379,7 +379,7 @@ class ListEventUser extends Component {
                     }
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
-                         value={this.state.selectedUser} addToList={this.addToList}
+                         value={this.state.selectedUser} addToList={this.addToList} checkIn={this.checkIn}
                          extraFields={this.state.extraFields} edit={this.state.edit}/>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}

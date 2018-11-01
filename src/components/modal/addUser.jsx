@@ -109,6 +109,7 @@ class AddUser extends Component {
 
     printUser = () => {
         const {name, email, apellido, CarreraInteres, Colegio} = this.state.user;
+        this.props.checkIn(this.state.user);
         let oIframe = this.refs.ifrmPrint;
         let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
         if (oDoc.document) {
