@@ -9,6 +9,7 @@ $pagination-current-border-color: #00b89c;
 $input-shadow: transparent;
 $input-focus-border-color: transparent;
 $input-focus-box-shadow-color: transparent;
+$breakpoint-mobile: 768px;
 @import "../../node_modules/bulma/bulma";
 @import "../../node_modules/react-widgets/lib/scss/react-widgets";
 @import '../../node_modules/bulma-switch/src/sass/index';

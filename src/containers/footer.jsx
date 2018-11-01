@@ -13,26 +13,26 @@ class Footer extends Component {
             <footer className="footer">
                 <div className="container">
                     <div className="content">
-                        <div className="columns menu">
-                            <div className="column has-text-grey-light">
+                        <div className="columns menu has-text-centered-mobile">
+                            <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Evius.co</p>
                                 <div><Link to={"#"} className="has-text-grey-light">Inicio</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Boletería</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Eventos</Link></div>
                             </div>
-                            <div className="column">
+                            <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Ayuda</p>
                                 <div><Link to={"#"} className="has-text-grey-light">Quienes somos</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">FAQ</Link></div>
                             </div>
-                            <div className="column has-text-grey-light">
+                            <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Condiciones</p>
                                 <div><Link to={"#"} className="has-text-grey-light">Términos y Condiciones</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Privacidad</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Políticas</Link></div>
                             </div>
                             <div className="column has-text-grey-light">
-                                <p className="subtitle has-text-grey-light">Contáctanos</p>
+                                <p className="subtitle has-text-grey-light is-hidden-mobile">Contáctanos</p>
                                 <div className="soc">
                                     <Link to={"#"} className="icon has-text-grey-light">
                                         <i className="fab fa-facebook-f fa-lg" aria-hidden="true"/>
@@ -49,7 +49,7 @@ class Footer extends Component {
                         <div className="columns copyright">
                             <div className="column has-text-centered">
                                 <p className="icon-footer" dangerouslySetInnerHTML={{ __html: icon }}/>
-                                <p className=" has-text-grey-light">© 2001-2018 All rights reserved - EVIUS.co is a registered trademark of MOCION</p>
+                                <p className="has-text-grey-light is-size-7-mobile">© 2001-2018 All rights reserved - EVIUS.co is a registered trademark of MOCION</p>
                             </div>
                         </div>
                     </div>

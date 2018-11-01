@@ -285,7 +285,7 @@ class ListEventUser extends Component {
                 <header>
                     <div className="field is-grouped is-pulled-right">
                         <div className="control">
-                            <button className={`button is-rounded ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
+                            <button className={`button ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
                                 <span className="icon is-small">
                                   <i className="far fa-trash-alt"/>
                                 </span>
@@ -294,7 +294,7 @@ class ListEventUser extends Component {
                         {
                             this.state.users.length>0 && (
                                 <div className="control">
-                                    <button className="button is-rounded" onClick={this.exportFile}>
+                                    <button className="button" onClick={this.exportFile}>
                                         <span className="icon">
                                             <i className="fas fa-download"/>
                                         </span>
@@ -304,10 +304,10 @@ class ListEventUser extends Component {
                             )
                         }
                         <div className="control">
-                            <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
+                            <button className="button is-inverted" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
                         </div>
                         <div className="control">
-                            <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
+                            <button className="button is-primary" onClick={this.modalUser}>Agregar Usuario +</button>
                         </div>
                     </div>
                 </header>

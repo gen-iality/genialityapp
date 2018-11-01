@@ -15,7 +15,10 @@ class Home extends Component {
         this.state = {
             loading:true,
             categories:[],
-            types:[]
+            types:[],
+            tabEvt:true,
+            tabEvtType:true,
+            tabEvtCat: true
         }
     }
 
@@ -78,41 +81,68 @@ class Home extends Component {
                     </div>
                 </div>
                 <div className="columns">
-                    <aside className="menu aside column is-2 has-text-centered-mobile has-text-weight-bold">
-                        <p className="menu-label has-text-grey-dark">Eventos</p>
-                        <ul className="menu-list">
-                            <li><a className="is-size-6 has-text-grey-light">Lo mas nuevo</a></li>
-                            {/*<li><a className="is-size-6 has-text-grey-light">Destacados</a></li>
-                            <li><a className="is-size-6 has-text-grey-light">Recomendados</a></li>*/}
-                        </ul>
+                    <aside className="column menu aside is-2 has-text-weight-bold">
+                        <p className="menu-label has-text-grey-dark has-text-centered-mobile" onClick={(e)=>{this.setState({tabEvt:!this.state.tabEvt})}}>
+                            <span>Eventos</span>
+                            <span className="icon">
+                                <i className={`${this.state.tabEvt?'up':'down'}`}/>
+                            </span>
+                        </p>
+                        {
+                            this.state.tabEvt && (
+                                <ul className="menu-list">
+                                    <li><a className="is-size-6 has-text-grey-light">Lo mas nuevo</a></li>
+                                    {/*<li><a className="is-size-6 has-text-grey-light">Destacados</a></li>
+                                    <li><a className="is-size-6 has-text-grey-light">Recomendados</a></li>*/}
+                                </ul>
+                            )
+                        }
                         <hr className="navbar-divider"/>
-                        <p className="menu-label has-text-grey-dark">Tipo de Evento</p>
-                        <ul className="menu-list">
-                            {
-                                types.map((item,key)=>{
-                                    return <li key={key}>
-                                        <Link className={`has-text-grey-light is-size-6 ${type===item.value?'active':''}`}
-                                            to={`${match.url}?type=${item.value}`}>
-                                            {item.label}
-                                        </Link>
-                                    </li>
-                                })
-                            }
-                        </ul>
+                        <p className="menu-label has-text-grey-dark has-text-centered-mobile" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
+                            <span>Tipo de Evento</span>
+                            <span className="icon">
+                                <i className={`${this.state.tabEvtType?'up':'down'}`}/>
+                            </span>
+                        </p>
+                        {
+                            this.state.tabEvtType && (
+                                <ul className="menu-list">
+                                    {
+                                        types.map((item,key)=>{
+                                            return <li key={key}>
+                                                <Link className={`has-text-grey-light is-size-6 ${type===item.value?'active':''}`}
+                                                    to={`${match.url}?type=${item.value}`}>
+                                                    {item.label}
+                                                </Link>
+                                            </li>
+                                        })
+                                    }
+                                </ul>
+                            )
+                        }
                         <hr className="navbar-divider"/>
-                        <p className="menu-label has-text-grey-dark">Categoría</p>
-                        <ul className="menu-list">
-                            {
-                                categories.map((item,key)=>{
-                                    return <li key={key}>
-                                        <Link className={`has-text-grey-light is-size-6 ${category===item.value?'active':''}`}
-                                            to={`${match.url}?category=${item.value}`}>
-                                            {item.label}
-                                        </Link>
-                                    </li>
-                                })
-                            }
-                        </ul>
+                        <p className="menu-label has-text-grey-dark has-text-centered-mobile" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
+                            <span>Categoría</span>
+                            <span className="icon">
+                                <i className={`${this.state.tabEvtCat?'up':'down'}`}/>
+                            </span>
+                        </p>
+                        {
+                            this.state.tabEvtCat && (
+                                <ul className="menu-list">
+                                    {
+                                        categories.map((item,key)=>{
+                                            return <li key={key}>
+                                                <Link className={`has-text-grey-light is-size-6 ${category===item.value?'active':''}`}
+                                                    to={`${match.url}?category=${item.value}`}>
+                                                    {item.label}
+                                                </Link>
+                                            </li>
+                                        })
+                                    }
+                                </ul>
+                            )
+                        }
                     </aside>
 
                     <section className="home column is-10">

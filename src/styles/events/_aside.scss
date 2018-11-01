@@ -3,19 +3,29 @@
   padding: 2rem !important;
   min-height: 100vh;
   height: auto;
-  .event-name{
-    background-color: #00d1b2;
-    font-size: 1.2rem;
-  }
   .menu-label{
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
     font-size: 1em;
     text-transform: none;
     letter-spacing: 0.1px;
-    a.item{
-      &:hover {
-        background-color: whitesmoke;
-        color: #363636;
-        cursor: pointer;
+    width: 100%;
+    .icon {
+      margin-left: 0.5em;
+      i {
+        border: solid black;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        &.up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+        &.down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
       }
     }
   }
@@ -26,21 +36,6 @@
     display: block;
     padding: 0.5em 0.75em;
     cursor: pointer;
-    i {
-      border: solid black;
-      border-width: 0 3px 3px 0;
-      right: 1.125em;
-      display: inline-block;
-      padding: 3px;
-      &.up {
-        transform: rotate(-135deg);
-        -webkit-transform: rotate(-135deg);
-      }
-      &.down {
-        transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
-      }
-    }
   }
   .active {
     color: $primary !important;
@@ -52,17 +47,64 @@
   // }
 }
 
-@media only screen and (max-width: 700px) {
+.event-aside {
+  border-right: solid 1px #b5b5b5;
+  height: auto;
+  margin: 3.5rem 0;
+  padding: 1rem 2rem !important;
+  .subtitle {
+    display: inline-flex;
+    align-items: center;
+    .icon {
+      margin-left: 0.5em;
+    }
+  }
+  .menu-label{
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1em;
+    letter-spacing: 0.1px;
+    margin-left: 1em;
+    text-transform: none;
+    width: 100%;
+    .icon {
+      margin-left: 0.5em;
+      i {
+        border: solid #7a7a7a;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        &.up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+        &.down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
+      }
+    }
+  }
+  .menu-list {
+    a {
+      margin-left: 1.5em;
+    }
+  }
+}
+
+@media only screen and (max-width: $breakpoint-mobile) {
   .aside {
     min-height: 0;
+    .menu-label {
+      .icon {
+        margin-left: auto;
+      }
+    }
   }
-  .button {
-    margin: 10px;
-   }
-   .field.is-grouped {
-    display: contents;
-  }
-  .section {
-    padding: 0%;
+  .event-aside {
+    background-color: #f9f9f9;
+    border-right: none;
+    margin: 0;
   }
 }

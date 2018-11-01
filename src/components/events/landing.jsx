@@ -60,83 +60,97 @@ class Landing extends Component {
                             {
                                 this.state.loading?<Loading/>:
                                     <React.Fragment>
-                                        <div className="item columns fecha">
-                                            <div className="column fecha-uno">
-                                                <span className="title is-size-4">{Moment(event.date_start).format('DD MMM,YY')}</span>
+                                        <div className="fecha item columns">
+                                            <div className="column fecha-uno has-text-centered">
+                                                <span className="title is-size-4">{Moment(event.date_start).format('DD')} <small className="is-size-6">{Moment(event.date_start).format('MMM YY')}</small></span>
                                                 <br/>
-                                                <span>Desde {Moment(event.hour_start).format('HH:mm')}</span>
+                                                <span className="subt is-size-6 is-italic has-text-grey">Desde {Moment(event.hour_start).format('HH:mm')}</span>
                                             </div>
-                                            <div className="column">
-                                                <span className="title is-size-4">{Moment(event.date_end).format('DD MMM,YY')}</span>
+                                            <div className="vertical-line"></div>
+                                            <div className="column fecha-dos has-text-centered">
+                                                <span className="title is-size-4">{Moment(event.date_end).format('DD')} <small className="is-size-6">{Moment(event.date_end).format('MMM YY')}</small></span>
                                                 <br/>
-                                                <span>Hasta {Moment(event.hour_end).format('HH:mm')}</span>
+                                                <span className="subt is-size-6 is-italic has-text-grey">Hasta {Moment(event.hour_end).format('HH:mm')}</span>
                                             </div>
                                         </div>
-                                        <div className="columns item">
-                                            <div className="columns">
-                                                <div className="column is-one-fifth">
-                                       <span className="icon is-large has-text-grey">
-                                           <i className="fas fa-map-marker-alt fa-2x"/>
-                                       </span>
+                                        <div className="lugar item columns is-centered">
+                                                <div className="column is-1">
+                                                    <span className="icon is-medium">
+                                                        <i className="fas fa-map-marker-alt fa-2x"/>
+                                                    </span>
                                                 </div>
-                                                <div className="column">
-                                                    <p className="subtitle is-pulled-left has-text-grey-darker has-text-weight-bold">{event.location.FormattedAddress}</p>
+                                                <div className="column is-9">
+                                                    <span className="subtitle is-size-6">{event.location.FormattedAddress}</span>
                                                 </div>
+                                        </div>
+                                        <div className="nombre item columns is-centered">
+                                            <div className="column is-10">
+                                                <h2 className="is-size-3">{event.name}</h2>
+                                                <span className="is-size-6 has-text-grey">Por: <Link className="has-text-grey" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
                                             </div>
                                         </div>
-                                        <div className="item">
-                                            <p className="title has-text-grey-darker has-text-weight-bold">{event.name}</p>
-                                            Por: <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link>
+                                        <div className="descripcion-c item columns is-centered">
+                                            <div className="column is-10">
+                                                <p className="is-italic has-text-grey">
+                                                    {
+                                                        event.description.length >= 160 ?
+                                                        event.description.substring(0,160)+'...':
+                                                        event.description
+                                                    }
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="item is-italic">
-                                            {
-                                                event.description.length >= 80 ?
-                                                event.description.substring(0,80)+'...':
-                                                event.description
-                                            }
-                                        </div>
-                                        {
-                                            (event.description.length >= 80 && !this.state.showFull) && (
-                                                <div className="item">
-                                                    <div className="columns is-mobile">
-                                                        <div className="column is-4 is-offset-8">
-                                                            <div className="fab-button has-text-weight-bold"
-                                                                 onClick={(e)=>{this.setState({showFull:true})}}>
-                                                                <span className="is-size-3">+</span>
-                                                            </div>
+                                        <div className="ver-mas item columns">
+                                                    <div className="column is-5 is-offset-1">
+                                                        <div className="aforo">
+                                                            <span className="titulo">150/400</span><br/>
+                                                            <span className="is-italic has-text-grey">Aforo</span>
                                                         </div>
                                                     </div>
-                                                </div>
+                                        {
+                                            (event.description.length >= 80 && !this.state.showFull) && (
+                                                    <div className="column is-5 button-cont">
+                                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
+                                                        <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
+                                                        <i className="icon fa fa-plus"></i>
+                                                        </div>
+                                                    </div>
+                                                
                                             )
                                         }
+                                        </div>
                                     </React.Fragment>
                             }
                         </div>
-                        <div className="column">
+                        <div className="column banner">
                             <figure className="image is-3by2">
                                 <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
                             </figure>
-                        </div>
-                    </div>
-                    {
-                        this.state.showFull && (
-                            <div className="info show-full is-hidden-mobile">
-                                <div className="item is-italic">
-                                    <p>{event.description}</p>
-                                </div>
-                                <div className="item">
-                                    <div className="columns is-mobile">
-                                        <div className="column is-4 is-offset-8">
-                                            <div className="fab-button has-text-weight-bold"
-                                                 onClick={(e)=>{this.setState({showFull:false})}}>
-                                                <span className="is-size-3">-</span>
+                            {
+                                this.state.showFull && (
+                                    <div className="info show-full columns is-centered is-hidden-mobile">
+                                        <div className="container column is-12">
+                                            <div className="item is-italic has-text-grey">
+                                                <p>{event.description}</p>
+                                            </div>
+                                            <div className="item">
+                                                <div className="columns is-mobile">
+                                                    <div className="button-cont column is-8 is-offset-4">
+                                                        <span className="has-text-weight-semibold has-text-grey">Ver menos</span>
+                                                        <div className="fav-button has-text-weight-bold"
+                                                            onClick={(e)=>{this.setState({showFull:false})}}>
+                                                            <i className="icon fa fa-minus"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        )
-                    }
+                                )
+                            }
+                        </div>
+                    </div>
+                    
                 </div>
                 <div className="hero-body">
                     <div className="container has-text-centered">

@@ -11,7 +11,7 @@ class FormEvent extends Component {
             <div className="columns">
                 <div className="column">
                     <div className="field">
-                        <label className="label">Nombre</label>
+                        <label className="label has-text-grey-light">Nombre</label>
                         <div className="control">
                             <input className="input" name={"name"} type="text"
                                    placeholder="Text input" value={event.name}
@@ -20,7 +20,7 @@ class FormEvent extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">Dirección</label>
+                        <label className="label has-text-grey-light">Dirección</label>
                         <div className="control">
                             <Geosuggest
                                 placeholder={'Dirección'}
@@ -30,75 +30,79 @@ class FormEvent extends Component {
                                 radius="20"/>
                         </div>
                     </div>
-                    <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Fecha Inicio</label>
-                                <div className="control">
-                                    <DateTimePicker
-                                        value={event.date_start}
-                                        format={'L'}
-                                        time={false}
-                                        onChange={value => this.props.changeDate(value,"date_start")}/>
+                    <div className="field">
+                        <div className="columns">
+                            <div className="column inner-column">
+                                <div className="field">
+                                    <label className="label has-text-grey-light">Fecha Inicio</label>
+                                    <div className="control">
+                                        <DateTimePicker
+                                            value={event.date_start}
+                                            format={'L'}
+                                            time={false}
+                                            onChange={value => this.props.changeDate(value,"date_start")}/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Hora Inicio</label>
-                                <div className="control">
-                                    <DateTimePicker
-                                        value={event.hour_start}
-                                        step={60}
-                                        date={false}
-                                        onChange={value => this.props.changeDate(value,"hour_start")}/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Fecha Fin</label>
-                                <div className="control">
-                                    <DateTimePicker
-                                        value={event.date_end}
-                                        format={'L'}
-                                        time={false}
-                                        onChange={value => this.props.changeDate(value,"date_end")}/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="field">
-                                <label className="label">Hora Fin</label>
-                                <div className="control">
-                                    <DateTimePicker
-                                        value={event.hour_end}
-                                        step={60}
-                                        date={false}
-                                        onChange={value => this.props.changeDate(value,"hour_end")}/>
+                            <div className="vertical-line"></div>
+                            <div className="column  inner-column">
+                                <div className="field">
+                                    <label className="label has-text-grey-light">Hora Inicio</label>
+                                    <div className="control">
+                                        <DateTimePicker
+                                            value={event.hour_start}
+                                            step={60}
+                                            date={false}
+                                            onChange={value => this.props.changeDate(value,"hour_start")}/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">Descripción</label>
+                        <div className="columns">
+                            <div className="column inner-column">
+                                <div className="field">
+                                    <label className="label has-text-grey-light">Fecha Fin</label>
+                                    <div className="control">
+                                        <DateTimePicker
+                                            value={event.date_end}
+                                            format={'L'}
+                                            time={false}
+                                            onChange={value => this.props.changeDate(value,"date_end")}/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="vertical-line"></div>
+                            <div className="column inner-column">
+                                <div className="field">
+                                    <label className="label has-text-grey-light">Hora Fin</label>
+                                    <div className="control">
+                                        <DateTimePicker
+                                            value={event.hour_end}
+                                            step={60}
+                                            date={false}
+                                            onChange={value => this.props.changeDate(value,"hour_end")}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="field">
+                        <label className="label has-text-grey-light">Descripción</label>
                         <div className="control">
-                                    <textarea className="textarea" name={"description"}
-                                              placeholder="Textarea" value={event.description} onChange={this.props.handleChange}/>
+                            <textarea className="textarea" name={"description"} placeholder="Textarea" value={event.description} onChange={this.props.handleChange}/>
                         </div>
                     </div>
                 </div>
                 <div className="column">
                     {imgComp}
                     <div className="field">
-                        <label className="label">Crear un evento: </label>
                         <div className="control">
                             <div className="select">
                                 <select value={event.visibility} onChange={this.props.handleChange} name={'visibility'}>
-                                    <option value={'PUBLIC'}>Público</option>
-                                    <option value={'ORGANIZATION'}>Privado</option>
+                                    <option value={'PUBLIC'}>Crear un evento público</option>
+                                    <option value={'ORGANIZATION'}>Crear un evento privado</option>
                                 </select>
                             </div>
                         </div>

@@ -109,7 +109,7 @@ class Header extends Component {
         return (
             <React.Fragment>
                 <header>
-                    <nav className="navbar is-fixed-top has-shadow is-spaced">
+                    <nav className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile">
                         <div className="navbar-brand">
                             <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
@@ -140,7 +140,7 @@ class Header extends Component {
                                     <div>Wait...</div>:
                                     this.state.user ?
                                     <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
-                                        <a className="navbar-link has-text-grey-light">
+                                        <a className="navbar-link has-text-grey-light is-hidden-mobile">
                                             {this.state.name}
                                         </a>
                                         <div className="navbar-dropdown is-right">

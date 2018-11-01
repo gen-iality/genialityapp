@@ -17,13 +17,15 @@ div.rsvpDate{
 }
 div.imgRsvp{
   height: auto;
-  width: 400px;
+  width: 100%;
   position: relative;
   img {
-    width: 100%;
+    display: block;
+    position: relative;
     height: auto;
+    width: 100%;
   }
-  &:after {
+  /* &:after {
     content: '\A';
     position: absolute;
     width: 100%;
@@ -32,12 +34,27 @@ div.imgRsvp{
     left: 0;
     background: rgba(0,0,0,0.6);
     opacity: 1;
-  }
+  } */
   .dropzone {
+    background-color: rgba($color: $black, $alpha: 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
     position: absolute !important;
-    top: 50%;
-    left: 50%;
-    z-index: 900;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    opacity: 0;
+    transition: all ease 0.33s;
+    input {
+      height: 100%;
+      width: 100%;
+    }
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 @media only screen and (max-width: 700px) {
@@ -50,20 +67,17 @@ div.imgRsvp{
   .rw-widget > .rw-widget-container {
     width: 70%;
   }
-div.imgRsvp{
-  height: auto;
-  width: 400px;
-  position: relative;
-  img {
-    width: 60%;
-  }
-  &:after {
-    width: 60%;
-    height: 96%;
-  }
-  .dropzone {
-    top: 60%;
-    left: 18%;
+  div.imgRsvp{
+    height: auto;
+    width: 400px;
+    position: relative;
+    img {
+      width: 70%;
+    }
+    .dropzone {
+      background-color: rgba($color: $black, $alpha: 0.25);
+      opacity: 1;
+      width: 70%;
     }
   }
 }
