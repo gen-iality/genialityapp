@@ -116,6 +116,7 @@ class AddUser extends Component {
         }
         // Head
         oDoc.write('<head><title>Usuario</title>');
+        oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1, body h3, body h4 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 18px;} body h3 {font-size: 18px;} body .info {width: 300px;text-align: center;} body .type {text-transform: uppercase;font-size: 14px;font-weight: bold;}</style>");
         oDoc.write('<link rel="stylesheet" type="text/css" href="/print.css" />');
         oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
         // body
