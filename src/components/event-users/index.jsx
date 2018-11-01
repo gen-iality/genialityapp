@@ -116,7 +116,7 @@ class ListEventUser extends Component {
                 user.updated_at = user.updated_at.toDate();
                 users.push(user);
             });
-            this.setState({ userReq:users, users });
+            this.setState({ userReq:users });
         },(error => {
             console.log(error);
             this.setState({timeout:true});
@@ -168,8 +168,7 @@ class ListEventUser extends Component {
     };
 
     checkIn = (user) => {
-        console.log(user);
-        const users = this.state.users;
+        const {users} = this.state;
         const { event } = this.props;
         const self = this;
         let pos = users.map((e) => { return e._id; }).indexOf(user._id);
@@ -177,33 +176,19 @@ class ListEventUser extends Component {
             user.checked_in = !user.checked_in;
             users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
+            toast.success('CheckIn made successfully');
+            self.setState({users});
             userRef.update({
                 updated_at: new Date(),
                 checked_in: true
             })
             .then(()=> {
                 console.log("Document successfully updated!");
-                toast.success('CheckIn made successfully');
-                self.setState((prevState) => {
-                    return {users,change:!prevState.change}
-                })
             })
             .catch(error => {
                 console.error("Error updating document: ", error);
                 toast.error('Something wrong. Try again later');
             });
-            /*Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
-                .then((response)=>{
-                    console.log(response);
-                    const qrData = {user:null,msg:'Check In correct'};
-                    toast.success('CheckIn made successfully');
-                    this.setState({qrData})
-                })
-                .catch(e=>{
-                    console.log(e.response);
-                    this.setState({timeout:true});
-                    toast.error('Something wrong. Try again later');
-                });*/
         }
     };
 
@@ -321,6 +306,7 @@ class ListEventUser extends Component {
 
     render() {
         const {users, pages, loading, columns, timeout, facingMode, qrData, userReq} = this.state;
+        console.log(this.state);
         return (
             <React.Fragment>
                 <header>
