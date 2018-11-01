@@ -490,6 +490,7 @@ const parseData = (data) => {
             info[key]['estado'] = item.state.name;
             info[key]['rol'] = item.rol.name;
             info[key]['checkIn'] = item.checked_in?item.checked_in:'';
+            info[key]['Actualizado'] = item.updated_at;
         }
         return info
     });
