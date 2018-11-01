@@ -40,7 +40,7 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        const {columns, usersRef} = this.state;
+        const {columns, usersRef, userReq} = this.state;
         let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
         if(pos<=0) columns.push({
             ...this.genericHeaderArrows(),
@@ -483,15 +483,13 @@ const parseData = (data) => {
     let info = [];
     data.map((item,key) => {
         info[key] = {};
-        if(item.user){
-            Object.keys(item.properties).map((obj, i) => (
-                info[key][obj] = item.properties[obj]
-            ));
-            info[key]['estado'] = item.state.name;
-            info[key]['rol'] = item.rol.name;
-            info[key]['checkIn'] = item.checked_in?item.checked_in:'';
-            info[key]['Actualizado'] = item.updated_at;
-        }
+        Object.keys(item.properties).map((obj, i) => (
+            info[key][obj] = item.properties[obj]
+        ));
+        info[key]['estado'] = item.state.name;
+        info[key]['rol'] = item.rol.name;
+        info[key]['checkIn'] = item.checked_in?item.checked_in:'';
+        info[key]['Actualizado'] = item.updated_at;
         return info
     });
     return info
