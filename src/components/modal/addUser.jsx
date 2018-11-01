@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {Actions, UsersApi} from "../../helpers/request";
+import {firestore} from "../../helpers/firebase";
+import {roles,states} from "../../helpers/constants";
 
 class AddUser extends Component {
     constructor(props) {
@@ -19,22 +19,16 @@ class AddUser extends Component {
     }
 
     componentDidMount() {
-        const self = this,
-            rols = Actions.getAll('/api/rols'),
-            states = Actions.getAll('/api/states');
-        axios.all([rols, states])
-            .then(axios.spread(function (roles, estados) {
-                let rolData = roles.map(rol => ({
-                    value: rol._id,
-                    label: rol.name
-                }));
-                console.log(rolData);
-                let stateData = estados.map(state => ({
-                    value: state._id,
-                    label: state.name
-                }));
-                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
-            }))
+        const self = this;
+        let rolData = roles.map(rol => ({
+            value: rol._id,
+            label: rol.name
+        }));
+        let stateData = states.map(state => ({
+            value: state._id,
+            label: state.name
+        }));
+        self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -62,34 +56,79 @@ class AddUser extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            role_id: this.state.rol,
+            rol_id: this.state.rol,
             state_id: this.state.state,
         };
+        const self = this;
         let message = {};
         this.setState({create:true});
-        try {
-            let resp = this.state.edit ?
-                await UsersApi.editOne(snap,this.props.value._id):
-                await UsersApi.createOne(snap,this.props.eventId);
-            console.log(resp);
-            if (resp.message === 'OK'){
-                this.props.addToList(resp.data);
-                message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
-                message.content = 'USER '+resp.status;
-            } else {
-                message.class = 'msg_danger';
-                message.content = 'User can`t be updated';
-            }
-            setTimeout(()=>{
-                message.class = message.content = '';
-                this.closeModal();
-            },1000)
-        } catch (err) {
-            console.log(err.response);
-            message.class = 'msg_error';
-            message.content = 'ERROR...TRYING LATER';
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        if(!this.state.edit){
+            snap.updated_at = new Date();
+            snap.checked_in = false;
+            snap.created_at = new Date();
+            userRef.add(snap)
+                .then(docRef => {
+                    console.log("Document written with ID: ", docRef.id);
+                    self.props.addToList();
+                    message.class = 'msg_success';
+                    message.content = 'USER CREATED';
+                    setTimeout(()=>{
+                        message.class = message.content = '';
+                        self.closeModal();
+                    },500)
+                })
+                .catch(error => {
+                    console.error("Error adding document: ", error);
+                    message.class = 'msg_danger';
+                    message.content = 'User can`t be created';
+                });
+        }
+        else{
+            message.class = 'msg_warning';
+            message.content = 'USER UPDATED';
+            snap.updated_at = new Date();
+            userRef.doc(this.props.value._id).update(snap)
+                .then(() => {
+                    console.log("Document successfully updated!");
+                    message.class = 'msg_warning';
+                    message.content = 'USER UPDATED';
+                    setTimeout(()=>{
+                        message.class = message.content = '';
+                        self.closeModal();
+                    },500)
+                })
+                .catch(error => {
+                    console.error("Error updating document: ", error);
+                    message.class = 'msg_danger';
+                    message.content = 'User can`t be updated';
+                });
         }
         this.setState({message,create:false});
+    }
+
+    printUser = () => {
+        const {name, email, apellido, CarreraInteres, Colegio} = this.state.user;
+        this.props.checkIn(this.state.user);
+        let oIframe = this.refs.ifrmPrint;
+        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+        if (oDoc.document) {
+            oDoc = oDoc.document
+        }
+        // Head
+        oDoc.write('<head><title>Usuario</title>');
+        oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1, body h3, body h4 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 18px;} body h3 {font-size: 18px;} body .info {width: 300px;text-align: center;} body .type {text-transform: uppercase;font-size: 14px;font-weight: bold;}</style>");
+        oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+        // body
+        oDoc.write('<body onload="window.print()"><div class="main-print">');
+        // Datos
+        oDoc.write(`<div class="info"><h1>${name} ${apellido}</h1></div>`);
+        oDoc.write(`<div class="info type">${Colegio}</div>`);
+        oDoc.write(`<div class="info type">${CarreraInteres}</div>`);
+        oDoc.write('</div></div>'); // close .main-print .info
+        // Close body
+        oDoc.write('</body></html>');
+        oDoc.close()
     }
 
     handleChange = (event) => {
@@ -217,6 +256,9 @@ class AddUser extends Component {
                             this.state.create?<div>Creando...</div>:
                                 <div>
                                     <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                    {
+                                        this.state.edit&& <button className="button" onClick={this.printUser}>Imprimir</button>
+                                    }
                                     <button className="button" onClick={this.closeModal}>Cancel</button>
                                 </div>
                         }
@@ -225,6 +267,7 @@ class AddUser extends Component {
                         </div>
                     </footer>
                 </div>
+                <iframe ref="ifrmPrint" style={{opacity:0}}/>
             </div>
         );
     }
