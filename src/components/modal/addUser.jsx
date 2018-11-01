@@ -76,7 +76,7 @@ class AddUser extends Component {
                     setTimeout(()=>{
                         message.class = message.content = '';
                         self.closeModal();
-                    },1500)
+                    },500)
                 })
                 .catch(error => {
                     console.error("Error adding document: ", error);
@@ -96,7 +96,7 @@ class AddUser extends Component {
                     setTimeout(()=>{
                         message.class = message.content = '';
                         self.closeModal();
-                    },1500)
+                    },500)
                 })
                 .catch(error => {
                     console.error("Error updating document: ", error);
