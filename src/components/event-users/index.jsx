@@ -20,6 +20,8 @@ class ListEventUser extends Component {
             users:      [],
             userReq:    [],
             usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
+            total:      0,
+            checkIn:    0,
             extraFields:[],
             addUser:    false,
             deleteUser: false,
@@ -105,18 +107,20 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
         usersRef.onSnapshot((listUsers)=> {
             let users = [];
+            let checkIn = 0;
             let user;
             listUsers.forEach((doc)=> {
                 user = doc.data();
                 const state = states.find(x => x._id === user.state_id);
                 const rol = roles.find(x => x._id === user.rol_id);
+                checkIn += (user.checked_in);
                 user._id = doc.id;
                 user.state = state;
                 user.rol = rol;
                 user.updated_at = user.updated_at.toDate();
                 users.push(user);
             });
-            this.setState({ userReq:users });
+            this.setState({ userReq:users, total: listUsers.size, checkIn });
         },(error => {
             console.log(error);
             this.setState({timeout:true});
@@ -177,18 +181,20 @@ class ListEventUser extends Component {
             users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
             toast.success('CheckIn made successfully');
-            self.setState({users});
+            self.setState((prevState) => {
+                return {users, checkIn: prevState.checkIn+1}
+            });
             userRef.update({
                 updated_at: new Date(),
                 checked_in: true
             })
-            .then(()=> {
-                console.log("Document successfully updated!");
-            })
-            .catch(error => {
-                console.error("Error updating document: ", error);
-                toast.error('Something wrong. Try again later');
-            });
+                .then(()=> {
+                    console.log("Document successfully updated!");
+                })
+                .catch(error => {
+                    console.error("Error updating document: ", error);
+                    toast.error('Something wrong. Try again later');
+                });
         }
     };
 
@@ -305,8 +311,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, loading, columns, timeout, facingMode, qrData, userReq} = this.state;
-        console.log(this.state);
+        const {users, pages, loading, columns, timeout, facingMode, qrData, userReq, total, checkIn} = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -339,24 +344,39 @@ class ListEventUser extends Component {
                     </div>
                 </header>
                 <div className="main">
-                    <div className="preview-list">
-                        {
-                         userReq.length>0&&
-                             <Table
-                                 columns={columns}
-                                 manual
-                                 data={users}
-                                 pages={pages}
-                                 loading={loading}
-                                 onFetchData={this.fetchData}
-                                 filterable
-                                 onSortedChange={sorted => this.setState({ sorted })}
-                                 defaultFilterMethod={(filter, row) =>
-                                     String(row[filter.id]) === filter.value}
-                                 defaultPageSize={25}
-                                 className="-highlight"/>
-                        }
-                    </div>
+                    {
+                        userReq.length>0&&
+                        <div className="preview-list">
+                            <div className="field is-grouped is-grouped-multiline">
+                                <div className="control">
+                                    <div className="tags has-addons">
+                                        <span className="tag is-dark">Total</span>
+                                        <span className="tag is-info">{total}</span>
+                                    </div>
+                                </div>
+
+                                <div className="control">
+                                    <div className="tags has-addons">
+                                        <span className="tag is-dark">CheckIn</span>
+                                        <span className="tag is-success">{checkIn}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <Table
+                                columns={columns}
+                                manual
+                                data={users}
+                                pages={pages}
+                                loading={loading}
+                                onFetchData={this.fetchData}
+                                filterable
+                                onSortedChange={sorted => this.setState({ sorted })}
+                                defaultFilterMethod={(filter, row) =>
+                                    String(row[filter.id]) === filter.value}
+                                defaultPageSize={25}
+                                className="-highlight"/>
+                        </div>
+                    }
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} addToList={this.addToList}

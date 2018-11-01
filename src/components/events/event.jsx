@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Route, NavLink, Redirect } from "react-router-dom";
+import {firestore} from "../../helpers/firebase";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
@@ -74,9 +75,13 @@ class Event extends Component {
         this.setState({newEvent:false})
     }
 
+    handleClick = (e) => {
+        if(!navigator.onLine) e.preventDefault();
+    }
+
     render() {
         const { match } = this.props;
-        const { timeout } = this.state;
+        const { timeout, showMenu } = this.state;
         return (
             <React.Fragment>
                 {
@@ -91,10 +96,11 @@ class Event extends Component {
                                     </span>
                                 </p>
                                 {
-                                    (!this.state.newEvent && this.state.showMenu) && (
-                                        <React.Fragment>
+                                    (!this.state.newEvent) && (
+                                        <div className={`${showMenu?'is-hidden-mobile':''}`}>
                                             <p className="menu-label">
-                                                <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
+                                                <NavLink className="item" onClick={this.handleClick}
+                                                         activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
                                             <p className="menu-label item" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span>Invitaciones</span>
@@ -106,16 +112,16 @@ class Event extends Component {
                                                 this.state.userTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                            <NavLink onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
+                                                            <NavLink onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
                                             }
                                             <p className="menu-label">
-                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
+                                                <NavLink onClick={this.handleClick} className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
                                             <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span>Contenido</span>
@@ -127,13 +133,13 @@ class Event extends Component {
                                                 this.state.contentTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
+                                                            <NavLink onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                                            <NavLink onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
                                             }
-                                        </React.Fragment>
+                                        </div>
                                     )
                                 }
                             </aside>
