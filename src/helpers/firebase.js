@@ -1,4 +1,6 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+
 const config = {
     apiKey: "AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc",
     authDomain: "eviusauth.firebaseapp.com",

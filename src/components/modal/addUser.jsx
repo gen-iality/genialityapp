@@ -108,7 +108,7 @@ class AddUser extends Component {
     }
 
     printUser = () => {
-        const {name, email, apellido, CarreraInteres, Colegio} = this.state.user;
+        const {name, apellido, CarreraInteres, Colegio} = this.state.user;
         this.props.checkIn(this.state.user);
         let oIframe = this.refs.ifrmPrint;
         let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
@@ -267,7 +267,7 @@ class AddUser extends Component {
                         </div>
                     </footer>
                 </div>
-                <iframe ref="ifrmPrint" style={{opacity:0}}/>
+                <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0}}/>
             </div>
         );
     }

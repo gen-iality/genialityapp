@@ -145,7 +145,7 @@ class UserEditProfile extends Component {
                                         <div className="control">
                                             <input className="input has-text-weight-bold" name={"name"} type="text"
                                                    placeholder="Text input" value={user.name}
-                                                   onChanssge={this.handleChange}
+                                                   onChange={this.handleChange}
                                             />
                                         </div>
                                     </div>
