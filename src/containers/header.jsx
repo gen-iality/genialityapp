@@ -12,6 +12,7 @@ class Header extends Component {
         super(props);
         this.props.history.listen((location, action) => {
             console.log("on route change");
+            window.scrollTo(0, 0);
             this.setState({open:false})
         });
         this.state = {

@@ -80,7 +80,7 @@ class UsersRsvp extends Component {
                     accessor: d => d,
                     Cell: props => <div>
                         <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value.id}
-                               type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onClick={(e)=>{this.toggleSelection(props.value)}}/>
+                               type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onChange={(e)=>{this.toggleSelection(props.value)}}/>
                         <label htmlFor={"checkinUser"+props.value.id}/>
                     </div>,
                     width: 80,
@@ -379,7 +379,7 @@ class UsersRsvp extends Component {
                             <div>
                                 <div className="field">
                                     <input className="is-checkradio is-link" id="thisEvent"
-                                           type="checkbox" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
+                                           type="checkbox" name="thisEvent" onChange={(e)=>{this.checkEvent(this.props.event)}}
                                            checked={this.state.actualEvent._id === this.props.event._id}/>
                                     <label htmlFor="thisEvent">{this.props.event.name}</label>
                                 </div>
@@ -404,7 +404,7 @@ class UsersRsvp extends Component {
                                             events.map((event,key)=>{
                                                 return <div className="field" key={key}>
                                                     <input className="is-checkradio is-link" id={`event${event._id}`}
-                                                           type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
+                                                           type="checkbox" name={`event${event._id}`} onChange={(e)=>{this.checkEvent(event)}}
                                                            checked={this.state.actualEvent._id === event._id}/>
                                                     <label htmlFor={`event${event._id}`} >{event.name}</label>
                                                 </div>
