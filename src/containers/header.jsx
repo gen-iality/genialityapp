@@ -132,7 +132,7 @@ class Header extends Component {
                                         </Link>
                                     </div>
                                 }
-                                <a className="navbar-item has-text-weight-bold has-text-grey-light" href="#">
+                                <a className="navbar-item has-text-weight-bold has-text-grey-light" href="/">
                                     <FormattedMessage id="header.help" defaultMessage="Help"/>
                                 </a>
                                 {

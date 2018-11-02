@@ -8,7 +8,6 @@ import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
 import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
-import SelectInput from "../shared/selectInput";
 import {BaseUrl} from "../../helpers/constants";
 import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
@@ -209,7 +208,7 @@ class OrgEditProfile extends Component {
     }
 
     render() {
-        const { org, categories, loading, timeout, events, wait } = this.state;
+        const { org, loading, timeout, events, wait } = this.state;
         return (
             <section className="section">
                 {
@@ -224,7 +223,7 @@ class OrgEditProfile extends Component {
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded"
+                                                    <img className="is-rounded" title={'evius.co'}
                                                          src="https://bulma.io/images/placeholders/128x128.png"/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
