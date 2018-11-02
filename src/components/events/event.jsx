@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Route, NavLink, Redirect } from "react-router-dom";
+import {firestore} from "../../helpers/firebase";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
@@ -74,30 +75,36 @@ class Event extends Component {
         this.setState({newEvent:false})
     }
 
+    handleClick = (e) => {
+        if(!navigator.onLine) e.preventDefault();
+    }
+
     render() {
         const { match } = this.props;
-        const { timeout } = this.state;
+        const { timeout, showMenu } = this.state;
         return (
             <React.Fragment>
                 {
                     this.state.loading ? <Loading/>:
-                        <section className="section columns">
-                            <aside className="column is-2 is-fullheight menu aside">
-                                <p className="subtitle event-name">
+                        <section className="columns">
+                            <aside className="column menu event-aside is-2 has-text-weight-bold">
+                                <p className="subtitle has-text-weight-bold">
                                     {this.state.event.name}
-                                    <span className="is-hidden-desktop" onClick={(e)=>{
+                                    <span className="icon is-hidden-desktop" onClick={(e)=>{
                                         this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
                                         {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}
                                     </span>
                                 </p>
                                 {
-                                    (!this.state.newEvent && this.state.showMenu) && (
-                                        <React.Fragment>
-                                            <p className="menu-label">
-                                                <NavLink className="item" activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
+                                    (!this.state.newEvent) && (
+                                        <div className={`${showMenu?'is-hidden-mobile':''}`}>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item has-text-grey" onClick={this.handleClick}
+                                                         activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
-                                            <p className="menu-label item" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                                                <span>Invitaciones</span>
+
+                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                                                <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
                                                     <i className={`${this.state.userTab?'up':'down'}`}/>
                                                 </span>
@@ -106,34 +113,35 @@ class Event extends Component {
                                                 this.state.userTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
+                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
                                             }
                                             <p className="menu-label">
-                                                <NavLink className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
+                                                <NavLink className="item has-text-grey" onClick={this.handleClick} className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-                                            <p className="menu-label item" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
-                                                <span>Contenido</span>
+
+                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
+                                                <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
-                                        <i className={`${this.state.contentTab?'up':'down'}`}/>
-                                    </span>
+                                                    <i className={`${this.state.contentTab?'up':'down'}`}/>
+                                                </span>
                                             </p>
                                             {
                                                 this.state.contentTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                                            <NavLink activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
+                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
                                             }
-                                        </React.Fragment>
+                                        </div>
                                     )
                                 }
                             </aside>

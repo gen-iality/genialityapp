@@ -195,16 +195,16 @@ class General extends Component {
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
         return (
-            <form onSubmit={this.submit}>
+            <form className="form" onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} organizers={organizers} types={types}
                            selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
                            imgComp={
-                               <div className="field">
-                                   <label className="label">Foto</label>
+                               <div className="field picture">
+                                   <label className="label has-text-grey-light">Foto</label>
                                    <div className="control">
                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                                    divClass={'imgRsvp'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                   classDrop={'dropzone'} contentDrop={<button className={`button is-link is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                   classDrop={'dropzone'} contentDrop={<button className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
                                                    contentZone={<div>Subir foto</div>}
                                                    changeImg={this.changeImg} errImg={this.state.errImg}/>
                                    </div>
@@ -216,10 +216,14 @@ class General extends Component {
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
                     <div className="control">
-                        {
-                            this.state.loading? <p>Saving...</p>
-                            :<button type={"submit"} className={`button is-outlined is-success`} disabled={valid}>Save!</button>
-                        }
+                        <div className="columns is-centered">
+                            <div className="column is-half has-text-centered">
+                                {
+                                    this.state.loading? <p>Saving...</p>
+                                    :<button type={"submit"} className={`button is-primary`} disabled={valid}>Save</button>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {timeout&&(<LogOut/>)}

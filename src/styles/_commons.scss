@@ -9,25 +9,21 @@ a {
   }
 }
 
-input{
-  background: transparent !important;
-  border: none !important;
-  border-bottom: 1px solid $grey !important;
-  &:focus{
-    border-bottom: 1px solid $primary !important;
-  }
-}
-
 .button {
   border-radius: 10px;
+  font-weight: 700;
   padding-left: 1.25em;
   padding-right: 1.25em;
+  transition: all ease 0.33s;
+  &.is-primary {
+    box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
+  }
   &.is-small {
     border-radius: 8px;
     transition: all ease 0.15s;
     &:hover {
       background: $primary;
-      color: #ffffff;
+      color: transparent;
     }
   }
 }
@@ -35,19 +31,19 @@ input{
 .navbar {
   .navbar-end {
     .navbar-item {
-      margin: 0 1em;
+      margin: 0 0.5em;
       &:nth-last-child(0) {
         margin-right: 0 !important;
       }
     }
   }
   .navbar-link:not(.is-arrowless)::after {
-    border-color: #b5b5b5 !important;
+    border-color: $grey-light !important;
   }
   .navbar-dropdown {
     border: 0 !important;
     border-radius: 0 !important;
-    box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.1) !important;
+    box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1) !important;
     .navbar-item {
       margin: 0;
       &.item-sub {
@@ -58,7 +54,7 @@ input{
 }
 
 .footer {
-  background-color: #ffffff;
+  background-color: $white;
   padding: 6rem 3rem;
   .subtitle {
     font-weight: 900;
@@ -82,6 +78,147 @@ input{
   }
 }
 
+.form {
+  .field {
+    margin-bottom: 1.25rem;
+    .label {
+      color: $grey-light;
+      font-weight: 900; 
+      margin: 0;
+    }
+    .control {
+      margin-left: 0.5em;
+    }
+    &.picture {
+      .control {
+        margin: 0;
+      }
+    }
+  }
+  .inner-column {
+    padding: 0; 
+    .field {
+      margin: 0;
+    }
+  }
+  .vertical-line {
+    background: $grey-light;
+    margin: 0 1rem;
+    width: 1px;
+  }
+}
+
+.control {
+  input{
+    background: transparent !important;
+    border: none;
+    border-bottom: 1px solid $grey-light;
+    border-radius: 0;
+    box-shadow: none !important;
+    color: $grey;
+    font-size: 1rem;
+    font-weight: 700;
+    outline: none;
+    padding: .5em 1em;
+    &:focus{
+      border-bottom: 1px solid $primary;
+    }
+  }
+  textarea {
+    border: 1px solid $grey-light;
+    border-radius: 10px;
+    height: 12em;
+    max-height: 12em;
+    margin: 0.5em 0;
+    padding-right: 1rem;
+    resize: none;
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-light;
+      border-radius: 10px;
+      width: 10px;
+    }
+  }
+  .select {
+    width: 100%;
+    select {
+      border: none;
+      border-bottom: 1px solid $grey-light;
+      border-radius: 0;
+      color: $grey;
+      font-weight: 700;
+      width: 100%;
+    }
+    &:after {
+      border-color: $grey-lighter !important;
+    }
+    &:hover {
+      &:after {
+        border-color: $grey !important;
+      }
+    }
+  }
+  .basic-multi-select {
+    .select__control {
+      cursor: pointer;
+      border: none;
+      border-bottom: 1px solid $grey-light;
+      border-radius: 0;
+      &:hover {
+        .select__dropdown-indicator {
+          svg {
+            fill: $grey;
+          }
+        }
+      }
+      &.select__control--is-focused {
+        box-shadow: none;
+      }
+    }
+    .select__single-value {
+      color: $grey;
+      font-weight: 700;
+    }
+    .select__placeholder {
+      font-weight: 700;
+    }
+    .select__multi-value {
+      background-color: $primary;
+      font-weight: 700;
+      .select__multi-value__label {
+        color: $white;
+      }
+      .select__multi-value__remove {
+        color: $white;
+      }
+    }
+    .select__indicator-separator {
+      display: none;
+    }
+    .select__menu {
+      .select__menu-list {
+        .select__option {
+          color: $grey;
+          font-weight: 700;
+          &.select__option--is-selected {
+            background-color: $primary;
+            color: $grey;
+          }
+          &.select__option--is-focused {
+            background-color: rgba($color: $primary, $alpha: 0.25);
+            color: $grey;
+          }
+        }
+      }
+    }
+  }
+}
+
 /**
  * The geosuggest module
  * NOTE: duplicated font-sizes' are for browsers which don't support rem (only IE 8)
@@ -91,19 +228,18 @@ input{
   font-size: 18px;
   font-size: 1rem;
   position: relative;
-  margin: 1em auto;
+  margin: 0 auto;
   text-align: left;
 }
 
 .geosuggest__input {
   width: 100%;
-  border: 2px solid transparent;
-  box-shadow: 0 0 1px #3d464d;
+  border: 1px solid transparent;
   padding: .5em 1em;
   -webkit-transition: border 0.2s, box-shadow 0.2s;
   transition: border 0.2s, box-shadow 0.2s;
   &:focus {
-    border-color: #267dc0;
+    border-color: $primary;
     box-shadow: 0 0 0 transparent;
   }
 }
@@ -117,7 +253,7 @@ input{
   padding: 0;
   margin-top: -1px;
   background: #fff;
-  border: 2px solid #267dc0;
+  border: 1px solid $primary;
   border-top-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -138,9 +274,7 @@ input{
  */
 
 .geosuggest__item {
-  font-size: 18px;
-  font-size: 1rem;
-  padding: .5em .65em;
+  padding: .5em 1em;
   cursor: pointer;
   &:hover, &:focus {
     background: #f5f5f5;
@@ -148,8 +282,8 @@ input{
 }
 
 .geosuggest__item--active {
-  background: #267dc0;
-  color: #fff;
+  background: $primary;
+  color: #4a4a4a;
   &:hover, &:focus {
     background: #ccc;
   }
@@ -157,4 +291,56 @@ input{
 
 .geosuggest__item__matched-text {
   font-weight: bold;
+}
+
+/**
+ * Date & Time Widget
+ */
+
+.rw-widget {
+  .rw-widget-picker {
+    border: none;
+    box-shadow: none !important;
+  }
+  .rw-input {
+    border: none !important;
+  }
+  .rw-select {
+    border: none !important;
+    border-radius: 4px;
+    .rw-btn {
+      color: #b5b5b5;
+    }
+    &:hover {
+      background-color: #f9f9f9;
+    }
+  }
+}
+
+@media only screen and (max-width: $breakpoint-mobile) {
+  .navbar {
+    .navbar-item {
+      &.item-sub {
+        margin-left: 0 !important;
+      }
+    }.navbar-dropdown {
+      box-shadow: none !important;
+      font-size: 1em;
+    }
+  }
+  .footer {
+    padding: 3em 0.75em;
+    .copyright {
+      padding: 0.75em;
+    }
+  }
+  .input {
+    max-width: 100% !important;
+  }
+  .geosuggest__input {
+    width: 100% !important;
+  }
+  .rw-widget-container {
+    width: 100% !important;
+  }
 }

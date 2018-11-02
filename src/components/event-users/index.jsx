@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from 'react-intl';
+import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import _ from "lodash";
 import XLSX from "xlsx";
-import API from "../../helpers/request"
-import { Actions, UsersApi } from "../../helpers/request";
 import AddUser from "../modal/addUser";
 import Dialog from "../modal/twoAction";
 import { FaSortUp, FaSortDown, FaSort, FaCamera} from "react-icons/fa";
@@ -12,6 +11,7 @@ import Table from "../shared/table";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {roles, states} from "../../helpers/constants";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -19,6 +19,9 @@ class ListEventUser extends Component {
         this.state = {
             users:      [],
             userReq:    [],
+            usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
+            total:      0,
+            checkIn:    0,
             extraFields:[],
             addUser:    false,
             deleteUser: false,
@@ -32,13 +35,12 @@ class ListEventUser extends Component {
             qrData:     {}
         };
         this.fetchData = this.fetchData.bind(this);
-        this.addToList = this.addToList.bind(this);
     }
 
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        const columns = this.state.columns;
+        const {columns, usersRef, userReq} = this.state;
         let pos = columns.map((e) => { return e.id; }).indexOf('properties.name');
         if(pos<=0) columns.push({
             ...this.genericHeaderArrows(),
@@ -73,7 +75,7 @@ class ListEventUser extends Component {
                 accessor: d => d,
                 Cell: props => <div>
                     <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value._id} disabled={props.value.checked_in}
-                           type="checkbox" name={"checkinUser"+props.value._id} checked={props.value.checked_in} onClick={(e)=>{this.checkIn(props.value)}}/>
+                           type="checkbox" name={"checkinUser"+props.value._id} checked={props.value.checked_in} onChange={(e)=>{this.checkIn(props.value)}}/>
                     <label htmlFor={"checkinUser"+props.value._id}/>
                 </div>,
                 width: 80,
@@ -101,26 +103,52 @@ class ListEventUser extends Component {
                 width:50,
                 show:false
             }
-        )
-        API.get(`/api/events/${event._id}/eventUsers?pageSize=10000`).then(({data})=>{
-            this.setState({ extraFields: properties, userReq:data.data });
-        }).catch(e=>{
-            console.log(e.response);
+        );
+        this.setState({ extraFields: properties });
+        usersRef.onSnapshot((listUsers)=> {
+            let users = [];
+            let checkIn = 0;
+            let user;
+            listUsers.forEach((doc)=> {
+                user = doc.data();
+                const state = states.find(x => x._id === user.state_id);
+                const rol = roles.find(x => x._id === user.rol_id);
+                checkIn += (user.checked_in);
+                user._id = doc.id;
+                user.state = state;
+                user.rol = rol;
+                user.updated_at = user.updated_at.toDate();
+                users.push(user);
+            });
+            this.setState({ userReq:users, total: listUsers.size, checkIn });
+        },(error => {
+            console.log(error);
             this.setState({timeout:true});
-        });
+        }));
     }
 
-    async addToList(user) {
-        console.log(user);
-        try{
-            const {data} = await UsersApi.getAll(this.props.event._id);
+    addToList = () => {
+        const self = this;
+        this.state.usersRef.get().then(function(listUsers) {
+            let user;
+            let users = [];
+            listUsers.forEach((doc)=> {
+                user = doc.data();
+                const state = states.find(x => x._id === user.state_id);
+                const rol = roles.find(x => x._id === user.rol_id);
+                user._id = doc.id;
+                user.state = state;
+                user.rol = rol;
+                user.updated_at = user.updated_at.toDate();
+                users.push(user);
+            });
+            self.setState({ userReq:users, users });
             toast.success('User created successfully');
-            this.setState({ users:data });
-        }catch (e) {
+        }).catch (e => {
             console.log(e);
             toast.error("User can't be created");
             this.setState({timeout:true,loader:false});
-        }
+        });
     };
 
     exportFile = (e) => {
@@ -144,26 +172,29 @@ class ListEventUser extends Component {
     };
 
     checkIn = (user) => {
-        const users = this.state.users;
+        const {users} = this.state;
+        const { event } = this.props;
+        const self = this;
         let pos = users.map((e) => { return e._id; }).indexOf(user._id);
         if(pos >= 0){
             user.checked_in = !user.checked_in;
             users[pos] = user;
-            Actions.edit('/api/eventUsers/' + user._id + '/checkin','','')
-                .then((response)=>{
-                    console.log(response);
-                    const qrData = {user:null,msg:'Check In correct'};
-                    toast.success('CheckIn made successfully');
-                    this.setState({qrData})
+            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
+            toast.success('CheckIn made successfully');
+            self.setState((prevState) => {
+                return {users, checkIn: prevState.checkIn+1}
+            });
+            userRef.update({
+                updated_at: new Date(),
+                checked_in: true
+            })
+                .then(()=> {
+                    console.log("Document successfully updated!");
                 })
-                .catch(e=>{
-                    console.log(e.response);
-                    this.setState({timeout:true});
+                .catch(error => {
+                    console.error("Error updating document: ", error);
                     toast.error('Something wrong. Try again later');
                 });
-            this.setState((prevState) => {
-                return {data:users,change:!prevState.change}
-            })
         }
     };
 
@@ -205,6 +236,7 @@ class ListEventUser extends Component {
             state.sorted,
             state.filtered
         ).then(res => {
+            console.log(res);
             this.setState({
                 users: res.rows,
                 pages: res.pages,
@@ -279,13 +311,13 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {users, pages, loading, columns, timeout, facingMode, qrData, userReq} = this.state;
+        const {users, pages, loading, columns, timeout, facingMode, qrData, userReq, total, checkIn} = this.state;
         return (
             <React.Fragment>
                 <header>
                     <div className="field is-grouped is-pulled-right">
                         <div className="control">
-                            <button className={`button is-rounded ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
+                            <button className={`button ${this.state.deleteUser?'is-danger':''}`} onClick={this.enableDelete}>
                                 <span className="icon is-small">
                                   <i className="far fa-trash-alt"/>
                                 </span>
@@ -294,7 +326,7 @@ class ListEventUser extends Component {
                         {
                             this.state.users.length>0 && (
                                 <div className="control">
-                                    <button className="button is-rounded" onClick={this.exportFile}>
+                                    <button className="button" onClick={this.exportFile}>
                                         <span className="icon">
                                             <i className="fas fa-download"/>
                                         </span>
@@ -304,35 +336,50 @@ class ListEventUser extends Component {
                             )
                         }
                         <div className="control">
-                            <button className="button is-inverted is-rounded" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
+                            <button className="button is-inverted" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
                         </div>
                         <div className="control">
-                            <button className="button is-primary is-rounded" onClick={this.modalUser}>Agregar Usuario +</button>
+                            <button className="button is-primary" onClick={this.modalUser}>Agregar Usuario +</button>
                         </div>
                     </div>
                 </header>
                 <div className="main">
-                    <div className="preview-list">
-                        {
-                         userReq.length>0&&
-                             <Table
-                                 columns={columns}
-                                 manual
-                                 data={users}
-                                 pages={pages}
-                                 loading={loading}
-                                 onFetchData={this.fetchData}
-                                 filterable
-                                 onSortedChange={sorted => this.setState({ sorted })}
-                                 defaultFilterMethod={(filter, row) =>
-                                     String(row[filter.id]) === filter.value}
-                                 defaultPageSize={25}
-                                 className="-highlight"/>
-                        }
-                    </div>
+                    {
+                        userReq.length>0&&
+                        <div className="preview-list">
+                            <div className="field is-grouped is-grouped-multiline">
+                                <div className="control">
+                                    <div className="tags has-addons">
+                                        <span className="tag is-dark">Total</span>
+                                        <span className="tag is-info">{total}</span>
+                                    </div>
+                                </div>
+
+                                <div className="control">
+                                    <div className="tags has-addons">
+                                        <span className="tag is-dark">CheckIn</span>
+                                        <span className="tag is-success">{checkIn}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <Table
+                                columns={columns}
+                                manual
+                                data={users}
+                                pages={pages}
+                                loading={loading}
+                                onFetchData={this.fetchData}
+                                filterable
+                                onSortedChange={sorted => this.setState({ sorted })}
+                                defaultFilterMethod={(filter, row) =>
+                                    String(row[filter.id]) === filter.value}
+                                defaultPageSize={25}
+                                className="-highlight"/>
+                        </div>
+                    }
                 </div>
                 <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.eventId}
-                         value={this.state.selectedUser} addToList={this.addToList}
+                         value={this.state.selectedUser} addToList={this.addToList} checkIn={this.checkIn}
                          extraFields={this.state.extraFields} edit={this.state.edit}/>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}
@@ -436,14 +483,13 @@ const parseData = (data) => {
     let info = [];
     data.map((item,key) => {
         info[key] = {};
-        if(item.user){
-            Object.keys(item.properties).map((obj, i) => (
-                info[key][obj] = item.properties[obj]
-            ));
-            info[key]['estado'] = item.state.name;
-            info[key]['rol'] = item.rol.name;
-            info[key]['checkIn'] = item.checked_in?item.checked_in:'';
-        }
+        Object.keys(item.properties).map((obj, i) => (
+            info[key][obj] = item.properties[obj]
+        ));
+        info[key]['estado'] = item.state.name;
+        info[key]['rol'] = item.rol.name;
+        info[key]['checkIn'] = item.checked_in?item.checked_in:'';
+        info[key]['Actualizado'] = item.updated_at;
         return info
     });
     return info
