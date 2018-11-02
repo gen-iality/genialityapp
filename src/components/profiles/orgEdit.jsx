@@ -223,7 +223,7 @@ class OrgEditProfile extends Component {
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded" title={'evius.co'}
+                                                    <img className="is-rounded" alt={'evius.co'}
                                                          src="https://bulma.io/images/placeholders/128x128.png"/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>

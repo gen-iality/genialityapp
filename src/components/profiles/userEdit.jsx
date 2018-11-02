@@ -6,7 +6,6 @@ import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
-import {BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -101,7 +100,7 @@ class UserEditProfile extends Component {
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded"
+                                                    <img className="is-rounded" alt={'evius.co'}
                                                          src="https://bulma.io/images/placeholders/128x128.png"/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
