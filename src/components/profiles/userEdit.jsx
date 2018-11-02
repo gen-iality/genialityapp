@@ -127,10 +127,91 @@ class UserEditProfile extends Component {
                                         <button className="button is-primary" onClick={this.saveForm}>Submit</button>
                                     </div>
                                 </div>
-                                <div className="column is-9 user-data">
+                                
+                                <div className="column is-9 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
+                                    <div className="columns is-9">
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Cédula</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Dirección</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChanssge={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="columns is-9">
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Celular</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Empresa</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="columns is-9">
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Fecha de nacimiento</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Intereses</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div className="columns is-9">
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Ciudad / País</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="field column">
+                                        <label className="label is-size-7 has-text-grey-light">Proceso</label>
+                                        <div className="control">
+                                            <input className="input has-text-weight-bold" name={"name"} type="text"
+                                                   placeholder="Text input" value={user.name}
+                                                   onChange={this.handleChange}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
                             <div>
                                 <h2>Eventos:</h2>
                                 <div className="columns home is-multiline is-mobile">
