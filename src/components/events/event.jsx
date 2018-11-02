@@ -122,7 +122,7 @@ class Event extends Component {
                                                 )
                                             }
                                             <p className="menu-label">
-                                                <NavLink className="item has-text-grey" onClick={this.handleClick} className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
+                                                <NavLink className="item has-text-grey" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
 
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
