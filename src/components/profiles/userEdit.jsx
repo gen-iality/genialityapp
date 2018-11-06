@@ -8,6 +8,7 @@ import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dialog from "../modal/twoAction";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -16,9 +17,14 @@ class UserEditProfile extends Component {
             selectedOption: [],
             events: [],
             user: {},
-            loading: true
+            loading: true,
+            message:{
+                class:'',
+                content:''
+            }
         };
         this.saveForm = this.saveForm.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -82,7 +88,26 @@ class UserEditProfile extends Component {
             toast.error('Something wrong. Try again later');
             this.setState({timeout:true,loader:false});
         }
+    };
+
+    async deleteEvent() {
+        this.setState({isLoading:'Wait....'});
+        const result = await EventsApi.deleteOne(this.state.eventId);
+        console.log(result);
+        if(result.data === "True"){
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+            const events = await EventsApi.getAll();
+            setTimeout(()=>{
+                this.setState({modal:false,events});
+            },500)
+        }else{
+            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+        }
     }
+
+    closeModal = () => {
+        this.setState({modal:false})
+    };
 
     render() {
         const { loading, timeout, events, user } = this.state;
@@ -212,16 +237,26 @@ class UserEditProfile extends Component {
                             </div>
                         </div>
                             <div>
-                                <h2>Eventos:</h2>
+                                <h2>Eventos creados:</h2>
                                 <div className="columns home is-multiline is-mobile">
                                     {
                                         events.map((event,key)=>{
                                             return <EventCard event={event} key={event._id}
                                                               action={''}
                                                               right={
-                                                                  <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
-                                                                      <span>Editar</span>
-                                                                  </Link>}
+                                                                  <div>
+                                                                      <div>
+                                                                          <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
+                                                                              <span>Editar</span>
+                                                                          </Link>
+                                                                      </div>
+                                                                      <div>
+                                                                          <a className="button is-text is-inverted is-danger" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>
+                                                                              <span>Borrar</span>
+                                                                          </a>
+                                                                      </div>
+                                                                  </div>
+                                                              }
                                             />
                                         })
                                     }
@@ -232,6 +267,11 @@ class UserEditProfile extends Component {
                 {
                     timeout&&(<LogOut/>)
                 }
+                <Dialog modal={this.state.modal} title={'Borrar Evento'}
+                        content={<p>Seguro de borrar este evento?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message} isLoading={this.state.isLoading}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </section>
         );
     }
