@@ -42,9 +42,10 @@ class Header extends Component {
                     if(resp.status === 200){
                         const data = resp.data;
                         const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
+                        const photo = (data.photoUrl) ? data.photoUrl : "http://www.radfaces.com/images/avatars/baby-sinclair.jpg";
                         OrganizationApi.mine()
                             .then((organizations)=>{
-                                this.setState({name,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
+                                this.setState({name,photo,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
                             });
                     }else{
                         this.setState({timeout:true,loader:false});
@@ -140,39 +141,43 @@ class Header extends Component {
                                     this.state.loader ?
                                     <div>Wait...</div>:
                                     this.state.user ?
-                                    <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
-                                        <a className="navbar-link has-text-grey-light is-hidden-mobile">
-                                            {this.state.name}
-                                        </a>
-                                        <div className="navbar-dropdown is-right">
-                                            <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
-                                                <FormattedMessage id="header.profile" defaultMessage="Profile"/>
-                                            </Link>
+                                        <React.Fragment>
+                                            <img src={this.state.photo}
+                                                 className="author-image" alt="Placeholder image"/>
+                                            <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
+                                                <a className="navbar-link has-text-grey-light is-hidden-mobile">
+                                                    {this.state.name}
+                                                </a>
+                                                <div className="navbar-dropdown is-right">
+                                                    <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
+                                                        <FormattedMessage id="header.profile" defaultMessage="Profile"/>
+                                                    </Link>
 
-                                            <hr className="navbar-divider"/>
+                                                    <hr className="navbar-divider"/>
 
-                                            <p className="navbar-item has-text-weight-bold has-text-grey-dark">
-                                                <FormattedMessage id="header.org" defaultMessage="Org"/>
-                                            </p>
-                                            {
-                                                this.state.organizations.map((org,key)=>{
-                                                    return  <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
+                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">
+                                                        <FormattedMessage id="header.org" defaultMessage="Org"/>
+                                                    </p>
+                                                    {
+                                                        this.state.organizations.map((org,key)=>{
+                                                            return  <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
                                                                 {org.name}
                                                             </Link>
-                                                })
-                                            }
-                                            <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}>+ Crear</Link>
-                                            <hr className="navbar-divider"/>
-                                            <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
-                                                <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
-                                            </a>
+                                                        })
+                                                    }
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}>+ Crear</Link>
+                                                    <hr className="navbar-divider"/>
+                                                    <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
+                                                        <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </React.Fragment>:
+                                        <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                            <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
+                                                <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                            </button>
                                         </div>
-                                    </div>:
-                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
-                                            <FormattedMessage id="header.login" defaultMessage="Sign In"/>
-                                        </button>
-                                    </div>
                                 }
                             </div>
                         </div>
