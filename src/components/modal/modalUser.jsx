@@ -98,6 +98,7 @@ class UserModal extends Component {
                     message.class = 'msg_warning';
                     message.content = 'USER UPDATED';
                     toast.info('User edited successfully');
+                    if(this.props.addToList) this.props.addToList();
                     setTimeout(()=>{
                         message.class = message.content = '';
                         self.closeModal();
