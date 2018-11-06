@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
+import Pagination from "../shared/pagination";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class ListEventUser extends Component {
         this.state = {
             users:      [],
             userReq:    [],
+            pageOfItems:[],
             usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
             total:      0,
             checkIn:    0,
@@ -150,6 +152,10 @@ class ListEventUser extends Component {
         this.setState({qrData})
     };
 
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
+    };
+
     //Search records at third column
     searchResult = (data) => {
         !data ? this.setState({users:[]}) : this.setState({users:data})
@@ -200,19 +206,20 @@ class ListEventUser extends Component {
                         </div>
                         {
                             users.length>0&&
+                            <React.Fragment>
                                 <table className="table">
                                     <thead>
-                                        <tr>
-                                            <th/>
-                                            <th>Check</th>
-                                            <th>Estado</th>
-                                            <th>Correo</th>
-                                            <th>Nombre</th>
-                                        </tr>
+                                    <tr>
+                                        <th/>
+                                        <th>Check</th>
+                                        <th>Estado</th>
+                                        <th>Correo</th>
+                                        <th>Nombre</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     {
-                                        users.map((item,key)=>{
+                                        this.state.pageOfItems.map((item,key)=>{
                                             return <tr key={key}>
                                                 <td>
                                                     <span className="icon has-text-info action_pointer"
@@ -233,6 +240,11 @@ class ListEventUser extends Component {
                                     }
                                     </tbody>
                                 </table>
+                                <Pagination
+                                    items={users}
+                                    onChangePage={this.onChangePage}
+                                />
+                            </React.Fragment>
                         }
                     </div>
                 </div>
