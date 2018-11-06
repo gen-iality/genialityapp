@@ -101,7 +101,6 @@ class Event extends Component {
                                                 <NavLink className="item has-text-grey" onClick={this.handleClick}
                                                          activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
-
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
@@ -123,7 +122,6 @@ class Event extends Component {
                                             <p className="menu-label">
                                                 <NavLink className="item has-text-grey" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">

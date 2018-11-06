@@ -40,11 +40,6 @@
   .active {
     color: $primary !important;
   }
-  // ul{
-  //   li{
-  //     padding-left: 30px;
-  //   }
-  // }
 }
 
 .event-aside {
@@ -90,6 +85,9 @@
     a {
       margin-left: 1.5em;
     }
+  }
+  .active {
+    color: $primary !important;
   }
 }
 
