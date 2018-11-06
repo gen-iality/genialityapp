@@ -65,7 +65,7 @@ class ListEventUser extends Component {
                 }
             });
             this.setState({
-                userReq: newItems,
+                userReq: newItems, auxArr: newItems,
                 loading: false,total: snapshot.size, checkIn
             });
         },(error => {
@@ -152,8 +152,8 @@ class ListEventUser extends Component {
 
     //Search records at third column
     searchResult = (data) => {
-        console.log(data);
-        !data ? this.setState({users:[]}) : this.setState({users:data})
+        const users = [...this.state.auxArr];
+        !data ? this.setState({userReq:users}) : this.setState({userReq:data})
     };
 
     render() {
@@ -183,59 +183,59 @@ class ListEventUser extends Component {
                     </div>
                 </header>
                 <div className="main">
-                    {
-                        userReq.length>0&&
-                        <div className="preview-list">
-                            <div className="field is-grouped is-grouped-multiline">
-                                <div className="control">
-                                    <div className="tags has-addons">
-                                        <span className="tag is-dark">Total</span>
-                                        <span className="tag is-info">{total}</span>
-                                    </div>
+                    <div className="preview-list">
+                        <div className="field is-grouped is-grouped-multiline">
+                            <div className="control">
+                                <div className="tags has-addons">
+                                    <span className="tag is-dark">Total</span>
+                                    <span className="tag is-info">{total}</span>
                                 </div>
-                                <div className="control">
-                                    <div className="tags has-addons">
-                                        <span className="tag is-dark">CheckIn</span>
-                                        <span className="tag is-success">{checkIn}</span>
-                                    </div>
-                                </div>
-                                <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                             </div>
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th/>
-                                        <th>Check</th>
-                                        <th>Estado</th>
-                                        <th>Correo</th>
-                                        <th>Nombre</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    userReq.map((item,key)=>{
-                                        return <tr key={key}>
-                                            <td>
-                                                <span className="icon has-text-info action_pointer"
-                                                      onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                                                           type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                                                    <label htmlFor={"checkinUser"+item._id}/>
-                                                </div>
-                                            </td>
-                                            <td>{item.state.name}</td>
-                                            <td>{item.properties.email}</td>
-                                            <td>{item.properties.name}</td>
-                                        </tr>
-                                    })
-                                }
-                                </tbody>
-                            </table>
+                            <div className="control">
+                                <div className="tags has-addons">
+                                    <span className="tag is-dark">CheckIn</span>
+                                    <span className="tag is-success">{checkIn}</span>
+                                </div>
+                            </div>
+                            <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                         </div>
-                    }
+                        {
+                            userReq.length>0&&
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th/>
+                                            <th>Check</th>
+                                            <th>Estado</th>
+                                            <th>Correo</th>
+                                            <th>Nombre</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {
+                                        userReq.map((item,key)=>{
+                                            return <tr key={key}>
+                                                <td>
+                                                    <span className="icon has-text-info action_pointer"
+                                                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                                               type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                                                        <label htmlFor={"checkinUser"+item._id}/>
+                                                    </div>
+                                                </td>
+                                                <td>{item.state.name}</td>
+                                                <td>{item.properties.email}</td>
+                                                <td>{item.properties.name}</td>
+                                            </tr>
+                                        })
+                                    }
+                                    </tbody>
+                                </table>
+                        }
+                    </div>
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} checkIn={this.checkIn}
