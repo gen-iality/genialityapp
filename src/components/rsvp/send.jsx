@@ -111,7 +111,7 @@ class SendRsvp extends Component {
                             <p>
                                 Hola "invitado", te invito a:
                                 <br/>
-                                <strong>{this.state.rsvp.name}</strong>
+                                <strong>{this.props.event.name}</strong>
                             </p>
                         </div>
                     </div>
