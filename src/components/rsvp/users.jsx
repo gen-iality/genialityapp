@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import {EventsApi, UsersApi} from "../../helpers/request";
-import AddUser from "../modal/modalUser";
+import UserModal from "../modal/modalUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
@@ -209,6 +209,11 @@ class UsersRsvp extends Component {
     modalUser = () => {
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:false}
+        });
+    };
+    closeModal = () => {
+        this.setState((prevState) => {
+            return {addUser:!prevState.addUser,edit:undefined}
         });
     };
 
@@ -478,9 +483,8 @@ class UsersRsvp extends Component {
                         </div>
                     </div>
                 </div>
-                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList}
-                         extraFields={this.props.event.user_properties} edit={false}/>
+                <UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
+                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>

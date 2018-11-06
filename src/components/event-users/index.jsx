@@ -92,12 +92,8 @@ class ListEventUser extends Component {
 
     modalUser = () => {
         this.setState((prevState) => {
-            return {editUser:!prevState.editUser}
+            return {editUser:!prevState.editUser,edit:undefined}
         });
-    };
-
-    closeModal = () => {
-        this.setState({modal:false})
     };
 
     checkIn = (user) => {
