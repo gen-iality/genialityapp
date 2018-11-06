@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {FormattedDate, FormattedTime} from 'react-intl';
 import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
-import Dialog from "../modal/twoAction";
 import { FaCamera} from "react-icons/fa";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
@@ -60,6 +58,9 @@ class ListEventUser extends Component {
                         break;
                     case "removed":
                         newItems.splice(change.newIndex, 1);
+                        break;
+                    default:
+                        console.log('Ninguno');
                         break;
                 }
             });
@@ -160,7 +161,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, total, checkIn, extraFields} = this.state;
+        const {timeout, facingMode, qrData, userReq, total, checkIn} = this.state;
         return (
             <React.Fragment>
                 <header>

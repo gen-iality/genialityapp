@@ -142,8 +142,7 @@ class Header extends Component {
                                     <div>Wait...</div>:
                                     this.state.user ?
                                         <React.Fragment>
-                                            <img src={this.state.photo}
-                                                 className="author-image" alt="Placeholder image"/>
+                                            <img src={this.state.photo} alt={`avatar_${this.state.name}`} className="author-image is-hidden-mobile"/>
                                             <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
                                                 <a className="navbar-link has-text-grey-light is-hidden-mobile">
                                                     {this.state.name}
