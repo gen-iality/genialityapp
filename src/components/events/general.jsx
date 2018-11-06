@@ -8,6 +8,7 @@ import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
+import ErrorServe from "../modal/serverError";
 Moment.locale('es');
 
 class General extends Component {
@@ -226,7 +227,7 @@ class General extends Component {
                         </div>
                     </div>
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </form>
         );
     }
