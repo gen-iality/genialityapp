@@ -152,12 +152,11 @@ class ListEventUser extends Component {
 
     //Search records at third column
     searchResult = (data) => {
-        const users = [...this.state.auxArr];
-        !data ? this.setState({userReq:users}) : this.setState({userReq:data})
+        !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, total, checkIn} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -184,7 +183,7 @@ class ListEventUser extends Component {
                 </header>
                 <div className="main">
                     <div className="preview-list">
-                        <div className="field is-grouped is-grouped-multiline">
+                        <div className="field is-grouped">
                             <div className="control">
                                 <div className="tags has-addons">
                                     <span className="tag is-dark">Total</span>
@@ -200,7 +199,7 @@ class ListEventUser extends Component {
                             <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                         </div>
                         {
-                            userReq.length>0&&
+                            users.length>0&&
                                 <table className="table">
                                     <thead>
                                         <tr>
@@ -213,7 +212,7 @@ class ListEventUser extends Component {
                                     </thead>
                                     <tbody>
                                     {
-                                        userReq.map((item,key)=>{
+                                        users.map((item,key)=>{
                                             return <tr key={key}>
                                                 <td>
                                                     <span className="icon has-text-info action_pointer"
