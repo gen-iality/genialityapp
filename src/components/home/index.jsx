@@ -16,19 +16,27 @@ class Home extends Component {
             loading:true,
             categories:[],
             types:[],
+            events:[],
             tabEvt:true,
             tabEvtType:true,
-            tabEvtCat: true
-        }
+            tabEvtCat: true,
+            loadingState: false
+        };
+        this.loadMoreItems = this.loadMoreItems.bind(this);
     }
 
     async componentDidMount() {
         try{
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
-            const resp = await EventsApi.getPublic();
+            const resp = await EventsApi.getPublic('?pageSize=6');
             console.log(resp);
-            this.setState({events:resp.data,loading:false,categories,types});
+            this.setState({events:resp.data,loading:false,categories,types,current_page:resp.meta.current_page,total:resp.meta.total});
+            this.refs.iScroll.addEventListener("scroll", () => {
+                if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 20){
+                    this.loadMoreItems();
+                }
+            });
         }catch (e) {
             console.log(e);
         }
@@ -57,6 +65,20 @@ class Home extends Component {
             console.log(e.response);
             this.setState({timeout:true,loading:false,events:[],type,category});
         });
+    }
+
+    async loadMoreItems() {
+        if(!this.state.loadingState && this.state.events.length<this.state.total){
+            this.setState({ loadingState: true });
+            try{
+                const resp = await EventsApi.getPublic(`?pageSize=6&page=${this.state.current_page+1}`);
+                let listEvents = [...this.state.events];
+                resp.data.map(event => {return listEvents.push(event)});
+                this.setState({ events: listEvents, loadingState: false, current_page:resp.meta.current_page });
+            }catch (e) {
+
+            }
+        }
     }
 
     render() {
@@ -144,49 +166,44 @@ class Home extends Component {
                             )
                         }
                     </aside>
-
                     <section className="home column is-10">
                         <div className="dynamic-content">
-                            {/*<header>
-                                <div className="is-pulled-right field is-grouped">
-                                    <p className="is-size-6">Ciudad</p>
-                                    <p className="is-size-6">Fecha</p>
-                                </div>
-                            </header>*/}
-                            <section className="">
-                                {
-                                    this.state.loading ? <LoadingEvent/>:
+                            {
+                                this.state.events.length<=0 ? <LoadingEvent/> :
+                                    <div ref="iScroll" style={{ height: "650px", overflow: "auto" }}>
                                         <div className="columns home is-multiline">
                                             {
                                                 this.state.events.map((event,key)=>{
                                                     return <EventCard key={event._id} event={event}
                                                                       action={{name:'Ver',url:`landing/${event._id}`}}
                                                                       right={<div className="actions">
-                                                                                <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-share"/>
-                                                                                    </span>
-                                                                                    <span>Compartir</span>
-                                                                                </p>
-                                                                                <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-check"/>
-                                                                                    </span>
-                                                                                    <span>Asistiré</span>
-                                                                                </p>
-                                                                                <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-heart"/>
-                                                                                    </span>
-                                                                                    <span>Me interesa</span>
-                                                                                </p>
-                                                                            </div>}
+                                                                          <p className="is-size-7">
+                                                                                        <span className="icon is-small has-text-grey">
+                                                                                            <i className="fas fa-share"/>
+                                                                                        </span>
+                                                                              <span>Compartir</span>
+                                                                          </p>
+                                                                          <p className="is-size-7">
+                                                                                        <span className="icon is-small has-text-grey">
+                                                                                            <i className="fas fa-check"/>
+                                                                                        </span>
+                                                                              <span>Asistiré</span>
+                                                                          </p>
+                                                                          <p className="is-size-7">
+                                                                                        <span className="icon is-small has-text-grey">
+                                                                                            <i className="fas fa-heart"/>
+                                                                                        </span>
+                                                                              <span>Me interesa</span>
+                                                                          </p>
+                                                                      </div>}
                                                     />
                                                 })
                                             }
                                         </div>
-                                }
-                            </section>
+                                        {this.state.loadingState && <LoadingEvent/>}
+                                    </div>
+
+                            }
                         </div>
                     </section>
                 </div>
