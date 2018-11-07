@@ -48,7 +48,7 @@
 }
 
 .event-aside {
-  border-right: solid 1px #b5b5b5;
+  border-right: solid 1px $grey-lighter;
   height: auto;
   margin: 3.5rem 0;
   padding: 1rem 2rem !important;
@@ -65,9 +65,17 @@
     align-items: center;
     font-size: 1em;
     letter-spacing: 0.1px;
-    margin-left: 1em;
     text-transform: none;
     width: 100%;
+    .item {
+      color: $grey;
+      padding-left: 1em;
+      &.active {
+        border-left: 2px solid $primary;
+        color: $primary;
+        padding-left: calc(1em - 2px);
+      }
+    }
     .icon {
       margin-left: 0.5em;
       i {
@@ -87,8 +95,16 @@
     }
   }
   .menu-list {
-    a {
-      margin-left: 1.5em;
+    .item {
+      border-radius: 0;
+      color: $grey-light;
+      margin: 0.75rem 0.75rem 0.75rem 1rem;
+      padding: 0 0 0 1rem;
+      &.active {
+        border-left: 2px solid $primary;
+        color: $primary;
+        padding-left: calc(1em - 2px);
+      }
     }
   }
 }
