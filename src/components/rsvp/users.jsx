@@ -207,11 +207,15 @@ class UsersRsvp extends Component {
 
     //Modal add single User
     modalUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:false}
         });
     };
     closeModal = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:undefined}
         });
@@ -235,9 +239,11 @@ class UsersRsvp extends Component {
     //Modal import
     async modalImport() {
         try{
+            const html = document.querySelector("html");
             const {data} = await UsersApi.getAll(this.props.event._id);
             const users = handleUsers(data);
             this.setState((prevState) => {
+                !prevState.importUser ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
                 return {importUser:!prevState.importUser,users}
             });
         }catch (e) {
@@ -253,7 +259,9 @@ class UsersRsvp extends Component {
 
     //Button Ticket Logic
     showTicket = () => {
+        const html = document.querySelector("html");
         this.setState((prevState)=>{
+            !prevState.ticket ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
             return {ticket:!prevState.ticket}
         })
     };
@@ -261,6 +269,7 @@ class UsersRsvp extends Component {
         const { event } = this.props;
         const { selection } = this.state;
         const url = '/api/eventUsers/bookEventUsers/'+event._id;
+        const html = document.querySelector("html");
         let users = [];
         selection.map(item=>{
             return users.push(item.id)
@@ -270,6 +279,7 @@ class UsersRsvp extends Component {
             .then((res) => {
                 console.log(res);
                 toast.success('Ticket sent successfully');
+                html.classList.remove('is-clipped');
                 this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages',disabled:false})
             })
             .catch(e=>{
