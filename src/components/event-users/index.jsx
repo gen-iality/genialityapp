@@ -87,12 +87,16 @@ class ListEventUser extends Component {
     };
 
     addUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:false}
         });
     };
 
     modalUser = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:undefined}
         });
