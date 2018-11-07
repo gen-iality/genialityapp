@@ -196,7 +196,7 @@ class OrgEditProfile extends Component {
                 if(create) {
                     const html = document.querySelector("html");
                     html.classList.add('is-clipped');
-                    this.setState({modalOrg:true, wait:false});
+                    this.setState({modalOrg:true, wait:false, org:{...this.state.org,_id:resp._id}});
                     toast.success('Organization created successfully');
                 }
                 else{
@@ -235,9 +235,10 @@ class OrgEditProfile extends Component {
     };
 
     closeOrg = () => {
+        const { org } = this.state;
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
-        window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
+        window.location.replace(`${BaseUrl}/profile/${org._id}?type=organization`);
     };
 
     render() {
