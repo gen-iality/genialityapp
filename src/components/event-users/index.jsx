@@ -205,7 +205,9 @@ class ListEventUser extends Component {
                                 <span className="tag is-success">{checkIn}</span>
                             </div>
                         </div>
-                        <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
+                        {
+                            total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
+                        }
                     </div>
                     {
                         users.length>0&&
