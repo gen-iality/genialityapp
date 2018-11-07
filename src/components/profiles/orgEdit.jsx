@@ -194,8 +194,10 @@ class OrgEditProfile extends Component {
             console.log(resp);
             if(resp._id){
                 if(create) {
+                    const html = document.querySelector("html");
+                    html.classList.add('is-clipped');
+                    this.setState({modalOrg:true, wait:false});
                     toast.success('Organization created successfully');
-                    window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
                 }
                 else{
                     org.doc = !(org.doc) && {};
@@ -230,6 +232,12 @@ class OrgEditProfile extends Component {
 
     closeModal = () => {
         this.setState({modal:false})
+    };
+
+    closeOrg = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
     };
 
     render() {
@@ -395,6 +403,9 @@ class OrgEditProfile extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                <Dialog modal={this.state.modalOrg} title={'Organización Creada'}
+                        content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información. Mientras mira eventos</p></div>}
+                        first={{title:'OK',class:'',action:this.closeOrg}}/>
             </section>
         );
     }
