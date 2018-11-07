@@ -1,54 +1,97 @@
-.org-profile{
-  .userData {
-    padding: 80px;
-    background-color: #f2f2f2;
-    .title { 
-      padding: 0 0 0 10px;
+.profile {
+  padding: 3em 0 3em 3em;
+  .org-profile{
+    max-width: 100%;
+    width: 100%;
+    .profile-info {
+      .user-info {
+        padding: 1em 3em;
+        .circle-img {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0.75rem auto;
+          position: relative;
+          height: 180px;
+          width: 180px;
+          .avatar-img {
+            background-size: cover;
+            width: 100%;
+            border-radius: 50%;
+            height: 100%;
+          }
+          .change-img {
+            cursor: pointer;
+            background-color: rgba($color: $black, $alpha: 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            transition: all ease 0.33s;
+            height: 100%;
+            width: 100%;
+            z-index: 10;
+            &:hover {
+              opacity: 1;
+            }
+            svg {
+              transition: all ease 0.33s;
+              &:hover {
+                fill: $primary;
+              }
+            }
+          }
+        }
+      }
+      .userData {
+        padding: 80px;
+        background-color: #f2f2f2;
+        .title { 
+          padding: 0 0 0 10px;
+        }
+        .label {
+          margin-bottom: -5px;
+        }
+        .column {
+          padding: 5px;  
+        }
+        .input {
+          width: 80%;
+        }
+      }
     }
-    .label {
-      margin-bottom: -5px;
-    }
-    .column {
-      padding: 5px;  
-    }
-    .input {
-      width: 80%;
+    .profile-data {
+      margin-top: 2em;
+      padding-right: 3em;
+      .data-title {
+        line-height: 1.1;
+        margin-bottom: 2em;
+        span {
+          font-weight: 900;
+        }
+      }
+      .tickets {
+        height: 100%;
+        width: 100%;
+        &.soon {
+          background-color: #f2f2f2;
+        }
+      }
     }
   }
-  .org-data{
-    background-color: $gray-lighter;
-  }
-  .document-zone {
-    background-color: white;
-    border-radius: 10px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .circle-img{
-    position: relative;
-    .avatar-img{
-      background-size: cover;
-      width: 170px;
-      border-radius: 50%;
-      height: 180px;
-    }
-    .change-img{
-      position: absolute !important;
-      top: 36%;
-      left: 26%;
-      z-index: 900;
-    }
-    &:after {
-      content: '\A';
-      position: absolute;
-      border-radius: 50%;
-      width: 55%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background: rgba(0,0,0,0.3);
-      opacity: 1;
-    }
-  }
+}
+
+.org-data {
+  background-color: $gray-lighter;
+}
+.document-zone {
+  background-color: white;
+  border-radius: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }

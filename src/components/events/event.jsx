@@ -121,7 +121,7 @@ class Event extends Component {
                                                     </ul>
                                                 )
                                             }
-                                            <p className="menu-label">
+                                            <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item has-text-grey" onClick={this.handleClick} className="item" activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
 

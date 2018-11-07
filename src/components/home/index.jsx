@@ -161,6 +161,7 @@ class Home extends Component {
                                                 this.state.events.map((event,key)=>{
                                                     return <EventCard key={event._id} event={event}
                                                                       action={{name:'Ver',url:`landing/${event._id}`}}
+                                                                      size={'column is-one-third'}
                                                                       right={<div className="actions">
                                                                                 <p className="is-size-7">
                                                                                     <span className="icon is-small has-text-grey">
