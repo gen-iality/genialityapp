@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Route, NavLink, Redirect } from "react-router-dom";
-import {firestore} from "../../helpers/firebase";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";

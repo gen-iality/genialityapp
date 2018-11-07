@@ -69,12 +69,12 @@ class SendRsvp extends Component {
         const { rsvp } = this.state;
         let users = [];
         selection.map(item=>{
-            users.push(item.id)
+            return users.push(item.id)
         });
         this.setState({dataMail:users,disabled:true});
         try{
             const data = {subject:rsvp.subject,message:rsvp.message,image:rsvp.image,eventUsersIds:users};
-            const resp = await EventsApi.sendRsvp(data,event._id);
+            await EventsApi.sendRsvp(data,event._id);
             toast.success('Email sent successfully');
             this.setState({disabled:false,redirect:true,url_redirect:'/event/'+event._id+'/messages'})
         }catch (e) {

@@ -25,7 +25,6 @@ class Landing extends Component {
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
-            attendee = searchParams.get("attendee"),
             status = searchParams.get("status");
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
@@ -101,23 +100,23 @@ class Landing extends Component {
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
-                                                    <div className="column is-5 is-offset-1">
-                                                        <div className="aforo">
-                                                            <span className="titulo">150/400</span><br/>
-                                                            <span className="is-italic has-text-grey">Aforo</span>
+                                            {/*<div className="column is-5 is-offset-1">
+                                                <div className="aforo">
+                                                    <span className="titulo">150/400</span><br/>
+                                                    <span className="is-italic has-text-grey">Aforo</span>
+                                                </div>
+                                            </div>*/}
+                                            {
+                                                (event.description.length >= 80 && !this.state.showFull) && (
+                                                        <div className="column is-5 button-cont">
+                                                            <span className="has-text-weight-semibold has-text-grey">Ver más</span>
+                                                            <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
+                                                            <i className="icon fa fa-plus"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                        {
-                                            (event.description.length >= 80 && !this.state.showFull) && (
-                                                    <div className="column is-5 button-cont">
-                                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
-                                                        <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
-                                                        <i className="icon fa fa-plus"></i>
-                                                        </div>
-                                                    </div>
-                                                
-                                            )
-                                        }
+
+                                                )
+                                            }
                                         </div>
                                     </React.Fragment>
                             }

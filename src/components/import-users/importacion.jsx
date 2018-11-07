@@ -61,7 +61,7 @@ class Importacion extends Component {
         console.log(this.props);
         let data = [{'name':'','email':''}];
         this.props.extraFields.map((extra)=>{
-           data[0][extra.name] = ''
+           return data[0][extra.name] = ''
         });
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();

@@ -115,9 +115,9 @@ class UsersRsvp extends Component {
     };
 
     handleCheckBox = (users, selection) => {
-        let exist = 0,
+        /*let exist = 0,
             unexist = 0;
-        /*for(let i=0;i<users.length;i++){
+        for(let i=0;i<users.length;i++){
             const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
             (pos < 0) ?  unexist++ : exist++;
         }
@@ -133,7 +133,7 @@ class UsersRsvp extends Component {
             this.refs.checkbox.indeterminate = true;
             this.refs.checkbox.checked = false;
         }*/
-    }
+    };
 
     //Add all of users to selection state
     toggleAll = () => {
@@ -258,7 +258,7 @@ class UsersRsvp extends Component {
         const url = '/api/eventUsers/bookEventUsers/'+event._id;
         let users = [];
         selection.map(item=>{
-            users.push(item.id)
+            return users.push(item.id)
         });
         this.setState({disabled:true});
         API.post(url, {eventUsersIds:users})
@@ -328,7 +328,7 @@ class UsersRsvp extends Component {
             if (filtered.length) {
                 let queryFilter = [];
                 filtered.map(filter=>{
-                    if(filter.value!=='all') queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
+                    if(filter.value!=='all') return queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
                 });
                 queryFilter = JSON.stringify(queryFilter);
                 query = query+`filtered=${queryFilter}`;
@@ -336,7 +336,7 @@ class UsersRsvp extends Component {
             if (sorted.length) {
                 let querySort = [];
                 sorted.map(sort=>{
-                    querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
+                    return querySort.push({"id":sort.id,"order":sort.desc?"desc":"asc"})
                 });
                 querySort = JSON.stringify(querySort);
                 query = query+`&orderBy=${querySort}`;
@@ -502,7 +502,7 @@ class UsersRsvp extends Component {
 const handleUsers = (list) => {
         let users = [];
         list.map(user=>{
-            users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
+            return users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
         });
         return users;
 };
