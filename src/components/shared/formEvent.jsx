@@ -67,6 +67,7 @@ class FormEvent extends Component {
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.date_end}
+                                            min={this.props.minDate}
                                             format={'L'}
                                             time={false}
                                             onChange={value => this.props.changeDate(value,"date_end")}/>
@@ -80,6 +81,7 @@ class FormEvent extends Component {
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.hour_end}
+                                            min={this.props.minDate}
                                             step={60}
                                             date={false}
                                             onChange={value => this.props.changeDate(value,"hour_end")}/>

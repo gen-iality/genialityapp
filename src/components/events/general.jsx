@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
+import {Actions, CategoriesApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
-import {BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -18,6 +17,7 @@ class General extends Component {
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
+            minDate: new Date(),
             valid: !this.props.event._id
         };
         this.submit = this.submit.bind(this);
@@ -77,7 +77,12 @@ class General extends Component {
     };
 
     changeDate=(value,name)=>{
-        this.setState({event:{...this.state.event,[name]:value}})
+        let {event:{date_end}} = this.state;
+        if(name === 'date_start') {
+            const diff = Moment(value).diff(Moment(date_end),'days');
+            if(diff >= 0) date_end = Moment(date_end).add(diff, 'days').toDate();
+            this.setState({minDate:value,event:{...this.state.event,date_end:date_end,date_start:value}});
+        }else this.setState({event:{...this.state.event,[name]:value}})
     };
 
     changeImg = (files) => {
@@ -114,8 +119,7 @@ class General extends Component {
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
-        console.log(event);
-        /*this.setState({loading:true});
+        this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
         const hour_end = Moment(event.hour_end).format('HH:mm');
@@ -160,7 +164,7 @@ class General extends Component {
             console.log(e);
             this.setState({timeout:true});
             toast.error("Something wrong")
-        }*/
+        }
     }
 
     onSuggestSelect = (suggest) => {
@@ -214,7 +218,7 @@ class General extends Component {
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                </div>
                            }
-                           handleChange={this.handleChange}
+                           handleChange={this.handleChange} minDate={this.state.minDate}
                            selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
