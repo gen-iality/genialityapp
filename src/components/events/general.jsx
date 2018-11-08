@@ -59,8 +59,8 @@ class General extends Component {
 
     valid = () => {
         const {event} = this.state,
-            valid = (event.name.length>8 && event.description.length>5 && event.location.PlaceId);
-        this.setState({valid:false})
+            valid = (event.name.length>0 && event.description.length>0 && event.location.PlaceId);
+        this.setState({valid:valid})
     };
 
     selectCategory = (selectedCategories) => {
@@ -195,6 +195,7 @@ class General extends Component {
 
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
+        console.log(valid);
         return (
             <form className="form" onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} organizers={organizers} types={types}

@@ -239,6 +239,7 @@ a {
       font-weight: 900; 
       margin: 0;
     }
+    .required:after { content:" *"; color: $danger }
     .control {
       margin-left: 0.5em;
     }

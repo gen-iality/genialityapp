@@ -11,7 +11,7 @@ class FormEvent extends Component {
             <div className="columns">
                 <div className="column">
                     <div className="field">
-                        <label className="label has-text-grey-light">Nombre</label>
+                        <label className="label required has-text-grey-light">Nombre</label>
                         <div className="control">
                             <input className="input" name={"name"} type="text"
                                    placeholder="Text input" value={event.name}
@@ -20,7 +20,7 @@ class FormEvent extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label has-text-grey-light">Dirección</label>
+                        <label className="label required has-text-grey-light">Dirección</label>
                         <div className="control">
                             <Geosuggest
                                 placeholder={'Dirección'}
@@ -34,7 +34,7 @@ class FormEvent extends Component {
                         <div className="columns">
                             <div className="column inner-column">
                                 <div className="field">
-                                    <label className="label has-text-grey-light">Fecha Inicio</label>
+                                    <label className="label required has-text-grey-light">Fecha Inicio</label>
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.date_start}
@@ -47,7 +47,7 @@ class FormEvent extends Component {
                             <div className="vertical-line"></div>
                             <div className="column  inner-column">
                                 <div className="field">
-                                    <label className="label has-text-grey-light">Hora Inicio</label>
+                                    <label className="label required has-text-grey-light">Hora Inicio</label>
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.hour_start}
@@ -63,7 +63,7 @@ class FormEvent extends Component {
                         <div className="columns">
                             <div className="column inner-column">
                                 <div className="field">
-                                    <label className="label has-text-grey-light">Fecha Fin</label>
+                                    <label className="label required has-text-grey-light">Fecha Fin</label>
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.date_end}
@@ -76,7 +76,7 @@ class FormEvent extends Component {
                             <div className="vertical-line"></div>
                             <div className="column inner-column">
                                 <div className="field">
-                                    <label className="label has-text-grey-light">Hora Fin</label>
+                                    <label className="label required has-text-grey-light">Hora Fin</label>
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.hour_end}
@@ -89,7 +89,7 @@ class FormEvent extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label has-text-grey-light">Descripción</label>
+                        <label className="label required has-text-grey-light">Descripción</label>
                         <div className="control">
                             <textarea className="textarea" name={"description"} placeholder="Textarea" value={event.description} onChange={this.props.handleChange}/>
                         </div>
@@ -107,9 +107,9 @@ class FormEvent extends Component {
                             </div>
                         </div>
                     </div>
-                    <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.props.selectOrganizer} options={organizers}/>
-                    <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.props.selectType} options={types}/>
-                    <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.props.selectCategory} options={categories}/>
+                    <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.props.selectOrganizer} options={organizers} required={true}/>
+                    <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.props.selectType} options={types} required={true}/>
+                    <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.props.selectCategory} options={categories} required={true}/>
                 </div>
             </div>
         );
