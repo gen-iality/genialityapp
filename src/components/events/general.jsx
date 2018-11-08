@@ -205,7 +205,7 @@ class General extends Component {
                                    <div className="control">
                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                                    divClass={'imgRsvp'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                   classDrop={'dropzone'} contentDrop={<button className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                   classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
                                                    contentZone={<div>Subir foto</div>}
                                                    changeImg={this.changeImg} errImg={this.state.errImg}/>
                                    </div>
