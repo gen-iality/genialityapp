@@ -4,7 +4,6 @@ import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -58,21 +57,23 @@ class General extends Component {
     };
 
     valid = () => {
-        const {event} = this.state,
-            valid = (event.name.length>0 && event.description.length>0 && event.location.PlaceId);
-        this.setState({valid:valid})
+        const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
+            valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+        this.setState({valid:!valid})
     };
 
     selectCategory = (selectedCategories) => {
-        this.setState({ selectedCategories });
+        this.setState({ selectedCategories }, this.valid);
     };
 
     selectOrganizer = (selectedOrganizer) => {
-        this.setState({ selectedOrganizer });
+        if(!selectedOrganizer.value) selectedOrganizer = undefined;
+        this.setState({ selectedOrganizer }, this.valid);
     };
 
     selectType = (selectedType) => {
-        this.setState({ selectedType });
+        if(!selectedType.value) selectedType = undefined;
+        this.setState({ selectedType }, this.valid);
     };
 
     changeDate=(value,name)=>{
@@ -110,10 +111,11 @@ class General extends Component {
     };
 
     async submit(e) {
-        this.setState({loading:true});
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
+        console.log(event);
+        /*this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
         const hour_end = Moment(event.hour_end).format('HH:mm');
@@ -158,7 +160,7 @@ class General extends Component {
             console.log(e);
             this.setState({timeout:true});
             toast.error("Something wrong")
-        }
+        }*/
     }
 
     onSuggestSelect = (suggest) => {
@@ -195,7 +197,6 @@ class General extends Component {
 
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
-        console.log(valid);
         return (
             <form className="form" onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} organizers={organizers} types={types}
@@ -254,7 +255,7 @@ const handleFields = (organizers,types,categories,event) =>{
     if(event_type_id){
         const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
         selectedType = types[pos];
-    }
+    }else selectedType = undefined;
     return {selectedOrganizer,selectedCategories,selectedType}
 }
 

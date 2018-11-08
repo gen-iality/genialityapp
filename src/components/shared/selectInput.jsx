@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
+import {FormattedMessage} from "react-intl";
 
 const MAX_OPTIONS = 2;
 
@@ -52,6 +53,7 @@ class SelectInput extends Component {
                         onChange={this.onChange}
                         options={maxReached ? selectedOptions : options}
                         isMulti={isMulti}
+                        placeholder={<FormattedMessage id="global.select" defaultMessage="Select..."/>}
                         noOptionsMessage={this.noOptionsMessage}
                         value={selectedOptions}
                         className="basic-multi-select"

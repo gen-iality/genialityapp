@@ -396,6 +396,9 @@ a {
     border-color: $primary;
     box-shadow: 0 0 0 transparent;
   }
+  &::placeholder {
+    color: rgba(54, 54, 54, 0.3);
+  }
 }
 
 .geosuggest__suggests {
