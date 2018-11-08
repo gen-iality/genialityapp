@@ -4,9 +4,9 @@ import {Link} from "react-router-dom";
 
 class EventCard extends Component {
     render() {
-        const {event,action,right} = this.props;
+        const {event,action,size,right} = this.props;
         return (
-            <div className="column is-one-third">
+            <div className={size}>
                 <div className="card">
                     <div className="card-image">
                         <figure className="image is-3by2">
@@ -49,7 +49,9 @@ class EventCard extends Component {
                     <div className="card-content">
                         <div className="media">
                             <div className="media-content">
-                                <h2 className="title is-size-6 is-medium has-text-grey-dark">{event.name}</h2>
+                                <div className="title">
+                                    <h2 className="title is-size-6 is-medium has-text-grey-dark">{event.name}</h2>
+                                </div>
                                 <div className="subtitle">
                                     <span className="icon is-small has-text-grey">
                                         <i className="fas fa-map-marker-alt"/>

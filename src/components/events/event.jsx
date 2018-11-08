@@ -98,8 +98,7 @@ class Event extends Component {
                                     (!this.state.newEvent) && (
                                         <div className={`${showMenu?'is-hidden-mobile':''}`}>
                                             <p className="menu-label has-text-centered-mobile">
-                                                <NavLink className="item has-text-grey" onClick={this.handleClick}
-                                                         activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
@@ -111,16 +110,16 @@ class Event extends Component {
                                                 this.state.userTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         <li>
-                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                         </li>
                                                     </ul>
                                                 )
                                             }
-                                            <p className="menu-label">
-                                                <NavLink className="item has-text-grey" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
@@ -132,8 +131,10 @@ class Event extends Component {
                                                 this.state.contentTab && (
                                                     <ul className="menu-list">
                                                         <li>
-                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                                            <NavLink className={'has-text-grey-light is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Speakers</NavLink>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
+                                                        </li>
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/speakers`}>Speakers</NavLink>
                                                         </li>
                                                     </ul>
                                                 )

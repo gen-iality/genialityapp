@@ -15,15 +15,19 @@ a {
   padding-left: 1.25em;
   padding-right: 1.25em;
   transition: all ease 0.33s;
+  .icon {
+    margin-left: 0.25em !important;
+  }
   &.is-primary {
     box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
   }
   &.is-small {
     border-radius: 8px;
+    box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
     transition: all ease 0.15s;
     &:hover {
       background: $primary;
-      color: transparent;
+      color: $white;
     }
   }
 }
@@ -78,7 +82,156 @@ a {
   }
 }
 
+.card {
+  box-shadow: 0px 0px 8px rgba($color: #000000, $alpha: 0.1);
+  .card-image{
+    .image {
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+    &:after {
+      content: '\A';
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#00000000',GradientType=0 );
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,0) 100%);
+      background: -webkit-linear-gradient(top, rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,0) 100%);
+      background: -moz-linear-gradient(top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 100%);
+      height: 100%;
+      opacity: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+  .header-event {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 1rem;
+    width: 100%;
+    z-index: 2;
+    div.dates {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-left: 1rem;
+      time{
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+      .vertical-line {
+        background-color: #ffffff;
+        margin: 0 0.75em;
+        height: 20px;
+        width: 1px;
+      }
+    }
+    div.cats {
+      margin-right: 1rem;
+      p {
+        font-weight: 700;
+        font-size: 0.6rem;
+        font-style: italic;
+        text-decoration: underline;
+        &:nth-child(1) {
+          color: #ffffff;
+        }
+        &:nth-child(2) {
+          color: #e1f97c;
+        }
+      }
+    }
+  }
+  .img-see {
+    z-index: 2;
+    bottom: 2em;
+    right: 2em;
+    position: absolute;
+    .icon {
+      margin-left: 0.5em;
+    }
+  }
+  .card-content {
+    padding: 0;
+    .media{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100px;
+      .media-content{
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        flex-direction: column;
+        height: 100%;
+        padding: 1em;
+        flex-basis: 60%;
+        width: 60%;
+        .title {
+          font-weight: 900;
+        }
+        .subtitle {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          line-height: 1;  
+          width: 100%;
+          .icon {
+            margin-right: 10px;
+          }
+        }
+      }
+      .media-right {
+        flex-basis: 35%;
+        height: 100%;
+        margin: 0;
+        padding: 0; 
+        width: 35%;
+        .actions {
+          display: none; //temporal
+          padding: 1rem;
+          .icon {
+            margin-right: 5px;
+          }
+        }
+        .edit {
+          height: 100%;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          max-height: -webkit-fill-available;
+          .button-edit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            &:hover {
+              background-color: $primary !important;
+              color: $white !important;
+            }
+          }
+        }
+      }
+      .vertical-line {
+        background: $grey-lighter;
+        height: 50%;
+        width: 1px; 
+      }
+    }
+  }
+}
+
 .form {
+  .input:disabled {
+    color: $grey-light !important;
+  }
   .field {
     margin-bottom: 1.25rem;
     .label {
