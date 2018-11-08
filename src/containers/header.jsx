@@ -151,9 +151,10 @@ class Header extends Component {
                                                     <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                                     </Link>
-
                                                     <hr className="navbar-divider"/>
-
+                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">Eventos creados</p>
+                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">Mis tickets</p>
+                                                    <hr className="navbar-divider"/>
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
                                                     </p>
