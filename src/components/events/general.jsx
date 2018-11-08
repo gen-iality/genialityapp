@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
-import {Actions, CategoriesApi, OrganizationApi, TypesApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
+import {BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
