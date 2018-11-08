@@ -115,137 +115,6 @@ class UserEditProfile extends Component {
             <section className="section">
                 {
                     loading ? <Loading/> :
-                        <div className="container org-profile">
-                            <div className="columns">
-                                <div className="column is-3">
-                                    <ImageInput picture={user.picture} imageFile={this.state.imageFile}
-                                                divClass={'circle-img'}
-                                                content={<div style={{backgroundImage: `url(${user.picture})`}}
-                                                              className="avatar-img"/>}
-                                                classDrop={'change-img is-size-2'}
-                                                contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
-                                                contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded" alt={'evius.co'}
-                                                         src="https://bulma.io/images/placeholders/128x128.png"/>
-                                                </figure>} style={{}}
-                                                changeImg={this.changeImg}/>
-                                    <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Nombre</label>
-                                        <div className="control">
-                                            <input className="input" name={"name"} type="text" placeholder="Nombre" value={user.name} onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-
-                                    <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Correo</label>
-                                        <div className="control">
-                                            <input className="input" name={"email"} type="email" placeholder="Email" value={user.email} onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-
-                                    <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Contraseña</label>
-                                        <div className="control">
-                                            <input className="input" name={"password"} type="password" placeholder="Contraseña" disabled/>
-                                        </div>
-                                    </div>
-
-                                    <div className="columns is-centered">
-                                        <div className="column is-half has-text-centered">
-                                            <div className="control field">
-                                                <button className="button is-primary" onClick={this.saveForm}>Guardar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="column is-8 user-data userData">
-                                    <h1 className="title has-text-primary">Datos</h1>
-                                    <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Cédula</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"cedula"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Dirección</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"direccion"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Celular</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"celular"} type="num" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Empresa</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"empresa"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Fecha de nacimiento</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"nacimiento"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Intereses</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"intereses"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Ciudad / País</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"ciudad"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                        {/* <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Proceso</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"proceso"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div> */}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            <div>
-                                <h2>Eventos creados:</h2>
-                                <div className="columns home is-multiline is-mobile">
-                                    {
-                                        events.map((event,key)=>{
-                                            return <EventCard event={event} key={event._id}
-                                                              action={''}
-                                                              right={
-                                                                  <div>
-                                                                      <div>
-                                                                          <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
-                                                                              <span>Editar</span>
-                                                                          </Link>
-                                                                      </div>
-                                                                      <div>
-                                                                          <a className="button is-text is-inverted is-danger" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>
-                                                                              <span>Borrar</span>
-                                                                          </a>
-                                                                      </div>
-                                                                  </div>
-                                                              }
-                                            />
-                                        })
-                                    }
                             <div className="profile-data columns">
                                 <div className="column is-8">
                                     <h2>
@@ -255,16 +124,22 @@ class UserEditProfile extends Component {
                                     <div className="columns home is-multiline is-mobile">
                                         {
                                             events.map((event,key)=>{
-                                                return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
-                                                        <div className="edit">
-                                                            <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
-                                                                <span className="icon is-medium">
-                                                                    <i className="fas fa-lg fa-pencil-alt"/>
-                                                                </span>
-                                                                <span className="is-size-7 is-italic">Editar</span>
-                                                            </Link>
-                                                        </div>
-                                                    }
+                                                return <EventCard event={event} key={event._id}
+                                                                  action={''}
+                                                                  right={
+                                                                      <div>
+                                                                          <div>
+                                                                              <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
+                                                                                  <span>Editar</span>
+                                                                              </Link>
+                                                                          </div>
+                                                                          <div>
+                                                                              <a className="button is-text is-inverted is-danger" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>
+                                                                                  <span>Borrar</span>
+                                                                              </a>
+                                                                          </div>
+                                                                      </div>
+                                                                  }
                                                 />
                                             })
                                         }
@@ -278,7 +153,6 @@ class UserEditProfile extends Component {
                                     <div className="tickets soon"></div>
                                 </div>
                             </div>
-                        </div>
                 }
                 {
                     timeout&&(<LogOut/>)
