@@ -14,7 +14,7 @@ class FormEvent extends Component {
                         <label className="label required has-text-grey-light">Nombre</label>
                         <div className="control">
                             <input className="input" name={"name"} type="text"
-                                   placeholder="Text input" value={event.name}
+                                   placeholder="Event name" value={event.name}
                                    onChange={this.props.handleChange}
                             />
                         </div>
