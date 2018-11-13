@@ -32,10 +32,14 @@ class Dialog extends Component {
                                 <div>{this.state.isLoading}</div>:
                                 <React.Fragment>
                                     <button className={`button ${first.class} ${first.disabled?'is-loading':''}`} onClick={first.action}>{first.title}</button>
-                                    <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
-                                    <div className={"msg"}>
-                                        <p className={`help ${message.class}`}>{message.content}</p>
-                                    </div>
+                                    {
+                                        second && <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
+                                    }
+                                    {
+                                        message && <div className={"msg"}>
+                                            <p className={`help ${message.class}`}>{message.content}</p>
+                                        </div>
+                                    }
                                 </React.Fragment>
                         }
                     </footer>

@@ -29,7 +29,7 @@ class Event extends Component {
     async componentDidMount() {
         let eventId = this.props.match.params.event;
         if(eventId === 'new_event'){
-            const event = {name:'New event',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             this.setState({newEvent:true,loading:false,event})
         }else{
             try {
@@ -88,7 +88,7 @@ class Event extends Component {
                         <section className="columns">
                             <aside className="column menu event-aside is-2 has-text-weight-bold">
                                 <p className="subtitle has-text-weight-bold">
-                                    {this.state.event.name}
+                                    {this.state.newEvent?'New Event':this.state.event.name}
                                     <span className="icon is-hidden-desktop" onClick={(e)=>{
                                         this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
                                         {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}
@@ -100,7 +100,6 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
-
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
@@ -122,7 +121,6 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">

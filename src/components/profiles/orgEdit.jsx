@@ -5,7 +5,7 @@ import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile, MdSave} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
-import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
+import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import {BaseUrl} from "../../helpers/constants";
@@ -15,6 +15,7 @@ import EventCard from "../shared/eventCard";
 import {Link} from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dialog from "../modal/twoAction";
 
 class OrgEditProfile extends Component {
     constructor(props) {
@@ -28,8 +29,13 @@ class OrgEditProfile extends Component {
             events: [],
             loading: true,
             wait: false,
+            message:{
+                class:'',
+                content:''
+            }
         };
         this.saveForm = this.saveForm.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -188,8 +194,10 @@ class OrgEditProfile extends Component {
             console.log(resp);
             if(resp._id){
                 if(create) {
+                    const html = document.querySelector("html");
+                    html.classList.add('is-clipped');
+                    this.setState({modalOrg:true, wait:false, org:{...this.state.org,_id:resp._id}});
                     toast.success('Organization created successfully');
-                    window.location.replace(`${BaseUrl}/profile/${resp._id}?type=organization`);
                 }
                 else{
                     org.doc = !(org.doc) && {};
@@ -206,6 +214,32 @@ class OrgEditProfile extends Component {
             this.setState({timeout:true,loader:false,org, wait:false});
         }
     }
+
+    async deleteEvent() {
+        this.setState({isLoading:'Wait....'});
+        const result = await EventsApi.deleteOne(this.state.eventId);
+        console.log(result);
+        if(result.data === "True"){
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+            const events = await EventsApi.getAll();
+            setTimeout(()=>{
+                this.setState({modal:false,events});
+            },500)
+        }else{
+            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+        }
+    }
+
+    closeModal = () => {
+        this.setState({modal:false})
+    };
+
+    closeOrg = () => {
+        const { org } = this.state;
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        window.location.replace(`${BaseUrl}/profile/${org._id}?type=organization`);
+    };
 
     render() {
         const { org, loading, timeout, events, wait } = this.state;
@@ -335,16 +369,26 @@ class OrgEditProfile extends Component {
                                 </div>
                             </div>
                             <div>
-                                <h2>Eventos:</h2>
+                                <h2>Eventos creados:</h2>
                                 <div className="columns home is-multiline is-mobile">
                                     {
                                         events.map((event,key)=>{
                                             return <EventCard event={event} key={event._id}
                                                               action={''}
                                                               right={
-                                                                  <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
-                                                                      <span>Editar</span>
-                                                                  </Link>}
+                                                                  <div>
+                                                                      <div>
+                                                                          <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
+                                                                              <span>Editar</span>
+                                                                          </Link>
+                                                                      </div>
+                                                                      <div>
+                                                                          <a className="button is-text is-inverted is-danger" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>
+                                                                              <span>Borrar</span>
+                                                                          </a>
+                                                                      </div>
+                                                                  </div>
+                                                              }
                                             />
                                         })
                                     }
@@ -355,6 +399,14 @@ class OrgEditProfile extends Component {
                 {
                     timeout&&(<LogOut/>)
                 }
+                <Dialog modal={this.state.modal} title={'Borrar Evento'}
+                        content={<p>Seguro de borrar este evento?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message} isLoading={this.state.isLoading}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                <Dialog modal={this.state.modalOrg} title={'Organización Creada'}
+                        content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información. Mientras mira eventos</p></div>}
+                        first={{title:'OK',class:'',action:this.closeOrg}}/>
             </section>
         );
     }

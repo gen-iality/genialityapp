@@ -62,8 +62,8 @@ export const Actions = {
     }
 };
 export const EventsApi = {
-    getPublic: async() => {
-      return await Actions.getAll('/api/events',true)
+    getPublic: async(query) => {
+      return await Actions.getAll(`/api/events${query}`,true)
     },
     landingEvent: async(id) => {
       return await Actions.getOne('/api/events/', id, true);
@@ -97,8 +97,8 @@ export const UsersApi = {
     editProfile: async (data,id) => {
         return await Actions.edit('/api/users/', data, id)
     },
-    editOne: async (data, id) => {
-        return await Actions.edit(`/api/eventUsers/${id}/`,data,'withStatus')
+    mineTickets: async () => {
+        return await Actions.getAll(`/api/me/eventUsers`)
     },
     createOne: async (data, id) => {
         return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`,data)

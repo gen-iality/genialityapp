@@ -7,6 +7,8 @@ import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
 import HomeProfile from "../components/home/profile";
 import MyProfile from "../components/profiles/myProfile";
+import Terms from "../components/policies/termsService";
+import Privacy from "../components/policies/privacyPolicy";
 
 class ContentContainer extends Component {
     componentWillMount(){
@@ -21,6 +23,8 @@ class ContentContainer extends Component {
                 <PrivateRoute path="/my_events" component={ Events }/>
                 <PrivateRoute path="/event/:event" component={ Event }/>
                 <PrivateRoute path="/profile/:id" component={ MyProfile }/>
+                <Route exact path="/terms" component={ Terms } />
+                <Route exact path="/privacy" component={ Privacy } />
             </main>
         );
     }

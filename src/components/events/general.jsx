@@ -4,10 +4,10 @@ import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
 import {BaseUrl} from "../../helpers/constants";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
+import ErrorServe from "../modal/serverError";
 Moment.locale('es');
 
 class General extends Component {
@@ -18,6 +18,7 @@ class General extends Component {
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
+            minDate: new Date(),
             valid: !this.props.event._id
         };
         this.submit = this.submit.bind(this);
@@ -57,25 +58,32 @@ class General extends Component {
     };
 
     valid = () => {
-        const {event} = this.state,
-            valid = (event.name.length>8 && event.description.length>5 && event.location.PlaceId);
-        this.setState({valid})
+        const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
+            valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+        this.setState({valid:!valid})
     };
 
     selectCategory = (selectedCategories) => {
-        this.setState({ selectedCategories });
+        this.setState({ selectedCategories }, this.valid);
     };
 
     selectOrganizer = (selectedOrganizer) => {
-        this.setState({ selectedOrganizer });
+        if(!selectedOrganizer.value) selectedOrganizer = undefined;
+        this.setState({ selectedOrganizer }, this.valid);
     };
 
     selectType = (selectedType) => {
-        this.setState({ selectedType });
+        if(!selectedType.value) selectedType = undefined;
+        this.setState({ selectedType }, this.valid);
     };
 
     changeDate=(value,name)=>{
-        this.setState({event:{...this.state.event,[name]:value}})
+        let {event:{date_end}} = this.state;
+        if(name === 'date_start') {
+            const diff = Moment(value).diff(Moment(date_end),'days');
+            if(diff >= 0) date_end = Moment(date_end).add(diff, 'days').toDate();
+            this.setState({minDate:value,event:{...this.state.event,date_end:date_end,date_start:value}});
+        }else this.setState({event:{...this.state.event,[name]:value}})
     };
 
     changeImg = (files) => {
@@ -109,10 +117,10 @@ class General extends Component {
     };
 
     async submit(e) {
-        this.setState({loading:true});
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
+        this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
         const hour_end = Moment(event.hour_end).format('HH:mm');
@@ -204,14 +212,14 @@ class General extends Component {
                                    <div className="control">
                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                                    divClass={'imgRsvp'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                   classDrop={'dropzone'} contentDrop={<button className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                   classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
                                                    contentZone={<div>Subir foto</div>}
                                                    changeImg={this.changeImg} errImg={this.state.errImg}/>
                                    </div>
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                </div>
                            }
-                           handleChange={this.handleChange}
+                           handleChange={this.handleChange} minDate={this.state.minDate}
                            selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                 <div className="field">
@@ -226,7 +234,7 @@ class General extends Component {
                         </div>
                     </div>
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </form>
         );
     }
@@ -252,7 +260,7 @@ const handleFields = (organizers,types,categories,event) =>{
     if(event_type_id){
         const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
         selectedType = types[pos];
-    }
+    }else selectedType = undefined;
     return {selectedOrganizer,selectedCategories,selectedType}
 }
 

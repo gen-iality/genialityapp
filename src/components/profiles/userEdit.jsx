@@ -8,6 +8,7 @@ import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dialog from "../modal/twoAction";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -16,9 +17,14 @@ class UserEditProfile extends Component {
             selectedOption: [],
             events: [],
             user: {},
-            loading: true
+            loading: true,
+            message:{
+                class:'',
+                content:''
+            }
         };
         this.saveForm = this.saveForm.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -27,6 +33,8 @@ class UserEditProfile extends Component {
             const categories = await CategoriesApi.getAll();
             const resp = await EventsApi.mine();
             const user = await UsersApi.getProfile(userId,true);
+            const tickets = await UsersApi.mineTickets();
+            console.log(tickets);
             user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             this.setState({loading:false,user,events:resp.data,categories});
@@ -82,7 +90,26 @@ class UserEditProfile extends Component {
             toast.error('Something wrong. Try again later');
             this.setState({timeout:true,loader:false});
         }
+    };
+
+    async deleteEvent() {
+        this.setState({isLoading:'Wait....'});
+        const result = await EventsApi.deleteOne(this.state.eventId);
+        console.log(result);
+        if(result.data === "True"){
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+            const events = await EventsApi.getAll();
+            setTimeout(()=>{
+                this.setState({modal:false,events});
+            },500)
+        }else{
+            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+        }
     }
+
+    closeModal = () => {
+        this.setState({modal:false})
+    };
 
     render() {
         const { loading, timeout, events, user } = this.state;
@@ -96,12 +123,11 @@ class UserEditProfile extends Component {
                                     <ImageInput picture={user.picture} imageFile={this.state.imageFile}
                                                 divClass={'circle-img'}
                                                 content={<div style={{backgroundImage: `url(${user.picture})`}}
-                                                className="avatar-img"/>}
+                                                              className="avatar-img"/>}
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded" alt={'evius.co'}
-                                                         src="https://bulma.io/images/placeholders/128x128.png"/>
+                                                    <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
                                     <div className="field">
@@ -110,21 +136,18 @@ class UserEditProfile extends Component {
                                             <input className="input" name={"name"} type="text" placeholder="Nombre" value={user.name} onChange={this.handleChange} />
                                         </div>
                                     </div>
-                                
                                     <div className="field">
                                         <label className="label is-size-7 has-text-grey-light">Correo</label>
                                         <div className="control">
                                             <input className="input" name={"email"} type="email" placeholder="Email" value={user.email} onChange={this.handleChange} />
                                         </div>
                                     </div>
-
                                     <div className="field">
                                         <label className="label is-size-7 has-text-grey-light">Contraseña</label>
                                         <div className="control">
                                             <input className="input" name={"password"} type="password" placeholder="Contraseña" disabled/>
                                         </div>
                                     </div>
-
                                     <div className="columns is-centered">
                                         <div className="column is-half has-text-centered">
                                             <div className="control field">
@@ -133,7 +156,6 @@ class UserEditProfile extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
@@ -143,7 +165,6 @@ class UserEditProfile extends Component {
                                                 <input className="input has-text-weight-bold" name={"cedula"} type="text" placeholder="Proximamente" disabled/>
                                             </div>
                                         </div>
-                                        
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Dirección</label>
                                             <div className="control">
@@ -151,7 +172,6 @@ class UserEditProfile extends Component {
                                             </div>
                                         </div>
                                     </div>
-
                                     <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Celular</label>
@@ -166,7 +186,6 @@ class UserEditProfile extends Component {
                                             </div>
                                         </div>
                                     </div>
-
                                     <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Fecha de nacimiento</label>
@@ -181,7 +200,6 @@ class UserEditProfile extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    
                                     <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Ciudad / País</label>
@@ -208,15 +226,15 @@ class UserEditProfile extends Component {
                                         {
                                             events.map((event,key)=>{
                                                 return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
-                                                        <div className="edit">
-                                                            <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
+                                                    <div className="edit">
+                                                        <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
                                                                 <span className="icon is-medium">
                                                                     <i className="fas fa-lg fa-pencil-alt"/>
                                                                 </span>
-                                                                <span className="is-size-7 is-italic">Editar</span>
-                                                            </Link>
-                                                        </div>
-                                                    }
+                                                            <span className="is-size-7 is-italic">Editar</span>
+                                                        </Link>
+                                                    </div>
+                                                }
                                                 />
                                             })
                                         }
@@ -235,6 +253,11 @@ class UserEditProfile extends Component {
                 {
                     timeout&&(<LogOut/>)
                 }
+                <Dialog modal={this.state.modal} title={'Borrar Evento'}
+                        content={<p>Seguro de borrar este evento?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message} isLoading={this.state.isLoading}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </section>
         );
     }

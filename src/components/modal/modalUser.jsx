@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
 import {roles,states} from "../../helpers/constants";
+import { toast } from 'react-toastify';
+import Dialog from "./twoAction";
 
-class AddUser extends Component {
+class UserModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -31,23 +33,25 @@ class AddUser extends Component {
         self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.edit) {
-            const {value,extraFields} = nextProps;
-            let user = {};
-            Object.keys(value.properties)
-                .map((obj) => {
-                    let pos = extraFields.map((e)=>{return e.name}).indexOf(obj);
-                    if(pos>=0) user[extraFields[pos].name] = '';
-                    return user[obj] = value.properties[obj]
-                });
-            this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
-        }else {
-            let user = {name: '', email: ''};
-            nextProps.extraFields
-                .map((obj) => (
-                    user[obj.name] = ''))
-            this.setState({user,  edit: false});
+    componentDidUpdate(prevProps) {
+        if(prevProps.edit !== this.props.edit){
+            if (this.props.edit) {
+                const {value,extraFields} = this.props;
+                let user = {};
+                Object.keys(value.properties)
+                    .map((obj) => {
+                        let pos = extraFields.map((e)=>{return e.name}).indexOf(obj);
+                        if(pos>=0) user[extraFields[pos].name] = '';
+                        return user[obj] = value.properties[obj]
+                    });
+                this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
+            }else {
+                let user = {name: '', email: ''};
+                this.props.extraFields
+                    .map((obj) => (
+                        user[obj.name] = ''));
+                this.setState({user,edit:false});
+            }
         }
     }
 
@@ -70,9 +74,9 @@ class AddUser extends Component {
             userRef.add(snap)
                 .then(docRef => {
                     console.log("Document written with ID: ", docRef.id);
-                    self.props.addToList();
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
+                    toast.success('User created successfully');
                     setTimeout(()=>{
                         message.class = message.content = '';
                         self.closeModal();
@@ -93,6 +97,8 @@ class AddUser extends Component {
                     console.log("Document successfully updated!");
                     message.class = 'msg_warning';
                     message.content = 'USER UPDATED';
+                    toast.info('User edited successfully');
+                    if(this.props.addToList) this.props.addToList();
                     setTimeout(()=>{
                         message.class = message.content = '';
                         self.closeModal();
@@ -129,7 +135,7 @@ class AddUser extends Component {
         // Close body
         oDoc.write('</body></html>');
         oDoc.close()
-    }
+    };
 
     handleChange = (event) => {
         const name = event.target.name;
@@ -152,8 +158,24 @@ class AddUser extends Component {
         this.setState({valid})
     };
 
+    deleteUser = () => {
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        const self = this;
+        let message = {};
+        userRef.doc(this.props.value._id).delete().then(function() {
+            console.log("Document successfully deleted!");
+            message.class = 'msg_warning';
+            message.content = 'USER DELETED';
+            toast.info('User deleted successfully');
+            setTimeout(()=>{
+                message.class = message.content = '';
+                self.closeModal();
+            },500)
+        })
+    };
+
     closeModal = () => {
-        this.setState({user:{}, valid:true},this.props.handleModal());
+        this.setState({user:{}, valid:true, modal:false},this.props.handleModal);
     };
 
     render() {
@@ -184,93 +206,104 @@ class AddUser extends Component {
             '</g>\n' +
             '</svg>';
         return (
-            <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
-                <div className="modal-background"/>
-                <div className="modal-card">
-                    <header className="modal-card-head">
-                        <div className="modal-card-title">
-                            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                        </div>
-                        <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
-                    </header>
-                    <section className="modal-card-body">
-                        {
-                            Object.keys(this.state.user).map((obj, i)=>{
-                                return <div className="field is-horizontal" key={obj}>
-                                    <div className="field-label is-normal">
-                                        <label className="label">{obj}</label>
+            <React.Fragment>
+                <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
+                    <div className="modal-background"/>
+                    <div className="modal-card">
+                        <header className="modal-card-head">
+                            <div className="modal-card-title">
+                                <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
+                            </div>
+                            <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
+                        </header>
+                        <section className="modal-card-body">
+                            {
+                                Object.keys(this.state.user).map((obj, i)=>{
+                                    return <div className="field is-horizontal" key={obj}>
+                                        <div className="field-label is-normal">
+                                            <label className="label">{obj}</label>
+                                        </div>
+                                        <div className="field-body">
+                                            <div className="field">
+                                                <div className="control">
+                                                    <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="field-body">
-                                        <div className="field">
-                                            <div className="control">
-                                                <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
+                                })
+                            }
+                            <div className="field is-horizontal">
+                                <div className="field-label is-normal">
+                                    <label className="label">Rol</label>
+                                </div>
+                                <div className="field-body">
+                                    <div className="field">
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
+                                                    {
+                                                        this.state.rolesList.map((item,key)=>{
+                                                            return <option key={key} value={item.value}>{item.label}</option>
+                                                        })
+                                                    }
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            })
-                        }
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Rol</label>
                             </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
-                                                {
-                                                    this.state.rolesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
+                            <div className="field is-horizontal">
+                                <div className="field-label is-normal">
+                                    <label className="label">Estado</label>
+                                </div>
+                                <div className="field-body">
+                                    <div className="field">
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={this.state.state} onChange={this.selectChange} name={'state'}>
+                                                    {
+                                                        this.state.statesList.map((item,key)=>{
+                                                            return <option key={key} value={item.value}>{item.label}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Estado</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={this.state.state} onChange={this.selectChange} name={'state'}>
-                                                {
-                                                    this.state.statesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
+                        </section>
+                        <footer className="modal-card-foot">
+                            {
+                                this.state.create?<div>Creando...</div>:
+                                    <div>
+                                        <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>Guardar</button>
+                                        {
+                                            this.state.edit&&
+                                            <React.Fragment>
+                                                <button className="button" onClick={this.printUser}>Imprimir</button>
+                                                <button className="button" onClick={(e)=>{this.setState({modal:true})}}>Borrar</button>
+                                            </React.Fragment>
+                                        }
+                                        <button className="button" onClick={this.closeModal}>Cancel</button>
                                     </div>
-                                </div>
+                            }
+                            <div className={"msg"}>
+                                <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
                             </div>
-                        </div>
-                    </section>
-                    <footer className="modal-card-foot">
-                        {
-                            this.state.create?<div>Creando...</div>:
-                                <div>
-                                    <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
-                                    {
-                                        this.state.edit&& <button className="button" onClick={this.printUser}>Imprimir</button>
-                                    }
-                                    <button className="button" onClick={this.closeModal}>Cancel</button>
-                                </div>
-                        }
-                        <div className={"msg"}>
-                            <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-                        </div>
-                    </footer>
+                        </footer>
+                    </div>
+                    <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0}}/>
                 </div>
-                <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0}}/>
-            </div>
+                <Dialog modal={this.state.modal} title={'Borrar Usuario'}
+                        content={<p>Seguro de borrar este usuario?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteUser}}
+                        message={this.state.message}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+            </React.Fragment>
         );
     }
 }
 
-export default AddUser;
+export default UserModal;

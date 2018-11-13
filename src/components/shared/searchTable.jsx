@@ -13,6 +13,7 @@ class SearchComponent extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        //Fix
         if (nextProps.data !== this.props.data) {
             this.setState({auxArr:nextProps.data});
         }

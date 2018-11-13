@@ -249,6 +249,7 @@ a {
       font-weight: 900; 
       margin: 0;
     }
+    .required:after { content:" *"; color: $danger }
     .control {
       margin-left: 0.5em;
     }
@@ -404,6 +405,9 @@ a {
   &:focus {
     border-color: $primary;
     box-shadow: 0 0 0 transparent;
+  }
+  &::placeholder {
+    color: rgba(54, 54, 54, 0.3);
   }
 }
 

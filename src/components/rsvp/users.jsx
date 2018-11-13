@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import {EventsApi, UsersApi} from "../../helpers/request";
-import AddUser from "../modal/addUser";
+import UserModal from "../modal/modalUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
@@ -80,7 +80,7 @@ class UsersRsvp extends Component {
                     accessor: d => d,
                     Cell: props => <div>
                         <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value.id}
-                               type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onClick={(e)=>{this.toggleSelection(props.value)}}/>
+                               type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onChange={(e)=>{this.toggleSelection(props.value)}}/>
                         <label htmlFor={"checkinUser"+props.value.id}/>
                     </div>,
                     width: 80,
@@ -207,8 +207,17 @@ class UsersRsvp extends Component {
 
     //Modal add single User
     modalUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {addUser:!prevState.addUser,edit:false}
+        });
+    };
+    closeModal = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        this.setState((prevState) => {
+            return {addUser:!prevState.addUser,edit:undefined}
         });
     };
 
@@ -230,9 +239,11 @@ class UsersRsvp extends Component {
     //Modal import
     async modalImport() {
         try{
+            const html = document.querySelector("html");
             const {data} = await UsersApi.getAll(this.props.event._id);
             const users = handleUsers(data);
             this.setState((prevState) => {
+                !prevState.importUser ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
                 return {importUser:!prevState.importUser,users}
             });
         }catch (e) {
@@ -248,7 +259,9 @@ class UsersRsvp extends Component {
 
     //Button Ticket Logic
     showTicket = () => {
+        const html = document.querySelector("html");
         this.setState((prevState)=>{
+            !prevState.ticket ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
             return {ticket:!prevState.ticket}
         })
     };
@@ -256,6 +269,7 @@ class UsersRsvp extends Component {
         const { event } = this.props;
         const { selection } = this.state;
         const url = '/api/eventUsers/bookEventUsers/'+event._id;
+        const html = document.querySelector("html");
         let users = [];
         selection.map(item=>{
             return users.push(item.id)
@@ -265,6 +279,7 @@ class UsersRsvp extends Component {
             .then((res) => {
                 console.log(res);
                 toast.success('Ticket sent successfully');
+                html.classList.remove('is-clipped');
                 this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages',disabled:false})
             })
             .catch(e=>{
@@ -386,7 +401,7 @@ class UsersRsvp extends Component {
                                         <h3 className="event-inv-subtitle">Asistentes a este evento</h3>
                                         <div className="field event-inv-option">
                                             <input className="is-checkradio" id="thisEvent"
-                                                type="radio" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
+                                                type="radio" name="thisEvent" onChange={(e)=>{this.checkEvent(this.props.event)}}
                                                 checked={this.state.actualEvent._id === this.props.event._id}/>
                                             <label htmlFor="thisEvent">{this.props.event.name}</label>
                                         </div>
@@ -415,19 +430,19 @@ class UsersRsvp extends Component {
                                     </div>
                                     {
                                         events.length>=1&&
-                                            <div className="event-inv-users">
-                                                <h3 className="event-inv-subtitle">Asistentes a eventos pasados</h3>
-                                                {
-                                                    events.map((event,key)=>{
-                                                        return <div className="field event-inv-option" key={key}>
-                                                            <input className="is-checkradio" id={`event${event._id}`}
-                                                                type="radio" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
-                                                                checked={this.state.actualEvent._id === event._id}/>
-                                                            <label htmlFor={`event${event._id}`} className="has-text-weight-bold has-text-grey">{event.name}</label>
-                                                        </div>
-                                                    })
-                                                }
-                                            </div>
+                                        <div className="event-inv-users">
+                                            <h3 className="event-inv-subtitle">Asistentes a eventos pasados</h3>
+                                            {
+                                                events.map((event,key)=>{
+                                                    return <div className="field event-inv-option" key={key}>
+                                                        <input className="is-checkradio" id={`event${event._id}`}
+                                                            type="radio" name={`event${event._id}`} onChange={(e)=>{this.checkEvent(event)}}
+                                                            checked={this.state.actualEvent._id === event._id}/>
+                                                        <label htmlFor={`event${event._id}`} className="has-text-weight-bold has-text-grey">{event.name}</label>
+                                                    </div>
+                                                })
+                                            }
+                                        </div>
                                     }
                                 </div>
                             </div>
@@ -509,9 +524,8 @@ class UsersRsvp extends Component {
                         </div>
                     </div>
                 </div>
-                <AddUser handleModal={this.modalUser} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList}
-                         extraFields={this.props.event.user_properties} edit={false}/>
+                <UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
+                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>

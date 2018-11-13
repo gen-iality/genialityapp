@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
+import {FormattedMessage} from "react-intl";
 
 const MAX_OPTIONS = 2;
 
@@ -43,15 +44,16 @@ class SelectInput extends Component {
     };
     render() {
         const { maxReached, selectedOptions, options } = this.state;
-        const { name, isMulti } = this.props;
+        const { name, isMulti, required } = this.props;
         return (
             <div className="field">
-                <label className="label">{name}</label>
+                <label className={`label ${required?'required':''}`}>{name}</label>
                 <div className="control">
                     <Select
                         onChange={this.onChange}
                         options={maxReached ? selectedOptions : options}
                         isMulti={isMulti}
+                        placeholder={<FormattedMessage id="global.select" defaultMessage="Select..."/>}
                         noOptionsMessage={this.noOptionsMessage}
                         value={selectedOptions}
                         className="basic-multi-select"
