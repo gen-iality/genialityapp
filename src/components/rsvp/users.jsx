@@ -36,7 +36,8 @@ class UsersRsvp extends Component {
             pageSize:   10,
             message:    {class:'', content:''},
             columns:    columns,
-            sorted:     []
+            sorted:     [],
+            clearSearch: false,
         };
         this.checkEvent = this.checkEvent.bind(this);
         this.modalImport = this.modalImport.bind(this);
@@ -197,7 +198,7 @@ class UsersRsvp extends Component {
 
     //Remove user at selection state
     removeThis = (user) => {
-        let selection = [...this.state.selection];
+        let selection = [...this.state.auxArr];
         const keyIndex = selection.map((e) => {
             return e.id;
         }).indexOf(user.id);
@@ -206,7 +207,7 @@ class UsersRsvp extends Component {
             ...selection.slice(keyIndex + 1)
         ];
         this.handleCheckBox(this.state.users,selection);
-        this.setState({ selection, auxArr: selection });
+        this.setState({ selection, auxArr: selection, clearSearch:true });
     };
 
     //Modal add single User
@@ -482,7 +483,7 @@ class UsersRsvp extends Component {
                         </div>
                         {
                             this.state.auxArr.length > 0 &&
-                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
+                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         }
                         <div className="event-inv-selected field">
                             {
