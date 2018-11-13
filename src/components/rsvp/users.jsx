@@ -115,31 +115,34 @@ class UsersRsvp extends Component {
     };
 
     handleCheckBox = (users, selection) => {
-        /*let exist = 0,
+        let exist = 0,
             unexist = 0;
-        for(let i=0;i<users.length;i++){
-            const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
-            (pos < 0) ?  unexist++ : exist++;
+        const checkbox = document.getElementById("checkallUser");
+        if(checkbox){
+            for(let i=0;i<users.length;i++){
+                const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
+                (pos < 0) ?  unexist++ : exist++;
+            }
+            if(exist === users.length){
+                checkbox.indeterminate = false;
+                checkbox.checked = true;
+            }
+            else if(unexist === users.length){
+                checkbox.indeterminate = false;
+                checkbox.checked = false;
+            }
+            else {
+                checkbox.indeterminate = true;
+                checkbox.checked = false;
+            }
         }
-        if(exist === users.length){
-            this.refs.checkbox.indeterminate = false;
-            this.refs.checkbox.checked = true;
-        }
-        else if(unexist === users.length){
-            this.refs.checkbox.indeterminate = false;
-            this.refs.checkbox.checked = false;
-        }
-        else {
-            this.refs.checkbox.indeterminate = true;
-            this.refs.checkbox.checked = false;
-        }*/
     };
 
     //Add all of users to selection state
     toggleAll = () => {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
-        const currentRecords = this.state.totalUsers;
+        const currentRecords = this.state.users;
         if (selectAll) {
             currentRecords.forEach(item => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
@@ -392,7 +395,6 @@ class UsersRsvp extends Component {
                     <div className="column is-12 title-col">
                         <h2 className="subtitle has-text-weight-bold">Invitar a {this.props.event.name}</h2>
                     </div>
-
                     <div className="column is-9 big-col">
                         <div className="columns">
                             <div className="column is-4">
@@ -446,12 +448,11 @@ class UsersRsvp extends Component {
                                     }
                                 </div>
                             </div>
-
                             <div className="column is-8">
                                 <strong className="is-5">
                                     {
                                         this.state.actualEvent._id === this.props.event._id ?
-                                            'Usuarios ' + this.props.event.name : 'Usuarios ' + this.state.actualEvent.name
+                                            `Usuarios ${this.props.event.name?this.props.event.name:''}` : `Usuarios ${this.state.actualEvent.name?this.state.actualEvent.name:''}`
                                     }
                                 </strong>
                                 {users.length>=1?
@@ -474,54 +475,50 @@ class UsersRsvp extends Component {
                             </div>
                         </div>
                     </div>
-
-
                     <div className="column is-3 small-col">
-                        <div className="">
-                            <div className="field">
-                                <strong>Seleccionados - {this.state.selection.length}</strong>
-                            </div>
+                        <div className="field">
+                            <strong>Seleccionados - {this.state.auxArr.length}</strong>
+                        </div>
+                        {
+                            this.state.auxArr.length > 0 &&
+                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
+                        }
+                        <div className="event-inv-selected field">
                             {
-                                this.state.selection.length > 0 &&
-                                    <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
-                            }   
-                            <div className="event-inv-selected field">
-                                {
-                                    this.state.selection.map((item,key)=>{
-                                        return <div key={key} className="media">
-                                            <div className="media-content">
-                                                <p className="title is-6">{item.name}</p>
-                                                <p className="subtitle is-7">{item.email}</p>
-                                            </div>
-                                            <div className="media-right">
+                                this.state.selection.map((item,key)=>{
+                                    return <div key={key} className="media">
+                                        <div className="media-content">
+                                            <p className="title is-6">{item.name}</p>
+                                            <p className="subtitle is-7">{item.email}</p>
+                                        </div>
+                                        <div className="media-right">
                                                 <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
                                                     <i className="fa fa-times-circle"/>
                                                 </span>
-                                            </div>
                                         </div>
-                                    })
-                                }
-                            </div>
-                            {
-                                this.state.selection.length > 0 &&
-                                <div>
-                                    <div className="field control btn-wrapper">
-                                        <button className="button is-primary"
-                                                disabled={this.state.selection.length<=0}
-                                                onClick={this.showTicket}>
-                                            Enviar Tiquete
-                                        </button>
                                     </div>
-                                    <div className="field control btn-wrapper">
-                                        <button className="button is-primary is-outlined"
-                                                disabled={this.state.selection.length<=0}
-                                                onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                            Enviar Invitación
-                                        </button>
-                                    </div>
-                                </div>
+                                })
                             }
                         </div>
+                        {
+                            this.state.auxArr.length > 0 &&
+                            <div>
+                                <div className="field control btn-wrapper">
+                                    <button className="button is-primary"
+                                            disabled={this.state.auxArr.length<=0}
+                                            onClick={this.showTicket}>
+                                        Enviar Tiquete
+                                    </button>
+                                </div>
+                                <div className="field control btn-wrapper">
+                                    <button className="button is-primary is-outlined"
+                                            disabled={this.state.selection.length<=0}
+                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                        Enviar Invitación
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
                 <UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
