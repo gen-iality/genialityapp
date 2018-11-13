@@ -24,10 +24,6 @@ class AddUser extends Component {
         const self = this,
             rols = Actions.getAll('/api/rols'),
             states = Actions.getAll('/api/states');
-        let user = {name: '', email: ''};
-        this.props.extraFields
-            .map((obj) => (
-                user[obj.name] = ''));
         axios.all([rols, states])
             .then(axios.spread(function (roles, estados) {
                 let rolData = roles.map(rol => ({
@@ -38,8 +34,18 @@ class AddUser extends Component {
                     value: state._id,
                     label: state.name
                 }));
-                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value, user,edit:false });
+                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
             }))
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.edit !== this.props.edit){
+            let user = {name: '', email: ''};
+            this.props.extraFields
+                .map((obj) => (
+                    user[obj.name] = ''));
+            this.setState({user,edit:false});
+        }
     }
 
     async handleSubmit(e) {

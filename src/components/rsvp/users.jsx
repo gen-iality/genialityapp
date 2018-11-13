@@ -526,7 +526,7 @@ class UsersRsvp extends Component {
                          value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>*/}
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
                          value={this.state.selectedUser} addToList={this.addToList}
-                         extraFields={this.props.event.user_properties} edit={false}/>
+                         extraFields={this.props.event.user_properties} edit={this.state.edit}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>
