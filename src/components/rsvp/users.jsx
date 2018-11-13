@@ -218,11 +218,11 @@ class UsersRsvp extends Component {
         try{
             const {data} = await UsersApi.getAll(this.props.event._id);
             const users = handleUsers(data);
-            toast.success('User created successfully');
+            toast.success('Usuario creado exitosamente');
             this.setState({ users });
         }catch (e) {
             console.log(e.response);
-            toast.error("User can't be created");
+            toast.error("Algo salió mal. Intentalo de nuevo");
             this.setState({timeout:true,loader:false});
         }
     };
@@ -373,108 +373,139 @@ class UsersRsvp extends Component {
         const {users, pages, pageSize, loading, columns, timeout, disabled, events} = this.state;
         return (
             <React.Fragment>
-                <div className="columns">
-                    <div className="column is-3">
-                        <div className="box">
-                            <div>
-                                <div className="field">
-                                    <input className="is-checkradio is-link" id="thisEvent"
-                                           type="checkbox" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
-                                           checked={this.state.actualEvent._id === this.props.event._id}/>
-                                    <label htmlFor="thisEvent">{this.props.event.name}</label>
-                                </div>
-                                {
-                                    this.state.actualEvent._id === this.props.event._id && (
-                                        <React.Fragment>
-                                            <div className="field control">
-                                                <button className="button is-light is-rounded is-small" onClick={this.modalUser}>Agregar Usuario</button>
-                                            </div>
-                                            <div className="field control">
-                                                <button className="button is-light is-rounded is-small" onClick={this.modalImport}>Importar Usuarios</button>
-                                            </div>
-                                        </React.Fragment>
-                                    )
-                                }
-                            </div>
-                            {
-                                events.length>=1&&
-                                    <div>
-                                        <p>Importar asistentes de eventos pasados</p>
+                <div className="columns is-multiline event-inv-send">
+                    <div className="column is-12 title-col">
+                        <h2 className="subtitle has-text-weight-bold">Invitar a {this.props.event.name}</h2>
+                    </div>
+
+                    <div className="column is-9 big-col">
+                        <div className="columns">
+                            <div className="column is-4">
+                                <div className="">
+                                    <div className="event-inv-users">
+                                        <h3 className="event-inv-subtitle">Asistentes a este evento</h3>
+                                        <div className="field event-inv-option">
+                                            <input className="is-checkradio" id="thisEvent"
+                                                type="radio" name="thisEvent" onClick={(e)=>{this.checkEvent(this.props.event)}}
+                                                checked={this.state.actualEvent._id === this.props.event._id}/>
+                                            <label htmlFor="thisEvent">{this.props.event.name}</label>
+                                        </div>
                                         {
-                                            events.map((event,key)=>{
-                                                return <div className="field" key={key}>
-                                                    <input className="is-checkradio is-link" id={`event${event._id}`}
-                                                           type="checkbox" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
-                                                           checked={this.state.actualEvent._id === event._id}/>
-                                                    <label htmlFor={`event${event._id}`} >{event.name}</label>
-                                                </div>
-                                            })
+                                            this.state.actualEvent._id === this.props.event._id && (
+                                                <React.Fragment>
+                                                    <div className="field control">
+                                                        <button className="btn-list button is-primary is-outlined is-small" onClick={this.modalUser}>
+                                                            <span>Agregar Usuario</span>
+                                                            <span className="icon is-small">
+                                                                <i className="fa fa-plus"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                    <div className="field control">
+                                                        <button className="btn-list button is-primary is-outlined is-small" onClick={this.modalImport}>
+                                                            <span>Importar Usuarios</span>
+                                                            <span className="icon is-small">
+                                                                <i className="fa fa-plus"></i>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </React.Fragment>
+                                            )
                                         }
                                     </div>
-                            }
+                                    {
+                                        events.length>=1&&
+                                            <div className="event-inv-users">
+                                                <h3 className="event-inv-subtitle">Asistentes a eventos pasados</h3>
+                                                {
+                                                    events.map((event,key)=>{
+                                                        return <div className="field event-inv-option" key={key}>
+                                                            <input className="is-checkradio" id={`event${event._id}`}
+                                                                type="radio" name={`event${event._id}`} onClick={(e)=>{this.checkEvent(event)}}
+                                                                checked={this.state.actualEvent._id === event._id}/>
+                                                            <label htmlFor={`event${event._id}`} className="has-text-weight-bold has-text-grey">{event.name}</label>
+                                                        </div>
+                                                    })
+                                                }
+                                            </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div className="column is-8">
+                                <strong className="is-5">
+                                    {
+                                        this.state.actualEvent._id === this.props.event._id ?
+                                            'Usuarios ' + this.props.event.name : 'Usuarios ' + this.state.actualEvent.name
+                                    }
+                                </strong>
+                                {users.length>=1?
+                                    <Table
+                                        columns={columns}
+                                        manual
+                                        data={users}
+                                        pages={pages}
+                                        loading={loading}
+                                        onFetchData={this.fetchData}
+                                        filterable
+                                        onSortedChange={sorted => this.setState({ sorted })}
+                                        defaultFilterMethod={(filter, row) =>
+                                            String(row[filter.id]) === filter.value}
+                                        defaultPageSize={pageSize}
+                                        showPageSizeOptions={false}
+                                        className="-highlight"/>
+                                    :<p>Aun no hay usuarios. Intenta crear uno o importarlo desde un excel</p>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <div className="column is-6">
-                        <strong className="is-5">
-                            {
-                                this.state.actualEvent._id === this.props.event._id ?
-                                    'Usuarios Evento Actual' : 'Usuarios Otro Evento'
-                            }
-                        </strong>
-                        {users.length>=1?
-                            <Table
-                                columns={columns}
-                                manual
-                                data={users}
-                                pages={pages}
-                                loading={loading}
-                                onFetchData={this.fetchData}
-                                filterable
-                                onSortedChange={sorted => this.setState({ sorted })}
-                                defaultFilterMethod={(filter, row) =>
-                                    String(row[filter.id]) === filter.value}
-                                defaultPageSize={pageSize}
-                                showPageSizeOptions={false}
-                                className="-highlight"/>
-                            :<p>Not exist users yet. Try add an user or import from a excel</p>
-                        }
-                    </div>
-                    <div className="column is-3">
-                        <div className="box">
+
+
+                    <div className="column is-3 small-col">
+                        <div className="">
                             <div className="field">
-                                <strong>Seleccionados {this.state.selection.length}</strong>
+                                <strong>Seleccionados - {this.state.selection.length}</strong>
                             </div>
                             {
                                 this.state.selection.length > 0 &&
                                     <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
-                            }
-                            <div style={{overflowY: 'auto',height: '24rem'}}>
+                            }   
+                            <div className="event-inv-selected field">
                                 {
                                     this.state.selection.map((item,key)=>{
                                         return <div key={key} className="media">
-                                            <div className="media-left">
-                                                <span className="icon has-text-danger is-medium" onClick={(e)=>{this.removeThis(item)}}>
-                                                    <i className="fas fa-ban"/>
-                                                </span>
-                                            </div>
                                             <div className="media-content">
-                                                <p className="title is-5">{item.name}</p>
-                                                <p className="subtitle is-6">{item.email}</p>
+                                                <p className="title is-6">{item.name}</p>
+                                                <p className="subtitle is-7">{item.email}</p>
+                                            </div>
+                                            <div className="media-right">
+                                                <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
+                                                    <i className="fa fa-times-circle"/>
+                                                </span>
                                             </div>
                                         </div>
                                     })
                                 }
                             </div>
-                            <button className="button is-rounded is-primary is-small"
-                                    disabled={this.state.selection.length<=0}
-                                    onClick={this.showTicket}>
-                                Enviar Tiquete
-                            </button>
-                            <button className="button is-rounded is-small"
-                                    disabled={this.state.selection.length<=0}
-                                    onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                Enviar Invitación
-                            </button>
+                            {
+                                this.state.selection.length > 0 &&
+                                <div>
+                                    <div className="field control btn-wrapper">
+                                        <button className="button is-primary"
+                                                disabled={this.state.selection.length<=0}
+                                                onClick={this.showTicket}>
+                                            Enviar Tiquete
+                                        </button>
+                                    </div>
+                                    <div className="field control btn-wrapper">
+                                        <button className="button is-primary is-outlined"
+                                                disabled={this.state.selection.length<=0}
+                                                onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                            Enviar Invitación
+                                        </button>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

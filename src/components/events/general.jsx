@@ -195,7 +195,7 @@ class General extends Component {
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
         return (
-            <form className="form" onSubmit={this.submit}>
+            <form className="form event-general" onSubmit={this.submit}>
                 <FormEvent event={event} categories={categories} organizers={organizers} types={types}
                            selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
                            imgComp={

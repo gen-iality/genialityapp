@@ -10,7 +10,7 @@ a {
 }
 
 .button {
-  border-radius: 10px;
+  border-radius: 15px;
   font-weight: 700;
   padding-left: 1.25em;
   padding-right: 1.25em;
@@ -20,15 +20,25 @@ a {
   }
   &.is-primary {
     box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
+    &.is-outlined {
+      &:hover {
+        border-color: $primary !important;
+        color: $white !important;
+      }
+    }
   }
   &.is-small {
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
     transition: all ease 0.15s;
     &:hover {
       background: $primary;
       color: $white;
     }
+  }
+  &.is-outlined {
+    border-color: $grey-light !important;
+    color: $grey-light !important;
   }
 }
 
