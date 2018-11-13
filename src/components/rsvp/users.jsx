@@ -12,6 +12,7 @@ import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddUser from "../modal/addUser";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -477,7 +478,7 @@ class UsersRsvp extends Component {
                     </div>
                     <div className="column is-3 small-col">
                         <div className="field">
-                            <strong>Seleccionados - {this.state.auxArr.length}</strong>
+                            <strong>Seleccionados: {this.state.auxArr.length}</strong>
                         </div>
                         {
                             this.state.auxArr.length > 0 &&
@@ -521,8 +522,11 @@ class UsersRsvp extends Component {
                         }
                     </div>
                 </div>
-                <UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
-                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>
+                {/*<UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
+                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>*/}
+                <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
+                         value={this.state.selectedUser} addToList={this.addToList}
+                         extraFields={this.props.event.user_properties} edit={false}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>
