@@ -43,13 +43,13 @@
 }
 
 .event-aside {
-  border-right: solid 1px $grey-lighter;
   height: auto;
   margin: 3.5rem 0;
   padding: 1rem 2rem !important;
   .subtitle {
     display: inline-flex;
     align-items: center;
+    word-break: normal;
     .icon {
       margin-left: 0.5em;
     }
