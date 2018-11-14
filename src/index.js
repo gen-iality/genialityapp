@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import  './styles/main.css';
 import App from './App/App';
 import registerServiceWorker from './registerServiceWorker';
+//index.html loading old files because of service worker after build
+//https://github.com/facebook/create-react-app/issues/2715
+unregister();
 import {addLocaleData, IntlProvider,} from 'react-intl';
 //Import local files from intl
 import locale_en from 'react-intl/locale-data/en';
