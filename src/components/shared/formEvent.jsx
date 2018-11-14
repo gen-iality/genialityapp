@@ -14,7 +14,7 @@ class FormEvent extends Component {
                         <label className="label required has-text-grey-light">Nombre</label>
                         <div className="control">
                             <input className="input" name={"name"} type="text"
-                                   placeholder="Text input" value={event.name}
+                                   placeholder="Event name" value={event.name}
                                    onChange={this.props.handleChange}
                             />
                         </div>
@@ -81,7 +81,6 @@ class FormEvent extends Component {
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.hour_end}
-                                            min={this.props.minDate}
                                             step={60}
                                             date={false}
                                             onChange={value => this.props.changeDate(value,"hour_end")}/>

@@ -7,6 +7,7 @@ class SearchComponent extends Component {
         super(props);
         this.state = {
             showMessage: false,
+            value: '',
             auxArr: [],
             message: ""
         };
@@ -16,6 +17,7 @@ class SearchComponent extends Component {
         //Fix
         if (nextProps.data !== this.props.data) {
             this.setState({auxArr:nextProps.data});
+            if(nextProps.clear) this.setState({value:''})
         }
     }
 
@@ -37,6 +39,7 @@ class SearchComponent extends Component {
 
     handleFilter = (input) => {
         let value = input.target.value;
+        this.setState({value});
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
             if (filtered.length > 0) {
@@ -60,11 +63,12 @@ class SearchComponent extends Component {
     }
 
     render() {
+        console.log(this.state);
         return (
             <React.Fragment>
                 <div className="field">
                     <p className="control has-icons-left">
-                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter}/>
+                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
                         <span className="icon is-small is-left"><i className="fas fa-search"/></span>
                     </p>
                     {this.state.showMessage && (

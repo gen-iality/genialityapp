@@ -244,7 +244,7 @@ class OrgEditProfile extends Component {
     render() {
         const { org, loading, timeout, events, wait } = this.state;
         return (
-            <section className="section">
+            <section className="section profile">
                 {
                     loading ? <Loading/> :
                         <div className="container org-profile">
@@ -368,30 +368,29 @@ class OrgEditProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <h2>Eventos creados:</h2>
-                                <div className="columns home is-multiline is-mobile">
-                                    {
-                                        events.map((event,key)=>{
-                                            return <EventCard event={event} key={event._id}
-                                                              action={''}
-                                                              right={
-                                                                  <div>
-                                                                      <div>
-                                                                          <Link className="button is-text is-inverted is-primary" to={`/event/${event._id}`}>
-                                                                              <span>Editar</span>
-                                                                          </Link>
-                                                                      </div>
-                                                                      <div>
-                                                                          <a className="button is-text is-inverted is-danger" onClick={(e)=>{this.setState({modal:true,eventId:event._id})}}>
-                                                                              <span>Borrar</span>
-                                                                          </a>
-                                                                      </div>
-                                                                  </div>
-                                                              }
-                                            />
-                                        })
-                                    }
+                            <div className="profile-data columns">
+                                <div className="column is-8">
+                                    <h2>
+                                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
+                                        <span className="has-text-grey-dark is-size-3">Eventos</span>
+                                    </h2>
+                                    <div className="columns home is-multiline is-mobile">
+                                        {
+                                            events.map((event,key)=>{
+                                                return  <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
+                                                    <div className="edit">
+                                                        <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
+                                                                    <span className="icon is-medium">
+                                                                        <i className="fas fa-lg fa-pencil-alt"/>
+                                                                    </span>
+                                                            <span className="is-size-7 is-italic">Editar</span>
+                                                        </Link>
+                                                    </div>
+                                                }
+                                                />
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>

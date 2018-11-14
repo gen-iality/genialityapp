@@ -120,6 +120,7 @@ class General extends Component {
         e.preventDefault();
         e.stopPropagation();
         const { event } = this.state;
+        const self = this;
         this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
@@ -146,7 +147,7 @@ class General extends Component {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
-                this.setState({loading:false});
+                self.setState({loading:false});
                 toast.success("All changes saved")
             }
             else{

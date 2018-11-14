@@ -12,6 +12,7 @@ import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddUser from "../modal/addUser";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -35,7 +36,8 @@ class UsersRsvp extends Component {
             pageSize:   10,
             message:    {class:'', content:''},
             columns:    columns,
-            sorted:     []
+            sorted:     [],
+            clearSearch: false,
         };
         this.checkEvent = this.checkEvent.bind(this);
         this.modalImport = this.modalImport.bind(this);
@@ -115,31 +117,34 @@ class UsersRsvp extends Component {
     };
 
     handleCheckBox = (users, selection) => {
-        /*let exist = 0,
+        let exist = 0,
             unexist = 0;
-        for(let i=0;i<users.length;i++){
-            const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
-            (pos < 0) ?  unexist++ : exist++;
+        const checkbox = document.getElementById("checkallUser");
+        if(checkbox){
+            for(let i=0;i<users.length;i++){
+                const pos = selection.map((e)=> { return e.id; }).indexOf(users[i].id);
+                (pos < 0) ?  unexist++ : exist++;
+            }
+            if(exist === users.length){
+                checkbox.indeterminate = false;
+                checkbox.checked = true;
+            }
+            else if(unexist === users.length){
+                checkbox.indeterminate = false;
+                checkbox.checked = false;
+            }
+            else {
+                checkbox.indeterminate = true;
+                checkbox.checked = false;
+            }
         }
-        if(exist === users.length){
-            this.refs.checkbox.indeterminate = false;
-            this.refs.checkbox.checked = true;
-        }
-        else if(unexist === users.length){
-            this.refs.checkbox.indeterminate = false;
-            this.refs.checkbox.checked = false;
-        }
-        else {
-            this.refs.checkbox.indeterminate = true;
-            this.refs.checkbox.checked = false;
-        }*/
     };
 
     //Add all of users to selection state
     toggleAll = () => {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
-        const currentRecords = this.state.totalUsers;
+        const currentRecords = this.state.users;
         if (selectAll) {
             currentRecords.forEach(item => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
@@ -193,7 +198,7 @@ class UsersRsvp extends Component {
 
     //Remove user at selection state
     removeThis = (user) => {
-        let selection = [...this.state.selection];
+        let selection = [...this.state.auxArr];
         const keyIndex = selection.map((e) => {
             return e.id;
         }).indexOf(user.id);
@@ -202,7 +207,7 @@ class UsersRsvp extends Component {
             ...selection.slice(keyIndex + 1)
         ];
         this.handleCheckBox(this.state.users,selection);
-        this.setState({ selection, auxArr: selection });
+        this.setState({ selection, auxArr: selection, clearSearch:true });
     };
 
     //Modal add single User
@@ -392,7 +397,6 @@ class UsersRsvp extends Component {
                     <div className="column is-12 title-col">
                         <h2 className="subtitle has-text-weight-bold">Invitar asistentes a {this.props.event.name}</h2>
                     </div>
-
                     <div className="column is-9 big-col">
                         <div className="columns">
                             <div className="column is-4">
@@ -446,12 +450,11 @@ class UsersRsvp extends Component {
                                     }
                                 </div>
                             </div>
-
                             <div className="column is-8 event-inv-table">
                                 <h3 className="event-inv-subtitle">
                                     {
                                         this.state.actualEvent._id === this.props.event._id ?
-                                            'Usuarios de ' + this.props.event.name : 'Usuarios ' + this.state.actualEvent.name
+                                            `Usuarios de ${this.props.event.name?this.props.event.name:''}` : `Usuarios de ${this.state.actualEvent.name?this.state.actualEvent.name:''}`
                                     }
                                 </h3>
                                 {users.length>=1?
@@ -474,58 +477,57 @@ class UsersRsvp extends Component {
                             </div>
                         </div>
                     </div>
-
-
                     <div className="column is-3 small-col">
-                        <div className="">
-                            <div className="field">
-                                <strong>Seleccionados - {this.state.selection.length}</strong>
-                            </div>
+                        <div className="field">
+                            <strong>Seleccionados: {this.state.auxArr.length}</strong>
+                        </div>
+                        {
+                            this.state.auxArr.length > 0 &&
+                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                        }
+                        <div className="event-inv-selected field">
                             {
-                                this.state.selection.length > 0 &&
-                                    <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult}/>
-                            }   
-                            <div className="event-inv-selected field">
-                                {
-                                    this.state.selection.map((item,key)=>{
-                                        return <div key={key} className="media">
-                                            <div className="media-content">
-                                                <p className="title is-6">{item.name}</p>
-                                                <p className="subtitle is-7">{item.email}</p>
-                                            </div>
-                                            <div className="media-right">
+                                this.state.selection.map((item,key)=>{
+                                    return <div key={key} className="media">
+                                        <div className="media-content">
+                                            <p className="title is-6">{item.name}</p>
+                                            <p className="subtitle is-7">{item.email}</p>
+                                        </div>
+                                        <div className="media-right">
                                                 <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
                                                     <i className="fa fa-times-circle"/>
                                                 </span>
-                                            </div>
                                         </div>
-                                    })
-                                }
-                            </div>
-                            {
-                                this.state.selection.length > 0 &&
-                                <div>
-                                    <div className="field control btn-wrapper">
-                                        <button className="button is-primary"
-                                                disabled={this.state.selection.length<=0}
-                                                onClick={this.showTicket}>
-                                            Enviar Tiquete
-                                        </button>
                                     </div>
-                                    <div className="field control btn-wrapper">
-                                        <button className="button is-primary is-outlined"
-                                                disabled={this.state.selection.length<=0}
-                                                onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                            Enviar Invitación
-                                        </button>
-                                    </div>
-                                </div>
+                                })
                             }
                         </div>
+                        {
+                            this.state.auxArr.length > 0 &&
+                            <div>
+                                <div className="field control btn-wrapper">
+                                    <button className="button is-primary"
+                                            disabled={this.state.auxArr.length<=0}
+                                            onClick={this.showTicket}>
+                                        Enviar Tiquete
+                                    </button>
+                                </div>
+                                <div className="field control btn-wrapper">
+                                    <button className="button is-primary is-outlined"
+                                            disabled={this.state.selection.length<=0}
+                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                        Enviar Invitación
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
-                <UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
-                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>
+                {/*<UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
+                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>*/}
+                <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
+                         value={this.state.selectedUser} addToList={this.addToList}
+                         extraFields={this.props.event.user_properties} edit={this.state.edit}/>
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>

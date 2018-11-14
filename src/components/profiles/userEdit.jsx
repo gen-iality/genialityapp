@@ -37,12 +37,23 @@ class UserEditProfile extends Component {
             console.log(tickets);
             user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
-            this.setState({loading:false,user,events:resp.data,categories});
+            this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
         }
     }
+
+    scrollEvent = () => {
+        const hash = this.props.location.hash;
+        if (hash) {
+            const element = document.querySelector(hash);
+            if (element) {
+                let topOfElement = element.offsetTop + 60;
+                window.scrollTo({ top: topOfElement, behavior: "smooth" })
+            }
+        }
+    };
 
     changeImg = (files) => {
         const file = files[0];
@@ -127,7 +138,7 @@ class UserEditProfile extends Component {
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
+                                                    <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt={'profileimage'}/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
                                     <div className="field">
@@ -216,7 +227,7 @@ class UserEditProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="profile-data columns">
+                            <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">
                                     <h2 className="data-title">
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
