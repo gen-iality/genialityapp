@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import { EventsApi } from "../../helpers/request";
 import {Link} from "react-router-dom";
-import Dialog from "../modal/twoAction";
-import * as Cookie from "js-cookie";
-import {AuthUrl} from "../../helpers/constants";
 import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
@@ -18,7 +15,6 @@ class Events extends Component {
                 content:''
             }
         };
-        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -31,31 +27,6 @@ class Events extends Component {
             this.setState({timeout:true,loading:false,events:[]});
         }
     }
-
-    async deleteEvent() {
-        this.setState({isLoading:'Wait....'});
-        try {
-            const result = await EventsApi.deleteOne(this.state.eventId);
-            console.log(result);
-            if(result.data === "True"){
-                this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
-                const events = await EventsApi.getAll();
-                setTimeout(()=>{
-                    this.setState({message:{},modal:false,events});
-                },500)
-            }else{
-                this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
-            }
-        }catch (e) {
-            Cookie.remove("token");
-            Cookie.remove("evius_token");
-            window.location.replace(`${AuthUrl}/logout`);
-        }
-    }
-
-    closeModal = () => {
-        this.setState({modal:false,message:{}})
-    };
 
     render() {
         const {timeout} = this.state;
@@ -79,11 +50,6 @@ class Events extends Component {
                             </div>
                     }
                 </section>
-                <Dialog modal={this.state.modal} title={'Borrar Evento'}
-                        content={<p>Seguro de borrar este evento?</p>}
-                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
-                        message={this.state.message} isLoading={this.state.isLoading}
-                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                 {timeout&&(<LogOut/>)}
             </React.Fragment>
         );
