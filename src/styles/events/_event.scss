@@ -22,8 +22,36 @@
             border-right: solid 1px $grey-lighter;
           }
         }
+        .event-inv-table {
+          .event-inv-subtitle {
+            color: $grey-light;
+            font-weight: 900;
+            margin-bottom: 10px;
+          }
+          .event-inv-check {
+            &:checked + label {
+              &:before {
+                border: none;
+              }
+            }
+            &:focus + label {
+              &:before {
+                outline: none;
+              }
+            }
+          }
+          .event-inv-check + label {
+            &:before {
+              border-radius: 0;
+            }
+            &:after {
+              left: 0.40rem;
+              height: 0.6rem;
+            }
+          }
+        }
         .event-inv-users {
-          margin-bottom: 1em;
+          margin-bottom: 1.5em;
           .event-inv-subtitle {
             color: $grey-light;
             font-weight: 900;
@@ -31,17 +59,19 @@
           }
           .event-inv-option {
             line-height: 1.6;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
             label {
               color: $grey;
               font-weight: 700;
+              line-height: 1;
+              margin: 0;
             }
           }
           .btn-list {
-            margin: 0 0.5rem 0 2.5rem;
-            width: calc(90% - 2.5rem);
+            margin: 0;
+            width: 100%;
           }
         }
       }
@@ -81,6 +111,9 @@
           justify-content: center;
         }
       }
+    }
+    .event-invitation {
+      padding: 0.5rem 2.5rem; 
     }
   }
 }

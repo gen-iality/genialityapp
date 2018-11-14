@@ -3,11 +3,13 @@ import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
-import {BaseUrl} from "../../helpers/constants";
+import {AuthUrl, BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
 import ErrorServe from "../modal/serverError";
+import Dialog from "../modal/twoAction";
+import * as Cookie from "js-cookie";
 Moment.locale('es');
 
 class General extends Component {
@@ -22,9 +24,11 @@ class General extends Component {
             valid: !this.props.event._id
         };
         this.submit = this.submit.bind(this);
+        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount(){
+        console.log(this.props);
         try{
             const {event} = this.state;
             const categories = await CategoriesApi.getAll();
@@ -201,6 +205,32 @@ class General extends Component {
         }
     };
 
+    //Delete event
+    async deleteEvent() {
+        this.setState({isLoading:'Wait....'});
+        try {
+            const result = await EventsApi.deleteOne(this.state.event._id);
+            console.log(result);
+            if(result.data === "True"){
+                this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+                setTimeout(()=>{
+                    this.setState({message:{},modal:false});
+                    window.location.replace(`${BaseUrl}/`);
+                },500)
+            }else{
+                this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+            }
+        }catch (e) {
+            Cookie.remove("token");
+            Cookie.remove("evius_token");
+            window.location.replace(`${AuthUrl}/logout`);
+        }
+    }
+
+    closeModal = () => {
+        this.setState({modal:false,message:{}})
+    };
+
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
         return (
@@ -223,19 +253,25 @@ class General extends Component {
                            handleChange={this.handleChange} minDate={this.state.minDate}
                            selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
-                <div className="field">
+                <div className="field is-grouped is-centered">
                     <div className="control">
-                        <div className="columns is-centered">
-                            <div className="column is-half has-text-centered">
-                                {
-                                    this.state.loading? <p>Saving...</p>
-                                    :<button type={"submit"} className={`button is-primary`} disabled={valid}>Save</button>
-                                }
-                            </div>
-                        </div>
+                        {
+                            this.state.loading? <p>Saving...</p>
+                            :<button type={"submit"} className={`button is-primary`} disabled={valid}>Save</button>
+                        }
+                    </div>
+                    <div className="control">
+                        <button className="button is-text has-text-danger" onClick={(e)=>{this.setState({modal:true})}}>
+                            <p className="help">Delete</p>
+                        </button>
                     </div>
                 </div>
                 {timeout&&(<ErrorServe/>)}
+                <Dialog modal={this.state.modal} title={'Borrar Evento'}
+                        content={<p>Seguro de borrar este evento?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
+                        message={this.state.message} isLoading={this.state.isLoading}
+                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
             </form>
         );
     }

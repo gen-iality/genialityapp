@@ -50,7 +50,7 @@ class UserEditProfile extends Component {
             const element = document.querySelector(hash);
             if (element) {
                 let topOfElement = element.offsetTop + 60;
-                window.scroll({ top: topOfElement, behavior: "smooth" })
+                window.scrollTo({ top: topOfElement, behavior: "smooth" })
             }
         }
     };
@@ -229,7 +229,7 @@ class UserEditProfile extends Component {
                             </div>
                             <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">
-                                    <h2>
+                                    <h2 className="data-title">
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
                                         <span className="has-text-grey-dark is-size-3">Eventos</span>
                                     </h2>

@@ -383,6 +383,120 @@ a {
   }
 }
 
+.ReactTable {
+  border: none !important;
+  .rt-thead {
+    box-shadow: none !important;
+    &.-header {
+      padding: 5px 5px 0 5px;
+    }
+    &.-filters {
+      padding: 0 5px 5px 5px;
+      .rt-th {
+        select {
+          border: none;
+          border-bottom: 1px solid $grey-light;
+          border-radius: 0;
+          color: $grey;
+          font-weight: 700;
+          height: 100%;
+          width: 100%;
+          padding: 0;
+        }
+        input {
+          background: transparent !important;
+          border: none;
+          border-bottom: 1px solid $grey-light;
+          border-radius: 0;
+          box-shadow: none !important;
+          color: $grey;
+          font-size: 1rem;
+          font-weight: 700;
+          height: 100%;
+          outline: none;
+          padding: 5px;
+          &:focus{
+            border-bottom: 1px solid $primary;
+          }
+        }
+      }
+    }
+    .rt-tr {
+      text-align: left !important;
+    }
+    .rt-th {
+      border-right: none !important;
+      &.rt-resizable-header {
+        &:focus {
+          outline: none !important;
+        }
+        .rt-resizable-header-content {
+          color: $grey;
+          font-weight: 700;
+          span {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+        }
+      }
+    }
+  }
+  .rt-tbody {
+    .rt-tr-group {
+      border-bottom: none !important;
+      .rt-tr {
+        padding: 5px;
+        &.-odd {
+          background: white;
+        }
+        &.-even {
+          background: #f9f9f9;
+        }
+        .rt-td {
+          border-right: none !important;
+          a {
+            color: $grey;
+          }
+        }
+      }
+    }
+  }
+  .-pagination {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 5px 0;
+    .-pageInfo {
+      color: $grey;
+      font-weight: 700;
+      .-pageJump {
+        input {
+          background: transparent !important;
+          border: none;
+          border-bottom: 1px solid $grey-light;
+          border-radius: 0;
+          box-shadow: none !important;
+          color: $grey;
+          font-size: 1rem;
+          font-weight: 700;
+          height: 100%;
+          outline: none;
+          padding: 5px;
+          &:focus{
+            border-bottom: 1px solid $primary;
+          }
+        }
+      }
+    }
+    .-btn {
+      background: $primary !important;
+      color: $white !important;
+      font-weight: 700 !important;
+      transition: all ease 0.33s !important;
+    }
+  }
+}
+
 /**
  * The geosuggest module
  * NOTE: duplicated font-sizes' are for browsers which don't support rem (only IE 8)

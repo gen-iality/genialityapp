@@ -73,15 +73,15 @@ class UsersRsvp extends Component {
                 {
                     Header: (
                         <div className="field">
-                            <input className="is-checkradio is-info is-small" id={"checkallUser"}
+                            <input className="event-inv-check is-checkradio is-small" id={"checkallUser"}
                                    type="checkbox" name={"checkallUser"} onClick={this.toggleAll}/>
-                            <label htmlFor={"checkallUser"}>Todos</label>
+                            <label htmlFor={"checkallUser"}/>
                         </div>
                     ),
                     id: "checked_in",
                     accessor: d => d,
                     Cell: props => <div>
-                        <input className="is-checkradio is-info is-small" id={"checkinUser"+props.value.id}
+                        <input className="event-inv-check is-checkradio is-small" id={"checkinUser"+props.value.id}
                                type="checkbox" name={"checkinUser"+props.value.id} checked={this.isChecked(props.value.id)} onChange={(e)=>{this.toggleSelection(props.value)}}/>
                         <label htmlFor={"checkinUser"+props.value.id}/>
                     </div>,
@@ -395,7 +395,7 @@ class UsersRsvp extends Component {
             <React.Fragment>
                 <div className="columns is-multiline event-inv-send">
                     <div className="column is-12 title-col">
-                        <h2 className="subtitle has-text-weight-bold">Invitar a {this.props.event.name}</h2>
+                        <h2 className="subtitle has-text-weight-bold">Invitar asistentes a {this.props.event.name}</h2>
                     </div>
                     <div className="column is-9 big-col">
                         <div className="columns">
@@ -414,7 +414,7 @@ class UsersRsvp extends Component {
                                                 <React.Fragment>
                                                     <div className="field control">
                                                         <button className="btn-list button is-primary is-outlined is-small" onClick={this.modalUser}>
-                                                            <span>Agregar Usuario</span>
+                                                            <span>Agregar Usuario Nuevo</span>
                                                             <span className="icon is-small">
                                                                 <i className="fa fa-plus"></i>
                                                             </span>
@@ -422,7 +422,7 @@ class UsersRsvp extends Component {
                                                     </div>
                                                     <div className="field control">
                                                         <button className="btn-list button is-primary is-outlined is-small" onClick={this.modalImport}>
-                                                            <span>Importar Usuarios</span>
+                                                            <span>Importar Usuarios de Excel</span>
                                                             <span className="icon is-small">
                                                                 <i className="fa fa-plus"></i>
                                                             </span>
@@ -435,7 +435,7 @@ class UsersRsvp extends Component {
                                     {
                                         events.length>=1&&
                                         <div className="event-inv-users">
-                                            <h3 className="event-inv-subtitle">Asistentes a eventos pasados</h3>
+                                            <h3 className="event-inv-subtitle">Importar asistentes de eventos pasados</h3>
                                             {
                                                 events.map((event,key)=>{
                                                     return <div className="field event-inv-option" key={key}>
@@ -450,13 +450,13 @@ class UsersRsvp extends Component {
                                     }
                                 </div>
                             </div>
-                            <div className="column is-8">
-                                <strong className="is-5">
+                            <div className="column is-8 event-inv-table">
+                                <h3 className="event-inv-subtitle">
                                     {
                                         this.state.actualEvent._id === this.props.event._id ?
-                                            `Usuarios ${this.props.event.name?this.props.event.name:''}` : `Usuarios ${this.state.actualEvent.name?this.state.actualEvent.name:''}`
+                                            `Usuarios de ${this.props.event.name?this.props.event.name:''}` : `Usuarios de ${this.state.actualEvent.name?this.state.actualEvent.name:''}`
                                     }
-                                </strong>
+                                </h3>
                                 {users.length>=1?
                                     <Table
                                         columns={columns}
@@ -468,7 +468,7 @@ class UsersRsvp extends Component {
                                         filterable
                                         onSortedChange={sorted => this.setState({ sorted })}
                                         defaultFilterMethod={(filter, row) =>
-                                            String(row[filter.id]) === filter.value}
+                                        String(row[filter.id]) === filter.value}
                                         defaultPageSize={pageSize}
                                         showPageSizeOptions={false}
                                         className="-highlight"/>
