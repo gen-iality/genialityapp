@@ -22,21 +22,21 @@ class Home extends Component {
             tabEvtCat: true,
             loadingState: false
         };
-        this.loadMoreItems = this.loadMoreItems.bind(this);
+        //this.loadMoreItems = this.loadMoreItems.bind(this);
     }
 
     async componentDidMount() {
         try{
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
-            const resp = await EventsApi.getPublic('?pageSize=6');
+            const resp = await EventsApi.getPublic('?pageSize=30');
             console.log(resp);
             this.setState({events:resp.data,loading:false,categories,types,current_page:resp.meta.current_page,total:resp.meta.total});
-            this.refs.iScroll.addEventListener("scroll", () => {
+            /*this.refs.iScroll.addEventListener("scroll", () => {
                 if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 20){
                     this.loadMoreItems();
                 }
-            });
+            });*/
         }catch (e) {
             console.log(e);
         }
@@ -67,7 +67,7 @@ class Home extends Component {
         });
     }
 
-    async loadMoreItems() {
+    /*async loadMoreItems() {
         if(!this.state.loadingState && this.state.events.length<this.state.total){
             this.setState({ loadingState: true });
             try{
@@ -79,7 +79,7 @@ class Home extends Component {
 
             }
         }
-    }
+    }*/
 
     render() {
         const {categories,types,category,type} = this.state;
@@ -170,40 +170,36 @@ class Home extends Component {
                         <div className="dynamic-content">
                             {
                                 this.state.events.length<=0 ? <LoadingEvent/> :
-                                    <div ref="iScroll" style={{ height: "650px", overflow: "auto" }}>
-                                        <div className="columns home is-multiline">
-                                            {
-                                                this.state.events.map((event,key)=>{
-                                                    return <EventCard key={event._id} event={event}
-                                                                      action={{name:'Ver',url:`landing/${event._id}`}}
-                                                                      size={'column is-one-third'}
-                                                                      right={<div className="actions">
-                                                                          <p className="is-size-7">
-                                                                                        <span className="icon is-small has-text-grey">
-                                                                                            <i className="fas fa-share"/>
-                                                                                        </span>
-                                                                              <span>Compartir</span>
-                                                                          </p>
-                                                                          <p className="is-size-7">
-                                                                                        <span className="icon is-small has-text-grey">
-                                                                                            <i className="fas fa-check"/>
-                                                                                        </span>
-                                                                              <span>Asistiré</span>
-                                                                          </p>
-                                                                          <p className="is-size-7">
-                                                                                        <span className="icon is-small has-text-grey">
-                                                                                            <i className="fas fa-heart"/>
-                                                                                        </span>
-                                                                              <span>Me interesa</span>
-                                                                          </p>
-                                                                      </div>}
-                                                    />
-                                                })
-                                            }
-                                        </div>
-                                        {this.state.loadingState && <LoadingEvent/>}
+                                    <div className="columns home is-multiline">
+                                        {
+                                            this.state.events.map((event,key)=>{
+                                                return <EventCard key={event._id} event={event}
+                                                                  action={{name:'Ver',url:`landing/${event._id}`}}
+                                                                  size={'column is-one-third'}
+                                                                  right={<div className="actions">
+                                                                      <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-share"/>
+                                                                                    </span>
+                                                                          <span>Compartir</span>
+                                                                      </p>
+                                                                      <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-check"/>
+                                                                                    </span>
+                                                                          <span>Asistiré</span>
+                                                                      </p>
+                                                                      <p className="is-size-7">
+                                                                                    <span className="icon is-small has-text-grey">
+                                                                                        <i className="fas fa-heart"/>
+                                                                                    </span>
+                                                                          <span>Me interesa</span>
+                                                                      </p>
+                                                                  </div>}
+                                                />
+                                            })
+                                        }
                                     </div>
-
                             }
                         </div>
                     </section>
