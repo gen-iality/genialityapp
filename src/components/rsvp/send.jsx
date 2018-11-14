@@ -31,7 +31,7 @@ class SendRsvp extends Component {
             this.setState({imageFile:file});
             this.uploadImg()
         }else{
-            this.setState({errImg:'Only images files allowed. Please try again (:'});
+            this.setState({errImg:'Only images files allowed. Please try again :)'});
         }
     };
 
@@ -94,8 +94,8 @@ class SendRsvp extends Component {
         const { timeout, disabled } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
-            <div className="columns">
-                <div className="column is-10">
+            <div className="columns event-invitation">
+                <div className="column is-8">
                     <div className="columns">
                         <div className="column box is-half is-offset-one-quarter">
                             <div className="field">
@@ -213,19 +213,22 @@ class SendRsvp extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="column box sendrsvp">
-                    <strong>Seleccionados {this.props.selection.length}</strong>
-                    <div className="rsvpusers">
-                        {
-                            this.props.selection.map((item,key)=>{
-                                return <p key={key} className="selection">{item.email}</p>
-                            })
-                        }
+
+                <div className="column is-4">
+                    <div className="box sendrsvp">
+                        <strong>Seleccionados {this.props.selection.length}</strong>
+                        <div className="rsvpusers">
+                            {
+                                this.props.selection.map((item,key)=>{
+                                    return <p key={key} className="selection">{item.email}</p>
+                                })
+                            }
+                        </div>
+                        <button className="button"
+                                onClick={(e)=>{this.props.prevTab()}}>
+                            Editar Seleccionados
+                        </button>
                     </div>
-                    <button className="button"
-                            onClick={(e)=>{this.props.prevTab()}}>
-                        Editar Seleccionados
-                    </button>
                 </div>
                 <Dialog modal={this.state.modal} title={'Confirmación'}
                         content={<p>Se van a enviar {this.props.selection.length} invitaciones</p>}
