@@ -83,7 +83,30 @@
       }
     }
   }
+  .document-zone {
+    margin-top: 10px;
+    width: 80%;
+    margin-left: 0;
+  }
+  .level {
+    margin-top: 20px;
+    width: 70%;
+  }
+  .button.is-primary {
+    background-color: lightgray;
+    &:hover { 
+    background-color: #00f0be;
+    }
+  }
+  svg{
+    fill: grey;
+  &:hover { 
+    fill: #00f0be;
+  }
+  }
 }
+
+
 
 .org-data {
   background-color: $gray-lighter;

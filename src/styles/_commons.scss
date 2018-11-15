@@ -283,6 +283,7 @@ a {
     font-size: 1rem;
     font-weight: 700;
     outline: none;
+    width: 80%;
     padding: .5em 1em;
     &:focus{
       border-bottom: 1px solid $primary;
