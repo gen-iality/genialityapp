@@ -249,7 +249,7 @@ class OrgEditProfile extends Component {
                     loading ? <Loading/> :
                         <div className="container org-profile">
                             <div className="profile-info columns">
-                                <div className="user-info column is-3">
+                                <div className="user-info column is-4">
                                     <ImageInput picture={org.picture} imageFile={this.state.imageFile}
                                                 divClass={'circle-img'}
                                                 content={<div style={{backgroundImage: `url(${org.picture})`}}
@@ -257,12 +257,11 @@ class OrgEditProfile extends Component {
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
-                                                    <img className="is-rounded" alt={'evius.co'}
-                                                         src="https://bulma.io/images/placeholders/128x128.png"/>
+                                                    <img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt={'profileimage'}/>
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
                                     <div className="field">
-                                        <label className="label">Nombre Empresa</label>
+                                        <label className="label is-size-7 has-text-grey-light">Nombre Empresa</label>
                                         <div className="control">
                                             <input className="input" name={"name"} type="text"
                                                    placeholder="Text input" value={org.name}
@@ -271,7 +270,7 @@ class OrgEditProfile extends Component {
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label">Correo Corporativo</label>
+                                        <label className="label is-size-7 has-text-grey-light">Correo Corporativo</label>
                                         <div className="control">
                                             <input className="input" name={"email"} type="email"
                                                    placeholder="Text input" value={org.email}
@@ -286,7 +285,7 @@ class OrgEditProfile extends Component {
                                     <div className="columns">
                                         <div className="column">
                                             <div className="field">
-                                                <label className="label">Nit</label>
+                                                <label className="label is-size-7 has-text-grey-light">Nit</label>
                                                 <div className="control">
                                                     <input className="input" name={"nit"} type="number"
                                                            placeholder="Text input" value={org.nit}
@@ -295,48 +294,26 @@ class OrgEditProfile extends Component {
                                                 </div>
                                             </div>
                                             <div className="field">
-                                                <label className="label">Dirección</label>
+                                                <label className="label is-size-7 has-text-grey-light">Dirección</label>
                                                 <div className="control">
                                                     <Geosuggest
                                                         placeholder={'Dirección'}
                                                         onSuggestSelect={this.onSuggestSelect}
                                                         initialValue={org.location.FormattedAddress}
                                                         location={new google.maps.LatLng(org.location.Latitude, org.location.Longitude)}
-                                                        radius="20"/>
+                                                        radius=""/>
                                                 </div>
                                             </div>
-                                            <div className="field is-grouped">
-                                                <button className={`is-text button`} onClick={(e) => {
-                                                    this.showNetwork('Facebook')
-                                                }}><FaFacebook/></button>
-                                                <button className={`is-text button`} onClick={(e) => {
-                                                    this.showNetwork('Twitter')
-                                                }}><FaTwitter/></button>
-                                                <button className={`is-text button`} onClick={(e) => {
-                                                    this.showNetwork('Instagram')
-                                                }}><FaInstagram/></button>
-                                                <button className={`is-text button`} onClick={(e) => {
-                                                    this.showNetwork('LinkedIn')
-                                                }}><FaLinkedinIn/></button>
+                                            <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Ciudad/País</label>
+                                            <div className="control">
+                                            <input className="input" name={"ciudad"} type="text"
+                                                           placeholder="Text input" value={org.nit}
+                                                           onChange={this.handleChange}
+                                                    />                                            </div>
                                             </div>
-                                            {
-                                                this.state.network && (
-                                                    <div className="field has-addons">
-                                                        <div className="control">
-                                                            <input className="input is-small" type="url"
-                                                                   placeholder={`${this.state.network} URL`}/>
-                                                        </div>
-                                                        <div className="control">
-                                                            <button className="button is-info is-outlined is-small">
-                                                                <MdSave/></button>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                        <div className="column">
                                             <div className="field">
-                                                <label className="label">Celular o Teléfono</label>
+                                                <label className="label is-size-7 has-text-grey-light">Celular o Teléfono</label>
                                                 <div className="control">
                                                     <input className="input" name={"phone"} type="tel"
                                                            placeholder="Text input" value={org.phone}
@@ -344,8 +321,10 @@ class OrgEditProfile extends Component {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="field">
-                                                <label className="label">Cámara de Comercio</label>
+                                        </div>
+                                        <div className="column">
+                                        <div className="field">
+                                                <label className="label is-size-7 has-text-grey-light">Cámara de Comercio</label>
                                                 {
                                                     org.doc.loading ?
                                                         <p>Subiendo archivo</p> :
@@ -361,8 +340,57 @@ class OrgEditProfile extends Component {
                                                         </React.Fragment>
                                                 }
                                             </div>
-                                            <div className="control">
-                                                <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Submit</button>
+                                            <div className="field">
+                                                <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
+                                                <div className="control">
+                                                    <input className="input" name={"estado"} type="text"
+                                                           placeholder="Text input" value={org.phone}
+                                                           onChange={this.handleChange}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="field">
+                                                <label className="label is-size-7 has-text-grey-light">Opción</label>
+                                                <div className="control">
+                                                    <input className="input" name={"opcion"} type="text"
+                                                           placeholder="Ejemplo" value={org.phone}
+                                                           onChange={this.handleChange}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="level">
+                                            <div className="field columns is-multiline is-mobile">
+                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                    this.showNetwork('Facebook')
+                                                }}><FaFacebook/></button>
+                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                    this.showNetwork('Twitter')
+                                                }}><FaTwitter/></button>
+                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                    this.showNetwork('Instagram')
+                                                }}><FaInstagram/></button>
+                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                    this.showNetwork('LinkedIn')
+                                                }}><FaLinkedinIn/></button>
+                                            </div>
+                                            {
+                                                this.state.network && (
+                                                    <div className="field has-addons">
+                                                        <div className="control column is-one-quarter">
+                                                            <input className="input is-small" type="url"
+                                                                   placeholder={`${this.state.network} URL`}/>
+                                                        </div>
+                                                        <div className="control">
+                                                            <button className="button is-info is-outlined is-small">
+                                                                <MdSave/></button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                            <div className="control column is-one-quarter">
+                                                <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Guardar</button>
+                                            </div>
                                             </div>
                                         </div>
                                     </div>
