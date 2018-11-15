@@ -172,7 +172,8 @@ class ListEventUser extends Component {
             });
             userRef.update({
                 updated_at: new Date(),
-                checked_in: true
+                checked_in: true,
+                checked_at: new Date()
             })
                 .then(()=> {
                     console.log("Document successfully updated!");
@@ -380,6 +381,7 @@ const parseData = (data) => {
         info[key]['estado'] = item.state.name;
         info[key]['rol'] = item.rol.name;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'';
+        info[key]['Hora checkIn'] = item.checked_at?item.checked_at:'';
         info[key]['Actualizado'] = item.updated_at;
         return info
     });
