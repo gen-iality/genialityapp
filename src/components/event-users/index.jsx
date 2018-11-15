@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
+import {Actions} from "../../helpers/request";
 import QrReader from "react-qr-reader";
+import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
-import { FaCamera} from "react-icons/fa";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,6 +20,7 @@ class ListEventUser extends Component {
             userReq:    [],
             pageOfItems:[],
             usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
+            pilaRef:    firestore.collection('pila'),
             total:      0,
             checkIn:    0,
             extraFields:[],
@@ -39,7 +41,7 @@ class ListEventUser extends Component {
         const { event } = this.props;
         const properties = event.user_properties;
         this.setState({ extraFields: properties });
-        const {usersRef} = this.state;
+        const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
         usersRef.onSnapshot((snapshot)=> {
             let checkIn = 0;
@@ -51,19 +53,22 @@ class ListEventUser extends Component {
                 user.state = states.find(x => x._id === user.state_id);
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
-                switch (change.type) {
-                    case "added":
-                        newItems.push(user);
-                        break;
-                    case "modified":
-                        newItems[change.newIndex] = user;
-                        break;
-                    case "removed":
-                        newItems.splice(change.newIndex, 1);
-                        break;
-                    default:
-                        console.log('Ninguno');
-                        break;
+                if (change.type === 'added'){
+                    newItems.push(user);
+                    if(change.doc._hasPendingWrites){
+                        console.log('en pilando ==>',change.doc.data());
+                        pilaRef.doc(change.doc.id).set(change.doc.data());
+                    }
+                }
+                if (change.type === 'modified'){
+                    newItems[change.newIndex] = user;
+                    if(change.doc._hasPendingWrites){
+                        console.log('en pilando ==>',change.doc.data());
+                        pilaRef.doc(change.doc.id).set(change.doc.data());
+                    }
+                }
+                if (change.type === 'removed'){
+                    newItems.splice(change.newIndex, 1);
                 }
             });
             this.setState({
@@ -74,6 +79,48 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
+        pilaRef.onSnapshot({
+            includeMetadataChanges: true
+        },querySnapshot => {
+            querySnapshot.docChanges().forEach(change => {
+                console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
+                const data = JSON.stringify(change.doc.data());
+                if (change.type === 'added') {
+                    pilaRef.doc(change.doc.id)
+                        .onSnapshot({
+                            includeMetadataChanges: true
+                        }, (doc) => {
+                            if(!doc._hasPendingWrites){
+                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,data)
+                                    .then((response)=>{
+                                        console.log(response);
+                                        console.log('desenpilando ==>',change.doc.data());
+                                        pilaRef.doc(change.doc.id).delete();
+                                    })
+                            }
+                        });
+                }
+                if (change.type === 'modified') {
+                    pilaRef.doc(change.doc.id)
+                        .onSnapshot({
+                            includeMetadataChanges: true
+                        }, (doc) => {
+                            if(!doc._hasPendingWrites){
+                                Actions.put(`/api/eventUsers/${event._id}`,data)
+                                    .then((response) => {
+                                        console.log('desenpilando ==>',change.doc.data());
+                                        pilaRef.doc(change.doc.id).delete();
+                                        console.log(response);
+                                    })
+                            }
+                        });
+                }
+                if (change.type === 'removed') {
+                }
+            });
+        }, err => {
+            console.log(`Encountered error: ${err}`);
+        });
     }
 
     exportFile = (e) => {

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {Actions, UsersApi} from "../../helpers/request";
-import {toast} from "react-toastify";
 
 class AddUser extends Component {
 
@@ -217,7 +216,7 @@ class AddUser extends Component {
                         </div>
                     </footer>
                 </div>
-                <iframe ref="ifrmPrint" style={{opacity:0}}/>
+                <iframe ref="ifrmPrint" style={{opacity:0}} title={'printUser'}/>
             </div>
         );
     }
