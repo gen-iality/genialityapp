@@ -40,17 +40,17 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        let {checkIn} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
         usersRef.onSnapshot((snapshot)=> {
-            let checkIn = 0;
             let user;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
-                checkIn += (user.checked_in);
                 user._id = change.doc.id;
                 user.state = states.find(x => x._id === user.state_id);
+                checkIn += (user.checked_in);
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
@@ -264,9 +264,7 @@ class ListEventUser extends Component {
                             total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                         }
                     </div>
-                    {
-                        users.length>0&&
-                        <React.Fragment>
+                    <React.Fragment>
                         <table className="table">
                             <thead>
                             <tr>
@@ -279,7 +277,7 @@ class ListEventUser extends Component {
                             </thead>
                             <tbody>
                             {
-                                this.state.pageOfItems.map((item,key)=>{
+                                this.state.userReq.map((item,key)=>{
                                     return <tr key={key}>
                                         <td>
                                                     <span className="icon has-text-info action_pointer"
@@ -305,8 +303,11 @@ class ListEventUser extends Component {
                             onChangePage={this.onChangePage}
                         />
                     </React.Fragment>
+                    {/*{
+                        users.length>0&&
 
-                    }
+
+                    }*/}
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} checkIn={this.checkIn}
