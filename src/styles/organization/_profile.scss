@@ -88,10 +88,20 @@
     width: 80%;
     margin-left: 0;
   }
+  .rw-widget-container {
+    width: 80%;
+    margin-top: 10px;
+  }
   .level {
     margin-top: 20px;
     width: 70%;
+    &.redes {
+      width: 50%;
+      display: flex;
+      justify-content: space-between;
+    }
   }
+
   .button.is-primary {
     background-color: lightgray;
     &:hover { 
