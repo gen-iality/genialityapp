@@ -9,6 +9,7 @@ import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
+import {firebase} from "../../helpers/firebase";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -24,7 +25,6 @@ class UserEditProfile extends Component {
             }
         };
         this.saveForm = this.saveForm.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -103,23 +103,21 @@ class UserEditProfile extends Component {
         }
     };
 
-    async deleteEvent() {
-        this.setState({isLoading:'Wait....'});
-        const result = await EventsApi.deleteOne(this.state.eventId);
-        console.log(result);
-        if(result.data === "True"){
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
-            const events = await EventsApi.getAll();
-            setTimeout(()=>{
-                this.setState({modal:false,events});
-            },500)
-        }else{
-            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
-        }
-    }
-
     closeModal = () => {
         this.setState({modal:false})
+    };
+
+    resetPassword = () => {
+        const { user } = this.state;
+        firebase.auth()
+            .sendPasswordResetEmail(user.email)
+            .then(()=>{
+                this.setState({modal:true});
+                console.log('reset email password sent');
+            })
+            .catch((e)=>{
+                console.log(e);
+            })
     };
 
     render() {
@@ -154,10 +152,7 @@ class UserEditProfile extends Component {
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Contraseña</label>
-                                        <div className="control">
-                                            <input className="input" name={"password"} type="password" placeholder="Contraseña" disabled/>
-                                        </div>
+                                        <button className="button is-text is-size-7 has-text-grey-light" onClick={this.resetPassword}>Cambiar Contraseña</button>
                                     </div>
                                     <div className="columns is-centered">
                                         <div className="column is-half has-text-centered">
@@ -264,11 +259,9 @@ class UserEditProfile extends Component {
                 {
                     timeout&&(<LogOut/>)
                 }
-                <Dialog modal={this.state.modal} title={'Borrar Evento'}
-                        content={<p>Seguro de borrar este evento?</p>}
-                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
-                        message={this.state.message} isLoading={this.state.isLoading}
-                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                <Dialog modal={this.state.modal} title={'Reestablecer Contraseña'}
+                        content={<p>Se ha enviado un correo a <i>{user.email}</i> con instrucciones para cambiar la contraseña</p>}
+                        first={{title:'Ok',class:'is-info is-outlined has-text-danger',action:this.closeModal}}/>
             </section>
         );
     }
