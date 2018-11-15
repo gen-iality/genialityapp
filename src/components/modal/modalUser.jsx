@@ -77,10 +77,6 @@ class UserModal extends Component {
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
                     toast.success('User created successfully');
-                    setTimeout(()=>{
-                        message.class = message.content = '';
-                        self.closeModal();
-                    },500)
                 })
                 .catch(error => {
                     console.error("Error adding document: ", error);
@@ -98,11 +94,6 @@ class UserModal extends Component {
                     message.class = 'msg_warning';
                     message.content = 'USER UPDATED';
                     toast.info('User edited successfully');
-                    if(this.props.addToList) this.props.addToList();
-                    setTimeout(()=>{
-                        message.class = message.content = '';
-                        self.closeModal();
-                    },500)
                 })
                 .catch(error => {
                     console.error("Error updating document: ", error);
@@ -110,6 +101,9 @@ class UserModal extends Component {
                     message.content = 'User can`t be updated';
                 });
         }
+        setTimeout(()=>{
+            self.closeModal();
+        },800);
         this.setState({message,create:false});
     }
 
@@ -167,15 +161,16 @@ class UserModal extends Component {
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
             toast.info('User deleted successfully');
-            setTimeout(()=>{
-                message.class = message.content = '';
-                self.closeModal();
-            },500)
         })
+        setTimeout(()=>{
+            message.class = message.content = '';
+            self.closeModal();
+        },500)
     };
 
     closeModal = () => {
-        this.setState({user:{}, valid:true, modal:false},this.props.handleModal);
+        let message = {class:'',content:''};
+        this.setState({user:{}, valid:true, modal:false, message},this.props.handleModal);
     };
 
     render() {

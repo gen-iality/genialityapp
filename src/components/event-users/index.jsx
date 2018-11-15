@@ -34,14 +34,15 @@ class ListEventUser extends Component {
             sorted:     [],
             facingMode: 'user',
             qrData:     {},
-            clearSearch:false
+            clearSearch:false,
+            changeItem: false
         };
     }
 
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        let {checkIn} = this.state;
+        let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
@@ -55,26 +56,28 @@ class ListEventUser extends Component {
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
-                    newItems.push(user);
+                    change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
                     }
                 }
                 if (change.type === 'modified'){
+                    newItems.unshift(user);
+                    newItems.splice(change.oldIndex+1, 1);
+                    changeItem = !changeItem;
                     if(change.doc._hasPendingWrites){
-                        newItems[change.newIndex] = user;
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
                     }
                 }
                 if (change.type === 'removed'){
-                    newItems.splice(change.newIndex, 1);
+                    newItems.splice(change.oldIndex, 1);
                 }
             });
             this.setState((prevState) => {
                 return {
-                    userReq: newItems, auxArr: newItems, users: newItems.slice(0,50),
+                    userReq: newItems, auxArr: newItems, users: newItems.slice(0,50), changeItem,
                     loading: false,total: snapshot.size, checkIn, clearSearch: !prevState.clearSearch
                 }
             });
@@ -306,6 +309,7 @@ class ListEventUser extends Component {
                             </table>
                             <Pagination
                                 items={users}
+                                change={this.state.changeItem}
                                 onChangePage={this.onChangePage}
                             />
                         </React.Fragment>
