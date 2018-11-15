@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import {EventsApi, UsersApi} from "../../helpers/request";
-import UserModal from "../modal/modalUser";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
