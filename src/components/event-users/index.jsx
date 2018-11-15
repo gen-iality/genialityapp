@@ -149,6 +149,14 @@ class ListEventUser extends Component {
         });
     };
 
+    checkModal = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
+        this.setState((prevState) => {
+            return {qrModal:!prevState.qrModal}
+        });
+    };
+
     checkIn = (user) => {
         const {userReq} = this.state;
         const { event } = this.props;
@@ -231,7 +239,7 @@ class ListEventUser extends Component {
                             )
                         }
                         <div className="control">
-                            <button className="button is-inverted" onClick={(e)=>{this.setState({qrModal:true})}}>Leer Código QR</button>
+                            <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
                         </div>
                         <div className="control">
                             <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
@@ -271,7 +279,7 @@ class ListEventUser extends Component {
                                 </thead>
                                 <tbody>
                                 {
-                                    this.state.pageOfItems.map((item,key)=>{
+                                    this.state.userReq.map((item,key)=>{
                                         return <tr key={key}>
                                             <td>
                                                     <span className="icon has-text-info action_pointer"
@@ -345,8 +353,9 @@ class ListEventUser extends Component {
                                 qrData.user&&(
                                     <React.Fragment>
                                         {
-                                            !qrData.user.checked_in &&
-                                            <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                            qrData.user.checked_in ?
+                                                <p>Already check</p>
+                                            :<button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
