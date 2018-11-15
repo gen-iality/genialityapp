@@ -264,50 +264,48 @@ class ListEventUser extends Component {
                             total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                         }
                     </div>
-                    <React.Fragment>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th/>
-                                <th>Check</th>
-                                <th>Estado</th>
-                                <th>Correo</th>
-                                <th>Nombre</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                this.state.userReq.map((item,key)=>{
-                                    return <tr key={key}>
-                                        <td>
-                                                    <span className="icon has-text-info action_pointer"
-                                                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                                                       type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                                                <label htmlFor={"checkinUser"+item._id}/>
-                                            </div>
-                                        </td>
-                                        <td>{item.state.name}</td>
-                                        <td>{item.properties.email}</td>
-                                        <td>{item.properties.name}</td>
-                                    </tr>
-                                })
-                            }
-                            </tbody>
-                        </table>
-                        <Pagination
-                            items={users}
-                            onChangePage={this.onChangePage}
-                        />
-                    </React.Fragment>
-                    {/*{
+                    {
                         users.length>0&&
-
-
-                    }*/}
+                        <React.Fragment>
+                            <table className="table">
+                                <thead>
+                                <tr>
+                                    <th/>
+                                    <th>Check</th>
+                                    <th>Estado</th>
+                                    <th>Correo</th>
+                                    <th>Nombre</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    this.state.pageOfItems.map((item,key)=>{
+                                        return <tr key={key}>
+                                            <td>
+                                                        <span className="icon has-text-info action_pointer"
+                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                                           type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                                                    <label htmlFor={"checkinUser"+item._id}/>
+                                                </div>
+                                            </td>
+                                            <td>{item.state.name}</td>
+                                            <td>{item.properties.email}</td>
+                                            <td>{item.properties.name}</td>
+                                        </tr>
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                            <Pagination
+                                items={users}
+                                onChangePage={this.onChangePage}
+                            />
+                        </React.Fragment>
+                    }
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} checkIn={this.checkIn}
