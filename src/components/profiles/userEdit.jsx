@@ -163,6 +163,10 @@ class UserEditProfile extends Component {
             })
     };
 
+    showNetwork = (network) => {
+        this.setState({network})
+    };
+
     render() {
         const { loading, timeout, events, user } = this.state;
         return (
@@ -250,68 +254,47 @@ class UserEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Intereses</label>
                                             <div className="control">
-                                            <input className="input has-text-weight-bold" name={"intereses"} value={user.company} type="text" placeholder="Enter something" onChange={this.handleChange}/>
+                                            <input className="input has-text-weight-bold" name={"intereses"} type="text" placeholder="Proximamente" disabled/>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Ciudad/País</label>
-                                            <div className="control">
-                                            <input className="input" name={"ciudad"} type="text"
-                                                           placeholder="Text input" 
-                                                           onChange={this.handleChange}
-                                                    />                                            
-                                                    </div>
+                                        <div className="column">
+                                            <div className="level redes">
+                                                <div className="field columns is-multiline is-mobile">
+                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                        this.showNetwork('Facebook')
+                                                    }}><FaFacebook/></button>
+                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                        this.showNetwork('Twitter')
+                                                    }}><FaTwitter/></button>
+                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                        this.showNetwork('Instagram')
+                                                    }}><FaInstagram/></button>
+                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
+                                                        this.showNetwork('LinkedIn')
+                                                    }}><FaLinkedinIn/></button>
+                                                </div>
+                                                {
+                                                    this.state.network && (
+                                                        <div className="field has-addons">
+                                                            <div className="control column is-one-quarter">
+                                                                <input className="input is-small" type="url"
+                                                                       placeholder={`${this.state.network} URL`}/>
+                                                            </div>
+                                                            <div className="control">
+                                                                <button className="button is-info is-outlined is-small">
+                                                                    <MdSave/></button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
                                         </div>
-                                        <div className="level redes">
-                                            <div className="field columns is-multiline is-mobile">
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Facebook')
-                                                }}><FaFacebook/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Twitter')
-                                                }}><FaTwitter/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Instagram')
-                                                }}><FaInstagram/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('LinkedIn')
-                                                }}><FaLinkedinIn/></button>
-                                            </div>
-                                            {
-                                                this.state.network && (
-                                                    <div className="field has-addons">
-                                                        <div className="control column is-one-quarter">
-                                                            <input className="input is-small" type="url"
-                                                                   placeholder={`${this.state.network} URL`}/>
-                                                        </div>
-                                                        <div className="control">
-                                                            <button className="button is-info is-outlined is-small">
-                                                                <MdSave/></button>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-                                            <div className="column is-half has-text-centered">
-                                                <button className="button is-primary" onClick={this.saveForm}>Guardar</button>
-                                            </div>
+                                        <div className="column">
+                                            <button className="button is-primary" onClick={this.saveForm}>Guardar</button>
                                         </div>
                                     </div>
-                                    {/*<div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Ciudad / País</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"ciudad"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Proceso</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"proceso"} type="text" placeholder="Proximamente" disabled/>
-                                            </div>
-                                        </div>
-                                    </div>*/}
                                 </div>
                             </div>
                             <div className="profile-data columns" id={'events'}>
