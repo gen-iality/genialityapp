@@ -85,7 +85,7 @@ class ListEventUser extends Component {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
                 const data = JSON.stringify(change.doc.data());
-                if (change.type === 'added') {
+                /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
@@ -116,7 +116,7 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }
+                }*/
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
@@ -264,7 +264,9 @@ class ListEventUser extends Component {
                             total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
                         }
                     </div>
-                    <React.Fragment>
+                    {
+                        users.length>0&&
+                        <React.Fragment>
                         <table className="table">
                             <thead>
                             <tr>
@@ -277,7 +279,7 @@ class ListEventUser extends Component {
                             </thead>
                             <tbody>
                             {
-                                this.state.userReq.map((item,key)=>{
+                                this.state.pageOfItems.map((item,key)=>{
                                     return <tr key={key}>
                                         <td>
                                                     <span className="icon has-text-info action_pointer"
@@ -303,10 +305,8 @@ class ListEventUser extends Component {
                             onChangePage={this.onChangePage}
                         />
                     </React.Fragment>
-                    {/*{
-                        users.length>0&&
 
-                    }*/}
+                    }
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} checkIn={this.checkIn}
