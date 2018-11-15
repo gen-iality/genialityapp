@@ -1,6 +1,8 @@
+/*global google*/
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
 import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
+import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
 import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
@@ -10,6 +12,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
 import {firebase} from "../../helpers/firebase";
+import {DateTimePicker} from "react-widgets";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -37,6 +40,7 @@ class UserEditProfile extends Component {
             console.log(tickets);
             user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
+            user.location = user.location ? user.location : {};
             this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
@@ -90,8 +94,45 @@ class UserEditProfile extends Component {
         this.setState({user:{...this.state.user,[name]:value}},this.valid)
     };
 
+    changeDate = (value,name)=>{
+        this.setState({user:{...this.state.user,[name]:value}})
+    };
+
+    onSuggestSelect = (suggest) => {
+        if(suggest){
+            const place = suggest.gmaps;
+            const location = place.geometry && place.geometry.location ? {
+                Latitude: place.geometry.location.lat(),
+                Longitude: place.geometry.location.lng()
+            } : {};
+            const componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name'
+            };
+            const mapping = {
+                street_number: 'number',
+                route: 'street',
+                locality: 'city',
+                administrative_area_level_1: 'state'
+            };
+            for (let i = 0; i < place.address_components.length; i++) {
+                const addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    const val = place.address_components[i][componentForm[addressType]];
+                    location[mapping[addressType]] = val;
+                }
+            }
+            location.FormattedAddress = place.formatted_address;
+            location.PlaceId = place.place_id;
+            this.setState({user:{...this.state.user,location}})
+        }
+    };
+
     async saveForm() {
         const { user } = this.state;
+        console.log(user);
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
@@ -140,13 +181,13 @@ class UserEditProfile extends Component {
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
                                     <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Nombre</label>
+                                        <label className="label required is-size-7 has-text-grey-light">Nombre</label>
                                         <div className="control">
                                             <input className="input" name={"name"} type="text" placeholder="Nombre" value={user.name} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Correo</label>
+                                        <label className="label required is-size-7 has-text-grey-light">Correo</label>
                                         <div className="control">
                                             <input className="input" name={"email"} type="email" placeholder="Email" value={user.email} onChange={this.handleChange} />
                                         </div>
@@ -168,27 +209,32 @@ class UserEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Cédula</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"cedula"} type="text" placeholder="Proximamente" disabled/>
+                                                <input className="input has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="Enter something" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Dirección</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"direccion"} type="text" placeholder="Proximamente" disabled/>
+                                                <Geosuggest
+                                                    placeholder={'Dirección'}
+                                                    onSuggestSelect={this.onSuggestSelect}
+                                                    initialValue={user.location.FormattedAddress}
+                                                    location={new google.maps.LatLng(user.location.Latitude,user.location.Longitude)}
+                                                    radius="20"/>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="columns is-9">
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Celular</label>
+                                            <label className="label required is-size-7 has-text-grey-light">Celular</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"celular"} type="num" placeholder="Proximamente" disabled/>
+                                                <input className="input has-text-weight-bold" name={"phoneNumber"} value={user.phoneNumber} type="number" placeholder="Enter something" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Empresa</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"empresa"} type="text" placeholder="Proximamente" disabled/>
+                                                <input className="input has-text-weight-bold" name={"company"} value={user.company} type="text" placeholder="Enter something" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +242,12 @@ class UserEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Fecha de nacimiento</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"nacimiento"} type="text" placeholder="Proximamente" disabled/>
+                                                <DateTimePicker
+                                                    value={user.birth_date}
+                                                    format={'L'}
+                                                    max={new Date()}
+                                                    time={false}
+                                                    onChange={value => this.changeDate(value,"birth_date")}/>
                                             </div>
                                         </div>
                                         <div className="field column">
@@ -206,20 +257,20 @@ class UserEditProfile extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="columns is-9">
+                                    {/*<div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Ciudad / País</label>
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"ciudad"} type="text" placeholder="Proximamente" disabled/>
                                             </div>
                                         </div>
-                                        {/* <div className="field column">
+                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Proceso</label>
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"proceso"} type="text" placeholder="Proximamente" disabled/>
                                             </div>
-                                        </div> */}
-                                    </div>
+                                        </div>
+                                    </div>*/}
                                 </div>
                             </div>
                             <div className="profile-data columns" id={'events'}>

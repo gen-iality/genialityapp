@@ -272,6 +272,8 @@ a {
   }
 }
 
+.required:after { content:" *"; color: $danger }
+
 .control {
   input{
     background: transparent !important;
