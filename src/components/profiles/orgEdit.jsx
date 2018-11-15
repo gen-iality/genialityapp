@@ -248,8 +248,8 @@ class OrgEditProfile extends Component {
                 {
                     loading ? <Loading/> :
                         <div className="container org-profile">
-                            <div className="columns">
-                                <div className="column is-3">
+                            <div className="profile-info columns">
+                                <div className="user-info column is-3">
                                     <ImageInput picture={org.picture} imageFile={this.state.imageFile}
                                                 divClass={'circle-img'}
                                                 content={<div style={{backgroundImage: `url(${org.picture})`}}
@@ -281,7 +281,7 @@ class OrgEditProfile extends Component {
                                     </div>
                                     {/*<SelectInput selectOption={this.handleSelect} name={'Categorías:'} options={categories}/>*/}
                                 </div>
-                                <div className="column is-9 org-data">
+                                <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns">
                                         <div className="column">
