@@ -72,9 +72,11 @@ class ListEventUser extends Component {
                     newItems.splice(change.newIndex, 1);
                 }
             });
-            this.setState({
-                userReq: newItems, auxArr: newItems, users: newItems.slice(0,50),
-                loading: false,total: snapshot.size, checkIn, clearSearch: true
+            this.setState((prevState) => {
+                return {
+                    userReq: newItems, auxArr: newItems, users: newItems.slice(0,50),
+                    loading: false,total: snapshot.size, checkIn, clearSearch: !prevState.clearSearch
+                }
             });
         },(error => {
             console.log(error);
@@ -224,8 +226,6 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
-        console.log(userReq);
-        console.log(users);
         return (
             <React.Fragment>
                 <header>

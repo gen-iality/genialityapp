@@ -33,7 +33,6 @@ class Pagination extends Component {
         } else {
             pageOfItems = [];
         }
-        console.log(pageOfItems);
 
         this.props.onChangePage(pageOfItems);
     }

@@ -19,6 +19,9 @@ class SearchComponent extends Component {
             this.setState({auxArr:nextProps.data});
             if(nextProps.clear) this.setState({value:''})
         }
+        if(nextProps.clear !== this.props.clear){
+            this.setState({value:''})
+        }
     }
 
     filterByAllColums(value) {
@@ -64,7 +67,6 @@ class SearchComponent extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <React.Fragment>
                 <div className="field">
