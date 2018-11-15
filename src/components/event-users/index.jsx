@@ -33,7 +33,8 @@ class ListEventUser extends Component {
             message:    {class:'', content:''},
             sorted:     [],
             facingMode: 'user',
-            qrData:     {}
+            qrData:     {},
+            clearSearch:false
         };
     }
 
@@ -44,7 +45,7 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
-        usersRef.onSnapshot((snapshot)=> {
+        usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
             let user;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
@@ -61,8 +62,8 @@ class ListEventUser extends Component {
                     }
                 }
                 if (change.type === 'modified'){
-                    newItems[change.newIndex] = user;
                     if(change.doc._hasPendingWrites){
+                        newItems[change.newIndex] = user;
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
                     }
@@ -72,8 +73,8 @@ class ListEventUser extends Component {
                 }
             });
             this.setState({
-                userReq: newItems, auxArr: newItems,
-                loading: false,total: snapshot.size, checkIn
+                userReq: newItems, auxArr: newItems, users: newItems.slice(0,50),
+                loading: false,total: snapshot.size, checkIn, clearSearch: true
             });
         },(error => {
             console.log(error);
@@ -223,6 +224,8 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
+        console.log(userReq);
+        console.log(users);
         return (
             <React.Fragment>
                 <header>
@@ -262,7 +265,7 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                         {
-                            total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult}/>
+                            total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         }
                     </div>
                     {

@@ -14,6 +14,13 @@ class Pagination extends Component {
         this.setPage( this.props.initialPage, auxArr);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.items.length!== this.props.items.length){
+            let auxArr =  nextProps.items;
+            this.setPage( nextProps.initialPage, auxArr);
+        }
+    }
+
     setPage = (page, items) => {
         const pageSize = 10;
         let pageOfItems;

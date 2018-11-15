@@ -52,13 +52,14 @@ class SearchComponent extends Component {
         if (value.length <= 2) {
             if (value.length === 0) {
                 this.setState({ showMessage: false, message: "" });
+                this.props.searchResult(this.props.data.slice(0,50));
             } else {
                 this.setState({
                     showMessage: true,
                     message: "short"
                 });
+                this.props.searchResult(false);
             }
-            this.props.searchResult(false);
         }
     }
 
