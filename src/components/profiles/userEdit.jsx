@@ -260,35 +260,35 @@ class UserEditProfile extends Component {
                                     </div>
                                     <div className="columns is-9">
                                         <div className="column">
-                                            <div className="level redes">
-                                                <div className="field columns is-multiline is-mobile">
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Facebook')
-                                                    }}><FaFacebook/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Twitter')
-                                                    }}><FaTwitter/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Instagram')
-                                                    }}><FaInstagram/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('LinkedIn')
-                                                    }}><FaLinkedinIn/></button>
-                                                </div>
-                                                {
-                                                    this.state.network && (
-                                                        <div className="field has-addons">
-                                                            <div className="control column is-one-quarter">
-                                                                <input className="input is-small" type="url"
-                                                                       placeholder={`${this.state.network} URL`}/>
-                                                            </div>
-                                                            <div className="control">
-                                                                <button className="button is-info is-outlined is-small">
-                                                                    <MdSave/></button>
-                                                            </div>
+                                            <div className="field is-grouped is-multiline is-mobile">
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Facebook')
+                                                }}><FaFacebook/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Twitter')
+                                                }}><FaTwitter/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('Instagram')
+                                                }}><FaInstagram/></button>
+                                                <button className={`is-text button`} onClick={(e) => {
+                                                    this.showNetwork('LinkedIn')
+                                                }}><FaLinkedinIn/></button>
+                                            </div>
+                                            {
+                                                this.state.network && (
+                                                    <div className="field has-addons">
+                                                        <div className="control">
+                                                            <input className="input is-small" type="url"
+                                                                   placeholder={`${this.state.network} URL`}/>
                                                         </div>
-                                                    )
-                                                }
+                                                        <div className="control">
+                                                            <button className="button is-info is-outlined is-small">
+                                                                <MdSave/></button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                            <div className="level redes">
                                             </div>
                                         </div>
                                         <div className="column">
