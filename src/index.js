@@ -25,6 +25,6 @@ ReactDOM.render(
     <IntlProvider locale={language} messages={messages}>
         <App/>
     </IntlProvider>, document.getElementById('root'));
+////index.html loading old files because of service worker after build
 //registerServiceWorker();
 unregisterServiceWorker();
-
