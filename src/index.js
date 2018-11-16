@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import  './styles/main.css';
 import App from './App/App';
 //import registerServiceWorker from './registerServiceWorker';
+import { unregister as unregisterServiceWorker } from './registerServiceWorker'
 //index.html loading old files because of service worker after build
 //https://github.com/facebook/create-react-app/issues/2715
+//https://gist.github.com/kirillshevch/a7d778a6aaa788149ae86a9b313cb0ad
 import {addLocaleData, IntlProvider,} from 'react-intl';
 //Import local files from intl
 import locale_en from 'react-intl/locale-data/en';
@@ -24,3 +26,4 @@ ReactDOM.render(
         <App/>
     </IntlProvider>, document.getElementById('root'));
 //registerServiceWorker();
+unregisterServiceWorker();
