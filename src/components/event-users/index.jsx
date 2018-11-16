@@ -199,8 +199,8 @@ class ListEventUser extends Component {
             const qrData = {};
             if(pos>=0) {
                 qrData.msg = 'User found';
-                qrData.another = false;
                 qrData.user = this.state.userReq[pos];
+                qrData.another = !qrData.user.checked_in;
                 console.log(qrData);
                 this.setState({qrData});
             }else{
@@ -215,11 +215,11 @@ class ListEventUser extends Component {
         console.error(err);
     }
     readQr = () => {
-        let qrData = {
-            user: null,
-            msg: ''
-        };
-        this.setState({qrData})
+        const {qrData} = this.state;
+        if(qrData.user && qrData.user.checked_in){
+            this.checkIn(qrData.user)
+        }
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
 
     onChangePage = (pageOfItems) => {
