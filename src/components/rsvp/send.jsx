@@ -94,83 +94,103 @@ class SendRsvp extends Component {
         const { timeout, disabled } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
-            <div className="columns event-invitation">
+            <div className="columns event-rsvp">
                 <div className="column is-8">
-                    <div className="columns">
-                        <div className="column box is-half is-offset-one-quarter">
-                            <div className="field">
-                                <label className="label">Objeto del correo (Por defecto será el nombre del evento)</label>
-                                <div className="control">
-                                    <input className="input" type="text" name="subject" onChange={this.handleChange} value={this.state.rsvp.subject}/>
+                    <div className="columns is-multiline is-centered">
+                        <div className="column is-10">
+                            <div className="box rsvp-subject">
+                                <div className="field">
+                                    <div className="rsvp-subject-txt">
+                                        <label className="label">Asunto del correo <br/> <small>(Por defecto será el nombre del evento)</small></label>
+                                        <i className="fa fa-info-circle info-icon"></i>
+                                    </div>
+                                    <div className="control">
+                                        <input className="input" type="text" name="subject" placeholder="Escribe aquí el asunto del correo" onChange={this.handleChange} value={this.state.rsvp.subject}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="column is-10">
+                            <div className="rsvp-title has-text-centered">
+                                <h2 className="rsvp-title-txt">
+                                    Hola "INVITADO", has sido invitado a:
+                                    <br/>
+                                    <span className="strong">{this.props.event.name}</span>
+                                </h2>
+                                
+                            </div>
+                        </div>
+
+                        <div className="column is-10">
+                            <div className="columns is-mobile is-multiline is-centered rsvp-date-wrapper">
+                                <div className="column is-12">
+                                    <div className="columns is-mobile is-centered">
+                                        <div className="column">
+                                            <div className="columns rsvp-date">
+                                                <div className="column is-two-thirds">
+                                                    <p>Fecha Inicio</p>
+                                                    <p className="date">{Moment(this.props.event.datetime_from).format('DD MMM YYYY')}</p>
+                                                </div>
+                                                <div className="column is-one-third">
+                                                <span className="icon is-large has-text-grey-lighter">
+                                                    <i className="far fa-calendar-alt fa-2x"/>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="vertical-line"></div>
+                                        <div className="column">
+                                            <div className="columns rsvp-date">
+                                                <div className="column is-two-thirds">
+                                                    <p>Hora</p>
+                                                    <p className="date">{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
+                                                </div>
+                                                <div className="column is-one-third">
+                                                <span className="icon is-large has-text-grey-lighter">
+                                                    <i className="far fa-clock fa-2x"/>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="column is-12">
+                                    <div className="columns is-mobile is-centered">
+                                        <div className="column">
+                                            <div className="columns rsvp-date">
+                                                <div className="column is-two-thirds">
+                                                    <p>Fecha Fin</p>
+                                                    <p className="date">{Moment(this.props.event.datetime_to).format('DD MMM YYYY')}</p>
+                                                </div>
+                                                <div className="column is-one-third">
+                                                <span className="icon is-large has-text-grey-lighter">
+                                                    <i className="far fa-calendar-alt fa-2x"/>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="vertical-line"></div>
+                                        <div className="column">
+                                            <div className="columns rsvp-date">
+                                                <div className="column is-two-thirds">
+                                                    <p>Hora</p>
+                                                    <p className="date">{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
+                                                </div>
+                                                <div className="column is-one-third">
+                                                <span className="icon is-large has-text-grey-lighter">
+                                                    <i className="far fa-clock fa-2x"/>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="columns">
-                        <div className="content column has-text-centered is-half is-offset-one-quarter">
-                            <p>
-                                Hola "invitado", te invito a:
-                                <br/>
-                                <strong>{this.props.event.name}</strong>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="columns is-mobile is-centered is-offset-one-quarter">
-                        <div className="column is-offset-one-quarter-desktop">
-                            <div className="columns rsvpDate">
-                                <div className="column">
-                                    <p>Fecha Inicio</p>
-                                    <p className="date">{Moment(this.props.event.datetime_from).format('DD MMM, YYYY')}</p>
-                                </div>
-                                <div className="column">
-                                   <span className="icon is-large has-text-grey">
-                                       <i className="far fa-calendar-alt fa-2x"/>
-                                   </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="columns">
-                                <div className="column">
-                                    <p>Hora</p>
-                                    <p>{Moment(this.props.event.datetime_from).format('HH:mm')}</p>
-                                </div>
-                                <div className="column">
-                                   <span className="icon is-large has-text-grey">
-                                       <i className="far fa-clock fa-2x"/>
-                                   </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="columns is-mobile is-centered is-offset-one-quarters">
-                        <div className="column is-offset-one-quarter-desktop">
-                            <div className="columns rsvpDate">
-                                <div className="column">
-                                    <p>Fecha Fin</p>
-                                    <p className="date">{Moment(this.props.event.datetime_to).format('DD MMM, YYYY')}</p>
-                                </div>
-                                <div className="column">
-                                   <span className="icon is-large has-text-grey">
-                                       <i className="far fa-calendar-alt fa-2x"/>
-                                   </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="column">
-                            <div className="columns">
-                                <div className="column">
-                                    <p>Hora</p>
-                                    <p>{Moment(this.props.event.datetime_to).format('HH:mm')}</p>
-                                </div>
-                                <div className="column">
-                                   <span className="icon is-large has-text-grey">
-                                       <i className="far fa-clock fa-2x"/>
-                                   </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div className="columns">
                        <div className="column is-half is-offset-one-third">
                            <div className="columns is-mobile is-centered is-offset-one-quarter">

@@ -1,3 +1,67 @@
+.event-rsvp {
+  padding: 0.5rem 2.5rem; 
+  .rsvp-subject {
+    box-shadow: none;
+    background: #f9f9f9;
+    border: none;
+    .rsvp-subject-txt {
+      color: $grey-lighter;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      label {
+        color: $grey-light;
+        font-weight: 900;
+      }
+    }
+    .control {
+      input {
+        width: 100%;
+      }
+    }
+  }
+  .rsvp-title {
+    color: $grey-light;
+    position: relative;
+    .rsvp-title-txt {
+      font-weight: 700;
+      font-size: 1.2rem;
+      .strong {
+        font-size: 1.3rem;
+        font-weight: 900;
+      }
+    }
+    .info-icon {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+    }
+  }
+  .rsvp-date-wrapper {
+    .rsvp-date{
+      color: $grey-light;
+      font-weight: 700;
+      .date{
+        font-weight: 900;
+        margin-left: 1em;
+        text-transform: uppercase;
+      }
+    }
+    .vertical-line {
+      background: #bbbbbb;
+      width: 1px;
+    }
+  }
+  .info-icon {
+    /* cursor: pointer; */ // temporal
+    cursor: not-allowed;
+    opacity: .5;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 div.sendrsvp {
   height: 100%;
   div.rsvpusers {
@@ -9,12 +73,7 @@ div.sendrsvp {
     }
   }
 }
-div.rsvpDate{
-  border-right: 1px solid gray;
-  .date{
-    text-transform: uppercase;
-  }
-}
+
 div.imgRsvp{
   height: auto;
   width: 100%;

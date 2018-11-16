@@ -58,6 +58,11 @@ section.landing{
         padding: 2em;
       }
     }
+    .image {
+      img {
+        object-fit: cover;
+      }
+    }
   }
   .button-cont {
     display: flex;

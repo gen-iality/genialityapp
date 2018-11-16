@@ -40,6 +40,16 @@ a {
     border-color: $grey-light !important;
     color: $grey-light !important;
   }
+  &.is-text {
+    &:hover {
+      background: transparent;
+      color: $primary !important;
+    }
+    &:focus {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
 }
 
 .navbar {
@@ -183,6 +193,8 @@ a {
         width: 60%;
         .title {
           font-weight: 900;
+          max-height: 2em;
+          overflow: hidden;
         }
         .subtitle {
           display: flex;
@@ -289,6 +301,9 @@ a {
     padding: .5em 1em;
     &:focus{
       border-bottom: 1px solid $primary;
+    }
+    &.is-small {
+      border-radius: 0;
     }
   }
   textarea {
@@ -582,6 +597,15 @@ a {
  */
 
 .rw-widget {
+  &.rw-state-focus > .rw-widget-container {
+    border-bottom-color: $primary !important;
+    &:hover {
+      background: transparent;
+    }
+  }
+  .rw-widget-container {
+    background: transparent;
+  }
   .rw-widget-picker {
     border: none;
     box-shadow: none !important;

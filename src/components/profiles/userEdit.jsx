@@ -1,7 +1,7 @@
 /*global google*/
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
-import {MdAttachFile, MdSave} from 'react-icons/md'
+import {MdAttachFile, MdSave, MdCheck} from 'react-icons/md'
 import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
@@ -178,8 +178,7 @@ class UserEditProfile extends Component {
                                 <div className="column is-4 user-info">
                                     <ImageInput picture={user.picture} imageFile={this.state.imageFile}
                                                 divClass={'circle-img'}
-                                                content={<div style={{backgroundImage: `url(${user.picture})`}}
-                                                              className="avatar-img"/>}
+                                                content={<div style={{backgroundImage: `url(${user.picture})`}} className="avatar-img"/>}
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
@@ -198,26 +197,25 @@ class UserEditProfile extends Component {
                                             <input className="input" name={"email"} type="email" placeholder="Email" value={user.email} onChange={this.handleChange} />
                                         </div>
                                     </div>
-                                    <div className="field">
-                                        <button className="button is-text is-size-7 has-text-grey-light" onClick={this.resetPassword}>Cambiar Contraseña</button>
-                                    </div>
-                                    <div className="columns is-centered">
+                                    <div className="field change-password">
+                                        <button className="button is-text is-size-7 has-text-grey-light" onClick={this.resetPassword}>Haz clic aquí para cambiar tu contraseña</button>
                                     </div>
                                 </div>
+
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Cédula</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="Enter something" onChange={this.handleChange}/>
+                                                <input className="input has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="1234567890" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Dirección</label>
                                             <div className="control">
                                                 <Geosuggest
-                                                    placeholder={'Dirección'}
+                                                    placeholder={'Ingresa tu dirección'}
                                                     onSuggestSelect={this.onSuggestSelect}
                                                     initialValue={user.location.FormattedAddress}
                                                     location={new google.maps.LatLng(user.location.Latitude,user.location.Longitude)}
@@ -229,13 +227,13 @@ class UserEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label required is-size-7 has-text-grey-light">Celular</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"phoneNumber"} value={user.phoneNumber} type="number" placeholder="Enter something" onChange={this.handleChange}/>
+                                                <input className="input has-text-weight-bold" name={"phoneNumber"} value={user.phoneNumber} type="number" placeholder="+57 123 456 7890" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Empresa</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"company"} value={user.company} type="text" placeholder="Enter something" onChange={this.handleChange}/>
+                                                <input className="input has-text-weight-bold" name={"company"} value={user.company} type="text" placeholder="Ingresa el nombre de tu empresa" onChange={this.handleChange}/>
                                             </div>
                                         </div>
                                     </div>
@@ -254,49 +252,53 @@ class UserEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Intereses</label>
                                             <div className="control">
-                                            <input className="input has-text-weight-bold" name={"intereses"} type="text" placeholder="Proximamente" disabled/>
+                                                <input className="input has-text-weight-bold" name={"intereses"} type="text" placeholder="Proximamente" disabled/>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="columns is-9">
                                         <div className="column">
-                                            <div className="level redes">
-                                                <div className="field columns is-multiline is-mobile">
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Facebook')
-                                                    }}><FaFacebook/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Twitter')
-                                                    }}><FaTwitter/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('Instagram')
-                                                    }}><FaInstagram/></button>
-                                                    <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                        this.showNetwork('LinkedIn')
-                                                    }}><FaLinkedinIn/></button>
+                                            <div className="redes level columns is-multiline">
+                                                <div className="column is-10">
+                                                    <div className="field columns is-mobile">
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Facebook')
+                                                        }}><FaFacebook/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Twitter')
+                                                        }}><FaTwitter/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Instagram')
+                                                        }}><FaInstagram/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('LinkedIn')
+                                                        }}><FaLinkedinIn/></button>
+                                                    </div>
+                                                    {
+                                                        this.state.network && (
+                                                            <div className="column is-10">
+                                                                <div className="field columns is-mobile">
+                                                                    <div className="control column is-12 input-redes">
+                                                                        <input className="input is-small" type="url"
+                                                                            placeholder={`URL de ${this.state.network}`}/>
+                                                                        <button className="button is-text">
+                                                                            <MdCheck/>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
                                                 </div>
-                                                {
-                                                    this.state.network && (
-                                                        <div className="field has-addons">
-                                                            <div className="control column is-one-quarter">
-                                                                <input className="input is-small" type="url"
-                                                                       placeholder={`${this.state.network} URL`}/>
-                                                            </div>
-                                                            <div className="control">
-                                                                <button className="button is-info is-outlined is-small">
-                                                                    <MdSave/></button>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                }
                                             </div>
                                         </div>
-                                        <div className="column">
+                                        <div className="column profile-buttons">
                                             <button className="button is-primary" onClick={this.saveForm}>Guardar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">
                                     <h2 className="data-title">

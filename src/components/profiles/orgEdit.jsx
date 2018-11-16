@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
-import {MdAttachFile, MdSave} from 'react-icons/md'
+import {MdAttachFile, MdSave, MdCheck} from 'react-icons/md'
 import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
 import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
@@ -249,11 +249,10 @@ class OrgEditProfile extends Component {
                     loading ? <Loading/> :
                         <div className="container org-profile">
                             <div className="profile-info columns">
-                                <div className="user-info column is-4">
+                                <div className="column is-4 user-info">
                                     <ImageInput picture={org.picture} imageFile={this.state.imageFile}
                                                 divClass={'circle-img'}
-                                                content={<div style={{backgroundImage: `url(${org.picture})`}}
-                                                              className="avatar-img"/>}
+                                                content={<div style={{backgroundImage: `url(${org.picture})`}} className="avatar-img"/>}
                                                 classDrop={'change-img is-size-2'}
                                                 contentDrop={<TiArrowLoopOutline className="has-text-white"/>}
                                                 contentZone={<figure className="image is-128x128">
@@ -261,151 +260,156 @@ class OrgEditProfile extends Component {
                                                 </figure>} style={{}}
                                                 changeImg={this.changeImg}/>
                                     <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Nombre Empresa</label>
+                                        <label className="label required is-size-7 has-text-grey-light">Nombre Empresa</label>
                                         <div className="control">
                                             <input className="input" name={"name"} type="text"
-                                                   placeholder="Text input" value={org.name}
+                                                   placeholder="Nombre" value={org.name}
                                                    onChange={this.handleChange}
                                             />
                                         </div>
                                     </div>
                                     <div className="field">
-                                        <label className="label is-size-7 has-text-grey-light">Correo Corporativo</label>
+                                        <label className="label required is-size-7 has-text-grey-light">Correo Corporativo</label>
                                         <div className="control">
                                             <input className="input" name={"email"} type="email"
-                                                   placeholder="Text input" value={org.email}
+                                                   placeholder="Email" value={org.email}
                                                    onChange={this.handleChange}
                                             />
                                         </div>
                                     </div>
-                                    {/*<SelectInput selectOption={this.handleSelect} name={'Categorías:'} options={categories}/>*/}
                                 </div>
+
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
-                                    <div className="columns">
-                                        <div className="column">
-                                            <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Nit</label>
-                                                <div className="control">
-                                                    <input className="input" name={"nit"} type="number"
-                                                           placeholder="Text input" value={org.nit}
-                                                           onChange={this.handleChange}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Dirección</label>
-                                                <div className="control">
-                                                    <Geosuggest
-                                                        placeholder={'Dirección'}
-                                                        onSuggestSelect={this.onSuggestSelect}
-                                                        initialValue={org.location.FormattedAddress}
-                                                        location={new google.maps.LatLng(org.location.Latitude, org.location.Longitude)}
-                                                        radius=""/>
-                                                </div>
-                                            </div>
-                                            <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Ciudad/País</label>
+                                    <div className="columns is-9">
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">NIT</label>
                                             <div className="control">
-                                            <input className="input" name={"ciudad"} type="text"
-                                                           placeholder="Text input" value={org.nit}
-                                                           onChange={this.handleChange}
-                                                    />                                            </div>
+                                                <input className="input has-text-weight-bold" name={"nit"} type="number" placeholder="123456789-0" value={org.nit} onChange={this.handleChange} />
                                             </div>
-                                            <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Celular o Teléfono</label>
-                                                <div className="control">
-                                                    <input className="input" name={"phone"} type="tel"
-                                                           placeholder="Text input" value={org.phone}
-                                                           onChange={this.handleChange}
-                                                    />
+                                        </div>
+
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Cámara de Comercio</label>
+                                            {
+                                                org.doc.loading ?
+                                                    <p>Subiendo archivo</p> :
+                                                    <React.Fragment>
+                                                        <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
+                                                            <div className="control">
+                                                                <span className="has-text-grey-light">Selecciona archivo</span>
+                                                                <MdAttachFile/>
+                                                            </div>
+                                                        </Dropzone>
+                                                        <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                                    </React.Fragment>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div className="columns is-9">
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Dirección</label>
+                                            <div className="control">
+                                                <Geosuggest
+                                                    placeholder={'Ingresa tu dirección'}
+                                                    onSuggestSelect={this.onSuggestSelect}
+                                                    initialValue={org.location.FormattedAddress}
+                                                    location={new google.maps.LatLng(org.location.Latitude, org.location.Longitude)}
+                                                    radius="20"/>
+                                            </div>
+                                        </div>
+
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Opción</label>
+                                            <div className="control">
+                                                <input className="input" name={"opcion"} type="text"
+                                                        placeholder="Opción" value={org.phone}
+                                                        onChange={this.handleChange}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="columns is-9">
+                                        <div className="field column">
+                                            <label className="label required is-size-7 has-text-grey-light">Ciudad/País</label>
+                                            <div className="control">
+                                                <input className="input has-text-weight-bold" name={"ciudad"} type="text" placeholder="Bogotá" value={org.city} onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
+                                            <div className="control">
+                                                <input className="input" name={"estado"} type="text" placeholder="Estado" value={org.phone} onChange={this.handleChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="columns is-9">
+                                        <div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Celular o Teléfono</label>
+                                            <div className="control">
+                                                <input className="input has-text-weight-bold" name={"phone"} type="tel" placeholder="+57 123 456 7890" value={org.phone} onChange={this.handleChange}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="field column"></div>
+                                    </div>
+                                    <div className="columns is-9">
+                                        <div className="column">
+                                            <div className="redes level columns is-multiline">
+                                                <div className="column is-10">
+                                                    <div className="field columns is-mobile">
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Facebook')
+                                                        }}><FaFacebook/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Twitter')
+                                                        }}><FaTwitter/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('Instagram')
+                                                        }}><FaInstagram/></button>
+                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
+                                                            this.showNetwork('LinkedIn')
+                                                        }}><FaLinkedinIn/></button>
+                                                    </div>
+                                                    {
+                                                        this.state.network && (
+                                                            <div className="column is-10">
+                                                                <div className="field columns is-mobile">
+                                                                    <div className="control column is-12 input-redes">
+                                                                        <input className="input is-small" type="url"
+                                                                            placeholder={`URL de ${this.state.network}`}/>
+                                                                        <button className="button is-text">
+                                                                            <MdCheck/>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="column">
-                                        <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Cámara de Comercio</label>
-                                                {
-                                                    org.doc.loading ?
-                                                        <p>Subiendo archivo</p> :
-                                                        <React.Fragment>
-                                                            <Dropzone accept="application/pdf" className="document-zone"
-                                                                      onDrop={this.docDrop}>
-                                                                <div className="control has-text-centered">
-                                                                    <p>Selecciona archivo <MdAttachFile
-                                                                        className="has-text-primary"/></p>
-                                                                </div>
-                                                            </Dropzone>
-                                                            <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
-                                                        </React.Fragment>
-                                                }
-                                            </div>
-                                            <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
-                                                <div className="control">
-                                                    <input className="input" name={"estado"} type="text"
-                                                           placeholder="Text input" value={org.phone}
-                                                           onChange={this.handleChange}
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="field">
-                                                <label className="label is-size-7 has-text-grey-light">Opción</label>
-                                                <div className="control">
-                                                    <input className="input" name={"opcion"} type="text"
-                                                           placeholder="Ejemplo" value={org.phone}
-                                                           onChange={this.handleChange}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="level">
-                                            <div className="field columns is-multiline is-mobile">
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Facebook')
-                                                }}><FaFacebook/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Twitter')
-                                                }}><FaTwitter/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('Instagram')
-                                                }}><FaInstagram/></button>
-                                                <button className={`is-text button column is-one-quarter`} onClick={(e) => {
-                                                    this.showNetwork('LinkedIn')
-                                                }}><FaLinkedinIn/></button>
-                                            </div>
-                                            {
-                                                this.state.network && (
-                                                    <div className="field has-addons">
-                                                        <div className="control column is-one-quarter">
-                                                            <input className="input is-small" type="url"
-                                                                   placeholder={`${this.state.network} URL`}/>
-                                                        </div>
-                                                        <div className="control">
-                                                            <button className="button is-info is-outlined is-small">
-                                                                <MdSave/></button>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-                                            <div className="control column is-one-quarter">
-                                                <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Guardar</button>
-                                            </div>
-                                            </div>
+                                        <div className="column profile-buttons">
+                                            <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Guardar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div className="profile-data columns">
-                                <div className="column is-8">
-                                    <h2>
+                                <div className="column is-12">
+                                    <h2 className="data-title">
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
                                         <span className="has-text-grey-dark is-size-3">Eventos</span>
                                     </h2>
                                     <div className="columns home is-multiline is-mobile">
                                         {
                                             events.map((event,key)=>{
-                                                return  <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
+                                                return  <EventCard event={event} key={event._id} action={''} size={'column is-one-third'} right={
                                                     <div className="edit">
                                                         <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
                                                                     <span className="icon is-medium">
@@ -432,7 +436,7 @@ class OrgEditProfile extends Component {
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                 <Dialog modal={this.state.modalOrg} title={'Organización Creada'}
-                        content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información. Mientras mira eventos</p></div>}
+                        content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información</p></div>}
                         first={{title:'OK',class:'',action:this.closeOrg}}/>
             </section>
         );

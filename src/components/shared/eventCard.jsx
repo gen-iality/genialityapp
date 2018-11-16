@@ -49,7 +49,7 @@ class EventCard extends Component {
                     <div className="card-content">
                         <div className="media">
                             <div className="media-content">
-                                <div className="title">
+                                <div className="">
                                     <h2 className="title is-size-6 is-medium has-text-grey-dark">{event.name}</h2>
                                 </div>
                                 <div className="subtitle">
