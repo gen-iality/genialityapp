@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
+import {FormattedDate, FormattedTime} from "react-intl";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -164,17 +165,18 @@ class ListEventUser extends Component {
     };
 
     checkIn = (user) => {
-        const {userReq} = this.state;
+        const {userReq,qrData} = this.state;
+        const newUser = user;
         const { event } = this.props;
+        qrData.another = true;
         const self = this;
-        let pos = userReq.map((e) => { return e._id; }).indexOf(user._id);
+        let pos = userReq.map((e) => { return e._id; }).indexOf(newUser._id);
         if(pos >= 0){
-            user.checked_in = !user.checked_in;
             //users[pos] = user;
-            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(user._id);
+            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
             toast.success('CheckIn made successfully');
             self.setState((prevState) => {
-                return {checkIn: prevState.checkIn+1}
+                return {checkIn: prevState.checkIn+1, qrData}
             });
             userRef.update({
                 updated_at: new Date(),
@@ -198,10 +200,12 @@ class ListEventUser extends Component {
             if(pos>=0) {
                 qrData.msg = 'User found';
                 qrData.user = this.state.userReq[pos];
+                qrData.another = !qrData.user.checked_in;
                 console.log(qrData);
                 this.setState({qrData});
             }else{
                 qrData.msg = 'User not found';
+                qrData.another = true;
                 qrData.user = null;
                 this.setState({qrData})
             }
@@ -211,11 +215,11 @@ class ListEventUser extends Component {
         console.error(err);
     }
     readQr = () => {
-        let qrData = {
-            user: null,
-            msg: ''
-        };
-        this.setState({qrData})
+        const {qrData} = this.state;
+        if(qrData.user && qrData.user.checked_in){
+            this.checkIn(qrData.user)
+        }
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
 
     onChangePage = (pageOfItems) => {
@@ -328,11 +332,11 @@ class ListEventUser extends Component {
                         <section className="modal-card-body">
                             {
                                 qrData.user ?
-                                    <div>{
-                                        Object.keys(qrData.user.properties).map((obj,key)=>{
-                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>
-                                        })
-                                    }</div>:
+                                    <div>
+                                        {Object.keys(qrData.user.properties).map((obj,key)=>{
+                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
+                                        {qrData.user.checked_in && (<p>Checked: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></p>)}
+                                    </div>:
                                     <React.Fragment>
                                         <div className="field">
                                             <div className="control has-icons-left">
@@ -361,9 +365,8 @@ class ListEventUser extends Component {
                                 qrData.user&&(
                                     <React.Fragment>
                                         {
-                                            qrData.user.checked_in ?
-                                                <p>Already check</p>
-                                            :<button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                            !qrData.another &&
+                                            <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
