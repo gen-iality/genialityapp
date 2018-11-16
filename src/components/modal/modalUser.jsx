@@ -3,6 +3,7 @@ import {firestore} from "../../helpers/firebase";
 import {roles,states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
+import {FormattedDate, FormattedTime} from "react-intl";
 
 class UserModal extends Component {
     constructor(props) {
@@ -15,7 +16,8 @@ class UserModal extends Component {
             rol: "",
             state: "",
             emailError:false,
-            valid: true
+            valid: true,
+            checked_in: false,
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -44,7 +46,9 @@ class UserModal extends Component {
                         if(pos>=0) user[extraFields[pos].name] = '';
                         return user[obj] = value.properties[obj]
                     });
-                this.setState({user, rol:value.rol._id, state:value.state._id, edit:true});
+                let checked_in = value.checked_in ? value.checked_at.toDate() : false;
+                console.log(checked_in);
+                this.setState({user, rol:value.rol._id, state:value.state._id, edit:true, checked_in});
             }else {
                 let user = {name: '', email: ''};
                 this.props.extraFields
@@ -227,6 +231,23 @@ class UserModal extends Component {
                                         </div>
                                     </div>
                                 })
+                            }
+                            {
+                                this.state.checked_in && (
+                                    <div className="field is-horizontal">
+                                        <div className="field-label is-normal">
+                                            <label className="label">Checked</label>
+                                        </div>
+                                        <div className="field-body">
+                                            <div className="field">
+                                                <div className="control">
+                                                    <p><FormattedDate value={this.state.checked_in}/> - <FormattedTime value={this.state.checked_in}/></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                )
                             }
                             <div className="field is-horizontal">
                                 <div className="field-label is-normal">

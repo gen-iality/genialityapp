@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
+import {FormattedDate, FormattedTime} from "react-intl";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -328,11 +329,11 @@ class ListEventUser extends Component {
                         <section className="modal-card-body">
                             {
                                 qrData.user ?
-                                    <div>{
-                                        Object.keys(qrData.user.properties).map((obj,key)=>{
-                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>
-                                        })
-                                    }</div>:
+                                    <div>
+                                        {Object.keys(qrData.user.properties).map((obj,key)=>{
+                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
+                                        {qrData.user.checked_in && (<p>Checked: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></p>)}
+                                    </div>:
                                     <React.Fragment>
                                         <div className="field">
                                             <div className="control has-icons-left">
@@ -361,9 +362,8 @@ class ListEventUser extends Component {
                                 qrData.user&&(
                                     <React.Fragment>
                                         {
-                                            qrData.user.checked_in ?
-                                                <p>Already check</p>
-                                            :<button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                            !qrData.user.checked_in &&
+                                            <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
