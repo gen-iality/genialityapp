@@ -53,7 +53,7 @@ class ListEventUser extends Component {
                 user = change.doc.data();
                 user._id = change.doc.id;
                 user.state = states.find(x => x._id === user.state_id);
-                checkIn += (user.checked_in);
+                if(user.checked_in) checkIn = checkIn + 1;
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
@@ -91,7 +91,7 @@ class ListEventUser extends Component {
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
-                const data = JSON.stringify(change.doc.data());
+                const data = change.doc.data();
                 /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
