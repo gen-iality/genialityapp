@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
 import {MdAttachFile} from 'react-icons/md'
-import {networks} from "../../helpers/constants";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
@@ -45,13 +44,14 @@ class OrgEditProfile extends Component {
             const categories = await CategoriesApi.getAll();
             this.setState({categories});
             if(orgId === 'create'){
-                const org= {location:{}, doc:{}};
+                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
                 this.setState({create:true,loading:false,events:[],org})
             }else{
                 const org = await OrganizationApi.getOne(orgId);
                 const resp = await OrganizationApi.events(orgId);
                 org.location = org.location? org.location: {};
                 org.doc = org.doc? org.doc: {};
+                org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
                 this.setState({org,loading:false,events:resp.data});
             }
         }catch (e) {
@@ -65,7 +65,7 @@ class OrgEditProfile extends Component {
         if(orgId === 'create'){
             this.setState({loading:true});
             setTimeout(()=>{
-                const org= {location:{}, doc:{}};
+                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
                 this.setState({create:true,loading:false,events:[],org})
             },1000)
         }else{
@@ -74,6 +74,7 @@ class OrgEditProfile extends Component {
             const resp = await OrganizationApi.events(orgId);
             org.location = org.location? org.location: {};
             org.doc = org.doc? org.doc: {};
+            org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             this.setState({org,loading:false,events:resp.data});
         }
     }
@@ -91,12 +92,12 @@ class OrgEditProfile extends Component {
             this.setState({org:{...this.state.org,doc:{...this.state.org.doc,flag:false,file:'',msg:'sólo archivos pdf permitidos'}}}) :
             this.uploadFile(file);
     };
-    uploadFile = (file) => {
+    uploadFile = (archivo) => {
         let data = new FormData();
         this.setState({org:{...this.state.org,doc:{...this.state.org.doc,loading:true}}});
         const url = '/api/files/upload',
             self = this;
-        data.append('file',file);
+        data.append('file',archivo);
         Actions.post(url, data)
             .then((file) => {
                 self.setState({
@@ -105,6 +106,7 @@ class OrgEditProfile extends Component {
                         doc: {
                             ...this.state.org.doc,
                             flag:true,
+                            name:archivo.name,
                             file,
                             msg:'Upload successfully',
                             loading:false
@@ -238,6 +240,13 @@ class OrgEditProfile extends Component {
         window.location.replace(`${BaseUrl}/profile/${org._id}?type=organization`);
     };
 
+    changeNetwork = (e) => {
+        const {name,value} = e.target;
+        const {network} = this.state.org;
+        network[name] = value;
+        this.setState({org:{...this.state.org,network:network}});
+    };
+
     render() {
         const { org, loading, timeout, events, wait } = this.state;
         return (
@@ -274,8 +283,13 @@ class OrgEditProfile extends Component {
                                             />
                                         </div>
                                     </div>
+                                    <div className="field">
+                                        <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
+                                        <div className="control">
+                                            <input className="input" name={"estado"} type="text" placeholder="Estado" disabled={true} onChange={this.handleChange} />
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
@@ -285,25 +299,35 @@ class OrgEditProfile extends Component {
                                                 <input className="input has-text-weight-bold" name={"nit"} type="number" placeholder="123456789-0" value={org.nit} onChange={this.handleChange} />
                                             </div>
                                         </div>
-
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Cámara de Comercio</label>
                                             {
                                                 org.doc.loading ?
                                                     <p>Subiendo archivo</p> :
                                                     <React.Fragment>
-                                                        <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
-                                                            <div className="control">
-                                                                <span className="has-text-grey-light">Selecciona archivo</span>
-                                                                <MdAttachFile/>
-                                                            </div>
-                                                        </Dropzone>
-                                                        <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                                        {org.doc.name? <Dropzone accept="application/pdf" className="document-zone" style={{padding:0}} onDrop={this.docDrop}>
+                                                                <div className="field has-addons">
+                                                                    <div className="control is-expanded">
+                                                                        <input className="input" type="text" disabled={true}
+                                                                               value={org.doc.name}/>
+                                                                    </div>
+                                                                    <div className="control"><a className="button is-outlined is-info"><TiArrowLoopOutline/></a></div>
+                                                                </div>
+                                                            </Dropzone>
+                                                            :<React.Fragment>
+                                                                <Dropzone accept="application/pdf" className="document-zone" onDrop={this.docDrop}>
+                                                                    <div className="control">
+                                                                        <span className="has-text-grey-light">Selecciona archivo</span>
+                                                                        <MdAttachFile/>
+                                                                    </div>
+                                                                </Dropzone>
+                                                                <p className={"help " + (org.doc.flag ? 'is-success' : 'is-danger')}>{org.doc.msg}</p>
+                                                            </React.Fragment>
+                                                        }
                                                     </React.Fragment>
                                             }
                                         </div>
                                     </div>
-
                                     <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Dirección</label>
@@ -316,34 +340,6 @@ class OrgEditProfile extends Component {
                                                     radius="20"/>
                                             </div>
                                         </div>
-
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Opción</label>
-                                            <div className="control">
-                                                <input className="input" name={"opcion"} type="text"
-                                                        placeholder="Opción" value={org.phone}
-                                                        onChange={this.handleChange}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="columns is-9">
-                                        <div className="field column">
-                                            <label className="label required is-size-7 has-text-grey-light">Ciudad/País</label>
-                                            <div className="control">
-                                                <input className="input has-text-weight-bold" name={"ciudad"} type="text" placeholder="Bogotá" value={org.city} onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-
-                                        <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
-                                            <div className="control">
-                                                <input className="input" name={"estado"} type="text" placeholder="Estado" value={org.phone} onChange={this.handleChange} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="columns is-9">
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Celular o Teléfono</label>
                                             <div className="control">
@@ -351,14 +347,21 @@ class OrgEditProfile extends Component {
                                                 />
                                             </div>
                                         </div>
-
-                                        <div className="field column"></div>
+                                        {/*<div className="field column">
+                                            <label className="label is-size-7 has-text-grey-light">Opción</label>
+                                            <div className="control">
+                                                <input className="input" name={"opcion"} type="text"
+                                                        placeholder="Opción" value={org.phone}
+                                                        onChange={this.handleChange}
+                                                />
+                                            </div>
+                                        </div>*/}
                                     </div>
                                     <div className="columns is-9">
                                         <div className="column">
                                             <div className="redes level columns is-multiline">
                                                 <div className="column is-10">
-                                                    <FormNetwork changeNetwork={this.changeNetwork} network={org.network}/>
+                                                    <FormNetwork changeNetwork={this.changeNetwork} object={org.network}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -368,7 +371,6 @@ class OrgEditProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="profile-data columns">
                                 <div className="column is-12">
                                     <h2 className="data-title">

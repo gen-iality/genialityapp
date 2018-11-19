@@ -165,16 +165,12 @@ class UserEditProfile extends Component {
             })
     };
 
-    showNetwork = (network) => {
-        this.setState({network})
-    };
-
     changeNetwork = (e) => {
         const {name,value} = e.target;
         const {network} = this.state.user;
         network[name] = value;
         this.setState({user:{...this.state.user,network:network}});
-    }
+    };
 
     render() {
         const { loading, timeout, events, user, network } = this.state;
