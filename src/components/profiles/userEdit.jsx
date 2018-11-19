@@ -1,7 +1,6 @@
 /*global google*/
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
-import {MdAttachFile, MdSave, MdCheck} from 'react-icons/md'
 import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
@@ -14,7 +13,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
 import {firebase} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
-import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
+import {networks} from "../../helpers/constants";
+import FormNetwork from "../shared/networkForm";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -23,6 +23,7 @@ class UserEditProfile extends Component {
             selectedOption: [],
             events: [],
             user: {},
+            network: {},
             loading: true,
             message:{
                 class:'',
@@ -43,6 +44,7 @@ class UserEditProfile extends Component {
             user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
+            user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
@@ -167,8 +169,15 @@ class UserEditProfile extends Component {
         this.setState({network})
     };
 
+    changeNetwork = (e) => {
+        const {name,value} = e.target;
+        const {network} = this.state.user;
+        network[name] = value;
+        this.setState({user:{...this.state.user,network:network}});
+    }
+
     render() {
-        const { loading, timeout, events, user } = this.state;
+        const { loading, timeout, events, user, network } = this.state;
         return (
             <section className="section profile">
                 {
@@ -201,7 +210,6 @@ class UserEditProfile extends Component {
                                         <button className="button is-text is-size-7 has-text-grey-light" onClick={this.resetPassword}>Haz clic aquí para cambiar tu contraseña</button>
                                     </div>
                                 </div>
-
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
@@ -260,35 +268,7 @@ class UserEditProfile extends Component {
                                         <div className="column">
                                             <div className="redes level columns is-multiline">
                                                 <div className="column is-10">
-                                                    <div className="field columns is-mobile">
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Facebook')
-                                                        }}><FaFacebook/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Twitter')
-                                                        }}><FaTwitter/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Instagram')
-                                                        }}><FaInstagram/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('LinkedIn')
-                                                        }}><FaLinkedinIn/></button>
-                                                    </div>
-                                                    {
-                                                        this.state.network && (
-                                                            <div className="column is-10">
-                                                                <div className="field columns is-mobile">
-                                                                    <div className="control column is-12 input-redes">
-                                                                        <input className="input is-small" type="url"
-                                                                            placeholder={`URL de ${this.state.network}`}/>
-                                                                        <button className="button is-text">
-                                                                            <MdCheck/>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    }
+                                                    <FormNetwork changeNetwork={this.changeNetwork} object={user.network}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -298,7 +278,6 @@ class UserEditProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">
                                     <h2 className="data-title">

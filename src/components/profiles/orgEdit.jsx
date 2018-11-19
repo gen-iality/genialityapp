@@ -3,8 +3,8 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
-import {MdAttachFile, MdSave, MdCheck} from 'react-icons/md'
-import {FaTwitter, FaFacebook, FaInstagram, FaLinkedinIn} from 'react-icons/fa'
+import {MdAttachFile} from 'react-icons/md'
+import {networks} from "../../helpers/constants";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
@@ -16,6 +16,7 @@ import {Link} from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
+import FormNetwork from "../shared/networkForm";
 
 class OrgEditProfile extends Component {
     constructor(props) {
@@ -179,10 +180,6 @@ class OrgEditProfile extends Component {
         else{
             this.setState({errImg:'Only images files allowed. Please try again (:'});
         }
-    };
-
-    showNetwork = (network) => {
-      this.setState({network})
     };
 
     async saveForm() {
@@ -361,35 +358,7 @@ class OrgEditProfile extends Component {
                                         <div className="column">
                                             <div className="redes level columns is-multiline">
                                                 <div className="column is-10">
-                                                    <div className="field columns is-mobile">
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Facebook')
-                                                        }}><FaFacebook/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Twitter')
-                                                        }}><FaTwitter/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('Instagram')
-                                                        }}><FaInstagram/></button>
-                                                        <button className={`is-text button column is-2 profile-buttons`} onClick={(e) => {
-                                                            this.showNetwork('LinkedIn')
-                                                        }}><FaLinkedinIn/></button>
-                                                    </div>
-                                                    {
-                                                        this.state.network && (
-                                                            <div className="column is-10">
-                                                                <div className="field columns is-mobile">
-                                                                    <div className="control column is-12 input-redes">
-                                                                        <input className="input is-small" type="url"
-                                                                            placeholder={`URL de ${this.state.network}`}/>
-                                                                        <button className="button is-text">
-                                                                            <MdCheck/>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    }
+                                                    <FormNetwork changeNetwork={this.changeNetwork} network={org.network}/>
                                                 </div>
                                             </div>
                                         </div>

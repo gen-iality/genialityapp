@@ -1,3 +1,5 @@
+import React from "react";
+
 export const ApiUrl  = 'https://master-7rqtwti-j3wmtawgjpc6a.us-2.platformsh.site/';
 //export const ApiUrl  = 'https://dev.mocionsoft.com/evius/eviusapilaravel/public';
 export const AuthUrl = process.env.REACT_APP_AUTH_URL;
@@ -32,4 +34,10 @@ export const roles = [
     {_id:"5afaf644500a7104f77189cd",name:"Attendee"},
     {_id:"5afaf657500a7104f77189ce",name:"checki-in"},
     {_id:"5afb0efc500a7104f77189cf",name:"Super Admin"}
+];
+export const networks = [
+    {name:'Facebook',path:'facebook',icon: <i className="fab fa-facebook"></i>},
+    {name:'Twitter',path:'twitter',icon:<i className="fab fa-twitter"></i>},
+    {name:'Instagram',path:'instagram',icon:<i className="fab fa-instagram"></i>},
+    {name:'LinkedIn',path:'linkedIn',icon:<i className="fab fa-linkedin"></i>},
 ];

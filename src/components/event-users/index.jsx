@@ -92,6 +92,8 @@ class ListEventUser extends Component {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
                 const data = change.doc.data();
+                data.created_at = data.created_at.toDate();
+                data.updated_at = data.updated_at.toDate();
                 /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
