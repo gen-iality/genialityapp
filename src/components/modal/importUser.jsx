@@ -15,6 +15,7 @@ class ImportUsers extends Component {
     }
 
     handleXls = (list) => {
+        console.log(list);
         if(list.length>=2) {
             this.setState((prevState) => {
                 return {list,step:prevState.step+1}
@@ -44,6 +45,8 @@ class ImportUsers extends Component {
                 }
             },
             function(items,newUsers,cb){
+                console.log(items);
+                console.log(newUsers);
                 let len = newUsers.length;
                 for(let i=0;i<items.length;i++){
                     for(let j=0;j<len;j++){
