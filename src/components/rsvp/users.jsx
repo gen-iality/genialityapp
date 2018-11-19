@@ -143,7 +143,7 @@ class UsersRsvp extends Component {
     toggleAll = () => {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
-        const currentRecords = this.state.users;
+        const currentRecords = this.state.totalUsers;
         if (selectAll) {
             currentRecords.forEach(item => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
