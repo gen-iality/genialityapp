@@ -202,7 +202,7 @@ class ListEventUser extends Component {
             if(pos>=0) {
                 qrData.msg = 'User found';
                 qrData.user = this.state.userReq[pos];
-                qrData.another = !qrData.user.checked_in;
+                qrData.another = !!qrData.user.checked_in;
                 console.log(qrData);
                 this.setState({qrData});
             }else{
@@ -218,7 +218,7 @@ class ListEventUser extends Component {
     }
     readQr = () => {
         const {qrData} = this.state;
-        if(qrData.user && qrData.user.checked_in){
+        if(qrData.user && !qrData.user.checked_in){
             this.checkIn(qrData.user)
         }
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
@@ -235,6 +235,7 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
+        console.log(this.state.userReq);
         return (
             <React.Fragment>
                 <header>
