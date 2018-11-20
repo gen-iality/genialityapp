@@ -58,7 +58,7 @@ class UserEditProfile extends Component {
             const element = document.querySelector(hash);
             if (element) {
                 let topOfElement = element.offsetTop + 60;
-                window.scrollTo({ top: topOfElement, behavior: "smooth" })
+                window.scroll({ top: topOfElement })
             }
         }
     };
