@@ -231,6 +231,12 @@ class General extends Component {
         this.setState({modal:false,message:{}})
     };
 
+    modalEvent = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({modal:true});
+    }
+
     render() {
         const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
         return (
@@ -259,7 +265,7 @@ class General extends Component {
                         this.state.loading? <p>Guardando...</p>
                         :<button type={"submit"} className={`button is-primary`} disabled={valid}>Guardar</button>
                     }
-                    <button className="button is-outlined is-danger" onClick={(e)=>{this.setState({modal:true})}}>
+                    <button className="button is-outlined is-danger" onClick={this.modalEvent}>
                         Eliminar evento
                     </button>
                 </div>
