@@ -43,8 +43,10 @@ class Importacion extends Component {
                     for (let j = 2; j < finN + 1; j++) {
                         if (sheetObj[abc[i] + j] &&
                             sheetObj[abc[i] + j].w &&
-                            sheetObj[abc[i] + j].w.trim().length > 0) {
+                            sheetObj[abc[i] + j].w.trim().length >= 0) {
                             fields[i].list.push(sheetObj[abc[i] + j].w.trim())
+                        }else{
+                            fields[i].list.push(undefined)
                         }
                     }
                     fields[i].list.slice(0, finN - 1);
