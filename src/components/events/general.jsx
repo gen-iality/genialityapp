@@ -265,9 +265,11 @@ class General extends Component {
                         this.state.loading? <p>Guardando...</p>
                         :<button type={"submit"} className={`button is-primary`} disabled={valid}>Guardar</button>
                     }
-                    <button className="button is-outlined is-danger" onClick={this.modalEvent}>
-                        Eliminar evento
-                    </button>
+                    {
+                        event._id && <button className="button is-outlined is-danger" onClick={this.modalEvent}>
+                            Eliminar evento
+                        </button>
+                    }
                 </div>
                 {timeout&&(<ErrorServe/>)}
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}
