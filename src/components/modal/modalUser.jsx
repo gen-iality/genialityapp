@@ -3,7 +3,7 @@ import {firestore} from "../../helpers/firebase";
 import {roles,states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
-import {FormattedDate, FormattedTime} from "react-intl";
+import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 
 class UserModal extends Component {
     constructor(props) {
@@ -80,7 +80,7 @@ class UserModal extends Component {
                     console.log("Document written with ID: ", docRef.id);
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
-                    toast.success('User created successfully');
+                    toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
                 })
                 .catch(error => {
                     console.error("Error adding document: ", error);
@@ -97,7 +97,7 @@ class UserModal extends Component {
                     console.log("Document successfully updated!");
                     message.class = 'msg_warning';
                     message.content = 'USER UPDATED';
-                    toast.info('User edited successfully');
+                    toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
                 })
                 .catch(error => {
                     console.error("Error updating document: ", error);
@@ -164,7 +164,7 @@ class UserModal extends Component {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
-            toast.info('User deleted successfully');
+            toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
         })
         setTimeout(()=>{
             message.class = message.content = '';

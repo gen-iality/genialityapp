@@ -15,6 +15,7 @@ import {firebase} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
 import {networks} from "../../helpers/constants";
 import FormNetwork from "../shared/networkForm";
+import {FormattedMessage} from "react-intl";
 
 class UserEditProfile extends Component {
     constructor(props) {
@@ -80,11 +81,11 @@ class UserEditProfile extends Component {
                             picture: image
                         },fileMsg:'Image uploaded successfully'
                     });
-                    toast.success('Image uploaded successfully');
+                    toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
                 })
                 .catch (e=> {
                     console.log(e.response);
-                    toast.error('Something wrong. Try again later');
+                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -140,10 +141,10 @@ class UserEditProfile extends Component {
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
-            toast.success('All changes saved successfully');
+            toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
             console.log(e.response);
-            toast.error('Something wrong. Try again later');
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
             this.setState({timeout:true,loader:false});
         }
     };

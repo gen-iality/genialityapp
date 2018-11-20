@@ -231,11 +231,11 @@ class UsersRsvp extends Component {
         try{
             const {data} = await UsersApi.getAll(this.props.event._id);
             const users = handleUsers(data);
-            toast.success('Usuario creado exitosamente');
+            toast.success((<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>));
             this.setState({ users });
         }catch (e) {
             console.log(e.response);
-            toast.error("Algo salió mal. Intentalo de nuevo");
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
             this.setState({timeout:true,loader:false});
         }
     };
@@ -282,13 +282,13 @@ class UsersRsvp extends Component {
         API.post(url, {eventUsersIds:users})
             .then((res) => {
                 console.log(res);
-                toast.success('Ticket sent successfully');
+                toast.success((<FormattedMessage id="toast.ticket_sent" defaultMessage="Ok!"/>));
                 html.classList.remove('is-clipped');
                 this.setState({redirect:true,url_redirect:'/event/'+event._id+'/messages',disabled:false})
             })
             .catch(e=>{
                 console.log(e.response);
-                toast.error('Something wrong. Try again later');
+                toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                 this.setState({timeout:true,loader:false});
             });
 

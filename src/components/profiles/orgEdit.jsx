@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
 import FormNetwork from "../shared/networkForm";
+import {FormattedMessage} from "react-intl";
 
 class OrgEditProfile extends Component {
     constructor(props) {
@@ -120,11 +121,11 @@ class OrgEditProfile extends Component {
                         }
                     },docLoading:false
                 });
-                toast.success('File uploaded successfully');
+                toast.success(<FormattedMessage id="toast.file" defaultMessage="Ok!"/>);
             })
             .catch (e=> {
                 console.log(e.response);
-                toast.error('Something wrong. Try again later');
+                toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                 this.setState({timeout:true,loader:false});
             });
     };
@@ -178,11 +179,11 @@ class OrgEditProfile extends Component {
                             picture: image
                         },fileMsg:'Image uploaded successfully'
                     });
-                    toast.success('Image uploaded successfully');
+                    toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
                 })
                 .catch (e=> {
                     console.log(e.response);
-                    toast.error('Something wrong. Try again later');
+                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -204,21 +205,21 @@ class OrgEditProfile extends Component {
                     const html = document.querySelector("html");
                     html.classList.add('is-clipped');
                     this.setState({modalOrg:true, wait:false, org:{...this.state.org,_id:resp._id}});
-                    toast.success('Organization created successfully');
+                    toast.success(<FormattedMessage id="toast.org" defaultMessage="Ok!"/>);
                 }
                 else{
                     org.doc = !(org.doc) && {name};
                     this.setState({msg:'Saved successfully',create:false, org, wait:false});
-                    toast.success('All changes saved successfully');
+                    toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
                 }
             }else{
                 this.setState({msg:'Cant Create',create:false, wait:false});
-                toast.error('Something wrong. Try again later');
+                toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
             }
         }catch (e) {
             console.log(e);
             console.log(e.response);
-            toast.error('Something wrong. Try again later');
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
             this.setState({timeout:true,loader:false,org, wait:false});
         }
     }
