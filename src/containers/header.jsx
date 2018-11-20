@@ -123,6 +123,13 @@ class Header extends Component {
                             </div>
                         </div>
                         <div id="navbarExampleTransparentExample" className={`navbar-menu ${this.state.open ? "is-active" : ""}`}>
+                            <div className="navbar-start">
+                                <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                    <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={'/'}>
+                                        <FormattedMessage id="header.home" defaultMessage="Main"/>
+                                    </Link>
+                                </div>
+                            </div>
                             <div className="navbar-end">
                                 {
                                     this.state.user &&
