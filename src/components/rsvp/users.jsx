@@ -52,7 +52,7 @@ class UsersRsvp extends Component {
             const users = handleUsers(resp.data);
             const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
             listEvents.data.splice(pos,1);
-            if(this.props.selection.length>0) this.setState({selection:this.props.selection});
+            if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;
             let index = columns.map((e) => { return e.id; }).indexOf('properties.name');
             if(index<=-1) columns.push({
