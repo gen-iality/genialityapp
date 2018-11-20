@@ -58,8 +58,8 @@ class Result extends Component {
                              imported[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
                              notok[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
                          }else{
-                             imported[key] = {name:user.name,email:user.email,status:'ERROR '};
-                             notok[key] = {name:user.name,email:user.email,status:'ERROR '};
+                             imported[key] = {name:user.name,email:user.email,status:'ERROR DESCONOCIDO'};
+                             notok[key] = {name:user.name,email:user.email,status:'ERROR DESCONOCIDO'};
                          }
                          self.setState((prevState) => {
                              return {fails:prevState.fails+1,total:prevState.total+1}
