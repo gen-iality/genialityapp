@@ -176,22 +176,24 @@ class ListEventUser extends Component {
         if(pos >= 0){
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
-            toast.success('CheckIn made successfully');
-            self.setState((prevState) => {
-                return {checkIn: prevState.checkIn+1, qrData}
-            });
-            userRef.update({
-                updated_at: new Date(),
-                checked_in: true,
-                checked_at: new Date()
-            })
-                .then(()=> {
-                    console.log("Document successfully updated!");
-                })
-                .catch(error => {
-                    console.error("Error updating document: ", error);
-                    toast.error('Something wrong. Try again later');
+            if(!userReq[pos].checked_in){
+                toast.success('CheckIn made successfully');
+                self.setState((prevState) => {
+                    return {checkIn: prevState.checkIn+1, qrData}
                 });
+                userRef.update({
+                    updated_at: new Date(),
+                    checked_in: true,
+                    checked_at: new Date()
+                })
+                    .then(()=> {
+                        console.log("Document successfully updated!");
+                    })
+                    .catch(error => {
+                        console.error("Error updating document: ", error);
+                        toast.error('Something wrong. Try again later');
+                    });
+            }
         }
     };
 
@@ -235,7 +237,6 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
-        console.log(this.state.userReq);
         return (
             <React.Fragment>
                 <header>
