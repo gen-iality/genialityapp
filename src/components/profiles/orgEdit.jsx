@@ -28,6 +28,7 @@ class OrgEditProfile extends Component {
             },
             events: [],
             loading: true,
+            valid: true,
             wait: false,
             message:{
                 class:'',
@@ -52,7 +53,7 @@ class OrgEditProfile extends Component {
                 org.location = org.location? org.location: {};
                 org.doc = org.doc? org.doc: {};
                 org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-                this.setState({org,loading:false,events:resp.data});
+                this.setState({org,loading:false,events:resp.data,valid:false});
             }
         }catch (e) {
             console.log(e.response);
@@ -75,13 +76,20 @@ class OrgEditProfile extends Component {
             org.location = org.location? org.location: {};
             org.doc = org.doc? org.doc: {};
             org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-            this.setState({org,loading:false,events:resp.data});
+            this.setState({org,loading:false,events:resp.data,valid:false});
         }
     }
 
     handleChange = (e) => {
         const {name, value} = e.target;
         this.setState({org:{...this.state.org,[name]:value}},this.valid)
+    };
+
+    valid = () => {
+        const {org} = this.state;
+        let valid;
+        if(org.phone.length <= 7) valid = true;
+        this.setState({valid})
     };
 
     //Doc
@@ -94,7 +102,7 @@ class OrgEditProfile extends Component {
     };
     uploadFile = (archivo) => {
         let data = new FormData();
-        this.setState({org:{...this.state.org,doc:{...this.state.org.doc,loading:true}}});
+        this.setState({docLoading:true});
         const url = '/api/files/upload',
             self = this;
         data.append('file',archivo);
@@ -108,10 +116,9 @@ class OrgEditProfile extends Component {
                             flag:true,
                             name:archivo.name,
                             file,
-                            msg:'Upload successfully',
-                            loading:false
+                            msg:'Upload successfully'
                         }
-                    }
+                    },docLoading:false
                 });
                 toast.success('File uploaded successfully');
             })
@@ -187,7 +194,8 @@ class OrgEditProfile extends Component {
     async saveForm() {
         const { org, create } = this.state;
         this.setState({wait:true});
-        org.doc = org.doc.file;
+        const name = org.doc.name ? org.doc.name : org.doc;
+        org.doc = org.doc.file ? org.doc.file : org.doc;
         try {
             const resp = create ? await Actions.create('/api/organizations',org) : await OrganizationApi.editOne(org,org._id);
             console.log(resp);
@@ -199,7 +207,7 @@ class OrgEditProfile extends Component {
                     toast.success('Organization created successfully');
                 }
                 else{
-                    org.doc = !(org.doc) && {};
+                    org.doc = !(org.doc) && {name};
                     this.setState({msg:'Saved successfully',create:false, org, wait:false});
                     toast.success('All changes saved successfully');
                 }
@@ -208,6 +216,7 @@ class OrgEditProfile extends Component {
                 toast.error('Something wrong. Try again later');
             }
         }catch (e) {
+            console.log(e);
             console.log(e.response);
             toast.error('Something wrong. Try again later');
             this.setState({timeout:true,loader:false,org, wait:false});
@@ -248,7 +257,8 @@ class OrgEditProfile extends Component {
     };
 
     render() {
-        const { org, loading, timeout, events, wait } = this.state;
+        const { org, loading, docLoading, timeout, events, wait, valid } = this.state;
+        console.log(org);
         return (
             <section className="section profile">
                 {
@@ -283,18 +293,18 @@ class OrgEditProfile extends Component {
                                             />
                                         </div>
                                     </div>
-                                    <div className="field">
+                                    {/*<div className="field">
                                         <label className="label is-size-7 has-text-grey-light">Estado de empresa</label>
                                         <div className="control">
                                             <input className="input" name={"estado"} type="text" placeholder="Estado" disabled={true} onChange={this.handleChange} />
                                         </div>
-                                    </div>
+                                    </div>*/}
                                 </div>
                                 <div className="column is-8 user-data userData">
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">NIT</label>
+                                            <label className="label required is-size-7 has-text-grey-light">NIT</label>
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"nit"} type="number" placeholder="123456789-0" value={org.nit} onChange={this.handleChange} />
                                             </div>
@@ -302,7 +312,7 @@ class OrgEditProfile extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Cámara de Comercio</label>
                                             {
-                                                org.doc.loading ?
+                                                docLoading ?
                                                     <p>Subiendo archivo</p> :
                                                     <React.Fragment>
                                                         {org.doc.name? <Dropzone accept="application/pdf" className="document-zone" style={{padding:0}} onDrop={this.docDrop}>
@@ -341,7 +351,7 @@ class OrgEditProfile extends Component {
                                             </div>
                                         </div>
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Celular o Teléfono</label>
+                                            <label className="label required is-size-7 has-text-grey-light">Celular o Teléfono</label>
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"phone"} type="tel" placeholder="+57 123 456 7890" value={org.phone} onChange={this.handleChange}
                                                 />
@@ -366,7 +376,7 @@ class OrgEditProfile extends Component {
                                             </div>
                                         </div>
                                         <div className="column profile-buttons">
-                                            <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm}>Guardar</button>
+                                            <button className={`button is-primary ${wait?'is-loading':''}`} onClick={this.saveForm} disabled={valid}>Guardar</button>
                                         </div>
                                     </div>
                                 </div>
