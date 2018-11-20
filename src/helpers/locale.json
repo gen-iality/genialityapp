@@ -14,7 +14,8 @@
     "global.cancel":          "Cancel",
     "global.search_short":    "To search, please enter more than 2 characters",
     "global.search_not":      "No results found",
-    "global.select":          "Select..."
+    "global.select":          "Select...",
+    "event.me":               "Me"
   },
   "es":{
     "header.help":            "Ayuda",
@@ -31,6 +32,7 @@
     "global.cancel":          "Cancelar",
     "global.search_short":    "Para buscar porfavor ingrese mas de 2 caracteres",
     "global.search_not":      "No hay resultados",
-    "global.select":          "Selecciona..."
+    "global.select":          "Selecciona...",
+    "event.me":               "Mi"
   }
 }

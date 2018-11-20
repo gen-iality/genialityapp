@@ -10,6 +10,7 @@ import 'react-widgets/lib/scss/react-widgets.scss'
 import ErrorServe from "../modal/serverError";
 import Dialog from "../modal/twoAction";
 import * as Cookie from "js-cookie";
+import {FormattedMessage} from "react-intl";
 Moment.locale('es');
 
 class General extends Component {
@@ -34,7 +35,7 @@ class General extends Component {
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
-            organizers.unshift({id:'me',name:'Me'});
+            organizers.unshift({id:'me',name: <FormattedMessage id="event.me" defaultMessage="Yo Mismo"/>});
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
