@@ -236,7 +236,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields} = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -290,6 +290,11 @@ class ListEventUser extends Component {
                                     <th>Estado</th>
                                     <th>Correo</th>
                                     <th>Nombre</th>
+                                    {
+                                        extraFields.map((field,key)=>{
+                                            return <th key={key} className="is-capitalized">{field.name}</th>
+                                        })
+                                    }
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -310,6 +315,11 @@ class ListEventUser extends Component {
                                             <td>{item.state.name}</td>
                                             <td>{item.properties.email}</td>
                                             <td>{item.properties.name}</td>
+                                            {
+                                                extraFields.map((field,key)=>{
+                                                    return <td key={item._id}>{item.properties[field.name]}</td>
+                                                })
+                                            }
                                         </tr>
                                     })
                                 }
