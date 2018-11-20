@@ -14,7 +14,7 @@ class FormEvent extends Component {
                         <label className="label required has-text-grey-light">Nombre</label>
                         <div className="control">
                             <input className="input" name={"name"} type="text"
-                                   placeholder="Event name" value={event.name}
+                                   placeholder="Nombre del evento" value={event.name}
                                    onChange={this.props.handleChange}
                             />
                         </div>
@@ -23,7 +23,7 @@ class FormEvent extends Component {
                         <label className="label required has-text-grey-light">Dirección</label>
                         <div className="control">
                             <Geosuggest
-                                placeholder={'Dirección'}
+                                placeholder={'Ubicación del evento'}
                                 onSuggestSelect={this.props.onSuggestSelect}
                                 initialValue={event.location.FormattedAddress}
                                 location={new google.maps.LatLng(event.location.Latitude,event.location.Longitude)}
@@ -92,7 +92,7 @@ class FormEvent extends Component {
                     <div className="field">
                         <label className="label required has-text-grey-light">Descripción</label>
                         <div className="control">
-                            <textarea className="textarea" name={"description"} placeholder="Textarea" value={event.description} onChange={this.props.handleChange}/>
+                            <textarea className="textarea" name={"description"} placeholder="Descripción del evento" value={event.description} onChange={this.props.handleChange}/>
                         </div>
                     </div>
                 </div>

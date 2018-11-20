@@ -105,18 +105,18 @@ class General extends Component {
                         event: {
                             ...self.state.event,
                             picture: image
-                        },fileMsg:'Image uploaded successfully',imageFile:null
+                        },fileMsg:'Imagen subida con exito',imageFile:null
                     });
-                    toast.success('Image uploaded successfully');
+                    toast.success('Imagen subida con exito');
                 })
                 .catch (e=> {
                     console.log(e.response);
-                    toast.error('Something wrong. Try again later');
+                    toast.error('Algo salió mal. Intentalo de nuevo');
                     this.setState({timeout:true,loader:false});
                 });
         }
         else{
-            this.setState({errImg:'Only images files allowed. Please try again (:'});
+            this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
         }
     };
 
@@ -152,7 +152,7 @@ class General extends Component {
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
                 self.setState({loading:false});
-                toast.success("All changes saved")
+                toast.success("Todos los cambios guardados")
             }
             else{
                 const result = await Actions.create('/api/events', data);
@@ -161,7 +161,7 @@ class General extends Component {
                 if(result._id){
                     window.location.replace(`${BaseUrl}/event/${result._id}`);
                 }else{
-                    toast.warn("Event can't create. Trying again later");
+                    toast.warn("No se pudo crear el evento. Intentalo de nuevo");
                     this.setState({msg:'Cant Create',create:false})
                 }
             }
@@ -169,7 +169,7 @@ class General extends Component {
             console.log('Some error');
             console.log(e);
             this.setState({timeout:true});
-            toast.error("Something wrong")
+            toast.error("Algo salió mal")
         }
     }
 
@@ -207,7 +207,7 @@ class General extends Component {
 
     //Delete event
     async deleteEvent() {
-        this.setState({isLoading:'Wait....'});
+        this.setState({isLoading:'Cargando....'});
         try {
             const result = await EventsApi.deleteOne(this.state.event._id);
             console.log(result);
@@ -218,7 +218,7 @@ class General extends Component {
                     window.location.replace(`${BaseUrl}/`);
                 },500)
             }else{
-                this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
+                this.setState({message:{...this.state.message,class:'msg_error',content:'Algo salió mal. Intentalo de nuevo'},isLoading:false})
             }
         }catch (e) {
             Cookie.remove("token");
@@ -242,10 +242,11 @@ class General extends Component {
                                    <label className="label has-text-grey-light">Foto</label>
                                    <div className="control">
                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                   divClass={'imgRsvp'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                   classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button has-text-weight-bold is-primary is-outlined is-inverted ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                   contentZone={<div>Subir foto</div>}
-                                                   changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                                   divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
+                                                   classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                   contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered">Subir foto</div>}
+                                                   changeImg={this.changeImg} errImg={this.state.errImg}
+                                                   style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 200, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
                                    </div>
                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                </div>
@@ -253,22 +254,18 @@ class General extends Component {
                            handleChange={this.handleChange} minDate={this.state.minDate}
                            selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                            changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
-                <div className="field is-grouped is-centered">
-                    <div className="control">
-                        {
-                            this.state.loading? <p>Saving...</p>
-                            :<button type={"submit"} className={`button is-primary`} disabled={valid}>Save</button>
-                        }
-                    </div>
-                    <div className="control">
-                        <button className="button is-text has-text-danger" onClick={(e)=>{this.setState({modal:true})}}>
-                            <p className="help">Delete</p>
-                        </button>
-                    </div>
+                <div className="buttons is-left">
+                    {
+                        this.state.loading? <p>Guardando...</p>
+                        :<button type={"submit"} className={`button is-primary`} disabled={valid}>Guardar</button>
+                    }
+                    <button className="button is-outlined is-danger" onClick={(e)=>{this.setState({modal:true})}}>
+                        Eliminar evento
+                    </button>
                 </div>
                 {timeout&&(<ErrorServe/>)}
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}
-                        content={<p>Seguro de borrar este evento?</p>}
+                        content={<p>¿Estas seguro de eliminar este evento?</p>}
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>

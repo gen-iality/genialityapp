@@ -189,65 +189,73 @@ class SendRsvp extends Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="columns">
-                       <div className="column is-half is-offset-one-third">
-                           <div className="columns is-mobile is-centered is-offset-one-quarter">
-                               <div className="column is-one-fifth">
-                                   <span className="icon is-large has-text-grey">
-                                       <i className="fas fa-map-marker-alt fa-3x"/>
-                                   </span>
-                               </div>
-                               <div className="column">
-                                   Ubicación del evento
-                                   <br/>
-                                   {this.props.event.location.FormattedAddress}
-                               </div>
-                           </div>
-                       </div>
-                    </div>
-                    <div className="columns">
-                        <div className="column is-half is-offset-one-quarter">
-                            <p>Sube una imagen (Por defecto será la del evento)</p>
-                            <ImageInput picture={this.state.rsvp.image} imageFile={this.state.imageFile}
-                                        divClass={'imgRsvp'} content={<img src={this.state.rsvp.image} alt={'Imagen Perfil'}/>}
-                                        classDrop={'dropzone'} contentDrop={<button className={`button is-link is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                        contentZone={<div>Subir foto</div>}
-                                        changeImg={this.changeImg} errImg={this.state.errImg}/>
+
+                        <div className="column is-10">
+                            <div className="columns is-mobile is-centered rsvp-where">
+                                <div className="column is-2 has-text-centered">
+                                    <span className="icon is-large has-text-grey-lighter">
+                                        <i className="fas fa-map-marker-alt fa-2x"/>
+                                    </span>
+                                </div>
+                                <div className="column is-8">
+                                    Ubicación del evento
+                                    <br/>
+                                    <span className="rsvp-location">{this.props.event.location.FormattedAddress}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="columns">
-                        <div className="column is-half is-offset-one-quarter">
-                            <div className="field">
-                                <label className="label">Cuerpo de la invitación (Por defecto será la descripción del evento)</label>
+
+                        <div className="column is-10">
+                            <div className="rsvp-pic">
+                                <p className="rsvp-pic-txt">Sube una imagen <br/> <small>(Por defecto será la del evento)</small></p> 
+                                <ImageInput picture={this.state.rsvp.image} imageFile={this.state.imageFile}
+                                            divClass={'rsvp-pic-img'} content={<img src={this.state.rsvp.image} alt={'Imagen Perfil'}/>}
+                                            classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                            contentZone={<div>Subir foto</div>}
+                                            changeImg={this.changeImg} errImg={this.state.errImg}/>
+                            </div>
+                        </div>
+
+                        <div className="column is-10">
+                            <div className="field rsvp-desc">
+                                <label className="label">Cuerpo de la invitación <br/> <small>(Por defecto será la descripción del evento)</small></label>
                                 <div className="control">
                                     <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"}/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="columns">
-                        <div className="column is-4 is-offset-8">
-                            <button className="button is-success" onClick={(e)=>{this.setState({modal:true})}}>Enviar</button>
+                        <div className="column is-10">
+                            <div className="columns is-centered">
+                                <div className="column has-text-centered">
+                                    <button className="button is-primary" onClick={(e)=>{this.setState({modal:true})}}>Enviar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="column is-4">
-                    <div className="box sendrsvp">
-                        <strong>Seleccionados {this.props.selection.length}</strong>
-                        <div className="rsvpusers">
+                    <div className="box rsvp-send">
+                        <div className="columns is-centered-is-multiline">
+                            <div className="column">
+                                <p className="rsvp-send-title">Seleccionados <span>{this.props.selection.length}</span></p>
+                            </div>
+                        </div>
+
+                        <div className="column rsvp-send-users">
                             {
                                 this.props.selection.map((item,key)=>{
                                     return <p key={key} className="selection">{item.email}</p>
                                 })
                             }
                         </div>
-                        <button className="button"
-                                onClick={(e)=>{this.props.prevTab()}}>
-                            Editar Seleccionados
-                        </button>
+
+                        <div className="column has-text-centered">
+                            <button className="button is-primary"
+                                    onClick={(e)=>{this.props.prevTab()}}>
+                                Editar Seleccionados
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <Dialog modal={this.state.modal} title={'Confirmación'}

@@ -1,17 +1,23 @@
 .event-rsvp {
-  padding: 0.5rem 2.5rem; 
+  color: $grey-light;
+  font-weight: 700;
+  padding: 0.5rem 2.5rem;
   .rsvp-subject {
     box-shadow: none;
     background: #f9f9f9;
     border: none;
+    border-radius: 10px;
     .rsvp-subject-txt {
-      color: $grey-lighter;
       display: flex;
       align-items: center;
       justify-content: space-between;
       label {
         color: $grey-light;
         font-weight: 900;
+        line-height: 1;
+        small {
+          font-size: 0.8em;
+        }
       }
     }
     .control {
@@ -21,12 +27,12 @@
     }
   }
   .rsvp-title {
-    color: $grey-light;
     position: relative;
     .rsvp-title-txt {
       font-weight: 700;
       font-size: 1.2rem;
       .strong {
+        color: $grey;
         font-size: 1.3rem;
         font-weight: 900;
       }
@@ -39,9 +45,8 @@
   }
   .rsvp-date-wrapper {
     .rsvp-date{
-      color: $grey-light;
-      font-weight: 700;
       .date{
+        color: $grey;
         font-weight: 900;
         margin-left: 1em;
         text-transform: uppercase;
@@ -60,62 +65,117 @@
       opacity: 1;
     }
   }
-}
-
-div.sendrsvp {
-  height: 100%;
-  div.rsvpusers {
-    overflow: auto;
-    height: 250px;
-    p.selection{
-      border-bottom: 1px solid gray;
-      margin: 3px
+  .rsvp-where {
+    .rsvp-location {
+      color: $grey;
+      font-weight: 900;
     }
   }
-}
-
-div.imgRsvp{
-  height: auto;
-  width: 100%;
-  position: relative;
-  img {
-    display: block;
-    position: relative;
-    height: auto;
-    width: 100%;
+  .rsvp-pic {
+    .rsvp-pic-txt {
+      font-weight: 900;
+      margin-bottom: 1em;
+      line-height: 1;
+      small {
+        font-size: 0.8em;
+      }
+    }
+    .rsvp-pic-img {
+      height: auto;
+      width: 100%;
+      position: relative;
+      img {
+        display: block;
+        position: relative;
+        height: auto;
+        width: 100%;
+      }
+      .dropzone {
+        background-color: rgba($color: $black, $alpha: 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        opacity: 0;
+        transition: all ease 0.33s;
+        input {
+          height: 100%;
+          width: 100%;
+        }
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
   }
-  /* &:after {
-    content: '\A';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,0.6);
-    opacity: 1;
-  } */
-  .dropzone {
-    background-color: rgba($color: $black, $alpha: 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    opacity: 0;
-    transition: all ease 0.33s;
-    input {
-      height: 100%;
+  .rsvp-desc {
+    label {
+      color: $grey-light;
+      font-weight: 900;
+      line-height: 1;
+      small {
+        font-size: 0.8em;
+      }
+    }
+  }
+  .control {
+    textarea {
       width: 100%;
     }
-    &:hover {
-      opacity: 1;
+  }
+}
+
+.rsvp-send {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  height: auto;
+  .rsvp-send-title {
+    color: $grey;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 900;
+    width: 100%;
+  }
+  .rsvp-send-users {
+    height: 250px;
+    max-height: 250px;
+    margin: 1em 0 2em 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-light;
+      border-radius: 10px;
+      width: 10px;
+    }
+    .selection {
+      color: $grey-light;
+      margin: 1em 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;  
+      &:first-child {
+        margin-top: 0;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
+
 @media only screen and (max-width: 700px) {
   .input, .textarea {
     max-width: 70%;

@@ -108,7 +108,7 @@ class Landing extends Component {
                                             </div>*/}
                                             {
                                                 (event.description.length >= 80 && !this.state.showFull) && (
-                                                        <div className="column is-5 button-cont">
+                                                        <div className="column is-5 is-offset-6 button-cont">
                                                             <span className="has-text-weight-semibold has-text-grey">Ver más</span>
                                                             <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
                                                             <i className="icon fa fa-plus"></i>
@@ -152,9 +152,9 @@ class Landing extends Component {
                     
                 </div>
                 <div className="hero-body">
-                    <div className="container has-text-centered">
-                        <div className="columns">
-                            <div className="column is-7">
+                    <div className="data container has-text-centered">
+                        <div className="columns is-centered">
+                            {/* <div className="column is-7">
                                 <div className="has-shadow">
                                     <p>Acciones</p>
                                     <div className="field is-grouped">
@@ -184,9 +184,12 @@ class Landing extends Component {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="column">
-                                Mapa
+                            </div> */}
+                            <div className="column is-8">
+                                <h2 className="data-title has-text-left">
+                                    <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
+                                    <span className="has-text-grey-dark is-size-3">Ubicación</span>
+                                </h2>
                                 {
                                     !this.state.loading&&(
                                         <MyMapComponent
