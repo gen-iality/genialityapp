@@ -44,7 +44,7 @@ class UserModal extends Component {
                     .map((obj) => {
                         let pos = extraFields.map((e)=>{return e.name}).indexOf(obj);
                         if(pos>=0) user[extraFields[pos].name] = '';
-                        return user[obj] = value.properties[obj]
+                        return user[obj] = value.properties[obj]?value.properties[obj]:''
                     });
                 let checked_in = value.checked_in ? value.checked_at.toDate() : false;
                 console.log(checked_in);
