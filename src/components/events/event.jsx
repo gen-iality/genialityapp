@@ -88,7 +88,7 @@ class Event extends Component {
                         <section className="columns">
                             <aside className="column menu event-aside is-2 has-text-weight-bold">
                                 <p className="subtitle has-text-weight-bold">
-                                    {this.state.newEvent?'New Event':this.state.event.name}
+                                    {this.state.newEvent?'Nuevo evento':this.state.event.name}
                                     <span className="icon is-hidden-desktop" onClick={(e)=>{
                                         this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
                                         {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}

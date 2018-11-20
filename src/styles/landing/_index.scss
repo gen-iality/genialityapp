@@ -81,4 +81,13 @@ section.landing{
       width: 45px;
     }
   }
+  .data {
+    .data-title {
+      line-height: 1.1;
+      margin-bottom: 2em;
+      span {
+        font-weight: 900;
+      }
+    }
+  }
 }
