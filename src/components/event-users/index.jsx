@@ -363,14 +363,14 @@ class ListEventUser extends Component {
                                                 <div className="icon is-small is-left"><FaCamera/></div>
                                             </div>
                                         </div>
-                                        <div className="columns">
+                                        <div className="columns is-centered">
                                             <QrReader
                                                 delay={500}
                                                 facingMode={facingMode}
                                                 onError={this.handleError}
                                                 onScan={this.handleScan}
                                                 style={{ width: "60%" }}
-                                                className={"column is-three-fifths is-offset-one-fifth"}
+                                                className={"column is-half"}
                                             />
                                         </div>
                                     </React.Fragment>
