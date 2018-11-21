@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
-import {FormattedDate, FormattedTime} from "react-intl";
+import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -177,7 +177,7 @@ class ListEventUser extends Component {
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
             if(!userReq[pos].checked_in){
-                toast.success('CheckIn made successfully');
+                toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
                 self.setState((prevState) => {
                     return {checkIn: prevState.checkIn+1, qrData}
                 });
@@ -191,7 +191,7 @@ class ListEventUser extends Component {
                     })
                     .catch(error => {
                         console.error("Error updating document: ", error);
-                        toast.error('Something wrong. Try again later');
+                        toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                     });
             }
         }
@@ -363,14 +363,14 @@ class ListEventUser extends Component {
                                                 <div className="icon is-small is-left"><FaCamera/></div>
                                             </div>
                                         </div>
-                                        <div className="columns">
+                                        <div className="columns is-centered">
                                             <QrReader
                                                 delay={500}
                                                 facingMode={facingMode}
                                                 onError={this.handleError}
                                                 onScan={this.handleScan}
                                                 style={{ width: "60%" }}
-                                                className={"column is-three-fifths is-offset-one-fifth"}
+                                                className={"column is-half"}
                                             />
                                         </div>
                                     </React.Fragment>

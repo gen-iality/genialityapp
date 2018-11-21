@@ -108,11 +108,11 @@ class General extends Component {
                             picture: image
                         },fileMsg:'Imagen subida con exito',imageFile:null
                     });
-                    toast.success('Imagen subida con exito');
+                    toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
                 })
                 .catch (e=> {
                     console.log(e.response);
-                    toast.error('Algo salió mal. Intentalo de nuevo');
+                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                     this.setState({timeout:true,loader:false});
                 });
         }
@@ -153,7 +153,7 @@ class General extends Component {
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
                 self.setState({loading:false});
-                toast.success("Todos los cambios guardados")
+                toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
                 const result = await Actions.create('/api/events', data);
@@ -162,7 +162,7 @@ class General extends Component {
                 if(result._id){
                     window.location.replace(`${BaseUrl}/event/${result._id}`);
                 }else{
-                    toast.warn("No se pudo crear el evento. Intentalo de nuevo");
+                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk"/>);
                     this.setState({msg:'Cant Create',create:false})
                 }
             }
@@ -170,7 +170,7 @@ class General extends Component {
             console.log('Some error');
             console.log(e);
             this.setState({timeout:true});
-            toast.error("Algo salió mal")
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>)
         }
     }
 
