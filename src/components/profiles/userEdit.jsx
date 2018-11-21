@@ -46,6 +46,7 @@ class UserEditProfile extends Component {
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
+            user.birth_date = user.birth_date ? user.birth_date : new Date();
             this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
