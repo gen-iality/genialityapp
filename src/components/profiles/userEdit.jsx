@@ -177,7 +177,8 @@ class UserEditProfile extends Component {
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
-            this.setState({user:resp})
+            resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
+            this.setState({user:resp});
             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
             console.log(e.response);
