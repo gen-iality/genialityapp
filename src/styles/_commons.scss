@@ -250,14 +250,15 @@ a {
 }
 
 .drop-img {
-  height: auto;
+  height: 250px;
   width: 100%;
   position: relative;
   img {
     display: block;
     position: relative;
-    height: auto;
+    height: 100%;
     width: 100%;
+    object-fit: cover;
   }
   .dropzone {
     background-color: rgba($color: $black, $alpha: 0.5);
@@ -441,78 +442,82 @@ a {
 
 .ReactTable {
   border: none !important;
-  .rt-thead {
-    box-shadow: none !important;
-    &.-header {
-      padding: 5px 5px 0 5px;
-    }
-    &.-filters {
-      padding: 0 5px 5px 5px;
-      .rt-th {
-        select {
-          border: none;
-          border-bottom: 1px solid $grey-light;
-          border-radius: 0;
-          color: $grey;
-          font-weight: 700;
-          height: 100%;
-          width: 100%;
-          padding: 0;
-        }
-        input {
-          background: transparent !important;
-          border: none;
-          border-bottom: 1px solid $grey-light;
-          border-radius: 0;
-          box-shadow: none !important;
-          color: $grey;
-          font-size: 1rem;
-          font-weight: 700;
-          height: 100%;
-          outline: none;
-          padding: 5px;
-          &:focus{
-            border-bottom: 1px solid $primary;
-          }
-        }
+  .rt-table {
+    overflow: visible;
+    .rt-thead {
+      box-shadow: none !important;
+      &.-header {
+        padding: 5px 5px 0 5px;
       }
-    }
-    .rt-tr {
-      text-align: left !important;
-    }
-    .rt-th {
-      border-right: none !important;
-      &.rt-resizable-header {
-        &:focus {
-          outline: none !important;
-        }
-        .rt-resizable-header-content {
-          color: $grey;
-          font-weight: 700;
-          span {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-        }
-      }
-    }
-  }
-  .rt-tbody {
-    .rt-tr-group {
-      border-bottom: none !important;
-      .rt-tr {
-        padding: 5px;
-        &.-odd {
-          background: white;
-        }
-        &.-even {
-          background: #f9f9f9;
-        }
-        .rt-td {
-          border-right: none !important;
-          a {
+      &.-filters {
+        padding: 0 5px 5px 5px;
+        .rt-th {
+          select {
+            border: none;
+            border-bottom: 1px solid $grey-light;
+            border-radius: 0;
             color: $grey;
+            font-weight: 700;
+            height: 100%;
+            width: 100%;
+            padding: 0;
+          }
+          input {
+            background: transparent !important;
+            border: none;
+            border-bottom: 1px solid $grey-light;
+            border-radius: 0;
+            box-shadow: none !important;
+            color: $grey;
+            font-size: 1rem;
+            font-weight: 700;
+            height: 100%;
+            outline: none;
+            padding: 5px;
+            &:focus{
+              border-bottom: 1px solid $primary;
+            }
+          }
+        }
+      }
+      .rt-tr {
+        text-align: left !important;
+      }
+      .rt-th {
+        border-right: none !important;
+        &.rt-resizable-header {
+          &:focus {
+            outline: none !important;
+          }
+          .rt-resizable-header-content {
+            color: $grey;
+            font-weight: 700;
+            span {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+          }
+        }
+      }
+    }
+    .rt-tbody {
+      overflow: visible;
+      .rt-tr-group {
+        border-bottom: none !important;
+        .rt-tr {
+          padding: 5px;
+          &.-odd {
+            background: white;
+          }
+          &.-even {
+            background: #f9f9f9;
+          }
+          .rt-td {
+            border-right: none !important;
+            a {
+              color: $grey;
+            }
           }
         }
       }
