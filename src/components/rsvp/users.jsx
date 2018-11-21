@@ -505,14 +505,16 @@ class UsersRsvp extends Component {
                             this.state.auxArr.length > 0 &&
                             <div>
                                 <div className="field control btn-wrapper">
-                                    <button className="button is-primary"
+                                    <button className="button is-primary tooltip"
+                                            data-tooltip="Se envía correo con Tiquete"
                                             disabled={this.state.auxArr.length<=0}
                                             onClick={this.showTicket}>
                                         Enviar Tiquete
                                     </button>
                                 </div>
                                 <div className="field control btn-wrapper">
-                                    <button className="button is-primary is-outlined"
+                                    <button className="button is-primary is-outlined tooltip"
+                                            data-tooltip="Se envía correo con Invitación"
                                             disabled={this.state.selection.length<=0}
                                             onClick={(e)=>{this.props.userTab(this.state.selection)}}>
                                         Enviar Invitación
@@ -522,8 +524,6 @@ class UsersRsvp extends Component {
                         }
                     </div>
                 </div>
-                {/*<UserModal handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id} addToList={this.addToList}
-                         value={this.state.selectedUser} extraFields={this.props.event.user_properties} edit={this.state.edit}/>*/}
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
                          value={this.state.selectedUser} addToList={this.addToList}
                          extraFields={this.props.event.user_properties} edit={this.state.edit}/>
