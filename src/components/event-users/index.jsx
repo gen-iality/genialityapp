@@ -230,6 +230,36 @@ class ListEventUser extends Component {
         this.setState({ pageOfItems: pageOfItems });
     };
 
+    renderRows = () => {
+        const items = [];
+        const {extraFields} = this.state;
+        const limit = this.exportFile.length;
+        this.state.pageOfItems.map((item,key)=>{
+            return items.push(<tr key={key}>
+                <td>
+                                                        <span className="icon has-text-primary action_pointer"
+                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                </td>
+                <td>
+                    <div>
+                        <input className="is-checkradio is-primary is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                               type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                        <label htmlFor={"checkinUser"+item._id}/>
+                    </div>
+                </td>
+                <td>{item.state.name}</td>
+                <td>{item.properties.email}</td>
+                <td>{item.properties.name}</td>
+                {
+                    extraFields.slice(0, limit).map((field,key)=>{
+                        return <td key={item._id}>{item.properties[field.name]}</td>
+                    })
+                }
+            </tr>)
+        })
+        return items
+    };
+
     //Search records at third column
     searchResult = (data) => {
         !data ? this.setState({users:[]}) : this.setState({users:data})
@@ -314,29 +344,7 @@ class ListEventUser extends Component {
                                         </thead>
                                         <tbody>
                                         {
-                                            this.state.pageOfItems.map((item,key)=>{
-                                                return <tr key={key}>
-                                                    <td>
-                                                                <span className="icon has-text-primary action_pointer"
-                                                                    onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
-                                                    </td>
-                                                    <td>
-                                                        <div>
-                                                            <input className="is-checkradio is-primary" id={"checkinUser"+item._id} disabled={item.checked_in}
-                                                                type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                                                            <label htmlFor={"checkinUser"+item._id}/>
-                                                        </div>
-                                                    </td>
-                                                    <td>{item.state.name}</td>
-                                                    <td>{item.properties.email}</td>
-                                                    <td>{item.properties.name}</td>
-                                                    {
-                                                        extraFields.map((field,key)=>{
-                                                            return <td key={item._id}>{item.properties[field.name]}</td>
-                                                        })
-                                                    }
-                                                </tr>
-                                            })
+                                            this.renderRows()
                                         }
                                         </tbody>
                                     </table>

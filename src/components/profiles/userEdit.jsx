@@ -5,6 +5,7 @@ import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
 import EventCard from "../shared/eventCard";
+import Moment from "moment"
 import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
@@ -24,8 +25,10 @@ class UserEditProfile extends Component {
             selectedOption: [],
             events: [],
             user: {},
+            error: {},
             network: {},
             loading: true,
+            valid: true,
             message:{
                 class:'',
                 content:''
@@ -46,7 +49,8 @@ class UserEditProfile extends Component {
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-            this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
+            user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
+            this.setState({loading:false,user,events:resp.data,categories,valid:false},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
@@ -99,6 +103,35 @@ class UserEditProfile extends Component {
         this.setState({user:{...this.state.user,[name]:value}},this.valid)
     };
 
+    valid = () => {
+        const {user:{email,name,phoneNumber,dni_number,location}} = this.state;
+        const error = {};
+        let nameValid, emailValid, phoneValid, dniValid, locationValid = false;
+        if(name.length <= 0) {
+            nameValid = true;
+            error.name = nameValid && 'Fill a name';
+        }
+        if(email) {
+            const EMAIL_REGEX = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+            emailValid = !(email.length > 6 && email.length < 61 && EMAIL_REGEX.test(email));
+            error.email = emailValid && 'Fill a valid email';
+        }
+        if(dni_number.length < 4) {
+            dniValid = true;
+            error.dni = dniValid && 'Fill a dni with a least 5 digits';
+        }
+        if(phoneNumber.length < 7) {
+            phoneValid = true;
+            error.phone = phoneValid && 'Fill a phone with at least 7 digits';
+        }
+        if(!location.FormattedAddress && !location.PlaceId){
+            locationValid = true;
+            error.location = locationValid && 'Fill a correct address'
+        }
+        let valid = (nameValid || emailValid || dniValid || phoneValid || locationValid);
+        this.setState({valid,error})
+    };
+
     changeDate = (value,name)=>{
         this.setState({user:{...this.state.user,[name]:value}})
     };
@@ -131,16 +164,21 @@ class UserEditProfile extends Component {
             }
             location.FormattedAddress = place.formatted_address;
             location.PlaceId = place.place_id;
-            this.setState({user:{...this.state.user,location}})
+            this.setState({user:{...this.state.user,location}},this.valid)
+        }else{
+            this.setState({user:{...this.state.user,location:{}}},this.valid)
         }
     };
 
     async saveForm() {
         const { user } = this.state;
+        user.birth_date = Moment(user.birth_date).format('YYYY-MM-DD HH:mm:ss');
         console.log(user);
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
+            resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
+            this.setState({user:resp});
             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
             console.log(e.response);
@@ -174,7 +212,9 @@ class UserEditProfile extends Component {
     };
 
     render() {
-        const { loading, timeout, events, user, network } = this.state;
+        const { loading, timeout, events, user, valid, error } = this.state;
+        console.log(valid);
+        console.log(error);
         return (
             <section className="section profile">
                 {
@@ -196,12 +236,14 @@ class UserEditProfile extends Component {
                                         <div className="control">
                                             <input className="input" name={"name"} type="text" placeholder="Nombre" value={user.name} onChange={this.handleChange} />
                                         </div>
+                                        {error.name && <p className="help is-danger">{error.name}</p>}
                                     </div>
                                     <div className="field">
                                         <label className="label required is-size-7 has-text-grey-light">Correo</label>
                                         <div className="control">
                                             <input className="input" name={"email"} type="email" placeholder="Email" value={user.email} onChange={this.handleChange} />
                                         </div>
+                                        {error.email && <p className="help is-danger">{error.email}</p>}
                                     </div>
                                     <div className="field change-password">
                                         <button className="button is-text is-size-7 has-text-grey-light" onClick={this.resetPassword}>Haz clic aquí para cambiar tu contraseña</button>
@@ -211,13 +253,14 @@ class UserEditProfile extends Component {
                                     <h1 className="title has-text-primary">Datos</h1>
                                     <div className="columns is-9">
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Cédula</label>
+                                            <label className="label is-size-7 required has-text-grey-light">Cédula</label>
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="1234567890" onChange={this.handleChange}/>
                                             </div>
+                                            {error.dni && <p className="help is-danger">{error.dni}</p>}
                                         </div>
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Dirección</label>
+                                            <label className="label is-size-7 has-text-grey-light required">Dirección</label>
                                             <div className="control">
                                                 <Geosuggest
                                                     placeholder={'Ingresa tu dirección'}
@@ -226,6 +269,7 @@ class UserEditProfile extends Component {
                                                     location={new google.maps.LatLng(user.location.Latitude,user.location.Longitude)}
                                                     radius="20"/>
                                             </div>
+                                            {error.location && <p className="help is-danger">{error.location}</p>}
                                         </div>
                                     </div>
                                     <div className="columns is-9">
@@ -234,6 +278,7 @@ class UserEditProfile extends Component {
                                             <div className="control">
                                                 <input className="input has-text-weight-bold" name={"phoneNumber"} value={user.phoneNumber} type="number" placeholder="+57 123 456 7890" onChange={this.handleChange}/>
                                             </div>
+                                            {error.phone && <p className="help is-danger">{error.phone}</p>}
                                         </div>
                                         <div className="field column">
                                             <label className="label is-size-7 has-text-grey-light">Empresa</label>
@@ -244,11 +289,11 @@ class UserEditProfile extends Component {
                                     </div>
                                     <div className="columns is-9">
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light">Fecha de nacimiento</label>
+                                            <label className="label is-size-7 has-text-grey-light required">Fecha de nacimiento</label>
                                             <div className="control">
                                                 <DateTimePicker
                                                     value={user.birth_date}
-                                                    format={'L'}
+                                                    format={'DD/MM/YYYY'}
                                                     max={new Date()}
                                                     time={false}
                                                     onChange={value => this.changeDate(value,"birth_date")}/>
@@ -270,7 +315,7 @@ class UserEditProfile extends Component {
                                             </div>
                                         </div>
                                         <div className="column profile-buttons">
-                                            <button className="button is-primary" onClick={this.saveForm}>Guardar</button>
+                                            <button className="button is-primary" onClick={this.saveForm} disabled={valid}>Guardar</button>
                                         </div>
                                     </div>
                                 </div>
