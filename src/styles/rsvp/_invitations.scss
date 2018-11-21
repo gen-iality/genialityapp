@@ -1,67 +1,5 @@
 .invitations{
   padding: 0.5rem 2.25rem;
-  .table {
-    border: none !important;
-    thead {
-      box-shadow: none !important;
-      tr {
-        text-align: left !important;
-      }
-      th {
-        border-right: none !important;
-      }
-    }
-    tbody {
-      tr {
-        padding: 5px;
-        &.-odd {
-          background: white;
-        }
-        &.-even {
-          background: #f9f9f9;
-        }
-        td {
-          border-right: none !important;
-          a {
-            color: $grey;
-          }
-        }
-      }
-    }
-    .-pagination {
-      border: none !important;
-      box-shadow: none !important;
-      margin: 5px 0;
-      .-pageInfo {
-        color: $grey;
-        font-weight: 700;
-        .-pageJump {
-          input {
-            background: transparent !important;
-            border: none;
-            border-bottom: 1px solid $grey-light;
-            border-radius: 0;
-            box-shadow: none !important;
-            color: $grey;
-            font-size: 1rem;
-            font-weight: 700;
-            height: 100%;
-            outline: none;
-            padding: 5px;
-            &:focus{
-              border-bottom: 1px solid $primary;
-            }
-          }
-        }
-      }
-      .-btn {
-        background: $primary !important;
-        color: $white !important;
-        font-weight: 700 !important;
-        transition: all ease 0.33s !important;
-      }
-    }
-  }
   .tr-item{
     cursor: pointer;
   }
@@ -79,6 +17,29 @@
           top: 0;
           left: 0;
           opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+.checkin {
+  padding: 0.5rem 2.25rem;
+  .checkin-tags {
+    margin: 0.5em 0;
+    .tags {
+      margin-right: 1rem;
+      &:nth-last-child() {
+        margin: 0;
+      }
+      .tag {
+        font-size: 1em;
+        font-weight: 700;
+        &.is-white {
+          color: $grey-light;
+        }
+        &:not(:last-child) {
+          margin-right: 0;
         }
       }
     }

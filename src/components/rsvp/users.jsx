@@ -412,7 +412,7 @@ class UsersRsvp extends Component {
                                             this.state.actualEvent._id === this.props.event._id && (
                                                 <React.Fragment>
                                                     <div className="field control">
-                                                        <button className="btn-list button is-grey is-outlined is-small" onClick={this.modalUser}>
+                                                        <button className="btn-list button is-small" onClick={this.modalUser}>
                                                             <span>Agregar Usuario Nuevo</span>
                                                             <span className="icon is-small">
                                                                 <i className="fa fa-plus"></i>
@@ -420,7 +420,7 @@ class UsersRsvp extends Component {
                                                         </button>
                                                     </div>
                                                     <div className="field control">
-                                                        <button className="btn-list button is-grey is-outlined is-small" onClick={this.modalImport}>
+                                                        <button className="btn-list button is-small" onClick={this.modalImport}>
                                                             <span>Importar Usuarios de Excel</span>
                                                             <span className="icon is-small">
                                                                 <i className="fa fa-plus"></i>

@@ -56,7 +56,7 @@ class EventCard extends Component {
                                     <span className="icon is-small has-text-grey">
                                         <i className="fas fa-map-marker-alt"/>
                                     </span>
-                                    <span className="is-size-7 is-small has-text-grey-dark">{event.location.FormattedAddress}</span>
+                                    <span className="is-size-7 is-small has-text-grey-dark subt-location">{event.location.FormattedAddress}</span>
                                 </div>
                             </div>
                             <div className="vertical-line"></div>

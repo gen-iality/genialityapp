@@ -1,3 +1,7 @@
+html {
+  font-size: 14px;
+}
+
 .action_pointer{
   cursor: pointer;
 }
@@ -10,7 +14,9 @@ a {
 }
 
 .button {
+  background: transparent;
   border-radius: 15px;
+  color: $grey-dark;
   font-weight: 700;
   padding-left: 1.25em;
   padding-right: 1.25em;
@@ -19,7 +25,7 @@ a {
     margin-left: 0.25em !important;
   }
   &.is-primary {
-    box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
+    /* box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1); */
     &.is-outlined {
       &:hover {
         border-color: $primary;
@@ -29,12 +35,7 @@ a {
   }
   &.is-small {
     border-radius: 10px;
-    box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1);
-    transition: all ease 0.15s;
-    &:hover {
-      background: $primary;
-      color: $white;
-    }
+    
   }
   &.is-text {
     &:hover {
@@ -70,9 +71,13 @@ a {
     .navbar-item {
       margin: 0;
       &.item-sub {
-        margin-left: 1em;
+        margin-left: 1rem;
       }
     }
+  }
+  .navbar-divider {
+    margin-left: 1rem;
+    margin-right: 1rem;
   }
 }
 
@@ -203,6 +208,10 @@ a {
           width: 100%;
           .icon {
             margin-right: 10px;
+          }
+          .subt-location {
+            max-height: 2em;
+            overflow: hidden;
           }
         }
       }
@@ -443,7 +452,7 @@ a {
 .ReactTable {
   border: none !important;
   .rt-table {
-    overflow: visible;
+    overflow: visible !important;
     .rt-thead {
       box-shadow: none !important;
       &.-header {
@@ -560,6 +569,73 @@ a {
       border-bottom: 1px solid $grey-light !important;
       border-radius: 0 !important;
     }
+  }
+}
+
+.table {
+  border: none !important;
+  max-width: 100%;
+  width: 100%;
+  thead {
+    box-shadow: none !important;
+    border-bottom: 1px solid $grey-lighter;
+    tr {
+      padding: 10px;
+      text-align: left !important;
+      th {
+        border: none !important;
+      }
+    }
+  }
+  tbody {
+    tr {
+      padding: 10px;
+      &:hover {
+        background: rgba($color: $black, $alpha: 0.05) !important;
+      }
+      &:nth-child(odd) {
+        background: white;
+      }
+      &:nth-child(even) {
+        background: #f9f9f9;
+      }
+      td {
+        border: none !important;
+        a {
+          color: $grey;
+        }
+      }
+    }
+  }
+}
+.pagination {
+  margin: 0 1rem;
+  .button {
+    .icon {
+      margin: 0 !important;
+    }
+  }
+  .pagination-list {
+    .pagination-link {
+      font-weight: 700;
+      &.is-current {
+        background-color: $primary;
+        border-color: $primary;
+      }
+    }
+  }
+}
+
+.is-checkradio[type="checkbox"]:checked[disabled] + label {
+  opacity: 1;
+  &:after, &:before {
+    border-width: .11rem;
+  }
+}
+
+.is-checkradio[type="checkbox"] + label {
+  &:after, &:before {
+    border-width: .11rem;
   }
 }
 

@@ -239,99 +239,117 @@ class ListEventUser extends Component {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields} = this.state;
         return (
             <React.Fragment>
-                <header>
-                    <div className="field is-grouped is-pulled-right">
-                        {
-                            userReq.length>0 && (
-                                <div className="control">
-                                    <button className="button" onClick={this.exportFile}>
-                                        <span className="icon">
-                                            <i className="fas fa-download"/>
-                                        </span>
-                                        <span>Exportar</span>
-                                    </button>
-                                </div>
-                            )
-                        }
-                        <div className="control">
-                            <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
-                        </div>
-                        <div className="control">
-                            <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
-                        </div>
-                    </div>
-                </header>
-                <div className="main">
-                    <div className="field is-grouped">
-                        <div className="control">
-                            <div className="tags has-addons">
-                                <span className="tag is-dark">Total</span>
-                                <span className="tag is-info">{total}</span>
-                            </div>
-                        </div>
-                        <div className="control">
-                            <div className="tags has-addons">
-                                <span className="tag is-dark">CheckIn</span>
-                                <span className="tag is-success">{checkIn}</span>
-                            </div>
-                        </div>
-                        {
-                            total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                        }
-                    </div>
-                    {
-                        users.length>0&&
-                        <React.Fragment>
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th/>
-                                    <th>Check</th>
-                                    <th>Estado</th>
-                                    <th>Correo</th>
-                                    <th>Nombre</th>
-                                    {
-                                        extraFields.map((field,key)=>{
-                                            return <th key={key} className="is-capitalized">{field.name}</th>
-                                        })
-                                    }
-                                </tr>
-                                </thead>
-                                <tbody>
+                <div className="checkin">
+                    <div className="columns checkin-header">
+                        <div className="column">
+                            <div>
                                 {
-                                    this.state.pageOfItems.map((item,key)=>{
-                                        return <tr key={key}>
-                                            <td>
-                                                        <span className="icon has-text-info action_pointer"
-                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <input className="is-checkradio is-info is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                                                           type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                                                    <label htmlFor={"checkinUser"+item._id}/>
-                                                </div>
-                                            </td>
-                                            <td>{item.state.name}</td>
-                                            <td>{item.properties.email}</td>
-                                            <td>{item.properties.name}</td>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                }
+                            </div>
+                        </div>
+                        <div className="column">
+                            <div className="field is-grouped is-pulled-right">
+                                {
+                                    userReq.length>0 && (
+                                        <div className="control">
+                                            <button className="button" onClick={this.exportFile}>
+                                                <span className="icon">
+                                                    <i className="fas fa-download"/>
+                                                </span>
+                                                <span>Exportar</span>
+                                            </button>
+                                        </div>
+                                    )
+                                }
+                                <div className="control">
+                                    <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
+                                </div>
+                                <div className="control">
+                                    <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="columns checkin-tags">
+                        <div className="column">
+                            <div className="field is-grouped">
+                                <div className="control">
+                                    <div className="tags">
+                                        <span className="tag is-light">{total}</span>
+                                        <span className="tag is-white">Total</span>
+                                    </div>
+                                </div>
+                                <div className="control">
+                                    <div className="tags">
+                                        <span className="tag is-primary">{checkIn}</span>
+                                        <span className="tag is-white">Check In</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="columns checkin-table">
+                        <div className="column">
+                            <div className="table-wrapper">
+                            {
+                                users.length>0&&
+                                <React.Fragment>
+                                    <table className="table">
+                                        <thead>
+                                        <tr>
+                                            <th/>
+                                            <th className="is-capitalized">Check</th>
+                                            <th className="is-capitalized">Estado</th>
+                                            <th className="is-capitalized">Correo</th>
+                                            <th className="is-capitalized">Nombre</th>
                                             {
                                                 extraFields.map((field,key)=>{
-                                                    return <td key={item._id}>{item.properties[field.name]}</td>
+                                                    return <th key={key} className="is-capitalized">{field.name}</th>
                                                 })
                                             }
                                         </tr>
-                                    })
-                                }
-                                </tbody>
-                            </table>
-                            <Pagination
-                                items={users}
-                                change={this.state.changeItem}
-                                onChangePage={this.onChangePage}
-                            />
-                        </React.Fragment>
-                    }
+                                        </thead>
+                                        <tbody>
+                                        {
+                                            this.state.pageOfItems.map((item,key)=>{
+                                                return <tr key={key}>
+                                                    <td>
+                                                                <span className="icon has-text-primary action_pointer"
+                                                                    onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <input className="is-checkradio is-primary" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                                                type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                                                            <label htmlFor={"checkinUser"+item._id}/>
+                                                        </div>
+                                                    </td>
+                                                    <td>{item.state.name}</td>
+                                                    <td>{item.properties.email}</td>
+                                                    <td>{item.properties.name}</td>
+                                                    {
+                                                        extraFields.map((field,key)=>{
+                                                            return <td key={item._id}>{item.properties[field.name]}</td>
+                                                        })
+                                                    }
+                                                </tr>
+                                            })
+                                        }
+                                        </tbody>
+                                    </table>
+                                    <Pagination
+                                        items={users}
+                                        change={this.state.changeItem}
+                                        onChangePage={this.onChangePage}
+                                    />
+                                </React.Fragment>
+                            }
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
                          value={this.state.selectedUser} checkIn={this.checkIn}
