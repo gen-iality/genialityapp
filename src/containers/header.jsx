@@ -146,7 +146,7 @@ class Header extends Component {
                                 </a>
                                 {
                                     this.state.loader ?
-                                    <div>Wait...</div>:
+                                    <div><FormattedMessage id="header.wait" defaultMessage="Tico..."/></div>:
                                     this.state.user ?
                                         <React.Fragment>
                                             <img src={this.state.photo} alt={`avatar_${this.state.name}`} className="author-image is-hidden-mobile"/>
@@ -160,9 +160,9 @@ class Header extends Component {
                                                     </Link>
                                                     <hr className="navbar-divider"/>
                                                     <Link className="navbar-item has-text-weight-bold has-text-grey-dark" to={`/profile/${this.state.id}?type=user#events`}>
-                                                        Eventos creados
+                                                        <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
                                                     </Link>
-                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">Mis tickets</p>
+                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark"><FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/></p>
                                                     <hr className="navbar-divider"/>
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
@@ -174,7 +174,7 @@ class Header extends Component {
                                                             </Link>
                                                         })
                                                     }
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}>+ Crear</Link>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
