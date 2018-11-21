@@ -12,6 +12,7 @@ import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
+import ErrorServe from "../modal/serverError";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -538,7 +539,7 @@ class UsersRsvp extends Component {
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
                             class:'',action:this.showTicket}}/>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }
