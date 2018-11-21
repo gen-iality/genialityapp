@@ -5,6 +5,7 @@ import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
 import EventCard from "../shared/eventCard";
+import Moment from "moment"
 import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
@@ -26,6 +27,7 @@ class UserEditProfile extends Component {
             user: {},
             network: {},
             loading: true,
+            valid: true,
             message:{
                 class:'',
                 content:''
@@ -46,8 +48,8 @@ class UserEditProfile extends Component {
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-            user.birth_date = user.birth_date ? user.birth_date : new Date();
-            this.setState({loading:false,user,events:resp.data,categories},this.scrollEvent);
+            user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
+            this.setState({loading:false,user,events:resp.data,categories,valid:false},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
@@ -100,6 +102,19 @@ class UserEditProfile extends Component {
         this.setState({user:{...this.state.user,[name]:value}},this.valid)
     };
 
+    valid = () => {
+        /*const {user:{...email,phoneNumber,name}} = this.state;
+        let nameValid, emailValid, phoneValid = false;
+        if(phoneNumber.length <= 7) phoneValid = true;
+        if(name.length <= 0) nameValid = true;
+        if(email) {
+            const EMAIL_REGEX = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+            emailValid = email.length <= 5 && email.length >= 61 && !EMAIL_REGEX.test(email);
+        }
+        let valid = nameValid && phoneValid && emailValid;
+        this.setState({valid})*/
+    };
+
     changeDate = (value,name)=>{
         this.setState({user:{...this.state.user,[name]:value}})
     };
@@ -138,10 +153,12 @@ class UserEditProfile extends Component {
 
     async saveForm() {
         const { user } = this.state;
+        user.birth_date = Moment(user.birth_date).format('YYYY-MM-DD HH:mm:ss');
         console.log(user);
         try {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
+            this.setState({user:resp})
             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
             console.log(e.response);
@@ -175,7 +192,7 @@ class UserEditProfile extends Component {
     };
 
     render() {
-        const { loading, timeout, events, user, network } = this.state;
+        const { loading, timeout, events, user, valid } = this.state;
         return (
             <section className="section profile">
                 {
@@ -249,7 +266,7 @@ class UserEditProfile extends Component {
                                             <div className="control">
                                                 <DateTimePicker
                                                     value={user.birth_date}
-                                                    format={'L'}
+                                                    format={'DD/MM/YYYY'}
                                                     max={new Date()}
                                                     time={false}
                                                     onChange={value => this.changeDate(value,"birth_date")}/>
