@@ -112,7 +112,7 @@ class UserEditProfile extends Component {
             error.name = nameValid && 'Fill a name';
         }
         if(email) {
-            const EMAIL_REGEX = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+            const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
             emailValid = !(email.length > 6 && email.length < 61 && EMAIL_REGEX.test(email));
             error.email = emailValid && 'Fill a valid email';
         }
