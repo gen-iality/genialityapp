@@ -91,6 +91,7 @@ class UserModal extends Component {
         else{
             message.class = 'msg_warning';
             message.content = 'USER UPDATED';
+            if(snap.state_id !== this.props.value.state_id) this.props.statesCounter(snap.state_id,this.props.value.state_id);
             snap.updated_at = new Date();
             userRef.doc(this.props.value._id).update(snap)
                 .then(() => {
@@ -160,6 +161,7 @@ class UserModal extends Component {
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         const self = this;
         let message = {};
+        this.props.statesCounter(null,this.props.value.state_id);
         userRef.doc(this.props.value._id).delete().then(function() {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';

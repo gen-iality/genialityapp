@@ -56,11 +56,11 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x._id === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
-                this.statesCounter(user.state._id);
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                    this.statesCounter(user.state._id);
                     if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
@@ -135,11 +135,19 @@ class ListEventUser extends Component {
         });
     }
 
-    statesCounter = (state) => {
+    statesCounter = (state,old) => {
         const item = states.find(x => x._id === state);
-        this.setState(prevState=>{
-            return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
-        })
+        const old_item = states.find(x => x._id === old);
+        if(state){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
+            });
+        }
+        if(old){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[old_item.name]:prevState.estados[old_item.name]-1,[item.name]:prevState.estados[item.name]+1}}
+            })
+        }
     };
 
     exportFile = (e) => {
@@ -247,8 +255,8 @@ class ListEventUser extends Component {
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
                 <td>
-                                                        <span className="icon has-text-primary action_pointer"
-                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                    <span className="icon has-text-primary action_pointer"
+                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
                     <div>
@@ -383,7 +391,7 @@ class ListEventUser extends Component {
                     </div>
                 </div>
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
-                         value={this.state.selectedUser} checkIn={this.checkIn}
+                         value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                          extraFields={this.state.extraFields} edit={this.state.edit}/>
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>

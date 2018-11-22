@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from "react-intl";
 import {Link,withRouter} from "react-router-dom";
-import {FaEye, FaSort, FaSortDown, FaSortUp} from "react-icons/fa";
+import {FaEye} from "react-icons/fa";
 import API from "../../helpers/request"
 import Table from "../shared/table";
 
@@ -20,34 +20,17 @@ class InvitationsList extends Component {
         this.fetchData = this.fetchData.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         const { match } = this.props;
-        let pos = columns.map((e) => { return e.id; }).indexOf('edit');
-        if(pos<=0){
-            columns.push(
-                {
-                    ...this.genericHeaderArrows(),
-                    headerText: "Fecha",
-                    id: "created_at",
-                    accessor: d => d.created_at,
-                    Cell: props => <span><FormattedDate value={props.value}/> <FormattedTime value={props.value}/></span>,
-                    width: 180
-                },
-                {
-                    ...this.genericHeaderArrows(),
-                    headerText: "Total",
-                    id: "number_of_recipients",
-                    accessor: d => d.number_of_recipients,
-                    width: 90
-                },
-                {
-                    Header: "",
-                    id: "edit",
-                    accessor: d => d,
-                    Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
-                    width:50
-                }
-            )
+        let pos = this.state.columns.map((e) => { return e.id; }).indexOf('edit');
+        if(pos<0){
+            columns.unshift({
+                Header: "",
+                id: "edit",
+                accessor: d => d,
+                Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
+                width:50
+            })
         }else{
             columns[pos] = {
                 Header: "",
@@ -56,7 +39,7 @@ class InvitationsList extends Component {
                 Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
                 width:50
             }
-        };
+        }
         this.setState({columns,loading:false});
     }
 
@@ -96,6 +79,7 @@ class InvitationsList extends Component {
             }
             API.get(`/api/events/${eventId}/messages${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
                 filteredData = data;
+                console.log(data);
                 let res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
                 resolve(res)
             }).catch(e=>{
@@ -105,37 +89,17 @@ class InvitationsList extends Component {
 
         });
     };
-    getSortedComponent = (id) => {
-        // console.log('getSortedComponent sorted:',this.state.sorted);
-        let sortInfo = this.state.sorted.filter(item => item.id === id);
-        if (sortInfo.length) {
-            // console.log('getSortedComponent sortInfo:',sortInfo[0].desc);
-            if (sortInfo[0].desc === true) return <FaSortDown />;
-            if (sortInfo[0].desc === false) return <FaSortUp />;
-        }
-        return <FaSort />;
-    };
-    genericHeaderArrows = () => {
-        return {
-            Header: props => {
-                const Sorted = this.getSortedComponent(props.column.id);
-                return (<span>{props.column.headerText} {Sorted}</span>);
-            },
-            headerStyle: { boxShadow: "none" }
-        };
-    };
 
     render() {
         const { invitations, pageSize, pages, loading } = this.state;
         return (
             <React.Fragment>
                 <Table
-                    columns={columns}
+                    columns={this.state.columns}
                     manual
                     data={invitations}
                     loading={loading}
                     onFetchData={this.fetchData}
-                    onSortedChange={sorted => this.setState({ sorted })}
                     showPaginationTop={true}
                     showPaginationBottom={false}
                     pages={pages}
@@ -151,6 +115,50 @@ const columns = [{
         id: "subject",
         accessor: d => d.subject,
         sortable: false,
-    }];
+    },
+    {
+        Header: "Fecha",
+        id: "created_at",
+        accessor: d => d.created_at,
+        Cell: props => <span><FormattedDate value={props.value}/> <FormattedTime value={props.value}/></span>,
+        width: 180
+    },
+    {
+        Header: "Total",
+        id: "number_of_recipients",
+        accessor: d => d.number_of_recipients,
+        width: 90
+    },
+    {
+        Header: "Request",
+        id: "request",
+        accessor: d => d.request,
+        width: 90
+    },
+    {
+        Header: "Delivered",
+        id: "delivered",
+        accessor: d => d.delivered,
+        width: 90
+    },
+    {
+        Header: "Unique",
+        id: "unique_opened",
+        accessor: d => d.unique_opened,
+        width: 90
+    },
+    {
+        Header: "Opened",
+        id: "opened",
+        accessor: d => d.opened,
+        width: 90
+    },
+    {
+        Header: "Click",
+        id: "click",
+        accessor: d => d.click,
+        width: 90
+    }
+];
 
 export default withRouter(InvitationsList);
