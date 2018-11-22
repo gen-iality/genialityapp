@@ -12,7 +12,7 @@ import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
-import {firebase} from "../../helpers/firebase";
+import {auth} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
 import {networks} from "../../helpers/constants";
 import FormNetwork from "../shared/networkForm";
@@ -193,7 +193,7 @@ class UserEditProfile extends Component {
 
     resetPassword = () => {
         const { user } = this.state;
-        firebase.auth()
+        auth
             .sendPasswordResetEmail(user.email)
             .then(()=>{
                 this.setState({modal:true});

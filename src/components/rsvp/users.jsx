@@ -8,7 +8,6 @@ import Dialog from "../modal/twoAction";
 import API from "../../helpers/request"
 import Table from "../shared/table";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
