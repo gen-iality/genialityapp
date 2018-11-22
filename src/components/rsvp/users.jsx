@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import {EventsApi, UsersApi} from "../../helpers/request";
-import Async from "async";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
@@ -17,6 +16,7 @@ import ErrorServe from "../modal/serverError";
 class UsersRsvp extends Component {
     constructor(props) {
         super(props);
+        this.myRef = React.createRef();
         this.state = {
             actualEvent:{},
             events: [],
@@ -24,6 +24,7 @@ class UsersRsvp extends Component {
             totalUsers: [],
             selection: [],
             auxArr: [],
+            items: [],
             state: 'all',
             preselection: [],
             importUser: false,
@@ -43,9 +44,15 @@ class UsersRsvp extends Component {
         this.modalImport = this.modalImport.bind(this);
         this.addToList = this.addToList.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.toggleAll = this.toggleAll.bind(this);
     }
 
     async componentDidMount() {
+        this.myRef.current.addEventListener("scroll", () => {
+            if (this.myRef.current.scrollTop + this.myRef.current.clientHeight >= this.myRef.current.scrollHeight - 20){
+                this.loadMoreItems();
+            }
+        });
         try {
             const listEvents = await EventsApi.mine();
             const eventId = this.props.event._id;
@@ -141,20 +148,18 @@ class UsersRsvp extends Component {
     };
 
     //Add all of users to selection state
-    toggleAll = () => {
+    async toggleAll() {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
         const currentRecords = this.state.totalUsers;
         if (selectAll) {
             this.setState({loading:true});
-            Async.eachOfSeries(currentRecords,(item,key,cb)=>{
+            await asyncForEach(currentRecords, async (item) => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
-                if(pos<=-1) selection.push(item);
-                cb()
-            }, (err)=> {
-                if( err ) console.log('Error en la consulta de información');
-                this.setState({loading:false});
+                if(pos<=-1) await selection.push(item);
             });
+            console.log('Done');
+            this.setState({loading:false,items:selection.slice(0,10),scrollNow:10});
         }
         else{
             currentRecords.map(user=>{
@@ -165,15 +170,17 @@ class UsersRsvp extends Component {
                         ...selection.slice(pos + 1)
                     ];
                 }
-            })
+            });
+            this.setState({loading:false,items:[],scrollNow:10});
         }
-        this.handleCheckBox(currentRecords,selection);
         this.setState({ selectAll, selection, auxArr: selection });
+        this.handleCheckBox(currentRecords,selection);
     };
 
     //Add or remove user to selection state
     toggleSelection = (user) => {
         let selection = [...this.state.selection];
+        let items = [...this.state.items];
         let auxArr = [...this.state.auxArr];
         const keyIndex = selection.map((e)=> { return e.id; }).indexOf(user.id);
         if (keyIndex >= 0) {
@@ -185,12 +192,17 @@ class UsersRsvp extends Component {
                 ...auxArr.slice(0, keyIndex),
                 ...auxArr.slice(keyIndex + 1)
             ];
+            items = [
+                ...items.slice(0, keyIndex),
+                ...items.slice(keyIndex + 1)
+            ];
         } else {
             selection.push(user);
             auxArr.push(user);
+            items.push(user);
         }
         this.handleCheckBox(this.state.users, selection);
-        this.setState({ selection, auxArr });
+        this.setState({ selection, auxArr, items });
     };
 
     //Check if user exist at selection state
@@ -198,12 +210,13 @@ class UsersRsvp extends Component {
         if(this.state.selection.length>0){
             const pos = this.state.selection.map((e)=> { return e.id; }).indexOf(id);
             return pos !== -1
-        }
+        }else return false
     };
 
     //Remove user at selection state
     removeThis = (user) => {
         let selection = [...this.state.auxArr];
+        let items = [...this.state.items];
         const keyIndex = selection.map((e) => {
             return e.id;
         }).indexOf(user.id);
@@ -211,8 +224,12 @@ class UsersRsvp extends Component {
             ...selection.slice(0, keyIndex),
             ...selection.slice(keyIndex + 1)
         ];
+        items = [
+            ...items.slice(0, keyIndex),
+            ...items.slice(keyIndex + 1)
+        ];
         this.handleCheckBox(this.state.users,selection);
-        this.setState({ selection, auxArr: selection, clearSearch:true });
+        this.setState({ selection, auxArr: selection, items, clearSearch:true });
     };
 
     //Modal add single User
@@ -264,8 +281,43 @@ class UsersRsvp extends Component {
 
     //Search records at third column
     searchResult = (data) => {
-        !data ? this.setState({selection:this.state.auxArr}) : this.setState({selection:data})
+        !data ? this.setState({items:this.state.auxArr.slice(0,10)}) : this.setState({items:data})
     };
+    displayItems = () => {
+        const list = [], {items} = this.state;
+        for (let i = 0; i < items.length; i++) {
+            list.push(
+                <div key={i} className="media">
+                    <div className="media-content">
+                        <p className="title is-6">{items[i].name}</p>
+                        <p className="subtitle is-7">{items[i].email}</p>
+                    </div>
+                    <div className="media-right">
+                        <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(items[i])}}>
+                            <i className="fa fa-times-circle"/>
+                        </span>
+                    </div>
+                </div>
+            );
+        }
+        return list;
+    }
+    loadMoreItems = () => {
+        if(this.state.loadingState){
+            return;
+        }
+        const moreItems = [...this.state.selection].slice(this.state.scrollNow,this.state.scrollNow+10);
+        const newItems = [...this.state.items];
+        moreItems.map(item=>{
+            return newItems.push(item)
+        })
+        this.setState({ loadingState: true });
+        setTimeout(() => {
+            this.setState(prevState=>{
+                return { items: newItems, loadingState: false, scrollNow:prevState.scrollNow+10 }
+            });
+        }, 1000);
+    }
 
     //Button Ticket Logic
     showTicket = () => {
@@ -490,22 +542,9 @@ class UsersRsvp extends Component {
                             this.state.auxArr.length > 0 &&
                             <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         }
-                        <div className="event-inv-selected field">
-                            {
-                                this.state.selection.map((item,key)=>{
-                                    return <div key={key} className="media">
-                                        <div className="media-content">
-                                            <p className="title is-6">{item.name}</p>
-                                            <p className="subtitle is-7">{item.email}</p>
-                                        </div>
-                                        <div className="media-right">
-                                                <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
-                                                    <i className="fa fa-times-circle"/>
-                                                </span>
-                                        </div>
-                                    </div>
-                                })
-                            }
+                        <div ref={this.myRef} style={{ height: "500px", overflow: "auto" }}>
+                            {this.displayItems()}
+                            {this.state.loadingState && <p>Loading...</p>}
                         </div>
                         {
                             this.state.auxArr.length > 0 &&
@@ -547,6 +586,12 @@ class UsersRsvp extends Component {
                 {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
+    }
+}
+
+async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
     }
 }
 
