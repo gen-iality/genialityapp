@@ -12,6 +12,7 @@ import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
+import Loading from "../loaders/loading";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class ListEventUser extends Component {
             pilaRef:    firestore.collection('pila'),
             total:      0,
             checkIn:    0,
+            estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
             extraFields:[],
             addUser:    false,
             editUser:   false,
@@ -54,6 +56,7 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x._id === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
+                this.statesCounter(user.state._id);
                 user.rol = roles.find(x => x._id === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
@@ -131,6 +134,13 @@ class ListEventUser extends Component {
             console.log(`Encountered error: ${err}`);
         });
     }
+
+    statesCounter = (state) => {
+        const item = states.find(x => x._id === state);
+        this.setState(prevState=>{
+            return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
+        })
+    };
 
     exportFile = (e) => {
         e.preventDefault();
@@ -266,7 +276,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -317,45 +327,56 @@ class ListEventUser extends Component {
                                         <span className="tag is-white">Check In</span>
                                     </div>
                                 </div>
+                                {
+                                    Object.keys(estados).map(item=>{
+                                        return <div className="control" key={item}>
+                                            <div className="tags">
+                                                <span className="tag is-light">{estados[item]}</span>
+                                                <span className="tag is-white">{item}</span>
+                                            </div>
+                                        </div>
+                                    })
+                                }
                             </div>
                         </div>
                     </div>
 
                     <div className="columns checkin-table">
                         <div className="column">
-                            <div className="table-wrapper">
-                            {
-                                users.length>0&&
-                                <React.Fragment>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th/>
-                                            <th className="is-capitalized">Check</th>
-                                            <th className="is-capitalized">Estado</th>
-                                            <th className="is-capitalized">Correo</th>
-                                            <th className="is-capitalized">Nombre</th>
-                                            {
-                                                extraFields.map((field,key)=>{
-                                                    return <th key={key} className="is-capitalized">{field.name}</th>
-                                                })
-                                            }
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {
-                                            this.renderRows()
-                                        }
-                                        </tbody>
-                                    </table>
-                                    <Pagination
-                                        items={users}
-                                        change={this.state.changeItem}
-                                        onChangePage={this.onChangePage}
-                                    />
-                                </React.Fragment>
-                            }
-                            </div>
+                            {this.state.loading ? <Loading/>:
+                                <div className="table-wrapper">
+                                    {
+                                        users.length>0&&
+                                        <React.Fragment>
+                                            <table className="table">
+                                                <thead>
+                                                <tr>
+                                                    <th/>
+                                                    <th className="is-capitalized">Check</th>
+                                                    <th className="is-capitalized">Estado</th>
+                                                    <th className="is-capitalized">Correo</th>
+                                                    <th className="is-capitalized">Nombre</th>
+                                                    {
+                                                        extraFields.map((field,key)=>{
+                                                            return <th key={key} className="is-capitalized">{field.name}</th>
+                                                        })
+                                                    }
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {
+                                                    this.renderRows()
+                                                }
+                                                </tbody>
+                                            </table>
+                                            <Pagination
+                                                items={users}
+                                                change={this.state.changeItem}
+                                                onChangePage={this.onChangePage}
+                                            />
+                                        </React.Fragment>
+                                    }
+                                </div>}
                         </div>
                     </div>
                 </div>
