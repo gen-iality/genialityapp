@@ -326,7 +326,7 @@ class UserEditProfile extends Component {
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
                                         <span className="has-text-grey-dark is-size-3">Eventos</span>
                                     </h2>
-                                    <div className="columns home is-multiline is-mobile">
+                                    <div className="columns home is-multiline">
                                         {
                                             events.map((event,key)=>{
                                                 return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={

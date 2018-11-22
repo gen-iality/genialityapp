@@ -138,64 +138,47 @@ class AddUser extends Component {
                 <div className="modal-card">
                     <header className="modal-card-head">
                         <div className="modal-card-title">
-                            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
+                            <div className="modal-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                         </div>
                         <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
                     </header>
                     <section className="modal-card-body">
                         {
                             Object.keys(this.state.user).map((obj, i)=>{
-                                return <div className="field is-horizontal" key={obj}>
-                                    <div className="field-label is-normal">
-                                        <label className="label">{obj}</label>
-                                    </div>
-                                    <div className="field-body">
-                                        <div className="field">
-                                            <div className="control">
-                                                <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
-                                            </div>
-                                        </div>
+                                return <div className="field" key={obj}>
+                                    <label className="label is-required has-text-grey-light">{obj}</label>
+                                    <div className="control">
+                                        <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
                                     </div>
                                 </div>
                             })
                         }
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Rol</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
-                                                {
-                                                    this.state.rolesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div className="field">
+                            <label className="label">Rol</label>
+                            <div className="control">
+                                <div className="select">
+                                    <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
+                                        {
+                                            this.state.rolesList.map((item,key)=>{
+                                                return <option key={key} value={item.value}>{item.label}</option>
+                                            })
+                                        }
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <div className="field is-horizontal">
-                            <div className="field-label is-normal">
-                                <label className="label">Estado</label>
-                            </div>
-                            <div className="field-body">
-                                <div className="field">
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={this.state.state} onChange={this.selectChange} name={'state'}>
-                                                {
-                                                    this.state.statesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
+
+                        <div className="field">
+                            <label className="label">Estado</label>
+                            <div className="control">
+                                <div className="select">
+                                    <select value={this.state.state} onChange={this.selectChange} name={'state'}>
+                                        {
+                                            this.state.statesList.map((item,key)=>{
+                                                return <option key={key} value={item.value}>{item.label}</option>
+                                            })
+                                        }
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -203,8 +186,8 @@ class AddUser extends Component {
                     <footer className="modal-card-foot">
                         {
                             this.state.create?<div>Creando...</div>:
-                                <div>
-                                    <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                <div className="modal-buttons">
+                                    <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
                                     {
                                         this.state.edit&& <button className="button" onClick={this.printUser}>Imprimir</button>
                                     }
