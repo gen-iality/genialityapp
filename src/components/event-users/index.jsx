@@ -247,8 +247,8 @@ class ListEventUser extends Component {
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
                 <td>
-                                                        <span className="icon has-text-primary action_pointer"
-                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                    <span className="icon has-text-primary action_pointer"
+                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
                     <div>
