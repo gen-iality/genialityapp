@@ -9,6 +9,7 @@ import HomeProfile from "../components/home/profile";
 import MyProfile from "../components/profiles/myProfile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
+import {ApiUrl} from "../helpers/constants";
 
 class ContentContainer extends Component {
     componentWillMount(){
@@ -25,9 +26,15 @@ class ContentContainer extends Component {
                 <PrivateRoute path="/profile/:id" component={ MyProfile }/>
                 <Route exact path="/terms" component={ Terms } />
                 <Route exact path="/privacy" component={ Privacy } />
+                <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
             </main>
         );
     }
+}
+
+function QRedirect({ match }) {
+    window.location.replace(`${ApiUrl}/api/generatorQr/${match.params.id}`);
+    return  <p>Redirecting...</p>;
 }
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
