@@ -26,28 +26,56 @@ class InvitationsList extends Component {
         if(pos<=0){
             columns.push(
                 {
-                    ...this.genericHeaderArrows(),
-                    headerText: "Fecha",
+                    Header: "Fecha",
                     id: "created_at",
                     accessor: d => d.created_at,
                     Cell: props => <span><FormattedDate value={props.value}/> <FormattedTime value={props.value}/></span>,
                     width: 180
                 },
                 {
-                    ...this.genericHeaderArrows(),
-                    headerText: "Total",
+                    Header: "Total",
                     id: "number_of_recipients",
                     accessor: d => d.number_of_recipients,
                     width: 90
                 },
                 {
-                    Header: "",
-                    id: "edit",
-                    accessor: d => d,
-                    Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
-                    width:50
-                }
-            )
+                    Header: "Request",
+                    id: "request",
+                    accessor: d => d.request,
+                    width: 90
+                },
+                {
+                    Header: "Delivered",
+                    id: "delivered",
+                    accessor: d => d.delivered,
+                    width: 90
+                },
+                {
+                    Header: "Unique",
+                    id: "unique_opened",
+                    accessor: d => d.unique_opened,
+                    width: 90
+                },
+                {
+                    Header: "Opened",
+                    id: "opened",
+                    accessor: d => d.opened,
+                    width: 90
+                },
+                {
+                    Header: "Click",
+                    id: "click",
+                    accessor: d => d.click,
+                    width: 90
+                },
+            );
+            columns.unshift({
+                Header: "",
+                id: "edit",
+                accessor: d => d,
+                Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
+                width:50
+            })
         }else{
             columns[pos] = {
                 Header: "",
@@ -135,7 +163,6 @@ class InvitationsList extends Component {
                     data={invitations}
                     loading={loading}
                     onFetchData={this.fetchData}
-                    onSortedChange={sorted => this.setState({ sorted })}
                     showPaginationTop={true}
                     showPaginationBottom={false}
                     pages={pages}
