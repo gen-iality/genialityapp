@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedDate, FormattedTime} from "react-intl";
 import {Link,withRouter} from "react-router-dom";
-import {FaEye, FaSort, FaSortDown, FaSortUp} from "react-icons/fa";
+import {FaEye} from "react-icons/fa";
 import API from "../../helpers/request"
 import Table from "../shared/table";
 
@@ -31,6 +31,14 @@ class InvitationsList extends Component {
                 Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
                 width:50
             })
+        }else{
+            columns[pos] = {
+                Header: "",
+                id: "edit",
+                accessor: d => d,
+                Cell: props => <Link to={{pathname: `${match.url}/detail`, state: { item: props.value, users:props.value.message_users }}}><FaEye/></Link>,
+                width:50
+            }
         }
         this.setState({columns,loading:false});
     }
