@@ -21,6 +21,7 @@ class General extends Component {
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
+            error: {},
             minDate: new Date(),
             valid: !this.props.event._id
         };
@@ -63,9 +64,13 @@ class General extends Component {
     };
 
     valid = () => {
+        const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
             valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
-        this.setState({valid:!valid})
+        if(!event.location.FormattedAddress && !event.location.PlaceId){
+            error.location = 'Fill a correct address'
+        }
+        this.setState({valid:!valid,error})
     };
 
     selectCategory = (selectedCategories) => {
@@ -203,8 +208,20 @@ class General extends Component {
             location.FormattedAddress = place.formatted_address;
             location.PlaceId = place.place_id;
             this.setState({event:{...this.state.event,location}},this.valid)
+        }else{
+            this.setState({event:{...this.state.event,location:{}}},this.valid)
         }
     };
+
+    changeSuggest = () => {
+        const error = {};
+        const {event:{location}} = this.state;
+        if(!location.FormattedAddress && !location.PlaceId){
+            error.location = 'Fill a correct address'
+        }
+        this.setState({error})
+    };
+
 
     //Delete event
     async deleteEvent() {
@@ -239,10 +256,10 @@ class General extends Component {
     }
 
     render() {
-        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
+        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout, error } = this.state;
         return (
             <form className="form event-general" onSubmit={this.submit}>
-                <FormEvent event={event} categories={categories} organizers={organizers} types={types}
+                <FormEvent event={event} categories={categories} organizers={organizers} types={types} error={error} changeSuggest={this.changeSuggest}
                            selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
                            imgComp={
                                <div className="field picture">
