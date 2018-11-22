@@ -124,6 +124,7 @@ class InvitationsList extends Component {
             }
             API.get(`/api/events/${eventId}/messages${query}&page=${page+1}&pageSize=${pageSize}`).then(({data})=>{
                 filteredData = data;
+                console.log(data);
                 let res = {rows: filteredData.data, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
                 resolve(res)
             }).catch(e=>{
