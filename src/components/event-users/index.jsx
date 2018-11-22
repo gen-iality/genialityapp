@@ -341,6 +341,8 @@ class ListEventUser extends Component {
                         </div>
                     </div>
 
+                    <p>Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
