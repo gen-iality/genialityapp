@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect } from 'react-router-dom';
 import {EventsApi, UsersApi} from "../../helpers/request";
+import Async from "async";
 import ImportUsers from "../modal/importUser";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
@@ -145,9 +146,14 @@ class UsersRsvp extends Component {
         let selection = [...this.state.selection];
         const currentRecords = this.state.totalUsers;
         if (selectAll) {
-            currentRecords.forEach(item => {
+            this.setState({loading:true});
+            Async.eachOfSeries(currentRecords,(item,key,cb)=>{
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
                 if(pos<=-1) selection.push(item);
+                cb()
+            }, (err)=> {
+                if( err ) console.log('Error en la consulta de información');
+                this.setState({loading:false});
             });
         }
         else{
