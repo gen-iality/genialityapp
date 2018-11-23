@@ -49,7 +49,7 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
-        usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
+        this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
             let user;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
@@ -89,7 +89,7 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
-        pilaRef.onSnapshot({
+        this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
@@ -133,6 +133,11 @@ class ListEventUser extends Component {
         }, err => {
             console.log(`Encountered error: ${err}`);
         });
+    }
+
+    componentWillUnmount() {
+        this.userListener();
+        this.pilaListener()
     }
 
     statesCounter = (state,old) => {
