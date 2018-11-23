@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
+import Moment from "moment"
 import {Actions} from "../../helpers/request";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
@@ -49,7 +50,7 @@ class ListEventUser extends Component {
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
-        usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
+        this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
             let user;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
@@ -89,14 +90,15 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
-        pilaRef.onSnapshot({
+        this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
                 const data = change.doc.data();
-                data.created_at = data.created_at.toDate();
-                data.updated_at = data.updated_at.toDate();
+                data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
+                data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
+                if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
                 /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
@@ -135,10 +137,15 @@ class ListEventUser extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.userListener();
+        this.pilaListener()
+    }
+
     statesCounter = (state,old) => {
         const item = states.find(x => x._id === state);
         const old_item = states.find(x => x._id === old);
-        if(state){
+        if(state && !old){
             this.setState(prevState=>{
                 return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
             });
