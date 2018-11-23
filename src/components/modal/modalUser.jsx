@@ -208,7 +208,7 @@ class UserModal extends Component {
             '</svg>';
         return (
             <React.Fragment>
-                <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
+                <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
@@ -220,74 +220,49 @@ class UserModal extends Component {
                         <section className="modal-card-body">
                             {
                                 Object.keys(this.state.user).map((obj, i)=>{
-                                    return <div className="field is-horizontal" key={obj}>
-                                        <div className="field-label is-normal">
-                                            <label className="label">{obj}</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control">
-                                                    <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
-                                                </div>
-                                            </div>
+                                    return <div className="field" key={obj}>
+                                        <label className="label is-required has-text-grey-light">{obj}</label>
+                                        <div className="control">
+                                            <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder={obj}/>
                                         </div>
                                     </div>
                                 })
                             }
                             {
                                 this.state.checked_in && (
-                                    <div className="field is-horizontal">
-                                        <div className="field-label is-normal">
-                                            <label className="label">Checked</label>
-                                        </div>
-                                        <div className="field-body">
-                                            <div className="field">
-                                                <div className="control">
-                                                    <p><FormattedDate value={this.state.checked_in}/> - <FormattedTime value={this.state.checked_in}/></p>
-                                                </div>
-                                            </div>
+                                    <div className="field">
+                                        <label className="label">Checked</label>
+                                        <div className="control">
+                                            <p><FormattedDate value={this.state.checked_in}/> - <FormattedTime value={this.state.checked_in}/></p>
                                         </div>
                                     </div>
-
                                 )
                             }
-                            <div className="field is-horizontal">
-                                <div className="field-label is-normal">
-                                    <label className="label">Rol</label>
-                                </div>
-                                <div className="field-body">
-                                    <div className="field">
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
-                                                    {
-                                                        this.state.rolesList.map((item,key)=>{
-                                                            return <option key={key} value={item.value}>{item.label}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
+                            <div className="field">
+                                <label className="label">Rol</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
+                                            {
+                                                this.state.rolesList.map((item,key)=>{
+                                                    return <option key={key} value={item.value}>{item.label}</option>
+                                                })
+                                            }
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div className="field is-horizontal">
-                                <div className="field-label is-normal">
-                                    <label className="label">Estado</label>
-                                </div>
-                                <div className="field-body">
-                                    <div className="field">
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={this.state.state} onChange={this.selectChange} name={'state'}>
-                                                    {
-                                                        this.state.statesList.map((item,key)=>{
-                                                            return <option key={key} value={item.value}>{item.label}</option>
-                                                        })
-                                                    }
-                                                </select>
-                                            </div>
-                                        </div>
+                            <div className="field">
+                                <label className="label">Estado</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={this.state.state} onChange={this.selectChange} name={'state'}>
+                                            {
+                                                this.state.statesList.map((item,key)=>{
+                                                    return <option key={key} value={item.value}>{item.label}</option>
+                                                })
+                                            }
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -295,8 +270,8 @@ class UserModal extends Component {
                         <footer className="modal-card-foot">
                             {
                                 this.state.create?<div>Creando...</div>:
-                                    <div>
-                                        <button className="button is-success" onClick={this.handleSubmit} disabled={this.state.valid}>Guardar</button>
+                                    <div className="modal-buttons">
+                                        <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>Guardar</button>
                                         {
                                             this.state.edit&&
                                             <React.Fragment>
@@ -312,7 +287,7 @@ class UserModal extends Component {
                             </div>
                         </footer>
                     </div>
-                    <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0}}/>
+                    <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}

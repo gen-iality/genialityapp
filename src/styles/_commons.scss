@@ -1,5 +1,16 @@
 html {
   font-size: 14px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $grey-lighter;
+    border-radius: 10px;
+    width: 10px;
+  }
 }
 
 .action_pointer{
@@ -316,7 +327,7 @@ a {
     font-weight: 900; 
     margin: 0;
   }
-  .required:after { content:" *"; color: $danger }
+  .required:after { content:" *"; color: $danger; }
   .control {
     margin-left: 0.5em;
   }
@@ -327,7 +338,7 @@ a {
   }
 }
 
-.required:after { content:" *"; color: $danger }
+.required:after { content:" *"; color: $danger; }
 
 .control {
   input{
@@ -370,7 +381,7 @@ a {
       display: none;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: $grey-light;
+      background-color: $grey-lighter;
       border-radius: 10px;
       width: 10px;
     }
@@ -640,6 +651,16 @@ a {
   }
 }
 
+.tags {
+  .tag {
+    font-size: 1em;
+    font-weight: 700;
+    &.is-white {
+      color: $grey-light;
+    }
+  }
+}
+
 /**
  * The geosuggest module
  * NOTE: duplicated font-sizes' are for browsers which don't support rem (only IE 8)
@@ -755,7 +776,9 @@ a {
     background-color: white;
     border-bottom: none;
     margin-bottom: -1px;
-    padding: 6rem 6rem 2rem 6rem;
+    padding-top: 4rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
     .modal-card-title {
       .modal-header {
         height: 30px;
@@ -764,13 +787,44 @@ a {
     }
   }
   .modal-card-body {
-    padding: 2rem 8rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    .tabs {
+      li {
+        font-weight: 900;
+        a {
+          color: $grey-lighter;
+          &:hover {
+            border-bottom-color: $primary;
+          }
+        }
+        &.is-active {
+          a {
+            border-bottom-color: $primary;
+            color: $primary;
+          }
+        }
+      }
+    }
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-lighter;
+      border-radius: 10px;
+      width: 10px;
+    }
   }
   .modal-card-foot {
     background-color: white;
     border-top: none;
     margin-top: -1px;
-    padding: 2rem 6rem 6rem 6rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-bottom: 4rem;
     .modal-buttons {
       display: flex;
       align-items: center;

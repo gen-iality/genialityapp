@@ -106,7 +106,7 @@ class ImportUsers extends Component {
             '</g>\n' +
             '</svg>';
         return (
-            <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
+            <div className={`modal modal-import-user ${this.state.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
@@ -127,14 +127,16 @@ class ImportUsers extends Component {
                             layout[this.state.step]
                         }
                     </section>
-                    {
-                        this.state.step === 2 && (
-                            <footer className="modal-card-foot">
-                                <button className="button is-success" onClick={this.closeModal}>Finalizar</button>
-                                <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
-                            </footer>
-                        )
-                    }
+                    <footer className="modal-card-foot">
+                        {
+                            this.state.step === 2 && (
+                                <div className="modal-buttons">
+                                    <button className="button is-primary" onClick={this.closeModal}>Finalizar</button>
+                                    <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
+                                </div> 
+                            )
+                        }
+                    </footer>
                 </div>
             </div>
         );

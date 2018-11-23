@@ -339,7 +339,7 @@ class ListEventUser extends Component {
                                     Object.keys(estados).map(item=>{
                                         return <div className="control" key={item}>
                                             <div className="tags">
-                                                <span className="tag is-light">{estados[item]}</span>
+                                                <span className={'tag '+item}>{estados[item]}</span>
                                                 <span className="tag is-white">{item}</span>
                                             </div>
                                         </div>

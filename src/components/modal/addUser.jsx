@@ -133,12 +133,12 @@ class AddUser extends Component {
             '</g>\n' +
             '</svg>';
         return (
-            <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
+            <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
                         <div className="modal-card-title">
-                            <div className="modal-header" dangerouslySetInnerHTML={{ __html: icon }}/>
+                            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                         </div>
                         <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
                     </header>
@@ -148,7 +148,7 @@ class AddUser extends Component {
                                 return <div className="field" key={obj}>
                                     <label className="label is-required has-text-grey-light">{obj}</label>
                                     <div className="control">
-                                        <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder="Evius.co"/>
+                                        <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder={obj}/>
                                     </div>
                                 </div>
                             })
@@ -199,7 +199,7 @@ class AddUser extends Component {
                         </div>
                     </footer>
                 </div>
-                <iframe ref="ifrmPrint" style={{opacity:0}} title={'printUser'}/>
+                <iframe ref="ifrmPrint" style={{opacity:0, display:'none'}} title={'printUser'}/>
             </div>
         );
     }

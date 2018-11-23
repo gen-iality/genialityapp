@@ -33,10 +33,21 @@
         margin: 0;
       }
       .tag {
-        font-size: 1em;
-        font-weight: 700;
-        &.is-white {
-          color: $grey-light;
+        &.DRAFT {
+          background-color: $danger;
+          color: $white;
+        }
+        &.BOOKED {
+          background-color: $warning;
+          color: $white;
+        }
+        &.RESERVED {
+          background-color: $info;
+          color: $white;
+        }
+        &.INVITED {
+          background-color: $success;
+          color: $white;
         }
         &:not(:last-child) {
           margin-right: 0;

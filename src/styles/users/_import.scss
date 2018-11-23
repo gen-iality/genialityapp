@@ -1,6 +1,126 @@
+.modal-add-user {
+  .modal-card-body {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
+.modal-import-user {
+  .importacion-txt  {
+    color: $grey-light;
+    text-align: justify;
+    strong {
+      color: $grey;
+    }
+  }
+  .importacion-ejm {
+    background-color: #f2f2f2;
+    margin: 1.5em 0 !important;
+    padding: 1.5em;
+    .column {
+      &:last-child {
+        .ejm-tabla {
+          margin-left: -1px;
+        }
+      }
+    }
+    .ejm-tabla {
+      .column {
+        border: 1px solid $grey-light;
+        padding: 0 5px !important;
+        &:not(:first-child) {
+          border-left-width: 0;
+        }
+      }
+    }
+  }
+  .preview-list{
+    overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-lighter;
+      border-radius: 10px;
+      width: 5px;
+    }
+    .column {
+      .preview-column {
+        border-right: 1px solid $grey-lighter;
+        margin-bottom: 10px;
+        padding: 1rem;
+        height: 12em;
+        width: 100%;
+        .preview-title {
+          border-bottom: 1px solid $grey-lighter;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-weight: 900;
+          padding: 1.5rem 0;
+          height: 1.5rem;
+          width: 100%;
+          .preview-title-left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            .icon {
+              font-size: 0.75rem;
+              margin-right: 0.5rem;
+            }
+            span {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+          .preview-title-right {
+            .dropdown {
+              .dropdown-menu {
+                min-width: 100% !important;
+              }
+              .button {
+                padding: 0;
+                .icon {
+                  margin: 0 !important;
+                }
+              }
+            }
+          }
+        }
+        .preview-items {
+          margin: 1rem 0;
+          p {
+            color: $grey;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            &:last-child {
+              opacity: 0.33;
+            }
+          }
+        }
+      }
+      &:last-child {
+        .preview-column {
+          border: none;
+        }
+      }
+    }
+  }
+  .preview-warning {
+    p {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
+}
+
+
 .zone{
   display: block;
-}
-.preview-list{
-  overflow: auto;
 }

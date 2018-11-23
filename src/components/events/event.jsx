@@ -121,7 +121,7 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
+                                            {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
                                                     <i className={`${this.state.contentTab?'up':'down'}`}/>
@@ -138,7 +138,7 @@ class Event extends Component {
                                                         </li>
                                                     </ul>
                                                 )
-                                            }
+                                            } */}
                                         </div>
                                     )
                                 }

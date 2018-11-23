@@ -81,32 +81,32 @@ class Result extends Component {
 
     render() {
         const {imported,total,saved,fails,updated,step,ok,notok} = this.state;
-        const data = [this.state.notok,this.state.ok];
+        const data = [this.state.ok,this.state.notok];
         return (
             <React.Fragment>
-                <div className="columns">
+                <div className="columns is-gapless">
                     <div className="column">
-                        <div className="tags has-addons">
-                            <span className="tag is-white">Total</span>
-                            <span className="tag">{total}</span>
+                        <div className="tags">
+                            <span className="tag is-size-7">{total}</span>
+                            <span className="tag is-white is-size-7">Total</span>
                         </div>
                     </div>
                     <div className="column">
-                        <div className="tags has-addons">
-                            <span className="tag is-white">Importados</span>
-                            <span className="tag is-primary">{saved}</span>
+                        <div className="tags">
+                            <span className="tag is-primary is-size-7">{saved}</span>
+                            <span className="tag is-white is-size-7">Importados</span>
                         </div>
                     </div>
                     <div className="column">
-                        <div className="tags has-addons">
-                            <span className="tag is-white">Fallidos</span>
-                            <span className="tag is-danger">{fails}</span>
+                        <div className="tags">
+                            <span className="tag is-danger is-size-7">{fails}</span>
+                            <span className="tag is-white is-size-7">Fallidos</span>
                         </div>
                     </div>
                     <div className="column">
-                        <div className="tags has-addons">
-                            <span className="tag is-white">Actualizados</span>
-                            <span className="tag is-warning">{updated}</span>
+                        <div className="tags">
+                            <span className="tag is-warning is-size-7">{updated}</span>
+                            <span className="tag is-white is-size-7">Actualizados</span>
                         </div>
                     </div>
                 </div>
@@ -115,8 +115,8 @@ class Result extends Component {
                         <React.Fragment>
                             <div className="tabs is-fullwidth">
                                 <ul>
-                                    <li className={`${step === 0 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:0})}}><a>Incorrectos</a></li>
-                                    <li className={`${step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>Correctos</a></li>
+                                    <li className={`${step === 0 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:0})}}><a>Correctos</a></li>
+                                    <li className={`${step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>Incorrectos</a></li>
                                 </ul>
                             </div>
                             <table className="table is-fullwidth is-striped">
