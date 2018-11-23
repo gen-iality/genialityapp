@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
+import Moment from "moment"
 import {Actions} from "../../helpers/request";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
@@ -95,8 +96,9 @@ class ListEventUser extends Component {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
                 const data = change.doc.data();
-                data.created_at = data.created_at.toDate();
-                data.updated_at = data.updated_at.toDate();
+                data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
+                data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
+                if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
                 /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
