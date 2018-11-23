@@ -20,7 +20,8 @@ class Header extends Component {
             organizations: [],
             name: 'user',
             user: false,
-            open: false,
+            menuOpen: false,
+            filterOpen: false,
             timeout: false,
             modal: false,
             loader: true,
@@ -75,8 +76,14 @@ class Header extends Component {
     };
 
     openMenu = () => {
-        this.setState((prevState) => {
-            return {open:!prevState.open}
+        this.setState((menuState) => {
+            return {menuOpen:!menuState.menuOpen}
+        });
+    };
+    
+    openFilter = () => {
+        this.setState((filterState) => {
+            return {filterOpen:!filterState.filterOpen}
         });
     };
 
@@ -113,16 +120,17 @@ class Header extends Component {
                 <header>
                     <nav className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile">
                         <div className="navbar-brand">
-                            <Link className="navbar-item" to={'/'}>
+                            <div className="navbar-item" data-target="filterMenu" onClick={this.openFilter}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                            </Link>
-                            <div className={`navbar-burger burger ${this.state.open ? "is-active" : ""}`}  data-target="navbarExampleTransparentExample" onClick={this.openMenu}>
+                            </div>
+                            <div className={`navbar-burger burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                             </div>
                         </div>
-                        <div id="navbarExampleTransparentExample" className={`navbar-menu ${this.state.open ? "is-active" : ""}`}>
+                        
+                        <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-start">
                                 <div className="navbar-item has-text-weight-bold has-text-grey-light">
                                     <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={'/'}>
@@ -203,6 +211,12 @@ class Header extends Component {
                                             </button>
                                         </div>
                                 }
+                            </div>
+                        </div>
+
+                        <div id="filterMenu" className={`navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
+                            <div className="">
+                                Proximamente
                             </div>
                         </div>
                     </nav>
