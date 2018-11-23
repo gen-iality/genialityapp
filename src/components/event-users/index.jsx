@@ -143,7 +143,7 @@ class ListEventUser extends Component {
     statesCounter = (state,old) => {
         const item = states.find(x => x._id === state);
         const old_item = states.find(x => x._id === old);
-        if(state){
+        if(state && !old){
             this.setState(prevState=>{
                 return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
             });
