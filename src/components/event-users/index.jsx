@@ -105,6 +105,7 @@ class ListEventUser extends Component {
                             includeMetadataChanges: true
                         }, (doc) => {
                             if(!doc._hasPendingWrites){
+                                console.log('this is data: ', data)
                                 Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,{"properties":data.properties,"role_id":data.role_id,"state_id":data.state_id,"checked_in": data.checked_in,"role_id": data.rol_id,    "state_id": data.state_id })
                                     .then((response)=>{
                                         console.log(response);
