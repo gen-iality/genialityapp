@@ -99,17 +99,19 @@ class ListEventUser extends Component {
                 data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
                 data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
                 if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                /*if (change.type === 'added') {
+                if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
                         }, (doc) => {
                             if(!doc._hasPendingWrites){
-                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,data)
+                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,{"properties":data.properties,"role_id":data.role_id,"state_id":data.state_id,"checked_in": data.checked_in,"role_id": data.rol_id,    "state_id": data.state_id })
                                     .then((response)=>{
                                         console.log(response);
-                                        console.log('desenpilando ==>',change.doc.data());
                                         pilaRef.doc(change.doc.id).delete();
+                                        if(response.status == "CREATED"){
+                                            usersRef.doc(change.doc.id).delete();
+                                        }
                                     })
                             }
                         });
@@ -130,7 +132,7 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }*/
+                }
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
