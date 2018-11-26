@@ -221,7 +221,7 @@ class UserModal extends Component {
                             {
                                 Object.keys(this.state.user).map((obj, i)=>{
                                     return <div className="field" key={obj}>
-                                        <label className="label is-required has-text-grey-light">{obj}</label>
+                                        <label className="label is-required has-text-grey-light is-capitalized">{obj}</label>
                                         <div className="control">
                                             <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder={obj}/>
                                         </div>
