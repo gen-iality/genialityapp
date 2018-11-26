@@ -114,7 +114,7 @@ class UserModal extends Component {
     }
 
     printUser = () => {
-        const {name, lastname, company, email, position, Phone} = this.state.user;
+        const {name, lastname, company} = this.state.user;
         axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
             .then((response) => {
                 let image = btoa(
@@ -136,10 +136,7 @@ class UserModal extends Component {
                 oDoc.write('<body onload="window.print()"><div class="main-print">');
                 // Datos
                 oDoc.write(`<div class="info"><h1>${name}</h1><h1>${lastname}</h1></div>`);
-                oDoc.write(`<div class="info type">${email}</div>`);
-                oDoc.write(`<div class="info type">${Phone}</div>`);
                 oDoc.write(`<div class="info type">${company}</div>`);
-                oDoc.write(`<div class="info type">${position}</div>`);
                 oDoc.write('</div>'); // close .info
                 oDoc.write(`<table><tr>`);
                 oDoc.write(`<td class="qr image"><img src=${qr}></td>`);
