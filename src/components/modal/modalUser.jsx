@@ -48,7 +48,6 @@ class UserModal extends Component {
                         return user[obj] = value.properties[obj]?value.properties[obj]:''
                     });
                 let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-                console.log(checked_in);
                 this.setState({user, rol:value.rol._id, state:value.state._id, edit:true, checked_in});
             }else {
                 let user = {name: '', email: ''};
@@ -114,7 +113,7 @@ class UserModal extends Component {
     }
 
     printUser = () => {
-        const {name, lastname, company} = this.state.user;
+        const {name, lastname, company, type} = this.state.user;
         axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
             .then((response) => {
                 let image = btoa(
@@ -136,11 +135,11 @@ class UserModal extends Component {
                 oDoc.write('<body onload="window.print()"><div class="main-print">');
                 // Datos
                 oDoc.write(`<div class="info"><h1>${name}</h1><h1>${lastname}</h1></div>`);
-                oDoc.write(`<div class="info type">${company}</div>`);
+                oDoc.write(`<div class="info type">${company?company:''}</div>`);
                 oDoc.write('</div>'); // close .info
                 oDoc.write(`<table><tr>`);
                 oDoc.write(`<td class="qr image"><img src=${qr}></td>`);
-                oDoc.write(`<td class="qr type">STAFF</td>`);
+                oDoc.write(`<td class="qr type">${type?type:''}</td>`);
                 oDoc.write('</tr></table></div>'); // close .qr .main-print
                 // Close body
                 oDoc.write('</body></html>');
@@ -153,6 +152,12 @@ class UserModal extends Component {
         const value = event.target.value;
         this.setState({user:{...this.state.user,[name]:value}}, this.validForm)
     };
+
+    changeType = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({user:{...this.state.user,[name]:value}}, this.validForm)
+    }
 
     selectChange = (e) => {
         let name = e.target.name;
@@ -232,6 +237,7 @@ class UserModal extends Component {
                         <section className="modal-card-body">
                             {
                                 Object.keys(this.state.user).map((obj, i)=>{
+                                    if(obj === 'type') return;
                                     return <div className="field" key={obj}>
                                         <label className="label is-required has-text-grey-light is-capitalized">{obj}</label>
                                         <div className="control">
@@ -254,9 +260,9 @@ class UserModal extends Component {
                                 <label className="label">Tipo de Usuario</label>
                                 <div className="control">
                                     <div className="select">
-                                        <select value={this.state.user.estado} onChange={this.selectChange} name={'estado'}>
-                                            <option value={'Preferencial'}>{'Preferencial'}</option>
+                                        <select value={this.state.user.type} onChange={this.changeType} name={'type'}>
                                             <option value={'General'}>{'General'}</option>
+                                            <option value={'Preferencial'}>{'Preferencial'}</option>
                                             <option value={'VIP'}>{'VIP'}</option>
                                             <option value={'Alumno'}>{'Alumno'}</option>
                                             <option value={'Prensa'}>{'Prensa'}</option>
