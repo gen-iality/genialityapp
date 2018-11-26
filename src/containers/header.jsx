@@ -214,8 +214,8 @@ class Header extends Component {
                             </div>
                         </div>
 
-                        <div id="filterMenu" className={`navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
-                            <div className="">
+                        <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
+                            <div className="is-hidden-desktop">
                                 Proximamente
                             </div>
                         </div>
