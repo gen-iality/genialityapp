@@ -261,7 +261,7 @@ class ListEventUser extends Component {
     renderRows = () => {
         const items = [];
         const {extraFields} = this.state;
-        const limit = this.exportFile.length;
+        const limit = extraFields.length;
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
                 <td>
