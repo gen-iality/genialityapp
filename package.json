@@ -23,6 +23,7 @@
     "react-icons": "^3.2.1",
     "react-intl": "^2.7.1",
     "react-qr-reader": "^2.1.1",
+    "react-redux": "^5.1.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
@@ -31,6 +32,8 @@
     "react-toastify": "^4.4.0",
     "react-widgets": "^4.4.6",
     "react-widgets-moment": "^4.0.19",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "xlsx": "^0.13.5"
   },
   "scripts": {
