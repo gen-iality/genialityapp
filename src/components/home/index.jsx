@@ -26,7 +26,7 @@ class Home extends Component {
 
     async componentDidMount() {
         try{
-            const resp = await EventsApi.getPublic('');
+            const resp = await EventsApi.getPublic('?pageSize=30');
             console.log(resp);
             this.setState({events:resp.data,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
             /*this.refs.iScroll.addEventListener("scroll", () => {
