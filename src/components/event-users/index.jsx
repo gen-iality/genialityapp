@@ -99,7 +99,7 @@ class ListEventUser extends Component {
                 data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
                 data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
                 if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                if (change.type === 'added') {
+                /*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
@@ -133,7 +133,7 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }
+                }*/
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
