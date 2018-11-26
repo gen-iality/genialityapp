@@ -6,6 +6,7 @@ import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
+import connect from "react-redux/es/connect/connect";
 
 class Header extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class Header extends Component {
         this.props.history.listen((location, action) => {
             console.log("on route change");
             window.scrollTo(0, 0);
-            this.setState({open:false})
+            this.setState({menuOpen:false,filterOpen:false})
         });
         this.state = {
             selection: [],
@@ -28,6 +29,8 @@ class Header extends Component {
             create: false,
             valid: true,
             serverError: false,
+            tabEvtType:true,
+            tabEvtCat: true,
         };
     }
 
@@ -77,18 +80,19 @@ class Header extends Component {
 
     openMenu = () => {
         this.setState((menuState) => {
-            return {menuOpen:!menuState.menuOpen}
+            return {menuOpen:!menuState.menuOpen,filterOpen:false}
         });
     };
     
     openFilter = () => {
         this.setState((filterState) => {
-            return {filterOpen:!filterState.filterOpen}
+            return {filterOpen:!filterState.filterOpen,menuOpen:false}
         });
     };
 
     render() {
         const { timeout, serverError } = this.state;
+        const { categories, types } = this.props;
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -129,7 +133,6 @@ class Header extends Component {
                                 <span></span>
                             </div>
                         </div>
-                        
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-start">
                                 <div className="navbar-item has-text-weight-bold has-text-grey-light">
@@ -166,27 +169,20 @@ class Header extends Component {
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                                     </p>
-
-                                                    <Link className="navbar-item item-sub  has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
                                                         <FormattedMessage id="header.profile_edit" defaultMessage="Profile"/>
                                                     </Link>
-
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
-
                                                     <hr className="navbar-divider"/>
-
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
                                                     </p>
-
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
                                                         <FormattedMessage id="header.my_events_create" defaultMessage="Eventos"/>
                                                     </Link>
-
                                                     <hr className="navbar-divider"/>
-
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
                                                     </p>
@@ -213,10 +209,43 @@ class Header extends Component {
                                 }
                             </div>
                         </div>
-
                         <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
-                            <div className="is-hidden-desktop">
-                                Proximamente
+                            <div className="navbar-dropdown">
+                                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
+                                    <span>Tipo de Evento</span>
+                                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
+                                </p>
+                                {
+                                    this.state.tabEvtType && (
+                                        <ul>
+                                            {
+                                                types.map((item,key)=>{
+                                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                                        {item.label}
+                                                    </li>
+                                                })
+                                            }
+                                        </ul>
+                                    )
+                                }
+                                <hr className="navbar-divider"/>
+                                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
+                                    <span>Categoría</span>
+                                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
+                                </p>
+                                {
+                                    this.state.tabEvtCat && (
+                                        <ul>
+                                            {
+                                                categories.map((item,key)=>{
+                                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                                        {item.label}
+                                                    </li>
+                                                })
+                                            }
+                                        </ul>
+                                    )
+                                }
                             </div>
                         </div>
                     </nav>
@@ -228,4 +257,10 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+const mapStateToProps = state => ({
+    categories: state.categories.items,
+    types: state.types.items,
+    error: state.categories.error
+});
+
+export default connect(mapStateToProps)(withRouter(Header));

@@ -90,6 +90,25 @@ a {
     margin-left: 1rem;
     margin-right: 1rem;
   }
+  #filterMenu{
+    .icon {
+      margin-left: 0.5em;
+      i {
+        border: solid black;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        &.up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+        &.down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
+      }
+    }
+  }
 }
 
 .footer {

@@ -20,7 +20,6 @@ class Event extends Component {
         super(props);
         this.state = {
             loading:true,
-            showMenu:true,
             userTab:true,
             contentTab:true
         }
@@ -80,7 +79,7 @@ class Event extends Component {
 
     render() {
         const { match } = this.props;
-        const { timeout, showMenu } = this.state;
+        const { timeout } = this.state;
         return (
             <React.Fragment>
                 {
@@ -89,14 +88,10 @@ class Event extends Component {
                             <aside className="column menu event-aside is-2 has-text-weight-bold">
                                 <p className="subtitle has-text-weight-bold">
                                     {this.state.newEvent?'Nuevo evento':this.state.event.name}
-                                    <span className="icon is-hidden-desktop" onClick={(e)=>{
-                                        this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
-                                        {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}
-                                    </span>
                                 </p>
                                 {
                                     (!this.state.newEvent) && (
-                                        <div className={`${showMenu?'is-hidden-mobile':''}`}>
+                                        <div className={`is-hidden-mobile`}>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
@@ -143,7 +138,6 @@ class Event extends Component {
                                     )
                                 }
                             </aside>
-                            <div className="event-vertical-line"></div>
                             <div className="column event-main is-10">
                                 <section className="section event-wrapper">
                                     <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
