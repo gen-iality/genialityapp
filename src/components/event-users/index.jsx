@@ -280,7 +280,7 @@ class ListEventUser extends Component {
                 <td>{item.properties.name}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
-                        return <td key={item._id}>{item.properties[field.name]}</td>
+                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
                     })
                 }
             </tr>)

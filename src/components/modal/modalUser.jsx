@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
-import {roles,states} from "../../helpers/constants";
+import {ApiUrl, roles, states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
+import axios from 'axios';
 
 class UserModal extends Component {
     constructor(props) {
@@ -113,27 +114,41 @@ class UserModal extends Component {
     }
 
     printUser = () => {
-        const {name, apellido, CarreraInteres, Colegio} = this.state.user;
-        this.props.checkIn(this.state.user);
-        let oIframe = this.refs.ifrmPrint;
-        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
-        if (oDoc.document) {
-            oDoc = oDoc.document
-        }
-        // Head
-        oDoc.write('<head><title>Usuario</title>');
-        oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1, body h3, body h4 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 18px;} body h3 {font-size: 18px;} body .info {width: 300px;text-align: center;} body .type {text-transform: uppercase;font-size: 14px;font-weight: bold;}</style>");
-        oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
-        // body
-        oDoc.write('<body onload="window.print()"><div class="main-print">');
-        // Datos
-        oDoc.write(`<div class="info"><h1>${name} ${apellido}</h1></div>`);
-        oDoc.write(`<div class="info type">${Colegio}</div>`);
-        oDoc.write(`<div class="info type">${CarreraInteres}</div>`);
-        oDoc.write('</div></div>'); // close .main-print .info
-        // Close body
-        oDoc.write('</body></html>');
-        oDoc.close()
+        const {name, lastname, company, email, position, Phone} = this.state.user;
+        axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
+            .then((response) => {
+                let image = btoa(
+                    new Uint8Array(response.data)
+                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
+                );
+                let qr = `data:image/png;base64,${image}`;
+                //this.props.checkIn(this.state.user);
+                let oIframe = this.refs.ifrmPrint;
+                let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+                if (oDoc.document) {
+                    oDoc = oDoc.document
+                }
+                // Head
+                oDoc.write('<head><title>Usuario</title>');
+                oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1, body h3, body h4 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 18px;} body h3 {font-size: 18px;} body .info {width: 300px;text-align: center;} body .type {text-transform: uppercase;font-size: 14px;font-weight: bold;}</style>");
+                oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+                // body
+                oDoc.write('<body onload="window.print()"><div class="main-print">');
+                // Datos
+                oDoc.write(`<div class="info"><h1>${name}</h1><h1>${lastname}</h1></div>`);
+                oDoc.write(`<div class="info type">${email}</div>`);
+                oDoc.write(`<div class="info type">${Phone}</div>`);
+                oDoc.write(`<div class="info type">${company}</div>`);
+                oDoc.write(`<div class="info type">${position}</div>`);
+                oDoc.write('</div>'); // close .info
+                oDoc.write(`<table><tr>`);
+                oDoc.write(`<td class="qr image"><img src=${qr}></td>`);
+                oDoc.write(`<td class="qr type">STAFF</td>`);
+                oDoc.write('</tr></table></div>'); // close .qr .main-print
+                // Close body
+                oDoc.write('</body></html>');
+                oDoc.close()
+            });
     };
 
     handleChange = (event) => {
@@ -238,6 +253,23 @@ class UserModal extends Component {
                                     </div>
                                 )
                             }
+                            <div className="field">
+                                <label className="label">Tipo de Usuario</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={this.state.user.estado} onChange={this.selectChange} name={'estado'}>
+                                            <option value={'Preferencial'}>{'Preferencial'}</option>
+                                            <option value={'General'}>{'General'}</option>
+                                            <option value={'VIP'}>{'VIP'}</option>
+                                            <option value={'Alumno'}>{'Alumno'}</option>
+                                            <option value={'Prensa'}>{'Prensa'}</option>
+                                            <option value={'Staff'}>{'Staff'}</option>
+                                            <option value={'Speaker'}>{'Speaker'}</option>
+                                            <option value={'Sin nombre'}>{'Sin nombre'}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="field">
                                 <label className="label">Rol</label>
                                 <div className="control">
