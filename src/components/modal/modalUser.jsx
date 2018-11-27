@@ -131,18 +131,18 @@ class UserModal extends Component {
                 setTimeout(()=>{
                     // Head
                     oDoc.write('<head><title>Usuario</title>');
-                    oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 28px;} body .info {width: 300px} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px}</style>");
+                    oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;font-family: 'Lato', sans-serif;color: black;text-transform: uppercase;font-weight: bold;font-size: 44px;} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px} body .qr{margin-top: 100px;font-family: 'Lato', sans-serif}</style>");
                     oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
                     // body
-                    oDoc.write('<body onload="window.print()"><div class="main-print">');
+                    oDoc.write('<body onload="window.print()"><table>');
                     // Datos
-                    oDoc.write(`<div class="info"><h1>${name}</h1><h1>${lastname}</h1></div>`);
-                    oDoc.write(`<div class="info type">${company?company:''}</div>`);
-                    oDoc.write('</div>'); // close .info
-                    oDoc.write(`<table><tr>`);
-                    oDoc.write(`<td class="qr image"><img src=${qr}></td>`);
-                    oDoc.write(`<td class="qr type">${type?type:''}</td>`);
-                    oDoc.write('</tr></table></div>'); // close .qr .main-print
+                    oDoc.write(`<tr><td><h1>${name}</h1></td></tr>`);
+                    oDoc.write(`<tr><td><h1>${lastname}</h1></td></tr>`);
+                    oDoc.write(`<tr><td><div class="info type">${company?company:''}</div></td></tr>`);
+                    oDoc.write(`<tr>`);
+                    oDoc.write(`<td><img src=${qr}></td>`);
+                    oDoc.write(`<td><div class="qr">${type?type:''}</div></td>`);
+                    oDoc.write('</tr></table>'); // close .qr .main-print
                     // Close body
                     oDoc.write('</body></html>');
                     oDoc.close()
