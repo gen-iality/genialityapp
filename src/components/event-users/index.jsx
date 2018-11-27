@@ -401,9 +401,11 @@ class ListEventUser extends Component {
                         </div>
                     </div>
                 </div>
+                {!this.props.loading &&
                 <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
-                         value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
-                         extraFields={this.state.extraFields} edit={this.state.edit}/>
+                           rolstate={this.props.rolstate}
+                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
+                           extraFields={this.state.extraFields} edit={this.state.edit}/>}
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
@@ -485,6 +487,7 @@ const parseData = (data) => {
 
 const mapStateToProps = state => ({
     rolstate: state.rolstate.items,
+    loading: state.rolstate.loading,
     error: state.rolstate.error
 });
 

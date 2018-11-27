@@ -17,6 +17,7 @@ class UserModal extends Component {
             rol: "",
             state: "",
             emailError:false,
+            confirmCheck:true,
             valid: true,
             checked_in: false,
         };
@@ -26,7 +27,8 @@ class UserModal extends Component {
     componentDidMount() {
         const self = this;
         const {rolstate:{roles,states}} = this.props;
-        self.setState({ rolesList: roles, statesList: states, state: states[0].value, rol: roles[1].value });
+        console.log('MODAL ',this.props);
+        self.setState({ rolesList: roles, statesList: states, state: states[1].value, rol: roles[1].value });
     }
 
     componentDidUpdate(prevProps) {
@@ -68,7 +70,12 @@ class UserModal extends Component {
             snap.updated_at = new Date();
             snap.checked_in = false;
             snap.created_at = new Date();
-            userRef.add(snap)
+            if(this.state.confirmCheck) {
+                snap.checked_in = true;
+                snap.checked_at = new Date();
+            }
+            console.log(snap);
+            /*userRef.add(snap)
                 .then(docRef => {
                     console.log("Document written with ID: ", docRef.id);
                     message.class = 'msg_success';
@@ -79,7 +86,7 @@ class UserModal extends Component {
                     console.error("Error adding document: ", error);
                     message.class = 'msg_danger';
                     message.content = 'User can`t be created';
-                });
+                });*/
         }
         else{
             message.class = 'msg_warning';
@@ -288,6 +295,13 @@ class UserModal extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className="field">
+                                <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
+                                       type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
+                                       onChange={(e)=>{this.setState(prevState=>{
+                                           return {confirmCheck:!prevState.confirmCheck}})}}/>
+                                <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                            </div>
                         </section>
                         <footer className="modal-card-foot">
                             {
@@ -324,9 +338,4 @@ class UserModal extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    rolstate: state.rolstate.items,
-    error: state.rolstate.error
-});
-
-export default connect(mapStateToProps)(UserModal);
+export default UserModal;

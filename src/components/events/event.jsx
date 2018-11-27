@@ -12,6 +12,8 @@ import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
 import {FaAngleDown, FaAngleUp} from "react-icons/fa";
+import {fetchRolState} from "../../redux/rolstate/actions";
+import connect from "react-redux/es/connect/connect";
 Moment.locale('es');
 momentLocalizer();
 
@@ -26,6 +28,7 @@ class Event extends Component {
     }
 
     async componentDidMount() {
+        this.props.dispatch(fetchRolState());
         let eventId = this.props.match.params.event;
         if(eventId === 'new_event'){
             const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
@@ -139,15 +142,17 @@ class Event extends Component {
                                 }
                             </aside>
                             <div className="column event-main is-10">
-                                <section className="section event-wrapper">
-                                    <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
-                                    <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                    <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
-                                    <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
-                                    <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
-                                    <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                    <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                                </section>
+                                {
+                                    this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
+                                        <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
+                                        <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
+                                        <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
+                                        <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
+                                        <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
+                                        <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
+                                        <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
+                                    </section>
+                                }
                             </div>
                         </section>
                 }
@@ -159,4 +164,9 @@ class Event extends Component {
     }
 }
 
-export default Event;
+const mapStateToProps = state => ({
+    loading: state.rolstate.loading,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(Event);
