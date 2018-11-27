@@ -75,7 +75,7 @@ class UserModal extends Component {
                 snap.checked_at = new Date();
             }
             console.log(snap);
-            /*userRef.add(snap)
+            userRef.add(snap)
                 .then(docRef => {
                     console.log("Document written with ID: ", docRef.id);
                     message.class = 'msg_success';
@@ -86,7 +86,7 @@ class UserModal extends Component {
                     console.error("Error adding document: ", error);
                     message.class = 'msg_danger';
                     message.content = 'User can`t be created';
-                });*/
+                });
         }
         else{
             message.class = 'msg_warning';
