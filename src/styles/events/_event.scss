@@ -126,4 +126,13 @@
   .event-vertical-line {
     display: none;
   }
+  .event-inv-send {
+    .big-col {
+      .column {
+        &:first-child {
+          border-right: none !important;
+        }
+      }
+    }
+  }
 }

@@ -534,7 +534,7 @@ class UsersRsvp extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="column is-3 small-col">
+                    {/* <div className="column is-3 small-col">
                         <div className="field">
                             <strong>Seleccionados: {this.state.auxArr.length}</strong>
                         </div>
@@ -567,7 +567,57 @@ class UsersRsvp extends Component {
                                 </div>
                             </div>
                         }
-                    </div>
+                    </div> */}
+                </div>
+                <div className="columns">
+                    <div className="column">
+                        <div className="dropdown is-up is-hoverable">
+                            <div className="dropdown-trigger">
+                                <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-selected">
+                                    <span>dropdown</span>
+                                    <span className="icon is-small"><i className="fas fa-angle-up"/></span>
+                                </button>
+                            </div>
+                            <div className="dropdown-menu" id="dropdown-selected" role="menu">
+                                <div className="dropdown-content small-col">
+                                    <div className="dropdown-item field">
+                                        <strong>Seleccionados: {this.state.auxArr.length}</strong>
+                                    </div>
+                                    <div className="dropdown-item">
+                                        {
+                                            this.state.auxArr.length > 0 &&
+                                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                        }
+                                        <div ref={this.myRef} style={{ height: "500px", overflow: "auto" }}>
+                                            {this.displayItems()}
+                                            {this.state.loadingState && <p>Loading...</p>}
+                                        </div>
+                                        {
+                                            this.state.auxArr.length > 0 &&
+                                            <div>
+                                                <div className="field control btn-wrapper">
+                                                    <button className="button is-primary tooltip"
+                                                            data-tooltip="Se envía correo con Tiquete"
+                                                            disabled={this.state.auxArr.length<=0}
+                                                            onClick={this.showTicket}>
+                                                        Enviar Tiquete
+                                                    </button>
+                                                </div>
+                                                <div className="field control btn-wrapper">
+                                                    <button className="button is-primary is-outlined tooltip"
+                                                            data-tooltip="Se envía correo con Invitación"
+                                                            disabled={this.state.selection.length<=0}
+                                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                                        Enviar Invitación
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
                 </div>
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
                          value={this.state.selectedUser} addToList={this.addToList}

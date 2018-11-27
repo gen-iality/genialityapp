@@ -336,19 +336,23 @@ class ListEventUser extends Component {
                         </div>
                     </div>
 
-                    <div className="columns checkin-tags">
-                        <div className="column">
+                    <div className="columns is-multiline checkin-tags">
+                        <div className="column is-12">
+                            <div className="field is-grouped">
+                                <div className="control">
+                                    <div className="tags">
+                                        <span className="tag is-primary">{checkIn}</span>
+                                        <span className="tag is-white">Check In</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="column is-12">
                             <div className="field is-grouped">
                                 <div className="control">
                                     <div className="tags">
                                         <span className="tag is-light">{total}</span>
                                         <span className="tag is-white">Total</span>
-                                    </div>
-                                </div>
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Check In</span>
                                     </div>
                                 </div>
                                 {
@@ -374,27 +378,29 @@ class ListEventUser extends Component {
                                     {
                                         users.length>0&&
                                         <React.Fragment>
-                                            <table className="table">
-                                                <thead>
-                                                <tr>
-                                                    <th/>
-                                                    <th className="is-capitalized">Check</th>
-                                                    <th className="is-capitalized">Estado</th>
-                                                    <th className="is-capitalized">Correo</th>
-                                                    <th className="is-capitalized">Nombre</th>
+                                            <div className="table">
+                                                <table className="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th/>
+                                                        <th className="is-capitalized">Check</th>
+                                                        <th className="is-capitalized">Estado</th>
+                                                        <th className="is-capitalized">Correo</th>
+                                                        <th className="is-capitalized">Nombre</th>
+                                                        {
+                                                            extraFields.map((field,key)=>{
+                                                                return <th key={key} className="is-capitalized">{field.name}</th>
+                                                            })
+                                                        }
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
                                                     {
-                                                        extraFields.map((field,key)=>{
-                                                            return <th key={key} className="is-capitalized">{field.name}</th>
-                                                        })
+                                                        this.renderRows()
                                                     }
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {
-                                                    this.renderRows()
-                                                }
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             <Pagination
                                                 items={users}
                                                 change={this.state.changeItem}

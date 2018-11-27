@@ -853,7 +853,7 @@ a {
   }
 }
 
-@media only screen and (max-width: $breakpoint-mobile) {
+@media only screen and (max-width: $breakpoint-tablet) {
   .navbar {
     .navbar-item {
       &.item-sub {
@@ -899,6 +899,46 @@ a {
     }
     .modal-card-foot {
       padding: 2rem;
+    }
+  }
+  .ReactTable {
+    .rt-thead {
+      min-width: 100% !important;
+      &.-header {
+        .rt-th {
+          &:not(:first-child) {
+            display: none;
+          }
+        }
+      }
+      &.-filters {
+        .rt-tr {
+          flex-direction: column;
+          .rt-th {
+            max-width: 100% !important;
+            width: 100% !important;
+            &:first-child {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .rt-tbody {
+      min-width: 100% !important;
+      .rt-tr {
+        flex-direction: column;
+        .rt-td {
+          padding-left: 1.5em;
+          max-width: 100% !important;
+          width: 100% !important;
+          &:first-child {
+            position: absolute;
+            left: -1em;
+            padding-left: 1em;
+          }
+        }
+      }
     }
   }
 }

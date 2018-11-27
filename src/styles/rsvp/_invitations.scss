@@ -55,4 +55,35 @@
       }
     }
   }
+  .checkin-table {
+    width: 100%;
+    .column {
+      width: 100%;
+      .table-wrapper {
+        overflow-y: hidden;
+        width: 100%;
+        .table {
+          overflow-x: visible;
+          overflow-y: auto;
+        }
+      }
+    }
+  }
+}
+
+
+
+@media only screen and (max-width: $breakpoint-mobile) {
+  .pagination.is-centered .pagination-previous {
+    -ms-flex-order: 1;
+    order: 1;
+  }
+  .pagination.is-centered .pagination-next {
+    -ms-flex-order: 3;
+    order: 3;
+  }
+  .pagination.is-centered .pagination-list {
+    -ms-flex-order: 2;
+    order: 2;
+  }
 }
