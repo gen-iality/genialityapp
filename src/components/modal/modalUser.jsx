@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
-import {ApiUrl, roles, states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
-import axios from 'axios';
 import QRCode from 'qrcode.react';
+import connect from "react-redux/es/connect/connect";
 
 class UserModal extends Component {
     constructor(props) {
@@ -26,15 +25,8 @@ class UserModal extends Component {
 
     componentDidMount() {
         const self = this;
-        let rolData = roles.map(rol => ({
-            value: rol._id,
-            label: rol.name
-        }));
-        let stateData = states.map(state => ({
-            value: state._id,
-            label: state.name
-        }));
-        self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
+        const {rolstate:{roles,states}} = this.props;
+        self.setState({ rolesList: roles, statesList: states, state: states[0].value, rol: roles[1].value });
     }
 
     componentDidUpdate(prevProps) {
@@ -140,15 +132,6 @@ class UserModal extends Component {
         // Close body
         oDoc.write('</body></html>');
         oDoc.close();
-        /*axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
-            .then((response) => {
-                let image = btoa(
-                    new Uint8Array(response.data)
-                        .reduce((data, byte) => data + String.fromCharCode(byte), '')
-                );
-                //let qr = `data:image/png;base64,${image}`;
-
-            });*/
     };
 
     handleChange = (event) => {
@@ -201,7 +184,6 @@ class UserModal extends Component {
     };
 
     render() {
-        console.log(this.props);
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -342,4 +324,9 @@ class UserModal extends Component {
     }
 }
 
-export default UserModal;
+const mapStateToProps = state => ({
+    rolstate: state.rolstate.items,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(UserModal);

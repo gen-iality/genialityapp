@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
 import Moment from "moment"
-import {Actions} from "../../helpers/request";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
@@ -9,11 +8,11 @@ import UserModal from "../modal/modalUser";
 import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
+import connect from "react-redux/es/connect/connect";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -46,6 +45,7 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        const {rolstate:{roles,states}} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
@@ -55,9 +55,9 @@ class ListEventUser extends Component {
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
                 user._id = change.doc.id;
-                user.state = states.find(x => x._id === user.state_id);
+                user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
-                user.rol = roles.find(x => x._id === user.rol_id);
+                user.rol = roles.find(x => x.value === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
@@ -146,8 +146,9 @@ class ListEventUser extends Component {
     }
 
     statesCounter = (state,old) => {
-        const item = states.find(x => x._id === state);
-        const old_item = states.find(x => x._id === old);
+        const {rolstate:{states}} = this.props;
+        const item = states.find(x => x.value === state);
+        const old_item = states.find(x => x.value === old);
         if(state && !old){
             this.setState(prevState=>{
                 return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
@@ -275,7 +276,7 @@ class ListEventUser extends Component {
                         <label htmlFor={"checkinUser"+item._id}/>
                     </div>
                 </td>
-                <td>{item.state.name}</td>
+                <td>{item.state.label}</td>
                 <td>{item.properties.email}</td>
                 <td>{item.properties.name}</td>
                 {
@@ -482,4 +483,9 @@ const parseData = (data) => {
     return info
 };
 
-export default ListEventUser;
+const mapStateToProps = state => ({
+    rolstate: state.rolstate.items,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(ListEventUser);
