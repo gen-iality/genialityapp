@@ -4,6 +4,7 @@ import {ApiUrl, roles, states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
+import QRCode from'qrcode.react';
 import axios from 'axios';
 
 class UserModal extends Component {
@@ -130,7 +131,7 @@ class UserModal extends Component {
                 setTimeout(()=>{
                     // Head
                     oDoc.write('<head><title>Usuario</title>');
-                    oDoc.write("<style> type='text/css'>body {font-family: 'Lato', sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 28px;} body .info {width: 300px} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;} body img{width: 120px; height: 120px}</style>");
+                    oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;text-transform:capitalize;font-family: 'Lato', sans-serif;color: black;} body h1 {text-transform: uppercase;font-weight: bold;font-size: 28px;} body .info {width: 300px} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px}</style>");
                     oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
                     // body
                     oDoc.write('<body onload="window.print()"><div class="main-print">');
