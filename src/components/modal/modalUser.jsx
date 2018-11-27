@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import axios from 'axios';
+import QRCode from 'qrcode.react';
 
 class UserModal extends Component {
     constructor(props) {
@@ -114,39 +115,40 @@ class UserModal extends Component {
 
     printUser = () => {
         const {name, lastname, company, type} = this.state.user;
-        axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
+        const canvas = document.getElementsByTagName('CANVAS')[0];
+        let qr = canvas.toDataURL();
+        this.props.checkIn(this.props.value);
+        let oIframe = this.refs.ifrmPrint;
+        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+        if (oDoc.document) {
+            oDoc = oDoc.document
+        }
+        // Head
+        oDoc.write('<head><title>Usuario</title>');
+        oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+        oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;font-family: 'Lato', sans-serif;color: black;text-transform: uppercase;font-weight: bold;font-size: 44px;} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px} body .qr{display: inline-block;font-family: 'Lato', sans-serif} body .qrcontent{display: flex;flex-direction: row;} body .tipo{position: relative} body .qrtipo{position: absolute;bottom: 12px;left: 9px; margin: 0}}</style>");
+        // body
+        oDoc.write('<body onload="window.print()"><div>');
+        // Datos
+        oDoc.write(`<h1>${name}</h1>`);
+        oDoc.write(`<h1>${lastname}</h1>`);
+        oDoc.write(`<p class="info type">${company?company:''}</p>`);
+        oDoc.write(`<div class="qrcontent">`);
+        oDoc.write(`<div class="qr"><img src=${qr}></div>`);
+        oDoc.write(`<div class="qr tipo"><p class="qrtipo">${type?type:''}</p></div>`);
+        oDoc.write('</div></div>'); // close .qr .main-print
+        // Close body
+        oDoc.write('</body></html>');
+        oDoc.close();
+        /*axios.get(`${ApiUrl}/api/generatorQr/${this.props.value._id}`, { responseType: 'arraybuffer' })
             .then((response) => {
                 let image = btoa(
                     new Uint8Array(response.data)
                         .reduce((data, byte) => data + String.fromCharCode(byte), '')
                 );
-                let qr = `data:image/png;base64,${image}`;
-                //this.props.checkIn(this.state.user);
-                let oIframe = this.refs.ifrmPrint;
-                let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
-                if (oDoc.document) {
-                    oDoc = oDoc.document
-                }
-                setTimeout(()=>{
-                    // Head
-                    oDoc.write('<head><title>Usuario</title>');
-                    oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
-                    oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;font-family: 'Lato', sans-serif;color: black;text-transform: uppercase;font-weight: bold;font-size: 44px;} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px} body .qr{display: inline-block;font-family: 'Lato', sans-serif} body .qrcontent{display: flex;flex-direction: row;} body .tipo{position: relative} body .qrtipo{position: absolute;bottom: 12px;left: 9px; margin: 0}}</style>");
-                    // body
-                    oDoc.write('<body onload="window.print()"><div>');
-                    // Datos
-                    oDoc.write(`<h1>${name}</h1>`);
-                    oDoc.write(`<h1>${lastname}</h1>`);
-                    oDoc.write(`<p class="info type">${company?company:''}</p>`);
-                    oDoc.write(`<div class="qrcontent">`);
-                    oDoc.write(`<div class="qr"><img src=${qr}></div>`);
-                    oDoc.write(`<div class="qr tipo"><p class="qrtipo">${type?type:''}</p></div>`);
-                    oDoc.write('</div></div>'); // close .qr .main-print
-                    // Close body
-                    oDoc.write('</body></html>');
-                    oDoc.close()
-                },500)
-            });
+                //let qr = `data:image/png;base64,${image}`;
+
+            });*/
     };
 
     handleChange = (event) => {
@@ -199,6 +201,7 @@ class UserModal extends Component {
     };
 
     render() {
+        console.log(this.props);
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -323,6 +326,9 @@ class UserModal extends Component {
                                 <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
                             </div>
                         </footer>
+                    </div>
+                    <div style={{opacity:0, display:'none'}}>
+                        {this.props.value && <QRCode value={this.props.value._id}/>}
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
