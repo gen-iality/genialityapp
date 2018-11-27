@@ -61,7 +61,7 @@ class ListEventUser extends Component {
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                    this.statesCounter(user.state._id);
+                    this.statesCounter(user.state.value);
                     if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
@@ -151,12 +151,17 @@ class ListEventUser extends Component {
         const old_item = states.find(x => x.value === old);
         if(state && !old){
             this.setState(prevState=>{
-                return {estados:{...this.state.estados,[item.name]:prevState.estados[item.name]+1}}
+                return {estados:{...this.state.estados,[item.label]:prevState.estados[item.label]+1}}
             });
         }
-        if(old){
+        if(old && state){
             this.setState(prevState=>{
-                return {estados:{...this.state.estados,[old_item.name]:prevState.estados[old_item.name]-1,[item.name]:prevState.estados[item.name]+1}}
+                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1,[item.label]:prevState.estados[item.label]+1}}
+            })
+        }
+        if(old && !state){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1}}
             })
         }
     };

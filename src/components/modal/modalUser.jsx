@@ -16,6 +16,7 @@ class UserModal extends Component {
             user: {},
             rol: "",
             state: "",
+            userId: "mocionsoft",
             emailError:false,
             confirmCheck:true,
             valid: true,
@@ -43,7 +44,7 @@ class UserModal extends Component {
                         return user[obj] = value.properties[obj]?value.properties[obj]:''
                     });
                 let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-                this.setState({user, rol:value.rol._id, state:value.state._id, edit:true, checked_in});
+                this.setState({user, rol:value.rol._id, state:value.state._id, edit:true, checked_in, userId:value._id});
             }else {
                 let user = {name: '', email: ''};
                 this.props.extraFields
@@ -78,6 +79,7 @@ class UserModal extends Component {
             userRef.add(snap)
                 .then(docRef => {
                     console.log("Document written with ID: ", docRef.id);
+                    self.setState({userId:docRef.id});
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
@@ -106,9 +108,13 @@ class UserModal extends Component {
                     message.content = 'User can`t be updated';
                 });
         }
-        setTimeout(()=>{
-            self.closeModal();
-        },800);
+        if(this.state.edit){
+            setTimeout(()=>{
+                self.closeModal();
+            },800);
+        }else{
+            this.setState({edit:true})
+        }
         this.setState({message,create:false});
     }
 
@@ -116,7 +122,7 @@ class UserModal extends Component {
         const {name, lastname, company, type} = this.state.user;
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas.toDataURL();
-        this.props.checkIn(this.props.value);
+        if(this.props.value) this.props.checkIn(this.props.value);
         let oIframe = this.refs.ifrmPrint;
         let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
         if (oDoc.document) {
@@ -295,13 +301,16 @@ class UserModal extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="field">
-                                <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
-                                       type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
-                                       onChange={(e)=>{this.setState(prevState=>{
-                                           return {confirmCheck:!prevState.confirmCheck}})}}/>
-                                <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
-                            </div>
+                            {
+                                !this.state.edit&&
+                                <div className="field">
+                                    <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
+                                           type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
+                                           onChange={(e)=>{this.setState(prevState=>{
+                                               return {confirmCheck:!prevState.confirmCheck}})}}/>
+                                    <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                                </div>
+                            }
                         </section>
                         <footer className="modal-card-foot">
                             {
@@ -324,7 +333,7 @@ class UserModal extends Component {
                         </footer>
                     </div>
                     <div style={{opacity:0, display:'none'}}>
-                        {this.props.value && <QRCode value={this.props.value._id}/>}
+                        <QRCode value={this.state.userId}/>
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
