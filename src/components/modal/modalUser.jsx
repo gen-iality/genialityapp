@@ -4,7 +4,6 @@ import {ApiUrl, roles, states} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
-import QRCode from'qrcode.react';
 import axios from 'axios';
 
 class UserModal extends Component {
