@@ -259,6 +259,9 @@ class ListEventUser extends Component {
         }
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
+    closeQr = () => {
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+    }
 
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
@@ -275,11 +278,14 @@ class ListEventUser extends Component {
                           onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
-                    <div>
-                        <input className="is-checkradio is-primary is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                               type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                        <label htmlFor={"checkinUser"+item._id}/>
-                    </div>
+                    {
+                        item.checked_in ? <p><FormattedDate value={item.checked_at.toDate()}/> <FormattedTime value={item.checked_at.toDate()}/></p>
+                            :<div>
+                                <input className="is-checkradio is-primary is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                       type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                                <label htmlFor={"checkinUser"+item._id}/>
+                            </div>
+                    }
                 </td>
                 <td>{item.state.label}</td>
                 <td>{item.properties.email}</td>
@@ -300,7 +306,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, pageOfItems} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -422,15 +428,18 @@ class ListEventUser extends Component {
                     <div className="modal-card">
                         <header className="modal-card-head">
                             <p className="modal-card-title">QR Reader</p>
-                            <button className="delete" aria-label="close" onClick={(e)=>{this.setState({qrModal:false})}}/>
+                            <button className="delete" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
                             {
                                 qrData.user ?
                                     <div>
+                                        {qrData.user.checked_in && (<div>
+                                            <h1 className="title">Usuario Chequeado</h1>
+                                            <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
+                                        </div>)}
                                         {Object.keys(qrData.user.properties).map((obj,key)=>{
                                             return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
-                                        {qrData.user.checked_in && (<p>Checked: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></p>)}
                                     </div>:
                                     <React.Fragment>
                                         <div className="field">
