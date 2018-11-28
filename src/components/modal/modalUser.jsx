@@ -3,7 +3,7 @@ import {firestore} from "../../helpers/firebase";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
-import QRCode from 'qrcode.react';
+//import QRCode from 'qrcode.react';
 
 class UserModal extends Component {
     constructor(props) {
@@ -330,9 +330,9 @@ class UserModal extends Component {
                             </div>
                         </footer>
                     </div>
-                    <div style={{opacity:0, display:'none'}}>
+                    {/*<div style={{opacity:0, display:'none'}}>
                         <QRCode value={this.state.userId}/>
-                    </div>
+                    </div>*/}
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
