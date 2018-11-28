@@ -17,7 +17,7 @@ class SearchComponent extends Component {
         //Fix
         if (nextProps.data !== this.props.data) {
             this.setState({auxArr:nextProps.data});
-            if(nextProps.clear) this.setState({value:''})
+            if(nextProps.clear&&this.state.value.length<=3) this.setState({value:''})
         }
         if(nextProps.clear !== this.props.clear){
             this.setState({value:''})
