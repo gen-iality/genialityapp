@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
-import connect from "react-redux/es/connect/connect";
 
 class UserModal extends Component {
     constructor(props) {
@@ -28,7 +27,6 @@ class UserModal extends Component {
     componentDidMount() {
         const self = this;
         const {rolstate:{roles,states}} = this.props;
-        console.log('MODAL ',this.props);
         self.setState({ rolesList: roles, statesList: states, state: states[1].value, rol: roles[1].value });
     }
 
