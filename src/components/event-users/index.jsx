@@ -313,10 +313,10 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                         <div className="column">
-                            <div className="field is-grouped is-pulled-right">
+                            <div className="columns is-mobile is-multiline is-centered">
                                 {
                                     userReq.length>0 && (
-                                        <div className="control">
+                                        <div className="column is-narrow has-text-centered">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -326,50 +326,44 @@ class ListEventUser extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
                                 </div>
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="columns is-multiline checkin-tags">
-                        <div className="column is-12">
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Check In</span>
-                                    </div>
+                    <div className="checkin-tags-wrapper">
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-primary">{checkIn}</span>
+                                    <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-12">
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Total</span>
-                                    </div>
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-light">{total}</span>
+                                    <span className="tag is-white">Total</span>
                                 </div>
-                                {
-                                    Object.keys(estados).map(item=>{
-                                        return <div className="control" key={item}>
-                                            <div className="tags">
-                                                <span className={'tag '+item}>{estados[item]}</span>
-                                                <span className="tag is-white">{item}</span>
-                                            </div>
-                                        </div>
-                                    })
-                                }
                             </div>
+                            {
+                                Object.keys(estados).map(item=>{
+                                    return <div className="column is-narrow" key={item}>
+                                                <div className="tags is-centered">
+                                                    <span className={'tag '+item}>{estados[item]}</span>
+                                                    <span className="tag is-white">{item}</span>
+                                                </div>
+                                            </div>
+                                })
+                            }
                         </div>
                     </div>
-
-                    <p>Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
 
                     <div className="columns checkin-table">
                         <div className="column">
@@ -410,6 +404,10 @@ class ListEventUser extends Component {
                                     }
                                 </div>}
                         </div>
+                    </div>
+
+                    <div className="checkin-warning">
+                        <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                     </div>
                 </div>
                 {!this.props.loading &&

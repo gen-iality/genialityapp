@@ -454,9 +454,9 @@ class UsersRsvp extends Component {
                     <div className="column is-12 title-col">
                         <h2 className="subtitle has-text-weight-bold">Invitar asistentes a {this.props.event.name}</h2>
                     </div>
-                    <div className="column is-9 big-col">
+                    <div className="column is-12 big-col">
                         <div className="columns">
-                            <div className="column is-4">
+                            <div className="column is-3">
                                 <div className="">
                                     <div className="event-inv-users">
                                         <h3 className="event-inv-subtitle">Asistentes a este evento</h3>
@@ -507,7 +507,7 @@ class UsersRsvp extends Component {
                                     }
                                 </div>
                             </div>
-                            <div className="column is-8 event-inv-table">
+                            <div className="column is-9 event-inv-table">
                                 <h3 className="event-inv-subtitle">
                                     {
                                         this.state.actualEvent._id === this.props.event._id ?
@@ -534,86 +534,52 @@ class UsersRsvp extends Component {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="column is-3 small-col">
-                        <div className="field">
-                            <strong>Seleccionados: {this.state.auxArr.length}</strong>
-                        </div>
-                        {
-                            this.state.auxArr.length > 0 &&
-                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                        }
-                        <div ref={this.myRef} style={{ height: "500px", overflow: "auto" }}>
-                            {this.displayItems()}
-                            {this.state.loadingState && <p>Loading...</p>}
-                        </div>
-                        {
-                            this.state.auxArr.length > 0 &&
-                            <div>
-                                <div className="field control btn-wrapper">
-                                    <button className="button is-primary tooltip"
-                                            data-tooltip="Se envía correo con Tiquete"
-                                            disabled={this.state.auxArr.length<=0}
-                                            onClick={this.showTicket}>
-                                        Enviar Tiquete
-                                    </button>
-                                </div>
-                                <div className="field control btn-wrapper">
-                                    <button className="button is-primary is-outlined tooltip"
-                                            data-tooltip="Se envía correo con Invitación"
-                                            disabled={this.state.selection.length<=0}
-                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                        Enviar Invitación
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                    </div> */}
                 </div>
-                <div className="columns">
-                    <div className="column">
-                        <div className="dropdown is-up is-hoverable">
+                <div className="columns event-inv-selected">
+                    <div className="column is-3 is-offset-9 inv-selected-wrapper">
+                        <div className="dropdown is-up is-hoverable inv-selected-drop">
                             <div className="dropdown-trigger">
                                 <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-selected">
-                                    <span>dropdown</span>
-                                    <span className="icon is-small"><i className="fas fa-angle-up"/></span>
+                                    <strong>Seleccionados: {this.state.auxArr.length}</strong>
                                 </button>
                             </div>
                             <div className="dropdown-menu" id="dropdown-selected" role="menu">
-                                <div className="dropdown-content small-col">
-                                    <div className="dropdown-item field">
-                                        <strong>Seleccionados: {this.state.auxArr.length}</strong>
-                                    </div>
-                                    <div className="dropdown-item">
-                                        {
-                                            this.state.auxArr.length > 0 &&
-                                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                                        }
-                                        <div ref={this.myRef} style={{ height: "500px", overflow: "auto" }}>
-                                            {this.displayItems()}
-                                            {this.state.loadingState && <p>Loading...</p>}
+                                <div className="dropdown-content inv-selected-content">
+                                    {
+                                        this.state.auxArr.length == 0 &&
+                                        <div className="has-text-centered">
+                                            <span className="has-text-weight-bold has-text-grey-dark">Aun no has seleccionado asistentes</span>
                                         </div>
-                                        {
-                                            this.state.auxArr.length > 0 &&
-                                            <div>
-                                                <div className="field control btn-wrapper">
-                                                    <button className="button is-primary tooltip"
-                                                            data-tooltip="Se envía correo con Tiquete"
-                                                            disabled={this.state.auxArr.length<=0}
-                                                            onClick={this.showTicket}>
-                                                        Enviar Tiquete
-                                                    </button>
-                                                </div>
-                                                <div className="field control btn-wrapper">
-                                                    <button className="button is-primary is-outlined tooltip"
-                                                            data-tooltip="Se envía correo con Invitación"
-                                                            disabled={this.state.selection.length<=0}
-                                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                                        Enviar Invitación
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        }
+                                    }
+                                    {
+                                        this.state.auxArr.length > 0 &&
+                                        <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    }
+                                    <div className="inv-selected-list" ref={this.myRef}>
+                                        {this.displayItems()}
+                                        {this.state.loadingState && <p>Loading...</p>}
                                     </div>
+                                    {
+                                        this.state.auxArr.length > 0 &&
+                                        <div className="btn-wrapper">
+                                            <div className="control">
+                                                <button className="button is-primary tooltip"
+                                                        data-tooltip="Se envía correo con Tiquete"
+                                                        disabled={this.state.auxArr.length<=0}
+                                                        onClick={this.showTicket}>
+                                                    Enviar Tiquete
+                                                </button>
+                                            </div>
+                                            <div className="control">
+                                                <button className="button is-primary is-outlined tooltip"
+                                                        data-tooltip="Se envía correo con Invitación"
+                                                        disabled={this.state.selection.length<=0}
+                                                        onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                                    Enviar Invitación
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
