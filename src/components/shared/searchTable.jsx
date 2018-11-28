@@ -9,18 +9,25 @@ class SearchComponent extends Component {
             showMessage: false,
             value: '',
             auxArr: [],
+            filtered: [],
             message: ""
         };
     }
 
     componentWillReceiveProps(nextProps) {
+        const {filtered} = this.state;
         //Fix
         if (nextProps.data !== this.props.data) {
             this.setState({auxArr:nextProps.data});
-            if(nextProps.clear&&this.state.value.length<=3) this.setState({value:''})
+            if(nextProps.clear&&this.state.value.length===0){
+                this.setState({value:''});
+                if(filtered.length > 0) this.props.searchResult(filtered);
+            }
         }
         if(nextProps.clear !== this.props.clear){
-            this.setState({value:''})
+            if(this.state.value.length>=3){
+                if(filtered.length > 0) this.props.searchResult(filtered);
+            }else this.setState({value:''})
         }
     }
 
@@ -46,7 +53,7 @@ class SearchComponent extends Component {
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
             if (filtered.length > 0) {
-                this.setState({ showMessage: false, message: "" });
+                this.setState({ showMessage: false, message: "", filtered });
             } else {
                 this.setState({ showMessage: true, message: "not" });
             }

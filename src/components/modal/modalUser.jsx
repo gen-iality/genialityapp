@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {firestore} from "../../helpers/firebase";
+import {app,firestore} from "../../helpers/firebase";
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
@@ -191,8 +191,26 @@ class UserModal extends Component {
 
     closeModal = () => {
         let message = {class:'',content:''};
-        this.setState({user:{}, valid:true, modal:false, message},this.props.handleModal);
+        this.setState({user:{}, valid:true, modal:false, uncheck:false, message},this.props.handleModal);
     };
+
+    unCheck = () => {
+        console.log(this.props.value);
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
+        userRef.update({checked_in:false,checked_at:app.firestore.FieldValue.delete()})
+            .then(() => {
+                this.setState({uncheck:false})
+                this.closeModal()
+                console.log("Document successfully updated!");
+            })
+            .catch(error => {
+                console.error("Error updating document: ", error);
+            });
+    };
+
+    closeUnCheck = () => {
+        this.setState({uncheck:false})
+    }
 
     render() {
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
@@ -248,8 +266,15 @@ class UserModal extends Component {
                                 this.state.checked_in && (
                                     <div className="field">
                                         <label className="label">Checked</label>
-                                        <div className="control">
-                                            <p><FormattedDate value={this.state.checked_in}/> - <FormattedTime value={this.state.checked_in}/></p>
+                                        <div className="control columns">
+                                            <div className="column">
+                                                <p><FormattedDate value={this.state.checked_in}/> - <FormattedTime value={this.state.checked_in}/></p>
+                                            </div>
+                                            <div className="column">
+                                                <input className="is-checkradio is-primary is-small" id={"unCheckUser"}
+                                                       type="checkbox" name={"unCheckUser"} onChange={()=>{this.setState({uncheck:true})}}/>
+                                                <label htmlFor={"unCheckUser"}>UnCheck?</label>
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -340,6 +365,11 @@ class UserModal extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteUser}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                <Dialog modal={this.state.uncheck} title={'Borrar Check In'}
+                        content={<p>Seguro de borrar el checkIn de este usuario?</p>}
+                        first={{title:'Si',class:'is-warning',action:this.unCheck}}
+                        message={this.state.message}
+                        second={{title:'Cancelar',class:'',action:this.closeUnCheck}}/>
             </React.Fragment>
         );
     }
