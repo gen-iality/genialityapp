@@ -195,7 +195,6 @@ class UserModal extends Component {
     };
 
     unCheck = () => {
-        console.log(this.props.value);
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
         userRef.update({checked_in:false,checked_at:app.firestore.FieldValue.delete()})
             .then(() => {
