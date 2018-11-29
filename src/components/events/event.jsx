@@ -13,6 +13,7 @@ import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
 import {fetchRolState} from "../../redux/rolstate/actions";
 import connect from "react-redux/es/connect/connect";
+import Badge from "../badge";
 Moment.locale('es');
 momentLocalizer();
 
@@ -118,6 +119,11 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
+                                            <ul className="menu-list">
+                                                <li>
+                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
+                                                </li>
+                                            </ul>
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
@@ -145,6 +151,7 @@ class Event extends Component {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
                                         <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
                                         <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
+                                        <Route path={`${match.url}/badge`} render={()=><Badge eventId={this.state.event._id} event={this.state.event}/>}/>
                                         <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
                                         <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                         <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
