@@ -306,7 +306,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, pageOfItems} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">

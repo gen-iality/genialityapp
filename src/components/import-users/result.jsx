@@ -81,7 +81,7 @@ class Result extends Component {
 
     render() {
         const {imported,total,saved,fails,updated,step,ok,notok} = this.state;
-        const data = [this.state.ok,this.state.notok];
+        const data = [ok,notok];
         return (
             <React.Fragment>
                 <div className="columns is-gapless">

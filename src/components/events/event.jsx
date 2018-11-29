@@ -11,7 +11,6 @@ import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
-import {FaAngleDown, FaAngleUp} from "react-icons/fa";
 import {fetchRolState} from "../../redux/rolstate/actions";
 import connect from "react-redux/es/connect/connect";
 Moment.locale('es');
