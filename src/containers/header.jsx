@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link, NavLink, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
@@ -13,12 +13,19 @@ class Header extends Component {
         super(props);
         this.props.history.listen((location, action) => {
             console.log("on route change");
+            const splited = location.pathname.split('/');
+            if(splited[1]===""){
+                this.setState({filterEvius:1})
+            }else if(splited[1]==="event"){
+                this.setState({filterEvius:2,eventUrl:splited[2]})
+            }else this.setState({filterEvius:0});
             window.scrollTo(0, 0);
             this.setState({menuOpen:false,filterOpen:false})
         });
         this.state = {
             selection: [],
             organizations: [],
+            filterEvius: 0,
             name: 'user',
             user: false,
             menuOpen: false,
@@ -91,8 +98,75 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError } = this.state;
+        const { timeout, serverError, filterEvius } = this.state;
         const { categories, types } = this.props;
+        const menuEvius = [
+            '',
+            <React.Fragment>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
+                    <span>Tipo de Evento</span>
+                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
+                </p>
+                {
+                    this.state.tabEvtType && (
+                        <ul>
+                            {
+                                types.map((item,key)=>{
+                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        {item.label}
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    )
+                }
+                <hr className="navbar-divider"/>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
+                    <span>Categoría</span>
+                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
+                </p>
+                {
+                    this.state.tabEvtCat && (
+                        <ul>
+                            {
+                                categories.map((item,key)=>{
+                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        {item.label}
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    )
+                }
+            </React.Fragment>,
+            <React.Fragment>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark">Evento</p>
+                <p className="menu-label has-text-centered-mobile">
+                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
+                </p>
+                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                    <span className="item has-text-grey">Invitaciones</span>
+                    <span className="icon">
+                                                    <i className={`${this.state.userTab?'up':'down'}`}/>
+                                                </span>
+                </p>
+                {
+                    this.state.userTab && (
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
+                            </li>
+                            <li>
+                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
+                            </li>
+                        </ul>
+                    )
+                }
+                <p className="menu-label has-text-centered-mobile">
+                    <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
+                </p>
+            </React.Fragment>
+        ]
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -211,41 +285,7 @@ class Header extends Component {
                         </div>
                         <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
                             <div className="navbar-dropdown">
-                                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
-                                    <span>Tipo de Evento</span>
-                                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
-                                </p>
-                                {
-                                    this.state.tabEvtType && (
-                                        <ul>
-                                            {
-                                                types.map((item,key)=>{
-                                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                                        {item.label}
-                                                    </li>
-                                                })
-                                            }
-                                        </ul>
-                                    )
-                                }
-                                <hr className="navbar-divider"/>
-                                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
-                                    <span>Categoría</span>
-                                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
-                                </p>
-                                {
-                                    this.state.tabEvtCat && (
-                                        <ul>
-                                            {
-                                                categories.map((item,key)=>{
-                                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                                        {item.label}
-                                                    </li>
-                                                })
-                                            }
-                                        </ul>
-                                    )
-                                }
+                                {menuEvius[filterEvius]}
                             </div>
                         </div>
                     </nav>
