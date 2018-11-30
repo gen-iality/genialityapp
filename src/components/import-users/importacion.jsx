@@ -84,14 +84,14 @@ class Importacion extends Component {
                     <p>Para importar los usuarios de tu evento, debes cargar un archivo excel (.xml o .cvs) con las columnas organizadas (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los datos de tus asistentes.</p>
                 </div>
 
-                <div className="importacion-ejm columns is-gapless">
+                <div className="importacion-ejm columns is-mobile is-gapless">
                     <div className="column is-4">
-                        <div className="columns is-multiline">
+                        <div className="columns is-mobile is-multiline">
                             <div className="column is-12 is-paddingless">
                                 <span className="is-uppercase has-text-weight-bold has-text-grey">Por Defecto</span>
                             </div>
                             <div className="column is-12 is-paddingless">
-                                <div className="ejm-tabla columns is-gapless">
+                                <div className="ejm-tabla columns is-mobile is-gapless">
                                     <div className="column is-half">
                                         <span className="has-text-grey-light">nombre</span>
                                     </div>
@@ -105,12 +105,12 @@ class Importacion extends Component {
                     {
                         this.state.showMsg && (
                             <div className="column is-8">
-                                <div className="columns is-multiline">
+                                <div className="columns is-mobile is-multiline">
                                     <div className="column is-12 is-paddingless">
                                         <span className="is-uppercase has-text-weight-bold has-text-grey">Adicionales</span>
                                     </div>
                                     <div className="column is-12 is-paddingless">
-                                        <div className="ejm-tabla columns is-gapless">
+                                        <div className="ejm-tabla columns is-mobile is-gapless">
                                             {this.props.extraFields.map((extra,key)=>{
                                                 return <div className="column">
                                                     <span className="has-text-grey-light" key={key}>{extra.name}</span>

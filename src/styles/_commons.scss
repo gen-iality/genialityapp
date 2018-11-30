@@ -94,7 +94,7 @@ a {
     .icon {
       margin-left: 0.5em;
       i {
-        border: solid black;
+        border: solid $grey-light;
         border-width: 0 2px 2px 0;
         display: inline-block;
         padding: 3px;
@@ -862,6 +862,11 @@ a {
     }.navbar-dropdown {
       box-shadow: none !important;
       font-size: 1em;
+      .navbar-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
   .footer {
@@ -941,7 +946,7 @@ a {
       }
     }
   }
-  .table {
+  .table:not(.def) {
     max-width: 100%;
     width: 100%;
     thead {

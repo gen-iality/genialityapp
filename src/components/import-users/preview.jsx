@@ -115,7 +115,7 @@ class Preview extends Component {
                 {
                     this.state.loading ?
                         <div>Parsing excel</div> :
-                        <div className="columns is-gapless preview-list">
+                        <div className="columns is-mobile is-gapless preview-list">
                             {
                                 list.map((item, index) => {
                                     return <div className="column is-4" key={index}>

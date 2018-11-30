@@ -84,7 +84,7 @@ class Result extends Component {
         const data = [ok,notok];
         return (
             <React.Fragment>
-                <div className="columns is-gapless">
+                <div className="columns is-mobile is-gapless">
                     <div className="column">
                         <div className="tags">
                             <span className="tag is-size-7">{total}</span>
@@ -119,7 +119,7 @@ class Result extends Component {
                                     <li className={`${step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>Incorrectos</a></li>
                                 </ul>
                             </div>
-                            <table className="table is-fullwidth is-striped">
+                            <table className="table def is-fullwidth is-striped">
                                 <thead>
                                 <tr>
                                     <th>Correo</th>

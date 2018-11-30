@@ -141,29 +141,29 @@ class Header extends Component {
             </React.Fragment>,
             <React.Fragment>
                 <p className="navbar-item has-text-weight-bold has-text-grey-dark">Evento</p>
-                <p className="menu-label has-text-centered-mobile">
-                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
+                <p className="navbar-item has-text-centered-mobile">
+                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
                 </p>
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                    <span className="item has-text-grey">Invitaciones</span>
+                <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                    <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
                     <span className="icon">
-                                                    <i className={`${this.state.userTab?'up':'down'}`}/>
-                                                </span>
+                        <i className={`${this.state.userTab?'up':'down'}`}/>
+                    </span>
                 </p>
                 {
                     this.state.userTab && (
                         <ul className="menu-list">
                             <li>
-                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
                             </li>
                             <li>
-                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
                             </li>
                         </ul>
                     )
                 }
-                <p className="menu-label has-text-centered-mobile">
-                    <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
+                <p className="navbar-item has-text-centered-mobile">
+                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
                 </p>
             </React.Fragment>
         ]
