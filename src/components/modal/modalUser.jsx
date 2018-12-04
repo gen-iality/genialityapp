@@ -134,7 +134,7 @@ class UserModal extends Component {
             }
             // Head
             oDoc.write('<head><title>Escarapela</title>');
-            oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+            //oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
             // body
             oDoc.write('<body onload="window.print()"><div>');
             // Datos
