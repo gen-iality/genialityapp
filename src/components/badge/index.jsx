@@ -23,13 +23,16 @@ class Badge extends Component {
     async componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        /*const badge = await BadgeApi.get(event._id);
-        console.log(badge);*/
-        const {extraFields} = this.state;
+        const resp = await BadgeApi.get(event._id);
+        let {extraFields,badge,showPrev} = this.state;
         properties.map(prop=>{
             return extraFields.push({value:prop._id,label:prop.name})
-        })
-        this.setState({ extraFields });
+        });
+        if(resp._id) {
+            badge = resp.BadgeFields;
+            showPrev = true;
+        }
+        this.setState({ extraFields,badge,showPrev });
     }
 
     addField = () => {
@@ -153,18 +156,14 @@ class Badge extends Component {
             "BadgeFields":[]
         };
         badge.map(item=>{
-            if(!item.qr){
-                item.id_properties = item.id_properties.value
-            }
-            return data.BadgeFields.push({item})
+            return data.BadgeFields.push(item)
         });
-        console.log(data);
-        /*try{
+        try{
             const resp = await BadgeApi.create(data);
             console.log(resp);
         }catch (err) {
             console.log(err.response);
-        }*/
+        }
     };
 
     render() {
