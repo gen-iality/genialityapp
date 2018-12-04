@@ -65,9 +65,13 @@ class Badge extends Component {
     };
 
     saveField = (key) => {
-        const {badge} = this.state;
+        const {badge,extraFields} = this.state;
+        if(badge[key].id_properties){
+            const pos = extraFields.map(field=>{return field.value}).indexOf(badge[key].id_properties.value);
+            extraFields.splice(pos, 1);
+        }
         badge[key].edit = !badge[key].edit;
-        this.setState({badge,newField:false,showPrev:true})
+        this.setState({badge,extraFields,newField:false,showPrev:true})
     };
 
     editField = (key) => {
@@ -252,7 +256,7 @@ class Badge extends Component {
                                                 <nav className="level">
                                                     <div className="level-left">
                                                         <div className="level-item">
-                                                            <button className="button is-info is-small is-outlined" onClick={(e)=>{this.saveField(key)}}>{item.edit?'Editar':"Agregar"}</button>
+                                                            <button className="button is-info is-small is-outlined" onClick={(e)=>{this.saveField(key)}}>Agregar</button>
                                                         </div>
                                                     </div>
                                                 </nav>
@@ -284,7 +288,7 @@ class Badge extends Component {
                         {showPrev && (this.renderPrint())}
                     </div>
                 </div>
-                <button className="button" onClick={this.saveBadge}>Guardar</button>
+                <button className="button" onClick={this.saveBadge} disabled={badge.length<=0}>Guardar</button>
             </React.Fragment>
         );
     }
