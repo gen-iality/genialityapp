@@ -173,6 +173,67 @@ class Badge extends Component {
         }
     };
 
+    printPreview = () => {
+        const canvas = document.getElementsByTagName('CANVAS')[0];
+        const { badge } = this.state;
+        let qr = canvas.toDataURL();
+        let oIframe = this.refs.ifrmPrint;
+        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+        if (oDoc.document) {
+            oDoc = oDoc.document
+        }
+        // Head
+        oDoc.write('<head><title>Escarapela</title>');
+        //oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+        // body
+        oDoc.write('<body onload="window.print()"><div>');
+        // Datos
+        let i = 0;
+        for(;i<badge.length;){
+            if(badge[i].line){
+                if(badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
+                else oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co</p>`);
+                i++
+            }else{
+                if(badge[i+1]&&!badge[i+1].line){
+                    oDoc.write(`<div style="display: flex">`);
+                    if(!badge[i].qr){
+                        oDoc.write(`<div style="margin-right: 20px">`);
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co</p>`);
+                        oDoc.write(`</div>`);
+                    }else{
+                        oDoc.write(`<div style="margin-right: 20px">`);
+                        oDoc.write(`<div><img src=${qr}></div>`);
+                        oDoc.write(`</div>`);
+                    }
+                    if(!badge[i+1].qr){
+                        oDoc.write(`<div style="margin-right: 20px">`);
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i+1].size}px;text-transform: uppercase">evius.co</p>`);
+                        oDoc.write(`</div>`);
+                    }else{
+                        oDoc.write(`<div style="margin-right: 20px">`);
+                        oDoc.write(`<div><img src=${qr}></div>`);
+                        oDoc.write(`</div>`);
+                    }
+                    oDoc.write(`</div>`);
+                    i = i + 2;
+                } else {
+                    oDoc.write(`<div style="display: flex">`);
+                    oDoc.write(`<div style="margin-right: 20px">`);
+                    if(!badge[i].qr){
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co]}</p>`)
+                    }else{
+                        oDoc.write(`<div><img src=${qr}></div>`);
+                    }
+                    oDoc.write(`</div>`);
+                    oDoc.write(`</div>`);
+                    i++
+                }
+            }
+        }
+        oDoc.close();
+    }
+
     render() {
         const {badge,qrExist,extraFields,newField,showPrev,fontSize,qrSize} = this.state;
         return (
@@ -301,9 +362,10 @@ class Badge extends Component {
                             </div>
                         </div>
                         <button className="button is-info is-outlined" onClick={this.saveBadge} disabled={badge.length<=0}>Guardar</button>
-                        <button className="button is-text is-outlined" onClick={this.saveBadge} disabled={badge.length<=0}>Imprimir</button>
+                        <button className="button is-text is-outlined" onClick={this.printPreview} disabled={badge.length<=0}>Imprimir</button>
                     </div>
                 </div>
+                <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
             </React.Fragment>
         );
     }
