@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
+import {BadgeApi} from "../../helpers/request";
 
 class UserModal extends Component {
     constructor(props) {
@@ -22,6 +23,7 @@ class UserModal extends Component {
             checked_in: false,
         };
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.printUser = this.printUser.bind(this)
     }
 
     componentDidMount() {
@@ -116,33 +118,71 @@ class UserModal extends Component {
         this.setState({message,create:false});
     }
 
-    printUser = () => {
-        const {name, lastname, company, type} = this.state.user;
+    async printUser() {
+        const resp = await BadgeApi.get(this.props.eventId);
+        const {user} = this.state;
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas.toDataURL();
-        if(this.props.value) this.props.checkIn(this.props.value);
-        let oIframe = this.refs.ifrmPrint;
-        let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
-        if (oDoc.document) {
-            oDoc = oDoc.document
+        //if(this.props.value) this.props.checkIn(this.props.value);
+        console.log(resp);
+        if(resp._id){
+            let oIframe = this.refs.ifrmPrint;
+            let badge = resp.BadgeFields;
+            let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
+            if (oDoc.document) {
+                oDoc = oDoc.document
+            }
+            // Head
+            oDoc.write('<head><title>Escarapela</title>');
+            oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
+            // body
+            oDoc.write('<body onload="window.print()"><div>');
+            // Datos
+            let i = 0;
+            for(;i<badge.length;){
+                if(badge[i].line){
+                    if(badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
+                    else oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${user[badge[i].id_properties.value]?user[badge[i].id_properties.value]:user[badge[i].id_properties.label]}</p>`);
+                    i++
+                }else{
+                    if(badge[i+1]&&!badge[i+1].line){
+                        oDoc.write(`<div style="display: flex">`);
+                        if(!badge[i].qr){
+                            oDoc.write(`<div style="margin-right: 20px">`);
+                            oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${user[badge[i].id_properties.value]?user[badge[i].id_properties.value]:user[badge[i].id_properties.label]}</p>`);
+                            oDoc.write(`</div>`);
+                        }else{
+                            oDoc.write(`<div style="margin-right: 20px">`);
+                            oDoc.write(`<div><img src=${qr}></div>`);
+                            oDoc.write(`</div>`);
+                        }
+                        if(!badge[i+1].qr){
+                            oDoc.write(`<div style="margin-right: 20px">`);
+                            oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i+1].size}px;text-transform: uppercase">${user[badge[i+1].id_properties.value]?user[badge[i+1].id_properties.value]:user[badge[i+1].id_properties.label]}</p>`);
+                            oDoc.write(`</div>`);
+                        }else{
+                            oDoc.write(`<div style="margin-right: 20px">`);
+                            oDoc.write(`<div><img src=${qr}></div>`);
+                            oDoc.write(`</div>`);
+                        }
+                        oDoc.write(`</div>`);
+                        i = i + 2;
+                    } else {
+                        oDoc.write(`<div style="display: flex">`);
+                        oDoc.write(`<div style="margin-right: 20px">`);
+                        if(!badge[i].qr){
+                            oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${user[badge[i].id_properties.value]?user[badge[i].id_properties.value]:user[badge[i].id_properties.label]}</p>`)
+                        }else{
+                            oDoc.write(`<div><img src=${qr}></div>`);
+                        }
+                        oDoc.write(`</div>`);
+                        oDoc.write(`</div>`);
+                        i++
+                    }
+                }
+            }
+            oDoc.close();
         }
-        // Head
-        oDoc.write('<head><title>Usuario</title>');
-        oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
-        oDoc.write("<style> type='text/css'>body {font-family: sans-serif;font-size: 12px;color: black;} * {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;} body h1 {padding-top: 1px;padding-bottom: 5px;margin: 0;font-family: 'Lato', sans-serif;color: black;text-transform: uppercase;font-weight: bold;font-size: 44px;} body .type {text-transform: uppercase;font-size: 18px;font-weight: bold;font-family: 'Lato', sans-serif;} body img{width: 120px; height: 120px} body .qr{display: inline-block;font-family: 'Lato', sans-serif} body .qrcontent{display: flex;flex-direction: row;} body .tipo{position: relative} body .qrtipo{position: absolute;bottom: 12px;left: 9px; margin: 0}}</style>");
-        // body
-        oDoc.write('<body onload="window.print()"><div>');
-        // Datos
-        oDoc.write(`<h1>${name}</h1>`);
-        oDoc.write(`<h1>${lastname}</h1>`);
-        oDoc.write(`<p class="info type">${company?company:''}</p>`);
-        oDoc.write(`<div class="qrcontent">`);
-        oDoc.write(`<div class="qr"><img src=${qr}></div>`);
-        oDoc.write(`<div class="qr tipo"><p class="qrtipo">${type?type:''}</p></div>`);
-        oDoc.write('</div></div>'); // close .qr .main-print
-        // Close body
-        oDoc.write('</body></html>');
-        oDoc.close();
     };
 
     handleChange = (event) => {
@@ -359,6 +399,7 @@ class UserModal extends Component {
                         <QRCode value={this.state.userId}/>
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
+                    {/*<iframe title={'Print User'} ref="ifrmPrint" style={{backgroundColor:"aliceblue",width:"900px",height:"900px",zIndex:9}}/>*/}
                 </div>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}

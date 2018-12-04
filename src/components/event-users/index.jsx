@@ -62,19 +62,19 @@ class ListEventUser extends Component {
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     this.statesCounter(user.state.value);
-                    if(change.doc._hasPendingWrites){
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'modified'){
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
-                    if(change.doc._hasPendingWrites){
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'removed'){
                     newItems.splice(change.oldIndex, 1);
@@ -90,7 +90,7 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
-        this.pilaListener = pilaRef.onSnapshot({
+        /*this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
@@ -99,7 +99,7 @@ class ListEventUser extends Component {
                 data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
                 data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
                 if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                /*if (change.type === 'added') {
+                /!*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
@@ -133,16 +133,16 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }*/
+                }*!/
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
-        });
+        });*/
     }
 
     componentWillUnmount() {
         this.userListener();
-        this.pilaListener()
+        //this.pilaListener()
     }
 
     statesCounter = (state,old) => {
