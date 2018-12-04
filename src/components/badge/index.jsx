@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import Moment from "moment";
 import QRCode from "qrcode.react";
 import {BadgeApi} from "../../helpers/request";
+import {toast} from "react-toastify";
+import {FormattedMessage} from "react-intl";
 
 class Badge extends Component {
     constructor(props) {
@@ -161,8 +162,14 @@ class Badge extends Component {
         try{
             const resp = await BadgeApi.create(data);
             console.log(resp);
+            if(resp._id){
+                toast.success('Badge Guardada');
+            }else{
+                toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Sry :("/>);
+            }
         }catch (err) {
             console.log(err.response);
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
         }
     };
 
@@ -170,6 +177,8 @@ class Badge extends Component {
         const {badge,qrExist,extraFields,newField,showPrev,fontSize,qrSize} = this.state;
         return (
             <React.Fragment>
+                <p>Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño</p>
+                <p>Visualiza el resultado e imprime para realizar una prueba!! </p>
                 <div className="columns">
                     <div className="column is-4">
                         <div className="field is-grouped">
@@ -200,7 +209,7 @@ class Badge extends Component {
                                                                             <option value={''}>Seleccione...</option>
                                                                             {
                                                                                 extraFields.map((field,key)=>{
-                                                                                    return <option value={field.value} key={key} className="is-capitalized">{field.label}</option>
+                                                                                    return <option value={field} key={key} className="is-capitalized">{field.label}</option>
                                                                                 })
                                                                             }
                                                                         </select>
@@ -284,10 +293,17 @@ class Badge extends Component {
                     </div>
                     <div className="column">
                         <h1>Preview</h1>
-                        {showPrev && (this.renderPrint())}
+                        <div className="column is-half">
+                            <div className="card">
+                                <div style={{padding:"1.5rem"}}>
+                                    {showPrev && (this.renderPrint())}
+                                </div>
+                            </div>
+                        </div>
+                        <button className="button is-info is-outlined" onClick={this.saveBadge} disabled={badge.length<=0}>Guardar</button>
+                        <button className="button is-text is-outlined" onClick={this.saveBadge} disabled={badge.length<=0}>Imprimir</button>
                     </div>
                 </div>
-                <button className="button" onClick={this.saveBadge} disabled={badge.length<=0}>Guardar</button>
             </React.Fragment>
         );
     }
