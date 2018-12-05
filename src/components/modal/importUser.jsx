@@ -78,7 +78,7 @@ class ImportUsers extends Component {
         const layout = [
             <Importacion handleXls={this.handleXls} extraFields={this.props.extraFields}/>,
             <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers}/>,
-            <Result list={this.state.toImport} eventId={this.props.eventId}/>];
+            <Result list={this.state.toImport} eventId={this.props.eventId} extraFields={this.props.extraFields}/>];
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +

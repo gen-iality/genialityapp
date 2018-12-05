@@ -81,6 +81,7 @@ class Result extends Component {
 
     render() {
         const {imported,total,saved,fails,updated,step,ok,notok} = this.state;
+        const {extraFields} = this.props;
         const data = [ok,notok];
         return (
             <React.Fragment>
@@ -122,8 +123,8 @@ class Result extends Component {
                             <table className="table def is-fullwidth is-striped">
                                 <thead>
                                 <tr>
-                                    <th>Correo</th>
-                                    <th>Nombre</th>
+                                    <th>{extraFields[0].name}</th>
+                                    <th>{extraFields[1].name}</th>
                                     <th>Estado</th>
                                 </tr>
                                 </thead>

@@ -6,10 +6,7 @@ class Preview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            head: [
-                {tag:'email',used:false},
-                {tag:'name',used:false}
-            ],
+            head: [],
             loading: true,
             list : [],
             auxArr: []
@@ -189,7 +186,7 @@ class Preview extends Component {
                             </span>
                         </p>)}
 
-                    {auxArr.length<=0&&(
+                    {auxArr.length<0&&(
                     <p className="has-text-grey-light">
                         <span className="icon is-medium has-text-warning">
                             <i className="fas fa-exclamation-circle"></i>
