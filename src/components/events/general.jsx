@@ -155,8 +155,10 @@ class General extends Component {
             description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
-            event_type_id : this.state.selectedType.value
+            event_type_id : this.state.selectedType.value,
+            user_properties : this.state.fields
         };
+        console.log(data);
         try {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);
@@ -229,7 +231,7 @@ class General extends Component {
     //User properties
     addField = () => {
         const {fields} = this.state;
-        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false}],})
+        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false}]})
     };
     handleChangeField = (e,key) => {
         const {fields} = this.state;
@@ -243,15 +245,14 @@ class General extends Component {
         fields[key][name] = !fields[key][name];
         this.setState({fields})
     };
-    handleInputChange = (inputValue) => {
+    handleInputChange = (key,inputValue) => {
         this.setState({ inputValue });
     };
-    changeOption = (option, actionMeta) => {
-        console.group('Value Changed');
-        console.log(option);
-        console.log(`action: ${actionMeta.action}`);
-        console.groupEnd();
-        this.setState({ option });
+    changeOption = (key, option) => {
+        const { fields } = this.state;
+        const field = fields[key];
+        field.options = option;
+        this.setState({ fields });
     };
     handleKeyDown = (event,key) => {
         const { inputValue, fields } = this.state;
@@ -261,7 +262,7 @@ class General extends Component {
         switch (event.key) {
             case 'Enter':
             case 'Tab':
-                field.options = [...field.options,createOption(inputValue)];
+                field.options = [...field.options,createOption(inputValue,key)];
                 this.setState({
                     inputValue: '',
                     fields
@@ -312,7 +313,6 @@ class General extends Component {
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue,
             valid, timeout, error } = this.state;
-        console.log(fields);
         return (
             <div>
                 <div className="event-general">
@@ -388,8 +388,8 @@ class General extends Component {
                                                                     isClearable
                                                                     isMulti
                                                                     menuIsOpen={false}
-                                                                    onChange={this.changeOption}
-                                                                    onInputChange={this.handleInputChange}
+                                                                    onChange={this.changeOption.bind(this, key)}
+                                                                    onInputChange={this.handleInputChange.bind(this, key)}
                                                                     onKeyDown={(e)=>{this.handleKeyDown(e,key)}}
                                                                     placeholder="Escribe la opción y presiona Enter o Tab..."
                                                                     value={field.options}
@@ -469,9 +469,6 @@ const handleFields = (organizers,types,categories,event) =>{
     return {selectedOrganizer,selectedCategories,selectedType}
 }
 
-const createOption = (label) => ({
-    label,
-    value: label,
-});
+const createOption = (label,key) => ({label, value: label, parent: key});
 
 export default General;
