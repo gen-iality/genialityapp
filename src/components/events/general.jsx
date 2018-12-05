@@ -45,7 +45,7 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType})
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields:event.user_properties})
         }catch (error) {
             // Error
             if (error.response) {
@@ -158,7 +158,6 @@ class General extends Component {
             event_type_id : this.state.selectedType.value,
             user_properties : this.state.fields
         };
-        console.log(data);
         try {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);
