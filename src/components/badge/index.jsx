@@ -10,10 +10,7 @@ class Badge extends Component {
         this.state = {
             badge:[],
             qrExist:false,
-            extraFields:[
-                {value:'name',label:'nombre'},
-                {value:'email',label:'correo'}
-            ],
+            extraFields:[],
             fontSize: [18,22,36,44],
             qrSize: [64,128],
             newField:false
@@ -27,7 +24,7 @@ class Badge extends Component {
         const resp = await BadgeApi.get(event._id);
         let {extraFields,badge,showPrev} = this.state;
         properties.map(prop=>{
-            return extraFields.push({value:prop._id,label:prop.name})
+            return extraFields.push({value:prop.name,label:prop.name})
         });
         if(resp._id) {
             badge = resp.BadgeFields;
@@ -270,7 +267,7 @@ class Badge extends Component {
                                                                             <option value={''}>Seleccione...</option>
                                                                             {
                                                                                 extraFields.map((field,key)=>{
-                                                                                    return <option value={field} key={key} className="is-capitalized">{field.label}</option>
+                                                                                    return <option value={field.value} key={key} className="is-capitalized">{field.label}</option>
                                                                                 })
                                                                             }
                                                                         </select>
