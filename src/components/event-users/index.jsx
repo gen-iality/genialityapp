@@ -288,8 +288,6 @@ class ListEventUser extends Component {
                     }
                 </td>
                 <td>{item.state.label}</td>
-                <td>{item.properties.email}</td>
-                <td>{item.properties.name}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
                         return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
@@ -306,7 +304,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -341,7 +339,6 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     </div>
-
                     <div className="checkin-tags-wrapper">
                         <div className="columns is-mobile is-multiline checkin-tags">
                             <div className="column is-narrow">
@@ -370,7 +367,6 @@ class ListEventUser extends Component {
                             }
                         </div>
                     </div>
-
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
@@ -385,8 +381,6 @@ class ListEventUser extends Component {
                                                         <th/>
                                                         <th className="is-capitalized">Check</th>
                                                         <th className="is-capitalized">Estado</th>
-                                                        <th className="is-capitalized">Correo</th>
-                                                        <th className="is-capitalized">Nombre</th>
                                                         {
                                                             extraFields.map((field,key)=>{
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
@@ -411,16 +405,16 @@ class ListEventUser extends Component {
                                 </div>}
                         </div>
                     </div>
-
                     <div className="checkin-warning">
                         <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                     </div>
                 </div>
-                {!this.props.loading &&
-                <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
+                {(!this.props.loading&editUser) &&
+                <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
                            rolstate={this.props.rolstate}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
-                           extraFields={this.state.extraFields} edit={this.state.edit}/>}
+                           extraFields={this.state.extraFields} edit={this.state.edit}/>
+                }
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
