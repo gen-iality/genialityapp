@@ -53,7 +53,7 @@ class Event extends Component {
     async componentWillReceiveProps(nextProps) {
         let eventId = nextProps.match.params.event;
         if(eventId === 'new_event'){
-            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate(), user_properties:[]};
             this.setState({newEvent:true,loading:false,event})
         }else{
             try {
