@@ -166,6 +166,8 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
+                let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"}];
+                data.user_properties = [...extraFields,...data.user_properties];
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
@@ -357,26 +359,29 @@ class General extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="card">
-                            <article className="media" style={{padding: "0.75rem"}}>
-                                <div className="media-content">
-                                    <p>Campo Predeterminado por Defecto</p>
-                                    <div className="columns">
-                                        <div className="column">
-                                            <p className="has-text-grey-dark has-text-weight-bold">EMAIL</p>
+                        {
+                            !event._id &&
+                                <div className="card">
+                                    <article className="media" style={{padding: "0.75rem"}}>
+                                        <div className="media-content">
+                                            <p>Campo Predeterminado por Defecto</p>
+                                            <div className="columns">
+                                                <div className="column">
+                                                    <p className="has-text-grey-dark has-text-weight-bold">EMAIL</p>
+                                                </div>
+                                                <div className="column">
+                                                    <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                </div>
+                                                <div className="column field">
+                                                    <input className="is-checkradio is-primary" disabled={true}
+                                                           type="checkbox" name={`mailndatory`} checked={true}/>
+                                                    <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="column">
-                                            <p className="has-text-grey-dark has-text-weight-bold">Email</p>
-                                        </div>
-                                        <div className="column field">
-                                            <input className="is-checkradio is-primary" disabled={true}
-                                                   type="checkbox" name={`mailndatory`} checked={true}/>
-                                            <label htmlFor={`mailndatory`}>Obligatorio</label>
-                                        </div>
-                                    </div>
+                                    </article>
                                 </div>
-                            </article>
-                        </div>
+                        }
                         {
                             fields.map((field,key)=>{
                                 return <div className="card" key={key}>
@@ -435,29 +440,32 @@ class General extends Component {
                                                     <label htmlFor={`mandatory${key}`}>Obligatorio</label>
                                                 </div>
                                             </div>
-                                            <div className="columns">
-                                                <div className="column is-1">
-                                                    <nav className="level is-mobile">
-                                                        <div className="level-left">
-                                                            {
-                                                                field.edit &&
+                                            {
+                                                field.name !== "email" &&
+                                                    <div className="columns">
+                                                    <div className="column is-1">
+                                                        <nav className="level is-mobile">
+                                                            <div className="level-left">
+                                                                {
+                                                                    field.edit &&
                                                                     <a className="level-item" onClick={(e)=>{this.saveField(key)}}>
                                                                         <span className="icon has-text-info"><i className="fas fa-save"></i></span>
                                                                     </a>
-                                                            }
-                                                            {
-                                                                !field.edit &&
+                                                                }
+                                                                {
+                                                                    !field.edit &&
                                                                     <a className="level-item" onClick={(e)=>{this.editField(key)}}>
                                                                         <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
                                                                     </a>
-                                                            }
-                                                            <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
-                                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
-                                                            </a>
-                                                        </div>
-                                                    </nav>
+                                                                }
+                                                                <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
+                                                                    <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                                </a>
+                                                            </div>
+                                                        </nav>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            }
                                         </div>
                                     </article>
                                 </div>
