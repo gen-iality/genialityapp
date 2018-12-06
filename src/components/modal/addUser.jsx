@@ -40,7 +40,7 @@ class AddUser extends Component {
             state_id: this.state.state,
         };
         console.log(snap);
-        /*let message = {};
+        let message = {};
         this.setState({create:true});
         try {
             let resp = await UsersApi.createOne(snap,this.props.eventId);
@@ -62,7 +62,7 @@ class AddUser extends Component {
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
-        this.setState({message,create:false});*/
+        this.setState({message,create:false});
     }
 
     /*handleChange = (event) => {
