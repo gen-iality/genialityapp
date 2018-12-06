@@ -230,7 +230,22 @@ class General extends Component {
     //User properties
     addField = () => {
         const {fields} = this.state;
-        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false}]})
+        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true}],newField:true})
+    };
+    saveField = (key) => {
+        const {fields} = this.state;
+        fields[key].edit = !fields[key].edit;
+        this.setState({fields,newField:false})
+    };
+    editField = (key) => {
+        const {fields} = this.state;
+        fields[key].edit = !fields[key].edit;
+        this.setState({fields,newField:true});
+    };
+    removeField = (key) => {
+        const {fields} = this.state;
+        fields.splice(key,1);
+        this.setState({fields})
     };
     handleChangeField = (e,key) => {
         const {fields} = this.state;
@@ -269,11 +284,6 @@ class General extends Component {
                 event.preventDefault();
         }
     };
-    removeField = (key) => {
-        const {fields} = this.state;
-        fields.splice(key,1);
-        this.setState({fields})
-    };
 
     //Delete event
     async deleteEvent() {
@@ -310,7 +320,7 @@ class General extends Component {
     render() {
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            fields, inputValue,
+            fields, inputValue, newField,
             valid, timeout, error } = this.state;
         return (
             <div>
@@ -341,22 +351,42 @@ class General extends Component {
                                     <p className="subtitle is-5"><strong>Campos de Evento</strong></p>
                                 </div>
                                 <div className="level-item">
-                                    <button className="button" onClick={this.addField}>
+                                    <button className="button" onClick={this.addField} disabled={newField}>
                                         <span className={`icon is-small`}><i className="fas fa-plus"></i></span>
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        <div className="card">
+                            <article className="media" style={{padding: "0.75rem"}}>
+                                <div className="media-content">
+                                    <p>Campo Predeterminado por Defecto</p>
+                                    <div className="columns">
+                                        <div className="column">
+                                            <p className="has-text-grey-dark has-text-weight-bold">EMAIL</p>
+                                        </div>
+                                        <div className="column">
+                                            <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                        </div>
+                                        <div className="column field">
+                                            <input className="is-checkradio is-primary" disabled={true}
+                                                   type="checkbox" name={`mailndatory`} checked={true}/>
+                                            <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
                         {
                             fields.map((field,key)=>{
                                 return <div className="card" key={key}>
-                                    <article className="media">
+                                    <article className="media" style={{padding: "0.75rem"}}>
                                         <div className="media-content">
                                             <div className="columns">
                                                 <div className="field column">
                                                     <label className="label required has-text-grey-light">Nombre</label>
                                                     <div className="control">
-                                                        <input className="input" name={"name"} type="text"
+                                                        <input className="input" name={"name"} type="text" disabled={!field.edit}
                                                                placeholder="Nombre del campo" value={field.name}
                                                                onChange={(e)=>{this.handleChangeField(e,key)}}
                                                         />
@@ -367,7 +397,7 @@ class General extends Component {
                                                         <label className="label required">Tipo</label>
                                                         <div className="control">
                                                             <div className="select">
-                                                                <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type}>
+                                                                <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type} disabled={!field.edit}>
                                                                     <option value={''}>Seleccione...</option>
                                                                     <option value={'text'}>Texto</option>
                                                                     <option value={'email'}>Correo</option>
@@ -384,6 +414,7 @@ class General extends Component {
                                                                 <CreatableSelect
                                                                     components={{DropdownIndicator: null,}}
                                                                     inputValue={inputValue}
+                                                                    isDisabled={!field.edit}
                                                                     isClearable
                                                                     isMulti
                                                                     menuIsOpen={false}
@@ -397,24 +428,36 @@ class General extends Component {
                                                         )
                                                     }
                                                 </div>
-                                                <div className="column field is-grouped">
-                                                    <div className="control">
-                                                        <input className="is-checkradio is-primary" id={`mandatory${key}`}
-                                                               type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                                               onChange={(e)=>{this.changeFieldCheck(e,key)}}/>
-                                                        <label htmlFor={`mandatory${key}`}>Obligatorio</label>
-                                                    </div>
-                                                    <div className="control">
-                                                        <input className="is-checkradio is-primary" id={`unique${key}`}
-                                                               type="checkbox" name={`unique`} checked={field.unique}
-                                                               onChange={(e)=>{this.changeFieldCheck(e,key)}}/>
-                                                        <label htmlFor={`unique${key}`}>Único</label>
-                                                    </div>
+                                                <div className="column field">
+                                                    <input className="is-checkradio is-primary" id={`mandatory${key}`}
+                                                           type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                                           onChange={(e)=>{this.changeFieldCheck(e,key)}} disabled={!field.edit}/>
+                                                    <label htmlFor={`mandatory${key}`}>Obligatorio</label>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="media-right">
-                                            <button className="delete" onClick={(e)=>{this.removeField(key)}}></button>
+                                            <div className="columns">
+                                                <div className="column is-1">
+                                                    <nav className="level is-mobile">
+                                                        <div className="level-left">
+                                                            {
+                                                                field.edit &&
+                                                                    <a className="level-item" onClick={(e)=>{this.saveField(key)}}>
+                                                                        <span className="icon has-text-info"><i className="fas fa-save"></i></span>
+                                                                    </a>
+                                                            }
+                                                            {
+                                                                !field.edit &&
+                                                                    <a className="level-item" onClick={(e)=>{this.editField(key)}}>
+                                                                        <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
+                                                                    </a>
+                                                            }
+                                                            <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
+                                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                            </a>
+                                                        </div>
+                                                    </nav>
+                                                </div>
+                                            </div>
                                         </div>
                                     </article>
                                 </div>
