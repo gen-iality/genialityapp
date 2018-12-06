@@ -58,6 +58,7 @@ class UsersRsvp extends Component {
         try {
             const listEvents = await EventsApi.mine();
             const eventId = this.props.event._id;
+            const properties = this.props.event.user_properties.slice(0,2);
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
             const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
@@ -68,14 +69,14 @@ class UsersRsvp extends Component {
             let index = columns.map((e) => { return e.id; }).indexOf('properties.name');
             if(index<=-1) columns.push({
                 ...this.genericHeaderArrows(),
-                headerText: "Name",
-                id: "properties.name",
-                accessor: d => d.name
+                headerText: `${properties[0].name}`,
+                id: `${properties[0].name}`,
+                accessor: d => d[`${properties[0].name}`]
             },{
                 ...this.genericHeaderArrows(),
-                headerText: "Email",
-                id: "properties.email",
-                accessor: d => d.email,
+                headerText: `${properties[1].name}`,
+                id: `${properties[1].name}`,
+                accessor: d => d[`${properties[1].name}`],
                 width: 200
             });
             columns.splice(0, 1);
@@ -292,8 +293,8 @@ class UsersRsvp extends Component {
             list.push(
                 <div key={i} className="media">
                     <div className="media-content">
-                        <p className="title is-6">{items[i].name}</p>
-                        <p className="subtitle is-7">{items[i].email}</p>
+                        <p className="title is-6">{items[i].email}</p>
+                        {/*<p className="subtitle is-7">{items[i]}</p>*/}
                     </div>
                     <div className="media-right">
                         <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(items[i])}}>
@@ -615,11 +616,16 @@ async function asyncForEach(array, callback) {
     }
 }
 
-//Add only id, name and email
+//Add only id, and the first two fields
 const handleUsers = (list) => {
         let users = [];
-        list.map(user=>{
-            return users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
+        list.map((user,key)=>{
+            users[key] = {};
+            users[key]['id'] = user._id;
+            users[key]['state'] = user.state.name;
+            return Object.keys(user.properties).slice(0,2).map(field=>{
+                return users[key][field] = user.properties[field];
+            })
         });
         return users;
 };
