@@ -588,7 +588,7 @@ class UsersRsvp extends Component {
                         </div>
                     </div>     
                 </div>
-                {!this.props.loading &&
+                {(!this.props.loading && this.state.addUser) &&
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
                          value={this.state.selectedUser} addToList={this.addToList} rolstate={this.props.rolstate}
                          extraFields={this.props.event.user_properties} edit={this.state.edit}/>}

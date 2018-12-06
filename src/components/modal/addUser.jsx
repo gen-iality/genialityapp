@@ -24,16 +24,11 @@ class AddUser extends Component {
         const self = this,
             {rolstate:{roles,states}} = this.props;
         self.setState({ rolesList: roles, statesList: states, state: states[0].value, rol: roles[1].value });
-    }
-
-    componentDidUpdate(prevProps) {
-        if(prevProps.edit !== this.props.edit){
-            let user = {name: '', email: ''};
-            this.props.extraFields
-                .map((obj) => (
-                    user[obj.name] = ''));
-            this.setState({user,edit:false});
-        }
+        let user = {};
+        this.props.extraFields
+            .map((obj) => (
+                user[obj.name] = ''));
+        this.setState({user,edit:false});
     }
 
     async handleSubmit(e) {
@@ -44,7 +39,8 @@ class AddUser extends Component {
             role_id: this.state.rol,
             state_id: this.state.state,
         };
-        let message = {};
+        console.log(snap);
+        /*let message = {};
         this.setState({create:true});
         try {
             let resp = await UsersApi.createOne(snap,this.props.eventId);
@@ -66,13 +62,79 @@ class AddUser extends Component {
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
-        this.setState({message,create:false});
+        this.setState({message,create:false});*/
     }
 
-    handleChange = (event) => {
+    /*handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         this.setState({user:{...this.state.user,[name]:value}}, this.validForm)
+    };*/
+
+    renderForm = () => {
+        const {extraFields} = this.props;
+        let formUI = extraFields.map((m,key) => {
+            let type = m.type || "text";
+            let props = m.props || {};
+            let name= m.name;
+            let mandatory = m.mandatory;
+            let target = name;
+            let value =  this.state.user[target];
+            let input =  <input {...props}
+                                className="input"
+                                type={type}
+                                key={key}
+                                name={name}
+                                value={value}
+                                onChange={(e)=>{this.onChange(e, type)}}
+            />;
+            if (type == "boolean") {
+                input =
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="checkbox"
+                            checked={value}
+                            onChange={(e)=>{this.onChange(e, type)}} />
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
+                    </React.Fragment>
+            }
+            if (type == "list") {
+                input = m.options.map((o,key) => {
+                    return (<option key={key} value={o.value}>{o.value}</option>);
+                });
+                input = <div className="select">
+                    <select name={name} value={value} onChange={(e)=>{this.onChange(e, type)}}>
+                        <option value={""}>Seleccione...</option>
+                        {input}
+                    </select>
+                </div>;
+            }
+            return (
+                <div key={'g' + key} className="field">
+                    {m.type !== "boolean"&&
+                    <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
+                           key={"l" + key}
+                           htmlFor={key}>
+                        {name}
+                    </label>}
+                    <div className="control">
+                        {input}
+                    </div>
+                </div>
+            );
+        });
+        return formUI;
+    };
+
+    onChange = (e,type) => {
+        const {value,name} = e.target;
+        //console.log(`${name} changed ${value} type ${type}`);
+        (type === "boolean") ?
+            this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
+            : this.setState({user:{...this.state.user,[name]:value}}, this.validForm);
     };
 
     selectChange = (e) => {
@@ -82,12 +144,12 @@ class AddUser extends Component {
     };
 
     validForm = () => {
-        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
+        /*const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
         let state= this.state,
             emailValid = state.user.email.length > 5 && state.user.email.length < 61 && EMAIL_REGEX.test(state.user.email),
             valid = !(emailValid && state.user.name.length>0 && state.rol.length>0 && state.state.length>0);
-        this.setState({emailError:!emailValid});
-        this.setState({valid})
+        this.setState({emailError:!emailValid});*/
+        this.setState({valid:false})
     };
 
     closeModal = () => {
@@ -107,14 +169,7 @@ class AddUser extends Component {
                     </header>
                     <section className="modal-card-body">
                         {
-                            Object.keys(this.state.user).map((obj, i)=>{
-                                return <div className="field" key={obj}>
-                                    <label className="label is-required has-text-grey-light">{obj}</label>
-                                    <div className="control">
-                                        <input className="input" type="text" name={obj} onChange={this.handleChange} value={this.state.user[obj]} placeholder={obj}/>
-                                    </div>
-                                </div>
-                            })
+                            Object.keys(this.state.user).length > 0 && this.renderForm()
                         }
                         <div className="field">
                             <label className="label">Rol</label>
