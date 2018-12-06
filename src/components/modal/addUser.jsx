@@ -21,20 +21,8 @@ class AddUser extends Component {
 
     componentDidMount() {
         const self = this,
-            rols = Actions.getAll('/api/rols'),
-            states = Actions.getAll('/api/states');
-        axios.all([rols, states])
-            .then(axios.spread(function (roles, estados) {
-                let rolData = roles.map(rol => ({
-                    value: rol._id,
-                    label: rol.name
-                }));
-                let stateData = estados.map(state => ({
-                    value: state._id,
-                    label: state.name
-                }));
-                self.setState({ rolesList: rolData, statesList: stateData, state: stateData[0].value, rol: rolData[1].value });
-            }))
+            {rolstate:{roles,states}} = this.props;
+        self.setState({ rolesList: roles, statesList: states, state: states[0].value, rol: roles[1].value });
     }
 
     componentDidUpdate(prevProps) {
