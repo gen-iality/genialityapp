@@ -258,34 +258,17 @@ class UserModal extends Component {
 
     validForm = () => {
         const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
-        const {extraFields} = this.props,
-            {user}= this.state;
-        let valid = true;
-        /*let emailValid = true,textValid = true,numValid = true, listValid=true;
-        if(field.type === 'email'){
-            emailValid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
-            console.log(field.name + '-> ', user[field.name]);
-        }
-        if(field.type === 'text') {
-            textValid = user[field.name] && user[field.name].length > 0;
-            console.log(field.name + '-> ', user[field.name]);
-        }
-        if(field.type === 'number') {
-            numValid = user[field.name] && user[field.name] >= 0;
-            console.log(field.name + '-> ', user[field.name]);
-        }
-        if(field.type === 'list') {
-            listValid = user[field.name] && user[field.name].length > 0;
-            console.log(field.name + '-> ', user[field.name]);
-        }
-        console.log('EMAIL ',emailValid);
-        console.log('TXT ',textValid);
-        console.log('NUM ',numValid);
-        console.log('LIST ',listValid);
-        return valid = !(emailValid && textValid && numValid && listValid)*/
-        const mandatories = extraFields.filter(field => field.mandatory);
-        //console.log(mandatories);
-        this.setState({valid:false})
+        const {extraFields} = this.props, {user}= this.state,
+            mandatories = extraFields.filter(field => field.mandatory),validations = [];
+        mandatories.map((field,key)=>{
+            let valid;
+            if(field.type === 'email')  valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
+            if(field.type === 'text' || field.type === 'list')  valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
+            if(field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
+            return validations[key] = valid;
+        });
+        const valid = validations.reduce((sum, next) => sum && next, true);
+        this.setState({valid:!valid})
     };
 
     deleteUser = () => {

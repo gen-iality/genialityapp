@@ -144,12 +144,18 @@ class AddUser extends Component {
     };
 
     validForm = () => {
-        /*const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
-        let state= this.state,
-            emailValid = state.user.email.length > 5 && state.user.email.length < 61 && EMAIL_REGEX.test(state.user.email),
-            valid = !(emailValid && state.user.name.length>0 && state.rol.length>0 && state.state.length>0);
-        this.setState({emailError:!emailValid});*/
-        this.setState({valid:false})
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
+        const {extraFields} = this.props, {user}= this.state,
+            mandatories = extraFields.filter(field => field.mandatory),validations = [];
+        mandatories.map((field,key)=>{
+            let valid;
+            if(field.type === 'email')  valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
+            if(field.type === 'text' || field.type === 'list')  valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
+            if(field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
+            return validations[key] = valid;
+        });
+        const valid = validations.reduce((sum, next) => sum && next, true);
+        this.setState({valid:!valid})
     };
 
     closeModal = () => {
