@@ -152,6 +152,7 @@ class AddUser extends Component {
             if(field.type === 'email')  valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
             if(field.type === 'text' || field.type === 'list')  valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
             if(field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
+            if(field.type === 'boolean') valid = (typeof user[field.name] === "boolean");
             return validations[key] = valid;
         });
         const valid = validations.reduce((sum, next) => sum && next, true);
