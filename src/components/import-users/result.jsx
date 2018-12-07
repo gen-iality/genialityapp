@@ -9,7 +9,6 @@ class Result extends Component {
             list: [],
             ok: [],
             notok: [],
-            imported: [],
             total: 0,
             saved: 0,
             fails: 0,
@@ -26,7 +25,8 @@ class Result extends Component {
 
      uploadByOne = (users) => {
         const self = this;
-        let imported = [], ok = [], notok = [];
+        const {extraFields} = this.props;
+        let ok = [], notok = [];
         const toImport = users.filter(user =>!this.isEmptyObject(user));
          Async.eachOfSeries(toImport,(user,key,cb)=>{
              if(!this.isEmptyObject(user)){
@@ -34,8 +34,10 @@ class Result extends Component {
                      .then((resp)=>{
                          console.log(resp);
                          if(resp.message === 'OK'){
-                             imported[key] = {name:user.name,email:user.email,status:resp.status};
-                             ok[key] = {name:user.name,email:user.email,status:resp.status};
+                             ok[key] = {
+                                 [extraFields[0].name]:user[extraFields[0].name],
+                                 [extraFields[1].name]:user[extraFields[1].name],
+                                 status:resp.status};
                              if(resp.status === 'UPDATED'){
                                  self.setState((prevState) => {
                                      return {updated:prevState.updated+1,total:prevState.total+1}
@@ -53,13 +55,19 @@ class Result extends Component {
                          console.log(err);
                          if(err.response){
                              const {data} = err.response;
-                             const msgE = data.email ? data.email[0] : '';
-                             const msgN = data.name ? data.name[0] : '';
-                             imported[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
-                             notok[key] = {name:user.name,email:user.email,status:'ERROR '+msgE + ' ' + msgN};
+                             let error = 'ERROR ';
+                             Object.keys(data).map(field=>{
+                                return error = error + data[field][0] + ' '
+                             });
+                             notok[key] = {
+                                 [extraFields[0].name]:user[extraFields[0].name],
+                                 [extraFields[1].name]:user[extraFields[1].name],
+                                 status:error};
                          }else{
-                             imported[key] = {name:user.name,email:user.email,status:'ERROR DESCONOCIDO'};
-                             notok[key] = {name:user.name,email:user.email,status:'ERROR DESCONOCIDO'};
+                             notok[key] = {
+                                 [extraFields[0].name]:user[extraFields[0].name],
+                                 [extraFields[1].name]:user[extraFields[1].name],
+                                 status:'ERROR DESCONOCIDO'};
                          }
                          self.setState((prevState) => {
                              return {fails:prevState.fails+1,total:prevState.total+1}
@@ -68,7 +76,7 @@ class Result extends Component {
                      });
              }
          }, (err)=> {
-             self.setState({imported,ok,notok});
+             self.setState({ok,notok});
              if( err ) console.log('Error en la consulta de información');
          });
     };
@@ -80,9 +88,9 @@ class Result extends Component {
     }
 
     render() {
-        const {imported,total,saved,fails,updated,step,ok,notok} = this.state;
+        const {total,saved,fails,updated,step,ok,notok} = this.state;
         const {extraFields} = this.props;
-        const data = [ok,notok];
+        const data = [notok,ok];
         return (
             <React.Fragment>
                 <div className="columns is-mobile is-gapless">
@@ -112,12 +120,12 @@ class Result extends Component {
                     </div>
                 </div>
                 {
-                    imported.length>0 &&
+                    total > 0 &&
                         <React.Fragment>
                             <div className="tabs is-fullwidth">
                                 <ul>
-                                    <li className={`${step === 0 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:0})}}><a>Correctos</a></li>
-                                    <li className={`${step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>Incorrectos</a></li>
+                                    <li className={`${step === 0 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:0})}}><a>Incorrectos</a></li>
+                                    <li className={`${step === 1 ? "is-active" : ""}`} onClick={(e)=>{this.setState({step:1})}}><a>Correctos</a></li>
                                 </ul>
                             </div>
                             <table className="table def is-fullwidth is-striped">
@@ -132,8 +140,8 @@ class Result extends Component {
                                 {
                                     data[step].map((item,key)=>{
                                         return <tr key={key}>
-                                            <td>{item.email}</td>
-                                            <td>{item.name}</td>
+                                            <td>{item[extraFields[0].name]}</td>
+                                            <td>{item[extraFields[1].name]}</td>
                                             <td>{item.status}</td>
                                         </tr>
                                     })
