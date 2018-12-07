@@ -312,7 +312,7 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={extraFields.slice(0,2)} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>
@@ -409,8 +409,8 @@ class ListEventUser extends Component {
                         <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                     </div>
                 </div>
-                {(!this.props.loading&editUser) &&
-                <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
+                {(!this.props.loading && editUser) &&
+                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
                            rolstate={this.props.rolstate}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
