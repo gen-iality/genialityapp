@@ -40,7 +40,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, rol:value.rol._id, state:value.state._id, edit:true, checked_in, userId:value._id});
+            this.setState({user, rol:value.rol_id, state:value.state_id, edit:true, checked_in, userId:value._id});
         }else {
             let user = {};
             this.props.extraFields
