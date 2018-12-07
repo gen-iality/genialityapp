@@ -408,7 +408,7 @@ class General extends Component {
                                                                     <option value={'email'}>Correo</option>
                                                                     <option value={'number'}>Numérico</option>
                                                                     <option value={'list'}>Lista Opciones</option>
-                                                                    <option value={'boolean'}>Booleano</option>
+                                                                    <option value={'boolean'}>Si/No</option>
                                                                 </select>
                                                             </div>
                                                         </div>
