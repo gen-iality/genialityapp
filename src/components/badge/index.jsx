@@ -175,7 +175,7 @@ class Badge extends Component {
     printPreview = () => {
         const canvas = document.getElementsByTagName('CANVAS')[0];
         const { badge } = this.state;
-        let qr = canvas.toDataURL();
+        let qr = canvas ? canvas.toDataURL() : '';
         let oIframe = this.refs.ifrmPrint;
         let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
         if (oDoc.document) {
@@ -191,14 +191,14 @@ class Badge extends Component {
         for(;i<badge.length;){
             if(badge[i].line){
                 if(badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-                else oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co</p>`);
+                else oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].id_properties.value}</p>`);
                 i++
             }else{
                 if(badge[i+1]&&!badge[i+1].line){
                     oDoc.write(`<div style="display: flex">`);
                     if(!badge[i].qr){
                         oDoc.write(`<div style="margin-right: 20px">`);
-                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co</p>`);
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i+1].name}</p>`);
                         oDoc.write(`</div>`);
                     }else{
                         oDoc.write(`<div style="margin-right: 20px">`);
@@ -207,7 +207,7 @@ class Badge extends Component {
                     }
                     if(!badge[i+1].qr){
                         oDoc.write(`<div style="margin-right: 20px">`);
-                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i+1].size}px;text-transform: uppercase">evius.co</p>`);
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i+1].size}px;text-transform: uppercase">${badge[i+1].name}</p>`);
                         oDoc.write(`</div>`);
                     }else{
                         oDoc.write(`<div style="margin-right: 20px">`);
@@ -220,7 +220,7 @@ class Badge extends Component {
                     oDoc.write(`<div style="display: flex">`);
                     oDoc.write(`<div style="margin-right: 20px">`);
                     if(!badge[i].qr){
-                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">evius.co]}</p>`)
+                        oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${badge[i].name}]}</p>`)
                     }else{
                         oDoc.write(`<div><img src=${qr}></div>`);
                     }
