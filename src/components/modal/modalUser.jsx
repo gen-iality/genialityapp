@@ -92,9 +92,9 @@ class UserModal extends Component {
         else{
             message.class = 'msg_warning';
             message.content = 'USER UPDATED';
-            if(snap.state_id !== this.props.value.state_id) this.props.statesCounter(snap.state_id,this.props.value.state_id);
+            if(snap.state_id !== this.state.state) this.props.statesCounter(snap.state_id,this.state.state);
             snap.updated_at = new Date();
-            userRef.doc(this.props.value._id).update(snap)
+            userRef.doc(this.state.userId).update(snap)
                 .then(() => {
                     console.log("Document successfully updated!");
                     message.class = 'msg_warning';
