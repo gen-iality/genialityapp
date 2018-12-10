@@ -166,7 +166,7 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
-                let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"}];
+                let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
                 data.user_properties = [...extraFields,...data.user_properties];
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
@@ -364,26 +364,48 @@ class General extends Component {
                         </div>
                         {
                             !event._id &&
-                                <div className="card">
-                                    <article className="media" style={{padding: "0.75rem"}}>
-                                        <div className="media-content">
-                                            <p>Campo Predeterminado por Defecto</p>
-                                            <div className="columns">
-                                                <div className="column">
-                                                    <p className="has-text-grey-dark has-text-weight-bold">EMAIL</p>
-                                                </div>
-                                                <div className="column">
-                                                    <p className="has-text-grey-dark has-text-weight-bold">Email</p>
-                                                </div>
-                                                <div className="column field">
-                                                    <input className="is-checkradio is-primary" disabled={true}
-                                                           type="checkbox" name={`mailndatory`} checked={true}/>
-                                                    <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                <React.Fragment>
+                                    <div className="card">
+                                        <article className="media" style={{padding: "0.75rem"}}>
+                                            <div className="media-content">
+                                                <p>Campo Predeterminado por Defecto</p>
+                                                <div className="columns">
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                    </div>
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                    </div>
+                                                    <div className="column field">
+                                                        <input className="is-checkradio is-primary" disabled={true}
+                                                               type="checkbox" name={`mailndatory`} checked={true}/>
+                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </article>
-                                </div>
+                                        </article>
+                                    </div>
+                                    <div className="card">
+                                        <article className="media" style={{padding: "0.75rem"}}>
+                                            <div className="media-content">
+                                                <p>Campo Predeterminado por Defecto</p>
+                                                <div className="columns">
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres</p>
+                                                    </div>
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres y Apellidos</p>
+                                                    </div>
+                                                    <div className="column field">
+                                                        <input className="is-checkradio is-primary" disabled={true}
+                                                               type="checkbox" name={`mailndatory`} checked={false}/>
+                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </React.Fragment>
                         }
                         {
                             fields.map((field,key)=>{
