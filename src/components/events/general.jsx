@@ -251,7 +251,10 @@ class General extends Component {
     };
     handleChangeField = (e,key) => {
         const {fields} = this.state;
-        const {name, value} = e.target;
+        let {name, value} = e.target;
+        if(name === 'name'){
+            value = toCapitalizeLower(value);
+        }
         fields[key][name] = value;
         this.setState({fields})
     };
@@ -520,5 +523,10 @@ const handleFields = (organizers,types,categories,event) =>{
 }
 
 const createOption = (label,key) => ({label, value: label, parent: key});
+
+function toCapitalizeLower(str){
+    str = str.toLowerCase();
+    return str.charAt(0).toUpperCase() + str.substr(1);
+}
 
 export default General;
