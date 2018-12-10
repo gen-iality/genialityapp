@@ -121,7 +121,7 @@ class UserModal extends Component {
         const resp = await BadgeApi.get(this.props.eventId);
         const {user} = this.state;
         const canvas = document.getElementsByTagName('CANVAS')[0];
-        let qr = canvas.toDataURL();
+        let qr = canvas ? canvas.toDataURL() : '';
         //if(this.props.value) this.props.checkIn(this.props.value);
         console.log(resp);
         if(resp._id){
