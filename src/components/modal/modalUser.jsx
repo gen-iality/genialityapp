@@ -6,6 +6,7 @@ import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
 import {BadgeApi} from "../../helpers/request";
 import {icon} from "../../helpers/constants";
+import {Redirect} from "react-router-dom";
 
 class UserModal extends Component {
     constructor(props) {
@@ -182,6 +183,7 @@ class UserModal extends Component {
             }
             oDoc.close();
         }
+        else this.setState({noBadge:true});
     };
 
     renderForm = () => {
@@ -294,6 +296,11 @@ class UserModal extends Component {
         this.setState({user:{}, valid:true, modal:false, uncheck:false, message},this.props.handleModal);
     };
 
+    goBadge = () => {
+        this.setState({redirect:true,url_redirect:'/event/'+this.props.eventId+'/badge',noBadge:false})
+    };
+    closeNoBadge = () => {this.setState({noBadge:false});};
+
     unCheck = () => {
         console.log(this.props.value);
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
@@ -314,6 +321,7 @@ class UserModal extends Component {
 
     render() {
         const {user,checked_in,rol,rolesList,state,statesList,userId} = this.state;
+        if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
@@ -423,6 +431,10 @@ class UserModal extends Component {
                         first={{title:'Si',class:'is-warning',action:this.unCheck}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeUnCheck}}/>
+                <Dialog modal={this.state.noBadge} title={'Sin Escarapela'}
+                        content={<p>Aún no tienes creada una escarapela. Crea una o sigue editando el usuario</p>}
+                        first={{title:'Crear',class:'is-info is-outlined',action:this.goBadge}}
+                        second={{title:'Cancelar',class:'is-text',action:this.closeNoBadge}}/>
             </React.Fragment>
         );
     }
