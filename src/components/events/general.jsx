@@ -247,7 +247,7 @@ class General extends Component {
     removeField = (key) => {
         const {fields} = this.state;
         fields.splice(key,1);
-        this.setState({fields})
+        this.setState({fields,newField:false})
     };
     handleChangeField = (e,key) => {
         const {fields} = this.state;
