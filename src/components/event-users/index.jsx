@@ -5,7 +5,6 @@ import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchComponent from "../shared/searchTable";
@@ -13,6 +12,7 @@ import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
+import ErrorServe from "../modal/serverError";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -474,7 +474,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }

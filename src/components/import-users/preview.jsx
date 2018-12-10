@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
-import LogOut from "../shared/logOut";
+import ErrorServe from "../modal/serverError";
 
 class Preview extends Component {
     constructor(props) {
@@ -200,7 +200,7 @@ class Preview extends Component {
                         <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
                     </div>
                 </div> 
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }
