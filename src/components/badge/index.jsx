@@ -12,7 +12,7 @@ class Badge extends Component {
             qrExist:false,
             extraFields:[],
             fontSize: [18,22,36,44],
-            qrSize: [64,128],
+            qrSize: [32,64,128],
             newField:false
         };
         this.saveBadge = this.saveBadge.bind(this)
@@ -35,7 +35,7 @@ class Badge extends Component {
 
     addField = () => {
         const {badge} = this.state;
-        badge.push({edit:true,line:true,id_properties:'',size:'18'});
+        badge.push({edit:true,line:true,id_properties:'',size:18});
         this.setState({badge,newField:true})
     };
 
@@ -82,10 +82,11 @@ class Badge extends Component {
     };
 
     removeField = (key) => {
-        const {badge} = this.state;
+        const {badge,extraFields} = this.state;
         if(badge[key].qr) this.setState({qrExist:false});
+        extraFields.push(badge[key].id_properties);
         badge.splice(key,1);
-        this.setState({badge})
+        this.setState({badge,extraFields})
     };
 
     renderPrint = () => {
@@ -156,7 +157,8 @@ class Badge extends Component {
         badge.map(item=>{
             return data.BadgeFields.push(item)
         });
-        try{
+        console.log(data);
+        /*try{
             const resp = await BadgeApi.create(data);
             console.log(resp);
             if(resp._id){
@@ -167,7 +169,7 @@ class Badge extends Component {
         }catch (err) {
             console.log(err.response);
             toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-        }
+        }*/
     };
 
     printPreview = () => {
