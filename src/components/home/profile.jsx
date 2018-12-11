@@ -3,13 +3,16 @@ import { withRouter } from 'react-router-dom';
 import EventCard from "../shared/eventCard";
 import LoadingEvent from "../loaders/loadevent";
 import {Actions, OrganizationApi, UsersApi} from "../../helpers/request";
+import {networks} from "../../helpers/constants";
 
 class HomeProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
             events: [],
-            user: {},
+            user: {
+                network:{}
+            },
             loadingEvents: true
         }
     }
@@ -24,6 +27,8 @@ class HomeProfile extends Component {
         const query = (type === 'User') ? 'users' : 'organizations';
         const resp = await Actions.get(`/api/${query}/${id}/events`,true);
         const user = (type === 'User') ? await UsersApi.getProfile(id,true): await OrganizationApi.getOne(id,true);
+        user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
+        console.log(user);
         this.setState({events:resp.data,loadingEvents:false,user});
     }
 
@@ -35,11 +40,11 @@ class HomeProfile extends Component {
                     <p className="menu-label">Menú</p>
                 </aside>
                 <div className="dynamic-content column">
-                    <div className="columns">
+                    <div className="columns card">
                         <div className="column is-4">
                             <figure className="image is-128x128">
                                 <img className="is-rounded" alt={`profile_${user.name}`}
-                                     src="https://bulma.io/images/placeholders/128x128.png"/>
+                                     src={user.picture}/>
                             </figure>
                             <div>
                                 <h3 className="title">{user.name}</h3>
@@ -58,14 +63,30 @@ class HomeProfile extends Component {
                             </div>
                         </div>
                         <div className="column">
+                            {
+                                Object.keys(user.network).map((net,key)=>{
+                                    if(!user.network[net]) return;
+                                    return <button className={`button column is-text`}
+                                                   key={key} onClick={(e) => {this.showNetwork(user.network[net])}}>
+                                        <span className={`icon is-small`}>
+                                            {
+                                                networks.find(obj => {
+                                                    return obj.path === net
+                                                }).icon
+                                            }
+                                        </span>
+                                    </button>
+                                })
+                            }
                         </div>
                     </div>
                     {
                         loadingEvents ? <LoadingEvent/> :
-                            <div className="columns home is-multiline is-mobile">
+                            <div className="columns home is-multiline is-mobile" style={{paddingTop:"2rem"}}>
                                 {
                                     events.map((event,key)=>{
                                     return <EventCard key={event._id} event={event}
+                                                      size={'column is-half'}
                                                       action={{name:'Ver >',url:`/landing/${event._id}`}}
                                                       right={<div className="actions is-pulled-right">
                                                           <p className="is-size-7"></p>

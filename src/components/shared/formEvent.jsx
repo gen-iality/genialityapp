@@ -6,7 +6,7 @@ import SelectInput from "./selectInput";
 
 class FormEvent extends Component {
     render() {
-        const { event, categories, organizers, types, imgComp, selectedCategories, selectedOrganizer, selectedType } = this.props;
+        const { event, categories, organizers, types, imgComp, selectedCategories, selectedOrganizer, selectedType, error } = this.props;
         return (
             <div className="columns">
                 <div className="column">
@@ -24,14 +24,16 @@ class FormEvent extends Component {
                         <div className="control">
                             <Geosuggest
                                 placeholder={'Ubicación del evento'}
+                                onKeyDown={this.props.changeSuggest}
                                 onSuggestSelect={this.props.onSuggestSelect}
                                 initialValue={event.location.FormattedAddress}
                                 location={new google.maps.LatLng(event.location.Latitude,event.location.Longitude)}
                                 radius="20"/>
                         </div>
+                        {error.location && <p className="help is-danger">{error.location}</p>}
                     </div>
                     <div className="field">
-                        <div className="columns">
+                        <div className="columns is-mobile">
                             <div className="column inner-column">
                                 <div className="field">
                                     <label className="label required has-text-grey-light">Fecha Inicio</label>
@@ -45,7 +47,7 @@ class FormEvent extends Component {
                                 </div>
                             </div>
                             <div className="vertical-line"></div>
-                            <div className="column  inner-column">
+                            <div className="column inner-column">
                                 <div className="field">
                                     <label className="label required has-text-grey-light">Hora Inicio</label>
                                     <div className="control">
@@ -60,7 +62,7 @@ class FormEvent extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <div className="columns">
+                        <div className="columns is-mobile">
                             <div className="column inner-column">
                                 <div className="field">
                                     <label className="label required has-text-grey-light">Fecha Fin</label>

@@ -9,31 +9,38 @@ class SearchComponent extends Component {
             showMessage: false,
             value: '',
             auxArr: [],
+            filtered: [],
             message: ""
         };
     }
 
     componentWillReceiveProps(nextProps) {
+        const {filtered} = this.state;
         //Fix
         if (nextProps.data !== this.props.data) {
             this.setState({auxArr:nextProps.data});
-            if(nextProps.clear) this.setState({value:''})
+            if(nextProps.clear&&this.state.value.length===0){
+                this.setState({value:''});
+                if(filtered.length > 0) this.props.searchResult(filtered);
+            }
         }
         if(nextProps.clear !== this.props.clear){
-            this.setState({value:''})
+            if(this.state.value.length>=3){
+                if(filtered.length > 0) this.props.searchResult(filtered);
+            }else this.setState({value:''})
         }
     }
 
     filterByAllColums(value) {
         let arrAux;
         if (this.props.kind === 'user') {
+            const filters = this.props.filter.map(item=>item.name);
             arrAux = this.props.data.filter( (item) =>{
-                return (item.properties.email.search(new RegExp(value, 'i')) >= 0 ||
-                    item.properties.name.search(new RegExp(value, 'i')) >= 0);
+                return (item.properties[filters[0]].search(new RegExp(value, 'i')) >= 0 ||
+                    item.properties[filters[1]].search(new RegExp(value, 'i')) >= 0);
             });
         }else if(this.props.kind === 'invitation'){
             arrAux = this.props.data.filter(item =>
-                item.name.search(new RegExp(value, 'i')) >= 0 ||
                 item.email.search(new RegExp(value, 'i')) >= 0 ||
                 item.state.search(new RegExp(value, 'i')) >= 0);
         }
@@ -46,7 +53,7 @@ class SearchComponent extends Component {
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
             if (filtered.length > 0) {
-                this.setState({ showMessage: false, message: "" });
+                this.setState({ showMessage: false, message: "", filtered });
             } else {
                 this.setState({ showMessage: true, message: "not" });
             }

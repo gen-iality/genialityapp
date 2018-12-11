@@ -1,17 +1,18 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
-import {Actions} from "../../helpers/request";
+import Moment from "moment"
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {roles, states} from "../../helpers/constants";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
+import Loading from "../loaders/loading";
+import connect from "react-redux/es/connect/connect";
+import ErrorServe from "../modal/serverError";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class ListEventUser extends Component {
             pilaRef:    firestore.collection('pila'),
             total:      0,
             checkIn:    0,
+            estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
             extraFields:[],
             addUser:    false,
             editUser:   false,
@@ -43,34 +45,36 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        const {rolstate:{roles,states}} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
         let newItems= [...this.state.userReq];
-        usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
+        this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
             let user;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
                 user._id = change.doc.id;
-                user.state = states.find(x => x._id === user.state_id);
+                user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
-                user.rol = roles.find(x => x._id === user.rol_id);
+                user.rol = roles.find(x => x.value === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                    if(change.doc._hasPendingWrites){
+                    this.statesCounter(user.state.value);
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'modified'){
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
-                    if(change.doc._hasPendingWrites){
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'removed'){
                     newItems.splice(change.oldIndex, 1);
@@ -86,25 +90,29 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
-        pilaRef.onSnapshot({
+        /*this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
                 console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
                 const data = change.doc.data();
-                data.created_at = data.created_at.toDate();
-                data.updated_at = data.updated_at.toDate();
-                /*if (change.type === 'added') {
+                data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
+                data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
+                if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
+                /!*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
                         }, (doc) => {
                             if(!doc._hasPendingWrites){
-                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,data)
+                                console.log('this is data: ', data)
+                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,{"properties":data.properties,"role_id":data.role_id,"state_id":data.state_id,"checked_in": data.checked_in,"role_id": data.rol_id,    "state_id": data.state_id })
                                     .then((response)=>{
                                         console.log(response);
-                                        console.log('desenpilando ==>',change.doc.data());
                                         pilaRef.doc(change.doc.id).delete();
+                                        if(response.status == "CREATED"){
+                                            usersRef.doc(change.doc.id).delete();
+                                        }
                                     })
                             }
                         });
@@ -125,12 +133,38 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }*/
+                }*!/
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
-        });
+        });*/
     }
+
+    componentWillUnmount() {
+        this.userListener();
+        //this.pilaListener()
+    }
+
+    statesCounter = (state,old) => {
+        const {rolstate:{states}} = this.props;
+        const item = states.find(x => x.value === state);
+        const old_item = states.find(x => x.value === old);
+        if(state && !old){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[item.label]:prevState.estados[item.label]+1}}
+            });
+        }
+        if(old && state){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1,[item.label]:prevState.estados[item.label]+1}}
+            })
+        }
+        if(old && !state){
+            this.setState(prevState=>{
+                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1}}
+            })
+        }
+    };
 
     exportFile = (e) => {
         e.preventDefault();
@@ -225,6 +259,9 @@ class ListEventUser extends Component {
         }
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
+    closeQr = () => {
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+    }
 
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
@@ -233,26 +270,27 @@ class ListEventUser extends Component {
     renderRows = () => {
         const items = [];
         const {extraFields} = this.state;
-        const limit = this.exportFile.length;
+        const limit = extraFields.length;
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
                 <td>
-                                                        <span className="icon has-text-primary action_pointer"
-                                                              onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                    <span className="icon has-text-primary action_pointer"
+                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
-                    <div>
-                        <input className="is-checkradio is-primary is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
-                               type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
-                        <label htmlFor={"checkinUser"+item._id}/>
-                    </div>
+                    {
+                        item.checked_in ? <p><FormattedDate value={item.checked_at.toDate()}/> <FormattedTime value={item.checked_at.toDate()}/></p>
+                            :<div>
+                                <input className="is-checkradio is-primary is-small" id={"checkinUser"+item._id} disabled={item.checked_in}
+                                       type="checkbox" name={"checkinUser"+item._id} checked={item.checked_in} onChange={(e)=>{this.checkIn(item)}}/>
+                                <label htmlFor={"checkinUser"+item._id}/>
+                            </div>
+                    }
                 </td>
-                <td>{item.state.name}</td>
-                <td>{item.properties.email}</td>
-                <td>{item.properties.name}</td>
+                <td>{item.state.label}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
-                        return <td key={item._id}>{item.properties[field.name]}</td>
+                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
                     })
                 }
             </tr>)
@@ -266,7 +304,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -274,15 +312,15 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={extraFields.slice(0,2)} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>
                         <div className="column">
-                            <div className="field is-grouped is-pulled-right">
+                            <div className="columns is-mobile is-multiline is-centered">
                                 {
                                     userReq.length>0 && (
-                                        <div className="control">
+                                        <div className="column is-narrow has-text-centered">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -292,90 +330,108 @@ class ListEventUser extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
                                 </div>
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="columns checkin-tags">
-                        <div className="column">
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Total</span>
-                                    </div>
-                                </div>
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Check In</span>
-                                    </div>
+                    <div className="checkin-tags-wrapper">
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-primary">{checkIn}</span>
+                                    <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
                         </div>
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-light">{total}</span>
+                                    <span className="tag is-white">Total</span>
+                                </div>
+                            </div>
+                            {
+                                Object.keys(estados).map(item=>{
+                                    return <div className="column is-narrow" key={item}>
+                                                <div className="tags is-centered">
+                                                    <span className={'tag '+item}>{estados[item]}</span>
+                                                    <span className="tag is-white">{item}</span>
+                                                </div>
+                                            </div>
+                                })
+                            }
+                        </div>
                     </div>
-
                     <div className="columns checkin-table">
                         <div className="column">
-                            <div className="table-wrapper">
-                            {
-                                users.length>0&&
-                                <React.Fragment>
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th/>
-                                            <th className="is-capitalized">Check</th>
-                                            <th className="is-capitalized">Estado</th>
-                                            <th className="is-capitalized">Correo</th>
-                                            <th className="is-capitalized">Nombre</th>
-                                            {
-                                                extraFields.map((field,key)=>{
-                                                    return <th key={key} className="is-capitalized">{field.name}</th>
-                                                })
-                                            }
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {
-                                            this.renderRows()
-                                        }
-                                        </tbody>
-                                    </table>
-                                    <Pagination
-                                        items={users}
-                                        change={this.state.changeItem}
-                                        onChangePage={this.onChangePage}
-                                    />
-                                </React.Fragment>
-                            }
-                            </div>
+                            {this.state.loading ? <Loading/>:
+                                <div className="table-wrapper">
+                                    {
+                                        users.length>0&&
+                                        <React.Fragment>
+                                            <div className="table">
+                                                <table className="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th/>
+                                                        <th className="is-capitalized">Check</th>
+                                                        <th className="is-capitalized">Estado</th>
+                                                        {
+                                                            extraFields.map((field,key)=>{
+                                                                return <th key={key} className="is-capitalized">{field.name}</th>
+                                                            })
+                                                        }
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {
+                                                        this.renderRows()
+                                                    }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <Pagination
+                                                items={users}
+                                                change={this.state.changeItem}
+                                                onChangePage={this.onChangePage}
+                                            />
+                                        </React.Fragment>
+                                    }
+                                </div>}
                         </div>
                     </div>
+                    <div className="checkin-warning">
+                        <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                    </div>
                 </div>
-                <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
-                         value={this.state.selectedUser} checkIn={this.checkIn}
-                         extraFields={this.state.extraFields} edit={this.state.edit}/>
+                {(!this.props.loading && editUser) &&
+                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
+                           rolstate={this.props.rolstate}
+                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
+                           extraFields={this.state.extraFields} edit={this.state.edit}/>
+                }
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
                             <p className="modal-card-title">QR Reader</p>
-                            <button className="delete" aria-label="close" onClick={(e)=>{this.setState({qrModal:false})}}/>
+                            <button className="delete" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
                             {
                                 qrData.user ?
                                     <div>
+                                        {qrData.user.checked_in && (<div>
+                                            <h1 className="title">Usuario Chequeado</h1>
+                                            <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
+                                        </div>)}
                                         {Object.keys(qrData.user.properties).map((obj,key)=>{
                                             return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
-                                        {qrData.user.checked_in && (<p>Checked: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></p>)}
                                     </div>:
                                     <React.Fragment>
                                         <div className="field">
@@ -418,7 +474,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }
@@ -434,11 +490,17 @@ const parseData = (data) => {
         info[key]['estado'] = item.state.name;
         info[key]['rol'] = item.rol.name;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'';
-        info[key]['Hora checkIn'] = item.checked_at?item.checked_at:'';
+        info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         return info
     });
     return info
 };
 
-export default ListEventUser;
+const mapStateToProps = state => ({
+    rolstate: state.rolstate.items,
+    loading: state.rolstate.loading,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(ListEventUser);

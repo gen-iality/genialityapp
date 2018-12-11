@@ -137,6 +137,18 @@ export const OrganizationApi = {
         return await Actions.getOne(`/api/organizations/${id}/`, 'events')
     }
 };
+export const BadgeApi = {
+    create: async(data) => {
+        return await Actions.post(`/api/escarapelas`,data)
+    },
+    edit: async(data,id) => {
+        return await Actions.edit('/api/escarapelas/', data, id)
+    },
+    get: async (id) => {
+        return await Actions.getOne('/api/escarapelas/', id)
+    }
+
+};
 const handleCat = (data) => {
     let list = [];
     data.map(item=>{

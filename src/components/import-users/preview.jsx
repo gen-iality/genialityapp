@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
-import LogOut from "../shared/logOut";
+import ErrorServe from "../modal/serverError";
 
 class Preview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            head: [
-                {tag:'email',used:false},
-                {tag:'name',used:false}
-            ],
+            head: [],
             loading: true,
             list : [],
             auxArr: []
@@ -115,45 +112,56 @@ class Preview extends Component {
                 {
                     this.state.loading ?
                         <div>Parsing excel</div> :
-                        <div className="columns preview-list">
+                        <div className="columns is-mobile is-gapless preview-list">
                             {
                                 list.map((item, index) => {
-                                    return <div className="column" key={index}>
-                                        <div className="box">
-                                            <div className="field is-grouped">
-                                                <div className={`control ${item.used ? "has-text-success" : "has-text-warning"}`}>
-                                                    {item.key}
+                                    return <div className="column is-4" key={index}>
+                                        <div className="preview-column">
+                                            <div className="preview-title">
+                                                <div className="preview-title-left">
+                                                    {
+                                                        (!item.used&&auxArr.length<=0) && (
+                                                            <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
+                                                                <i className="fas fa-plus"/>
+                                                            </span>
+                                                        )
+                                                    }
+                                                    {
+                                                        (!item.used&&auxArr.length>0) && (
+                                                            <span className="icon action_pointer tooltip is-small" data-tooltip="Change Field">
+                                                                <i className="fas fa-redo"/>
+                                                            </span>
+                                                        )
+                                                    }
+                                                    <span className={`${item.used ? "has-text-success" : `${auxArr.length>0 ? "has-text-danger" : "has-text-warning"}`}`}>
+                                                        {item.key}
+                                                    </span>   
                                                 </div>
                                                 {
-                                                    (!item.used&&auxArr.length>0) ?
-                                                        <div className="dropdown is-hoverable">
-                                                            <div className="control dropdown-trigger">
-                                                                <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
-                                                                    <span className="icon is-small"><i className="fas fa-angle-down"/></span>
-                                                                </button>
-                                                            </div>
-                                                            <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                                                                <div className="dropdown-content">
-                                                                    {
-                                                                        auxArr.map((head,llave)=>{
-                                                                            return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
-                                                                        })
-                                                                    }
+                                                    (!item.used&&auxArr.length>0) && (
+                                                        <div className="preview-title-right">
+                                                            <div className="dropdown is-right is-hoverable">
+                                                                <div className="control dropdown-trigger">
+                                                                    <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu">
+                                                                        <span className="icon is-small"><i className="fas fa-angle-down"/></span>
+                                                                    </button>
+                                                                </div>
+                                                                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                                                                    <div className="dropdown-content">
+                                                                        {
+                                                                            auxArr.map((head,llave)=>{
+                                                                                return <a className="dropdown-item" key={llave} onClick={(e)=>{self.sChange(head,index)}}>{head.tag}</a>
+                                                                            })
+                                                                        }
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>:
-                                                        <span className="icon action_pointer tooltip is-small" data-tooltip="Change Field" onClick={(e)=>{self.revertField(item,index)}}>
-                                                            <i className="fas fa-redo"/>
-                                                        </span>
+                                                        </div>
+                                                    )
                                                 }
-                                                {
-                                                    (!item.used&&auxArr.length<=0) && (
-                                                        <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
-                                                            <i className="fas fa-plus"/>
-                                                        </span>)
-                                                }
+                                                
                                             </div>
-                                            <div>
+                                            <div className="preview-items">
                                                 {item.list.slice(0,2).map((item,j)=>{
                                                     return <p key={j}>
                                                         {item}
@@ -166,12 +174,33 @@ class Preview extends Component {
                             }
                         </div>
                 }
-                {auxArr.length>0&&(
-                    <p className="has-text-danger">Faltan  los siguientes campos <b>Obligatorios: </b>
-                        {auxArr.map((item)=>{return <b key={item.tag}>{item.tag} </b>})}
+                <div className="preview-warning">
+                    {auxArr.length>0&&(
+                        <p className="has-text-grey-light">
+                            <span className="icon is-medium has-text-danger">
+                                <i className="fas fa-exclamation-circle"></i>
+                            </span>
+                            <span>
+                                <span>Los siguientes campos <strong className="has-text-danger">Obligatorios</strong> no se han definido: </span>
+                                <span>{auxArr.map((item)=>{return <strong key={item.tag}>{item.tag} </strong>})}</span> 
+                            </span>
+                        </p>)}
+
+                    {auxArr.length<0&&(
+                    <p className="has-text-grey-light">
+                        <span className="icon is-medium has-text-warning">
+                            <i className="fas fa-exclamation-circle"></i>
+                        </span>
+                        <span>Tienes algunos campos <strong className="has-text-warning">Opcionales</strong> sin definir.</span>
                     </p>)}
-                <button className="button is-primary is-rounded" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
-                {timeout&&(<LogOut/>)}
+                </div>
+
+                <div className="preview-button columns">
+                    <div className="column has-text-centered">
+                        <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
+                    </div>
+                </div> 
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }

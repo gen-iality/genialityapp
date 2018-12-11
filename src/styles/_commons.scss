@@ -1,5 +1,16 @@
 html {
   font-size: 14px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-button {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $grey-lighter;
+    border-radius: 10px;
+    width: 10px;
+  }
 }
 
 .action_pointer{
@@ -78,6 +89,25 @@ a {
   .navbar-divider {
     margin-left: 1rem;
     margin-right: 1rem;
+  }
+  #filterMenu{
+    .icon {
+      margin-left: 0.5em;
+      i {
+        border: solid $grey-light;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        &.up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+        &.down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
+      }
+    }
   }
 }
 
@@ -296,23 +326,6 @@ a {
   .input:disabled {
     color: $grey-light !important;
   }
-  .field {
-    margin-bottom: 1.25rem;
-    .label {
-      color: $grey-light;
-      font-weight: 900; 
-      margin: 0;
-    }
-    .required:after { content:" *"; color: $danger }
-    .control {
-      margin-left: 0.5em;
-    }
-    &.picture {
-      .control {
-        margin: 0;
-      }
-    }
-  }
   .inner-column {
     padding: 0; 
     .field {
@@ -326,7 +339,25 @@ a {
   }
 }
 
-.required:after { content:" *"; color: $danger }
+.field {
+  margin-bottom: 1.25rem;
+  .label {
+    color: $grey-light;
+    font-weight: 900; 
+    margin: 0;
+  }
+  .required:after { content:" *"; color: $danger; }
+  .control {
+    margin-left: 0.5em;
+  }
+  &.picture {
+    .control {
+      margin: 0;
+    }
+  }
+}
+
+.required:after { content:" *"; color: $danger; }
 
 .control {
   input{
@@ -369,7 +400,7 @@ a {
       display: none;
     }
     &::-webkit-scrollbar-thumb {
-      background-color: $grey-light;
+      background-color: $grey-lighter;
       border-radius: 10px;
       width: 10px;
     }
@@ -639,6 +670,16 @@ a {
   }
 }
 
+.tags {
+  .tag {
+    font-size: 1em;
+    font-weight: 700;
+    &.is-white {
+      color: $grey-light;
+    }
+  }
+}
+
 /**
  * The geosuggest module
  * NOTE: duplicated font-sizes' are for browsers which don't support rem (only IE 8)
@@ -749,6 +790,69 @@ a {
   }
 }
 
+.modal {
+  .modal-card-head {
+    background-color: white;
+    border-bottom: none;
+    margin-bottom: -1px;
+    padding-top: 4rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    .modal-card-title {
+      .modal-header {
+        height: 30px;
+        width: 175px;
+      }
+    }
+  }
+  .modal-card-body {
+    padding-left: 4rem;
+    padding-right: 4rem;
+    .tabs {
+      li {
+        font-weight: 900;
+        a {
+          color: $grey-lighter;
+          &:hover {
+            border-bottom-color: $primary;
+          }
+        }
+        &.is-active {
+          a {
+            border-bottom-color: $primary;
+            color: $primary;
+          }
+        }
+      }
+    }
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $grey-lighter;
+      border-radius: 10px;
+      width: 10px;
+    }
+  }
+  .modal-card-foot {
+    background-color: white;
+    border-top: none;
+    margin-top: -1px;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-bottom: 4rem;
+    .modal-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      width: 100%;
+    }
+  }
+}
+
 @media only screen and (max-width: $breakpoint-mobile) {
   .navbar {
     .navbar-item {
@@ -758,12 +862,22 @@ a {
     }.navbar-dropdown {
       box-shadow: none !important;
       font-size: 1em;
+      .navbar-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
   .footer {
     padding: 3em 0.75em;
     .copyright {
       padding: 0.75em;
+    }
+  }
+  .control {
+    input {
+      padding: 0.5rem;
     }
   }
   .input {
@@ -774,5 +888,88 @@ a {
   }
   .rw-widget-container {
     width: 100% !important;
+  }
+  .modal {
+    .modal-card-head {
+      padding: 2rem;
+      .modal-card-title {
+        .modal-header {
+          height: 20px;
+          width: 140px;
+        }
+      }
+    }
+    .modal-card-body {
+      padding: 2rem;
+    }
+    .modal-card-foot {
+      padding: 2rem;
+    }
+  }
+  .ReactTable {
+    .rt-thead {
+      min-width: 100% !important;
+      &.-header {
+        .rt-th {
+          &:not(:first-child) {
+            display: none;
+          }
+        }
+      }
+      &.-filters {
+        .rt-tr {
+          flex-direction: column;
+          .rt-th {
+            max-width: 100% !important;
+            width: 100% !important;
+            &:first-child {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .rt-tbody {
+      min-width: 100% !important;
+      .rt-tr {
+        flex-direction: column;
+        .rt-td {
+          padding-left: 1.5em;
+          max-width: 100% !important;
+          width: 100% !important;
+          &:first-child {
+            position: absolute;
+            left: -1em;
+            padding-left: 1em;
+          }
+        }
+      }
+    }
+  }
+  .table:not(.def) {
+    max-width: 100%;
+    width: 100%;
+    thead {
+      display: none;
+    }
+    tbody {
+      tr {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-direction: column;
+        position: relative;
+        td {
+          margin-left: 2em;
+          width: 100%;
+          &:nth-child(1) {
+            position: absolute;
+            top: 0.6em;
+            left: -2em;
+          }
+          
+        }
+      }
+    }
   }
 }

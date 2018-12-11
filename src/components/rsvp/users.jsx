@@ -8,15 +8,17 @@ import Dialog from "../modal/twoAction";
 import API from "../../helpers/request"
 import Table from "../shared/table";
 import { FaSortUp, FaSortDown, FaSort} from "react-icons/fa";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
 import ErrorServe from "../modal/serverError";
+import connect from "react-redux/es/connect/connect";
+import UserModal from "../modal/modalUser";
 
 class UsersRsvp extends Component {
     constructor(props) {
         super(props);
+        this.myRef = React.createRef();
         this.state = {
             actualEvent:{},
             events: [],
@@ -24,6 +26,7 @@ class UsersRsvp extends Component {
             totalUsers: [],
             selection: [],
             auxArr: [],
+            items: [],
             state: 'all',
             preselection: [],
             importUser: false,
@@ -43,29 +46,37 @@ class UsersRsvp extends Component {
         this.modalImport = this.modalImport.bind(this);
         this.addToList = this.addToList.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.toggleAll = this.toggleAll.bind(this);
     }
 
     async componentDidMount() {
+        this.myRef.current.addEventListener("scroll", () => {
+            if (this.myRef.current.scrollTop + this.myRef.current.clientHeight >= this.myRef.current.scrollHeight - 20){
+                this.loadMoreItems();
+            }
+        });
         try {
             const listEvents = await EventsApi.mine();
             const eventId = this.props.event._id;
+            const properties = this.props.event.user_properties.slice(0,2);
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
             const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
+            const {rolstate:{roles,states}} = this.props;
             listEvents.data.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;
-            let index = columns.map((e) => { return e.id; }).indexOf('properties.name');
+            let index = columns.map((e) => { return e.id; }).indexOf(`${properties[0].name}`);
             if(index<=-1) columns.push({
                 ...this.genericHeaderArrows(),
-                headerText: "Name",
-                id: "properties.name",
-                accessor: d => d.name
+                headerText: `${properties[0].name}`,
+                id: `${properties[0].name}`,
+                accessor: d => d[`${properties[0].name}`]
             },{
                 ...this.genericHeaderArrows(),
-                headerText: "Email",
-                id: "properties.email",
-                accessor: d => d.email,
+                headerText: `${properties[1].name}`,
+                id: `${properties[1].name}`,
+                accessor: d => d[`${properties[1].name}`],
                 width: 200
             });
             columns.splice(0, 1);
@@ -141,15 +152,18 @@ class UsersRsvp extends Component {
     };
 
     //Add all of users to selection state
-    toggleAll = () => {
+    async toggleAll() {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
         const currentRecords = this.state.totalUsers;
         if (selectAll) {
-            currentRecords.forEach(item => {
+            this.setState({loading:true});
+            await asyncForEach(currentRecords, async (item) => {
                 const pos = selection.map((e)=> { return e.id; }).indexOf(item.id);
-                if(pos<=-1) selection.push(item);
+                if(pos<=-1) await selection.push(item);
             });
+            console.log('Done');
+            this.setState({loading:false,items:selection.slice(0,10),scrollNow:10});
         }
         else{
             currentRecords.map(user=>{
@@ -160,15 +174,17 @@ class UsersRsvp extends Component {
                         ...selection.slice(pos + 1)
                     ];
                 }
-            })
+            });
+            this.setState({loading:false,items:[],scrollNow:10});
         }
-        this.handleCheckBox(currentRecords,selection);
         this.setState({ selectAll, selection, auxArr: selection });
+        this.handleCheckBox(currentRecords,selection);
     };
 
     //Add or remove user to selection state
     toggleSelection = (user) => {
         let selection = [...this.state.selection];
+        let items = [...this.state.items];
         let auxArr = [...this.state.auxArr];
         const keyIndex = selection.map((e)=> { return e.id; }).indexOf(user.id);
         if (keyIndex >= 0) {
@@ -180,12 +196,17 @@ class UsersRsvp extends Component {
                 ...auxArr.slice(0, keyIndex),
                 ...auxArr.slice(keyIndex + 1)
             ];
+            items = [
+                ...items.slice(0, keyIndex),
+                ...items.slice(keyIndex + 1)
+            ];
         } else {
             selection.push(user);
             auxArr.push(user);
+            items.push(user);
         }
         this.handleCheckBox(this.state.users, selection);
-        this.setState({ selection, auxArr });
+        this.setState({ selection, auxArr, items });
     };
 
     //Check if user exist at selection state
@@ -193,12 +214,13 @@ class UsersRsvp extends Component {
         if(this.state.selection.length>0){
             const pos = this.state.selection.map((e)=> { return e.id; }).indexOf(id);
             return pos !== -1
-        }
+        }else return false
     };
 
     //Remove user at selection state
     removeThis = (user) => {
         let selection = [...this.state.auxArr];
+        let items = [...this.state.items];
         const keyIndex = selection.map((e) => {
             return e.id;
         }).indexOf(user.id);
@@ -206,8 +228,12 @@ class UsersRsvp extends Component {
             ...selection.slice(0, keyIndex),
             ...selection.slice(keyIndex + 1)
         ];
+        items = [
+            ...items.slice(0, keyIndex),
+            ...items.slice(keyIndex + 1)
+        ];
         this.handleCheckBox(this.state.users,selection);
-        this.setState({ selection, auxArr: selection, clearSearch:true });
+        this.setState({ selection, auxArr: selection, items, clearSearch:true });
     };
 
     //Modal add single User
@@ -259,8 +285,43 @@ class UsersRsvp extends Component {
 
     //Search records at third column
     searchResult = (data) => {
-        !data ? this.setState({selection:this.state.auxArr}) : this.setState({selection:data})
+        !data ? this.setState({items:this.state.auxArr.slice(0,10)}) : this.setState({items:data})
     };
+    displayItems = () => {
+        const list = [], {items} = this.state;
+        for (let i = 0; i < items.length; i++) {
+            list.push(
+                <div key={i} className="media">
+                    <div className="media-content">
+                        <p className="title is-6">{items[i].email}</p>
+                        {/*<p className="subtitle is-7">{items[i]}</p>*/}
+                    </div>
+                    <div className="media-right">
+                        <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(items[i])}}>
+                            <i className="fa fa-times-circle"/>
+                        </span>
+                    </div>
+                </div>
+            );
+        }
+        return list;
+    }
+    loadMoreItems = () => {
+        if(this.state.loadingState){
+            return;
+        }
+        const moreItems = [...this.state.selection].slice(this.state.scrollNow,this.state.scrollNow+10);
+        const newItems = [...this.state.items];
+        moreItems.map(item=>{
+            return newItems.push(item)
+        })
+        this.setState({ loadingState: true });
+        setTimeout(() => {
+            this.setState(prevState=>{
+                return { items: newItems, loadingState: false, scrollNow:prevState.scrollNow+10 }
+            });
+        }, 1000);
+    }
 
     //Button Ticket Logic
     showTicket = () => {
@@ -397,9 +458,9 @@ class UsersRsvp extends Component {
                     <div className="column is-12 title-col">
                         <h2 className="subtitle has-text-weight-bold">Invitar asistentes a {this.props.event.name}</h2>
                     </div>
-                    <div className="column is-9 big-col">
+                    <div className="column is-12 big-col">
                         <div className="columns">
-                            <div className="column is-4">
+                            <div className="column is-3">
                                 <div className="">
                                     <div className="event-inv-users">
                                         <h3 className="event-inv-subtitle">Asistentes a este evento</h3>
@@ -450,7 +511,7 @@ class UsersRsvp extends Component {
                                     }
                                 </div>
                             </div>
-                            <div className="column is-8 event-inv-table">
+                            <div className="column is-9 event-inv-table">
                                 <h3 className="event-inv-subtitle">
                                     {
                                         this.state.actualEvent._id === this.props.event._id ?
@@ -477,57 +538,61 @@ class UsersRsvp extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="column is-3 small-col">
-                        <div className="field">
-                            <strong>Seleccionados: {this.state.auxArr.length}</strong>
-                        </div>
-                        {
-                            this.state.auxArr.length > 0 &&
-                            <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                        }
-                        <div className="event-inv-selected field">
-                            {
-                                this.state.selection.map((item,key)=>{
-                                    return <div key={key} className="media">
-                                        <div className="media-content">
-                                            <p className="title is-6">{item.name}</p>
-                                            <p className="subtitle is-7">{item.email}</p>
+                </div>
+                <div className="columns event-inv-selected">
+                    <div className="column is-3 is-offset-9 inv-selected-wrapper">
+                        <div className="dropdown is-up is-hoverable inv-selected-drop">
+                            <div className="dropdown-trigger">
+                                <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-selected">
+                                    <strong>Seleccionados: {this.state.auxArr.length}</strong>
+                                </button>
+                            </div>
+                            <div className="dropdown-menu" id="dropdown-selected" role="menu">
+                                <div className="dropdown-content inv-selected-content">
+                                    {
+                                        this.state.auxArr.length == 0 &&
+                                        <div className="has-text-centered">
+                                            <span className="has-text-weight-bold has-text-grey-dark">Aun no has seleccionado asistentes</span>
                                         </div>
-                                        <div className="media-right">
-                                                <span className="icon has-text-danger is-small" onClick={(e)=>{this.removeThis(item)}}>
-                                                    <i className="fa fa-times-circle"/>
-                                                </span>
-                                        </div>
+                                    }
+                                    {
+                                        this.state.auxArr.length > 0 &&
+                                        <SearchComponent  data={this.state.selection} kind={'invitation'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    }
+                                    <div className="inv-selected-list" ref={this.myRef}>
+                                        {this.displayItems()}
+                                        {this.state.loadingState && <p>Loading...</p>}
                                     </div>
-                                })
-                            }
-                        </div>
-                        {
-                            this.state.auxArr.length > 0 &&
-                            <div>
-                                <div className="field control btn-wrapper">
-                                    <button className="button is-primary tooltip"
-                                            data-tooltip="Se envía correo con Tiquete"
-                                            disabled={this.state.auxArr.length<=0}
-                                            onClick={this.showTicket}>
-                                        Enviar Tiquete
-                                    </button>
-                                </div>
-                                <div className="field control btn-wrapper">
-                                    <button className="button is-primary is-outlined tooltip"
-                                            data-tooltip="Se envía correo con Invitación"
-                                            disabled={this.state.selection.length<=0}
-                                            onClick={(e)=>{this.props.userTab(this.state.selection)}}>
-                                        Enviar Invitación
-                                    </button>
+                                    {
+                                        this.state.auxArr.length > 0 &&
+                                        <div className="btn-wrapper">
+                                            <div className="control">
+                                                <button className="button is-primary tooltip"
+                                                        data-tooltip="Se envía correo con Tiquete"
+                                                        disabled={this.state.auxArr.length<=0}
+                                                        onClick={this.showTicket}>
+                                                    Enviar Tiquete
+                                                </button>
+                                            </div>
+                                            <div className="control">
+                                                <button className="button is-primary is-outlined tooltip"
+                                                        data-tooltip="Se envía correo con Invitación"
+                                                        disabled={this.state.selection.length<=0}
+                                                        onClick={(e)=>{this.props.userTab(this.state.selection)}}>
+                                                    Enviar Invitación
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    </div>     
                 </div>
+                {(!this.props.loading && this.state.addUser) &&
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList}
-                         extraFields={this.props.event.user_properties} edit={this.state.edit}/>
+                         value={this.state.selectedUser} addToList={this.addToList} rolstate={this.props.rolstate}
+                         extraFields={this.props.event.user_properties} edit={this.state.edit}/>}
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
                         content={<p>
@@ -545,11 +610,22 @@ class UsersRsvp extends Component {
     }
 }
 
-//Add only id, name and email
+async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+    }
+}
+
+//Add only id, and the first two fields
 const handleUsers = (list) => {
         let users = [];
-        list.map(user=>{
-            return users.push({name:user.properties.name,email:user.properties.email,state:user.state.name,id:user._id})
+        list.map((user,key)=>{
+            users[key] = {};
+            users[key]['id'] = user._id;
+            users[key]['state'] = user.state.name;
+            return Object.keys(user.properties).slice(0,2).map(field=>{
+                return users[key][field] = user.properties[field];
+            })
         });
         return users;
 };
@@ -576,4 +652,10 @@ const columns = [
     }
 ];
 
-export default UsersRsvp;
+const mapStateToProps = state => ({
+    rolstate: state.rolstate.items,
+    loading: state.rolstate.loading,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(UsersRsvp);

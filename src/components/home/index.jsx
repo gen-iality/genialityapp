@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import { connect } from "react-redux";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
-import {CategoriesApi, EventsApi, TypesApi} from "../../helpers/request";
+import { EventsApi } from "../../helpers/request";
 import API from "../../helpers/request";
 Moment.locale('es');
 momentLocalizer();
@@ -14,8 +15,6 @@ class Home extends Component {
         super(props);
         this.state = {
             loading:true,
-            categories:[],
-            types:[],
             events:[],
             tabEvt:true,
             tabEvtType:true,
@@ -27,11 +26,9 @@ class Home extends Component {
 
     async componentDidMount() {
         try{
-            const categories = await CategoriesApi.getAll();
-            const types = await TypesApi.getAll();
             const resp = await EventsApi.getPublic('?pageSize=30');
             console.log(resp);
-            this.setState({events:resp.data,loading:false,categories,types,current_page:resp.meta.current_page,total:resp.meta.total});
+            this.setState({events:resp.data,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
             /*this.refs.iScroll.addEventListener("scroll", () => {
                 if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 20){
                     this.loadMoreItems();
@@ -82,8 +79,8 @@ class Home extends Component {
     }*/
 
     render() {
-        const {categories,types,category,type} = this.state;
-        const {match} = this.props;
+        const {category,type} = this.state;
+        const {match,categories,types} = this.props;
         return (
             <div>
                 <div className="filter-bar column is-3 is-offset-9">
@@ -103,7 +100,7 @@ class Home extends Component {
                     </div>
                 </div>
                 <div className="columns">
-                    <aside className="column menu aside is-2 has-text-weight-bold">
+                    <aside className="column menu aside is-2 has-text-weight-bold is-hidden-mobile">
                         <p className="menu-label has-text-grey-dark has-text-centered-mobile" onClick={(e)=>{this.setState({tabEvt:!this.state.tabEvt})}}>
                             <span>Eventos</span>
                             <span className="icon">
@@ -209,4 +206,10 @@ class Home extends Component {
     }
 }
 
-export default withRouter(Home);
+const mapStateToProps = state => ({
+    categories: state.categories.items,
+    types: state.types.items,
+    error: state.categories.error
+});
+
+export default connect(mapStateToProps)(withRouter(Home));

@@ -11,7 +11,9 @@ import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
-import {FaAngleDown, FaAngleUp} from "react-icons/fa";
+import {fetchRolState} from "../../redux/rolstate/actions";
+import connect from "react-redux/es/connect/connect";
+import Badge from "../badge";
 Moment.locale('es');
 momentLocalizer();
 
@@ -20,13 +22,13 @@ class Event extends Component {
         super(props);
         this.state = {
             loading:true,
-            showMenu:true,
             userTab:true,
             contentTab:true
         }
     }
 
     async componentDidMount() {
+        this.props.dispatch(fetchRolState());
         let eventId = this.props.match.params.event;
         if(eventId === 'new_event'){
             const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
@@ -51,7 +53,7 @@ class Event extends Component {
     async componentWillReceiveProps(nextProps) {
         let eventId = nextProps.match.params.event;
         if(eventId === 'new_event'){
-            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate(), user_properties:[]};
             this.setState({newEvent:true,loading:false,event})
         }else{
             try {
@@ -80,7 +82,7 @@ class Event extends Component {
 
     render() {
         const { match } = this.props;
-        const { timeout, showMenu } = this.state;
+        const { timeout } = this.state;
         return (
             <React.Fragment>
                 {
@@ -89,14 +91,10 @@ class Event extends Component {
                             <aside className="column menu event-aside is-2 has-text-weight-bold">
                                 <p className="subtitle has-text-weight-bold">
                                     {this.state.newEvent?'Nuevo evento':this.state.event.name}
-                                    <span className="icon is-hidden-desktop" onClick={(e)=>{
-                                        this.setState((prevState) => {return {showMenu:!prevState.showMenu}})}}>
-                                        {this.state.showMenu?<FaAngleUp/>:<FaAngleDown/>}
-                                    </span>
                                 </p>
                                 {
                                     (!this.state.newEvent) && (
-                                        <div className={`${showMenu?'is-hidden-mobile':''}`}>
+                                        <div className={`is-hidden-mobile`}>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
@@ -121,7 +119,12 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
+                                            <ul className="menu-list">
+                                                <li>
+                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
+                                                </li>
+                                            </ul>
+                                            {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
                                                     <i className={`${this.state.contentTab?'up':'down'}`}/>
@@ -138,22 +141,24 @@ class Event extends Component {
                                                         </li>
                                                     </ul>
                                                 )
-                                            }
+                                            } */}
                                         </div>
                                     )
                                 }
                             </aside>
-                            <div className="event-vertical-line"></div>
                             <div className="column event-main is-10">
-                                <section className="section event-wrapper">
-                                    <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
-                                    <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                    <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
-                                    <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
-                                    <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
-                                    <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                    <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                                </section>
+                                {
+                                    this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
+                                        <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
+                                        <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
+                                        <Route path={`${match.url}/badge`} render={()=><Badge eventId={this.state.event._id} event={this.state.event}/>}/>
+                                        <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
+                                        <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
+                                        <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
+                                        <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
+                                        <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
+                                    </section>
+                                }
                             </div>
                         </section>
                 }
@@ -165,4 +170,9 @@ class Event extends Component {
     }
 }
 
-export default Event;
+const mapStateToProps = state => ({
+    loading: state.rolstate.loading,
+    error: state.rolstate.error
+});
+
+export default connect(mapStateToProps)(Event);

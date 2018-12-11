@@ -11,6 +11,7 @@ import ErrorServe from "../modal/serverError";
 import Dialog from "../modal/twoAction";
 import * as Cookie from "js-cookie";
 import {FormattedMessage} from "react-intl";
+import CreatableSelect from 'react-select/lib/Creatable';
 Moment.locale('es');
 
 class General extends Component {
@@ -21,6 +22,10 @@ class General extends Component {
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
+            error: {},
+            fields:[],
+            inputValue: '',
+            option: [],
             minDate: new Date(),
             valid: !this.props.event._id
         };
@@ -40,7 +45,7 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType})
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields:event.user_properties})
         }catch (error) {
             // Error
             if (error.response) {
@@ -63,9 +68,13 @@ class General extends Component {
     };
 
     valid = () => {
+        const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
             valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
-        this.setState({valid:!valid})
+        if(!event.location.FormattedAddress && !event.location.PlaceId){
+            error.location = 'Fill a correct address'
+        }
+        this.setState({valid:!valid,error})
     };
 
     selectCategory = (selectedCategories) => {
@@ -146,7 +155,8 @@ class General extends Component {
             description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
-            event_type_id : this.state.selectedType.value
+            event_type_id : this.state.selectedType.value,
+            user_properties : this.state.fields
         };
         try {
             if(event._id){
@@ -156,6 +166,8 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
+                let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
+                data.user_properties = [...extraFields,...data.user_properties];
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
@@ -203,6 +215,78 @@ class General extends Component {
             location.FormattedAddress = place.formatted_address;
             location.PlaceId = place.place_id;
             this.setState({event:{...this.state.event,location}},this.valid)
+        }else{
+            this.setState({event:{...this.state.event,location:{}}},this.valid)
+        }
+    };
+
+    changeSuggest = () => {
+        const error = {};
+        const {event:{location}} = this.state;
+        if(!location.FormattedAddress && !location.PlaceId){
+            error.location = 'Fill a correct address'
+        }
+        this.setState({error})
+    };
+
+    //User properties
+    addField = () => {
+        const {fields} = this.state;
+        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true}],newField:true})
+    };
+    saveField = (key) => {
+        const {fields} = this.state;
+        fields[key].edit = !fields[key].edit;
+        this.setState({fields,newField:false})
+    };
+    editField = (key) => {
+        const {fields} = this.state;
+        fields[key].edit = !fields[key].edit;
+        this.setState({fields,newField:true});
+    };
+    removeField = (key) => {
+        const {fields} = this.state;
+        fields.splice(key,1);
+        this.setState({fields,newField:false})
+    };
+    handleChangeField = (e,key) => {
+        const {fields} = this.state;
+        let {name, value} = e.target;
+        if(name === 'name'){
+            value = toCapitalizeLower(value);
+        }
+        fields[key][name] = value;
+        this.setState({fields})
+    };
+    changeFieldCheck = (e,key) => {
+        const {fields} = this.state;
+        const {name} = e.target;
+        fields[key][name] = !fields[key][name];
+        this.setState({fields})
+    };
+    handleInputChange = (key,inputValue) => {
+        this.setState({ inputValue });
+    };
+    changeOption = (key, option) => {
+        const { fields } = this.state;
+        const field = fields[key];
+        field.options = option;
+        this.setState({ fields });
+    };
+    handleKeyDown = (event,key) => {
+        const { inputValue, fields } = this.state;
+        const field = fields[key];
+        field.options = field.options ? field.options : [];
+        if (!inputValue) return;
+        switch (event.key) {
+            case 'Enter':
+            case 'Tab':
+                field.options = [...field.options,createOption(inputValue,key)];
+                this.setState({
+                    inputValue: '',
+                    fields
+                });
+                event.preventDefault();
         }
     };
 
@@ -239,32 +323,185 @@ class General extends Component {
     }
 
     render() {
-        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid, timeout } = this.state;
+        const { event, categories, organizers, types,
+            selectedCategories, selectedOrganizer, selectedType,
+            fields, inputValue, newField,
+            valid, timeout, error } = this.state;
         return (
-            <form className="form event-general" onSubmit={this.submit}>
-                <FormEvent event={event} categories={categories} organizers={organizers} types={types}
-                           selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
-                           imgComp={
-                               <div className="field picture">
-                                   <label className="label has-text-grey-light">Foto</label>
-                                   <div className="control">
-                                       <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                   divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                   classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                   contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                                   changeImg={this.changeImg} errImg={this.state.errImg}
-                                                   style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+            <div>
+                <div className="event-general">
+                    <FormEvent event={event} categories={categories} organizers={organizers} types={types} error={error} changeSuggest={this.changeSuggest}
+                               selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
+                               imgComp={
+                                   <div className="field picture">
+                                       <label className="label has-text-grey-light">Foto</label>
+                                       <div className="control">
+                                           <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                                       divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
+                                                       classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                       contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
+                                                       changeImg={this.changeImg} errImg={this.state.errImg}
+                                                       style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                                       </div>
+                                       {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                    </div>
-                                   {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                               </div>
-                           }
-                           handleChange={this.handleChange} minDate={this.state.minDate}
-                           selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
-                           changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
+                               }
+                               handleChange={this.handleChange} minDate={this.state.minDate}
+                               selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
+                               changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
+                    <div>
+                        <div className="level">
+                            <div className="level-left">
+                                <div className="level-item">
+                                    <p className="subtitle is-5"><strong>Campos de Evento</strong></p>
+                                </div>
+                                <div className="level-item">
+                                    <button className="button" onClick={this.addField} disabled={newField}>
+                                        <span className={`icon is-small`}><i className="fas fa-plus"></i></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {
+                            !event._id &&
+                                <React.Fragment>
+                                    <div className="card">
+                                        <article className="media" style={{padding: "0.75rem"}}>
+                                            <div className="media-content">
+                                                <p>Campo Predeterminado por Defecto</p>
+                                                <div className="columns">
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                    </div>
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                    </div>
+                                                    <div className="column field">
+                                                        <input className="is-checkradio is-primary" disabled={true}
+                                                               type="checkbox" name={`mailndatory`} checked={true}/>
+                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                    <div className="card">
+                                        <article className="media" style={{padding: "0.75rem"}}>
+                                            <div className="media-content">
+                                                <p>Campo Predeterminado por Defecto</p>
+                                                <div className="columns">
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres</p>
+                                                    </div>
+                                                    <div className="column">
+                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres y Apellidos</p>
+                                                    </div>
+                                                    <div className="column field">
+                                                        <input className="is-checkradio is-primary" disabled={true}
+                                                               type="checkbox" name={`mailndatory`} checked={false}/>
+                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    </div>
+                                </React.Fragment>
+                        }
+                        {
+                            fields.map((field,key)=>{
+                                return <div className="card" key={key}>
+                                    <article className="media" style={{padding: "0.75rem"}}>
+                                        <div className="media-content">
+                                            <div className="columns">
+                                                <div className="field column">
+                                                    <label className="label required has-text-grey-light">Nombre</label>
+                                                    <div className="control">
+                                                        <input className="input" name={"name"} type="text" disabled={!field.edit}
+                                                               placeholder="Nombre del campo" value={field.name}
+                                                               onChange={(e)=>{this.handleChangeField(e,key)}}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="field column">
+                                                    <div className="control">
+                                                        <label className="label required">Tipo</label>
+                                                        <div className="control">
+                                                            <div className="select">
+                                                                <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type} disabled={!field.edit}>
+                                                                    <option value={''}>Seleccione...</option>
+                                                                    <option value={'text'}>Texto</option>
+                                                                    <option value={'email'}>Correo</option>
+                                                                    <option value={'number'}>Numérico</option>
+                                                                    <option value={'list'}>Lista Opciones</option>
+                                                                    <option value={'boolean'}>Si/No</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {
+                                                        field.type === 'list' && (
+                                                            <div className="control">
+                                                                <CreatableSelect
+                                                                    components={{DropdownIndicator: null,}}
+                                                                    inputValue={inputValue}
+                                                                    isDisabled={!field.edit}
+                                                                    isClearable
+                                                                    isMulti
+                                                                    menuIsOpen={false}
+                                                                    onChange={this.changeOption.bind(this, key)}
+                                                                    onInputChange={this.handleInputChange.bind(this, key)}
+                                                                    onKeyDown={(e)=>{this.handleKeyDown(e,key)}}
+                                                                    placeholder="Escribe la opción y presiona Enter o Tab..."
+                                                                    value={field.options}
+                                                                />
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
+                                                <div className="column field">
+                                                    <input className="is-checkradio is-primary" id={`mandatory${key}`}
+                                                           type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                                           onChange={(e)=>{this.changeFieldCheck(e,key)}} disabled={!field.edit}/>
+                                                    <label htmlFor={`mandatory${key}`}>Obligatorio</label>
+                                                </div>
+                                            </div>
+                                            {
+                                                field.name !== "email" &&
+                                                    <div className="columns">
+                                                    <div className="column is-1">
+                                                        <nav className="level is-mobile">
+                                                            <div className="level-left">
+                                                                {
+                                                                    field.edit &&
+                                                                    <a className="level-item" onClick={(e)=>{this.saveField(key)}}>
+                                                                        <span className="icon has-text-info"><i className="fas fa-save"></i></span>
+                                                                    </a>
+                                                                }
+                                                                {
+                                                                    !field.edit &&
+                                                                    <a className="level-item" onClick={(e)=>{this.editField(key)}}>
+                                                                        <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
+                                                                    </a>
+                                                                }
+                                                                <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
+                                                                    <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                                </a>
+                                                            </div>
+                                                        </nav>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </article>
+                                </div>
+                            })
+                        }
+                    </div>
+                </div>
                 <div className="buttons is-left">
                     {
                         this.state.loading? <p>Guardando...</p>
-                        :<button type={"submit"} className={`button is-primary`} disabled={valid}>Guardar</button>
+                            :<button onClick={this.submit} className={`button is-primary`} disabled={valid}>Guardar Evento</button>
                     }
                     {
                         event._id && <button className="button is-outlined is-danger" onClick={this.modalEvent}>
@@ -278,7 +515,7 @@ class General extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
-            </form>
+            </div>
         );
     }
 }
@@ -305,6 +542,13 @@ const handleFields = (organizers,types,categories,event) =>{
         selectedType = types[pos];
     }else selectedType = undefined;
     return {selectedOrganizer,selectedCategories,selectedType}
+}
+
+const createOption = (label,key) => ({label, value: label, parent: key});
+
+function toCapitalizeLower(str){
+    str = str.toLowerCase();
+    return str.charAt(0).toUpperCase() + str.substr(1);
 }
 
 export default General;

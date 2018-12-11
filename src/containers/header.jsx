@@ -1,32 +1,43 @@
 import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import {Link, NavLink, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
 import {AuthUrl} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
+import connect from "react-redux/es/connect/connect";
 
 class Header extends Component {
     constructor(props) {
         super(props);
         this.props.history.listen((location, action) => {
             console.log("on route change");
+            const splited = location.pathname.split('/');
+            if(splited[1]===""){
+                this.setState({filterEvius:1})
+            }else if(splited[1]==="event"){
+                this.setState({filterEvius:2,eventUrl:splited[2]})
+            }else this.setState({filterEvius:0});
             window.scrollTo(0, 0);
-            this.setState({open:false})
+            this.setState({menuOpen:false,filterOpen:false})
         });
         this.state = {
             selection: [],
             organizations: [],
+            filterEvius: 0,
             name: 'user',
             user: false,
-            open: false,
+            menuOpen: false,
+            filterOpen: false,
             timeout: false,
             modal: false,
             loader: true,
             create: false,
             valid: true,
             serverError: false,
+            tabEvtType:true,
+            tabEvtCat: true,
         };
     }
 
@@ -75,13 +86,87 @@ class Header extends Component {
     };
 
     openMenu = () => {
-        this.setState((prevState) => {
-            return {open:!prevState.open}
+        this.setState((menuState) => {
+            return {menuOpen:!menuState.menuOpen,filterOpen:false}
+        });
+    };
+    
+    openFilter = () => {
+        this.setState((filterState) => {
+            return {filterOpen:!filterState.filterOpen,menuOpen:false}
         });
     };
 
     render() {
-        const { timeout, serverError } = this.state;
+        const { timeout, serverError, filterEvius } = this.state;
+        const { categories, types } = this.props;
+        const menuEvius = [
+            '',
+            <React.Fragment>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
+                    <span>Tipo de Evento</span>
+                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
+                </p>
+                {
+                    this.state.tabEvtType && (
+                        <ul>
+                            {
+                                types.map((item,key)=>{
+                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        {item.label}
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    )
+                }
+                <hr className="navbar-divider"/>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
+                    <span>Categoría</span>
+                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
+                </p>
+                {
+                    this.state.tabEvtCat && (
+                        <ul>
+                            {
+                                categories.map((item,key)=>{
+                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        {item.label}
+                                    </li>
+                                })
+                            }
+                        </ul>
+                    )
+                }
+            </React.Fragment>,
+            <React.Fragment>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark">Evento</p>
+                <p className="navbar-item has-text-centered-mobile">
+                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
+                </p>
+                <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                    <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
+                    <span className="icon">
+                        <i className={`${this.state.userTab?'up':'down'}`}/>
+                    </span>
+                </p>
+                {
+                    this.state.userTab && (
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
+                            </li>
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
+                            </li>
+                        </ul>
+                    )
+                }
+                <p className="navbar-item has-text-centered-mobile">
+                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
+                </p>
+            </React.Fragment>
+        ]
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -113,16 +198,16 @@ class Header extends Component {
                 <header>
                     <nav className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile">
                         <div className="navbar-brand">
-                            <Link className="navbar-item" to={'/'}>
+                            <div className="navbar-item" data-target="filterMenu" onClick={this.openFilter}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                            </Link>
-                            <div className={`navbar-burger burger ${this.state.open ? "is-active" : ""}`}  data-target="navbarExampleTransparentExample" onClick={this.openMenu}>
+                            </div>
+                            <div className={`navbar-burger burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
                                 <span></span>
                                 <span></span>
                                 <span></span>
                             </div>
                         </div>
-                        <div id="navbarExampleTransparentExample" className={`navbar-menu ${this.state.open ? "is-active" : ""}`}>
+                        <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-start">
                                 <div className="navbar-item has-text-weight-bold has-text-grey-light">
                                     <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={'/'}>
@@ -158,27 +243,20 @@ class Header extends Component {
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                                     </p>
-
-                                                    <Link className="navbar-item item-sub  has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
                                                         <FormattedMessage id="header.profile_edit" defaultMessage="Profile"/>
                                                     </Link>
-
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
-
                                                     <hr className="navbar-divider"/>
-
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
                                                     </p>
-
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
                                                         <FormattedMessage id="header.my_events_create" defaultMessage="Eventos"/>
                                                     </Link>
-
                                                     <hr className="navbar-divider"/>
-
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
                                                     </p>
@@ -205,6 +283,11 @@ class Header extends Component {
                                 }
                             </div>
                         </div>
+                        <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
+                            <div className="navbar-dropdown">
+                                {menuEvius[filterEvius]}
+                            </div>
+                        </div>
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
@@ -214,4 +297,10 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+const mapStateToProps = state => ({
+    categories: state.categories.items,
+    types: state.types.items,
+    error: state.categories.error
+});
+
+export default connect(mapStateToProps)(withRouter(Header));

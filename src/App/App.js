@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+import { Provider } from 'react-redux'
 import * as Cookie from "js-cookie";
 import { parseUrl } from "../helpers/constants";
 
-import Header from "../containers/header";
-import ContentContainer from "../containers/content";
-import Footer from "../containers/footer";
 import privateInstance, {Actions} from "../helpers/request";
-import { ToastContainer } from 'react-toastify';
+import store from "../redux/store";
+import MainRouter from "../containers/router";
 
 
 class App extends Component {
@@ -30,14 +28,9 @@ class App extends Component {
     }
     render() {
         return (
-        <Router>
-            <div>
-                <Header/>
-                <ContentContainer/>
-                <Footer/>
-                <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange/>
-            </div>
-        </Router>
+         <Provider store={store}>
+             <MainRouter/>
+         </Provider>
         );
     }
 }

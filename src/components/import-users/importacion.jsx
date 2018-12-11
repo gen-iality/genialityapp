@@ -60,15 +60,14 @@ class Importacion extends Component {
     }
 
     downloadExcel = () => {
-        console.log(this.props);
-        let data = [{'name':'','email':''}];
+        let data = [{}];
         this.props.extraFields.map((extra)=>{
            return data[0][extra.name] = ''
         });
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Template");
-        XLSX.writeFile(wb, `usertemplate${Moment().format('DDMMYY')}.xls`);
+        XLSX.writeFile(wb, `attendeestemplate${Moment().format('DDMMYY')}.xls`);
     };
 
     componentWillReceiveProps(nextProps) {
@@ -80,23 +79,37 @@ class Importacion extends Component {
     render() {
         return (
             <React.Fragment>
-                <p>Para importar los usuarios de tu evento debes cargar un archivo excel con las columnas organizadas (cómo se muestra en el siguiente ejemplo) o para mayor facilidad <strong>descarga nuestro template</strong>.</p>
-                <p>Las columnas requeridas que deben existir para importar usuarios son: <strong>nombre</strong> y <strong>correo</strong></p>
-                {
-                    this.state.showMsg && (
-                        <p>Las columnas adicionales para este evento son:
-                            {this.props.extraFields.map((extra,key)=>{
-                                return <strong key={key}>{extra.name}, </strong>
-                            })}
-                        </p>
-                    )
-                }
-                <div className="has-text-centered">
+                <div className="importacion-txt">
+                    <p>Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los datos de tus asistentes.</p>
+                </div>
+
+                <div className="importacion-ejm is-mobile is-gapless">
+                    {
+                        this.state.showMsg && (
+                            <div className="columns is-mobile is-multiline">
+                                <div className="column is-12 is-paddingless">
+                                    <span className="is-uppercase has-text-weight-bold has-text-grey">Campos Requeridos</span>
+                                </div>
+                                <div className="column is-12 is-paddingless">
+                                    <div className="ejm-tabla columns is-mobile is-gapless">
+                                        {this.props.extraFields.map((extra,key)=>{
+                                            return <div className="column" key={key}>
+                                                <span className="has-text-grey-light">{extra.name}</span>
+                                            </div>
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+
+                <div className="importacion-btns has-text-centered">
                     <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
-                        <button className="button is-rounded is-primary">Importar Excel</button>
+                        <button className="button is-primary">Importar Excel</button>
                     </Dropzone>
                     <p className="help is-danger">{this.state.errMsg}</p>
-                    <button className="button is-text is-primary" onClick={this.downloadExcel}>
+                    <button className="button is-text" onClick={this.downloadExcel}>
                         <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
                         <span><ins>Descargar Template</ins></span>
                     </button>

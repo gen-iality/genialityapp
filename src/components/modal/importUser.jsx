@@ -78,7 +78,7 @@ class ImportUsers extends Component {
         const layout = [
             <Importacion handleXls={this.handleXls} extraFields={this.props.extraFields}/>,
             <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers}/>,
-            <Result list={this.state.toImport} eventId={this.props.eventId}/>];
+            <Result list={this.state.toImport} eventId={this.props.eventId} extraFields={this.props.extraFields}/>];
         const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
             '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +
             '<g>\n' +
@@ -106,7 +106,7 @@ class ImportUsers extends Component {
             '</g>\n' +
             '</svg>';
         return (
-            <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
+            <div className={`modal modal-import-user ${this.state.modal ? "is-active" : ""}`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
@@ -127,14 +127,16 @@ class ImportUsers extends Component {
                             layout[this.state.step]
                         }
                     </section>
-                    {
-                        this.state.step === 2 && (
-                            <footer className="modal-card-foot">
-                                <button className="button is-success" onClick={this.closeModal}>Finalizar</button>
-                                <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
-                            </footer>
-                        )
-                    }
+                    <footer className="modal-card-foot">
+                        {
+                            this.state.step === 2 && (
+                                <div className="modal-buttons">
+                                    <button className="button is-primary" onClick={this.closeModal}>Finalizar</button>
+                                    <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
+                                </div> 
+                            )
+                        }
+                    </footer>
                 </div>
             </div>
         );

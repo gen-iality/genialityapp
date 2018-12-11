@@ -72,7 +72,7 @@
         .column {
           padding: 5px;  
         }
-        .input {
+        input {
           width: 80%;
         }
         .rw-widget-container {
@@ -158,4 +158,27 @@
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media only screen and (max-width: $breakpoint-mobile) {
+  .profile {
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+    .user-info {
+      padding: 1em !important;
+    }
+    .user-data {
+      padding: 1em !important;
+      input {
+        width: 100% !important;
+      }
+    }
+    .profile-data {
+      padding: 0 !important;
+    }
+    .document-zone {
+      width: 100%;
+    }
+  }
 }

@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+import app from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 
 const config = {
@@ -9,9 +10,9 @@ const config = {
     storageBucket: "eviusauth.appspot.com",
     messagingSenderId: "400499146867"
 };
-firebase.initializeApp(config);
+app.initializeApp(config);
 
-const firestore = firebase.firestore();
+const firestore = app.firestore();
 firestore.settings({
 timestampsInSnapshots: true
 });
@@ -19,5 +20,5 @@ firestore.enablePersistence()
     .catch((err)=> {
         console.log(err);
     });
-
-export {firebase,firestore};
+const auth = app.auth();
+export {app,auth,firestore};

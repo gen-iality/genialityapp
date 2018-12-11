@@ -12,9 +12,8 @@ import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
-import {firebase} from "../../helpers/firebase";
+import {auth} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
-import {networks} from "../../helpers/constants";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 
@@ -112,7 +111,7 @@ class UserEditProfile extends Component {
             error.name = nameValid && 'Fill a name';
         }
         if(email) {
-            const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            const EMAIL_REGEX = /^[\w]+@([\w-]+\.)+[\w-]{2,4}$/;
             emailValid = !(email.length > 6 && email.length < 61 && EMAIL_REGEX.test(email));
             error.email = emailValid && 'Fill a valid email';
         }
@@ -193,7 +192,7 @@ class UserEditProfile extends Component {
 
     resetPassword = () => {
         const { user } = this.state;
-        firebase.auth()
+        auth
             .sendPasswordResetEmail(user.email)
             .then(()=>{
                 this.setState({modal:true});
@@ -326,7 +325,7 @@ class UserEditProfile extends Component {
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
                                         <span className="has-text-grey-dark is-size-3">Eventos</span>
                                     </h2>
-                                    <div className="columns home is-multiline is-mobile">
+                                    <div className="columns home is-multiline">
                                         {
                                             events.map((event,key)=>{
                                                 return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
