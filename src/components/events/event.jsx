@@ -14,6 +14,7 @@ import LogOut from "../shared/logOut";
 import {fetchRolState} from "../../redux/rolstate/actions";
 import connect from "react-redux/es/connect/connect";
 import Badge from "../badge";
+import AdminRol from "../roles";
 Moment.locale('es');
 momentLocalizer();
 
@@ -124,6 +125,9 @@ class Event extends Component {
                                                     <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
                                                 </li>
                                             </ul>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/roles`}>Staff</NavLink>
+                                            </p>
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
@@ -154,6 +158,7 @@ class Event extends Component {
                                         <Route path={`${match.url}/badge`} render={()=><Badge eventId={this.state.event._id} event={this.state.event}/>}/>
                                         <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
                                         <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
+                                        <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
                                         <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                         <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                         <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
