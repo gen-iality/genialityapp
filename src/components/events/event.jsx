@@ -99,6 +99,11 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
+                                            <ul className="menu-list">
+                                                <li>
+                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
+                                                </li>
+                                            </ul>
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
@@ -125,9 +130,6 @@ class Event extends Component {
                                                     <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
                                                 </li>
                                             </ul>
-                                            <p className="menu-label has-text-centered-mobile">
-                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/roles`}>Staff</NavLink>
-                                            </p>
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">

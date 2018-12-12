@@ -144,6 +144,11 @@ class Header extends Component {
                 <p className="navbar-item has-text-centered-mobile">
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
                 </p>
+                <ul className="menu-list">
+                    <li>
+                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
+                    </li>
+                </ul>
                 <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                     <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
                     <span className="icon">
@@ -170,9 +175,6 @@ class Header extends Component {
                         <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
                     </li>
                 </ul>
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`roles`}>Staff</NavLink>
-                </p>
             </React.Fragment>
         ];
         return (
