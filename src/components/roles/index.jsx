@@ -19,7 +19,12 @@ class AdminRol extends Component {
             estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
             extraFields:[],
             message:    {},
-            modal:      false
+            modal:      false,
+            formErrors: {email: '', name: ''},
+            emailValid: false,
+            nameValid:  false,
+            rolValid:   false,
+            formValid:  false
         };
     }
 
@@ -29,15 +34,39 @@ class AdminRol extends Component {
 
     handleModal = () => {
         const html = document.querySelector("html");
+        const formErrors = {email: '', name: ''};
+        const user = {name:'',email:'',rol:''};
         this.setState((prevState)=>{
             !prevState.modal ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
-            return {modal:!prevState.modal}})
+            return {modal:!prevState.modal,formValid:false,formErrors,user}})
     };
 
     onChange = (e) => {
         const {value,name} = e.target;
-        this.setState({user:{...this.state.user,[name]:value}}, this.validForm);
+        this.setState({user:{...this.state.user,[name]:value}}, this.validateField(name,value));
     };
+
+    validateField = (fieldName, value) => {
+        let {formErrors,emailValid,nameValid,rolValid } = this.state;
+        switch(fieldName) {
+            case 'email':
+                emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) && value.length > 5 && value.length < 61;
+                formErrors.email = emailValid ? '' : 'Correo inválido';
+                break;
+            case 'name':
+                nameValid = value && value.length > 0 && value !== "";
+                formErrors.name = nameValid ? '': 'El nombre no puede estar vacio';
+                break;
+            case 'rol':
+                rolValid = value !== "";
+                break;
+            default:
+                break;
+        }
+        this.setState({formErrors, emailValid, nameValid, rolValid }, this.validateForm);
+    };
+
+    validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
 
     handleSubmit = () => {
         const {user} = this.state;
@@ -46,6 +75,7 @@ class AdminRol extends Component {
 
     render() {
         const {timeout, userReq, users, total, extraFields, estados, modal, user} = this.state;
+        const {formValid, formErrors:{name,email}} = this.state;
         const {rolstate:{roles}} = this.props;
         return (
             <React.Fragment>
@@ -134,17 +164,19 @@ class AdminRol extends Component {
                             <div className="field">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                 <div className="control">
-                                    <input className="input" type='text' name='name' value={user.name} onChange={this.onChange}/>
+                                    <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='name' value={user.name} onChange={this.onChange}/>
                                 </div>
+                                {name.length>0 && <p className="help is-danger">{name}</p>}
                             </div>
                             <div className="field">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Correo</label>
                                 <div className="control">
-                                    <input className="input" type='text' name='email' value={user.email} onChange={this.onChange}/>
+                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange}/>
                                 </div>
+                                {email.length>0 && <p className="help is-danger">{email}</p>}
                             </div>
                             <div className="field">
-                                <label className="label">Rol</label>
+                                <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
                                 <div className="control">
                                     <div className="select">
                                         <select value={user.rol} onChange={this.onChange} name={'rol'}>
@@ -163,7 +195,7 @@ class AdminRol extends Component {
                             {
                                 this.state.create?<div>Creando...</div>:
                                     <div className="modal-buttons">
-                                        <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                        <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{this.state.edit?'Guardar':'Crear'}</button>
                                         <button className="button" onClick={this.handleModal}>Cancel</button>
                                     </div>
                             }

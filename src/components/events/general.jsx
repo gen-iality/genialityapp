@@ -166,8 +166,8 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
-                let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
-                data.user_properties = [...extraFields,...data.user_properties];
+                /*let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
+                data.user_properties = [...extraFields,...data.user_properties];*/
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
