@@ -8,11 +8,9 @@ class AddUser extends Component {
     constructor(props) {
     super(props);
     this.state = {
-        rolesList: [],
         statesList: [],
         message: {},
         user: {},
-        rol: "",
         state: "",
         emailError:false,
         valid: true
@@ -22,8 +20,8 @@ class AddUser extends Component {
 
     componentDidMount() {
         const self = this,
-            {rolstate:{roles,states}} = this.props;
-        self.setState({ rolesList: roles, statesList: states, state: states[0].value, rol: roles[1].value });
+            {rolstate:{states}} = this.props;
+        self.setState({ statesList: states, state: states[0].value });
         let user = {};
         this.props.extraFields
             .map((obj) => (
@@ -36,7 +34,6 @@ class AddUser extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            role_id: this.state.rol,
             state_id: this.state.state,
         };
         console.log(snap);
@@ -178,21 +175,6 @@ class AddUser extends Component {
                         {
                             Object.keys(this.state.user).length > 0 && this.renderForm()
                         }
-                        <div className="field">
-                            <label className="label">Rol</label>
-                            <div className="control">
-                                <div className="select">
-                                    <select value={this.state.rol} onChange={this.selectChange} name={'rol'}>
-                                        {
-                                            this.state.rolesList.map((item,key)=>{
-                                                return <option key={key} value={item.value}>{item.label}</option>
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="field">
                             <label className="label">Estado</label>
                             <div className="control">
