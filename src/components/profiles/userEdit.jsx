@@ -1,6 +1,11 @@
 /*global google*/
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
+//redux
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import {addLoginInformation} from "../../redux/user/actions";
+//Libraries and stuffs
 import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
@@ -177,6 +182,7 @@ class UserEditProfile extends Component {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
             resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
+            this.props.addLoginInformation(user);
             this.setState({user:resp});
             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
@@ -212,8 +218,6 @@ class UserEditProfile extends Component {
 
     render() {
         const { loading, timeout, events, user, valid, error } = this.state;
-        console.log(valid);
-        console.log(error);
         return (
             <section className="section profile">
                 {
@@ -364,4 +368,8 @@ class UserEditProfile extends Component {
     }
 }
 
-export default withRouter(UserEditProfile);
+const mapDispatchToProps = dispatch => ({
+    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+});
+
+export default connect(null,mapDispatchToProps)(withRouter(UserEditProfile));

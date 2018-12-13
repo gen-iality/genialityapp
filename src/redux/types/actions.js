@@ -4,8 +4,8 @@ export function fetchTypes() {
     return async dispatch => {
         dispatch(fetchTypesBegin());
         try {
-            const categories = await TypesApi.getAll();
-            dispatch(fetchTypesSuccess(categories));
+            const types = await TypesApi.getAll();
+            dispatch(fetchTypesSuccess(types));
         }catch (e) {
             dispatch(fetchTypesFailure(e))
 

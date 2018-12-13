@@ -1,20 +1,16 @@
-import {
-    GET_USER
-} from "./actions";
+import {ADD_LOGIN_INFO} from "./actions";
 
-const initialState = {
-    user: {}
-};
+const initialState = {data:{}};
 
 export default function userReducer(
     state = initialState,
     action
 ) {
     switch (action.type) {
-        case GET_USER:
+        case ADD_LOGIN_INFO:
             return {
                 ...state,
-                user: action.payload
+                data: action.data
             };
         default:
             return state;

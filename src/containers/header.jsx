@@ -79,6 +79,14 @@ class Header extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if ((this.props.loginInfo.name !== prevProps.loginInfo.name) || (this.props.loginInfo.picture !== prevProps.loginInfo.picture)) {
+            const name = this.props.loginInfo.name;
+            const photo = this.props.loginInfo.picture;
+            this.setState({name,photo})
+        }
+    }
+
     logout = () => {
         Cookie.remove("token");
         Cookie.remove("evius_token");
@@ -282,9 +290,9 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-    categories: state.categories.items,
-    types: state.types.items,
-    error: state.categories.error
-});
+        categories: state.categories.items,
+        types: state.types.items,
+        loginInfo: state.user.data,
+        error: state.categories.error});
 
 export default connect(mapStateToProps)(withRouter(Header));
