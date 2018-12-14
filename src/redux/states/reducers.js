@@ -10,7 +10,7 @@ const initialState = {
     error: null
 };
 
-export default function categoriesReducer(
+export default function statesReducer(
     state = initialState,
     action
 ) {
