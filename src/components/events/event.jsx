@@ -11,7 +11,7 @@ import Agenda from "../agenda";
 import AgendaEdit from "../agenda/edit";
 import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
-import {fetchRolState} from "../../redux/rolstate/actions";
+import {fetchState} from "../../redux/states/actions";
 import connect from "react-redux/es/connect/connect";
 import Badge from "../badge";
 import AdminRol from "../roles";
@@ -29,7 +29,7 @@ class Event extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(fetchRolState());
+        this.props.dispatch(fetchState());
         let eventId = this.props.match.params.event;
         if(eventId === 'new_event'){
             const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
@@ -178,8 +178,8 @@ class Event extends Component {
 }
 
 const mapStateToProps = state => ({
-    loading: state.rolstate.loading,
-    error: state.rolstate.error
+    loading: state.states.loading,
+    error: state.states.error
 });
 
 export default connect(mapStateToProps)(Event);

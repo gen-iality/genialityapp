@@ -1,7 +1,7 @@
 import {
-    FETCH_ROLSTATE_BEGIN,
-    FETCH_ROLSTATE_SUCCESS,
-    FETCH_ROLSTATE_FAILURE
+    FETCH_STATE_BEGIN,
+    FETCH_STATE_SUCCESS,
+    FETCH_STATE_FAILURE
 } from "./actions";
 
 const initialState = {
@@ -15,21 +15,21 @@ export default function categoriesReducer(
     action
 ) {
     switch (action.type) {
-        case FETCH_ROLSTATE_BEGIN:
+        case FETCH_STATE_BEGIN:
             return {
                 ...state,
                 loading: true,
                 error: null
             };
 
-        case FETCH_ROLSTATE_SUCCESS:
+        case FETCH_STATE_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 items: action.payload
             };
 
-        case FETCH_ROLSTATE_FAILURE:
+        case FETCH_STATE_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -45,7 +45,7 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
-        const {rolstate:{roles,states}} = this.props;
+        const {states} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, pilaRef } = this.state;
@@ -57,7 +57,7 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
-                user.rol = roles.find(x => x.value === user.rol_id);
+                //user.rol = roles.find(x => x.value === user.rol_id);
                 user.updated_at = user.updated_at.toDate();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
@@ -146,7 +146,7 @@ class ListEventUser extends Component {
     }
 
     statesCounter = (state,old) => {
-        const {rolstate:{states}} = this.props;
+        const {states} = this.props;
         const item = states.find(x => x.value === state);
         const old_item = states.find(x => x.value === old);
         if(state && !old){
@@ -411,7 +411,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           rolstate={this.props.rolstate}
+                           states={this.props.states}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
@@ -498,9 +498,9 @@ const parseData = (data) => {
 };
 
 const mapStateToProps = state => ({
-    rolstate: state.rolstate.items,
-    loading: state.rolstate.loading,
-    error: state.rolstate.error
+    states: state.states.items,
+    loading: state.states.loading,
+    error: state.states.error
 });
 
 export default connect(mapStateToProps)(ListEventUser);

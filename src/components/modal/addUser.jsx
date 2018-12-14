@@ -20,7 +20,7 @@ class AddUser extends Component {
 
     componentDidMount() {
         const self = this,
-            {rolstate:{states}} = this.props;
+            {states} = this.props;
         self.setState({ statesList: states, state: states[0].value });
         let user = {};
         this.props.extraFields

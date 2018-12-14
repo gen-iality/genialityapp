@@ -62,7 +62,7 @@ class UsersRsvp extends Component {
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
             const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
-            const {rolstate:{roles,states}} = this.props;
+            const {states} = this.props;
             listEvents.data.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;
@@ -591,7 +591,7 @@ class UsersRsvp extends Component {
                 </div>
                 {(!this.props.loading && this.state.addUser) &&
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList} rolstate={this.props.rolstate}
+                         value={this.state.selectedUser} addToList={this.addToList} states={this.props.states}
                          extraFields={this.props.event.user_properties} edit={this.state.edit}/>}
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
@@ -653,9 +653,9 @@ const columns = [
 ];
 
 const mapStateToProps = state => ({
-    rolstate: state.rolstate.items,
-    loading: state.rolstate.loading,
-    error: state.rolstate.error
+    states: state.states.items,
+    loading: state.states.loading,
+    error: state.states.error
 });
 
 export default connect(mapStateToProps)(UsersRsvp);

@@ -29,7 +29,7 @@ class UserModal extends Component {
     componentDidMount() {
         const self = this;
         console.log(this.props);
-        const {rolstate:{states}} = this.props;
+        const {states} = this.props;
         self.setState({ statesList: states, state: states[1].value });
         if (this.props.edit) {
             const {value} = this.props;
