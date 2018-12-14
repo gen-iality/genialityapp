@@ -81,7 +81,11 @@ class Event extends Component {
 
     handleClick = (e) => {
         if(!navigator.onLine) e.preventDefault();
-    }
+    };
+
+    updateEvent = (event) => {
+        this.setState({event})
+    };
 
     render() {
         const { match } = this.props;
@@ -157,11 +161,11 @@ class Event extends Component {
                             <div className="column event-main is-10">
                                 {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
-                                        <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} />}/>
-                                        <Route path={`${match.url}/assistants`} render={()=><ListEventUser eventId={this.state.event._id} event={this.state.event}/>}/>
-                                        <Route path={`${match.url}/badge`} render={()=><Badge eventId={this.state.event._id} event={this.state.event}/>}/>
+                                        <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
+                                        <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                        <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                        <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                         <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
-                                        <Route path={`${match.url}/rsvp`} render={()=><RSVP event={this.state.event} />}/>
                                         <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
                                         <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                         <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
@@ -178,6 +182,17 @@ class Event extends Component {
         );
     }
 }
+
+const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
+    <Route
+        {...rest}
+        render={props =>
+            (event.user_properties && event.user_properties.length>0)?
+            (<Component {...props} event={event} eventId={eventId}/>):
+            (<Redirect push to={`${url}/main`}/>)
+        }
+    />
+);
 
 const mapStateToProps = state => ({
     loading: state.states.loading,
