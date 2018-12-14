@@ -33,8 +33,8 @@ export const Actions = {
         return privateInstance.post(url, data).then(({data})=>data);
     },
     delete: (url, id, unsafe) => {
-        if(unsafe) return publicInstance.delete(`${url}${id}`);
-        return privateInstance.delete(`${url}${id}`);
+        if(unsafe) return publicInstance.delete(`${url}${id}`).then(({data})=>data);
+        return privateInstance.delete(`${url}${id}`).then(({data})=>data);
     },
     edit: (url, data, id, unsafe) => {
         if(unsafe) return publicInstance.put(`${url}${id}`, data).then(({data})=>data);

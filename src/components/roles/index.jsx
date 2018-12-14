@@ -7,6 +7,9 @@ import {icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
 import {Actions, HelperApi, UsersApi} from "../../helpers/request";
 import {firestore} from "../../helpers/firebase";
+import Dialog from "../modal/twoAction";
+import {toast} from "react-toastify";
+import {FormattedMessage} from "react-intl";
 
 class AdminRol extends Component {
     constructor(props) {
@@ -29,6 +32,8 @@ class AdminRol extends Component {
             rolValid:   false,
             formValid:  false
         };
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.deleteUser = this.deleteUser.bind(this)
     }
 
     async componentDidMount(){
@@ -42,6 +47,19 @@ class AdminRol extends Component {
         }
     }
 
+    //EDit
+    editHelper = (item) => {
+        console.log(item);
+        const user = {
+            name:item.user.properties.Nombres,
+            email:item.user.properties.email,
+            rol:item.role_id,
+            id:item._id
+        };
+        this.setState({user,edit:true,modal:true,found:3})
+    };
+
+    //Modal
     handleModal = () => {
         const html = document.querySelector("html");
         const formErrors = {email: '', name: ''};
@@ -50,13 +68,11 @@ class AdminRol extends Component {
             !prevState.modal ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
             return {modal:!prevState.modal,formValid:false,formErrors,user}})
     };
-
     onChange = (e) => {
         const {value,name} = e.target;
         if(name ==='email') this.setState({found:0});
         this.setState({user:{...this.state.user,[name]:value}}, this.validateField(name,value));
     };
-
     validateField = (fieldName, value) => {
         let {formErrors,emailValid,nameValid,rolValid } = this.state;
         switch(fieldName) {
@@ -76,9 +92,7 @@ class AdminRol extends Component {
         }
         this.setState({formErrors, emailValid, nameValid, rolValid }, this.validateForm);
     };
-
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
-
     searchByEmail = () => {
         const {user:{email}} = this.state;
         /*const userRef = firestore.collection(`${this.props.event._id}_event_attendees`);
@@ -108,17 +122,8 @@ class AdminRol extends Component {
                 console.log(err);
             })
     };
-
-    //Search records at third column
-    onChangePage = (pageOfItems) => {
-        this.setState({ pageOfItems: pageOfItems });
-    };
-    searchResult = (data) => {
-        !data ? this.setState({pageOfItems:this.state.users}) : this.setState({pageOfItems:data})
-    };
-
     async handleSubmit() {
-        const {user} = this.state;
+        const {user,edit} = this.state;
         const data = {
             "properties": {"email":user.email, "Nombres":user.Nombres},
             "role_id":user.rol,
@@ -126,12 +131,43 @@ class AdminRol extends Component {
         };
         console.log(data);
         try {
-            const res = await HelperApi.saveHelper(data);
-            console.log(res);
+            if(edit){
+                const update = await HelperApi.editHelper(this.props.event._id,data);
+                console.log(update);
+            }
+            else{
+                const res = await HelperApi.saveHelper(data);
+                console.log(res);
+            }
         }
         catch (e) {
             console.log(e);
         }
+    };
+
+    //Delete Helper
+    async deleteUser() {
+        const self = this;
+        let message = {};
+        const res = await HelperApi.removeHelper(self.state.user.id);
+        console.log(res);
+        /*toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
+        console.log("Document successfully deleted!");
+        message.class = 'msg_warning';
+        message.content = 'USER DELETED';
+        setTimeout(()=>{
+            message.class = message.content = '';
+            self.closeModal();
+        },500)*/
+    };
+    closeDelete = () => {this.setState({deleteModal:false,edit:false})};
+
+    //Search records at third column
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
+    };
+    searchResult = (data) => {
+        !data ? this.setState({pageOfItems:this.state.users}) : this.setState({pageOfItems:data})
     };
 
     render() {
@@ -191,7 +227,7 @@ class AdminRol extends Component {
                                                         return <tr key={key}>
                                                             <td>
                                                                 <span className="icon has-text-primary action_pointer"
-                                                                    onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                                                                    onClick={(e)=>{this.editHelper(item)}}><i className="fas fa-edit"/></span>
                                                             </td>
                                                             <td>{item.user.properties.email}</td>
                                                             <td>{item.user.properties.Nombres}</td>
@@ -233,7 +269,7 @@ class AdminRol extends Component {
                                 </div>
                             </div>
                             {email.length>0 && <p className="help is-danger">{email}</p>}
-                            {found===2 &&
+                            {(found===2 || this.state.edit) &&
                                 <React.Fragment>
                                 <div className="field">
                                     <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
@@ -267,6 +303,12 @@ class AdminRol extends Component {
                                     this.state.create?<div>Creando...</div>:
                                         <div className="modal-buttons">
                                             <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                            {
+                                                this.state.edit&&
+                                                <React.Fragment>
+                                                    <button className="button" onClick={(e)=>{this.setState({deleteModal:true})}}>Eliminar</button>
+                                                </React.Fragment>
+                                            }
                                             <button className="button" onClick={this.handleModal}>Cancel</button>
                                         </div>
                                 }
@@ -277,6 +319,11 @@ class AdminRol extends Component {
                         }
                     </div>
                 </div>
+                <Dialog modal={this.state.deleteModal} title={'Borrar Usuario'}
+                        content={<p>Seguro de borrar este usuario?</p>}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteUser}}
+                        message={this.state.message}
+                        second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
                 {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
