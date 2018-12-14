@@ -5,7 +5,8 @@ import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
 import {icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
-import {Actions, HelperApi} from "../../helpers/request";
+import {Actions, HelperApi, UsersApi} from "../../helpers/request";
+import {firestore} from "../../helpers/firebase";
 
 class AdminRol extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class AdminRol extends Component {
         this.state = {
             user:       {Nombres:'',email:'',rol:''},
             users:      [],
+            loading:    true,
             userReq:    [],
             pageOfItems:[],
             total:      0,
@@ -32,8 +34,9 @@ class AdminRol extends Component {
     async componentDidMount(){
         console.log('PROPS ',this.props);
         try{
-            const res = await HelperApi.listHelper(this.props.event_id);
+            const res = await HelperApi.listHelper(this.props.event._id);
             console.log(res);
+            this.setState({users:res,pageOfItems:res,loading:false})
         }catch (e) {
             console.log(e);
         }
@@ -50,6 +53,7 @@ class AdminRol extends Component {
 
     onChange = (e) => {
         const {value,name} = e.target;
+        if(name ==='email') this.setState({found:0});
         this.setState({user:{...this.state.user,[name]:value}}, this.validateField(name,value));
     };
 
@@ -75,7 +79,45 @@ class AdminRol extends Component {
 
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
 
-    handleSubmit = () => {
+    searchByEmail = () => {
+        const {user:{email}} = this.state;
+        /*const userRef = firestore.collection(`${this.props.event._id}_event_attendees`);
+        userRef.where("properties.email","==",email)
+            .get()
+            .then(querySnapshot => {
+                console.log(querySnapshot);
+                querySnapshot.forEach(function(doc) {
+                    // doc.data() is never undefined for query doc snapshots
+                    console.log(doc.id, " => ", doc.data());
+                });
+            })
+            .catch(error=> {
+                console.log("Error getting documents: ", error);
+            });*/
+        UsersApi.findByEmail(email)
+            .then(res=>{
+                console.log(res);
+                if(res.length>0){
+                    this.setState({found:1})
+                }
+                else{
+                    this.setState({found:2})
+                }
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+    };
+
+    //Search records at third column
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
+    };
+    searchResult = (data) => {
+        !data ? this.setState({pageOfItems:this.state.users}) : this.setState({pageOfItems:data})
+    };
+
+    async handleSubmit() {
         const {user} = this.state;
         const data = {
             "properties": {"email":user.email, "Nombres":user.Nombres},
@@ -83,18 +125,18 @@ class AdminRol extends Component {
             "event_id":this.props.event._id
         };
         console.log(data);
-        Actions.post(`/api/permissions/roles/CreateAndAdd`,data)
-            .then(resp=>{
-                console.log(resp);
-            })
-            .catch(err=>{
-                console.log(err);
-            })
+        try {
+            const res = await HelperApi.saveHelper(data);
+            console.log(res);
+        }
+        catch (e) {
+            console.log(e);
+        }
     };
 
     render() {
-        const {timeout, userReq, users, total, extraFields, estados, modal, user} = this.state;
-        const {formValid, formErrors:{name,email}} = this.state;
+        const {timeout, users, pageOfItems, estados, modal, user} = this.state;
+        const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         const {roles} = this.props;
         return (
             <React.Fragment>
@@ -103,7 +145,7 @@ class AdminRol extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={extraFields.slice(0,2)} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    users.length>0 && <SearchComponent data={users} kind={'helpers'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>
@@ -128,47 +170,43 @@ class AdminRol extends Component {
                                 })
                             }
                         </div>
-                    </div>
+                    </div>*/}
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
                                 <div className="table-wrapper">
-                                    {
-                                        users.length>0&&
-                                        <React.Fragment>
-                                            <div className="table">
-                                                <table className="table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th/>
-                                                        <th className="is-capitalized">Check</th>
-                                                        <th className="is-capitalized">Estado</th>
-                                                        {
-                                                            extraFields.map((field,key)=>{
-                                                                return <th key={key} className="is-capitalized">{field.Nombres}</th>
-                                                            })
-                                                        }
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {
-                                                        this.renderRows()
-                                                    }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <Pagination
-                                                items={users}
-                                                change={this.state.changeItem}
-                                                onChangePage={this.onChangePage}
-                                            />
-                                        </React.Fragment>
-                                    }
+                                    <div className="table">
+                                        <table className="table">
+                                            <thead>
+                                                <tr>
+                                                    <th/>
+                                                    <th className="is-capitalized">Correo</th>
+                                                    <th className="is-capitalized">Nombre</th>
+                                                    <th className="is-capitalized">Rol</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    pageOfItems.map((item,key)=>{
+                                                        return <tr key={key}>
+                                                            <td>
+                                                                <span className="icon has-text-primary action_pointer"
+                                                                    onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                                                            </td>
+                                                            <td>{item.user.properties.email}</td>
+                                                            <td>{item.user.properties.Nombres}</td>
+                                                            <td>{item.role.name}</td>
+                                                        </tr>
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {users.length>10&& <Pagination items={users} onChangePage={this.onChangePage}/>}
                                 </div>
                             }
                         </div>
-                    </div>*/}
-                    <p>Usuarios</p>
+                    </div>
                 </div>
                 <div className={`modal modal-add-user ${modal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
@@ -180,56 +218,63 @@ class AdminRol extends Component {
                             <button className="delete" aria-label="close" onClick={this.handleModal}/>
                         </header>
                         <section className="modal-card-body">
+                            {
+                                (found===1) ?
+                                    <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
+                                    (found===2) ?
+                                        <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
+                            }
                             <div className="field has-addons">
-                                <label className={`label has-text-grey-light is-capitalized required`}>Correo</label>
                                 <div className="control">
                                     <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange} placeholder="Correo"/>
                                 </div>
                                 <div className="control">
-                                    <a className="button is-info">Buscar</a>
+                                    <button className="button is-info" style={{borderRadius: '0px'}} disabled={!emailValid} onClick={this.searchByEmail}>Buscar</button>
                                 </div>
-                                {email.length>0 && <p className="help is-danger">{email}</p>}
                             </div>
-                            {/*<div className="field">
-                                <div className="control">
-                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange}/>
+                            {email.length>0 && <p className="help is-danger">{email}</p>}
+                            {found===2 &&
+                                <React.Fragment>
+                                <div className="field">
+                                    <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
+                                    <div className="control">
+                                        <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.name} onChange={this.onChange}/>
+                                    </div>
+                                    {name.length>0 && <p className="help is-danger">{name}</p>}
                                 </div>
-                            </div>*/}
-                            {/*<div className="field">
-                                <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
-                                <div className="control">
-                                    <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.name} onChange={this.onChange}/>
-                                </div>
-                                {name.length>0 && <p className="help is-danger">{name}</p>}
-                            </div>
-                            <div className="field">
-                                <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
-                                <div className="control">
-                                    <div className="select">
-                                        <select value={user.rol} onChange={this.onChange} name={'rol'}>
-                                            <option value={''}>Seleccione...</option>
-                                            {
-                                                roles.map((item,key)=>{
-                                                    return <option key={key} value={item.value}>{item.label}</option>
-                                                })
-                                            }
-                                        </select>
+                                <div className="field">
+                                    <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
+                                    <div className="control">
+                                        <div className="select">
+                                            <select value={user.rol} onChange={this.onChange} name={'rol'}>
+                                                <option value={''}>Seleccione...</option>
+                                                {
+                                                    roles.map((item,key)=>{
+                                                        return <option key={key} value={item.value}>{item.label}</option>
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>*/}
-                        </section>
-                        <footer className="modal-card-foot">
-                            {
-                                this.state.create?<div>Creando...</div>:
-                                    <div className="modal-buttons">
-                                        <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{this.state.edit?'Guardar':'Crear'}</button>
-                                        <button className="button" onClick={this.handleModal}>Cancel</button>
-                                    </div>
+                            </React.Fragment>
                             }
-                            <div className={"msg"}>
-                                <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-                            </div>
-                        </footer>
+                        </section>
+                        {
+                            found>0&&
+                                <footer className="modal-card-foot">
+                                {
+                                    this.state.create?<div>Creando...</div>:
+                                        <div className="modal-buttons">
+                                            <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                            <button className="button" onClick={this.handleModal}>Cancel</button>
+                                        </div>
+                                }
+                                <div className={"msg"}>
+                                    <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+                                </div>
+                            </footer>
+                        }
                     </div>
                 </div>
                 {timeout&&(<ErrorServe/>)}
