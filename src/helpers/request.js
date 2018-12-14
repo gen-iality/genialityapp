@@ -98,7 +98,7 @@ export const UsersApi = {
         return await Actions.edit('/api/users/', data, id)
     },
     findByEmail: async(email) => {
-        return await Actions.getOne(`api/users/findByEmail`,email)
+        return await Actions.getOne(`api/users/findByEmail/`,email)
     },
     mineTickets: async () => {
         return await Actions.getAll(`/api/me/eventUsers`)
