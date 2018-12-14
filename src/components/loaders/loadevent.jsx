@@ -9,7 +9,7 @@ class LoadingEvent extends Component {
     render() {
         const events = [0,1,2,3,4,5];
         return (
-            <div className="columns is-multiline is-mobile">
+            <div className="columns home is-multiline">
                 {
                     events.map((event,key)=>{
                         return <div className="column is-one-third" key={key}>

@@ -34,13 +34,13 @@ class SearchComponent extends Component {
     filterByAllColums(value) {
         let arrAux;
         if (this.props.kind === 'user') {
+            const filters = this.props.filter.map(item=>item.name);
             arrAux = this.props.data.filter( (item) =>{
-                return (item.properties.email.search(new RegExp(value, 'i')) >= 0 ||
-                    item.properties.name.search(new RegExp(value, 'i')) >= 0);
+                return (item.properties[filters[0]].search(new RegExp(value, 'i')) >= 0 ||
+                    item.properties[filters[1]].search(new RegExp(value, 'i')) >= 0);
             });
         }else if(this.props.kind === 'invitation'){
             arrAux = this.props.data.filter(item =>
-                item.name.search(new RegExp(value, 'i')) >= 0 ||
                 item.email.search(new RegExp(value, 'i')) >= 0 ||
                 item.state.search(new RegExp(value, 'i')) >= 0);
         }

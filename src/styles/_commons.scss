@@ -94,7 +94,7 @@ a {
     .icon {
       margin-left: 0.5em;
       i {
-        border: solid black;
+        border: solid $grey-light;
         border-width: 0 2px 2px 0;
         display: inline-block;
         padding: 3px;
@@ -853,7 +853,7 @@ a {
   }
 }
 
-@media only screen and (max-width: $breakpoint-tablet) {
+@media only screen and (max-width: $breakpoint-mobile) {
   .navbar {
     .navbar-item {
       &.item-sub {
@@ -862,6 +862,11 @@ a {
     }.navbar-dropdown {
       box-shadow: none !important;
       font-size: 1em;
+      .navbar-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
   .footer {
@@ -937,6 +942,32 @@ a {
             left: -1em;
             padding-left: 1em;
           }
+        }
+      }
+    }
+  }
+  .table:not(.def) {
+    max-width: 100%;
+    width: 100%;
+    thead {
+      display: none;
+    }
+    tbody {
+      tr {
+        display: flex;
+        align-items: stretch;
+        justify-content: flex-start;
+        flex-direction: column;
+        position: relative;
+        td {
+          margin-left: 2em;
+          width: 100%;
+          &:nth-child(1) {
+            position: absolute;
+            top: 0.6em;
+            left: -2em;
+          }
+          
         }
       }
     }

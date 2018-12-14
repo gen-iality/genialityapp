@@ -14,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Dialog from "../modal/twoAction";
 import {auth} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
-import {networks} from "../../helpers/constants";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 
@@ -112,7 +111,7 @@ class UserEditProfile extends Component {
             error.name = nameValid && 'Fill a name';
         }
         if(email) {
-            const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+            const EMAIL_REGEX = /^[\w]+@([\w-]+\.)+[\w-]{2,4}$/;
             emailValid = !(email.length > 6 && email.length < 61 && EMAIL_REGEX.test(email));
             error.email = emailValid && 'Fill a valid email';
         }

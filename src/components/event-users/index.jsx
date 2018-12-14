@@ -5,7 +5,6 @@ import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
-import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchComponent from "../shared/searchTable";
@@ -13,6 +12,7 @@ import Pagination from "../shared/pagination";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
+import ErrorServe from "../modal/serverError";
 
 class ListEventUser extends Component {
     constructor(props) {
@@ -62,19 +62,19 @@ class ListEventUser extends Component {
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     this.statesCounter(user.state.value);
-                    if(change.doc._hasPendingWrites){
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'modified'){
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
-                    if(change.doc._hasPendingWrites){
+                    /*if(change.doc._hasPendingWrites){
                         console.log('en pilando ==>',change.doc.data());
                         pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }
+                    }*/
                 }
                 if (change.type === 'removed'){
                     newItems.splice(change.oldIndex, 1);
@@ -90,7 +90,7 @@ class ListEventUser extends Component {
             console.log(error);
             this.setState({timeout:true});
         }));
-        this.pilaListener = pilaRef.onSnapshot({
+        /*this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true
         },querySnapshot => {
             querySnapshot.docChanges().forEach(change => {
@@ -99,7 +99,7 @@ class ListEventUser extends Component {
                 data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
                 data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
                 if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                /*if (change.type === 'added') {
+                /!*if (change.type === 'added') {
                     pilaRef.doc(change.doc.id)
                         .onSnapshot({
                             includeMetadataChanges: true
@@ -133,16 +133,16 @@ class ListEventUser extends Component {
                         });
                 }
                 if (change.type === 'removed') {
-                }*/
+                }*!/
             });
         }, err => {
             console.log(`Encountered error: ${err}`);
-        });
+        });*/
     }
 
     componentWillUnmount() {
         this.userListener();
-        this.pilaListener()
+        //this.pilaListener()
     }
 
     statesCounter = (state,old) => {
@@ -288,8 +288,6 @@ class ListEventUser extends Component {
                     }
                 </td>
                 <td>{item.state.label}</td>
-                <td>{item.properties.email}</td>
-                <td>{item.properties.name}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
                         return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
@@ -306,7 +304,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, pageOfItems} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -314,15 +312,15 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={extraFields.slice(0,2)} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>
                         <div className="column">
-                            <div className="field is-grouped is-pulled-right">
+                            <div className="columns is-mobile is-multiline is-centered">
                                 {
                                     userReq.length>0 && (
-                                        <div className="control">
+                                        <div className="column is-narrow has-text-centered">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -332,51 +330,43 @@ class ListEventUser extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
                                 </div>
-                                <div className="control">
+                                <div className="column is-narrow has-text-centered">
                                     <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="columns is-multiline checkin-tags">
-                        <div className="column is-12">
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Check In</span>
-                                    </div>
+                    <div className="checkin-tags-wrapper">
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-primary">{checkIn}</span>
+                                    <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-12">
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <div className="tags">
-                                        <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Total</span>
-                                    </div>
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-light">{total}</span>
+                                    <span className="tag is-white">Total</span>
                                 </div>
-                                {
-                                    Object.keys(estados).map(item=>{
-                                        return <div className="control" key={item}>
-                                            <div className="tags">
-                                                <span className={'tag '+item}>{estados[item]}</span>
-                                                <span className="tag is-white">{item}</span>
-                                            </div>
-                                        </div>
-                                    })
-                                }
                             </div>
+                            {
+                                Object.keys(estados).map(item=>{
+                                    return <div className="column is-narrow" key={item}>
+                                                <div className="tags is-centered">
+                                                    <span className={'tag '+item}>{estados[item]}</span>
+                                                    <span className="tag is-white">{item}</span>
+                                                </div>
+                                            </div>
+                                })
+                            }
                         </div>
                     </div>
-
-                    <p>Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
-
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
@@ -391,8 +381,6 @@ class ListEventUser extends Component {
                                                         <th/>
                                                         <th className="is-capitalized">Check</th>
                                                         <th className="is-capitalized">Estado</th>
-                                                        <th className="is-capitalized">Correo</th>
-                                                        <th className="is-capitalized">Nombre</th>
                                                         {
                                                             extraFields.map((field,key)=>{
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
@@ -417,12 +405,16 @@ class ListEventUser extends Component {
                                 </div>}
                         </div>
                     </div>
+                    <div className="checkin-warning">
+                        <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                    </div>
                 </div>
-                {!this.props.loading &&
-                <UserModal handleModal={this.modalUser} modal={this.state.editUser} eventId={this.props.eventId}
+                {(!this.props.loading && editUser) &&
+                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
                            rolstate={this.props.rolstate}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
-                           extraFields={this.state.extraFields} edit={this.state.edit}/>}
+                           extraFields={this.state.extraFields} edit={this.state.edit}/>
+                }
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
@@ -482,7 +474,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout&&(<ErrorServe/>)}
             </React.Fragment>
         );
     }

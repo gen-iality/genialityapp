@@ -32,6 +32,11 @@
         }
       }
     }
+    .column {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
   .preview-list{
     overflow-x: auto;

@@ -34,13 +34,13 @@ class Footer extends Component {
                             <div className="column has-text-grey-light">
                                 <p className="subtitle has-text-grey-light is-hidden-mobile">Contáctanos</p>
                                 <div className="soc">
-                                    <a target="_blank" href="https://www.facebook.com/pages/Mocion/" className="icon has-text-grey-light">
+                                    <a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/pages/Mocion/" className="icon has-text-grey-light">
                                         <i className="fab fa-facebook-f fa-lg" aria-hidden="true"/>
                                     </a>
-                                    <a target="_blank" href="https://www.linkedin.com/company/mocion" className="icon has-text-grey-light">
+                                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/company/mocion" className="icon has-text-grey-light">
                                         <i className="fab fa-linkedin fa-lg" aria-hidden="true"/>
                                     </a>
-                                    <a target="_blank" href="https://www.instagram.com/mocionsoft/" className="icon has-text-grey-light">
+                                    <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/mocionsoft/" className="icon has-text-grey-light">
                                         <i className="fab fa-instagram fa-lg" aria-hidden="true"/>
                                     </a>
                                 </div>
