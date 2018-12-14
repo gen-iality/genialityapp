@@ -76,6 +76,7 @@ class AdminRol extends Component {
     render() {
         const {timeout, userReq, users, total, extraFields, estados, modal, user} = this.state;
         const {formValid, formErrors:{name,email}} = this.state;
+        const {roles} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -167,7 +168,7 @@ class AdminRol extends Component {
                                 </div>
                                 {email.length>0 && <p className="help is-danger">{email}</p>}
                             </div>
-                            {/*<div className="field">
+                            <div className="field">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                 <div className="control">
                                     <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='name' value={user.name} onChange={this.onChange}/>
@@ -188,7 +189,7 @@ class AdminRol extends Component {
                                         </select>
                                     </div>
                                 </div>
-                            </div>*/}
+                            </div>
                         </section>
                         <footer className="modal-card-foot">
                             {
@@ -211,9 +212,9 @@ class AdminRol extends Component {
 }
 
 const mapStateToProps = state => ({
-    states: state.states.items,
-    loading: state.states.loading,
-    error: state.states.error
+    roles: state.rols.items,
+    loading: state.rols.loading,
+    error: state.rols.error
 });
 
 export default connect(mapStateToProps)(AdminRol);
