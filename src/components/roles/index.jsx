@@ -18,14 +18,10 @@ class AdminRol extends Component {
             user:       {Nombres:'',email:'',rol:''},
             users:      [],
             loading:    true,
-            userReq:    [],
             pageOfItems:[],
-            total:      0,
-            checkIn:    0,
-            estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
-            extraFields:[],
             message:    {},
             modal:      false,
+            edit:      false,
             formErrors: {email: '', name: ''},
             emailValid: false,
             nameValid:  false,
@@ -49,9 +45,8 @@ class AdminRol extends Component {
 
     //EDit
     editHelper = (item) => {
-        console.log(item);
         const user = {
-            name:item.user.properties.Nombres,
+            Nombres:item.user.properties.Nombres,
             email:item.user.properties.email,
             rol:item.role_id,
             id:item._id
@@ -66,7 +61,7 @@ class AdminRol extends Component {
         const user = {Nombres:'',email:'',rol:''};
         this.setState((prevState)=>{
             !prevState.modal ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
-            return {modal:!prevState.modal,formValid:false,formErrors,user}})
+            return {modal:!prevState.modal,formValid:false,formErrors,user,edit:false,found:0}})
     };
     onChange = (e) => {
         const {value,name} = e.target;
@@ -74,6 +69,13 @@ class AdminRol extends Component {
         this.setState({user:{...this.state.user,[name]:value}}, this.validateField(name,value));
     };
     validateField = (fieldName, value) => {
+        console.group('VALIDATING ?');
+            console.log(fieldName);
+            console.log(value);
+            console.log(this.state.emailValid);
+            console.log(this.state.nameValid);
+            console.log(this.state.rolValid);
+        console.groupEnd()
         let {formErrors,emailValid,nameValid,rolValid } = this.state;
         switch(fieldName) {
             case 'email':
@@ -95,19 +97,6 @@ class AdminRol extends Component {
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
     searchByEmail = () => {
         const {user:{email}} = this.state;
-        /*const userRef = firestore.collection(`${this.props.event._id}_event_attendees`);
-        userRef.where("properties.email","==",email)
-            .get()
-            .then(querySnapshot => {
-                console.log(querySnapshot);
-                querySnapshot.forEach(function(doc) {
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, " => ", doc.data());
-                });
-            })
-            .catch(error=> {
-                console.log("Error getting documents: ", error);
-            });*/
         UsersApi.findByEmail(email)
             .then(res=>{
                 console.log(res);
@@ -142,6 +131,7 @@ class AdminRol extends Component {
         }
         catch (e) {
             console.log(e);
+            this.setState({timeout:true})
         }
     };
 
@@ -149,8 +139,13 @@ class AdminRol extends Component {
     async deleteUser() {
         const self = this;
         let message = {};
-        const res = await HelperApi.removeHelper(self.state.user.id);
-        console.log(res);
+        try {
+            const res = await HelperApi.removeHelper(self.state.user.id);
+            console.log(res);
+        }catch (e) {
+            console.log(e);
+            this.setState({timeout:true})
+        }
         /*toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
         console.log("Document successfully deleted!");
         message.class = 'msg_warning';
@@ -171,7 +166,7 @@ class AdminRol extends Component {
     };
 
     render() {
-        const {timeout, users, pageOfItems, estados, modal, user} = this.state;
+        const {timeout, users, pageOfItems, modal, user} = this.state;
         const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         const {roles} = this.props;
         return (
@@ -255,45 +250,57 @@ class AdminRol extends Component {
                         </header>
                         <section className="modal-card-body">
                             {
-                                (found===1) ?
+                                (found===1 && !this.state.edit) ?
                                     <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
-                                    (found===2) ?
+                                    (found===2 && !this.state.edit) ?
                                         <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
                             }
-                            <div className="field has-addons">
-                                <div className="control">
-                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange} placeholder="Correo"/>
-                                </div>
-                                <div className="control">
-                                    <button className="button is-info" style={{borderRadius: '0px'}} disabled={!emailValid} onClick={this.searchByEmail}>Buscar</button>
-                                </div>
-                            </div>
-                            {email.length>0 && <p className="help is-danger">{email}</p>}
-                            {(found===2 || this.state.edit) &&
-                                <React.Fragment>
+                            {
+                                this.state.edit ?
+                                    <div className="field">
+                                        <label className={`label has-text-grey-light is-capitalized required`}>Correo</label>
+                                        <div className="control">
+                                            <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} disabled={found===1} onChange={this.onChange}/>
+                                        </div>
+                                        {email.length>0 && <p className="help is-danger">{email}</p>}
+                                    </div>
+                                    :<div className="field has-addons">
+                                        <div className="control">
+                                            <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange} placeholder="Correo"/>
+                                        </div>
+                                        <div className="control">
+                                            <button className="button is-info" style={{borderRadius: '0px'}} disabled={!emailValid} onClick={this.searchByEmail}>Buscar</button>
+                                        </div>
+                                        {email.length>0 && <p className="help is-danger">{email}</p>}
+                                    </div>
+                            }
+                            {
+                                (found===2 || this.state.edit) &&
                                 <div className="field">
                                     <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                     <div className="control">
-                                        <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.name} onChange={this.onChange}/>
+                                        <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.Nombres} onChange={this.onChange}/>
                                     </div>
                                     {name.length>0 && <p className="help is-danger">{name}</p>}
                                 </div>
-                                <div className="field">
-                                    <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={user.rol} onChange={this.onChange} name={'rol'}>
-                                                <option value={''}>Seleccione...</option>
-                                                {
-                                                    roles.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
+                            }
+                            {
+                                (found===2 || this.state.edit || found===1) &&
+                                    <div className="field">
+                                        <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={user.rol} onChange={this.onChange} name={'rol'}>
+                                                    <option value={''}>Seleccione...</option>
+                                                    {
+                                                        roles.map((item,key)=>{
+                                                            return <option key={key} value={item.value}>{item.label}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </React.Fragment>
                             }
                         </section>
                         {
