@@ -97,6 +97,9 @@ export const UsersApi = {
     editProfile: async (data,id) => {
         return await Actions.edit('/api/users/', data, id)
     },
+    findByEmail: async(email) => {
+        return await Actions.getOne(`api/users/findByEmail`,email)
+    },
     mineTickets: async () => {
         return await Actions.getAll(`/api/me/eventUsers`)
     },
@@ -148,6 +151,23 @@ export const BadgeApi = {
         return await Actions.getOne('/api/escarapelas/', id)
     }
 
+};
+export const HelperApi = {
+    listHelper: async(id) => {
+        return await Actions.getOne(`api/permissions/roles/event/`,id)
+    },
+    rolesOne: async(event) => {
+        return await Actions.get(`api/permissions/roles/event/${event}/me`)
+    },
+    saveHelper: async(data) => {
+        return await Actions.post(`api/permissions/roles/CreateAndAdd`,data)
+    },
+    editHelper: async(id,data) => {
+        return await Actions.put(`api/permissions/roles/${id}`,data)
+    },
+    removeHelper: async(id) => {
+        return await Actions.delete(`api/permissions/roles/`,id)
+    }
 };
 const handleCat = (data) => {
     let list = [];

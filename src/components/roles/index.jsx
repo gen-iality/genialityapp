@@ -5,7 +5,7 @@ import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
 import {icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
-import {Actions} from "../../helpers/request";
+import {Actions, HelperApi} from "../../helpers/request";
 
 class AdminRol extends Component {
     constructor(props) {
@@ -29,8 +29,14 @@ class AdminRol extends Component {
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         console.log('PROPS ',this.props);
+        try{
+            const res = await HelperApi.listHelper(this.props.event_id);
+            console.log(res);
+        }catch (e) {
+            console.log(e);
+        }
     }
 
     handleModal = () => {
@@ -77,13 +83,13 @@ class AdminRol extends Component {
             "event_id":this.props.event._id
         };
         console.log(data);
-        /*Actions.post(`/api/permissions/roles/CreateAndAdd`,data)
+        Actions.post(`/api/permissions/roles/CreateAndAdd`,data)
             .then(resp=>{
                 console.log(resp);
             })
             .catch(err=>{
                 console.log(err);
-            })*/
+            })
     };
 
     render() {
@@ -174,14 +180,22 @@ class AdminRol extends Component {
                             <button className="delete" aria-label="close" onClick={this.handleModal}/>
                         </header>
                         <section className="modal-card-body">
-                            <div className="field">
+                            <div className="field has-addons">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Correo</label>
                                 <div className="control">
-                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange}/>
+                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange} placeholder="Correo"/>
+                                </div>
+                                <div className="control">
+                                    <a className="button is-info">Buscar</a>
                                 </div>
                                 {email.length>0 && <p className="help is-danger">{email}</p>}
                             </div>
-                            <div className="field">
+                            {/*<div className="field">
+                                <div className="control">
+                                    <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} onChange={this.onChange}/>
+                                </div>
+                            </div>*/}
+                            {/*<div className="field">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                 <div className="control">
                                     <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.name} onChange={this.onChange}/>
@@ -202,7 +216,7 @@ class AdminRol extends Component {
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*/}
                         </section>
                         <footer className="modal-card-foot">
                             {
