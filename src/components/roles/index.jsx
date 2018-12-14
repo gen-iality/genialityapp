@@ -132,7 +132,7 @@ class AdminRol extends Component {
         console.log(data);
         try {
             if(edit){
-                const update = await HelperApi.editHelper(this.props.event._id,data);
+                const update = await HelperApi.editHelper(user.id,data);
                 console.log(update);
             }
             else{
