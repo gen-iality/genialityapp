@@ -5,12 +5,13 @@ import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
 import {icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
+import {Actions} from "../../helpers/request";
 
 class AdminRol extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user:       {name:'',email:'',rol:''},
+            user:       {Nombres:'',email:'',rol:''},
             users:      [],
             userReq:    [],
             pageOfItems:[],
@@ -35,7 +36,7 @@ class AdminRol extends Component {
     handleModal = () => {
         const html = document.querySelector("html");
         const formErrors = {email: '', name: ''};
-        const user = {name:'',email:'',rol:''};
+        const user = {Nombres:'',email:'',rol:''};
         this.setState((prevState)=>{
             !prevState.modal ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
             return {modal:!prevState.modal,formValid:false,formErrors,user}})
@@ -53,7 +54,7 @@ class AdminRol extends Component {
                 emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) && value.length > 5 && value.length < 61;
                 formErrors.email = emailValid ? '' : 'Correo inválido';
                 break;
-            case 'name':
+            case 'Nombres':
                 nameValid = value && value.length > 0 && value !== "";
                 formErrors.name = nameValid ? '': 'El nombre no puede estar vacio';
                 break;
@@ -70,7 +71,19 @@ class AdminRol extends Component {
 
     handleSubmit = () => {
         const {user} = this.state;
-        console.log(user);
+        const data = {
+            "properties": {"email":user.email, "Nombres":user.Nombres},
+            "role_id":user.rol,
+            "event_id":this.props.event._id
+        };
+        console.log(data);
+        /*Actions.post(`/api/permissions/roles/CreateAndAdd`,data)
+            .then(resp=>{
+                console.log(resp);
+            })
+            .catch(err=>{
+                console.log(err);
+            })*/
     };
 
     render() {
@@ -126,7 +139,7 @@ class AdminRol extends Component {
                                                         <th className="is-capitalized">Estado</th>
                                                         {
                                                             extraFields.map((field,key)=>{
-                                                                return <th key={key} className="is-capitalized">{field.name}</th>
+                                                                return <th key={key} className="is-capitalized">{field.Nombres}</th>
                                                             })
                                                         }
                                                     </tr>
@@ -171,7 +184,7 @@ class AdminRol extends Component {
                             <div className="field">
                                 <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                 <div className="control">
-                                    <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='name' value={user.name} onChange={this.onChange}/>
+                                    <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.name} onChange={this.onChange}/>
                                 </div>
                                 {name.length>0 && <p className="help is-danger">{name}</p>}
                             </div>
