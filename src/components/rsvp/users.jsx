@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
 import ErrorServe from "../modal/serverError";
 import connect from "react-redux/es/connect/connect";
-import UserModal from "../modal/modalUser";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -62,7 +61,6 @@ class UsersRsvp extends Component {
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
             const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
-            const {states} = this.props;
             listEvents.data.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;

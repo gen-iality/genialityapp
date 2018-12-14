@@ -287,6 +287,8 @@ class General extends Component {
                     fields
                 });
                 event.preventDefault();
+                break;
+            default: {}
         }
     };
 
@@ -528,7 +530,7 @@ const handleFields = (organizers,types,categories,event) =>{
     if(category_ids){
         categories.map(item=>{
             let pos = category_ids.indexOf(item.value);
-            if(pos>=0){ return selectedCategories.push(item)}
+            return (pos>=0)?selectedCategories.push(item):''
         });
     }
     if(organizer_type==='App\\User'){

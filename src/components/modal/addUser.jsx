@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import axios from 'axios';
-import {Actions, UsersApi} from "../../helpers/request";
+import {UsersApi} from "../../helpers/request";
 import {icon} from "../../helpers/constants";
 
 class AddUser extends Component {
