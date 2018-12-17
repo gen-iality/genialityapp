@@ -16,6 +16,8 @@ import {fetchRol} from "../../redux/rols/actions";
 import connect from "react-redux/es/connect/connect";
 import Badge from "../badge";
 import AdminRol from "../roles";
+import TicketInfo from "../tickets";
+import TicketConfig from "../tickets/config";
 Moment.locale('es');
 momentLocalizer();
 
@@ -25,6 +27,7 @@ class Event extends Component {
         this.state = {
             loading:true,
             userTab:true,
+            ticketTab:true,
             contentTab:true
         }
     }
@@ -110,6 +113,32 @@ class Event extends Component {
                                                     <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
                                                 </li>
                                             </ul>
+                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
+                                                <span className="item has-text-grey">Ticketes</span>
+                                                <span className="icon">
+                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
+                                                </span>
+                                            </p>
+                                            {
+                                                this.state.ticketTab && (
+                                                    <ul className="menu-list">
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/ticket`}>Informativa</NavLink>
+                                                        </li>
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/configuration_ticket`}>Configuración</NavLink>
+                                                        </li>
+                                                    </ul>
+                                                )
+                                            }
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
+                                            </p>
+                                            <ul className="menu-list">
+                                                <li>
+                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
+                                                </li>
+                                            </ul>
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
@@ -128,14 +157,6 @@ class Event extends Component {
                                                     </ul>
                                                 )
                                             }
-                                            <p className="menu-label has-text-centered-mobile">
-                                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
-                                            </p>
-                                            <ul className="menu-list">
-                                                <li>
-                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
-                                                </li>
-                                            </ul>
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
@@ -167,6 +188,8 @@ class Event extends Component {
                                         <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                         <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
                                         <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                        <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
+                                        <Route path={`${match.url}/configuration_ticket`} render={()=><TicketConfig eventId={this.state.event._id}/>}/>
                                         <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                         <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                         <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>

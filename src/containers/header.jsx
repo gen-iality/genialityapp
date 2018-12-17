@@ -157,6 +157,32 @@ class Header extends Component {
                         <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
                     </li>
                 </ul>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
+                    <span className="item has-text-grey">Ticketes</span>
+                    <span className="icon">
+                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
+                                                </span>
+                </p>
+                {
+                    this.state.ticketTab && (
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`ticket`}>Informativa</NavLink>
+                            </li>
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`configuration_ticket`}>Configuración</NavLink>
+                            </li>
+                        </ul>
+                    )
+                }
+                <p className="navbar-item has-text-centered-mobile">
+                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
+                </p>
+                <ul className="menu-list">
+                    <li>
+                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
+                    </li>
+                </ul>
                 <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                     <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
                     <span className="icon">
@@ -175,14 +201,6 @@ class Header extends Component {
                         </ul>
                     )
                 }
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
-                </p>
-                <ul className="menu-list">
-                    <li>
-                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
-                    </li>
-                </ul>
             </React.Fragment>
         ];
         return (
