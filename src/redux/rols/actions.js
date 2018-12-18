@@ -5,11 +5,11 @@ export function fetchRol() {
         dispatch(fetchRolBegin());
         Actions.getAll('/api/contributors/metadata/roles')
             .then((rolData)=> {
-                let states = rolData.map(state => ({
+                let roles = rolData.map(state => ({
                     value: state._id,
                     label: state.name
                 }));
-                dispatch(fetchRolSuccess(states));
+                dispatch(fetchRolSuccess(roles));
             })
             .catch((e)=>{
                 dispatch(fetchRolFailure(e))
@@ -25,9 +25,9 @@ export const fetchRolBegin = () => ({
     type: FETCH_ROL_BEGIN
 });
 
-export const fetchRolSuccess = (states) => ({
+export const fetchRolSuccess = (roles) => ({
     type: FETCH_ROL_SUCCESS,
-    payload: states
+    payload: roles
 });
 
 export const fetchRolFailure = error => ({
