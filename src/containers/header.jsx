@@ -107,7 +107,7 @@ class Header extends Component {
 
     render() {
         const { timeout, serverError, filterEvius } = this.state;
-        const { categories, types } = this.props;
+        const { categories, types, permissions } = this.props;
         const menuEvius = [
             '',
             <React.Fragment>
@@ -178,11 +178,14 @@ class Header extends Component {
                 <p className="navbar-item has-text-centered-mobile">
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
                 </p>
-                <ul className="menu-list">
-                    <li>
-                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
-                    </li>
-                </ul>
+                {
+                    permissions.items.includes('5c192450f33bd450a6022e36') &&
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
+                            </li>
+                        </ul>
+                }
             </React.Fragment>
         ];
         return (
@@ -290,9 +293,10 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-        categories: state.categories.items,
-        types: state.types.items,
-        loginInfo: state.user.data,
-        error: state.categories.error});
+    categories: state.categories.items,
+    types: state.types.items,
+    loginInfo: state.user.data,
+    permissions: state.permissions,
+    error: state.categories.error});
 
 export default connect(mapStateToProps)(withRouter(Header));

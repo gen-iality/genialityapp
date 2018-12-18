@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import { Route, NavLink, Redirect } from "react-router-dom";
+import { Route, NavLink, Redirect, Switch } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
-import { EventsApi } from "../../helpers/request";
+import {EventsApi, HelperApi} from "../../helpers/request";
 import General from "./general";
 import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
@@ -13,6 +13,7 @@ import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
 import {fetchState} from "../../redux/states/actions";
 import {fetchRol} from "../../redux/rols/actions";
+import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import Badge from "../badge";
 import AdminRol from "../roles";
@@ -33,6 +34,7 @@ class Event extends Component {
         this.props.dispatch(fetchState());
         this.props.dispatch(fetchRol());
         let eventId = this.props.match.params.event;
+        this.props.dispatch(fetchPermissions(eventId));
         if(eventId === 'new_event'){
             const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             this.setState({newEvent:true,loading:false,event})
@@ -88,7 +90,7 @@ class Event extends Component {
     };
 
     render() {
-        const { match } = this.props;
+        const { match,permissions } = this.props;
         const { timeout } = this.state;
         return (
             <React.Fragment>
@@ -131,11 +133,14 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
-                                            <ul className="menu-list">
-                                                <li>
-                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
-                                                </li>
-                                            </ul>
+                                            {
+                                                permissions.items.includes('5c192450f33bd450a6022e36') &&
+                                                <ul className="menu-list">
+                                                    <li>
+                                                        <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
+                                                    </li>
+                                                </ul>
+                                            }
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
@@ -161,15 +166,21 @@ class Event extends Component {
                             <div className="column event-main is-10">
                                 {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
-                                        <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
-                                        <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
-                                        <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
-                                        <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
-                                        <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
-                                        <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
-                                        <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
-                                        <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                        <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
+                                        <Switch>
+                                            <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
+                                            <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                            {
+                                                permissions.items.includes('5c192450f33bd450a6022e36') &&
+                                                <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                            }
+                                            <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
+                                            <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
+                                            <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
+                                            <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
+                                            <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
+                                            <Route component={NoMatch} />
+                                        </Switch>
                                     </section>
                                 }
                             </div>
@@ -181,6 +192,16 @@ class Event extends Component {
             </React.Fragment>
         );
     }
+}
+
+function NoMatch({ location }) {
+    return (
+        <div>
+            <h3>
+                No match for <code>{location.pathname}</code>
+            </h3>
+        </div>
+    );
 }
 
 const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
@@ -196,6 +217,7 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
 
 const mapStateToProps = state => ({
     loading: state.states.loading,
+    permissions: state.permissions,
     error: state.states.error
 });
 
