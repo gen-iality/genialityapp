@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Redirect, withRouter } from "react-router-dom";
+import { Route, Redirect, withRouter, Switch } from "react-router-dom";
 import Home from "../components/home";
 import Landing from "../components/events/landing";
 import Events from "../components/events";
@@ -18,15 +18,17 @@ class ContentContainer extends Component {
     render() {
         return (
             <main className="main">
-                <Route exact path="/" component={ Home } />
-                <Route exact path="/page/:id" component={ HomeProfile } />
-                <Route exact path="/landing/:event" component={ Landing }/>
-                <PrivateRoute path="/my_events" component={ Events }/>
-                <PrivateRoute path="/event/:event" component={ Event }/>
-                <PrivateRoute path="/profile/:id" component={ MyProfile }/>
-                <Route exact path="/terms" component={ Terms } />
-                <Route exact path="/privacy" component={ Privacy } />
-                <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
+                <Switch>
+                    <Route exact path="/" component={ Home } />
+                    <Route exact path="/page/:id" component={ HomeProfile } />
+                    <Route exact path="/landing/:event" component={ Landing }/>
+                    <PrivateRoute path="/my_events" component={ Events }/>
+                    <PrivateRoute path="/event/:event" component={ Event }/>
+                    <PrivateRoute path="/profile/:id" component={ MyProfile }/>
+                    <Route exact path="/terms" component={ Terms } />
+                    <Route exact path="/privacy" component={ Privacy } />
+                    <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
+                </Switch>
             </main>
         );
     }
