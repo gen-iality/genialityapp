@@ -60,8 +60,8 @@ class UsersRsvp extends Component {
             const properties = this.props.event.user_properties.slice(0,2);
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
-            const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
-            listEvents.data.splice(pos,1);
+            const pos = listEvents.map((e)=> { return e._id; }).indexOf(eventId);
+            listEvents.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;
             let index = columns.map((e) => { return e.id; }).indexOf(`${properties[0].name}`);
@@ -99,7 +99,7 @@ class UsersRsvp extends Component {
                     filterable: false,
                 }
             );
-            this.setState({events:listEvents.data,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
+            this.setState({events:listEvents,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
             this.handleCheckBox(users,this.state.selection)
         }catch (e) {
             console.log(e);
