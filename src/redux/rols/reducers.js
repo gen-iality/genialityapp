@@ -5,7 +5,7 @@ import {
 } from "./actions";
 
 const initialState = {
-    items: {},
+    items: [],
     loading: false,
     error: null
 };
@@ -34,7 +34,7 @@ export default function rolesReducer(
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                items: {}
+                items: []
             };
 
         default:

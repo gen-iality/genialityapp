@@ -34,7 +34,7 @@ export default function permissionsReducer(
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                items: {}
+                items: []
             };
 
         default:
