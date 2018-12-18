@@ -49,12 +49,13 @@ class UserEditProfile extends Component {
             const user = await UsersApi.getProfile(userId,true);
             const tickets = await UsersApi.mineTickets();
             console.log(tickets);
+            const events = resp.map(item=> item.event);
             user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
-            this.setState({loading:false,user,events:resp.data,categories,valid:false},this.scrollEvent);
+            this.setState({loading:false,user,events,categories,valid:false},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
