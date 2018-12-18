@@ -107,11 +107,14 @@ class Event extends Component {
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
-                                            <ul className="menu-list">
-                                                <li>
-                                                    <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
-                                                </li>
-                                            </ul>
+                                            {
+                                                permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                                                    <ul className="menu-list">
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
+                                                        </li>
+                                                    </ul>
+                                            }
                                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                 <span className="item has-text-grey">Invitaciones</span>
                                                 <span className="icon">
@@ -124,9 +127,12 @@ class Event extends Component {
                                                         <li>
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
-                                                        </li>
+                                                        {
+                                                            permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                                            <li>
+                                                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
+                                                            </li>
+                                                        }
                                                     </ul>
                                                 )
                                             }
@@ -174,8 +180,14 @@ class Event extends Component {
                                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             }
                                             <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
-                                            <Route path={`${match.url}/messages`} render={()=><Invitations event={this.state.event} />}/>
-                                            <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            {
+                                                permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                                <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
+                                            }
+                                            {
+                                                permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                                                <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            }
                                             <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                             <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
                                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>

@@ -7,6 +7,8 @@ export function fetchPermissions(event) {
             .then((data)=> {
                 const permissions = data.map(item => (item._id));
                 //const permissions = ['5c192450f33bd450a6022e36']; //ESCARAPELA
+                //const permissions = ['5c192400f33bd41b9070cb34']; //STAFF
+                //const permissions = ['5c192428f33bd46c102ec974']; //HISTORIAL INVITACIONS
                 dispatch(fetchPermissionsSuccess(permissions));
             })
             .catch((e)=>{

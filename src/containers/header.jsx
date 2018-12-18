@@ -152,11 +152,14 @@ class Header extends Component {
                 <p className="navbar-item has-text-centered-mobile">
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
                 </p>
-                <ul className="menu-list">
-                    <li>
-                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
-                    </li>
-                </ul>
+                {
+                    permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                    <ul className="menu-list">
+                        <li>
+                            <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
+                        </li>
+                    </ul>
+                }
                 <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                     <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
                     <span className="icon">
@@ -169,9 +172,12 @@ class Header extends Component {
                             <li>
                                 <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
                             </li>
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
-                            </li>
+                            {
+                                permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                <li>
+                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
+                                </li>
+                            }
                         </ul>
                     )
                 }
