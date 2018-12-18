@@ -3,7 +3,7 @@ import SearchComponent from "../shared/searchTable";
 import Loading from "../loaders/loading";
 import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
-import {icon} from "../../helpers/constants";
+import {BaseUrl, icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
 import {Actions, HelperApi, UsersApi} from "../../helpers/request";
 import {firestore} from "../../helpers/firebase";
@@ -29,7 +29,7 @@ class AdminRol extends Component {
             formValid:  false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.deleteUser = this.deleteUser.bind(this)
+        this.deleteHelper = this.deleteHelper.bind(this)
     }
 
     async componentDidMount(){
@@ -46,12 +46,13 @@ class AdminRol extends Component {
     //EDit
     editHelper = (item) => {
         const user = {
-            Nombres:item.user.properties.Nombres,
-            email:item.user.properties.email,
+            Nombres:'QONDA',
+            email:item.user.email,
             rol:item.role_id,
-            id:item._id
+            id:item._id,
+            model_id:item.model_id
         };
-        this.setState({user,edit:true,modal:true,found:3})
+        this.setState({user,edit:true,modal:true,found:3,emailValid:true,nameValid:true,rolValid:true},this.validateForm)
     };
 
     //Modal
@@ -65,17 +66,10 @@ class AdminRol extends Component {
     };
     onChange = (e) => {
         const {value,name} = e.target;
-        if(name ==='email') this.setState({found:0});
+        if(name ==='email') this.setState({found:0}, this.validateForm);
         this.setState({user:{...this.state.user,[name]:value}}, this.validateField(name,value));
     };
     validateField = (fieldName, value) => {
-        console.group('VALIDATING ?');
-            console.log(fieldName);
-            console.log(value);
-            console.log(this.state.emailValid);
-            console.log(this.state.nameValid);
-            console.log(this.state.rolValid);
-        console.groupEnd()
         let {formErrors,emailValid,nameValid,rolValid } = this.state;
         switch(fieldName) {
             case 'email':
@@ -92,6 +86,13 @@ class AdminRol extends Component {
             default:
                 break;
         }
+        /*console.group('VALIDATING ?');
+        console.log(fieldName);
+        console.log(value);
+        console.log(this.state.emailValid);
+        console.log(this.state.nameValid);
+        console.log(this.state.rolValid);
+        console.groupEnd();*/
         this.setState({formErrors, emailValid, nameValid, rolValid }, this.validateForm);
     };
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
@@ -101,10 +102,10 @@ class AdminRol extends Component {
             .then(res=>{
                 console.log(res);
                 if(res.length>0){
-                    this.setState({found:1})
+                    this.setState({found:1,user:{...this.state.user,rol:''},emailValid:true,nameValid:true,rolValid:false},this.validateForm)
                 }
                 else{
-                    this.setState({found:2})
+                    this.setState({found:2,user:{...this.state.user,rol:'',Nombres:''},emailValid:true,nameValid:false,rolValid:false},this.validateForm)
                 }
             })
             .catch(err=>{
@@ -112,22 +113,35 @@ class AdminRol extends Component {
             })
     };
     async handleSubmit() {
-        const {user,edit} = this.state;
+        const {user,edit,users} = this.state;
+        const self = this;
         const data = {
-            "properties": {"email":user.email, "Nombres":user.Nombres},
             "role_id":user.rol,
             "event_id":this.props.event._id
         };
         console.log(data);
+        this.setState({create:true});
         try {
             if(edit){
+                data.model_id = user.id;
                 const update = await HelperApi.editHelper(user.id,data);
                 console.log(update);
+                toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
+                this.setState({message:{...this.state.message,class:'msg_warning',content:'HELPER UPDATED'},isLoading:false});
             }
             else{
+                data.properties = {"email":user.email, "Nombres":user.Nombres};
                 const res = await HelperApi.saveHelper(data);
                 console.log(res);
+                if(res._id){
+                    toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
+                    this.setState({message:{...this.state.message,class:'msg_success',content:'HELPER CREATED'},isLoading:false});
+                }
             }
+            setTimeout(()=>{
+                this.setState({message:{},create:false});
+                self.handleModal();
+            },800);
         }
         catch (e) {
             console.log(e);
@@ -136,26 +150,29 @@ class AdminRol extends Component {
     };
 
     //Delete Helper
-    async deleteUser() {
+    async deleteHelper() {
         const self = this;
-        let message = {};
         try {
             const res = await HelperApi.removeHelper(self.state.user.id);
             console.log(res);
+            toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
+            this.setState({message:{...this.state.message,class:'msg_error',content:'HELPER DELETED'},create:false});
+            self.removeContributtor();
+            setTimeout(()=>{
+                this.setState({message:{},deleteModal:false});
+                self.handleModal();
+            },800);
         }catch (e) {
             console.log(e);
             this.setState({timeout:true})
         }
-        /*toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
-        console.log("Document successfully deleted!");
-        message.class = 'msg_warning';
-        message.content = 'USER DELETED';
-        setTimeout(()=>{
-            message.class = message.content = '';
-            self.closeModal();
-        },500)*/
     };
     closeDelete = () => {this.setState({deleteModal:false,edit:false})};
+    removeContributtor = () => {
+      const {users,user} = this.state;
+      const pos = users.map(user=>user._id).indexOf(user.id);
+      if(pos>=0) users.splice(pos, 1);
+    };
 
     //Search records at third column
     onChangePage = (pageOfItems) => {
@@ -166,7 +183,7 @@ class AdminRol extends Component {
     };
 
     render() {
-        const {timeout, users, pageOfItems, modal, user} = this.state;
+        const {timeout, users, pageOfItems, modal, user, edit} = this.state;
         const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         const {roles} = this.props;
         return (
@@ -224,8 +241,8 @@ class AdminRol extends Component {
                                                                 <span className="icon has-text-primary action_pointer"
                                                                     onClick={(e)=>{this.editHelper(item)}}><i className="fas fa-edit"/></span>
                                                             </td>
-                                                            <td>{item.user.properties.email}</td>
-                                                            <td>{item.user.properties.Nombres}</td>
+                                                            <td>{item.user.email}</td>
+                                                            <td>asdad</td>
                                                             <td>{item.role.name}</td>
                                                         </tr>
                                                     })
@@ -250,17 +267,17 @@ class AdminRol extends Component {
                         </header>
                         <section className="modal-card-body">
                             {
-                                (found===1 && !this.state.edit) ?
+                                (found===1 && !edit) ?
                                     <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
-                                    (found===2 && !this.state.edit) ?
+                                    (found===2 && !edit) ?
                                         <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
                             }
                             {
-                                this.state.edit ?
+                                edit ?
                                     <div className="field">
                                         <label className={`label has-text-grey-light is-capitalized required`}>Correo</label>
                                         <div className="control">
-                                            <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} disabled={found===1} onChange={this.onChange}/>
+                                            <input className={`input ${email.length>0?'is-danger':''}`} type='email' name='email' value={user.email} disabled={found===1 || edit} onChange={this.onChange}/>
                                         </div>
                                         {email.length>0 && <p className="help is-danger">{email}</p>}
                                     </div>
@@ -275,17 +292,17 @@ class AdminRol extends Component {
                                     </div>
                             }
                             {
-                                (found===2 || this.state.edit) &&
+                                (found===2 || edit) &&
                                 <div className="field">
                                     <label className={`label has-text-grey-light is-capitalized required`}>Nombre</label>
                                     <div className="control">
-                                        <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.Nombres} onChange={this.onChange}/>
+                                        <input className={`input ${name.length>0?'is-danger':''}`} type='text' name='Nombres' value={user.Nombres} disabled={edit} onChange={this.onChange}/>
                                     </div>
                                     {name.length>0 && <p className="help is-danger">{name}</p>}
                                 </div>
                             }
                             {
-                                (found===2 || this.state.edit || found===1) &&
+                                (found===2 || edit || found===1) &&
                                     <div className="field">
                                         <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
                                         <div className="control">
@@ -309,7 +326,7 @@ class AdminRol extends Component {
                                 {
                                     this.state.create?<div>Creando...</div>:
                                         <div className="modal-buttons">
-                                            <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{this.state.edit?'Guardar':'Crear'}</button>
+                                            <button className="button is-primary" onClick={this.handleSubmit} disabled={!formValid}>{(edit)?'Guardar':'Crear'}</button>
                                             {
                                                 this.state.edit&&
                                                 <React.Fragment>
@@ -328,7 +345,7 @@ class AdminRol extends Component {
                 </div>
                 <Dialog modal={this.state.deleteModal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}
-                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteUser}}
+                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteHelper}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
                 {timeout&&(<ErrorServe/>)}

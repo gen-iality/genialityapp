@@ -75,7 +75,7 @@ export const EventsApi = {
         return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data)
     },
     mine: async () => {
-        return await Actions.getAll('/api/me/events')
+        return await Actions.getAll('/api/me/contributors/events')
     },
     getOne: async (id) => {
         return await Actions.getOne('/api/events/', id)
@@ -154,19 +154,19 @@ export const BadgeApi = {
 };
 export const HelperApi = {
     listHelper: async(id) => {
-        return await Actions.getOne(`api/permissions/roles/event/`,id)
+        return await Actions.getOne(`api/contributors/events/`,id)
     },
     rolesOne: async(event) => {
         return await Actions.get(`api/permissions/roles/event/${event}/me`)
     },
     saveHelper: async(data) => {
-        return await Actions.post(`api/permissions/roles/CreateAndAdd`,data)
+        return await Actions.post(`api/contributors`,data)
     },
     editHelper: async(id,data) => {
-        return await Actions.put(`api/permissions/roles/${id}`,data)
+        return await Actions.put(`api/contributors/${id}`,data)
     },
     removeHelper: async(id) => {
-        return await Actions.delete(`api/permissions/roles/`,id)
+        return await Actions.delete(`api/contributors/`,id)
     }
 };
 const handleCat = (data) => {

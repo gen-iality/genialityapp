@@ -3,7 +3,7 @@ import {Actions} from "../../helpers/request";
 export function fetchRol() {
     return async dispatch => {
         dispatch(fetchRolBegin());
-        Actions.getAll('/api/permissions/roles')
+        Actions.getAll('/api/contributors/metadata/roles')
             .then((rolData)=> {
                 let states = rolData.map(state => ({
                     value: state._id,
