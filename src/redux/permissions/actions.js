@@ -9,6 +9,11 @@ export function fetchPermissions(event) {
                 //const permissions = ['5c192450f33bd450a6022e36']; //ESCARAPELA
                 //const permissions = ['5c192400f33bd41b9070cb34']; //STAFF
                 //const permissions = ['5c192428f33bd46c102ec974']; //HISTORIAL INVITACIONS
+                //const permissions = ['5c09261df33bd415e22dcdb2']; //TIQUETES
+                //const permissions = ['5c092604f33bd415490d4892']; //EDICIÒN EVENTOS
+                //const permissions = ['5c192408f33bd41b9070cb35']; //AGREGAR ASISTENTE
+                //const permissions = ['5c192410f33bd41b9070cb36']; //ENVIAR INVITACIÒN
+                //const permissions = ['5c192421f33bd46c102ec973']; //ENVIAR TIQUETE
                 dispatch(fetchPermissionsSuccess(permissions));
             })
             .catch((e)=>{

@@ -75,7 +75,8 @@ export const EventsApi = {
         return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data)
     },
     mine: async () => {
-        return await Actions.getAll('/api/me/contributors/events')
+        //return await Actions.getAll('/api/me/contributors/events')
+        return await Actions.getAll('/api/me/events')
     },
     getOne: async (id) => {
         return await Actions.getOne('/api/events/', id)
