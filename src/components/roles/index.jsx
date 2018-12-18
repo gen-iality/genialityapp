@@ -47,7 +47,7 @@ class AdminRol extends Component {
     //Edit
     editHelper = (item) => {
         const user = {
-            Nombres:'QONDA',
+            Nombres:item.user.Nombres?item.user.Nombres:item.user.displayName?item.user.displayName:item._id,
             email:item.user.email,
             rol:item.role_id,
             id:item._id,
