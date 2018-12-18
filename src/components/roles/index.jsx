@@ -29,7 +29,8 @@ class AdminRol extends Component {
             formValid:  false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.deleteHelper = this.deleteHelper.bind(this)
+        this.deleteHelper = this.deleteHelper.bind(this);
+        this.updateContributors = this.updateContributors.bind(this)
     }
 
     async componentDidMount(){
@@ -43,7 +44,7 @@ class AdminRol extends Component {
         }
     }
 
-    //EDit
+    //Edit
     editHelper = (item) => {
         const user = {
             Nombres:'QONDA',
@@ -113,24 +114,23 @@ class AdminRol extends Component {
             })
     };
     async handleSubmit() {
-        const {user,edit,users} = this.state;
+        const {user,edit} = this.state;
         const self = this;
-        const data = {
-            "role_id":user.rol,
-            "event_id":this.props.event._id
-        };
-        console.log(data);
         this.setState({create:true});
         try {
             if(edit){
-                data.model_id = user.id;
-                const update = await HelperApi.editHelper(user.id,data);
+                const update = await HelperApi.editHelper(user.id,{"role_id": user.rol});
                 console.log(update);
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
                 this.setState({message:{...this.state.message,class:'msg_warning',content:'CONTRIBUTOR UPDATED'},isLoading:false});
             }
             else{
-                data.properties = {"email":user.email, "Nombres":user.Nombres};
+                const data = {
+                    "properties": {"email":user.email, "Nombres":user.Nombres},
+                    "role_id":user.rol,
+                    "event_id":this.props.event._id
+                };
+                console.log(data);
                 const res = await HelperApi.saveHelper(data);
                 console.log(res);
                 if(res._id){
@@ -138,6 +138,7 @@ class AdminRol extends Component {
                     this.setState({message:{...this.state.message,class:'msg_success',content:'CONTRIBUTOR CREATED'},isLoading:false});
                 }
             }
+            self.updateContributors();
             setTimeout(()=>{
                 this.setState({message:{},create:false});
                 self.handleModal();
@@ -148,7 +149,6 @@ class AdminRol extends Component {
             this.setState({timeout:true})
         }
     };
-
     //Delete Helper
     async deleteHelper() {
         const self = this;
@@ -157,7 +157,7 @@ class AdminRol extends Component {
             console.log(res);
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
             this.setState({message:{...this.state.message,class:'msg_error',content:'CONTRIBUTOR DELETED'},create:false});
-            self.removeContributor();
+            self.updateContributors();
             setTimeout(()=>{
                 this.setState({message:{},deleteModal:false});
                 self.handleModal();
@@ -168,13 +168,17 @@ class AdminRol extends Component {
         }
     };
     closeDelete = () => {this.setState({deleteModal:false,edit:false})};
-    removeContributor = () => {
-      const {users,user} = this.state;
-      const pos = users.map(user=>user._id).indexOf(user.id);
-      if(pos>=0) users.splice(pos, 1);
+
+    async updateContributors() {
+        try{
+            const res = await HelperApi.listHelper(this.props.event._id);
+            this.setState({users:res,pageOfItems:res,loading:false})
+        }catch (e) {
+            console.log(e);
+        }
     };
 
-    //Search records at third column
+    //Search records
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
     };
