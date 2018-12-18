@@ -127,7 +127,7 @@ class AdminRol extends Component {
                 const update = await HelperApi.editHelper(user.id,data);
                 console.log(update);
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
-                this.setState({message:{...this.state.message,class:'msg_warning',content:'HELPER UPDATED'},isLoading:false});
+                this.setState({message:{...this.state.message,class:'msg_warning',content:'CONTRIBUTOR UPDATED'},isLoading:false});
             }
             else{
                 data.properties = {"email":user.email, "Nombres":user.Nombres};
@@ -135,7 +135,7 @@ class AdminRol extends Component {
                 console.log(res);
                 if(res._id){
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
-                    this.setState({message:{...this.state.message,class:'msg_success',content:'HELPER CREATED'},isLoading:false});
+                    this.setState({message:{...this.state.message,class:'msg_success',content:'CONTRIBUTOR CREATED'},isLoading:false});
                 }
             }
             setTimeout(()=>{
@@ -156,8 +156,8 @@ class AdminRol extends Component {
             const res = await HelperApi.removeHelper(self.state.user.id);
             console.log(res);
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
-            this.setState({message:{...this.state.message,class:'msg_error',content:'HELPER DELETED'},create:false});
-            self.removeContributtor();
+            this.setState({message:{...this.state.message,class:'msg_error',content:'CONTRIBUTOR DELETED'},create:false});
+            self.removeContributor();
             setTimeout(()=>{
                 this.setState({message:{},deleteModal:false});
                 self.handleModal();
@@ -168,7 +168,7 @@ class AdminRol extends Component {
         }
     };
     closeDelete = () => {this.setState({deleteModal:false,edit:false})};
-    removeContributtor = () => {
+    removeContributor = () => {
       const {users,user} = this.state;
       const pos = users.map(user=>user._id).indexOf(user.id);
       if(pos>=0) users.splice(pos, 1);

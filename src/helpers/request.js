@@ -157,7 +157,7 @@ export const HelperApi = {
         return await Actions.getOne(`api/contributors/events/`,id)
     },
     rolesOne: async(event) => {
-        return await Actions.get(`api/permissions/roles/event/${event}/me`)
+        return await Actions.get(`api/contributors/events/${event}/me`)
     },
     saveHelper: async(data) => {
         return await Actions.post(`api/contributors`,data)
