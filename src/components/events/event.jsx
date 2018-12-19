@@ -116,18 +116,24 @@ class Event extends Component {
                                                         </li>
                                                     </ul>
                                             }
-                                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                                                <span className="item has-text-grey">Invitaciones</span>
-                                                <span className="icon">
-                                                    <i className={`${this.state.userTab?'up':'down'}`}/>
-                                                </span>
-                                            </p>
+                                            {
+                                                (permissions.items.includes(rolPermissions.admin_invitations) || permissions.items.includes(rolPermissions.history_invitations)) &&
+                                                    <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                                                        <span className="item has-text-grey">Invitaciones</span>
+                                                        <span className="icon">
+                                                        <i className={`${this.state.userTab?'up':'down'}`}/>
+                                                    </span>
+                                                    </p>
+                                            }
                                             {
                                                 this.state.userTab && (
                                                     <ul className="menu-list">
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
-                                                        </li>
+                                                        {
+                                                            permissions.items.includes(rolPermissions.admin_invitations) &&
+                                                            <li>
+                                                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                            </li>
+                                                        }
                                                         {
                                                             permissions.items.includes(rolPermissions.history_invitations) &&
                                                             <li>

@@ -160,18 +160,24 @@ class Header extends Component {
                         </li>
                     </ul>
                 }
-                <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                    <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
-                    <span className="icon">
-                        <i className={`${this.state.userTab?'up':'down'}`}/>
-                    </span>
-                </p>
+                {
+                    (permissions.items.includes(rolPermissions.admin_invitations) || permissions.items.includes(rolPermissions.history_invitations)) &&
+                        <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
+                            <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
+                            <span className="icon">
+                            <i className={`${this.state.userTab?'up':'down'}`}/>
+                        </span>
+                        </p>
+                }
                 {
                     this.state.userTab && (
                         <ul className="menu-list">
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
-                            </li>
+                            {
+                                permissions.items.includes(rolPermissions.admin_invitations) &&
+                                <li>
+                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
+                                </li>
+                            }
                             {
                                 permissions.items.includes(rolPermissions.history_invitations) &&
                                 <li>

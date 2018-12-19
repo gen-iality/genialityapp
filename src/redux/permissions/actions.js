@@ -10,9 +10,9 @@ export function fetchPermissions(event) {
                 //const permissions = [rolPermissions.admin_badge]; //ESCARAPELA
                 //const permissions = [rolPermissions.admin_staff]; //STAFF
                 //const permissions = [rolPermissions.history_invitations]; //HISTORIAL INVITACIONS
+                //const permissions = [rolPermissions.admin_invitations]; //ADMINISTRAR INVITACIÓN
                 //const permissions = [rolPermissions.admin_ticket]; //TIQUETES
                 //const permissions = [rolPermissions.add_attendees]; //AGREGAR ASISTENTE
-                //const permissions = [rolPermissions.admin_invitations]; //ADMINISTRAR INVITACIÓN
                 dispatch(fetchPermissionsSuccess(permissions));
             })
             .catch((e)=>{
