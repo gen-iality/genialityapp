@@ -1,4 +1,5 @@
 import {Actions} from "../../helpers/request";
+import {rolPermissions} from "../../helpers/constants";
 
 export function fetchPermissions(event) {
     return async dispatch => {
@@ -6,14 +7,12 @@ export function fetchPermissions(event) {
         Actions.get(`api/contributors/events/${event}/me`)
             .then((data)=> {
                 const permissions = data.map(item => (item._id));
-                //const permissions = ['5c192450f33bd450a6022e36']; //ESCARAPELA
-                //const permissions = ['5c192400f33bd41b9070cb34']; //STAFF
-                //const permissions = ['5c192428f33bd46c102ec974']; //HISTORIAL INVITACIONS
-                //const permissions = ['5c09261df33bd415e22dcdb2']; //TIQUETES
-                //const permissions = ['5c092604f33bd415490d4892']; //EDICIÒN EVENTOS
-                //const permissions = ['5c192408f33bd41b9070cb35']; //AGREGAR ASISTENTE
-                //const permissions = ['5c192410f33bd41b9070cb36']; //ENVIAR INVITACIÒN
-                //const permissions = ['5c192421f33bd46c102ec973']; //ENVIAR TIQUETE
+                //const permissions = [rolPermissions.admin_badge]; //ESCARAPELA
+                //const permissions = [rolPermissions.admin_staff]; //STAFF
+                //const permissions = [rolPermissions.history_invitations]; //HISTORIAL INVITACIONS
+                //const permissions = [rolPermissions.admin_ticket]; //TIQUETES
+                //const permissions = [rolPermissions.add_attendees]; //AGREGAR ASISTENTE
+                //const permissions = [rolPermissions.admin_invitations]; //ADMINISTRAR INVITACIÓN
                 dispatch(fetchPermissionsSuccess(permissions));
             })
             .catch((e)=>{

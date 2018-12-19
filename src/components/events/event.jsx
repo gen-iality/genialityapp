@@ -3,7 +3,8 @@ import { Route, NavLink, Redirect, Switch } from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
-import {EventsApi, HelperApi} from "../../helpers/request";
+import {EventsApi} from "../../helpers/request";
+import {rolPermissions} from "../../helpers/constants";
 import General from "./general";
 import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
@@ -108,7 +109,7 @@ class Event extends Component {
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
                                             {
-                                                permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                                                permissions.items.includes(rolPermissions.admin_staff) &&
                                                     <ul className="menu-list">
                                                         <li>
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
@@ -128,7 +129,7 @@ class Event extends Component {
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         {
-                                                            permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                                            permissions.items.includes(rolPermissions.history_invitations) &&
                                                             <li>
                                                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                             </li>
@@ -140,7 +141,7 @@ class Event extends Component {
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
                                             {
-                                                permissions.items.includes('5c192450f33bd450a6022e36') &&
+                                                permissions.items.includes(rolPermissions.admin_badge) &&
                                                 <ul className="menu-list">
                                                     <li>
                                                         <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
@@ -176,16 +177,16 @@ class Event extends Component {
                                             <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
                                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             {
-                                                permissions.items.includes('5c192450f33bd450a6022e36') &&
+                                                permissions.items.includes(rolPermissions.admin_badge) &&
                                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             }
                                             <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                             {
-                                                permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                                permissions.items.includes(rolPermissions.history_invitations) &&
                                                 <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
                                             }
                                             {
-                                                permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                                                permissions.items.includes(rolPermissions.admin_staff) &&
                                                 <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
                                             }
                                             <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>

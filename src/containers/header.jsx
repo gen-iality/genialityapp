@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link, NavLink, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
-import {AuthUrl,icon} from "../helpers/constants";
+import {AuthUrl,icon,rolPermissions} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
@@ -153,7 +153,7 @@ class Header extends Component {
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
                 </p>
                 {
-                    permissions.items.includes('5c192400f33bd41b9070cb34') &&
+                    permissions.items.includes(rolPermissions.admin_staff) &&
                     <ul className="menu-list">
                         <li>
                             <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
@@ -173,7 +173,7 @@ class Header extends Component {
                                 <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
                             </li>
                             {
-                                permissions.items.includes('5c192428f33bd46c102ec974') &&
+                                permissions.items.includes(rolPermissions.history_invitations) &&
                                 <li>
                                     <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
                                 </li>
@@ -185,7 +185,7 @@ class Header extends Component {
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
                 </p>
                 {
-                    permissions.items.includes('5c192450f33bd450a6022e36') &&
+                    permissions.items.includes(rolPermissions.admin_badge) &&
                         <ul className="menu-list">
                             <li>
                                 <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
