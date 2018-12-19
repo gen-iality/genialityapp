@@ -45,8 +45,8 @@ class SearchComponent extends Component {
                 item.state.search(new RegExp(value, 'i')) >= 0);
         }else if(this.props.kind === 'helpers'){
             arrAux = this.props.data.filter(item =>
-                item.user.properties.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.user.properties.Nombres.search(new RegExp(value, 'i')) >= 0);
+                item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+                item.user.displayName.search(new RegExp(value, 'i')) >= 0);
         }
         return arrAux
     }

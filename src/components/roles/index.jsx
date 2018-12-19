@@ -3,10 +3,9 @@ import SearchComponent from "../shared/searchTable";
 import Loading from "../loaders/loading";
 import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
-import {BaseUrl, icon} from "../../helpers/constants";
+import { icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
-import {Actions, HelperApi, UsersApi} from "../../helpers/request";
-import {firestore} from "../../helpers/firebase";
+import { HelperApi, UsersApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
@@ -246,7 +245,7 @@ class AdminRol extends Component {
                                                                     onClick={(e)=>{this.editHelper(item)}}><i className="fas fa-edit"/></span>
                                                             </td>
                                                             <td>{item.user.email}</td>
-                                                            <td>asdad</td>
+                                                            <td>{item.user.displayName?item.user.displayName:'SinNombre'}</td>
                                                             <td>{item.role.name}</td>
                                                         </tr>
                                                     })

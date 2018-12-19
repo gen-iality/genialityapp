@@ -3,13 +3,12 @@ import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
-import {AuthUrl, BaseUrl} from "../../helpers/constants";
+import {BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
 import ErrorServe from "../modal/serverError";
 import Dialog from "../modal/twoAction";
-import * as Cookie from "js-cookie";
 import {FormattedMessage} from "react-intl";
 import CreatableSelect from 'react-select/lib/Creatable';
 Moment.locale('es');
