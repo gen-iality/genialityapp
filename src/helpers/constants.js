@@ -34,29 +34,25 @@ export const rolPermissions = {
         "_id": "5c09261df33bd415e22dcdb2",
         "name": "Tiquetes",
     },
-    "metrics": {
-        "_id": "5c092624f33bd415e22dcdb3",
-        "name": "Metricas del evento",
-    },
     "admin_staff": {
         "_id": "5c192400f33bd41b9070cb34",
         "name": "Asignación de roles para el evento",
-    },
-    "add_attendees": {
-        "_id": "5c192408f33bd41b9070cb35",
-        "name": "Agregar asistente",
     },
     "admin_invitations": {
         "_id": "5c192410f33bd41b9070cb36",
         "name": "Administrar invitaciones",
     },
-    "history_invitations": {
-        "_id": "5c192428f33bd46c102ec974",
-        "name": "Historial de las invitaciones enviadas",
+    "admin_badge": {
+        "_id": "5c192450f33bd450a6022e36",
+        "name": "Modificación de la escarapela",
     },
     "checkin": {
         "_id": "5c19242ff33bd46c102ec975",
         "name": "Realización del checking",
+    },
+    "add_attendees": {
+        "_id": "5c192408f33bd41b9070cb35",
+        "name": "Agregar asistente",
     },
     "update_attendees": {
         "_id": "5c19243cf33bd450a6022e33",
@@ -70,9 +66,13 @@ export const rolPermissions = {
         "_id": "5c19244af33bd450a6022e35",
         "name": "Impresión de la escarapela del asistente",
     },
-    "admin_badge": {
-        "_id": "5c192450f33bd450a6022e36",
-        "name": "Modificación de la escarapela",
+    "history_invitations": {
+        "_id": "5c192428f33bd46c102ec974",
+        "name": "Historial de las invitaciones enviadas",
+    },
+    "metrics": {
+        "_id": "5c092624f33bd415e22dcdb3",
+        "name": "Metricas del evento",
     }
 };
 
