@@ -299,19 +299,22 @@ class General extends Component {
         try {
             const result = await EventsApi.deleteOne(this.state.event._id);
             console.log(result);
-            if(result.data === "True"){
-                this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
-                setTimeout(()=>{
-                    this.setState({message:{},modal:false});
-                    window.location.replace(`${BaseUrl}/`);
-                },500)
-            }else{
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
+            setTimeout(()=>{
+                this.setState({message:{},modal:false});
+                window.location.replace(`${BaseUrl}/`);
+            },500)
+        }catch (error) {
+            if (error.response) {
+                console.log(error.response);
                 this.setState({message:{...this.state.message,class:'msg_error',content:'Algo salió mal. Intentalo de nuevo'},isLoading:false})
+            } else if (error.request) {
+                console.log(error.request);
+                this.setState({timeout:true});
+            } else {
+                console.log('Error', error.message);
+                this.setState({timeout:true});
             }
-        }catch (e) {
-            Cookie.remove("token");
-            Cookie.remove("evius_token");
-            window.location.replace(`${AuthUrl}/logout`);
         }
     }
 
