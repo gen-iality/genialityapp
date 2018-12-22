@@ -18,6 +18,8 @@ import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import Badge from "../badge";
 import AdminRol from "../roles";
+import TicketInfo from "../tickets";
+import TicketConfig from "../tickets/config";
 Moment.locale('es');
 momentLocalizer();
 
@@ -27,6 +29,7 @@ class Event extends Component {
         this.state = {
             loading:true,
             userTab:true,
+            ticketTab:true,
             contentTab:true
         }
     }
@@ -126,7 +129,7 @@ class Event extends Component {
                                                     </p>
                                             }
                                             {
-                                                this.state.userTab && (
+                                                this.state.ticketTab && (
                                                     <ul className="menu-list">
                                                         {
                                                             permissions.items.includes(rolPermissions.admin_invitations) &&
@@ -140,6 +143,12 @@ class Event extends Component {
                                                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                             </li>
                                                         }
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/ticket`}>Informativa</NavLink>
+                                                        </li>
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/configuration_ticket`}>Configuración</NavLink>
+                                                        </li>
                                                     </ul>
                                                 )
                                             }

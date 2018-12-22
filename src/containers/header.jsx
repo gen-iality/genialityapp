@@ -169,8 +169,19 @@ class Header extends Component {
                         </span>
                         </p>
                 }
+                <ul className="menu-list">
+                    <li>
+                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
+                    </li>
+                </ul>
+                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
+                    <span className="item has-text-grey">Ticketes</span>
+                    <span className="icon">
+                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
+                                                </span>
+                </p>
                 {
-                    this.state.userTab && (
+                    this.state.ticketTab && (
                         <ul className="menu-list">
                             {
                                 permissions.items.includes(rolPermissions.admin_invitations) &&
@@ -184,6 +195,12 @@ class Header extends Component {
                                     <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
                                 </li>
                             }
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`ticket`}>Informativa</NavLink>
+                            </li>
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`configuration_ticket`}>Configuración</NavLink>
+                            </li>
                         </ul>
                     )
                 }
