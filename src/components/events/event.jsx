@@ -95,6 +95,7 @@ class Event extends Component {
 
     render() {
         const { match,permissions } = this.props;
+        console.log('permissions ',permissions);
         const { timeout } = this.state;
         return (
             <React.Fragment>
@@ -129,20 +130,32 @@ class Event extends Component {
                                                     </p>
                                             }
                                             {
-                                                this.state.ticketTab && (
+                                                (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations)) && (
                                                     <ul className="menu-list">
-                                                        {
-                                                            permissions.items.includes(rolPermissions.admin_invitations) &&
-                                                            <li>
-                                                                <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
-                                                            </li>
-                                                        }
+                                                        <li>
+                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
+                                                        </li>
                                                         {
                                                             permissions.items.includes(rolPermissions.history_invitations) &&
                                                             <li>
                                                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                             </li>
                                                         }
+                                                    </ul>
+                                                )
+                                            }
+                                            {
+                                                permissions.items.includes(rolPermissions.admin_ticket) &&
+                                                    <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
+                                                    <span className="item has-text-grey">Ticketes</span>
+                                                    <span className="icon">
+                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
+                                                </span>
+                                                </p>
+                                            }
+                                            {
+                                                (this.state.ticketTab && permissions.items.includes(rolPermissions.admin_ticket)) && (
+                                                    <ul className="menu-list">
                                                         <li>
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/ticket`}>Informativa</NavLink>
                                                         </li>
@@ -203,6 +216,13 @@ class Event extends Component {
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff) &&
                                                 <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            }
+                                            {
+                                                permissions.items.includes(rolPermissions.admin_ticket) &&
+                                                    <React.Fragment>
+                                                        <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
+                                                        <Route path={`${match.url}/configuration_ticket`} render={()=><TicketConfig eventId={this.state.event._id}/>}/>
+                                                    </React.Fragment>
                                             }
                                             <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                             <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>

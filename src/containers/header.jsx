@@ -13,14 +13,7 @@ class Header extends Component {
         super(props);
         this.props.history.listen((location, action) => {
             console.log("on route change");
-            const splited = location.pathname.split('/');
-            if(splited[1]===""){
-                this.setState({filterEvius:1})
-            }else if(splited[1]==="event"){
-                this.setState({filterEvius:2,eventUrl:splited[2]})
-            }else this.setState({filterEvius:0});
-            window.scrollTo(0, 0);
-            this.setState({menuOpen:false,filterOpen:false})
+            this.handleMenu(location)
         });
         this.state = {
             selection: [],
@@ -58,25 +51,41 @@ class Header extends Component {
                             .then((organizations)=>{
                                 this.setState({name,photo,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
                             });
+                        this.handleMenu(this.props.location)
                     }else{
                         this.setState({timeout:true,loader:false});
                     }
                 })
                 .catch(error => {
-                    // Error
                     if (error.response) {
                         console.log(error.response);
-                        const {status} = error.response;
-                        if(status === 401) this.setState({timeout:true,loader:false});
-                        else this.setState({serverError:true,loader:false})
+                        const {status,data} = error.response;
+                        console.log('STATUS',status,status === 401);
+                        if(status !== 401) this.setState({timeout:true,loader:false});
+                        else this.setState({serverError:true,loader:false,errorData:data})
                     } else {
+                        let errorData = error.message;
                         console.log('Error', error.message);
-                        if(error.request) console.log(error.request);
-                        this.setState({serverError:true,loader:false})
+                        if(error.request) {
+                            console.log(error.request);
+                            errorData = error.request
+                        }
+                        this.setState({serverError:true,loader:false,errorData})
                     }
                     console.log(error.config);
                 });
         }
+    }
+
+    handleMenu = (location) => {
+        const splited = location.pathname.split('/');
+        if(splited[1]===""){
+            this.setState({filterEvius:1})
+        }else if(splited[1]==="event"){
+            this.setState({filterEvius:2,eventUrl:splited[2]})
+        }else this.setState({filterEvius:0});
+        window.scrollTo(0, 0);
+        this.setState({menuOpen:false,filterOpen:false})
     }
 
     componentDidUpdate(prevProps) {
@@ -165,23 +174,36 @@ class Header extends Component {
                         <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                             <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
                             <span className="icon">
-                            <i className={`${this.state.userTab?'up':'down'}`}/>
-                        </span>
+                                <i className={`${this.state.userTab?'up':'down'}`}/>
+                            </span>
                         </p>
                 }
-                <ul className="menu-list">
-                    <li>
-                        <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
-                    </li>
-                </ul>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
-                    <span className="item has-text-grey">Ticketes</span>
-                    <span className="icon">
-                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
-                                                </span>
-                </p>
                 {
-                    this.state.ticketTab && (
+                    (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations)) && (
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
+                            </li>
+                            {
+                                permissions.items.includes(rolPermissions.history_invitations) &&
+                                <li>
+                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
+                                </li>
+                            }
+                        </ul>
+                    )
+                }
+                {
+                    permissions.items.includes(rolPermissions.admin_ticket) &&
+                        <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
+                        <span className="item has-text-grey">Ticketes</span>
+                        <span className="icon">
+                        <i className={`${this.state.ticketTab?'up':'down'}`}/>
+                    </span>
+                    </p>
+                }
+                {
+                    (this.state.ticketTab && permissions.items.includes(rolPermissions.admin_ticket)) && (
                         <ul className="menu-list">
                             {
                                 permissions.items.includes(rolPermissions.admin_invitations) &&
@@ -315,7 +337,7 @@ class Header extends Component {
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
-                {serverError&&(<ErrorServe/>)}
+                {serverError&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
     }
