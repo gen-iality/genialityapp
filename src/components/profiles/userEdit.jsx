@@ -47,9 +47,8 @@ class UserEditProfile extends Component {
             const categories = await CategoriesApi.getAll();
             const events = await EventsApi.mine();
             const user = await UsersApi.getProfile(userId,true);
-            const tickets = await UsersApi.mineTickets();
-            console.log(tickets);
-            user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
+            //const tickets = await UsersApi.mineTickets();
+            user.name = (user.displayName) ? user.displayName: user.name? user.name: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
