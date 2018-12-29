@@ -233,7 +233,7 @@ class UserModal extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {name}
+                        {name}y
                     </label>}
                     <div className="control">
                         {input}

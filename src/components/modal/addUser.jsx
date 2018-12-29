@@ -89,6 +89,7 @@ class AddUser extends Component {
                                 name={name}
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
+                                autofocus = {primercampo}
             />;
             if (type == "boolean") {
                 input =
@@ -100,7 +101,7 @@ class AddUser extends Component {
                             type="checkbox"
                             checked={value}
                             onChange={(e)=>{this.onChange(e, type)}}
-                            autofocus = {primercampo} 
+                         
 
                         />
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{aliasname}a</label>
@@ -123,7 +124,7 @@ class AddUser extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {name}
+                        {aliasname}x
                     </label>}
                     <div className="control">
                         {input}
