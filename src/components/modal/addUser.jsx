@@ -77,8 +77,10 @@ class AddUser extends Component {
             let type = m.type || "text";
             let props = m.props || {};
             let name= m.name;
+            let primercampo = (name=="Nombres");
             let mandatory = m.mandatory;
             let target = name;
+            let aliasname = (name=="Nombres")?name:"Documento";
             let value =  this.state.user[target];
             let input =  <input {...props}
                                 className="input"
@@ -97,7 +99,10 @@ class AddUser extends Component {
                             className="is-checkradio is-primary is-rtl"
                             type="checkbox"
                             checked={value}
-                            onChange={(e)=>{this.onChange(e, type)}} />
+                            onChange={(e)=>{this.onChange(e, type)}}
+                            autofocus = {primercampo} 
+
+                        />
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
