@@ -9,6 +9,7 @@ import {icon} from "../../helpers/constants";
 import {Redirect} from "react-router-dom";
 
 class UserModal extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -26,6 +27,7 @@ class UserModal extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this)
         this.printUser = this.printUser.bind(this)
+        this.textInput = React.createRef();
     }
 
     componentDidMount() {
@@ -53,6 +55,10 @@ class UserModal extends Component {
 
     componentWillUnmount(){
         this.setState({user:{},edit:false});
+    }
+
+    componentDidUpdate(){
+        this.textInput.focus();
     }
 
     async handleSubmit(e) {
@@ -204,6 +210,8 @@ class UserModal extends Component {
                                 name={name}
                                 autofocus={(name=="Nombres") ? 'true' : undefined}
                                 value={value}
+                                
+                                ref={(c) => {if(name=="Nombres")this.textInput = c}}
                                 onChange={(e)=>{this.onChange(e, type)}}
                                
             />;
