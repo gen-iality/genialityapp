@@ -52,6 +52,7 @@ class UserModal extends Component {
             this.setState({user,edit:false});
         }
 
+        if (this.textInput && this.textInput.focus)
         this.textInput.focus();
     }
 
