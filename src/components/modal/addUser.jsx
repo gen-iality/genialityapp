@@ -124,7 +124,7 @@ class AddUser extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {aliasname}x
+                        {aliasname}
                     </label>}
                     <div className="control">
                         {input}

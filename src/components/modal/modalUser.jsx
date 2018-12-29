@@ -192,6 +192,8 @@ class UserModal extends Component {
             let type = m.type || "text";
             let props = m.props || {};
             let name= m.name;
+            let aliasname = (name=="Nombres")?name:"Documento";
+            let primercampo = (name=="Nombres");
             let mandatory = m.mandatory;
             let target = name;
             let value =  this.state.user[target];
@@ -202,6 +204,7 @@ class UserModal extends Component {
                                 name={name}
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
+                                autofocus = {primercampo}
             />;
             if (type == "boolean") {
                 input =
@@ -233,7 +236,7 @@ class UserModal extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {name}y
+                        {aliasname}
                     </label>}
                     <div className="control">
                         {input}
