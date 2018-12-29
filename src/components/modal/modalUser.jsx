@@ -192,7 +192,7 @@ class UserModal extends Component {
             let type = m.type || "text";
             let props = m.props || {};
             let name= m.name;
-            let aliasname = (name=="Nombres")?name:"Documento";
+            let aliasname = (name=="Nombres")?"Documento":name;
             let primercampo = (name=="Nombres");
             let mandatory = m.mandatory;
             let target = name;
@@ -202,9 +202,10 @@ class UserModal extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
+                                autofocus = {primercampo}
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
-                                autofocus = {primercampo}
+                               
             />;
             if (type == "boolean") {
                 input =
