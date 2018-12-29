@@ -213,7 +213,7 @@ class UserModal extends Component {
                             type="checkbox"
                             checked={value}
                             onChange={(e)=>{this.onChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}x</label>
                     </React.Fragment>
             }
             if (type == "list") {

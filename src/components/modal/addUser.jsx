@@ -103,7 +103,7 @@ class AddUser extends Component {
                             autofocus = {primercampo} 
 
                         />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{aliasname}a</label>
                     </React.Fragment>
             }
             if (type == "list") {
