@@ -202,7 +202,7 @@ class UserModal extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
-                                autofocus = {primercampo}
+                                autofocus={(name=="Nombres") ? 'true' : undefined}
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
                                
