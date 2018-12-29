@@ -51,6 +51,8 @@ class UserModal extends Component {
                     user[obj.name] =  obj.type==="boolean" ? false :  obj.type==="number" ? 0: ""));
             this.setState({user,edit:false});
         }
+
+        this.textInput.focus();
     }
 
     componentWillUnmount(){
@@ -58,7 +60,7 @@ class UserModal extends Component {
     }
 
     componentDidUpdate(){
-        this.textInput.focus();
+      
     }
 
     async handleSubmit(e) {
