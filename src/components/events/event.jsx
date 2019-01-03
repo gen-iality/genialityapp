@@ -95,7 +95,6 @@ class Event extends Component {
 
     render() {
         const { match,permissions } = this.props;
-        console.log('permissions ',permissions);
         const { timeout } = this.state;
         return (
             <React.Fragment>
@@ -202,6 +201,7 @@ class Event extends Component {
                                 {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
                                         <Switch>
+                                            <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
                                             <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
                                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             {
@@ -226,7 +226,6 @@ class Event extends Component {
                                             }
                                             <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
                                             <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
-                                            <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
                                             <Route component={NoMatch} />
                                         </Switch>
                                     </section>
