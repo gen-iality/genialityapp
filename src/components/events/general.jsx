@@ -47,8 +47,9 @@ class General extends Component {
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
+            const {fields,groups} = parseProperties(event);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields:(event.user_properties)?event.user_properties:[]})
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups})
         }
         catch (error) {
             // Error
@@ -201,7 +202,7 @@ class General extends Component {
     //Guardar campo en el evento o lista
     saveField = (index,key) => {
         const {fields,groups} = this.state;
-        if(key){
+        if(key || key === 0){
             const obj = groups[key].fields[index];
             obj['edit'] = !obj['edit'];
             this.setState({groups})
@@ -214,7 +215,7 @@ class General extends Component {
     //Editar campo en el evento o lista
     editField = (index,key) => {
         const {fields,groups} = this.state;
-        if(key){
+        if(key || key === 0){
             const obj = groups[key].fields[index];
             obj['edit'] = !obj['edit'];
             this.setState({groups})
@@ -227,7 +228,7 @@ class General extends Component {
     //Borrar campo en el evento o lista
     removeField = (index,key) => {
         const {groups,fields} = this.state;
-        if(key){
+        if(key || key === 0){
             groups[key].fields.splice(index, 1);
             this.setState({groups});
         }
@@ -241,26 +242,26 @@ class General extends Component {
         let {name, value} = e.target;
         const {fields,groups} = this.state;
         if(name === 'name')value = toCapitalizeLower(value);
-        if(!key){
-            fields[index][name] = value;
-            this.setState({fields})
-        }else{
+        if (key || key === 0) {
             let {fields} = groups[key];
             fields[index][name] = value;
             this.setState({groups})
+        } else {
+            fields[index][name] = value;
+            this.setState({fields})
         }
     };
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e,index,key) => {
         const {fields,groups} = this.state;
         const {name} = e.target;
-        if(!key) {
-            fields[index][name] = !fields[index][name];
-            this.setState({fields})
-        }else{
+        if (key || key === 0) {
             let {fields} = groups[key];
             fields[index][name] = !fields[index][name];
             this.setState({groups})
+        } else {
+            fields[index][name] = !fields[index][name];
+            this.setState({fields})
         }
     };
     //Funciones para lista de opciones del campo
@@ -326,8 +327,9 @@ class General extends Component {
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-        const { event } = this.state;
+        const { event,groups,fields } = this.state;
         const self = this;
+        const {properties_group,user_properties} = handleProperties(event,fields,groups);
         this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
@@ -349,7 +351,8 @@ class General extends Component {
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value,
-            user_properties : this.state.fields
+            user_properties : [...this.state.fields, ...user_properties],
+            properties_group
         };
         try {
             if(event._id){
@@ -435,9 +438,8 @@ class General extends Component {
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue, newField, groups,
             valid, timeout, error , errorData, serverError} = this.state;
-        console.log(groups);
         return (
-            <div>
+            <React.Fragment>
                 <div className="event-general">
                     <FormEvent event={event} categories={categories} organizers={organizers} types={types} error={error} changeSuggest={this.changeSuggest}
                                selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
@@ -624,14 +626,14 @@ class General extends Component {
                                             <div className="level-item">
                                                 <div className="field">
                                                     <div className="control">
-                                                        <input className="input" name={"group_id"} type="text"
+                                                        <input className="input subtitle is-5" name={"group_id"} type="text"
                                                                placeholder="Nombre del grupo" value={list.group_id}
                                                                onChange={(e)=>{this.changeNameGroup(e,key)}}/>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="level-item">
-                                                <button className="button" onClick={(e)=>{this.addFieldtoGroup(key)}} disabled={newField}>Agregar Campo</button>
+                                                <button className="button" onClick={(e)=>{this.addFieldtoGroup(key)}}>Agregar Campo</button>
                                             </div>
                                         </div>
                                         <div className="level-right">
@@ -755,13 +757,13 @@ class General extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
                         message={this.state.message} isLoading={this.state.isLoading}
                         second={{title:'Cancelar',class:'',action:this.closeModal}}/>
-            </div>
+            </React.Fragment>
         );
     }
 }
 
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
-const handleFields = (organizers,types,categories,event) =>{
+function handleFields(organizers,types,categories,event){
     let selectedOrganizer = {};
     let selectedCategories = [];
     let selectedType = {};
@@ -783,6 +785,29 @@ const handleFields = (organizers,types,categories,event) =>{
         selectedType = types[pos];
     }else selectedType = undefined;
     return {selectedOrganizer,selectedCategories,selectedType}
+}
+
+//Función para mostrar los campos y grupos por separado
+function parseProperties(event){
+    let groups = [];
+    const {user_properties,properties_group} = event;
+    let fields = user_properties.filter(item => !item.group_id);
+    return {fields,groups}
+}
+
+//Función para construir el campo user_properties y properties_group con los nuevos campos|grupos
+function handleProperties(event,fields,groups){
+    let properties_group = [];
+    let user_properties = [];
+    for(let i = 0;i < groups.length; i++){
+        properties_group.push(groups[i].group_id);
+        for(let j = 0;j < groups[i].fields.length; j++){
+            const list = groups[i].fields[j];
+            list.group_id = groups[i].group_id;
+            user_properties.push(list);
+        }
+    }
+    return {properties_group,user_properties}
 }
 
 const createOption = (label,key) => ({label, value: label, parent: key});

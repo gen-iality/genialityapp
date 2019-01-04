@@ -14,10 +14,10 @@ $accordion-content-padding-left: 1.25em !default
       }
     }
     &:not(:last-child) {
-    margin-bottom: 0;
-    .accordion-content {
-      border-radius: 0
-    }
+      margin-bottom: 16px;
+      .accordion-content {
+        border-radius: 0
+      }
     }
     .toggle, [data-action="toggle"]{
       cursor: pointer
