@@ -37,7 +37,9 @@ class ListEventUser extends Component {
             facingMode: 'user',
             qrData:     {},
             clearSearch:false,
-            changeItem: false
+            changeItem: false,
+            errorData: {},
+            serverError: false,
         };
     }
 

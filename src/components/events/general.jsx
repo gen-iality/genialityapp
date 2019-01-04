@@ -27,7 +27,9 @@ class General extends Component {
             inputValue: '',
             option: [],
             minDate: new Date(),
-            valid: !this.props.event._id
+            valid: !this.props.event._id,
+            errorData: {},
+            serverError: false,
         };
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
