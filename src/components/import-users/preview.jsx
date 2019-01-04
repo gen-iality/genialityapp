@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
 import ErrorServe from "../modal/serverError";
+import LogOut from "../shared/logOut";
 
 class Preview extends Component {
     constructor(props) {
@@ -9,6 +10,8 @@ class Preview extends Component {
             head: [],
             loading: true,
             list : [],
+            errorData: {},
+            serverError: false,
             auxArr: []
         };
         this.addField = this.addField.bind(this)
@@ -28,9 +31,19 @@ class Preview extends Component {
                 return llaves.push(list.key)
             });
             this.renderHead(llaves, list);
-        }catch (e) {
-            console.log(e);
-            this.setState({timeout: true});
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     }
 
@@ -105,7 +118,7 @@ class Preview extends Component {
     };
 
     render() {
-        const {list, auxArr, timeout} = this.state;
+        const {list, auxArr, timeout, serverError, errorData} = this.state;
         const self = this;
         return (
             <React.Fragment>
@@ -199,8 +212,9 @@ class Preview extends Component {
                     <div className="column has-text-centered">
                         <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
                     </div>
-                </div> 
-                {timeout&&(<ErrorServe/>)}
+                </div>
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }

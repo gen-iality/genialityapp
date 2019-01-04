@@ -9,6 +9,7 @@ import { HelperApi, UsersApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
+import LogOut from "../shared/logOut";
 
 class AdminRol extends Component {
     constructor(props) {
@@ -25,7 +26,9 @@ class AdminRol extends Component {
             emailValid: false,
             nameValid:  false,
             rolValid:   false,
-            formValid:  false
+            formValid:  false,
+            errorData: {},
+            serverError: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.deleteHelper = this.deleteHelper.bind(this);
@@ -38,8 +41,19 @@ class AdminRol extends Component {
             const res = await HelperApi.listHelper(this.props.event._id);
             console.log(res);
             this.setState({users:res,pageOfItems:res,loading:false})
-        }catch (e) {
-            console.log(e);
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     }
 
@@ -108,9 +122,25 @@ class AdminRol extends Component {
                     this.setState({found:2,user:{...this.state.user,rol:'',Nombres:''},emailValid:true,nameValid:false,rolValid:false},this.validateForm)
                 }
             })
-            .catch(err=>{
-                console.log(err);
-            })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                    const {status,data} = error.response;
+                    console.log('STATUS',status,status === 401);
+                    if(status !== 401) this.setState({timeout:true,loader:false});
+                    else this.setState({serverError:true,loader:false,errorData:data})
+                } else {
+                    let errorData = error.message;
+                    console.log('Error', error.message);
+                    if(error.request) {
+                        console.log(error.request);
+                        errorData = error.request
+                    };
+                    errorData.status = 708;
+                    this.setState({serverError:true,loader:false,errorData})
+                }
+                console.log(error.config);
+            });
     };
     async handleSubmit() {
         const {user,edit} = this.state;
@@ -143,9 +173,18 @@ class AdminRol extends Component {
                 self.handleModal();
             },800);
         }
-        catch (e) {
-            console.log(e);
-            this.setState({timeout:true})
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     };
     //Delete Helper
@@ -161,9 +200,19 @@ class AdminRol extends Component {
                 this.setState({message:{},deleteModal:false});
                 self.handleModal();
             },800);
-        }catch (e) {
-            console.log(e);
-            this.setState({timeout:true})
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     };
     closeDelete = () => {this.setState({deleteModal:false,edit:false})};
@@ -172,8 +221,19 @@ class AdminRol extends Component {
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
             this.setState({users:res,pageOfItems:res,loading:false})
-        }catch (e) {
-            console.log(e);
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     };
 
@@ -186,7 +246,7 @@ class AdminRol extends Component {
     };
 
     render() {
-        const {timeout, users, pageOfItems, modal, user, edit} = this.state;
+        const {timeout, users, pageOfItems, modal, user, edit, serverError, errorData} = this.state;
         const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         const {roles} = this.props;
         return (
@@ -351,7 +411,8 @@ class AdminRol extends Component {
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteHelper}}
                         message={this.state.message}
                         second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
-                {timeout&&(<ErrorServe/>)}
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }
