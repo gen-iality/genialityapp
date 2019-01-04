@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
-import Moment from "moment"
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
 import XLSX from "xlsx";
@@ -88,7 +87,7 @@ class ListEventUser extends Component {
             });
         },(error => {
             console.log(error);
-            this.setState({timeout:true});
+            this.setState({timeout:true,errorData:{message:error,status:708}});
         }));
         /*this.pilaListener = pilaRef.onSnapshot({
             includeMetadataChanges: true

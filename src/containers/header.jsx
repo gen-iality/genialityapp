@@ -69,7 +69,8 @@ class Header extends Component {
                         if(error.request) {
                             console.log(error.request);
                             errorData = error.request
-                        }
+                        };
+                        errorData.status = 708;
                         this.setState({serverError:true,loader:false,errorData})
                     }
                     console.log(error.config);
@@ -115,7 +116,7 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError, filterEvius } = this.state;
+        const { timeout, serverError, filterEvius, errorData } = this.state;
         const { categories, types, permissions } = this.props;
         const menuEvius = [
             '',
@@ -337,7 +338,7 @@ class Header extends Component {
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
-                {serverError&&(<ErrorServe errorData={this.state.errorData}/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }
