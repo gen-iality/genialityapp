@@ -28,8 +28,9 @@ class General extends Component {
             option: [],
             minDate: new Date(),
             valid: !this.props.event._id,
+            groups: [],
             errorData: {},
-            serverError: false,
+            serverError: false
         };
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
@@ -65,11 +66,13 @@ class General extends Component {
         }
     }
 
+    //*********** FUNCIONES DEL FORMULARIO
+    //Cambio en los input
     handleChange = (e) => {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}},this.valid)
     };
-
+    //Validación
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
@@ -79,21 +82,19 @@ class General extends Component {
         }
         this.setState({valid:!valid,error})
     };
-
+    //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
     };
-
     selectOrganizer = (selectedOrganizer) => {
         if(!selectedOrganizer.value) selectedOrganizer = undefined;
         this.setState({ selectedOrganizer }, this.valid);
     };
-
     selectType = (selectedType) => {
         if(!selectedType.value) selectedType = undefined;
         this.setState({ selectedType }, this.valid);
     };
-
+    //Cambio en los input de fechas
     changeDate=(value,name)=>{
         let {event:{date_end}} = this.state;
         if(name === 'date_start') {
@@ -102,7 +103,7 @@ class General extends Component {
             this.setState({minDate:value,event:{...this.state.event,date_end:date_end,date_start:value}});
         }else this.setState({event:{...this.state.event,[name]:value}})
     };
-
+    //Cambio en el input de imagen
     changeImg = (files) => {
         const file = files[0];
         if(file){
@@ -147,7 +148,181 @@ class General extends Component {
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
         }
     };
+    //Funciones para manejo del campo de direcciones
+    onSuggestSelect = (suggest) => {
+        if(suggest){
+            const place = suggest.gmaps;
+            const location = place.geometry && place.geometry.location ? {
+                Latitude: place.geometry.location.lat(),
+                Longitude: place.geometry.location.lng()
+            } : {};
+            const componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name'
+            };
+            const mapping = {
+                street_number: 'number',
+                route: 'street',
+                locality: 'city',
+                administrative_area_level_1: 'state'
+            };
+            for (let i = 0; i < place.address_components.length; i++) {
+                const addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    const val = place.address_components[i][componentForm[addressType]];
+                    location[mapping[addressType]] = val;
+                }
+            }
+            location.FormattedAddress = place.formatted_address;
+            location.PlaceId = place.place_id;
+            this.setState({event:{...this.state.event,location}},this.valid)
+        }else{
+            this.setState({event:{...this.state.event,location:{}}},this.valid)
+        }
+    };
+    changeSuggest = () => {
+        const error = {};
+        const {event:{location}} = this.state;
+        if(!location.FormattedAddress && !location.PlaceId){
+            error.location = 'Fill a correct address'
+        }
+        this.setState({error})
+    };
+    //*********** FIN FUNCIONES DEL FORMULARIO
 
+    //*********** CAMPOS EVENTO
+    //Agregar nuevo campo
+    addField = () => {
+        const {fields} = this.state;
+        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true}],newField:true})
+    };
+    //Guardar campo en el evento o lista
+    saveField = (index,key) => {
+        const {fields,groups} = this.state;
+        if(key){
+            const obj = groups[key].fields[index];
+            obj['edit'] = !obj['edit'];
+            this.setState({groups})
+        }
+        else{
+            fields[index].edit = !fields[index].edit;
+            this.setState({fields,newField:false})
+        }
+    };
+    //Editar campo en el evento o lista
+    editField = (index,key) => {
+        const {fields,groups} = this.state;
+        if(key){
+            const obj = groups[key].fields[index];
+            obj['edit'] = !obj['edit'];
+            this.setState({groups})
+        }
+        else{
+            fields[index].edit = !fields[index].edit;
+            this.setState({fields,newField:true});
+        }
+    };
+    //Borrar campo en el evento o lista
+    removeField = (index,key) => {
+        const {groups,fields} = this.state;
+        if(key){
+            groups[key].fields.splice(index, 1);
+            this.setState({groups});
+        }
+        else {
+            fields.splice(index, 1);
+            this.setState({fields, newField: false})
+        }
+    };
+    //Cambiar input del campo del evento o lista
+    handleChangeField = (e,index,key) => {
+        let {name, value} = e.target;
+        const {fields,groups} = this.state;
+        if(name === 'name')value = toCapitalizeLower(value);
+        if(!key){
+            fields[index][name] = value;
+            this.setState({fields})
+        }else{
+            let {fields} = groups[key];
+            fields[index][name] = value;
+            this.setState({groups})
+        }
+    };
+    //Cambiar mandatory del campo del evento o lista
+    changeFieldCheck = (e,index,key) => {
+        const {fields,groups} = this.state;
+        const {name} = e.target;
+        if(!key) {
+            fields[index][name] = !fields[index][name];
+            this.setState({fields})
+        }else{
+            let {fields} = groups[key];
+            fields[index][name] = !fields[index][name];
+            this.setState({groups})
+        }
+    };
+    //Funciones para lista de opciones del campo
+    handleInputChange = (index,inputValue) => {
+        this.setState({ inputValue });
+    };
+    changeOption = (index, option) => {
+        const { fields } = this.state;
+        const field = fields[index];
+        field.options = option;
+        this.setState({ fields });
+    };
+    handleKeyDown = (event,index) => {
+        const { inputValue, fields } = this.state;
+        const field = fields[index];
+        field.options = field.options ? field.options : [];
+        if (!inputValue) return;
+        switch (event.index) {
+            case 'Enter':
+            case 'Tab':
+                field.options = [...field.options,createOption(inputValue,index)];
+                this.setState({
+                    inputValue: '',
+                    fields
+                });
+                event.preventDefault();
+                break;
+            default: {}
+        }
+    };
+    //Mostar campos de evento
+    toggleFields = () => {
+        this.setState((prevState)=>{return {toggleFields:!prevState.toggleFields}})
+    };
+    //Agregar nuevo grupo de campos
+    addGroup = () => {
+        const {groups} = this.state;
+        const item = {group_id:'',fields:[],show:false};
+        this.setState({groups:[...groups,item]});
+    };
+    //Cambiar nombre del grupo de campos
+    changeNameGroup = (e,key) => {
+        const {groups} = this.state;
+        let {name, value} = e.target;
+        groups[key][name] = value;
+        this.setState({groups})
+    };
+    //Agregar campo al grupo de campos
+    addFieldtoGroup = (key) => {
+        const {groups} = this.state;
+        groups[key]['fields'] = [...groups[key]['fields'], {name:'',unique:false,mandatory:false,edit:true}];
+        this.setState({groups})
+    };
+    //Mostrar grupo de campos
+    showList = (key) => {
+        const {groups} = this.state;
+        groups[key].show = !groups[key].show;
+        this.setState({groups})
+    };
+    //*********** FIN CAMPOS EVENTO
+
+    //Envío de datos
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -219,113 +394,6 @@ class General extends Component {
             console.log(error.config);
         }
     }
-
-    onSuggestSelect = (suggest) => {
-        if(suggest){
-            const place = suggest.gmaps;
-            const location = place.geometry && place.geometry.location ? {
-                Latitude: place.geometry.location.lat(),
-                Longitude: place.geometry.location.lng()
-            } : {};
-            const componentForm = {
-                street_number: 'short_name',
-                route: 'long_name',
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name'
-            };
-            const mapping = {
-                street_number: 'number',
-                route: 'street',
-                locality: 'city',
-                administrative_area_level_1: 'state'
-            };
-            for (let i = 0; i < place.address_components.length; i++) {
-                const addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    const val = place.address_components[i][componentForm[addressType]];
-                    location[mapping[addressType]] = val;
-                }
-            }
-            location.FormattedAddress = place.formatted_address;
-            location.PlaceId = place.place_id;
-            this.setState({event:{...this.state.event,location}},this.valid)
-        }else{
-            this.setState({event:{...this.state.event,location:{}}},this.valid)
-        }
-    };
-
-    changeSuggest = () => {
-        const error = {};
-        const {event:{location}} = this.state;
-        if(!location.FormattedAddress && !location.PlaceId){
-            error.location = 'Fill a correct address'
-        }
-        this.setState({error})
-    };
-
-    //User properties
-    addField = () => {
-        const {fields} = this.state;
-        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true}],newField:true})
-    };
-    saveField = (key) => {
-        const {fields} = this.state;
-        fields[key].edit = !fields[key].edit;
-        this.setState({fields,newField:false})
-    };
-    editField = (key) => {
-        const {fields} = this.state;
-        fields[key].edit = !fields[key].edit;
-        this.setState({fields,newField:true});
-    };
-    removeField = (key) => {
-        const {fields} = this.state;
-        fields.splice(key,1);
-        this.setState({fields,newField:false})
-    };
-    handleChangeField = (e,key) => {
-        const {fields} = this.state;
-        let {name, value} = e.target;
-        if(name === 'name'){
-            value = toCapitalizeLower(value);
-        }
-        fields[key][name] = value;
-        this.setState({fields})
-    };
-    changeFieldCheck = (e,key) => {
-        const {fields} = this.state;
-        const {name} = e.target;
-        fields[key][name] = !fields[key][name];
-        this.setState({fields})
-    };
-    handleInputChange = (key,inputValue) => {
-        this.setState({ inputValue });
-    };
-    changeOption = (key, option) => {
-        const { fields } = this.state;
-        const field = fields[key];
-        field.options = option;
-        this.setState({ fields });
-    };
-    handleKeyDown = (event,key) => {
-        const { inputValue, fields } = this.state;
-        const field = fields[key];
-        field.options = field.options ? field.options : [];
-        if (!inputValue) return;
-        switch (event.key) {
-            case 'Enter':
-            case 'Tab':
-                field.options = [...field.options,createOption(inputValue,key)];
-                this.setState({
-                    inputValue: '',
-                    fields
-                });
-                event.preventDefault();
-                break;
-            default: {}
-        }
-    };
-
     //Delete event
     async deleteEvent() {
         this.setState({isLoading:'Cargando....'});
@@ -353,22 +421,21 @@ class General extends Component {
             }
         }
     }
-
     closeModal = () => {
         this.setState({modal:false,message:{}})
     };
-
     modalEvent = (e) => {
         e.preventDefault();
         e.stopPropagation();
         this.setState({modal:true});
-    }
+    };
 
     render() {
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            fields, inputValue, newField,
+            fields, inputValue, newField, groups,
             valid, timeout, error , errorData, serverError} = this.state;
+        console.log(groups);
         return (
             <div>
                 <div className="event-general">
@@ -391,154 +458,284 @@ class General extends Component {
                                handleChange={this.handleChange} minDate={this.state.minDate}
                                selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                                changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
-                    <div>
-                        <div className="level">
-                            <div className="level-left">
-                                <div className="level-item">
-                                    <p className="subtitle is-5"><strong>Campos de Evento</strong></p>
-                                </div>
-                                <div className="level-item">
-                                    <button className="button" onClick={this.addField} disabled={newField}>
-                                        <span className={`icon is-small`}><i className="fas fa-plus"></i></span>
-                                    </button>
+                    <section className="accordions">
+                        <article className={`accordion ${this.state.toggleFields ? 'is-active':''}`}>
+                            <div className="accordion-header">
+                                <div className="level">
+                                    <div className="level-left">
+                                        <div className="level-item">
+                                            <p className="subtitle is-5"><strong>Campos de Evento</strong></p>
+                                        </div>
+                                        <div className="level-item">
+                                            <button className="button" onClick={this.addField} disabled={newField}>Agregar Campo</button>
+                                        </div>
+                                    </div>
+                                    <div className="level-right">
+                                        <div className="level-item">
+                                            <button className="toggle" aria-label="toggle" onClick={this.toggleFields}/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {
-                            !event._id &&
-                                <React.Fragment>
-                                    <div className="card">
-                                        <article className="media" style={{padding: "0.75rem"}}>
-                                            <div className="media-content">
-                                                <p>Campo Predeterminado por Defecto</p>
-                                                <div className="columns">
-                                                    <div className="column">
-                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
-                                                    </div>
-                                                    <div className="column">
-                                                        <p className="has-text-grey-dark has-text-weight-bold">Email</p>
-                                                    </div>
-                                                    <div className="column field">
-                                                        <input className="is-checkradio is-primary" disabled={true}
-                                                               type="checkbox" name={`mailndatory`} checked={true}/>
-                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </article>
-                                    </div>
-                                    <div className="card">
-                                        <article className="media" style={{padding: "0.75rem"}}>
-                                            <div className="media-content">
-                                                <p>Campo Predeterminado por Defecto</p>
-                                                <div className="columns">
-                                                    <div className="column">
-                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres</p>
-                                                    </div>
-                                                    <div className="column">
-                                                        <p className="has-text-grey-dark has-text-weight-bold">Nombres y Apellidos</p>
-                                                    </div>
-                                                    <div className="column field">
-                                                        <input className="is-checkradio is-primary" disabled={true}
-                                                               type="checkbox" name={`mailndatory`} checked={false}/>
-                                                        <label htmlFor={`mailndatory`}>Obligatorio</label>
+                            <div className="accordion-body">
+                                {
+                                    !event._id &&
+                                    <React.Fragment>
+                                        <div className="card">
+                                            <article className="media" style={{padding: "0.75rem"}}>
+                                                <div className="media-content">
+                                                    <p>Campo Predeterminado por Defecto</p>
+                                                    <div className="columns">
+                                                        <div className="column">
+                                                            <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                        </div>
+                                                        <div className="column">
+                                                            <p className="has-text-grey-dark has-text-weight-bold">Email</p>
+                                                        </div>
+                                                        <div className="column field">
+                                                            <input className="is-checkradio is-primary" disabled={true}
+                                                                   type="checkbox" name={`mailndatory`} checked={true}/>
+                                                            <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </article>
-                                    </div>
-                                </React.Fragment>
-                        }
-                        {
-                            fields.map((field,key)=>{
-                                return <div className="card" key={key}>
-                                    <article className="media" style={{padding: "0.75rem"}}>
-                                        <div className="media-content">
-                                            <div className="columns">
-                                                <div className="field column">
-                                                    <label className="label required has-text-grey-light">Nombre</label>
-                                                    <div className="control">
-                                                        <input className="input" name={"name"} type="text" disabled={!field.edit}
-                                                               placeholder="Nombre del campo" value={field.name}
-                                                               onChange={(e)=>{this.handleChangeField(e,key)}}
-                                                        />
+                                            </article>
+                                        </div>
+                                        <div className="card">
+                                            <article className="media" style={{padding: "0.75rem"}}>
+                                                <div className="media-content">
+                                                    <p>Campo Predeterminado por Defecto</p>
+                                                    <div className="columns">
+                                                        <div className="column">
+                                                            <p className="has-text-grey-dark has-text-weight-bold">Nombres</p>
+                                                        </div>
+                                                        <div className="column">
+                                                            <p className="has-text-grey-dark has-text-weight-bold">Nombres y Apellidos</p>
+                                                        </div>
+                                                        <div className="column field">
+                                                            <input className="is-checkradio is-primary" disabled={true}
+                                                                   type="checkbox" name={`mailndatory`} checked={false}/>
+                                                            <label htmlFor={`mailndatory`}>Obligatorio</label>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="field column">
-                                                    <div className="control">
-                                                        <label className="label required">Tipo</label>
-                                                        <div className="control">
-                                                            <div className="select">
-                                                                <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type} disabled={!field.edit}>
-                                                                    <option value={''}>Seleccione...</option>
-                                                                    <option value={'text'}>Texto</option>
-                                                                    <option value={'email'}>Correo</option>
-                                                                    <option value={'number'}>Numérico</option>
-                                                                    <option value={'list'}>Lista Opciones</option>
-                                                                    <option value={'boolean'}>Si/No</option>
-                                                                </select>
+                                            </article>
+                                        </div>
+                                    </React.Fragment>
+                                }
+                                {
+                                    fields.map((field,key)=>{
+                                        return <div className="card" key={key}>
+                                            <article className="media" style={{padding: "0.75rem"}}>
+                                                <div className="media-content">
+                                                    <div className="columns">
+                                                        <div className="field column">
+                                                            <label className="label required has-text-grey-light">Nombre</label>
+                                                            <div className="control">
+                                                                <input className="input" name={"name"} type="text" disabled={!field.edit}
+                                                                       placeholder="Nombre del campo" value={field.name}
+                                                                       onChange={(e)=>{this.handleChangeField(e,key)}}
+                                                                />
                                                             </div>
+                                                        </div>
+                                                        <div className="field column">
+                                                            <div className="control">
+                                                                <label className="label required">Tipo</label>
+                                                                <div className="control">
+                                                                    <div className="select">
+                                                                        <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type} disabled={!field.edit}>
+                                                                            <option value={''}>Seleccione...</option>
+                                                                            <option value={'text'}>Texto</option>
+                                                                            <option value={'email'}>Correo</option>
+                                                                            <option value={'number'}>Numérico</option>
+                                                                            <option value={'list'}>Lista Opciones</option>
+                                                                            <option value={'date'}>Fecha (DD/MM/YYYY)</option>
+                                                                            <option value={'boolean'}>Si/No</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {
+                                                                field.type === 'list' && (
+                                                                    <div className="control">
+                                                                        <CreatableSelect
+                                                                            components={{DropdownIndicator: null,}}
+                                                                            inputValue={inputValue}
+                                                                            isDisabled={!field.edit}
+                                                                            isClearable
+                                                                            isMulti
+                                                                            menuIsOpen={false}
+                                                                            onChange={this.changeOption.bind(this, key)}
+                                                                            onInputChange={this.handleInputChange.bind(this, key)}
+                                                                            onKeyDown={(e)=>{this.handleKeyDown(e,key)}}
+                                                                            placeholder="Escribe la opción y presiona Enter o Tab..."
+                                                                            value={field.options}
+                                                                        />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                        <div className="column field">
+                                                            <input className="is-checkradio is-primary" id={`mandatory${key}`}
+                                                                   type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                                                   onChange={(e)=>{this.changeFieldCheck(e,key)}} disabled={!field.edit}/>
+                                                            <label htmlFor={`mandatory${key}`}>Obligatorio</label>
                                                         </div>
                                                     </div>
                                                     {
-                                                        field.type === 'list' && (
-                                                            <div className="control">
-                                                                <CreatableSelect
-                                                                    components={{DropdownIndicator: null,}}
-                                                                    inputValue={inputValue}
-                                                                    isDisabled={!field.edit}
-                                                                    isClearable
-                                                                    isMulti
-                                                                    menuIsOpen={false}
-                                                                    onChange={this.changeOption.bind(this, key)}
-                                                                    onInputChange={this.handleInputChange.bind(this, key)}
-                                                                    onKeyDown={(e)=>{this.handleKeyDown(e,key)}}
-                                                                    placeholder="Escribe la opción y presiona Enter o Tab..."
-                                                                    value={field.options}
-                                                                />
+                                                        field.name !== "email" &&
+                                                        <div className="columns">
+                                                            <div className="column is-1">
+                                                                <nav className="level is-mobile">
+                                                                    <div className="level-left">
+                                                                        {
+                                                                            field.edit &&
+                                                                            <a className="level-item" onClick={(e)=>{this.saveField(key)}}>
+                                                                                <span className="icon has-text-info"><i className="fas fa-save"></i></span>
+                                                                            </a>
+                                                                        }
+                                                                        {
+                                                                            !field.edit &&
+                                                                            <a className="level-item" onClick={(e)=>{this.editField(key)}}>
+                                                                                <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
+                                                                            </a>
+                                                                        }
+                                                                        <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
+                                                                            <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                                        </a>
+                                                                    </div>
+                                                                </nav>
                                                             </div>
-                                                        )
+                                                        </div>
                                                     }
                                                 </div>
-                                                <div className="column field">
-                                                    <input className="is-checkradio is-primary" id={`mandatory${key}`}
-                                                           type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                                           onChange={(e)=>{this.changeFieldCheck(e,key)}} disabled={!field.edit}/>
-                                                    <label htmlFor={`mandatory${key}`}>Obligatorio</label>
-                                                </div>
-                                            </div>
-                                            {
-                                                field.name !== "email" &&
-                                                    <div className="columns">
-                                                    <div className="column is-1">
-                                                        <nav className="level is-mobile">
-                                                            <div className="level-left">
-                                                                {
-                                                                    field.edit &&
-                                                                    <a className="level-item" onClick={(e)=>{this.saveField(key)}}>
-                                                                        <span className="icon has-text-info"><i className="fas fa-save"></i></span>
-                                                                    </a>
-                                                                }
-                                                                {
-                                                                    !field.edit &&
-                                                                    <a className="level-item" onClick={(e)=>{this.editField(key)}}>
-                                                                        <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
-                                                                    </a>
-                                                                }
-                                                                <a className="level-item" onClick={(e)=>{this.removeField(key)}}>
-                                                                    <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
-                                                                </a>
-                                                            </div>
-                                                        </nav>
+                                            </article>
+                                        </div>
+                                    })
+                                }
+                            </div>
+                        </article>
+                        <button className="button is-text" onClick={this.addGroup}>Agregar grupo de campos</button>
+                        {groups.map((list,key)=>{
+                            return <article className={`accordion ${list.show ? 'is-active':''}`} key={key}>
+                                <div className="accordion-header">
+                                    <div className="level">
+                                        <div className="level-left">
+                                            <div className="level-item">
+                                                <div className="field">
+                                                    <div className="control">
+                                                        <input className="input" name={"group_id"} type="text"
+                                                               placeholder="Nombre del grupo" value={list.group_id}
+                                                               onChange={(e)=>{this.changeNameGroup(e,key)}}/>
                                                     </div>
                                                 </div>
-                                            }
+                                            </div>
+                                            <div className="level-item">
+                                                <button className="button" onClick={(e)=>{this.addFieldtoGroup(key)}} disabled={newField}>Agregar Campo</button>
+                                            </div>
                                         </div>
-                                    </article>
+                                        <div className="level-right">
+                                            <div className="level-item">
+                                                <button className="toggle" aria-label="toggle" onClick={(e)=>{this.showList(key)}}/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            })
-                        }
-                    </div>
+                                <div className="accordion-body">
+                                    {
+                                        list.fields.map((field,index)=>{
+                                            return <div className="card" key={index}>
+                                                <article className="media" style={{padding: "0.75rem"}}>
+                                                    <div className="media-content">
+                                                        <div className="columns">
+                                                            <div className="field column">
+                                                                <label className="label required has-text-grey-light">Nombre</label>
+                                                                <div className="control">
+                                                                    <input className="input" name={"name"} type="text" disabled={!field.edit}
+                                                                           placeholder="Nombre del campo" value={field.name}
+                                                                           onChange={(e)=>{this.handleChangeField(e,index,key)}}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="field column">
+                                                                <div className="control">
+                                                                    <label className="label required">Tipo</label>
+                                                                    <div className="control">
+                                                                        <div className="select">
+                                                                            <select onChange={(e)=>{this.handleChangeField(e,index,key)}} name={'type'} value={field.type} disabled={!field.edit}>
+                                                                                <option value={''}>Seleccione...</option>
+                                                                                <option value={'text'}>Texto</option>
+                                                                                <option value={'email'}>Correo</option>
+                                                                                <option value={'number'}>Numérico</option>
+                                                                                <option value={'list'}>Lista Opciones</option>
+                                                                                <option value={'date'}>Fecha (DD/MM/YYYY)</option>
+                                                                                <option value={'boolean'}>Si/No</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {
+                                                                    field.type === 'list' && (
+                                                                        <div className="control">
+                                                                            <CreatableSelect
+                                                                                components={{DropdownIndicator: null,}}
+                                                                                inputValue={inputValue}
+                                                                                isDisabled={!field.edit}
+                                                                                isClearable
+                                                                                isMulti
+                                                                                menuIsOpen={false}
+                                                                                onChange={this.changeOption.bind(this, index)}
+                                                                                onInputChange={this.handleInputChange.bind(this, index)}
+                                                                                onKeyDown={(e)=>{this.handleKeyDown(e,index)}}
+                                                                                placeholder="Escribe la opción y presiona Enter o Tab..."
+                                                                                value={field.options}
+                                                                            />
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                            <div className="column field">
+                                                                <input className="is-checkradio is-primary" id={`mandatory${index}`}
+                                                                       type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                                                       onChange={(e)=>{this.changeFieldCheck(e,index,key)}} disabled={!field.edit}/>
+                                                                <label htmlFor={`mandatory${index}`}>Obligatorio</label>
+                                                            </div>
+                                                        </div>
+                                                        {
+                                                            field.name !== "email" &&
+                                                            <div className="columns">
+                                                                <div className="column is-1">
+                                                                    <nav className="level is-mobile">
+                                                                        <div className="level-left">
+                                                                            {
+                                                                                field.edit &&
+                                                                                <a className="level-item" onClick={(e)=>{this.saveField(index,key)}}>
+                                                                                    <span className="icon has-text-info"><i className="fas fa-save"></i></span>
+                                                                                </a>
+                                                                            }
+                                                                            {
+                                                                                !field.edit &&
+                                                                                <a className="level-item" onClick={(e)=>{this.editField(index,key)}}>
+                                                                                    <span className="icon has-text-black"><i className="fas fa-edit"></i></span>
+                                                                                </a>
+                                                                            }
+                                                                            <a className="level-item" onClick={(e)=>{this.removeField(index,key)}}>
+                                                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </nav>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        })
+                                    }
+                                </div>
+                            </article>
+                        })}
+                    </section>
                 </div>
                 <div className="buttons is-left">
                     {
@@ -563,6 +760,7 @@ class General extends Component {
     }
 }
 
+//Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 const handleFields = (organizers,types,categories,event) =>{
     let selectedOrganizer = {};
     let selectedCategories = [];
