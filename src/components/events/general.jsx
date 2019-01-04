@@ -11,6 +11,7 @@ import ErrorServe from "../modal/serverError";
 import Dialog from "../modal/twoAction";
 import {FormattedMessage} from "react-intl";
 import CreatableSelect from 'react-select/lib/Creatable';
+import LogOut from "../shared/logOut";
 Moment.locale('es');
 
 class General extends Component {
@@ -45,7 +46,8 @@ class General extends Component {
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields:(event.user_properties)?event.user_properties:[]})
-        }catch (error) {
+        }
+        catch (error) {
             // Error
             if (error.response) {
                 console.log(error.response);
@@ -118,10 +120,25 @@ class General extends Component {
                     });
                     toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
                 })
-                .catch (e=> {
-                    console.log(e.response);
+                .catch(error => {
                     toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-                    this.setState({timeout:true,loader:false});
+                    if (error.response) {
+                        console.log(error.response);
+                        const {status,data} = error.response;
+                        console.log('STATUS',status,status === 401);
+                        if(status !== 401) this.setState({timeout:true,loader:false});
+                        else this.setState({serverError:true,loader:false,errorData:data})
+                    } else {
+                        let errorData = error.message;
+                        console.log('Error', error.message);
+                        if(error.request) {
+                            console.log(error.request);
+                            errorData = error.request
+                        };
+                        errorData.status = 708;
+                        this.setState({serverError:true,loader:false,errorData})
+                    }
+                    console.log(error.config);
                 });
         }
         else{
@@ -178,11 +195,26 @@ class General extends Component {
                     this.setState({msg:'Cant Create',create:false})
                 }
             }
-        } catch (e) {
-            console.log('Some error');
-            console.log(e);
-            this.setState({timeout:true});
-            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>)
+        }
+        catch(error) {
+            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status !== 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                };
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
         }
     }
 
@@ -303,16 +335,19 @@ class General extends Component {
                 this.setState({message:{},modal:false});
                 window.location.replace(`${BaseUrl}/`);
             },500)
-        }catch (error) {
+        }
+        catch (error) {
             if (error.response) {
                 console.log(error.response);
                 this.setState({message:{...this.state.message,class:'msg_error',content:'Algo salió mal. Intentalo de nuevo'},isLoading:false})
-            } else if (error.request) {
+            }
+            else if (error.request) {
                 console.log(error.request);
-                this.setState({timeout:true});
-            } else {
+                this.setState({serverError:true,errorData:{message:error.request,status:708}});
+            }
+            else {
                 console.log('Error', error.message);
-                this.setState({timeout:true});
+                this.setState({serverError:true,errorData:{message:error.message,status:708}});
             }
         }
     }
@@ -331,7 +366,7 @@ class General extends Component {
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue, newField,
-            valid, timeout, error } = this.state;
+            valid, timeout, error , errorData, serverError} = this.state;
         return (
             <div>
                 <div className="event-general">
@@ -514,7 +549,8 @@ class General extends Component {
                         </button>
                     }
                 </div>
-                {timeout&&(<ErrorServe/>)}
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}
                         content={<p>¿Estas seguro de eliminar este evento?</p>}
                         first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}

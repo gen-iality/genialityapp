@@ -473,7 +473,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {timeout&&(<ErrorServe/>)}
+                {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
     }
