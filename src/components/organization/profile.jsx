@@ -174,6 +174,7 @@ class OrganizationProfile extends Component {
                     org.doc = !(org.doc) && {name};
                     this.setState({msg:'Saved successfully',create:false, org, wait:false});
                     toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
+                    this.props.updateOrg(org);
                 }else{
                     this.setState({msg:'Cant Create',create:false, wait:false});
                     toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);

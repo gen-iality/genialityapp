@@ -20,21 +20,51 @@ class Organization extends Component {
         let orgId = this.props.match.params.id;
         try {
             if(orgId === 'create'){
-                const org= {name:'',location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''},email:'',nit:'',phone:''};
+                const org= {name:'',location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''},email:'',nit:'',phone:'',user_properties:[]};
                 this.setState({create:true,loading:false,org})
-            }else{
+            }
+            else{
                 const org = await OrganizationApi.getOne(orgId);
                 const resp = await OrganizationApi.events(orgId);
                 org.location = org.location? org.location: {};
                 org.doc = org.doc? org.doc: {};
                 org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
+                org.user_properties = org.user_properties ? org.user_properties : [];
                 this.setState({org,loading:false,events:resp.data,valid:false});
             }
-        }catch (e) {
+        }
+        catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
         }
     }
+
+    async componentWillReceiveProps(nextProps) {
+        let orgId = nextProps.match.params.id;
+        try {
+            if(orgId === 'create'){
+                const org= {name:'',location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''},email:'',nit:'',phone:'',user_properties:[]};
+                this.setState({create:true,loading:false,org})
+            }
+            else{
+                const org = await OrganizationApi.getOne(orgId);
+                const resp = await OrganizationApi.events(orgId);
+                org.location = org.location? org.location: {};
+                org.doc = org.doc? org.doc: {};
+                org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
+                org.user_properties = org.user_properties ? org.user_properties : [];
+                this.setState({org,loading:false,events:resp.data,valid:false});
+            }
+        }
+        catch (e) {
+            console.log(e.response);
+            this.setState({timeout:true,loading:false});
+        }
+    }
+
+    updateOrg = (org) => {
+        this.setState({org})
+    };
 
     render() {
         const { match } = this.props;
@@ -73,8 +103,8 @@ class Organization extends Component {
                                     this.props.loading?<p>Cargando</p>:<section className="section">
                                         <Switch>
                                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/profile`} />}/>
-                                            <Route exact path={`${match.url}/profile`} render={()=><OrganizationProfile org={org} />}/>
-                                            <Route exact path={`${match.url}/properties`} render={()=><Properties org={org} />}/>
+                                            <Route exact path={`${match.url}/profile`} render={()=><OrganizationProfile org={org} updateOrg={this.updateOrg} />}/>
+                                            <Route exact path={`${match.url}/properties`} render={()=><Properties org={org} updateOrg={this.updateOrg} />}/>
                                             <Protected exact path={`${match.url}/users`} component={OrgUsers} org={org} url={match.url}/>
                                             <Route exact path={`${match.url}/events`} render={()=><OrgEvents org={org} />}/>
                                             <Route component={NoMatch} />
