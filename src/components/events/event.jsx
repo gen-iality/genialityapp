@@ -106,7 +106,8 @@ class Event extends Component {
                     this.state.loading ? <Loading/>:
                         <section className="columns">
                             <aside className="column menu event-aside is-2 has-text-weight-bold">
-                                <p className="subtitle has-text-weight-bold">
+                                <p className="subtitle">Evento</p>
+                                <p className="title">
                                     {this.state.newEvent?'Nuevo evento':this.state.event.name}
                                 </p>
                                 {
