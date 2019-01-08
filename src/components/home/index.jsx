@@ -87,11 +87,8 @@ class Home extends Component {
                 } else {
                     let errorData = {message:error.message};
                     console.log('Error', error.message);
-                    if(error.request) {
-                        console.log(error.request);
-                        errorData = error.request
-                    };
-                    errorData.status = 708;
+                    if(error.request) console.log('Request Er ',error.request);
+                    errorData.status = 520;
                     this.setState({serverError:true,loader:false,errorData})
                 }
                 console.log(error.config);
