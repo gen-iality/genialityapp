@@ -290,17 +290,17 @@ class Header extends Component {
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
                                                     </p>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user`}>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}`}>
                                                         <FormattedMessage id="header.profile_edit" defaultMessage="Profile"/>
                                                     </Link>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
                                                     <hr className="navbar-divider"/>
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
                                                     </p>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}?type=user#events`}>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#events`}>
                                                         <FormattedMessage id="header.my_events_create" defaultMessage="Eventos"/>
                                                     </Link>
                                                     <hr className="navbar-divider"/>
@@ -309,12 +309,12 @@ class Header extends Component {
                                                     </p>
                                                     {
                                                         this.state.organizations.map((org,key)=>{
-                                                            return  <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${org.id}?type=organization`} key={key}>
+                                                            return  <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/${org.id}`} key={key}>
                                                                 {org.name}
                                                             </Link>
                                                         })
                                                     }
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/create?type=organization`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/create`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>

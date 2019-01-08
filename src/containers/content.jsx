@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import { Route, Redirect, withRouter, Switch } from "react-router-dom";
 import Home from "../components/home";
+import Organization from "../components/organization";
 import Landing from "../components/events/landing";
 import Events from "../components/events";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
 import HomeProfile from "../components/home/profile";
-import MyProfile from "../components/profiles/myProfile";
+import MyProfile from "../components/profile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
 import {ApiUrl} from "../helpers/constants";
@@ -25,6 +26,7 @@ class ContentContainer extends Component {
                     <PrivateRoute path="/my_events" component={ Events }/>
                     <PrivateRoute path="/event/:event" component={ Event }/>
                     <PrivateRoute path="/profile/:id" component={ MyProfile }/>
+                    <PrivateRoute path="/organization/:id" component={ Organization }/>
                     <Route exact path="/terms" component={ Terms } />
                     <Route exact path="/privacy" component={ Privacy } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>

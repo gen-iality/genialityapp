@@ -22,7 +22,7 @@ import {DateTimePicker} from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 
-class UserEditProfile extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -371,4 +371,4 @@ const mapDispatchToProps = dispatch => ({
     addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
 });
 
-export default connect(null,mapDispatchToProps)(withRouter(UserEditProfile));
+export default connect(null,mapDispatchToProps)(withRouter(Index));
