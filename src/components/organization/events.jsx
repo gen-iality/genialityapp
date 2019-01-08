@@ -1,15 +1,25 @@
 import React, {Component} from 'react';
 import EventCard from "../shared/eventCard";
 import {Link} from "react-router-dom";
+import {OrganizationApi} from "../../helpers/request";
 
 class OrgEvents extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            events:[],
+            loading:true
+        }
+    }
+
+    async componentDidMount(){
+        let {org} = this.props;
+        const resp = await OrganizationApi.events(org._id);
+        this.setState({loading:false,events:resp.data});
     }
 
     render() {
-        const events = [];
+        const {loading,events} = this.state;
         return (
             <div className="profile-data columns">
                 <div className="column is-12">
