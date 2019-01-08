@@ -268,7 +268,8 @@ class General extends Component {
     handleInputChange = (index,inputValue) => {
         this.setState({ inputValue });
     };
-    changeOption = (index, option) => {
+    changeOption = (index, key, option) => {
+        console.log('INFO ', index, key);
         const { fields } = this.state;
         const field = fields[index];
         field.options = option;
@@ -686,7 +687,7 @@ class General extends Component {
                                                                                 isClearable
                                                                                 isMulti
                                                                                 menuIsOpen={false}
-                                                                                onChange={this.changeOption.bind(this, index)}
+                                                                                onChange={this.changeOption.bind(this, index, key)}
                                                                                 onInputChange={this.handleInputChange.bind(this, index)}
                                                                                 onKeyDown={(e)=>{this.handleKeyDown(e,index)}}
                                                                                 placeholder="Escribe la opción y presiona Enter o Tab..."
@@ -792,6 +793,7 @@ function parseProperties(event){
     let groups = [];
     const {user_properties,properties_group} = event;
     let fields = user_properties.filter(item => !item.group_id);
+    properties_group.map((group,key) => groups[key] = {group_id:group,fields:user_properties.filter(item => item.group_id === group)});
     return {fields,groups}
 }
 
