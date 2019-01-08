@@ -231,7 +231,7 @@ class OrganizationProfile extends Component {
         const { org, loading, docLoading, wait, valid } = this.state;
         const { timeout, serverError, errorData } = this.state;
         return (
-            <section className="section profile">
+            <div className="profile">
                 {
                     loading ? <Loading/> :
                         <div className="container org-profile">
@@ -359,7 +359,7 @@ class OrganizationProfile extends Component {
                 <Dialog modal={this.state.modalOrg} title={'Organización Creada'}
                         content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información</p></div>}
                         first={{title:'OK',class:'',action:this.closeOrg}}/>
-            </section>
+            </div>
         );
     }
 }

@@ -68,9 +68,9 @@ class Organization extends Component {
                                     )
                                 }
                             </aside>
-                            <div className="column event-main is-10">
+                            <div className="column is-10">
                                 {
-                                    this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
+                                    this.props.loading?<p>Cargando</p>:<section className="section">
                                         <Switch>
                                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/profile`} />}/>
                                             <Route exact path={`${match.url}/profile`} render={()=><OrganizationProfile org={org} />}/>
