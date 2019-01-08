@@ -20,7 +20,7 @@ class Organization extends Component {
         let orgId = this.props.match.params.id;
         try {
             if(orgId === 'create'){
-                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
+                const org= {name:'',location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''},email:'',nit:'',phone:''};
                 this.setState({create:true,loading:false,org})
             }else{
                 const org = await OrganizationApi.getOne(orgId);
@@ -33,25 +33,6 @@ class Organization extends Component {
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
-        }
-    }
-
-    async componentWillReceiveProps(nextProps) {
-        let orgId = nextProps.match.params.id;
-        if(orgId === 'create'){
-            this.setState({loading:true});
-            setTimeout(()=>{
-                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
-                this.setState({create:true,loading:false,org})
-            },1000)
-        }else{
-            this.setState({loading:true});
-            const org = await OrganizationApi.getOne(orgId);
-            const resp = await OrganizationApi.events(orgId);
-            org.location = org.location? org.location: {};
-            org.doc = org.doc? org.doc: {};
-            org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-            this.setState({org,loading:false,events:resp.data,valid:false});
         }
     }
 

@@ -3,20 +3,19 @@ import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 import Geosuggest from 'react-geosuggest'
 import Dropzone from 'react-dropzone'
+import {FormattedMessage} from "react-intl";
 import {MdAttachFile} from 'react-icons/md'
-import {Actions, CategoriesApi, EventsApi, OrganizationApi} from "../../helpers/request";
-import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
+import { toast } from 'react-toastify';
+import {Actions, CategoriesApi, OrganizationApi} from "../../helpers/request";
 import {BaseUrl} from "../../helpers/constants";
+import ImageInput from "../shared/imageInput";
 import Loading from "../loaders/loading";
 import LogOut from "../shared/logOut";
-import EventCard from "../shared/eventCard";
-import {Link} from "react-router-dom";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Dialog from "../modal/twoAction";
 import FormNetwork from "../shared/networkForm";
-import {FormattedMessage} from "react-intl";
+import Dialog from "../modal/twoAction";
+import ErrorServe from "../modal/serverError";
+import 'react-toastify/dist/ReactToastify.css';
 
 class OrganizationProfile extends Component {
     constructor(props) {
@@ -34,10 +33,12 @@ class OrganizationProfile extends Component {
             message:{
                 class:'',
                 content:''
-            }
+            },
+            timeout:false,
+            serverError:false,
+            errorData:{}
         };
         this.saveForm = this.saveForm.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount() {
@@ -56,10 +57,10 @@ class OrganizationProfile extends Component {
     };
 
     valid = () => {
-        const {org} = this.state;
+        /*const {org} = this.state;
         let valid;
-        if(org.phone.length <= 7) valid = true;
-        this.setState({valid})
+        if(org.phone.length <= 7) valid = true;*/
+        this.setState({valid:false})
     };
 
     //Doc
@@ -162,61 +163,61 @@ class OrganizationProfile extends Component {
     };
 
     async saveForm() {
-        const { org, create } = this.state;
+        const { org } = this.state;
         this.setState({wait:true});
         const name = org.doc.name ? org.doc.name : org.doc;
         org.doc = org.doc.file ? org.doc.file : org.doc;
         try {
-            const resp = create ? await Actions.create('/api/organizations',org) : await OrganizationApi.editOne(org,org._id);
-            console.log(resp);
-            if(resp._id){
-                if(create) {
-                    const html = document.querySelector("html");
-                    html.classList.add('is-clipped');
-                    this.setState({modalOrg:true, wait:false, org:{...this.state.org,_id:resp._id}});
-                    toast.success(<FormattedMessage id="toast.org" defaultMessage="Ok!"/>);
-                }
-                else{
+            if(org._id){
+                const resp = await OrganizationApi.editOne(org,org._id);
+                if(resp._id){
                     org.doc = !(org.doc) && {name};
                     this.setState({msg:'Saved successfully',create:false, org, wait:false});
                     toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
+                }else{
+                    this.setState({msg:'Cant Create',create:false, wait:false});
+                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                 }
-            }else{
-                this.setState({msg:'Cant Create',create:false, wait:false});
-                toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
             }
-        }catch (e) {
-            console.log(e);
-            console.log(e.response);
-            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-            this.setState({timeout:true,loader:false,org, wait:false});
+            else{
+                const result = await Actions.create('/api/organizations',org);
+                if(result._id){
+                    const html = document.querySelector("html");
+                    html.classList.add('is-clipped');
+                    this.setState({modalOrg:true, wait:false, org:{...this.state.org,_id:result._id}});
+                    toast.success(<FormattedMessage id="toast.org" defaultMessage="Ok!"/>);
+                }else{
+                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk"/>);
+                    this.setState({msg:'Cant Create',create:false})
+                }
+            }
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status !== 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                }
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
         }
     }
-
-    async deleteEvent() {
-        this.setState({isLoading:'Wait....'});
-        const result = await EventsApi.deleteOne(this.state.eventId);
-        console.log(result);
-        if(result.data === "True"){
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Evento borrado'},isLoading:false});
-            const events = await EventsApi.getAll();
-            setTimeout(()=>{
-                this.setState({modal:false,events});
-            },500)
-        }else{
-            this.setState({message:{...this.state.message,class:'msg_error',content:'Evento no borrado'},isLoading:false})
-        }
-    }
-
-    closeModal = () => {
-        this.setState({modal:false})
-    };
 
     closeOrg = () => {
         const { org } = this.state;
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
-        window.location.replace(`${BaseUrl}/profile/${org._id}?type=organization`);
+        window.location.replace(`${BaseUrl}/organization/${org._id}`);
     };
 
     changeNetwork = (e) => {
@@ -227,8 +228,8 @@ class OrganizationProfile extends Component {
     };
 
     render() {
-        const { org, loading, docLoading, timeout, events, wait, valid } = this.state;
-        console.log('STATE ORG ',this.state);
+        const { org, loading, docLoading, wait, valid } = this.state;
+        const { timeout, serverError, errorData } = this.state;
         return (
             <section className="section profile">
                 {
@@ -353,14 +354,8 @@ class OrganizationProfile extends Component {
                             </div>
                         </div>
                 }
-                {
-                    timeout&&(<LogOut/>)
-                }
-                <Dialog modal={this.state.modal} title={'Borrar Evento'}
-                        content={<p>Seguro de borrar este evento?</p>}
-                        first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteEvent}}
-                        message={this.state.message} isLoading={this.state.isLoading}
-                        second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
                 <Dialog modal={this.state.modalOrg} title={'Organización Creada'}
                         content={<div><p className='has-text-weight-bold has-text-success'>Organización creada correctamente</p><p>Nuestro equipo validará tu información</p></div>}
                         first={{title:'OK',class:'',action:this.closeOrg}}/>
