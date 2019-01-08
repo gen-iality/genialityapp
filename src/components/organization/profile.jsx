@@ -18,7 +18,7 @@ import Dialog from "../modal/twoAction";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 
-class OrgEditProfile extends Component {
+class OrganizationProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -41,43 +41,12 @@ class OrgEditProfile extends Component {
     }
 
     async componentDidMount() {
-        let orgId = this.props.match.params.id;
         try {
             const categories = await CategoriesApi.getAll();
-            this.setState({categories});
-            if(orgId === 'create'){
-                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
-                this.setState({create:true,loading:false,events:[],org})
-            }else{
-                const org = await OrganizationApi.getOne(orgId);
-                const resp = await OrganizationApi.events(orgId);
-                org.location = org.location? org.location: {};
-                org.doc = org.doc? org.doc: {};
-                org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-                this.setState({org,loading:false,events:resp.data,valid:false});
-            }
+            this.setState({categories,org:this.props.org,loading:false});
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
-        }
-    }
-
-    async componentWillReceiveProps(nextProps) {
-        let orgId = nextProps.match.params.id;
-        if(orgId === 'create'){
-            this.setState({loading:true});
-            setTimeout(()=>{
-                const org= {location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''}};
-                this.setState({create:true,loading:false,events:[],org})
-            },1000)
-        }else{
-            this.setState({loading:true});
-            const org = await OrganizationApi.getOne(orgId);
-            const resp = await OrganizationApi.events(orgId);
-            org.location = org.location? org.location: {};
-            org.doc = org.doc? org.doc: {};
-            org.network = org.network ? org.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
-            this.setState({org,loading:false,events:resp.data,valid:false});
         }
     }
 
@@ -259,7 +228,7 @@ class OrgEditProfile extends Component {
 
     render() {
         const { org, loading, docLoading, timeout, events, wait, valid } = this.state;
-        console.log(org);
+        console.log('STATE ORG ',this.state);
         return (
             <section className="section profile">
                 {
@@ -382,31 +351,6 @@ class OrgEditProfile extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="profile-data columns">
-                                <div className="column is-12">
-                                    <h2 className="data-title">
-                                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
-                                        <span className="has-text-grey-dark is-size-3">Eventos</span>
-                                    </h2>
-                                    <div className="columns home is-multiline is-mobile">
-                                        {
-                                            events.map((event,key)=>{
-                                                return  <EventCard event={event} key={event._id} action={''} size={'column is-one-third'} right={
-                                                    <div className="edit">
-                                                        <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
-                                                                    <span className="icon is-medium">
-                                                                        <i className="fas fa-lg fa-pencil-alt"/>
-                                                                    </span>
-                                                            <span className="is-size-7 is-italic">Editar</span>
-                                                        </Link>
-                                                    </div>
-                                                }
-                                                />
-                                            })
-                                        }
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                 }
                 {
@@ -425,4 +369,4 @@ class OrgEditProfile extends Component {
     }
 }
 
-export default withRouter(OrgEditProfile);
+export default withRouter(OrganizationProfile);
