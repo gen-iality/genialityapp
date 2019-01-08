@@ -40,7 +40,9 @@ class Event extends Component {
         let eventId = this.props.match.params.event;
         this.props.dispatch(fetchPermissions(eventId));
         if(eventId === 'new_event'){
-            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            const event = {name:'',location:{}, description: '', categories: [],
+                properties_group:[], user_properties:[],
+                hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             this.setState({newEvent:true,loading:false,event})
         }else{
             try {
@@ -62,7 +64,9 @@ class Event extends Component {
     async componentWillReceiveProps(nextProps) {
         let eventId = nextProps.match.params.event;
         if(eventId === 'new_event'){
-            const event = {name:'',location:{}, description: '', categories: [], hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate(), user_properties:[]};
+            const event = {name:'',location:{}, description: '', categories: [],
+                properties_group:[], user_properties:[],
+                hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             this.setState({newEvent:true,loading:false,event})
         }else{
             try {
