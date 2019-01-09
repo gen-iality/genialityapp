@@ -160,7 +160,7 @@ class Properties extends Component {
     }
 
     render() {
-        const { fields, inputValue, newField} = this.state;
+        const { fields, inputValue, newField, loading} = this.state;
         return (
             <React.Fragment>
                 <div className="level">
@@ -178,7 +178,7 @@ class Properties extends Component {
                     </div>
                     <div className="level-right">
                         <div className="level-item">
-                            <button className="button is-success" onClick={this.submit}>
+                            <button className={`button is-success ${loading?'is-loading':''}`} onClick={this.submit}>
                                 <span className="icon is-small">
                                   <i className="fas fa-check"/>
                                 </span>
