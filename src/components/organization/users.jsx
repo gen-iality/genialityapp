@@ -34,6 +34,7 @@ class OrgUsers extends Component {
 
     async componentDidMount(){
         const {org} = this.props;
+        console.log(org);
         try{
             const resp = await OrganizationApi.getUsers(org._id);
             this.setState((prevState) => {
@@ -246,7 +247,7 @@ class OrgUsers extends Component {
                     <UserOrg handleModal={this.modalUser} modal={editUser} orgId={org._id}
                                value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
-                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} extraFields={org.user_properties}/>
+                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} organization={true} extraFields={org.user_properties}/>
                 {timeout&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
