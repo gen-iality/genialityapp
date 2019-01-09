@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import SearchComponent from "../shared/searchTable";
-import Loading from "../loaders/loading";
-import Pagination from "../shared/pagination";
-import UserModal from "../modal/modalUser";
-import ErrorServe from "../modal/serverError";
 import connect from "react-redux/es/connect/connect";
-import ImportUsers from "../modal/importUser";
 import {UsersApi} from "../../helpers/request";
+import Loading from "../loaders/loading";
+import SearchComponent from "../shared/searchTable";
+import Pagination from "../shared/pagination";
+import ErrorServe from "../modal/serverError";
+import ImportUsers from "../modal/importUser";
+import UserOrg from "../modal/userOrg";
 
 class OrgUsers extends Component {
     constructor(props) {
@@ -151,7 +151,7 @@ class OrgUsers extends Component {
                     </div>
                 </div>
                 {(!this.props.loading && editUser) &&
-                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={org._id}
+                    <UserOrg handleModal={this.modalUser} modal={editUser} eventId={org._id}
                                states={states} value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} extraFields={org.user_properties}/>
