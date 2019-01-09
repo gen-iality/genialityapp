@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {UsersApi} from "../../helpers/request";
+import {OrganizationApi, UsersApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
 import ImportUsers from "../modal/importUser";
 import UserOrg from "../modal/userOrg";
+import XLSX from "xlsx";
 
 class OrgUsers extends Component {
     constructor(props) {
@@ -25,7 +26,6 @@ class OrgUsers extends Component {
             message:    {class:'', content:''},
             sorted:     [],
             clearSearch:false,
-            changeItem: false,
             errorData: {},
             serverError: false
         };
@@ -34,15 +34,109 @@ class OrgUsers extends Component {
 
     async componentDidMount(){
         const {org} = this.props;
-        this.setState({extraFields:org.user_properties,loading:false})
+        try{
+            const resp = await OrganizationApi.getUsers(org._id);
+            this.setState((prevState) => {
+                return {
+                    userReq: resp.data, auxArr: resp.data, users: resp.data.slice(0,50),
+                    extraFields:org.user_properties,loading: !prevState.loading, clearSearch: !prevState.clearSearch
+                }
+            });
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status !== 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                }
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
+        }
     }
 
-    addUser = () => {
+    exportFile = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const data = parseData(this.state.userReq);
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
+        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
+    };
+
+    modalUser = (modal) => {
+        const {org} = this.props;
         const html = document.querySelector("html");
         html.classList.add('is-clipped');
+        if(modal){
+            this.setState({loading:true});
+            OrganizationApi.getUsers(org._id)
+                .then(resp=>{
+                    this.setState((prevState) => {
+                        return {
+                            userReq: resp.data, auxArr: resp.data, users: resp.data.slice(0,50),
+                            clearSearch: !prevState.clearSearch, loading:false
+                        }
+                    });
+
+                })
+                .catch (error => {
+                if (error.response) {
+                    console.log(error.response);
+                    const {status,data} = error.response;
+                    console.log('STATUS',status,status === 401);
+                    if(status !== 401) this.setState({timeout:true,loader:false});
+                    else this.setState({serverError:true,loader:false,errorData:data})
+                } else {
+                    let errorData = error.message;
+                    console.log('Error', error.message);
+                    if(error.request) {
+                        console.log(error.request);
+                        errorData = error.request
+                    }
+                    errorData.status = 708;
+                    this.setState({serverError:true,loader:false,errorData})
+                }
+                console.log(error.config);
+            })
+        }
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:false}
         });
+    };
+
+    renderRows = () => {
+        const items = [];
+        const {extraFields} = this.state;
+        const limit = extraFields.length;
+        this.state.pageOfItems.map((item,key)=>{
+            return items.push(<tr key={key}>
+                <td>
+                    <span className="icon has-text-primary action_pointer"
+                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                </td>
+                {
+                    extraFields.slice(0, limit).map((field,key)=>{
+                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
+                    })
+                }
+            </tr>)
+        });
+        return items
+    };
+
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
     };
 
     //Modal import
@@ -103,7 +197,7 @@ class OrgUsers extends Component {
                                     <button className="button is-inverted" onClick={this.modalImport}>Importar</button>
                                 </div>
                                 <div className="column is-narrow has-text-centered">
-                                    <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
+                                    <button className="button is-primary" onClick={(e)=>{this.modalUser(false)}}>Agregar Usuario +</button>
                                 </div>
                             </div>
                         </div>
@@ -120,8 +214,6 @@ class OrgUsers extends Component {
                                                     <thead>
                                                     <tr>
                                                         <th/>
-                                                        <th className="is-capitalized">Check</th>
-                                                        <th className="is-capitalized">Estado</th>
                                                         {
                                                             extraFields.map((field,key)=>{
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
@@ -151,7 +243,7 @@ class OrgUsers extends Component {
                     </div>
                 </div>
                 {(!this.props.loading && editUser) &&
-                    <UserOrg handleModal={this.modalUser} modal={editUser} eventId={org._id}
+                    <UserOrg handleModal={this.modalUser} modal={editUser} orgId={org._id}
                                value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} extraFields={org.user_properties}/>
@@ -167,12 +259,23 @@ const handleUsers = (list) => {
     list.map((user,key)=>{
         users[key] = {};
         users[key]['id'] = user._id;
-        users[key]['state'] = user.state.name;
         return Object.keys(user.properties).slice(0,2).map(field=>{
             return users[key][field] = user.properties[field];
         })
     });
     return users;
+};
+
+const parseData = (data) => {
+    let info = [];
+    data.map((item,key) => {
+        info[key] = {};
+        Object.keys(item.properties).map((obj, i) => (
+            info[key][obj] = item.properties[obj]
+        ));
+        return info
+    });
+    return info
 };
 
 const mapStateToProps = state => ({

@@ -139,7 +139,22 @@ export const OrganizationApi = {
     },
     events: async (id) => {
         return await Actions.getOne(`/api/organizations/${id}/`, 'events')
-    }
+    },
+    getUsers: async (id) => {
+        return await Actions.get(`/api/organizations/${id}/users`)
+    },
+    getUser: async (org,member) => {
+        return await Actions.getOne(`/api/organizations/${org}/users/`,member)
+    },
+    saveUser: async (org,data) => {
+        return await Actions.post(`/api/organizations/${org}/users`,data)
+    },
+    editUser: async (org,member,data) => {
+        return await Actions.edit(`/api/organizations/${org}/users/`,data,member)
+    },
+    deleteUser: async (org,member) => {
+        return await Actions.delete(`/api/organizations/${org}/users/`,member)
+    },
 };
 export const BadgeApi = {
     create: async(data) => {

@@ -143,6 +143,6 @@ const Protected = ({ component: Component, org, url, ...rest }) => (
     />
 );
 
-const campos = [{name: "email", unique: true, mandatory: true, type: "email"},{name: "names", unique: false, mandatory: true, type: "text"}];
+const campos = [{name: "email", unique: true, mandatory: true, type: "email"},{name: "displayName", unique: false, mandatory: true, type: "text"}];
 
 export default withRouter(Organization);

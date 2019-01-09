@@ -3,6 +3,7 @@ import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
 import {icon} from "../../helpers/constants";
 import Dialog from "./twoAction";
+import {OrganizationApi} from "../../helpers/request";
 
 class UserOrg extends Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class UserOrg extends Component {
             valid: true
         };
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.deleteUser = this.deleteUser.bind(this)
     }
 
     componentDidMount() {
@@ -48,63 +50,54 @@ class UserOrg extends Component {
         e.preventDefault();
         e.stopPropagation();
         console.log(this.state);
-        /*const snap = {
-            properties: this.state.user,
-            state_id: this.state.state,
-        };
         const self = this;
         let message = {};
         this.setState({create:true});
-        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        if(!this.state.edit){
-            snap.updated_at = new Date();
-            snap.checked_in = false;
-            snap.created_at = new Date();
-            if(this.state.confirmCheck) {
-                snap.checked_in = true;
-                snap.checked_at = new Date();
+        try{
+            if(!this.state.edit){
+                const res = await OrganizationApi.saveUser(this.props.orgId,this.state.user);
+                console.log(res);
+                message.class = 'msg_success';
+                message.content = 'USER CREATED';
+                toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
             }
-            console.log(snap);
-            userRef.add(snap)
-                .then(docRef => {
-                    console.log("Document written with ID: ", docRef.id);
-                    self.setState({userId:docRef.id});
-                    message.class = 'msg_success';
-                    message.content = 'USER CREATED';
-                    toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
-                })
-                .catch(error => {
-                    console.error("Error adding document: ", error);
-                    message.class = 'msg_danger';
-                    message.content = 'User can`t be created';
-                });
+            else{
+                message.class = 'msg_warning';
+                message.content = 'USER UPDATED';
+                const res = await OrganizationApi.editUser(this.props.orgId,this.state.userId,this.state.user);
+                console.log("Document successfully updated!");
+                message.class = 'msg_warning';
+                message.content = 'USER UPDATED';
+                toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
+            }
+            if(this.state.edit){
+                setTimeout(()=>{
+                    self.closeModal();
+                },800);
+            }else{
+                this.setState({edit:true})
+            }
+            this.setState({message,create:false});
         }
-        else{
-            message.class = 'msg_warning';
-            message.content = 'USER UPDATED';
-            if(snap.state_id !== this.state.state) this.props.statesCounter(snap.state_id,this.state.state);
-            snap.updated_at = new Date();
-            userRef.doc(this.state.userId).update(snap)
-                .then(() => {
-                    console.log("Document successfully updated!");
-                    message.class = 'msg_warning';
-                    message.content = 'USER UPDATED';
-                    toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
-                })
-                .catch(error => {
-                    console.error("Error updating document: ", error);
-                    message.class = 'msg_danger';
-                    message.content = 'User can`t be updated';
-                });
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status !== 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                }
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
         }
-        if(this.state.edit){
-            setTimeout(()=>{
-                self.closeModal();
-            },800);
-        }else{
-            this.setState({edit:true})
-        }
-        this.setState({message,create:false});*/
     }
 
     renderForm = () => {
@@ -195,26 +188,46 @@ class UserOrg extends Component {
         this.setState({valid:!valid})
     };
 
-    deleteUser = () => {
-       /* const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        const self = this;
+    async deleteUser(){
         let message = {};
-        this.props.statesCounter(null,this.props.value.state_id);
-        userRef.doc(this.props.value._id).delete().then(function() {
-            console.log("Document successfully deleted!");
+        const self = this;
+        try{
+            const res = await OrganizationApi.deleteUser(this.props.orgId,this.state.userId);
+            console.log(res);
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
-        })
-        setTimeout(()=>{
-            message.class = message.content = '';
-            self.closeModal();
-        },500)*/
+            this.setState({message});
+            setTimeout(()=>{
+                message.class = message.content = '';
+                this.setState({message});
+                self.closeModal();
+            },500)
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status !== 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                }
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
+        }
     };
 
     closeModal = () => {
         let message = {class:'',content:''};
-        this.setState({user:{}, valid:true, modal:false, uncheck:false, message},this.props.handleModal);
+        this.setState({user:{}, valid:true, modal:false, uncheck:false, message},this.props.handleModal(true));
     };
 
     render() {
