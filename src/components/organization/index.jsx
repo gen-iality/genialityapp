@@ -7,8 +7,6 @@ import OrganizationProfile from "./profile";
 import Properties from "./properties";
 import OrgUsers from "./users";
 import OrgEvents from "./events";
-import {fetchState} from "../../redux/states/actions";
-import connect from "react-redux/es/connect/connect";
 
 class Organization extends Component {
     constructor(props) {
@@ -20,7 +18,6 @@ class Organization extends Component {
 
     async componentDidMount() {
         let orgId = this.props.match.params.id;
-        this.props.dispatch(fetchState());
         try {
             if(orgId === 'create'){
                 const org= {name:'',location:{}, doc:{}, network:{facebook:'',twitter:'',instagram:'',linkedIn:''},email:'',nit:'',phone:'',user_properties:[]};
@@ -148,4 +145,4 @@ const Protected = ({ component: Component, org, url, ...rest }) => (
 
 const campos = [{name: "email", unique: true, mandatory: true, type: "email"},{name: "names", unique: false, mandatory: true, type: "text"}];
 
-export default connect(null)(withRouter(Organization));
+export default withRouter(Organization);

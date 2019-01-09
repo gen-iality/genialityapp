@@ -73,7 +73,7 @@ class OrgUsers extends Component {
 
     render() {
         const {timeout, userReq, users, total, extraFields, editUser, selectedUser, errorData, importUser} = this.state;
-        const {org,states} = this.props;
+        const {org} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -152,7 +152,7 @@ class OrgUsers extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserOrg handleModal={this.modalUser} modal={editUser} eventId={org._id}
-                               states={states} value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
+                               value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} extraFields={org.user_properties}/>
                 {timeout&&(<ErrorServe errorData={errorData}/>)}

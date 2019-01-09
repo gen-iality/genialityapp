@@ -22,8 +22,7 @@ class UserOrg extends Component {
     componentDidMount() {
         const self = this;
         console.log(this.props);
-        const {states,edit,extraFields} = this.props;
-        self.setState({ statesList: states, state: states[1].value });
+        const {edit,extraFields} = this.props;
         if (edit) {
             const {value} = this.props;
             let user = {};
@@ -31,7 +30,7 @@ class UserOrg extends Component {
                 .map((obj) => {
                     return user[obj] = value.properties[obj];
                 });
-            this.setState({user, state:value.state_id, edit:true, userId:value._id});
+            this.setState({user, edit:true, userId:value._id});
         }else {
             let user = {};
             extraFields
@@ -219,7 +218,7 @@ class UserOrg extends Component {
     };
 
     render() {
-        const {user,state,statesList} = this.state;
+        const {user} = this.state;
         return (
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
@@ -235,7 +234,7 @@ class UserOrg extends Component {
                             {
                                 Object.keys(user).length > 0 && this.renderForm()
                             }
-                            <div className="field is-grouped">
+                            {/*<div className="field">
                                 <div className="control">
                                     <label className="label">Estado</label>
                                     <div className="control">
@@ -250,7 +249,7 @@ class UserOrg extends Component {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*/}
                         </section>
                         <footer className="modal-card-foot">
                             {
