@@ -4,6 +4,9 @@ import Loading from "../loaders/loading";
 import Pagination from "../shared/pagination";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
+import connect from "react-redux/es/connect/connect";
+import ImportUsers from "../modal/importUser";
+import {UsersApi} from "../../helpers/request";
 
 class OrgUsers extends Component {
     constructor(props) {
@@ -12,8 +15,6 @@ class OrgUsers extends Component {
             users:      [],
             userReq:    [],
             pageOfItems:[],
-            total:      0,
-            checkIn:    0,
             extraFields:[],
             addUser:    false,
             editUser:   false,
@@ -27,15 +28,52 @@ class OrgUsers extends Component {
             changeItem: false,
             errorData: {},
             serverError: false
-        }
+        };
+        this.modalImport = this.modalImport.bind(this);
     }
 
     async componentDidMount(){
-
+        const {org} = this.props;
+        this.setState({extraFields:org.user_properties,loading:false})
     }
 
+    addUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
+        this.setState((prevState) => {
+            return {editUser:!prevState.editUser,edit:false}
+        });
+    };
+
+    //Modal import
+    async modalImport() {
+        try{
+            const html = document.querySelector("html");
+            const {data} = await UsersApi.getAll(this.props.org._id);
+            const users = handleUsers(data);
+            this.setState((prevState) => {
+                !prevState.importUser ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
+                return {importUser:!prevState.importUser,users}
+            });
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
+        }
+    };
+
     render() {
-        const {timeout, userReq, users, total, extraFields, editUser} = this.state;
+        const {timeout, userReq, users, total, extraFields, editUser, selectedUser, errorData, importUser} = this.state;
+        const {org,states} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -62,7 +100,7 @@ class OrgUsers extends Component {
                                     )
                                 }
                                 <div className="column is-narrow has-text-centered">
-                                    <button className="button is-inverted" onClick={this.checkModal}>Importar</button>
+                                    <button className="button is-inverted" onClick={this.modalImport}>Importar</button>
                                 </div>
                                 <div className="column is-narrow has-text-centered">
                                     <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
@@ -113,15 +151,34 @@ class OrgUsers extends Component {
                     </div>
                 </div>
                 {(!this.props.loading && editUser) &&
-                <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states}
-                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
-                           extraFields={this.state.extraFields} edit={this.state.edit}/>
+                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={org._id}
+                               states={states} value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
-                {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
+                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} extraFields={org.user_properties}/>
+                {timeout&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }
 }
 
-export default OrgUsers;
+//Add only id, and the first two fields
+const handleUsers = (list) => {
+    let users = [];
+    list.map((user,key)=>{
+        users[key] = {};
+        users[key]['id'] = user._id;
+        users[key]['state'] = user.state.name;
+        return Object.keys(user.properties).slice(0,2).map(field=>{
+            return users[key][field] = user.properties[field];
+        })
+    });
+    return users;
+};
+
+const mapStateToProps = state => ({
+    states: state.states.items,
+    loading: state.states.loading,
+    error: state.states.error
+});
+
+export default connect(mapStateToProps)(OrgUsers);
