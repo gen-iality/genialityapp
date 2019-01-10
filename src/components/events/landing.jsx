@@ -5,6 +5,8 @@ import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import { EventsApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
+import {ApiUrl} from "../../helpers/constants";
+import * as Cookie from "js-cookie";
 Moment.locale('es');
 momentLocalizer();
 
@@ -12,7 +14,8 @@ class Landing extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:true
+            loading:true,
+            tickets:[]
         }
     }
 
@@ -26,11 +29,14 @@ class Landing extends Component {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
             status = searchParams.get("status");
+        const id = this.props.match.params.event;
+        const event = await EventsApi.landingEvent(id);
+        const evius_token = Cookie.get('evius_token');
+        let iframeUrl = `${ApiUrl}/e/${event._id}`;
+        if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
-        const id = this.props.match.params.event;
-        const event = await EventsApi.landingEvent(id);
         console.log(event);
         const dateFrom = event.datetime_from.split(' ');
         const dateTo = event.datetime_to.split(' ');
@@ -38,11 +44,16 @@ class Landing extends Component {
         event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
         event.date_start = dateFrom[0];
         event.date_end = dateTo[0];
-        this.setState({event,loading:false});
+        const tickets = event.tickets.map(ticket => {
+            ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
+            return ticket
+        });
+        this.setState({event,loading:false,tickets,iframeUrl});
     }
 
     render() {
-        const { event } = this.state;
+        const { event, tickets, iframeUrl } = this.state;
+        console.log(iframeUrl);
         return (
             <section className="section hero landing">
                 {
@@ -53,12 +64,12 @@ class Landing extends Component {
                         </div>
                     )
                 }
-                <div className="hero-head">
-                    <div className="columns is-gapless">
-                        <div className="column is-4 info">
-                            {
-                                this.state.loading?<Loading/>:
-                                    <React.Fragment>
+                {
+                    this.state.loading?<Loading/> :
+                        <React.Fragment>
+                            <div className="hero-head">
+                                <div className="columns is-gapless">
+                                    <div className="column is-4 info">
                                         <div className="fecha item columns">
                                             <div className="column fecha-uno has-text-centered">
                                                 <span className="title is-size-4">{Moment(event.date_start).format('DD')} <small className="is-size-6">{Moment(event.date_start).format('MMM YY')}</small></span>
@@ -73,14 +84,14 @@ class Landing extends Component {
                                             </div>
                                         </div>
                                         <div className="lugar item columns is-centered">
-                                                <div className="column is-1">
+                                            <div className="column is-1">
                                                     <span className="icon is-medium">
                                                         <i className="fas fa-map-marker-alt fa-2x"/>
                                                     </span>
-                                                </div>
-                                                <div className="column is-9">
-                                                    <span className="subtitle is-size-6">{event.location.FormattedAddress}</span>
-                                                </div>
+                                            </div>
+                                            <div className="column is-9">
+                                                <span className="subtitle is-size-6">{event.location.FormattedAddress}</span>
+                                            </div>
                                         </div>
                                         <div className="nombre item columns is-centered">
                                             <div className="column is-10">
@@ -93,8 +104,8 @@ class Landing extends Component {
                                                 <p className="is-italic has-text-grey">
                                                     {
                                                         event.description.length >= 160 ?
-                                                        event.description.substring(0,160)+'...':
-                                                        event.description
+                                                            event.description.substring(0,160)+'...':
+                                                            event.description
                                                     }
                                                 </p>
                                             </div>
@@ -108,53 +119,90 @@ class Landing extends Component {
                                             </div>*/}
                                             {
                                                 (event.description.length >= 80 && !this.state.showFull) && (
-                                                        <div className="column is-5 is-offset-6 button-cont">
-                                                            <span className="has-text-weight-semibold has-text-grey">Ver más</span>
-                                                            <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
+                                                    <div className="column is-5 is-offset-6 button-cont">
+                                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
+                                                        <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
                                                             <i className="icon fa fa-plus"></i>
-                                                            </div>
                                                         </div>
+                                                    </div>
 
                                                 )
                                             }
                                         </div>
-                                    </React.Fragment>
-                            }
-                        </div>
-                        <div className="column banner">
-                            <figure className="image is-3by2">
-                                <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
-                            </figure>
-                            {
-                                this.state.showFull && (
-                                    <div className="info show-full columns is-centered is-hidden-mobile">
-                                        <div className="container column is-12">
-                                            <div className="item is-italic has-text-grey">
-                                                <p>{event.description}</p>
-                                            </div>
-                                            <div className="item">
-                                                <div className="columns is-mobile">
-                                                    <div className="button-cont column is-8 is-offset-4">
-                                                        <span className="has-text-weight-semibold has-text-grey">Ver menos</span>
-                                                        <div className="fav-button has-text-weight-bold"
-                                                            onClick={(e)=>{this.setState({showFull:false})}}>
-                                                            <i className="icon fa fa-minus"></i>
+                                    </div>
+                                    <div className="column banner">
+                                        <figure className="image is-3by2">
+                                            <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
+                                        </figure>
+                                        {
+                                            this.state.showFull && (
+                                                <div className="info show-full columns is-centered is-hidden-mobile">
+                                                    <div className="container column is-12">
+                                                        <div className="item is-italic has-text-grey">
+                                                            <p>{event.description}</p>
+                                                        </div>
+                                                        <div className="item">
+                                                            <div className="columns is-mobile">
+                                                                <div className="button-cont column is-8 is-offset-4">
+                                                                    <span className="has-text-weight-semibold has-text-grey">Ver menos</span>
+                                                                    <div className="fav-button has-text-weight-bold"
+                                                                         onClick={(e)=>{this.setState({showFull:false})}}>
+                                                                        <i className="icon fa fa-minus"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="hero-body">
+                                <div className="data container has-text-centered">
+                                    <div className="columns is-centered">
+                                        <div className="column is-8">
+                                            <h2 className="data-title has-text-left has-text-dark is-size-3">Tiquetes</h2>
+                                            {
+                                                tickets.map((ticket,key)=>{
+                                                    return <div className="level is-mobile" key={key}>
+                                                            <div className="level-left">
+                                                                <div className='level-item'>
+                                                                    <p className="subtitle is-5">
+                                                                        <strong>{ticket.title}</strong>
+                                                                    </p><br/>
+                                                                    <p>{ticket.description}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="level-right">
+                                                                <div className="level-item">
+                                                                    <p>{ticket.price}</p>
+                                                                </div>
+                                                                <div className="level-item">
+                                                                    <div className="select">
+                                                                        <select onChange={this.handleQuantity} name={`quantity_${ticket._id}`}>
+                                                                            {
+                                                                                ticket.options.map(item => {
+                                                                                    return <option value={item} key={item}>{item}</option>
+                                                                                })
+                                                                            }
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                })
+                                            }
                                         </div>
                                     </div>
-                                )
-                            }
-                        </div>
-                    </div>
-                    
-                </div>
-                <div className="hero-body">
-                    <div className="data container has-text-centered">
-                        <div className="columns is-centered">
-                            {/* <div className="column is-7">
+                                    <div className="columns is-centered">
+                                        <div className="column is-8">
+                                            <iframe title={'Tiquets'} src={iframeUrl} width={'600px'} height={'600px'}/>
+                                        </div>
+                                    </div>
+                                    <div className="columns is-centered">
+                                        {/* <div className="column is-7">
                                 <div className="has-shadow">
                                     <p>Acciones</p>
                                     <div className="field is-grouped">
@@ -185,26 +233,28 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div> */}
-                            <div className="column is-8">
-                                <h2 className="data-title has-text-left">
-                                    <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                    <span className="has-text-grey-dark is-size-3">Ubicación</span>
-                                </h2>
-                                {
-                                    !this.state.loading&&(
-                                        <MyMapComponent
-                                            lat={event.location.Latitude} long={event.location.Longitude}
-                                            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-                                            loadingElement={<div style={{height: `100%`}}/>}
-                                            containerElement={<div style={{height: `400px`}}/>}
-                                            mapElement={<div style={{height: `100%`}}/>}
-                                        />
-                                    )
-                                }
+                                        <div className="column is-8">
+                                            <h2 className="data-title has-text-left">
+                                                <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
+                                                <span className="has-text-grey-dark is-size-3">Ubicación</span>
+                                            </h2>
+                                            {
+                                                !this.state.loading&&(
+                                                    <MyMapComponent
+                                                        lat={event.location.Latitude} long={event.location.Longitude}
+                                                        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                                                        loadingElement={<div style={{height: `100%`}}/>}
+                                                        containerElement={<div style={{height: `400px`}}/>}
+                                                        mapElement={<div style={{height: `100%`}}/>}
+                                                    />
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </React.Fragment>
+                }
             </section>
         );
     }
