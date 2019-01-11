@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import * as Cookie from "js-cookie";
 import {ApiUrl} from "../../helpers/constants";
+import IFrame from "../shared/iFrame";
 
 class TicketInfo extends Component {
     constructor(props) {
@@ -23,10 +24,8 @@ class TicketInfo extends Component {
     render() {
         return (
             <div>
-                <p>{this.state.iframeUrl}</p>
                 {
-                    this.state.loading ? <p>Loading...</p>:
-                        <iframe title={'Tiquets'} src={this.state.iframeUrl} width={'600px'} height={'600px'}/>
+                    this.state.loading ? <p>Loading...</p>:<IFrame iframeUrl={this.state.iframeUrl}/>
                 }
             </div>
         );
