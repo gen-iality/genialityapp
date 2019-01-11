@@ -23,6 +23,7 @@ class DashboardEvent extends Component {
     render() {
         return (
             <div>
+                <p>{this.state.iframeUrl}</p>
                 {
                     this.state.loading ? <p>Loading...</p>:
                         <iframe title={'Tiquets'} src={this.state.iframeUrl} width={'600px'} height={'600px'}/>
