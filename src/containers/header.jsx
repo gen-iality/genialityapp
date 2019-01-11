@@ -50,6 +50,25 @@ class Header extends Component {
                         OrganizationApi.mine()
                             .then((organizations)=>{
                                 this.setState({name,photo,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
+                            })
+                            .catch(error => {
+                                if (error.response) {
+                                    console.log(error.response);
+                                    const {status,data} = error.response;
+                                    console.log('STATUS',status,status === 401);
+                                    if(status !== 401) this.setState({timeout:true,loader:false});
+                                    else this.setState({serverError:true,loader:false,errorData:data})
+                                } else {
+                                    let errorData = error.message;
+                                    console.log('Error', error.message);
+                                    if(error.request) {
+                                        console.log(error.request);
+                                        errorData = error.request
+                                    }
+                                    errorData.status = 708;
+                                    this.setState({serverError:true,loader:false,errorData})
+                                }
+                                console.log(error.config);
                             });
                         this.handleMenu(this.props.location)
                     }else{
