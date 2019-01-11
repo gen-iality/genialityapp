@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as Cookie from "js-cookie";
 import {ApiUrl} from "../../helpers/constants";
 
-class TicketInfo extends Component {
+class OrdersEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +15,7 @@ class TicketInfo extends Component {
         const evius_token = Cookie.get('evius_token');
         const {eventId} = this.props;
         if(evius_token){
-            const iframeUrl = `${ApiUrl}/es/event/${eventId}/tickets?evius_token=${evius_token}`;
+            const iframeUrl = `${ApiUrl}/es/event/${eventId}/orders?evius_token=${evius_token}`;
             this.setState({iframeUrl,loading:false})
         }
     }
@@ -32,4 +32,4 @@ class TicketInfo extends Component {
     }
 }
 
-export default TicketInfo;
+export default OrdersEvent;

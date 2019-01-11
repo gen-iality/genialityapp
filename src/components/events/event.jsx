@@ -20,6 +20,8 @@ import Badge from "../badge";
 import AdminRol from "../roles";
 import TicketInfo from "../tickets";
 import TicketConfig from "../tickets/config";
+import DashboardEvent from "../dashboard";
+import OrdersEvent from "../orders";
 Moment.locale('es');
 momentLocalizer();
 
@@ -53,6 +55,7 @@ class Event extends Component {
                 event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
                 event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
                 event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
+                event.properties_group = event.properties_group ? event.properties_group : [];
                 this.setState({event,loading:false});
             }catch (e) {
                 console.log(e.response);
@@ -150,24 +153,9 @@ class Event extends Component {
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_ticket) &&
-                                                    <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
-                                                    <span className="item has-text-grey">Ticketes</span>
-                                                    <span className="icon">
-                                                    <i className={`${this.state.ticketTab?'up':'down'}`}/>
-                                                </span>
-                                                </p>
-                                            }
-                                            {
-                                                (this.state.ticketTab && permissions.items.includes(rolPermissions.admin_ticket)) && (
-                                                    <ul className="menu-list">
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/ticket`}>Informativa</NavLink>
-                                                        </li>
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/configuration_ticket`}>Configuración</NavLink>
-                                                        </li>
-                                                    </ul>
-                                                )
+                                                    <p className="menu-label has-text-centered-mobile">
+                                                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/ticket`}>Ticketes</NavLink>
+                                                    </p>
                                             }
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
@@ -180,6 +168,12 @@ class Event extends Component {
                                                     </li>
                                                 </ul>
                                             }
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/dashboard`}>Dashboard</NavLink>
+                                            </p>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
+                                            </p>
                                             {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
                                                 <span className="item has-text-grey">Contenido</span>
                                                 <span className="icon">
@@ -224,13 +218,10 @@ class Event extends Component {
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_ticket) &&
-                                                    <React.Fragment>
-                                                        <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
-                                                        <Route path={`${match.url}/configuration_ticket`} render={()=><TicketConfig eventId={this.state.event._id}/>}/>
-                                                    </React.Fragment>
+                                                    <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
                                             }
-                                            <Route exact strict path={`${match.url}/agenda`} render={()=><Agenda event={this.state.event} />}/>
-                                            <Route path={`${match.url}/agenda/:item`} render={()=><AgendaEdit event={this.state.event}/>}/>
+                                            <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
+                                            <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>
                                     </section>

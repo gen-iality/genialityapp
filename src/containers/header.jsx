@@ -215,36 +215,9 @@ class Header extends Component {
                 }
                 {
                     permissions.items.includes(rolPermissions.admin_ticket) &&
-                        <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({ticketTab:!this.state.ticketTab})}}>
-                        <span className="item has-text-grey">Ticketes</span>
-                        <span className="icon">
-                        <i className={`${this.state.ticketTab?'up':'down'}`}/>
-                    </span>
-                    </p>
-                }
-                {
-                    (this.state.ticketTab && permissions.items.includes(rolPermissions.admin_ticket)) && (
-                        <ul className="menu-list">
-                            {
-                                permissions.items.includes(rolPermissions.admin_invitations) &&
-                                <li>
-                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
-                                </li>
-                            }
-                            {
-                                permissions.items.includes(rolPermissions.history_invitations) &&
-                                <li>
-                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
-                                </li>
-                            }
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`ticket`}>Informativa</NavLink>
-                            </li>
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`configuration_ticket`}>Configuración</NavLink>
-                            </li>
-                        </ul>
-                    )
+                        <p className="navbar-item has-text-centered-mobile">
+                            <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`ticket`}>General</NavLink>
+                        </p>
                 }
                 <p className="navbar-item has-text-centered-mobile">
                     <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
