@@ -120,7 +120,7 @@ class Event extends Component {
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
                                             {
-                                                permissions.items.includes(rolPermissions.admin_staff) &&
+                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
                                                     <ul className="menu-list">
                                                         <li>
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
@@ -128,7 +128,7 @@ class Event extends Component {
                                                     </ul>
                                             }
                                             {
-                                                (permissions.items.includes(rolPermissions.admin_invitations) || permissions.items.includes(rolPermissions.history_invitations)) &&
+                                                (permissions.items.includes(rolPermissions.admin_invitations._id) || permissions.items.includes(rolPermissions.history_invitations._id)) &&
                                                     <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                                                         <span className="item has-text-grey">Invitaciones</span>
                                                         <span className="icon">
@@ -137,13 +137,13 @@ class Event extends Component {
                                                     </p>
                                             }
                                             {
-                                                (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations)) && (
+                                                (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations._id)) && (
                                                     <ul className="menu-list">
                                                         <li>
                                                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/rsvp`}>Enviar</NavLink>
                                                         </li>
                                                         {
-                                                            permissions.items.includes(rolPermissions.history_invitations) &&
+                                                            permissions.items.includes(rolPermissions.history_invitations._id) &&
                                                             <li>
                                                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/messages`}>Historial</NavLink>
                                                             </li>
@@ -152,7 +152,7 @@ class Event extends Component {
                                                 )
                                             }
                                             {
-                                                permissions.items.includes(rolPermissions.admin_ticket) &&
+                                                permissions.items.includes(rolPermissions.admin_ticket._id) &&
                                                     <p className="menu-label has-text-centered-mobile">
                                                         <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/ticket`}>Ticketes</NavLink>
                                                     </p>
@@ -161,7 +161,7 @@ class Event extends Component {
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/assistants`}>Asistentes</NavLink>
                                             </p>
                                             {
-                                                permissions.items.includes(rolPermissions.admin_badge) &&
+                                                permissions.items.includes(rolPermissions.admin_badge._id) &&
                                                 <ul className="menu-list">
                                                     <li>
                                                         <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
@@ -204,20 +204,20 @@ class Event extends Component {
                                             <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
                                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             {
-                                                permissions.items.includes(rolPermissions.admin_badge) &&
+                                                permissions.items.includes(rolPermissions.admin_badge._id) &&
                                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             }
                                             <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                             {
-                                                permissions.items.includes(rolPermissions.history_invitations) &&
+                                                permissions.items.includes(rolPermissions.history_invitations._id) &&
                                                 <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
                                             }
                                             {
-                                                permissions.items.includes(rolPermissions.admin_staff) &&
+                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
                                                 <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
                                             }
                                             {
-                                                permissions.items.includes(rolPermissions.admin_ticket) &&
+                                                permissions.items.includes(rolPermissions.admin_ticket._id) &&
                                                     <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
