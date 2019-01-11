@@ -73,8 +73,10 @@ class AddUser extends Component {
             let type = m.type || "text";
             let props = m.props || {};
             let name= m.name;
+            let primercampo = (name=="Nombres");
             let mandatory = m.mandatory;
             let target = name;
+            let aliasname = (name=="Nombres")?name:"Documento";
             let value =  this.state.user[target];
             let input =  <input {...props}
                                 className="input"
@@ -83,6 +85,7 @@ class AddUser extends Component {
                                 name={name}
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
+                                autofocus = {primercampo}
             />;
             if (type == "boolean") {
                 input =
@@ -93,8 +96,11 @@ class AddUser extends Component {
                             className="is-checkradio is-primary is-rtl"
                             type="checkbox"
                             checked={value}
-                            onChange={(e)=>{this.onChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
+                            onChange={(e)=>{this.onChange(e, type)}}
+                         
+
+                        />
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{aliasname}a</label>
                     </React.Fragment>
             }
             if (type == "list") {
@@ -114,7 +120,7 @@ class AddUser extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {name}
+                        {aliasname}
                     </label>}
                     <div className="control">
                         {input}
