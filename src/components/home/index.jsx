@@ -7,6 +7,8 @@ import LoadingEvent from "../loaders/loadevent";
 import EventCard from "../shared/eventCard";
 import { EventsApi } from "../../helpers/request";
 import API from "../../helpers/request";
+import LogOut from "../shared/logOut";
+import ErrorServe from "../modal/serverError";
 Moment.locale('es');
 momentLocalizer();
 
@@ -19,7 +21,10 @@ class Home extends Component {
             tabEvt:true,
             tabEvtType:true,
             tabEvtCat: true,
-            loadingState: false
+            loadingState: false,
+            timeout: false,
+            serverError: false,
+            errorData: {}
         };
         //this.loadMoreItems = this.loadMoreItems.bind(this);
     }
@@ -34,8 +39,20 @@ class Home extends Component {
                     this.loadMoreItems();
                 }
             });*/
-        }catch (e) {
-            console.log(e);
+        }
+        catch (error) {
+            // Error
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     }
 
@@ -55,13 +72,27 @@ class Home extends Component {
         queryFilter = JSON.stringify(queryFilter);
         query = query+`filtered=${queryFilter}`;
         this.setState({loading:true});
-        API.get(`/api/events${query}`).then(({data})=>{
+        API.get(`/api/events${query}`)
+            .then(({data})=>{
             console.log(data);
             this.setState({events:data.data,loading:false,type,category});
-        }).catch(e=>{
-            console.log(e.response);
-            this.setState({timeout:true,loading:false,events:[],type,category});
-        });
+        })
+            .catch(error => {
+                if (error.response) {
+                    console.log(error.response);
+                    const {status,data:{message}} = error.response;
+                    console.log('STATUS',status,status === 401);
+                    if(status === 401) this.setState({timeout:true,loader:false});
+                    else this.setState({serverError:true,loader:false,errorData:{status,message}})
+                } else {
+                    let errorData = {message:error.message};
+                    console.log('Error', error.message);
+                    if(error.request) console.log('Request Er ',error.request);
+                    errorData.status = 520;
+                    this.setState({serverError:true,loader:false,errorData})
+                }
+                console.log(error.config);
+            });
     }
 
     /*async loadMoreItems() {
@@ -79,10 +110,10 @@ class Home extends Component {
     }*/
 
     render() {
-        const {category,type} = this.state;
+        const {category,type,timeout, serverError, errorData} = this.state;
         const {match,categories,types} = this.props;
         return (
-            <div>
+            <React.Fragment>
                 <div className="filter-bar column is-3 is-offset-9">
                     <div className="buttons is-right has-text-weight-bold">
                         <p className="control">
@@ -201,7 +232,9 @@ class Home extends Component {
                         </div>
                     </section>
                 </div>
-            </div>
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
+            </React.Fragment>
         );
     }
 }

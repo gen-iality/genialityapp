@@ -27,8 +27,9 @@ class HomeProfile extends Component {
         const query = (type === 'User') ? 'users' : 'organizations';
         const resp = await Actions.get(`/api/${query}/${id}/events`,true);
         const user = (type === 'User') ? await UsersApi.getProfile(id,true): await OrganizationApi.getOne(id,true);
+        user.name = (user.displayName) ? user.displayName: user.name? user.name: user.email;
         user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
-        console.log(user);
+        user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
         this.setState({events:resp.data,loadingEvents:false,user});
     }
 

@@ -1,40 +1,40 @@
 import {
-    FETCH_ROLSTATE_BEGIN,
-    FETCH_ROLSTATE_SUCCESS,
-    FETCH_ROLSTATE_FAILURE
+    FETCH_ROL_BEGIN,
+    FETCH_ROL_SUCCESS,
+    FETCH_ROL_FAILURE
 } from "./actions";
 
 const initialState = {
-    items: {},
+    items: [],
     loading: false,
     error: null
 };
 
-export default function categoriesReducer(
+export default function rolesReducer(
     state = initialState,
     action
 ) {
     switch (action.type) {
-        case FETCH_ROLSTATE_BEGIN:
+        case FETCH_ROL_BEGIN:
             return {
                 ...state,
                 loading: true,
                 error: null
             };
 
-        case FETCH_ROLSTATE_SUCCESS:
+        case FETCH_ROL_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 items: action.payload
             };
 
-        case FETCH_ROLSTATE_FAILURE:
+        case FETCH_ROL_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                items: {}
+                items: []
             };
 
         default:

@@ -34,6 +34,7 @@
     "react-widgets": "^4.4.6",
     "react-widgets-moment": "^4.0.19",
     "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "xlsx": "^0.13.5"
   },

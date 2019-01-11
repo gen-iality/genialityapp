@@ -1,42 +1,40 @@
 import React, {Component} from 'react';
 import { Actions, EventsApi } from "../../helpers/request";
 import ErrorServe from "../modal/serverError";
+import LogOut from "../shared/logOut";
 
 class Preview extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            head: [],
+            headers: [],
             loading: true,
             list : [],
+            errorData: {},
+            serverError: false,
             auxArr: []
         };
-        this.addField = this.addField.bind(this)
     }
 
-    async componentDidMount(){
-        try {
-            let llaves = [];
-            const {list, eventId} = this.props;
-            const event = await EventsApi.getOne(eventId);
-            event.user_properties.map(item => {
-                return this.setState(prevState => ({
-                    head: [...prevState.head, {tag:item.name,used:false}]
-                }))
-            });
-            list.map(list => {
-                return llaves.push(list.key)
-            });
-            this.renderHead(llaves, list);
-        }catch (e) {
-            console.log(e);
-            this.setState({timeout: true});
-        }
+    componentDidMount(){
+        let llaves = [], headers = [];
+        const {list, extraFields} = this.props;
+        //Promesa para recorrer las propiedades del evento/organizaciòn para crear el header de las listas
+        const results = extraFields.map(async (item) => { return headers.push({tag:item.name,used:false}) });
+        Promise.all(results).then((completed) => {
+            //Se crea el arreglo de llaves para comparar con el header
+            list.map(list => {return llaves.push(list.key)});
+            this.setState({headers});
+            this.renderHead(llaves, list)
+        });
     }
 
+    //Funcion para manejar las propiedades
+    //Se parsea si las propiedaeds existen(verde) en el excel o no(rojo)
     renderHead = (llaves, list) => {
         const a = llaves;
-        const b = this.state.head;
+        const b = this.state.headers;
+        //Se compara los headers con las llaves para realizar la validaciòn de campos
         const comparer = (otherArray) => {
             return ( current ) => {
                 return otherArray.filter( other => {
@@ -48,35 +46,33 @@ class Preview extends Component {
             }
         }
         const onlyInB = b.filter(comparer(a));
-        this.setState({auxArr:onlyInB,head:b});
-        list.map(item=>{
-            return item.used = this.headExist(item.key)
-        });
+        this.setState({auxArr:onlyInB});
+        list.map(item=>{return item.used = this.headExist(item.key)});
         let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
         this.setState({list,loading:false,auxList})
-    }
+    };
 
+    //Pinta rojo/verde en la cabecera
     headExist = (key) => {
-        let head = this.state.head;
-        const j = head.map(e=>{ return e.tag; }).indexOf(key);
-        return (j !== -1 ) ? head[j].used : false
+        const j = this.state.headers.map(e=>{ return e.tag; }).indexOf(key);
+        return (j !== -1 ) ? this.state.headers[j].used : false
     };
 
     sChange = (item,key) => {
         const auxHead = this.state.auxArr;
-        const {head, list} = this.state;
+        const {headers, list} = this.state;
         const i = auxHead.map((e) => { return e.tag; }).indexOf(item.tag);
-        const j = head.map(e=>{ return e.tag; }).indexOf(item.tag);
-        head[j].used = true;
+        const j = headers.map(e=>{ return e.tag; }).indexOf(item.tag);
+        headers[j].used = true;
         let listCopy = JSON.parse(JSON.stringify(list));
         listCopy[key].used = true;
         listCopy[key].key = item.tag;
         auxHead.splice(i,1);
-        this.setState({auxArr:auxHead,head,list:listCopy});
+        this.setState({auxArr:auxHead,headers,list:listCopy});
         this.headExist(key);
     };
 
-    async addField(item, key) {
+    /*async addField(item, key) {
         console.log(item);
         try {
             const { list } = this.state;
@@ -95,17 +91,17 @@ class Preview extends Component {
     revertField = (item, position) => {
         const auxHead = this.state.auxArr;
         const list = JSON.parse(JSON.stringify(this.state.list));
-        const head = [...this.state.head];
+        const head = [...this.state.headers];
         const j = head.map(e=>{ return e.tag; }).indexOf(item.key);
         head[j].used = false;
         list[position].used = false;
         list[position].key = this.state.auxList[position].key;
         auxHead.push({tag:item.key,used:false});
         this.setState({auxArr:auxHead,head,list});
-    };
+    };*/
 
     render() {
-        const {list, auxArr, timeout} = this.state;
+        const {list, auxArr, timeout, serverError, errorData} = this.state;
         const self = this;
         return (
             <React.Fragment>
@@ -119,13 +115,13 @@ class Preview extends Component {
                                         <div className="preview-column">
                                             <div className="preview-title">
                                                 <div className="preview-title-left">
-                                                    {
+                                                    {/*{
                                                         (!item.used&&auxArr.length<=0) && (
                                                             <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
                                                                 <i className="fas fa-plus"/>
                                                             </span>
                                                         )
-                                                    }
+                                                    }*/}
                                                     {
                                                         (!item.used&&auxArr.length>0) && (
                                                             <span className="icon action_pointer tooltip is-small" data-tooltip="Change Field">
@@ -199,8 +195,9 @@ class Preview extends Component {
                     <div className="column has-text-centered">
                         <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
                     </div>
-                </div> 
-                {timeout&&(<ErrorServe/>)}
+                </div>
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }

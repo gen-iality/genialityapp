@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
 import ErrorServe from "../modal/serverError";
 import connect from "react-redux/es/connect/connect";
-import UserModal from "../modal/modalUser";
+import LogOut from "../shared/logOut";
 
 class UsersRsvp extends Component {
     constructor(props) {
@@ -41,6 +41,8 @@ class UsersRsvp extends Component {
             columns:    columns,
             sorted:     [],
             clearSearch: false,
+            errorData: {},
+            serverError: false
         };
         this.checkEvent = this.checkEvent.bind(this);
         this.modalImport = this.modalImport.bind(this);
@@ -61,9 +63,8 @@ class UsersRsvp extends Component {
             const properties = this.props.event.user_properties.slice(0,2);
             const resp = await UsersApi.getAll(eventId);
             const users = handleUsers(resp.data);
-            const pos = listEvents.data.map((e)=> { return e._id; }).indexOf(eventId);
-            const {rolstate:{roles,states}} = this.props;
-            listEvents.data.splice(pos,1);
+            const pos = listEvents.map((e)=> { return e._id; }).indexOf(eventId);
+            listEvents.splice(pos,1);
             if(this.props.selection.length>0) this.setState({selection:this.props.selection,auxArr:this.props.selection});
             const columns = this.state.columns;
             let index = columns.map((e) => { return e.id; }).indexOf(`${properties[0].name}`);
@@ -101,11 +102,21 @@ class UsersRsvp extends Component {
                     filterable: false,
                 }
             );
-            this.setState({events:listEvents.data,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
+            this.setState({events:listEvents,users,userReq:resp,userAux:users,loading:false,actualEvent:this.props.event});
             this.handleCheckBox(users,this.state.selection)
-        }catch (e) {
-            console.log(e);
-            this.setState({timeout:true,loading:false,events:[],users:[]});
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     }
 
@@ -120,9 +131,19 @@ class UsersRsvp extends Component {
                 if(index>=0) columns.splice(index,1);
                 this.setState({ actualEvent:event, users, userAux:users });
                 this.handleCheckBox(users,this.state.selection)
-            }catch (e) {
-                console.log(e.response);
-                this.setState({timeout:true,loader:false});
+            }
+            catch (error) {
+                if (error.response) {
+                    console.log(error.response);
+                    const {status} = error.response;
+                    if(status === 401) this.setState({timeout:true,loader:false});
+                    else this.setState({serverError:true,loader:false})
+                } else {
+                    console.log('Error', error.message);
+                    if(error.request) console.log(error.request);
+                    this.setState({serverError:true,loader:false})
+                }
+                console.log(error.config);
             }
         }
     };
@@ -260,10 +281,19 @@ class UsersRsvp extends Component {
             const users = handleUsers(data);
             toast.success((<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>));
             this.setState({ users });
-        }catch (e) {
-            console.log(e.response);
-            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-            this.setState({timeout:true,loader:false});
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     };
 
@@ -277,9 +307,19 @@ class UsersRsvp extends Component {
                 !prevState.importUser ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
                 return {importUser:!prevState.importUser,users}
             });
-        }catch (e) {
-            console.log(e.response);
-            this.setState({timeout:true,loader:false});
+        }
+        catch (error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status} = error.response;
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false})
+            } else {
+                console.log('Error', error.message);
+                if(error.request) console.log(error.request);
+                this.setState({serverError:true,loader:false})
+            }
+            console.log(error.config);
         }
     };
 
@@ -429,9 +469,24 @@ class UsersRsvp extends Component {
                     res = {rows: users, total: filteredData.meta.total, perPage: filteredData.meta.per_page};
                     resolve(res)
                 })
-                .catch(e=>{
-                    console.log(e.response);
-                    this.setState({timeout:true,loader:false});
+                .catch(error => {
+                    if (error.response) {
+                        console.log(error.response);
+                        const {status,data} = error.response;
+                        console.log('STATUS',status,status === 401);
+                        if(status !== 401) this.setState({timeout:true,loader:false});
+                        else this.setState({serverError:true,loader:false,errorData:data})
+                    } else {
+                        let errorData = error.message;
+                        console.log('Error', error.message);
+                        if(error.request) {
+                            console.log(error.request);
+                            errorData = error.request
+                        };
+                        errorData.status = 708;
+                        this.setState({serverError:true,loader:false,errorData})
+                    }
+                    console.log(error.config);
                 });
 
         });
@@ -451,7 +506,7 @@ class UsersRsvp extends Component {
 
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        const {users, pages, pageSize, loading, columns, timeout, disabled, events} = this.state;
+        const {users, pages, pageSize, loading, columns, timeout, disabled, events, serverError, errorData} = this.state;
         return (
             <React.Fragment>
                 <div className="columns is-multiline event-inv-send">
@@ -591,7 +646,7 @@ class UsersRsvp extends Component {
                 </div>
                 {(!this.props.loading && this.state.addUser) &&
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList} rolstate={this.props.rolstate}
+                         value={this.state.selectedUser} addToList={this.addToList} states={this.props.states}
                          extraFields={this.props.event.user_properties} edit={this.state.edit}/>}
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
@@ -604,7 +659,8 @@ class UsersRsvp extends Component {
                         second={{
                             title:<FormattedMessage id="global.cancel" defaultMessage="Sign In"/>,
                             class:'',action:this.showTicket}}/>
-                {timeout&&(<ErrorServe/>)}
+                {timeout&&(<LogOut/>)}
+                {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );
     }
@@ -653,9 +709,9 @@ const columns = [
 ];
 
 const mapStateToProps = state => ({
-    rolstate: state.rolstate.items,
-    loading: state.rolstate.loading,
-    error: state.rolstate.error
+    states: state.states.items,
+    loading: state.states.loading,
+    error: state.states.error
 });
 
 export default connect(mapStateToProps)(UsersRsvp);

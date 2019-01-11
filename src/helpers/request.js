@@ -33,8 +33,8 @@ export const Actions = {
         return privateInstance.post(url, data).then(({data})=>data);
     },
     delete: (url, id, unsafe) => {
-        if(unsafe) return publicInstance.delete(`${url}${id}`);
-        return privateInstance.delete(`${url}${id}`);
+        if(unsafe) return publicInstance.delete(`${url}${id}`).then(({data})=>data);
+        return privateInstance.delete(`${url}${id}`).then(({data})=>data);
     },
     edit: (url, data, id, unsafe) => {
         if(unsafe) return publicInstance.put(`${url}${id}`, data).then(({data})=>data);
@@ -75,7 +75,8 @@ export const EventsApi = {
         return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data)
     },
     mine: async () => {
-        return await Actions.getAll('/api/me/events')
+        const events = await Actions.getAll('/api/me/contributors/events');
+        return events.map(item=>item.event)
     },
     getOne: async (id) => {
         return await Actions.getOne('/api/events/', id)
@@ -96,6 +97,9 @@ export const UsersApi = {
     },
     editProfile: async (data,id) => {
         return await Actions.edit('/api/users/', data, id)
+    },
+    findByEmail: async(email) => {
+        return await Actions.getOne(`api/users/findByEmail/`,email)
     },
     mineTickets: async () => {
         return await Actions.getAll(`/api/me/eventUsers`)
@@ -135,7 +139,22 @@ export const OrganizationApi = {
     },
     events: async (id) => {
         return await Actions.getOne(`/api/organizations/${id}/`, 'events')
-    }
+    },
+    getUsers: async (id) => {
+        return await Actions.get(`/api/organizations/${id}/users`)
+    },
+    getUser: async (org,member) => {
+        return await Actions.getOne(`/api/organizations/${org}/users/`,member)
+    },
+    saveUser: async (org,data) => {
+        return await Actions.post(`/api/organizations/${org}/users`,data)
+    },
+    editUser: async (org,member,data) => {
+        return await Actions.edit(`/api/organizations/${org}/users/`,data,member)
+    },
+    deleteUser: async (org,member) => {
+        return await Actions.delete(`/api/organizations/${org}/users/`,member)
+    },
 };
 export const BadgeApi = {
     create: async(data) => {
@@ -148,6 +167,23 @@ export const BadgeApi = {
         return await Actions.getOne('/api/escarapelas/', id)
     }
 
+};
+export const HelperApi = {
+    listHelper: async(id) => {
+        return await Actions.getOne(`api/contributors/events/`,id)
+    },
+    rolesOne: async(event) => {
+        return await Actions.get(`api/contributors/events/${event}/me`)
+    },
+    saveHelper: async(data) => {
+        return await Actions.post(`api/contributors`,data)
+    },
+    editHelper: async(id,data) => {
+        return await Actions.put(`api/contributors/${id}`,data)
+    },
+    removeHelper: async(id) => {
+        return await Actions.delete(`api/contributors/`,id)
+    }
 };
 const handleCat = (data) => {
     let list = [];

@@ -8,16 +8,31 @@ class ErrorServe extends Component {
         }
     }
 
+    componentDidMount() {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
+    }
+
+    closeModal = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        this.setState({modal:false})
+    };
+
     render() {
+        const {errorData} = this.props;
         return (
             <div className={`modal ${this.state.modal?'is-active':''}`}>
                 <div className="modal-background"/>
-                <div className="modal-content">
-                    <p className="image is-4by3">
-                        <img src="https://thealmostdone.com/wp-content/uploads/2018/02/Identify-and-fix-the-500-internal-server-error-in-WordPress.png" alt=""/>
-                    </p>
+                <div className="modal-card">
+                    <header className="modal-card-head">
+                        <p className="modal-card-title">ERROR: {errorData.status}</p>
+                        <button className="delete" aria-label="close" onClick={this.closeModal}/>
+                    </header>
+                    <section className="modal-card-body">
+                        <p>{errorData.message}</p>
+                    </section>
                 </div>
-                <button className="modal-close is-large" aria-label="close" onClick={(e)=>{this.setState({modal:false})}}/>
             </div>
         );
     }

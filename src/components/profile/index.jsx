@@ -1,6 +1,11 @@
 /*global google*/
 import React, {Component} from 'react';
 import { withRouter, Link } from "react-router-dom";
+//redux
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import {addLoginInformation} from "../../redux/user/actions";
+//Libraries and stuffs
 import {Actions, CategoriesApi, EventsApi, UsersApi} from "../../helpers/request";
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
@@ -17,7 +22,7 @@ import {DateTimePicker} from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 
-class UserEditProfile extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,16 +45,15 @@ class UserEditProfile extends Component {
         let userId = this.props.match.params.id;
         try {
             const categories = await CategoriesApi.getAll();
-            const resp = await EventsApi.mine();
+            const events = await EventsApi.mine();
             const user = await UsersApi.getProfile(userId,true);
-            const tickets = await UsersApi.mineTickets();
-            console.log(tickets);
-            user.name = (user.name) ? user.name: user.displayName? user.displayName: user.email;
+            //const tickets = await UsersApi.mineTickets();
+            user.name = (user.displayName) ? user.displayName: user.name? user.name: user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
-            this.setState({loading:false,user,events:resp.data,categories,valid:false},this.scrollEvent);
+            this.setState({loading:false,user,events,categories,valid:false},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
@@ -177,6 +181,7 @@ class UserEditProfile extends Component {
             const resp = await UsersApi.editProfile(user,user._id);
             console.log(resp);
             resp.birth_date = resp.birth_date ? Moment(resp.birth_date).toDate() : new Date();
+            this.props.addLoginInformation(user);
             this.setState({user:resp});
             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>);
         }catch (e) {
@@ -212,8 +217,6 @@ class UserEditProfile extends Component {
 
     render() {
         const { loading, timeout, events, user, valid, error } = this.state;
-        console.log(valid);
-        console.log(error);
         return (
             <section className="section profile">
                 {
@@ -364,4 +367,8 @@ class UserEditProfile extends Component {
     }
 }
 
-export default withRouter(UserEditProfile);
+const mapDispatchToProps = dispatch => ({
+    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+});
+
+export default connect(null,mapDispatchToProps)(withRouter(Index));

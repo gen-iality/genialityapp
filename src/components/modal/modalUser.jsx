@@ -12,11 +12,9 @@ class UserModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rolesList: [],
             statesList: [],
             message: {},
             user: {},
-            rol: "",
             state: "",
             userId: "mocionsoft",
             emailError:false,
@@ -31,8 +29,8 @@ class UserModal extends Component {
     componentDidMount() {
         const self = this;
         console.log(this.props);
-        const {rolstate:{roles,states}} = this.props;
-        self.setState({ rolesList: roles, statesList: states, state: states[1].value, rol: roles[1].value });
+        const {states} = this.props;
+        self.setState({ statesList: states, state: states[1].value });
         if (this.props.edit) {
             const {value} = this.props;
             let user = {};
@@ -41,7 +39,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, rol:value.rol_id, state:value.state_id, edit:true, checked_in, userId:value._id});
+            this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id});
         }else {
             let user = {};
             this.props.extraFields
@@ -60,7 +58,6 @@ class UserModal extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            rol_id: this.state.rol,
             state_id: this.state.state,
         };
         const self = this;
@@ -319,7 +316,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,checked_in,rol,rolesList,state,statesList,userId} = this.state;
+        const {user,checked_in,state,statesList,userId} = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
@@ -355,20 +352,6 @@ class UserModal extends Component {
                             }
                             <div className="field is-grouped">
                                 <div className="control">
-                                    <label className="label">Rol</label>
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={rol} onChange={this.selectChange} name={'rol'}>
-                                                {
-                                                    rolesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="control">
                                     <label className="label">Estado</label>
                                     <div className="control">
                                         <div className="select">
@@ -382,17 +365,17 @@ class UserModal extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {
+                                    !this.state.edit&&
+                                    <div className="control">
+                                        <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
+                                               type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
+                                               onChange={(e)=>{this.setState(prevState=>{
+                                                   return {confirmCheck:!prevState.confirmCheck}})}}/>
+                                        <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                                    </div>
+                                }
                             </div>
-                            {
-                                !this.state.edit&&
-                                <div className="control">
-                                    <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
-                                           type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
-                                           onChange={(e)=>{this.setState(prevState=>{
-                                               return {confirmCheck:!prevState.confirmCheck}})}}/>
-                                    <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
-                                </div>
-                            }
                         </section>
                         <footer className="modal-card-foot">
                             {
