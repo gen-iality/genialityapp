@@ -12,5 +12,4 @@ const store = createStore(
     combineReducers({...reducers}),
     compose(applyMiddleware(...middlewares))
 );
-window.store = store;
 export default store;
