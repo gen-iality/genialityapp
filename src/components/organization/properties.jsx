@@ -143,7 +143,7 @@ class Properties extends Component {
                 console.log(error.response);
                 const {status,data} = error.response;
                 console.log('STATUS',status,status === 401);
-                if(status !== 401) this.setState({timeout:true,loader:false});
+                if(status === 401) this.setState({timeout:true,loader:false});
                 else this.setState({serverError:true,loader:false,errorData:data})
             } else {
                 let errorData = error.message;
