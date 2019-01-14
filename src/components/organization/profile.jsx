@@ -198,8 +198,8 @@ class OrganizationProfile extends Component {
                 console.log(error.response);
                 const {status,data} = error.response;
                 console.log('STATUS',status,status === 401);
-                if(status === 401) this.setState({timeout:true,loader:false});
-                else this.setState({serverError:true,loader:false,errorData:data})
+                if(status === 401) this.setState({timeout:true,loader:false,wait:false});
+                else this.setState({serverError:true,loader:false,errorData:data,wait:false})
             } else {
                 let errorData = error.message;
                 console.log('Error', error.message);
@@ -208,7 +208,7 @@ class OrganizationProfile extends Component {
                     errorData = error.request
                 }
                 errorData.status = 708;
-                this.setState({serverError:true,loader:false,errorData})
+                this.setState({serverError:true,loader:false,errorData,wait:false})
             }
             console.log(error.config);
         }
