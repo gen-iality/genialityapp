@@ -25,6 +25,7 @@ class General extends Component {
             error: {},
             fields:[],
             inputValue: '',
+            listValue: '',
             option: [],
             minDate: new Date(),
             valid: !this.props.event._id,
@@ -265,29 +266,29 @@ class General extends Component {
         }
     };
     //Funciones para lista de opciones del campo
-    handleInputChange = (index,inputValue) => {
+    handleInputChange = (inputValue) => {
         this.setState({ inputValue });
     };
-    changeOption = (index, key, option) => {
-        console.log('INFO ', index, key);
-        const { fields } = this.state;
-        const field = fields[index];
-        field.options = option;
-        this.setState({ fields });
+    handleListChange = (listValue) => {
+        this.setState({ listValue });
     };
-    handleKeyDown = (event,index) => {
-        const { inputValue, fields } = this.state;
-        const field = fields[index];
+    changeOption = (index, key, option) => {
+        const { fields, groups } = this.state;
+        const field =  (key || key === 0) ? groups[key].fields[index] : fields[index];
+        field.options = option;
+        this.setState({ fields,groups });
+    };
+    handleKeyDown = (event,index,key) => {
+        const { inputValue, listValue, fields, groups } = this.state;
+        const field = (key || key === 0) ? groups[key].fields[index] : fields[index];
         field.options = field.options ? field.options : [];
-        if (!inputValue) return;
-        switch (event.index) {
-            case 'Enter':
-            case 'Tab':
-                field.options = [...field.options,createOption(inputValue,index)];
-                this.setState({
-                    inputValue: '',
-                    fields
-                });
+        const value = (key || key === 0) ? listValue : inputValue;
+        if (!value) return;
+        switch (event.keyCode) {
+            case 9:
+            case 13:
+                field.options = [...field.options,createOption(value,index)];
+                this.setState({inputValue: '',listValue:'', fields});
                 event.preventDefault();
                 break;
             default: {}
@@ -437,7 +438,7 @@ class General extends Component {
     render() {
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            fields, inputValue, newField, groups,
+            fields, inputValue, newField, groups, listValue,
             valid, timeout, error , errorData, serverError} = this.state;
         return (
             <React.Fragment>
@@ -568,8 +569,8 @@ class General extends Component {
                                                                             isClearable
                                                                             isMulti
                                                                             menuIsOpen={false}
-                                                                            onChange={this.changeOption.bind(this, key)}
-                                                                            onInputChange={this.handleInputChange.bind(this, key)}
+                                                                            onChange={this.changeOption.bind(this, key, undefined)}
+                                                                            onInputChange={this.handleInputChange}
                                                                             onKeyDown={(e)=>{this.handleKeyDown(e,key)}}
                                                                             placeholder="Escribe la opción y presiona Enter o Tab..."
                                                                             value={field.options}
@@ -682,14 +683,14 @@ class General extends Component {
                                                                         <div className="control">
                                                                             <CreatableSelect
                                                                                 components={{DropdownIndicator: null,}}
-                                                                                inputValue={inputValue}
+                                                                                inputValue={listValue}
                                                                                 isDisabled={!field.edit}
                                                                                 isClearable
                                                                                 isMulti
                                                                                 menuIsOpen={false}
                                                                                 onChange={this.changeOption.bind(this, index, key)}
-                                                                                onInputChange={this.handleInputChange.bind(this, index)}
-                                                                                onKeyDown={(e)=>{this.handleKeyDown(e,index)}}
+                                                                                onInputChange={this.handleListChange}
+                                                                                onKeyDown={(e)=>{this.handleKeyDown(e,index,key)}}
                                                                                 placeholder="Escribe la opción y presiona Enter o Tab..."
                                                                                 value={field.options}
                                                                             />
