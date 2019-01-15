@@ -158,7 +158,7 @@ class Badge extends Component {
             return data.BadgeFields.push(item)
         });
         console.log(data);
-        /*try{
+        try{
             const resp = await BadgeApi.create(data);
             console.log(resp);
             if(resp._id){
@@ -169,7 +169,7 @@ class Badge extends Component {
         }catch (err) {
             console.log(err.response);
             toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-        }*/
+        }
     };
 
     printPreview = () => {
