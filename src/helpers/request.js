@@ -76,7 +76,7 @@ export const EventsApi = {
     },
     mine: async () => {
         const events = await Actions.getAll('/api/me/contributors/events');
-        return events.map(item=>item.event)
+        return events
     },
     getOne: async (id) => {
         return await Actions.getOne('/api/events/', id)
