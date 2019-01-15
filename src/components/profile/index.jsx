@@ -53,6 +53,7 @@ class Index extends Component {
             user.location = user.location ? user.location : {};
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
+            user.phoneNumber = user.phoneNumber ? user.phoneNumber : '';
             this.setState({loading:false,user,events,categories,valid:false},this.scrollEvent);
         }catch (e) {
             console.log(e.response);
