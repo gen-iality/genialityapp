@@ -134,7 +134,7 @@ class Landing extends Component {
                                     <div className="column banner">
                                         {
                                             (typeof event.picture === 'object') ?
-                                                <div style={{width:'200px',height:'100%'}}>
+                                                <div style={{width:'134vh'}}>
                                                     <Slider images={event.picture}/>
                                                 </div>:
                                                 <figure className="image is-3by2">

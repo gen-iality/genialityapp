@@ -48,7 +48,6 @@ class General extends Component {
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
-            organizers.unshift({id:'me',name: <FormattedMessage id="event.me" defaultMessage="Yo Mismo"/>});
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
@@ -801,22 +800,17 @@ class General extends Component {
 
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 function handleFields(organizers,types,categories,event){
-    let selectedOrganizer = {};
     let selectedCategories = [];
     let selectedType = {};
-    const {category_ids,organizer_type,organizer_id,event_type_id} = event;
+    const {category_ids,organizer_id,event_type_id} = event;
     if(category_ids){
         categories.map(item=>{
             let pos = category_ids.indexOf(item.value);
             return (pos>=0)?selectedCategories.push(item):''
         });
     }
-    if(organizer_type==='App\\User'){
-        selectedOrganizer = {value:'me',label:'Me'};
-    }else{
-        const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
-        selectedOrganizer = organizers[pos];
-    }
+    const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
+    const selectedOrganizer = organizers[pos];
     if(event_type_id){
         const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
         selectedType = types[pos];
