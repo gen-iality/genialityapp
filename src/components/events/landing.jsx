@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import Carousel from "react-slick";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import { EventsApi } from "../../helpers/request";
@@ -44,6 +45,7 @@ class Landing extends Component {
         event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
         event.date_start = dateFrom[0];
         event.date_end = dateTo[0];
+        event.organizer = event.organizer ? event.organizer : event.author;
         const tickets = event.tickets.map(ticket => {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
@@ -53,7 +55,6 @@ class Landing extends Component {
 
     render() {
         const { event, tickets, iframeUrl } = this.state;
-        console.log(iframeUrl);
         return (
             <section className="section hero landing">
                 {
@@ -110,13 +111,13 @@ class Landing extends Component {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="ver-mas item columns">
-                                            {/*<div className="column is-5 is-offset-1">
+                                        {/*<div className="ver-mas item columns">
+                                            <div className="column is-5 is-offset-1">
                                                 <div className="aforo">
                                                     <span className="titulo">150/400</span><br/>
                                                     <span className="is-italic has-text-grey">Aforo</span>
                                                 </div>
-                                            </div>*/}
+                                            </div>
                                             {
                                                 (event.description.length >= 80 && !this.state.showFull) && (
                                                     <div className="column is-5 is-offset-6 button-cont">
@@ -128,12 +129,18 @@ class Landing extends Component {
 
                                                 )
                                             }
-                                        </div>
+                                        </div>*/}
                                     </div>
                                     <div className="column banner">
-                                        <figure className="image is-3by2">
-                                            <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
-                                        </figure>
+                                        {
+                                            (typeof event.picture === 'object') ?
+                                                <div style={{width:'200px',height:'100%'}}>
+                                                    <Slider images={event.picture}/>
+                                                </div>:
+                                                <figure className="image is-3by2">
+                                                    <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
+                                                </figure>
+                                        }
                                         {
                                             this.state.showFull && (
                                                 <div className="info show-full columns is-centered is-hidden-mobile">
@@ -259,6 +266,56 @@ class Landing extends Component {
         );
     }
 }
+
+function NextArrow(props) {
+    const {  onClick} = props;
+    return (
+        <div className='arrows' onClick={onClick}>
+            <span className='arrow right'><svg viewBox="0 0 477.175 477.175"><path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5 c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span>
+        </div>
+    );
+}
+
+function PrevArrow(props) {
+    const { onClick} = props;
+    return (
+        <div className='arrows' onClick={onClick}>
+            <span className='arrow left'><svg viewBox="0 0 477.175 477.175"><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225 c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"></path></svg></span>
+        </div>
+    );
+}
+
+function Slider(props){
+    const settings = {
+        infinite: true,
+        speed: 800,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: false,
+        autoplaySpeed: 4500,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />
+    };
+    return(
+        <Carousel {...settings}>
+            {
+                props.images.map((image,key)=>{
+                    return <div key={key}>
+                            <figure className="image is-3by2">
+                                <img src={image} alt="Evius.co"/>
+                            </figure>
+                        </div>
+                })
+            }
+        </Carousel>
+    );
+}
+
+const imagenes = [
+    "https://storage.googleapis.com/herba-images/evius/events/tRHV2dgzu7geS6O75ubJ6ftkfeDfBjel35iaB8gT.jpeg",
+    "https://storage.googleapis.com/herba-images/evius/events/Txf9UtFISnDaO7UAkLIKDZXESsTKXjJm0824KvdO.jpeg",
+    "https://storage.googleapis.com/herba-images/evius/events/AoK1u4iDEUaIabKSuZw1OzE1ZsPWhIGn9UZnDcrF.jpeg"
+];
 
 const MyMapComponent = withGoogleMap((props) =>
     <GoogleMap

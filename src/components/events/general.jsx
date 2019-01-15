@@ -12,6 +12,7 @@ import Dialog from "../modal/twoAction";
 import {FormattedMessage} from "react-intl";
 import CreatableSelect from 'react-select/lib/Creatable';
 import LogOut from "../shared/logOut";
+import axios from "axios/index"
 Moment.locale('es');
 
 class General extends Component {
@@ -19,11 +20,13 @@ class General extends Component {
         super(props);
         this.state = {
             event : this.props.event,
+            optionForm: [],
             selectedOption: [],
             selectedOrganizer: {},
             selectedType: {},
             error: {},
             fields:[],
+            path:[],
             inputValue: '',
             listValue: '',
             option: [],
@@ -41,6 +44,7 @@ class General extends Component {
         console.log(this.props);
         try{
             const {event} = this.state;
+            event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
@@ -107,9 +111,30 @@ class General extends Component {
     };
     //Cambio en el input de imagen
     changeImg = (files) => {
+        console.log(files);
         const file = files[0];
+        const url = '/api/files/upload', path = [], self = this;
         if(file){
             this.setState({imageFile: file,
+                event:{...this.state.event, picture: null}});
+            const uploaders = files.map(file => {
+                let data = new FormData();
+                data.append('file',file);
+                return Actions.post(url,data).then((image) => {
+                    console.log(image);
+                    if(image) path.push(image);
+                });
+            });
+            axios.all(uploaders).then((data) => {
+                console.log(path);
+                console.log('SUCCESSFULL DONE');
+                self.setState({event: {
+                        ...self.state.event,
+                        picture: path[0]
+                    },fileMsg:'Imagen subida con exito',imageFile:null,path});
+                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
+            });
+            /*this.setState({imageFile: file,
                 event:{...this.state.event, picture: null}});
             let data = new FormData();
             const url = '/api/files/upload',
@@ -144,7 +169,7 @@ class General extends Component {
                         this.setState({serverError:true,loader:false,errorData})
                     }
                     console.log(error.config);
-                });
+                });*/
         }
         else{
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
@@ -334,10 +359,10 @@ class General extends Component {
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-        const { event,groups,fields } = this.state;
+        const { event,groups,fields,path } = this.state;
         const self = this;
         const {properties_group,user_properties} = handleProperties(event,fields,groups);
-        this.setState({loading:true});
+        //this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
         const hour_end = Moment(event.hour_end).format('HH:mm');
@@ -351,7 +376,7 @@ class General extends Component {
             name: event.name,
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
-            picture: event.picture,
+            picture: path.length > 1 ? path : event.picture,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description,
@@ -361,6 +386,7 @@ class General extends Component {
             user_properties : [...this.state.fields, ...user_properties],
             properties_group
         };
+        console.log(data);
         try {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);

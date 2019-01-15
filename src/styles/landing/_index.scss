@@ -90,4 +90,30 @@ section.landing{
       }
     }
   }
+  .arrows {
+    .arrow {
+      &.left, &.right {
+        display: block;
+        position: absolute;
+        z-index: 999;
+        top: 50%;
+        transform: translateY(-50%);
+        svg {
+          width: 2rem;
+          height: 2rem;
+          vertical-align: middle;
+          cursor: pointer;
+          path {
+            fill: $white;
+          }
+        }
+      }
+      &.left {
+        left: 0;
+      }
+      &.right {
+        right: 0;
+      }
+    }
+  }
 }
