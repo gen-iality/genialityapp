@@ -112,7 +112,7 @@ class Home extends Component {
     }*/
 
     render() {
-        const {category,type,timeout, serverError, errorData} = this.state;
+        const {category,type,timeout, serverError, errorData, events, loading} = this.state;
         const {match,categories,types} = this.props;
         return (
             <React.Fragment>
@@ -199,10 +199,11 @@ class Home extends Component {
                     <section className="home column is-10">
                         <div className="dynamic-content">
                             {
-                                this.state.events.length<=0 ? <LoadingEvent/> :
+                                loading ? <LoadingEvent/> :
                                     <div className="columns home is-multiline">
                                         {
-                                            this.state.events.map((event,key)=>{
+                                            events.length<=0 ? <p>No hay eventos próximos {(type || category)&&`para está sección`}</p> :
+                                            events.map((event,key)=>{
                                                 return <EventCard key={event._id} event={event}
                                                                   action={{name:'Ver',url:`landing/${event._id}`}}
                                                                   size={'column is-one-third'}
