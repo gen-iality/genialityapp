@@ -161,7 +161,7 @@ class Landing extends Component {
                             </div>
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
-                                    <div className="columns is-centered">
+                                    {/*<div className="columns is-centered">
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left has-text-dark is-size-3">Tiquetes</h2>
                                             {
@@ -195,7 +195,7 @@ class Landing extends Component {
                                                 })
                                             }
                                         </div>
-                                    </div>
+                                    </div>*/}
                                     <div className="columns is-centered">
                                         <div className="column is-8">
                                             <iframe title={'Tiquets'} src={iframeUrl} width={'600px'} height={'600px'}/>
