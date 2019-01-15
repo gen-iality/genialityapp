@@ -33,7 +33,8 @@ class Home extends Component {
         try{
             const resp = await EventsApi.getPublic('?pageSize=30');
             console.log(resp);
-            this.setState({events:resp.data,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
+            const events = resp.data.filter(item => item.organizer);
+            this.setState({events,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
             /*this.refs.iScroll.addEventListener("scroll", () => {
                 if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 20){
                     this.loadMoreItems();
@@ -75,7 +76,8 @@ class Home extends Component {
         API.get(`/api/events${query}`)
             .then(({data})=>{
             console.log(data);
-            this.setState({events:data.data,loading:false,type,category});
+            const events = data.data.filter(item => item.organizer);
+            this.setState({events,loading:false,type,category});
         })
             .catch(error => {
                 if (error.response) {
