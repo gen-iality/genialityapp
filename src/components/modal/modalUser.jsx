@@ -9,7 +9,6 @@ import {icon} from "../../helpers/constants";
 import {Redirect} from "react-router-dom";
 
 class UserModal extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +24,6 @@ class UserModal extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this)
         this.printUser = this.printUser.bind(this)
-        this.textInput = React.createRef();
     }
 
     componentDidMount() {
@@ -49,17 +47,10 @@ class UserModal extends Component {
                     user[obj.name] =  obj.type==="boolean" ? false :  obj.type==="number" ? 0: ""));
             this.setState({user,edit:false});
         }
-
-        if (this.textInput && this.textInput.focus)
-        this.textInput.focus();
     }
 
     componentWillUnmount(){
         this.setState({user:{},edit:false});
-    }
-
-    componentDidUpdate(){
-      
     }
 
     async handleSubmit(e) {
@@ -198,8 +189,6 @@ class UserModal extends Component {
             let type = m.type || "text";
             let props = m.props || {};
             let name= m.name;
-            let aliasname = (name=="Nombres")?"Documento":name;
-            let primercampo = (name=="Nombres");
             let mandatory = m.mandatory;
             let target = name;
             let value =  this.state.user[target];
@@ -208,12 +197,8 @@ class UserModal extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
-                                autofocus={(name=="Nombres") ? 'true' : undefined}
                                 value={value}
-                                
-                                ref={(c) => {if(name=="Nombres")this.textInput = c}}
                                 onChange={(e)=>{this.onChange(e, type)}}
-                               
             />;
             if (type == "boolean") {
                 input =
@@ -225,7 +210,7 @@ class UserModal extends Component {
                             type="checkbox"
                             checked={value}
                             onChange={(e)=>{this.onChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}x</label>
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
             if (type == "list") {
@@ -245,7 +230,7 @@ class UserModal extends Component {
                     <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
                            key={"l" + key}
                            htmlFor={key}>
-                        {aliasname}
+                        {name}
                     </label>}
                     <div className="control">
                         {input}
@@ -314,6 +299,7 @@ class UserModal extends Component {
     closeNoBadge = () => {this.setState({noBadge:false});};
 
     unCheck = () => {
+        //console.log(this.props.value);
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
         userRef.update({checked_in:false,checked_at:app.firestore.FieldValue.delete()})
             .then(() => {
