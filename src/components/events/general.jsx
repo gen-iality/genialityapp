@@ -304,6 +304,11 @@ class General extends Component {
         const item = {group_id:'',fields:[],show:false};
         this.setState({groups:[...groups,item]});
     };
+    removeGroup = (key) => {
+        const {groups} = this.state;
+        groups.splice(key,1);
+        this.setState({groups})
+    };
     //Cambiar nombre del grupo de campos
     changeNameGroup = (e,key) => {
         const {groups} = this.state;
@@ -637,6 +642,9 @@ class General extends Component {
                                             <div className="level-item">
                                                 <button className="button" onClick={(e)=>{this.addFieldtoGroup(key)}}>Agregar Campo</button>
                                             </div>
+                                            <a className="level-item" onClick={(e)=>{this.removeGroup(key)}}>
+                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                            </a>
                                         </div>
                                         <div className="level-right">
                                             <div className="level-item">
@@ -668,6 +676,7 @@ class General extends Component {
                                                                         <div className="select">
                                                                             <select onChange={(e)=>{this.handleChangeField(e,index,key)}} name={'type'} value={field.type} disabled={!field.edit}>
                                                                                 <option value={''}>Seleccione...</option>
+                                                                                <option value={'title'}>Título</option>
                                                                                 <option value={'text'}>Texto</option>
                                                                                 <option value={'email'}>Correo</option>
                                                                                 <option value={'number'}>Numérico</option>
