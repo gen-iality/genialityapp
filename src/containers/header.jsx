@@ -275,7 +275,7 @@ class Header extends Component {
                                     this.state.user ?
                                         <React.Fragment>
                                             {
-                                                !photo ? <img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile"/>
+                                                photo ? <img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile"/>
                                                     : <LetterAvatar name={name}/>
                                             }
                                             <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
