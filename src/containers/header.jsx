@@ -7,6 +7,7 @@ import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
 import connect from "react-redux/es/connect/connect";
+import LetterAvatar from "../components/shared/letterAvatar";
 
 class Header extends Component {
     constructor(props) {
@@ -46,7 +47,7 @@ class Header extends Component {
                     if(resp.status === 200){
                         const data = resp.data;
                         const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
-                        const photo = (data.photoUrl) ? data.photoUrl : data.picture ? data.picture : "http://www.radfaces.com/images/avatars/baby-sinclair.jpg";
+                        const photo = (data.photoUrl) ? data.photoUrl : data.picture;
                         OrganizationApi.mine()
                             .then((organizations)=>{
                                 this.setState({name,photo,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
@@ -135,7 +136,7 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError, filterEvius, errorData } = this.state;
+        const { timeout, serverError, filterEvius, errorData, photo, name } = this.state;
         const { categories, types, permissions } = this.props;
         const menuEvius = [
             '',
@@ -273,7 +274,10 @@ class Header extends Component {
                                     <div><FormattedMessage id="header.wait" defaultMessage="Tico..."/></div>:
                                     this.state.user ?
                                         <React.Fragment>
-                                            <img src={this.state.photo} alt={`avatar_${this.state.name}`} className="author-image is-hidden-mobile"/>
+                                            {
+                                                !photo ? <img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile"/>
+                                                    : <LetterAvatar name={name}/>
+                                            }
                                             <div className="navbar-item is-hoverable has-dropdown has-text-weight-bold">
                                                 <a className="navbar-link has-text-grey-light is-hidden-mobile">
                                                     {this.state.name}
