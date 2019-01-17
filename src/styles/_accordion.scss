@@ -86,7 +86,8 @@ $accordion-content-padding-left: 1.25em !default
         }
       }
       .accordion-body {
-        max-height: 100em
+        max-height: 40em;
+        overflow-y: auto;
       }
     }
   }
