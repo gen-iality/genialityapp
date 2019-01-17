@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment";
 import {Link} from "react-router-dom";
+import Slider from "./sliderImage";
 
 class EventCard extends Component {
     render() {
@@ -10,7 +11,7 @@ class EventCard extends Component {
                 <div className="card">
                     <div className="card-image">
                         <figure className="image is-3by2">
-                            <img src={event.picture?event.picture:"https://bulma.io/images/placeholders/1280x960.png"} alt="Evius.co"/>
+                            <img src={typeof event.picture === 'object'?event.picture[0]:event.picture} alt="Evius.co"/>
                         </figure>
                         <div className="header-event">
                             <div className="is-pulled-left dates">

@@ -8,6 +8,7 @@ import { EventsApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {ApiUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
+import Slider from "../shared/sliderImage";
 Moment.locale('es');
 momentLocalizer();
 
@@ -103,22 +104,22 @@ class Landing extends Component {
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
                                                 <p className="is-italic has-text-grey">
-                                                    {
+                                                    {event.description}
+                                                    {/*{
                                                         event.description.length >= 160 ?
                                                             event.description.substring(0,160)+'...':
-                                                            event.description
-                                                    }
+                                                    }*/}
                                                 </p>
                                             </div>
                                         </div>
-                                        {/*<div className="ver-mas item columns">
-                                            <div className="column is-5 is-offset-1">
+                                        <div className="ver-mas item columns">
+                                            {/*<div className="column is-5 is-offset-1">
                                                 <div className="aforo">
                                                     <span className="titulo">150/400</span><br/>
                                                     <span className="is-italic has-text-grey">Aforo</span>
                                                 </div>
-                                            </div>
-                                            {
+                                            </div>*/}
+                                            {/*{
                                                 (event.description.length >= 80 && !this.state.showFull) && (
                                                     <div className="column is-5 is-offset-6 button-cont">
                                                         <span className="has-text-weight-semibold has-text-grey">Ver más</span>
@@ -126,10 +127,9 @@ class Landing extends Component {
                                                             <i className="icon fa fa-plus"></i>
                                                         </div>
                                                     </div>
-
                                                 )
-                                            }
-                                        </div>*/}
+                                            }*/}
+                                        </div>
                                     </div>
                                     <div className="column banner">
                                         {
@@ -203,11 +203,7 @@ class Landing extends Component {
                                             }
                                         </div>
                                     </div>*/}
-                                    <div className="columns is-centered">
-                                        <div className="column is-8">
-                                            <iframe title={'Tiquets'} src={iframeUrl} width={'600px'} height={'600px'}/>
-                                        </div>
-                                    </div>
+                                    <iframe title={'Tiquets'} src={iframeUrl} width={'100%'} height={'600px'}/>
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
                                 <div className="has-shadow">
@@ -265,50 +261,6 @@ class Landing extends Component {
             </section>
         );
     }
-}
-
-function NextArrow(props) {
-    const {  onClick} = props;
-    return (
-        <div className='arrows' onClick={onClick}>
-            <span className='arrow right'><svg viewBox="0 0 477.175 477.175"><path d="M360.731,229.075l-225.1-225.1c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1l215.5,215.5l-215.5,215.5 c-5.3,5.3-5.3,13.8,0,19.1c2.6,2.6,6.1,4,9.5,4c3.4,0,6.9-1.3,9.5-4l225.1-225.1C365.931,242.875,365.931,234.275,360.731,229.075z"></path></svg></span>
-        </div>
-    );
-}
-
-function PrevArrow(props) {
-    const { onClick} = props;
-    return (
-        <div className='arrows' onClick={onClick}>
-            <span className='arrow left'><svg viewBox="0 0 477.175 477.175"><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225 c2.6,2.6,6.1,4,9.5,4s6.9-1.3,9.5-4c5.3-5.3,5.3-13.8,0-19.1L145.188,238.575z"></path></svg></span>
-        </div>
-    );
-}
-
-function Slider(props){
-    const settings = {
-        infinite: true,
-        speed: 800,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: false,
-        autoplaySpeed: 4500,
-        nextArrow: <NextArrow />,
-        prevArrow: <PrevArrow />
-    };
-    return(
-        <Carousel {...settings}>
-            {
-                props.images.map((image,key)=>{
-                    return <div key={key}>
-                            <figure className="image is-3by2">
-                                <img src={image} alt="Evius.co"/>
-                            </figure>
-                        </div>
-                })
-            }
-        </Carousel>
-    );
 }
 
 const imagenes = [
