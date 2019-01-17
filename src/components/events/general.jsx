@@ -3,7 +3,7 @@ import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
 import FormEvent from "../shared/formEvent";
-import {BaseUrl} from "../../helpers/constants";
+import {BaseUrl,typeInputs} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -579,12 +579,11 @@ class General extends Component {
                                                                     <div className="select">
                                                                         <select onChange={(e)=>{this.handleChangeField(e,key)}} name={'type'} value={field.type} disabled={!field.edit}>
                                                                             <option value={''}>Seleccione...</option>
-                                                                            <option value={'text'}>Texto</option>
-                                                                            <option value={'email'}>Correo</option>
-                                                                            <option value={'number'}>Numérico</option>
-                                                                            <option value={'list'}>Lista Opciones</option>
-                                                                            <option value={'date'}>Fecha (DD/MM/YYYY)</option>
-                                                                            <option value={'boolean'}>Si/No</option>
+                                                                            {
+                                                                                typeInputs.map((type,key)=>{
+                                                                                    return <option key={key} value={type.value}>{type.label}</option>
+                                                                                })
+                                                                            }
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -702,12 +701,11 @@ class General extends Component {
                                                                             <select onChange={(e)=>{this.handleChangeField(e,index,key)}} name={'type'} value={field.type} disabled={!field.edit}>
                                                                                 <option value={''}>Seleccione...</option>
                                                                                 <option value={'title'}>Título</option>
-                                                                                <option value={'text'}>Texto</option>
-                                                                                <option value={'email'}>Correo</option>
-                                                                                <option value={'number'}>Numérico</option>
-                                                                                <option value={'list'}>Lista Opciones</option>
-                                                                                <option value={'date'}>Fecha (DD/MM/YYYY)</option>
-                                                                                <option value={'boolean'}>Si/No</option>
+                                                                                {
+                                                                                    typeInputs.map((type,key)=>{
+                                                                                        return <option key={key} value={type.value}>{type.label}</option>
+                                                                                    })
+                                                                                }
                                                                             </select>
                                                                         </div>
                                                                     </div>
