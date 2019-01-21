@@ -235,11 +235,11 @@ class Event extends Component {
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/speakers`} render={() =><ContainerCrud eventId={this.state.event._id}/>}/>
+                                                    <Route path={`${match.url}/crud/speakers/`} render={(props) =><ContainerCrud idModel='speakers'/>}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/programme`} render={() =><ContainerCrud eventId={this.state.event._id}/>}/>
+                                                    <Route path={`${match.url}/crud/programme`} render={() => <ContainerCrud idModel="programme"/>}/>
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>

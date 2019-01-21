@@ -2,15 +2,15 @@ import React, {Component} from 'react';
 
 
 class ContainerCrud extends Component {
- 
+    constructor(props){
+        super(props);
+    }
 
     render() {
         return(
-            <React.Fragment>
-                <div>
-                    hola insecto
-                </div>
-               </React.Fragment>
+            <div>
+                {this.props.idModel}
+            </div>
         )
     }
 }
