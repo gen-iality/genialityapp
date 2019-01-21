@@ -51,8 +51,15 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl});
+        this.setState({event,loading:false,tickets,iframeUrl},this.handleScroll);
     }
+
+    handleScroll = () => {
+        const hash = this.props.location.hash;
+        if (hash) {
+            document.getElementById(hash.substring(1)).scrollIntoView();
+        }
+    };
 
     render() {
         const { event, tickets, iframeUrl } = this.state;
@@ -203,7 +210,9 @@ class Landing extends Component {
                                             }
                                         </div>
                                     </div>*/}
-                                    <iframe title={'Tiquets'} src={iframeUrl} width={'100%'} height={'600px'}/>
+                                    <div id={'tickets'}>
+                                        <iframe title={'Tiquetes'} src={iframeUrl} width={'100%'} height={'600px'}/>
+                                    </div>
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
                                 <div className="has-shadow">
