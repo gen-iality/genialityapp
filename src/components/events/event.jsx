@@ -168,22 +168,15 @@ class Event extends Component {
                                                     </li>
                                                 </ul>
                                             }
+                                             <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/agenda`}>Agenda</NavLink>
+                                            </p>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/speakers`}>Speakers</NavLink>
+                                            </p>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/dashboard`}>Dashboard</NavLink>
                                             </p>
-
-                                            {/* ===================== Componente */}
-                                            {
-                                                (permissions.items.includes(rolPermissions.admin_invitations._id) || permissions.items.includes(rolPermissions.history_invitations._id)) &&
-                                                    <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                                                        <span className="item has-text-grey">Contenido</span>
-                                                        <span className="icon">
-                                                        <i className={`${this.state.userTab?'up':'down'}`}/>
-                                                    </span>
-                                                    </p>
-                                            }
-
-                                             {/* ===================== Componente Creacio*/}
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
                                             </p>
