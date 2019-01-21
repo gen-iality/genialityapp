@@ -11,6 +11,7 @@ import MyProfile from "../components/profile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
 import {ApiUrl} from "../helpers/constants";
+import ContainerCrud from '../components/shared/crud/containers';
 
 class ContentContainer extends Component {
     componentWillMount(){
@@ -30,6 +31,7 @@ class ContentContainer extends Component {
                     <Route exact path="/terms" component={ Terms } />
                     <Route exact path="/privacy" component={ Privacy } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
+                    <Route exact path="/crud" component={ ContainerCrud } />
                 </Switch>
             </main>
         );
