@@ -65,7 +65,7 @@ componentDidMount() {
                 (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.props.eventId.user_properties}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
-                    <button className="button is-primary" onClick={this.showModal}>Agregar Conferencista +</button>
+                    <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
                 </div>
                 <React.Fragment>
                     <ListCrud  data={this.state.pageOfItems} config={configCrud} />
