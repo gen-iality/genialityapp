@@ -1,14 +1,13 @@
 import React, {Component} from 'react';
-import ModalCrud from "../../../shared/crud/containers/modalCrud";
+import ModalCrud from "../components/modalCrud";
 import configCrud from '../config'
-import ListCrud from '../components/listCrud'
+import ListCrud from '../components/listCrud';
 
 class ContainerCrud extends Component {
     constructor(props){
         super(props);
         this.state = {
             show: false,
-            addUser: false,
             modal: false,
             fields: [],
             pageOfItems: []
@@ -62,7 +61,8 @@ componentDidMount() {
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.props.eventId.user_properties}/>) : ("")
+                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={configCrud}/>) : ("")
+                // (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.props.eventId.user_properties}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
