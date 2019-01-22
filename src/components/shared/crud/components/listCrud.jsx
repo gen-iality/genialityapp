@@ -19,7 +19,8 @@ class ListCrud extends Component {
         
         return(
             <React.Fragment>
-                <table className="table">
+                 
+                <table className="table"> 
                                             <thead>
                                                 <tr>
                                                     
@@ -37,12 +38,9 @@ class ListCrud extends Component {
                                                         <td>{item.rol}</td>
                                                     </tr>
                                                 })
-                                                }
-                                           
+                                            }                                         
                                             </tbody>
                 </table>
-
-
             </React.Fragment>
         )
     }
