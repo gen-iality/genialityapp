@@ -20,6 +20,13 @@ class ModalCrud extends Component {
         // console.log("here all info in modal", this.props.info.speakers.fieldsModal);
         const fields = this.props.info.speakers.fieldsModal;
         this.setState({modalFields: fields});
+        let newInfo = {};
+        /*
+            * This is to create keys inside newInfo object and avoid uncontrolled input error
+        */
+        fields.map(info => (
+            newInfo[info.name] = ''));
+        this.setState({newInfo, edit:false});
     }
 
     async submitForm(e) {
@@ -29,9 +36,9 @@ class ModalCrud extends Component {
             properties: this.state.newInfo
         };
         console.log("Here saving", snap);
+        return
         let message = {};
         this.setState({create:true});
-        return
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
             let resp = "Testing";
@@ -68,12 +75,13 @@ class ModalCrud extends Component {
         this.setState({valid: !valid})
     };
 
-    onChange = (e,type) => {
-        const {value,name} = e.target;
-        //console.log(`${name} changed ${value} type ${type}`);
-        (type === "boolean") ?
-            this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
-            : this.setState({user:{...this.state.newInfo,[name]: value}}, this.validForm);
+    handleChange = (e,type) => {
+        const {value, name} = e.target;
+        // console.log(`${name} changed ${value} type ${type}`);
+        // (type === "boolean") ?
+        //     this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
+        // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}});
     };
 
     renderForm = () => {
@@ -90,7 +98,7 @@ class ModalCrud extends Component {
                                 key={key}
                                 name={name}
                                 value={value}
-                                // onChange={value => this.onChange(value, type)}
+                                onChange={value => this.handleChange(value, type)}
             />;
             if (type == "boolean") {
                 input =

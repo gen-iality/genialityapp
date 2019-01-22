@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ModalCrud from "../components/modalCrud";
-import configCrud from '../config'
+import configCrud from '../config.jsx'
 import ListCrud from '../components/listCrud';
 
 class ContainerCrud extends Component {
