@@ -144,7 +144,7 @@ class Landing extends Component {
                                                 <div style={{width:'134vh'}}>
                                                     <Slider images={event.picture}/>
                                                 </div>:
-                                                <figure className="image is-3by2">
+                                                <figure className="image">
                                                     <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
                                                 </figure>
                                         }
