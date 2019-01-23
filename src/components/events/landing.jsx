@@ -1,18 +1,19 @@
+/*global firebaseui*/
+/*global firebase*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import {EventsApi, OrganizationApi} from "../../helpers/request";
+import {EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
-import {auth} from "../../helpers/firebase";
 import {bindActionCreators} from "redux";
 import {addLoginInformation} from "../../redux/user/actions";
 import connect from "react-redux/es/connect/connect";
-import API from "../../helpers/request";
+import app from "firebase";
 Moment.locale('es');
 momentLocalizer();
 
@@ -63,21 +64,23 @@ class Landing extends Component {
     }
 
     firebaseUI = () => {
-        const {event} = this.state;
         //FIREBSAE UI
-        const ui = new window.firebaseui.auth.AuthUI(auth);
+        const firebaseui = global.firebaseui;
+        const authUi = new firebaseui.auth.AuthUI(firebase.auth());
         const uiConfig = {
             //POPUP Facebook/Google
             signInFlow: 'popup',
             //The list of providers enabled for signing
-            signInOptions: [window.firebase.auth.EmailAuthProvider.PROVIDER_ID,],
+            signInOptions: [app.auth.EmailAuthProvider.PROVIDER_ID,],
             //Allow redirect
-            callbacks: {signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+            callbacks: {
+                signInSuccessWithAuthResult: (authResult, redirectUrl) => {
                     const user = authResult.user;
                     //Cookie.set("evius_token", user.ra);
                     this.closeLogin(user);
                     return false;
-                }},
+                }
+            },
             //Disabled accountchooser
             credentialHelper: 'none',
             // Terms of service url.
@@ -85,7 +88,7 @@ class Landing extends Component {
             // Privacy policy url.
             privacyPolicyUrl: `${BaseUrl}/privacy`,
         };
-        ui.start('#firebaseui-auth-container', uiConfig);
+        authUi.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
         const html = document.querySelector("html");
@@ -268,7 +271,7 @@ class Landing extends Component {
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
                                     </div>
-                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Registrar</button>}
+                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
                                 <div className="has-shadow">
