@@ -21,6 +21,7 @@ import {auth} from "../../helpers/firebase";
 import {DateTimePicker} from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
+import {ApiUrl} from "../../helpers/constants";
 
 class Index extends Component {
     constructor(props) {
@@ -54,14 +55,14 @@ class Index extends Component {
             user.network = user.network ? user.network : {facebook:'',twitter:'',instagram:'',linkedIn:''};
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
             user.phoneNumber = user.phoneNumber ? user.phoneNumber : '';
-            this.setState({loading:false,user,events,categories,valid:false},this.scrollEvent);
+            this.setState({loading:false,user,events,categories,valid:false},this.handleScroll);
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
         }
     }
 
-    scrollEvent = () => {
+    handleScroll = () => {
         const hash = this.props.location.hash;
         if (hash) {
             const element = document.querySelector(hash);
@@ -218,6 +219,7 @@ class Index extends Component {
 
     render() {
         const { loading, timeout, events, user, valid, error } = this.state;
+        let userId = this.props.match.params.id;
         return (
             <section className="section profile">
                 {
@@ -322,6 +324,13 @@ class Index extends Component {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="profile-data" id={'compras'}>
+                                <h2 className="data-title">
+                                    <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
+                                    <span className="has-text-grey-dark is-size-3">Compras</span>
+                                </h2>
+                                <iframe title={'Compras'} src={`${ApiUrl}/es/viewOrdersUsers/${userId}`} width={'100%'} height={'600px'}/>
                             </div>
                             <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">

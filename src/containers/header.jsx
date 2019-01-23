@@ -113,7 +113,7 @@ class Header extends Component {
         if ((this.props.loginInfo.name !== prevProps.loginInfo.name) || (this.props.loginInfo.picture !== prevProps.loginInfo.picture)) {
             const name = this.props.loginInfo.name;
             const photo = this.props.loginInfo.picture;
-            this.setState({name,photo})
+            this.setState({name,photo,user:true})
         }
     }
 
