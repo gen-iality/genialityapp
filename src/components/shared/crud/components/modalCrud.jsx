@@ -39,10 +39,9 @@ class ModalCrud extends Component {
         const snap = {
             properties: this.state.newInfo
         };
-        let resp = await SpeakersApi.getList();
-        console.log('resp: ', resp);
-        console.log("Here saving", snap);
-        this.props.hideModal();
+        await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
+        // console.log("Here saving", snap);
+        this.props.hideModal(); 
         return
         let message = {};
         this.setState({create:true});
@@ -53,21 +52,21 @@ class ModalCrud extends Component {
             if (resp.message === 'OK'){
                 this.props.addToList(resp.data);
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
-                message.content = 'USER '+resp.status;
+                message.content = 'Speaker '+ resp.status;
             } else {
                 message.class = 'msg_danger';
                 message.content = 'Docmunet can`t be created';
             }
             setTimeout(()=>{
                 message.class = message.content = '';
-                this.closeModal();
+                this.props.hideModal(); 
             },1000)
         } catch (err) {
             console.log(err.response);
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
-        this.setState({message,create:false});
+        this.setState({message, create:false});
     }
 
     validForm = () => {

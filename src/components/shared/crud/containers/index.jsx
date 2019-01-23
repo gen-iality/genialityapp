@@ -27,8 +27,7 @@ class ContainerCrud extends Component {
             updated_at: ''
         }
         ]
-        let resp = await SpeakersApi.getList();
-        console.log('resp: ', resp);
+        let resp = await SpeakersApi.getList(this.props.eventId);
         this.setState({
             pageOfItems: resp.data
         });
@@ -49,8 +48,7 @@ class ContainerCrud extends Component {
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={configCrud}/>) : ("")
-                // (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.props.eventId.user_properties}/>) : ("")
+                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={configCrud} enventInfo={this.props.eventId}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
