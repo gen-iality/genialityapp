@@ -26,7 +26,7 @@ class MainRouter extends Component {
             <Router>
                 <div>
                     <Helmet>
-                        <script crossOrigin={true} src={`https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__${language}.js`}/>
+                        <script src={`https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__${language}.js`}/>
                         <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth.css" />
                     </Helmet>
                     <Header/>

@@ -77,12 +77,11 @@ class Landing extends Component {
                 callbacks: {signInSuccessWithAuthResult: (authResult, redirectUrl) => {
                         const user = authResult.user;
                         Cookie.set("evius_token", user.ra);
-                        this.props.addLoginInformation({name:user.displayName});
                         this.closeLogin();
                         return true;
                 }},
                 //url-to-redirect-to-on-success
-                signInSuccessUrl: `${BaseUrl}/landing/${event._id}#tickets`,
+                signInSuccessUrl: `${BaseUrl}/landing/${event._id}?tickets=on`,
                 //Disabled accountchooser
                 credentialHelper: 'none',
                 // Terms of service url.
@@ -110,6 +109,16 @@ class Landing extends Component {
         const hash = this.props.location.hash;
         if (hash) {
             document.getElementById(hash.substring(1)).scrollIntoView();
+        }
+    };
+
+    loadedIframe = () => {
+        var iFrameID = document.getElementById('idIframe');
+        if(iFrameID) {
+            console.log(iFrameID);
+            // here you can make the height, I delete it first, then I make it again
+            //iFrameID.height = "";
+            //iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
         }
     };
 
@@ -263,7 +272,7 @@ class Landing extends Component {
                                         </div>
                                     </div>*/}
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'400px'}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Registrar</button>}
                                     <div className="columns is-centered">
