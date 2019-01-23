@@ -1,14 +1,20 @@
+/*global firebaseui*/
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
+import {Helmet} from "react-helmet";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-import Carousel from "react-slick";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import { EventsApi } from "../../helpers/request";
+import {EventsApi, OrganizationApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {ApiUrl} from "../../helpers/constants";
+import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
+import {auth} from "../../helpers/firebase";
+import {bindActionCreators} from "redux";
+import {addLoginInformation} from "../../redux/user/actions";
+import connect from "react-redux/es/connect/connect";
+import API from "../../helpers/request";
 Moment.locale('es');
 momentLocalizer();
 
@@ -17,6 +23,8 @@ class Landing extends Component {
         super(props);
         this.state = {
             loading:true,
+            auth:false,
+            modal:false,
             tickets:[]
         }
     }
@@ -39,7 +47,6 @@ class Landing extends Component {
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
-        console.log(event);
         const dateFrom = event.datetime_from.split(' ');
         const dateTo = event.datetime_to.split(' ');
         event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();
@@ -51,7 +58,53 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl},this.handleScroll);
+        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+            this.firebaseUI();
+            this.handleScroll();
+        });
+    }
+
+    firebaseUI = () => {
+        const {event} = this.state;
+        if(firebaseui) {
+            //FIREBSAE UI
+            const ui = new firebaseui.auth.AuthUI(auth);
+            const uiConfig = {
+                //POPUP Facebook/Google
+                signInFlow: 'popup',
+                //The list of providers enabled for signing
+                signInOptions: [window.firebase.auth.EmailAuthProvider.PROVIDER_ID,],
+                //Allow redirect
+                callbacks: {signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+                        const user = authResult.user;
+                        Cookie.set("evius_token", user.ra);
+                        this.props.addLoginInformation({name:user.displayName});
+                        this.closeLogin();
+                        return true;
+                }},
+                //url-to-redirect-to-on-success
+                signInSuccessUrl: `${BaseUrl}/landing/${event._id}#tickets`,
+                //Disabled accountchooser
+                credentialHelper: 'none',
+                // Terms of service url.
+                tosUrl: `${BaseUrl}/terms`,
+                // Privacy policy url.
+                privacyPolicyUrl: `${BaseUrl}/privacy`,
+            };
+            ui.start('#firebaseui-auth-container', uiConfig);
+        }else{
+            window.reload();
+        }
+    };
+    openLogin = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
+        this.setState({modal:true});
+    }
+    closeLogin = () => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        this.setState({modal:false});
     }
 
     handleScroll = () => {
@@ -62,9 +115,16 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, tickets, iframeUrl } = this.state;
+        const { event, tickets, iframeUrl, auth, modal } = this.state;
+        const language = navigator.language.slice(0, 2);
         return (
             <section className="section hero landing">
+                {!auth &&
+                    <Helmet>
+                        <script crossOrigin={true} src={`https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__${language}.js`}/>
+                        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth.css" />
+                    </Helmet>
+                }
                 {
                     this.state.showConfirm && (
                         <div className="notification is-success">
@@ -212,6 +272,7 @@ class Landing extends Component {
                                     </div>*/}
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} src={iframeUrl} width={'100%'} height={'600px'}/>
+                                        {!auth && <button onClick={this.openLogin}>Registrar</button>}
                                     </div>
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
@@ -265,18 +326,19 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className={`modal ${modal?'is-active':''}`}>
+                                <div className="modal-background"></div>
+                                <div className="modal-content">
+                                    <div id="firebaseui-auth-container"/>
+                                </div>
+                                <button className="modal-close is-large" aria-label="close" onClick={this.closeLogin}/>
+                            </div>
                         </React.Fragment>
                 }
             </section>
         );
     }
 }
-
-const imagenes = [
-    "https://storage.googleapis.com/herba-images/evius/events/tRHV2dgzu7geS6O75ubJ6ftkfeDfBjel35iaB8gT.jpeg",
-    "https://storage.googleapis.com/herba-images/evius/events/Txf9UtFISnDaO7UAkLIKDZXESsTKXjJm0824KvdO.jpeg",
-    "https://storage.googleapis.com/herba-images/evius/events/AoK1u4iDEUaIabKSuZw1OzE1ZsPWhIGn9UZnDcrF.jpeg"
-];
 
 const MyMapComponent = withGoogleMap((props) =>
     <GoogleMap
@@ -287,4 +349,8 @@ const MyMapComponent = withGoogleMap((props) =>
     </GoogleMap>
 )
 
-export default Landing;
+const mapDispatchToProps = dispatch => ({
+    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+});
+
+export default connect(null,mapDispatchToProps)(withRouter(Landing));

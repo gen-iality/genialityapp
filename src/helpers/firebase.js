@@ -21,4 +21,5 @@ firestore.enablePersistence()
         console.log(err);
     });
 const auth = app.auth();
+window.firebase = app;
 export {app,auth,firestore};
