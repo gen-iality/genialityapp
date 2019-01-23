@@ -9,40 +9,54 @@ const configCrud = {
         },
         fieldsModal:[
             {
-                name: "Nombre",
+                name: "name",
                 edit: false,
+                label: "Nombre",
                 mandatory: true,
                 type: "text",
                 unique: false
             },
             {
-                name: "Cargo",
+                name: "position",
                 edit: false,
+                label: "Cargo",
                 mandatory: false,
                 type: "text",
                 unique: false
             },
             {
-                name: "Empresa/Organización",
+                name: "company",
                 edit: false,
+                label: "Empresa/Organización",
                 mandatory: false,
                 type: "text",
                 unique: false
             },
             {
-                name: "País",
+                name: "country",
                 edit: false,
+                label: "País",
                 manadatory: false,
                 type: "text",
                 unique: false
             },
             {
-                name: "Descripción",
+                name: "description",
                 edit: false,
+                label: "Descripción",
                 mandatory: false,
                 type: "text",
                 unique: false
+            },
+            {
+                name: "picture",
+                edit: false,
+                label: "Imagen",
+                mandatory: false,
+                type: "image",
+                unique: false
             }
+
         ],
         ListCrud:{
             headers: ["_id", "name", "updated_at", "created_at"],

@@ -35,14 +35,13 @@ class ContainerCrud extends Component {
         }
         ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-        console.log('resp here: ', resp);
         
         // var newinfo = resp.data.map((element)=> element);
         
      
         // let fields = Object.keys(resp.data[0])
         // console.log('headers =', Object.keys(resp.data[0]))
-
+        console.log("resp data", resp.data);
         this.setState({
             pageOfItems: resp.data
         });
@@ -63,7 +62,7 @@ class ContainerCrud extends Component {
     };
 
     render() {
-        console.log("here data", this.state);
+        console.log("here pageofitems", this.state.pageOfItems);
         return (
             <div>{
                 this.state.show ? 
