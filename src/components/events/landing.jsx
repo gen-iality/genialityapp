@@ -1,4 +1,3 @@
-/*global firebaseui*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
@@ -65,44 +64,39 @@ class Landing extends Component {
 
     firebaseUI = () => {
         const {event} = this.state;
-        if(firebaseui) {
-            //FIREBSAE UI
-            const ui = new firebaseui.auth.AuthUI(auth);
-            const uiConfig = {
-                //POPUP Facebook/Google
-                signInFlow: 'popup',
-                //The list of providers enabled for signing
-                signInOptions: [window.firebase.auth.EmailAuthProvider.PROVIDER_ID,],
-                //Allow redirect
-                callbacks: {signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-                        const user = authResult.user;
-                        Cookie.set("evius_token", user.ra);
-                        this.closeLogin();
-                        return true;
+        //FIREBSAE UI
+        const ui = new window.firebaseui.auth.AuthUI(auth);
+        const uiConfig = {
+            //POPUP Facebook/Google
+            signInFlow: 'popup',
+            //The list of providers enabled for signing
+            signInOptions: [window.firebase.auth.EmailAuthProvider.PROVIDER_ID,],
+            //Allow redirect
+            callbacks: {signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+                    const user = authResult.user;
+                    //Cookie.set("evius_token", user.ra);
+                    this.closeLogin(user);
+                    return false;
                 }},
-                //url-to-redirect-to-on-success
-                signInSuccessUrl: `${BaseUrl}/landing/${event._id}?tickets=on`,
-                //Disabled accountchooser
-                credentialHelper: 'none',
-                // Terms of service url.
-                tosUrl: `${BaseUrl}/terms`,
-                // Privacy policy url.
-                privacyPolicyUrl: `${BaseUrl}/privacy`,
-            };
-            ui.start('#firebaseui-auth-container', uiConfig);
-        }else{
-            window.reload();
-        }
+            //Disabled accountchooser
+            credentialHelper: 'none',
+            // Terms of service url.
+            tosUrl: `${BaseUrl}/terms`,
+            // Privacy policy url.
+            privacyPolicyUrl: `${BaseUrl}/privacy`,
+        };
+        ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
         const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState({modal:true});
     }
-    closeLogin = () => {
+    closeLogin = (user) => {
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
+        if(user) window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=ads`);
     }
 
     handleScroll = () => {
@@ -332,7 +326,7 @@ class Landing extends Component {
                                 <div className="modal-content">
                                     <div id="firebaseui-auth-container"/>
                                 </div>
-                                <button className="modal-close is-large" aria-label="close" onClick={this.closeLogin}/>
+                                <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
                         </React.Fragment>
                 }
