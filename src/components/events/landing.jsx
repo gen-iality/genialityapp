@@ -263,9 +263,9 @@ class Landing extends Component {
                                         </div>
                                     </div>*/}
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} src={iframeUrl} width={'100%'} height={'600px'}/>
-                                        {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Registrar</button>}
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'400px'}/>
                                     </div>
+                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Registrar</button>}
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
                                 <div className="has-shadow">
