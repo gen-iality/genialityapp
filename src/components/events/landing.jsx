@@ -10,9 +10,6 @@ import Loading from "../loaders/loading";
 import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
-import {bindActionCreators} from "redux";
-import {addLoginInformation} from "../../redux/user/actions";
-import connect from "react-redux/es/connect/connect";
 import app from "firebase";
 Moment.locale('es');
 momentLocalizer();
@@ -35,6 +32,7 @@ class Landing extends Component {
     }
 
     async componentDidMount() {
+        console.log(this.props);
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
             status = searchParams.get("status");
@@ -76,7 +74,6 @@ class Landing extends Component {
             callbacks: {
                 signInSuccessWithAuthResult: (authResult, redirectUrl) => {
                     const user = authResult.user;
-                    //Cookie.set("evius_token", user.ra);
                     this.closeLogin(user);
                     return false;
                 }
@@ -99,23 +96,13 @@ class Landing extends Component {
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
-        if(user) window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=ads`);
+        if(user) window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/5c3fb4ddfb8a3371ef79bd62#tickets`);
     }
 
     handleScroll = () => {
         const hash = this.props.location.hash;
         if (hash) {
             document.getElementById(hash.substring(1)).scrollIntoView();
-        }
-    };
-
-    loadedIframe = () => {
-        var iFrameID = document.getElementById('idIframe');
-        if(iFrameID) {
-            console.log(iFrameID);
-            // here you can make the height, I delete it first, then I make it again
-            //iFrameID.height = "";
-            //iFrameID.height = iFrameID.contentWindow.document.body.scrollHeight + "px";
         }
     };
 
@@ -347,8 +334,4 @@ const MyMapComponent = withGoogleMap((props) =>
     </GoogleMap>
 )
 
-const mapDispatchToProps = dispatch => ({
-    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
-});
-
-export default connect(null,mapDispatchToProps)(withRouter(Landing));
+export default withRouter(Landing);
