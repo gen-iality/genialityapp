@@ -7,6 +7,7 @@ import Header from "./header";
 import ContentContainer from "./content";
 import Footer from "./footer";
 import {ToastContainer} from "react-toastify";
+import {Helmet} from "react-helmet";
 
 class MainRouter extends Component {
     constructor(props) {
@@ -20,9 +21,14 @@ class MainRouter extends Component {
     }
 
     render() {
+        const language = navigator.language.slice(0, 2);
         return (
             <Router>
                 <div>
+                    <Helmet>
+                        <script crossOrigin={true} src={`https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__${language}.js`}/>
+                        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth.css" />
+                    </Helmet>
                     <Header/>
                     <ContentContainer/>
                     <Footer/>

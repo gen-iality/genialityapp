@@ -1,7 +1,6 @@
 /*global firebaseui*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {Helmet} from "react-helmet";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
@@ -116,15 +115,8 @@ class Landing extends Component {
 
     render() {
         const { event, tickets, iframeUrl, auth, modal } = this.state;
-        const language = navigator.language.slice(0, 2);
         return (
             <section className="section hero landing">
-                {!auth &&
-                    <Helmet>
-                        <script crossOrigin={true} src={`https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__${language}.js`}/>
-                        <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth.css" />
-                    </Helmet>
-                }
                 {
                     this.state.showConfirm && (
                         <div className="notification is-success">
