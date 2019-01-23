@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ModalCrud from "../components/modalCrud";
 import configCrud from '../config.jsx'
 import ListCrud from '../components/listCrud';
+import {SpeakersApi} from "../../../../helpers/request";
 
 class ContainerCrud extends Component {
     constructor(props){
@@ -12,38 +13,25 @@ class ContainerCrud extends Component {
             fields: [],
             pageOfItems: []
         };
-}
-componentDidMount() {
-    const pageOfItems= [
+    }
+    componentDidMount() {
+        this.bringSpeakers();
+    }
+
+    async bringSpeakers(){
+        const pageOfItems = [
         {
-            correo: 'jose@jose.com',
-            name : 'jose',
-            rol: 'administrador'
-        },
-        {
-            correo: 'jose@jose.com',
-            name : 'jose',
-            rol: 'administrador'
-        },
-        {
-            correo: 'jose@jose.com',
-            name : 'jose',
-            rol: 'administrador'
-        },
-        {
-            correo: 'jose@jose.com',
-            name : 'jose',
-            rol: 'administrador'
+            id: '',
+            name : '',
+            created_at: '',
+            updated_at: ''
         }
         ]
-    this.setState({
-        pageOfItems: pageOfItems
-    });
-   
-}
-
-    componentDidMount() {
-        // console.log("here all info", this.props.eventId);
+        let resp = await SpeakersApi.getList();
+        console.log('resp: ', resp);
+        this.setState({
+            pageOfItems: resp.data
+        });
     }
     
 

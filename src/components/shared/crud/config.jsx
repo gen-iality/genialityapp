@@ -14,7 +14,7 @@ const configCrud = {
         },
         fieldsModal:[
             {
-                name: "Nombres",
+                name: "Nombre",
                 edit: false,
                 mandatory: true,
                 type: "text",

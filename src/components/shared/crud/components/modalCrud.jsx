@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {icon} from "../../../../helpers/constants";
+import {SpeakersApi} from "../../../../helpers/request";
 
 class ModalCrud extends Component {
     constructor(props){
@@ -29,13 +30,19 @@ class ModalCrud extends Component {
         this.setState({newInfo, edit:false});
     }
 
+    /*
+        * This method is for save information from popup
+    */
     async submitForm(e) {
         e.preventDefault();
         e.stopPropagation();
         const snap = {
             properties: this.state.newInfo
         };
+        let resp = await SpeakersApi.getList();
+        console.log('resp: ', resp);
         console.log("Here saving", snap);
+        this.props.hideModal();
         return
         let message = {};
         this.setState({create:true});

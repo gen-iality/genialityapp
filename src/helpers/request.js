@@ -192,5 +192,15 @@ const handleCat = (data) => {
     })
     return list;
 };
+export const SpeakersApi = {
+    getList: async() => {
+        return await Actions.getAll('api/speakers');
+    },
+    createSpeaker: async(data) => {
+        console.log('data: ', data);
+        return
+        return await Actions.post('api/speakers', data);
+    }
+};
 
 export default privateInstance;
