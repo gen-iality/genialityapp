@@ -11,7 +11,8 @@ class ContainerCrud extends Component {
             show: false,
             modal: false,
             fields: [],
-            pageOfItems: []
+            pageOfItems: [],
+            data: {}
         };
     
         this.config = configCrud[this.props.idModel];
@@ -57,13 +58,16 @@ class ContainerCrud extends Component {
     hideModal = () => {
         this.setState({ show: false });
     };
+    updateTable(){
+        this.getData();
+    };
 
     render() {
         console.log("here data", this.state);
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.config} enventInfo={this.props.eventId}/>) : ("")
+                (<ModalCrud hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>

@@ -48,6 +48,7 @@ const configCrud = {
             headers: ["_id", "name", "updated_at", "created_at"],
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/speakers`,
+                create: (eventId) =>  `api/events/${eventId}/speakers`,
                 post: 'jdlj',
                 update: 'kfjdj',
                 delete: 'delete'

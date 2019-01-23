@@ -11,10 +11,6 @@ class ListCrud extends Component {
        }
      
     }
-    componentWillReceiveProps(){ 
-        this.pageOfItems = this.props.data;
-        console.log('here.jkj. ===>> ',this.props)
-    }
 
     componentDidMount() {
 
@@ -42,7 +38,7 @@ class ListCrud extends Component {
                                                 <tr>                                                  
                                                 {
                                                     this.props.config.ListCrud.headers.map((item,key)=>{
-                                                        return <th>{item}</th>
+                                                        return <th key={key}>{item}</th>
                                                 })
                                                 }
                                                 </tr>
@@ -51,12 +47,10 @@ class ListCrud extends Component {
                                            {
                                                 this.props.data.map((item,key)=>{
                                                     return <tr key={key}>
-                                                   {Object.keys(item).map((keyField)=>{
-                                                       return  <td>{item[keyField]}</td>
+                                                   {Object.keys(item).map((keyField,key)=>{
+                                                       //Si el campo no se llama imagen no mostramos la imagen
+                                                       return  (item[keyField]) ? <td key={key}>{ (keyField != 'image') ? item[keyField]: <img className="imageTable" src={item[keyField]} height="25" width= "25" alt=""/> } </td>: ('')
                                                     })}
-                                                        {/* <td><img className="imageTable" src={(item.image)?item.image: ''} height="25" width= "25" alt=""/></td>
-                                                        <td>{item.name}</td>
-                                                        <td>{item.rol}</td> */}
                                                     </tr>
                                                 })
                                             }                                         

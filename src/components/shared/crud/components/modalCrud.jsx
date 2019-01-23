@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {icon} from "../../../../helpers/constants";
-// import {SpeakersApi} from "../../../../helpers/request";
+import {Actions} from "../../../../helpers/request";
 
 class ModalCrud extends Component {
     constructor(props){
@@ -19,7 +19,7 @@ class ModalCrud extends Component {
 
     componentDidMount() {
         // console.log("here all info in modal", this.props.info.speakers.fieldsModal);
-        const fields = this.props.info.speakers.fieldsModal;
+        const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
         /*
@@ -36,17 +36,20 @@ class ModalCrud extends Component {
     async submitForm(e) {
         e.preventDefault();
         e.stopPropagation();
-        const snap = {
-            properties: this.state.newInfo
-        };
+        const formData = this.state.newInfo;
+        
+        // alert(JSON.stringify(snap))
+        await Actions.create(this.props.config.ListCrud.urls.create(this.eventId),formData);
         // await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
+       
         // console.log("Here saving", snap);
         this.props.hideModal(); 
-        return
+        
         let message = {};
         this.setState({create:true});
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
+            this.props.updateTable()
             let resp = "Testing";
             console.log(resp);
             if (resp.message === 'OK'){
