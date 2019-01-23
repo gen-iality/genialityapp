@@ -192,16 +192,16 @@ const handleCat = (data) => {
     })
     return list;
 };
-export const SpeakersApi = {
-    getList: async(eventId) => {
-        return await Actions.getAll(`api/events/${eventId}/speakers`);
-    },
-    createSpeaker: async(data, eventId) => {
-        console.log('data: ', data);
-        console.log("here in request", eventId);
-        return
-        return await Actions.post('api/speakers', data);
-    }
-};
+// export const SpeakersApi = {
+//     getList: async(eventId) => {
+//         return await Actions.getAll(`api/events/${eventId}/speakers`);
+//     },
+//     createSpeaker: async(data, eventId) => {
+//         console.log('data: ', data);
+//         console.log("here in request", eventId);
+//         return
+//         return await Actions.post('api/speakers', data);
+//     }
+// };
 
 export default privateInstance;

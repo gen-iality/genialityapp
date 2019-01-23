@@ -3,12 +3,7 @@ const configCrud = {
     speakers: {
         
         //Configuracion de las urls para realizar las peticiones para realiazar las peticiones 
-        urls: {
-            get: 'youo',
-            post: 'jdlj',
-            update: 'kfjdj',
-            delete: 'delete'
-        },
+      
         fieldsTable: {
 
         },
@@ -49,6 +44,15 @@ const configCrud = {
                 unique: false
             }
         ],
+        ListCrud:{
+            headers: ["_id", "name", "updated_at", "created_at"],
+            urls: {
+                getAll: (eventId) =>  `api/events/${eventId}/speakers`,
+                post: 'jdlj',
+                update: 'kfjdj',
+                delete: 'delete'
+            },
+        },
         UpdateAndCreate: {
 
         }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {icon} from "../../../../helpers/constants";
-import {SpeakersApi} from "../../../../helpers/request";
+// import {SpeakersApi} from "../../../../helpers/request";
 
 class ModalCrud extends Component {
     constructor(props){
@@ -39,7 +39,7 @@ class ModalCrud extends Component {
         const snap = {
             properties: this.state.newInfo
         };
-        await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
+        // await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
         // console.log("Here saving", snap);
         this.props.hideModal(); 
         return

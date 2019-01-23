@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ModalCrud from "../components/modalCrud";
 import configCrud from '../config.jsx'
 import ListCrud from '../components/listCrud';
-import {SpeakersApi} from "../../../../helpers/request";
+import {Actions} from "../../../../helpers/request";
 
 class ContainerCrud extends Component {
     constructor(props){
@@ -13,12 +13,18 @@ class ContainerCrud extends Component {
             fields: [],
             pageOfItems: []
         };
+    
+        this.config = configCrud[this.props.idModel];
+        this.eventId =this.props.eventId._id;   
+      
     }
     componentDidMount() {
-        this.bringSpeakers();
+        this.getData();
     }
 
-    async bringSpeakers(){
+    // Conseguimos la informacion que se va a cargar en la lista de la tabla de el crud
+    async getData(){
+        console.log('ejecutando bring speakers' ,this.config)
         const pageOfItems = [
         {
             id: '',
@@ -27,12 +33,20 @@ class ContainerCrud extends Component {
             updated_at: ''
         }
         ]
-        let resp = await SpeakersApi.getList(this.props.eventId);
+        let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
+        console.log('resp here: ', resp);
+        
+        // var newinfo = resp.data.map((element)=> element);
+        
+     
+        // let fields = Object.keys(resp.data[0])
+        // console.log('headers =', Object.keys(resp.data[0]))
+
         this.setState({
             pageOfItems: resp.data
         });
     }
-    
+   
 
     showModal = () => {
         this.setState(prevState => {
@@ -45,16 +59,17 @@ class ContainerCrud extends Component {
     };
 
     render() {
+        console.log("here data", this.state);
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={configCrud} enventInfo={this.props.eventId}/>) : ("")
+                (<ModalCrud hideModal={this.hideModal} modal={this.state.modal} info={this.config} enventInfo={this.props.eventId}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
                 </div>
                 <React.Fragment>
-                    <ListCrud  data={this.state.pageOfItems} config={configCrud} />
+                    <ListCrud  data={this.state.pageOfItems} config={this.config} />
                 </React.Fragment>
             </div>
         );
