@@ -292,6 +292,9 @@ class Header extends Component {
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#compras`}>
+                                                        <FormattedMessage id="header.my_orders" defaultMessage="Holi"/>
+                                                    </Link>
                                                     <hr className="navbar-divider"/>
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
