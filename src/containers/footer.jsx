@@ -23,12 +23,12 @@ class Footer extends Component {
                             <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Ayuda</p>
                                 <div><Link to={"#"} className="has-text-grey-light">Quienes somos</Link></div>
-                                <div><Link to={"#"} className="has-text-grey-light">FAQ</Link></div>
+                                <div><Link to={"/faqs"} className="has-text-grey-light">FAQ</Link></div>
                             </div>
                             <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Condiciones</p>
-                                <div><Link to={"#"} className="has-text-grey-light">Términos y Condiciones</Link></div>
-                                <div><Link to={"#"} className="has-text-grey-light">Privacidad</Link></div>
+                                <div><Link to={"/terms"} className="has-text-grey-light">Términos y Condiciones</Link></div>
+                                <div><Link to={"/privacy"} className="has-text-grey-light">Privacidad</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Políticas</Link></div>
                             </div>
                             <div className="column has-text-grey-light">

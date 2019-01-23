@@ -11,6 +11,7 @@ import MyProfile from "../components/profile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
 import {ApiUrl} from "../helpers/constants";
+import Faqs from "../components/faqs";
 
 class ContentContainer extends Component {
     componentWillMount(){
@@ -29,6 +30,7 @@ class ContentContainer extends Component {
                     <PrivateRoute path="/organization/:id" component={ Organization }/>
                     <Route exact path="/terms" component={ Terms } />
                     <Route exact path="/privacy" component={ Privacy } />
+                    <Route exact path="/faqs" component={ Faqs } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
                 </Switch>
             </main>
