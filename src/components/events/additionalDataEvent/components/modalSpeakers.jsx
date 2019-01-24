@@ -4,16 +4,30 @@ import {icon} from "../../../../helpers/constants";
 class ModalSpeaker extends Component{
     constructor(props){
         super(props)
-        this.state = {};
+        // this.state = {
+        //     speakerDetails: [] 
+        // };
     }
 
     componentDidMount() {
-      
+        this.props.infoSpeaker.map(data => {
+            console.log('data: ', data);
+
+        })
+    }
+    
+
+    showSpeakerInfo () {
+        let info = this.props.infoSpeaker.map(data => {
+            return(
+                <p>{data}</p>
+            )
+        })
     }
 
     
     render(){
-        console.log('here info speaker', this.props.infoSpeaker[0]);
+        // console.log("here array", this.props.infoSpeaker);
         return(
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
@@ -27,12 +41,8 @@ class ModalSpeaker extends Component{
                             </header>
                             <section className="modal-card-body">
                             {
-                             <p htmlFor={this.props.infoSpeaker[0]}>Name</p>
+                                // this.showSpeakerInfo()
                             }
-                            </section>
-                            <section className="modal-card-body">
-                             <p>Here speaker</p>
-                             <p>Other</p>
                             </section>
                             {
                                 <footer className="modal-card-foot">
