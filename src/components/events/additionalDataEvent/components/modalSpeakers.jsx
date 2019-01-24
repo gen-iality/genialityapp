@@ -13,7 +13,7 @@ class ModalSpeaker extends Component{
 
     
     render(){
-        console.log('here info speaker', this.props.infoSpeaker);
+        console.log('here info speaker', this.props.infoSpeaker[0]);
         return(
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
@@ -26,12 +26,18 @@ class ModalSpeaker extends Component{
                                 <button className="delete" aria-label="close" onClick={this.props.hideModal}/>
                             </header>
                             <section className="modal-card-body">
+                            {
+                             <p htmlFor={this.props.infoSpeaker[0]}>Name</p>
+                            }
+                            </section>
+                            <section className="modal-card-body">
                              <p>Here speaker</p>
+                             <p>Other</p>
                             </section>
                             {
                                 <footer className="modal-card-foot">
                                 {
-                                    this.props.infoSpeaker
+                                    
                                 }
                                 </footer>
                             }
