@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import '../crud.css'
 import Table from '../../table';
+import Pagination from "../../../shared/pagination";
 
 class ListCrud extends Component {
     constructor(props){
         super(props);
         console.log('props ===>> ')
        this.state = {
-            modalFields: []
+            modalFields: [],
+            pageOfItems: []
        }
      
     }
@@ -25,11 +27,12 @@ class ListCrud extends Component {
         this.setState({newInfo, edit:false});
     }
 
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
+    };
+
     render() {
-     
-      
-        
-        console.log('this.props.data: ', this.props.data);
+    
         return(
             <React.Fragment>
                  
@@ -48,9 +51,11 @@ class ListCrud extends Component {
                                                 this.props.data.map((item,key)=>{
                                                     return <tr key={key}>
                                                    {Object.keys(item).map((keyField,key)=>{
+
                                                        //Si el campo no se llama imagen no mostramos la imagen y si el campo es nulo igualmente no lo mostramos
                                                        return  (item[keyField]) ? <td key={key}>{ (keyField != 'picture') ? item[keyField]: <img className="imageTable" src={item[keyField]} height="25" width= "25" alt=""/> } </td>   : null;
                                                         
+
                                                     })}
                                                     <td> 
                                                         <a className="level-item"  onClick={(e)=>{this.props.update(item._id)}}>
@@ -65,6 +70,10 @@ class ListCrud extends Component {
                                             }                                         
                                             </tbody>
                 </table>
+                <Pagination
+                    items={this.props}
+                    onChangePage={this.onChangePage}
+                />
             </React.Fragment>
         )
     }

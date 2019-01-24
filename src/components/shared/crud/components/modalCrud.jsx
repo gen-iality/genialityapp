@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {icon} from "../../../../helpers/constants";
 import {Actions} from "../../../../helpers/request";
+import ImageInput from "../../../shared/imageInput";
+import axios from "axios/index";
+import { toast } from 'react-toastify';
+import {FormattedMessage} from "react-intl";
 
 class ModalCrud extends Component {
     constructor(props){
@@ -12,7 +16,8 @@ class ModalCrud extends Component {
             message: {},
             modalFields: [],
             newInfo: {},
-            valid: true
+            valid: true,
+            speaker: ""
         }
         this.submitForm = this.submitForm.bind(this)
     }
@@ -98,6 +103,7 @@ class ModalCrud extends Component {
             let type = data.type || "text";
             let props = data.props || {};
             let name= data.name;
+            let label = data.label;
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
@@ -135,19 +141,54 @@ class ModalCrud extends Component {
             }
             return (
                 <div key={'g' + key} className="field">
-                    {data.type !== "boolean"&&
-                    <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
-                           key={"l" + key}
-                           htmlFor={key}>
-                        {name}
-                    </label>}
-                    <div className="control">
-                        {input}
-                    </div>
+                    {
+                        data.type !== "boolean" && data.type !== "image" &&
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`}
+                        key={"l" + key}
+                        htmlFor={key}>
+                            {label}
+                        </label>
+                    }
+                    {
+                        data.type !== "image" &&
+                        <div className="control">
+                            {input}
+                        </div>
+                    }
                 </div>
             );
         });
         return formUI;
+    };
+
+    changeImg = (files) => {
+        console.log(files);
+        const file = files[0];
+        const url = '/api/files/upload', path = [], self = this;
+        if(file){
+            this.setState({imageFile: file,
+                speaker:{...this.state.image, picture: null}});
+            const uploaders = files.map(file => {
+                let data = new FormData();
+                data.append('file',file);
+                return Actions.post(url,data).then((image) => {
+                    console.log(image);
+                    if(image) path.push(image);
+                });
+            });
+            axios.all(uploaders).then((data) => {
+                console.log(path);
+                console.log('SUCCESSFULL DONE');
+                this.setState({newInfo: {
+                        picture: path[0]
+                    }, fileMsg:'Imagen subida con exito', imageFile:null, path});
+                    console.log('here info', this.state);
+                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
+            });
+            }
+        else{
+            this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
+        }
     };
 
     render(){
@@ -164,6 +205,11 @@ class ModalCrud extends Component {
                                 <button className="delete" aria-label="close" onClick={this.props.hideModal}/>
                             </header>
                             <section className="modal-card-body">
+                            <ImageInput picture={this.state.speaker.picture} imageFile={this.state.imageFile}
+                                            divClass={'rsvp-pic-img'} content={<img src={this.state.speaker.image} alt={'Imagen Speaker'}/>}
+                                            classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                            contentZone={<div>Subir foto</div>}
+                                            changeImg={this.changeImg} errImg={this.state.errImg}/>
                             {
                                 this.renderForm()
                             }
