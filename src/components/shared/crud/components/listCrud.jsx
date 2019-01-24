@@ -6,11 +6,13 @@ import Pagination from "../../../shared/pagination";
 class ListCrud extends Component {
     constructor(props){
         super(props);
-        console.log('props ===>> ')
+        console.log('props ===>> ', this.props)
        this.state = {
             modalFields: [],
-            pageOfItems: []
+            pageOfItems: this.props.data
        }
+
+
      
     }
 
@@ -28,6 +30,7 @@ class ListCrud extends Component {
     }
 
     onChangePage = (pageOfItems) => {
+        console.log('respondiendo =>> ', this.props.data,pageOfItems)
         this.setState({ pageOfItems: pageOfItems });
     };
 
@@ -48,7 +51,7 @@ class ListCrud extends Component {
                                             </thead>
                                             <tbody>
                                            {
-                                                this.props.data.map((item,key)=>{
+                                                this.state.pageOfItems.map((item,key)=>{
                                                     return <tr key={key}>
                                                    {Object.keys(item).map((keyField,key)=>{
 
@@ -71,7 +74,7 @@ class ListCrud extends Component {
                                             </tbody>
                 </table>
                 <Pagination
-                    items={this.props}
+                    items={this.props.data}
                     onChangePage={this.onChangePage}
                 />
             </React.Fragment>

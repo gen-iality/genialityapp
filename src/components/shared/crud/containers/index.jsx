@@ -18,7 +18,7 @@ class ContainerCrud extends Component {
     
         this.config = configCrud[this.props.idModel];
         this.eventId =this.props.eventId._id;   
-      
+        console.log('ejecutando bring speakers' ,this.config)
     }
     componentDidMount() {
         this.getData();
@@ -26,7 +26,7 @@ class ContainerCrud extends Component {
 
     // Conseguimos la informacion que se va a cargar en la lista de la tabla de el crud
     async getData(){
-        console.log('ejecutando bring speakers' ,this.config)
+       
         const pageOfItems = [
         {
             id: '',
