@@ -9,7 +9,7 @@ import Loading from "../loaders/loading";
 import {ApiUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
-import AdditonalDataEvent from "./additionalDataEvent/containers"
+import AdditonalDataEvent from "./additionalDataEvent/containers";
 Moment.locale('es');
 momentLocalizer();
 
