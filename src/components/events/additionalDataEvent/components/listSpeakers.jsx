@@ -1,10 +1,29 @@
 import React, {Component} from 'react';
+import ModalSpeaker from '../components/modalSpeakers';
 import '../styles.css'
 class ListSpeakers extends Component{
 
     constructor(props){
         super(props)
+        this.state = {
+            show: false,
+            modal: false,
+            speakerData: []
+        }
+        this.showModal = this.showModal.bind(this)
     }
+
+    showModal(key) {
+        // console.log("here speaker", this.props.speakers[key]);
+
+        this.setState(prevState => {
+            return {modal: true, show: true, speakerData: this.props.speakers[key]}
+        });
+    };
+    
+    hideModal = () => {
+        this.setState({ show: false });
+    };
 
     render() {
 
@@ -41,7 +60,7 @@ class ListSpeakers extends Component{
                                         <div className="media-content">
                                             {/* <p className="title is-4">{item.name}</p> */}
                                             <p class="has-text-grey-dark is-size-3  titulo">{item.name}</p>
-                                            <a class="verMas"><span>+ </span><br/> Ver Más</a>
+                                            <a class="verMas" onclick={() => this.showModal(key)}><span>+ </span><br/> Ver Más</a>
                                             {/* <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
                                                 <span className="has-text-grey-dark is-size-3">Ubicación</span>
@@ -56,11 +75,13 @@ class ListSpeakers extends Component{
                              </div> 
                     </div>
                         )
-                    })}
-                    
-                    
+                    })}  
                 </div>
-                
+                {
+                        this.state.show ?
+                        (<ModalSpeaker hideModal={this.hideModal} modal={this.state.modal} infoSpeaker={this.state.speakerData}/>) 
+                        : (null)
+                    }
           
             </React.Fragment>
         );
