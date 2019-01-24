@@ -96,7 +96,10 @@ class Landing extends Component {
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
-        if(user) window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/5c3fb4ddfb8a3371ef79bd62`);
+        if(user) {
+            const {event} = this.state;
+            window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
+        }
     }
 
     handleScroll = () => {
