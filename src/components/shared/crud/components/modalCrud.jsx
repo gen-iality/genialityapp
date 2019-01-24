@@ -44,7 +44,7 @@ class ModalCrud extends Component {
         const formData = this.state.newInfo;
         
         // alert(JSON.stringify(snap))
-        await Actions.create(this.props.config.ListCrud.urls.create(this.eventId),formData);
+        
         // await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
        
         // console.log("Here saving", snap);
@@ -54,8 +54,10 @@ class ModalCrud extends Component {
         this.setState({create:true});
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
+            console.log('url ===>> ',this.props.enventInfo._id ,' ==== ', this.props.config.ListCrud.urls.create(this.props.eventId))
+            let resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
             this.props.updateTable()
-            let resp = "Testing";
+            // let resp = "Testing";
             console.log(resp);
             if (resp.message === 'OK'){
                 this.props.addToList(resp.data);
