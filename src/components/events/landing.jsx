@@ -167,7 +167,7 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <AdditonalDataEvent/>
+                            <AdditonalDataEvent eventInfo={this.state.event}/>
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     {/*<div className="columns is-centered">
