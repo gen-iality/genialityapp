@@ -19,10 +19,19 @@ class ModalCrud extends Component {
             valid: true,
             speaker: ""
         }
+
         this.submitForm = this.submitForm.bind(this)
     }
 
     componentDidMount() {
+       
+        console.log('brutaaaa!!!!',  this.props.itemInfo, this.renderForm())
+        if(this.props.itemInfo){
+            // this.setState({newInfo: this.props.itemInfo})
+            console.log("her the update info", this.props.itemInfo)
+        } else {
+            console.log("no")
+        }
         // console.log("here all info in modal", this.props.info.speakers.fieldsModal);
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
@@ -92,6 +101,7 @@ class ModalCrud extends Component {
     };
 
     handleChange = (e,type) => {
+        console.log('se esta cambiando ', e,type)
         const {value, name} = e.target;
         // console.log(`${name} changed ${value} type ${type}`);
         // (type === "boolean") ?
@@ -109,6 +119,7 @@ class ModalCrud extends Component {
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
+            console.log("her value", value)
             let input =  <input {...props}
                                 className="input"
                                 type={type}
@@ -126,6 +137,22 @@ class ModalCrud extends Component {
                             className="is-checkradio is-primary is-rtl"
                             type="checkbox"
                             // checked={value}
+                           
+                            onChange={(e)=>{this.onChange(e, type)}} />
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
+                    </React.Fragment>
+            }
+            if (type == "text") {
+                input =
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="text"
+                            value= {this.props.itemInfo[name]}
+                            // checked={value}
+                           
                             onChange={(e)=>{this.onChange(e, type)}} />
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>

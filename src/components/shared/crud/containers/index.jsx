@@ -18,7 +18,7 @@ class ContainerCrud extends Component {
     
         this.config = configCrud[this.props.idModel];
         this.eventId =this.props.eventId._id;   
-        console.log('ejecutando bring speakers' ,this.config)
+        
     }
     componentDidMount() {
         this.getData();
@@ -41,8 +41,8 @@ class ContainerCrud extends Component {
         
      
         // let fields = Object.keys(resp.data[0])
-        // console.log('headers =', Object.keys(resp.data[0]))
-        console.log("resp data", resp.data);
+        // 
+        
         this.setState({
             pageOfItems: resp.data
         });
@@ -54,17 +54,18 @@ class ContainerCrud extends Component {
         this.setState(
              {itemInfo: data}
         )
-        console.log('obtenemos la info====>> ',data)
-        // console.log(id)
+        this.showModal()
+        
+        // 
         // this.showModal()
         // alert('actualizando ' ,id)
     }
 
     async delete(id){
-        console.log('==============>> >> ',this.config.ListCrud.urls.delete(this.eventId),id)
+        
         await Actions.delete(this.config.ListCrud.urls.delete(this.eventId),id);
     
-        console.log(this.config.ListCrud.urls.delete(this.eventId))
+        
         this.updateTable()
     }
 
@@ -83,11 +84,11 @@ class ContainerCrud extends Component {
     };
 
     render() {
-        console.log("here pageofitems", this.state.pageOfItems);
+        
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud itemInfo = {this.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
+                (<ModalCrud itemInfo = {this.state.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
