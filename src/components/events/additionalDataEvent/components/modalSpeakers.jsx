@@ -8,23 +8,7 @@ class ModalSpeaker extends Component{
         //     speakerDetails: [] 
         // };
     }
-
-    componentDidMount() {
-        this.props.infoSpeaker.map(data => {
-            console.log('data: ', data);
-
-        })
-    }
     
-
-    showSpeakerInfo () {
-        let info = this.props.infoSpeaker.map(data => {
-            return(
-                <p>{data}</p>
-            )
-        })
-    }
-
     
     render(){
         // console.log("here array", this.props.infoSpeaker);
@@ -40,9 +24,16 @@ class ModalSpeaker extends Component{
                                 <button className="delete" aria-label="close" onClick={this.props.hideModal}/>
                             </header>
                             <section className="modal-card-body">
-                            {
-                                // this.showSpeakerInfo()
-                            }
+                                <div>
+                                    <img src={this.props.infoSpeaker['picture'] ? this.props.infoSpeaker['picture'] : 'https://bulma.io/images/placeholders/1280x960.png'} alt="Pic" />
+                                </div>
+                                <div>
+                                    <h1>{this.props.infoSpeaker.name}</h1>
+                                    <h2>{this.props.infoSpeaker.position}</h2>
+                                    <h2>{this.props.infoSpeaker.company}</h2>
+                                    <h2>{this.props.infoSpeaker.country}</h2>
+                                    <h2>{this.props.infoSpeaker.description}</h2>
+                                </div>
                             </section>
                             {
                                 <footer className="modal-card-foot">
