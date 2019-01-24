@@ -45,13 +45,13 @@ const configCrud = {
             }
         ],
         ListCrud:{
-            headers: ["_id", "name", "updated_at", "created_at"],
+            headers: ["_id", "name", "updated_at", "created_at","actions"],
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/speakers`,
                 create: (eventId) =>  `api/events/${eventId}/speakers`,
-                post: 'jdlj',
+                getOne: (eventId) =>  `api/events/${eventId}/speakers`,
                 update: 'kfjdj',
-                delete: 'delete'
+                delete: (eventId) =>  `api/events/${eventId}/speakers`,
             },
         },
         UpdateAndCreate: {

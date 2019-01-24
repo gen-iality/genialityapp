@@ -12,7 +12,8 @@ class ContainerCrud extends Component {
             modal: false,
             fields: [],
             pageOfItems: [],
-            data: {}
+            data: {},
+            itemInfo: {}
         };
     
         this.config = configCrud[this.props.idModel];
@@ -48,6 +49,25 @@ class ContainerCrud extends Component {
         });
     }
    
+    async update(id){
+        let data = await Actions.getOne(this.config.ListCrud.urls.getOne(this.eventId),`/${id}`);
+  
+        this.setState(
+             {itemInfo: data}
+        )
+        console.log('obtenemos la info====>> ',data)
+        // console.log(id)
+        // this.showModal()
+        // alert('actualizando ' ,id)
+    }
+
+    async delete(id){
+        console.log('==============>> >> ',this.config.ListCrud.urls.delete(this.eventId),id)
+        await Actions.delete(this.config.ListCrud.urls.delete(this.eventId),id);
+    
+        console.log(this.config.ListCrud.urls.delete(this.eventId))
+        this.updateTable()
+    }
 
     showModal = () => {
         this.setState(prevState => {
@@ -58,6 +78,7 @@ class ContainerCrud extends Component {
     hideModal = () => {
         this.setState({ show: false });
     };
+    //Refresca la pagina para mostrar los cambios
     updateTable(){
         this.getData();
     };
@@ -67,13 +88,13 @@ class ContainerCrud extends Component {
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
+                (<ModalCrud itemInfo = {this.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
                 </div>
                 <React.Fragment>
-                    <ListCrud  data={this.state.pageOfItems} config={this.config} />
+                    <ListCrud  data={this.state.pageOfItems} config={this.config} delete={this.delete.bind(this)}  update={this.update.bind(this)} />
                 </React.Fragment>
             </div>
         );

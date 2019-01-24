@@ -48,9 +48,18 @@ class ListCrud extends Component {
                                                 this.props.data.map((item,key)=>{
                                                     return <tr key={key}>
                                                    {Object.keys(item).map((keyField,key)=>{
-                                                       //Si el campo no se llama imagen no mostramos la imagen
-                                                       return  (item[keyField]) ? <td key={key}>{ (keyField != 'image') ? item[keyField]: <img className="imageTable" src={item[keyField]} height="25" width= "25" alt=""/> } </td>: ('')
+                                                       //Si el campo no se llama imagen no mostramos la imagen y si el campo es nulo igualmente no lo mostramos
+                                                       return  (item[keyField]) ? <td key={key}>{ (keyField != 'picture') ? item[keyField]: <img className="imageTable" src={item[keyField]} height="25" width= "25" alt=""/> } </td>   : null;
+                                                        
                                                     })}
+                                                    <td> 
+                                                        <a className="level-item"  onClick={(e)=>{this.props.update(item._id)}}>
+                                                        <i className="fas fa-edit"/>
+                                                        </a>
+                                                        <a className="level-item" onClick={(e)=>{this.props.delete(item._id)}}>
+                                                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                        </a>
+                                                    </td>
                                                     </tr>
                                                 })
                                             }                                         
