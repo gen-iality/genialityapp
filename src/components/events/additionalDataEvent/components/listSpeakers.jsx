@@ -34,7 +34,7 @@ class ListSpeakers extends Component{
 
             <React.Fragment>
                 <br/>   <br/>
-                <p className="has-text-grey-dark is-size-2  titulo cabecera">SPEAKERS</p>
+                <p className="has-text-grey-dark is-size-2 cabecera">SPEAKERS</p>
                 <div className="columns is-multiline">
                     {/* <div className="column">
                     </div> */}
@@ -46,7 +46,7 @@ class ListSpeakers extends Component{
                     </div> */}
                     {this.props.speakers.map((item,key)=>{
                         return (
-                            <div className="column is-12-mobile is-6-tablet is-3-desktop" key={key} >
+                            <div className="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" key={key} >
                                 <div className="card">
                                     <div className="card-image">
                                         <figure className="image is-4by3">
@@ -54,18 +54,18 @@ class ListSpeakers extends Component{
                                         </figure>
                                     </div>
                                     <div className="card-content">
-                                        <div class="media">                         
-                                            <div className="media-content">
+                                        <div className="media">                         
+                                            <div className="media-content media-cont">
                                                 {/* <p className="title is-4">{item.name}</p> */}
-                                                <div class="columns info-card">
-                                                    <div class="column is-9">
+                                                <div className="columns info-card">
+                                                    <div className="column is-9 texto-tarjetas">
                                                         <p className="has-text-grey-dark is-size-4  titulo">{item.name}</p>
-                                                        <p class="sub-titulo">Temática</p>
+                                                        <p className="sub-titulo">Temática</p>
                                                     </div>
-                                                    <div class="column is-3" onClick={() => this.showModal(key)}>
-                                                        <p class="verMasPlus">+</p>
+                                                    <div className="column is-3" onClick={() => this.showModal(key)}>
+                                                        <p className="verMasPlus">+</p>
                                                         <p className="verMas" >Más</p>
-                                                      </div>
+                                                    </div>
                                                 </div>
 
                                                 {/* <h2 className="data-title has-text-left">

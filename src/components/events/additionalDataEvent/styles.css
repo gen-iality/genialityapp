@@ -1,6 +1,7 @@
 .cabecera{
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
+    font-weight: 900;
 }
 .titulo{
     font-weight: 900;
@@ -14,9 +15,9 @@
 }
 .info-card{
     position: relative;
-    top: 35px;
-    width: 80%;
-    left: 10%;
+    top: 25px;
+    width: 100%;
+    left: 0%;
 }
 .verMas{
     font-weight: 900;
@@ -45,7 +46,10 @@
 .img-modal{
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
 }
-/* @media (max-width: 768px){
+.media-cont{
+    overflow-x: visible !important;
+}
+@media (max-width: 768px){
     .info-card{
         position: relative;
         top: 40px;
@@ -61,4 +65,7 @@
         float: right;
         top: -80px;
     }
-} */
+    .texto-tarjetas{
+        width: 80%;
+    }
+}
