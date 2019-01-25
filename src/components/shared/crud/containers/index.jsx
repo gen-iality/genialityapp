@@ -25,9 +25,9 @@ class ContainerCrud extends Component {
         this.getData();
     }
 
-    // Conseguimos la informacion que se va a cargar en la lista de la tabla de el crud
+    // Consigue la informacion que se va a cargar en la lista de la tabla de el crud
     async getData(){
-       
+      
         const pageOfItems = [
         {
             id: '',
@@ -37,13 +37,10 @@ class ContainerCrud extends Component {
         }
         ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-        
-        // var newinfo = resp.data.map((element)=> element);
-        
-     
-        // let fields = Object.keys(resp.data[0])
-        // 
-        
+        console.log('popopooppopopopo ==+++ >>>> ',resp)
+        this.setState({
+            pageOfItems: []
+        });
         this.setState({
             pageOfItems: resp.data
         });
@@ -68,17 +65,18 @@ class ContainerCrud extends Component {
         this.setState({valid:!valid})
     };
    
+
+    //consigue la informacion de elemento para cargarla en formulacion en caso de que se quiera editar
     async update(id){
         let data = await Actions.getOne(this.config.ListCrud.urls.getOne(this.eventId),`/${id}`);
-  
         this.setState(
              {itemInfo: data}
         )
-        this.showModal()
-        
-        // 
-        // this.showModal()
-        // alert('actualizando ' ,id)
+
+        //mostramos el modal con la informacion cargada
+        this.setState(prevState => {
+            return {modal: true, show: true}
+        });
     }
 
     async delete(id){
@@ -93,6 +91,11 @@ class ContainerCrud extends Component {
         this.setState(prevState => {
             return {modal: true, show: true}
         });
+
+        //Limpiamos la informacion de el formulario cuando vayamos a editar
+        this.setState(
+            {itemInfo: {}}
+       )
     };
 
     hideModal = () => {

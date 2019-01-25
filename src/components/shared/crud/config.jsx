@@ -64,7 +64,7 @@ const configCrud = {
                 getAll: (eventId) =>  `api/events/${eventId}/speakers`,
                 create: (eventId) =>  `api/events/${eventId}/speakers`,
                 getOne: (eventId) =>  `api/events/${eventId}/speakers`,
-                update: 'kfjdj',
+                edit : (eventId) =>  `api/events/${eventId}/speakers`,
                 delete: (eventId) =>  `api/events/${eventId}/speakers`,
             },
         },

@@ -16,16 +16,16 @@ class ModalCrud extends Component {
             message: {},
             modalFields: [],
             newInfo: {},
-            speaker: ""
+            speaker: "",
+            picture: null
         }
 
         this.submitForm = this.submitForm.bind(this)
+      
     }
 
     componentDidMount() {
-       
-        console.log('brutaaaa!!!!',  this.renderForm())
-        // console.log("here all info in modal", this.props.info.speakers.fieldsModal);
+
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
@@ -33,7 +33,8 @@ class ModalCrud extends Component {
             * This is to create keys inside newInfo object and avoid uncontrolled input error
         */
         fields.map(info => (
-            newInfo[info.name] = ''));
+            //cargamos la informacion en caso de que la queramos actualizar en el modal
+            newInfo[info.name] = this.props.itemInfo[info.name] || ''));
         this.setState({newInfo, edit:false});
     }
 
@@ -45,20 +46,29 @@ class ModalCrud extends Component {
         e.stopPropagation();
         const formData = this.state.newInfo;
         
-        // alert(JSON.stringify(snap))
-        
-        // await SpeakersApi.createSpeaker(snap, this.props.enventInfo);
-       
-        // console.log("Here saving", snap);
+    
         this.props.hideModal(); 
         
         let message = {};
         this.setState({create:true});
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
-            console.log('url ===>> ',this.props.enventInfo._id ,' ==== ', this.props.config.ListCrud.urls.create(this.props.eventId))
-            let resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
+            
+            let informacionEditar = Object.keys(this.props.itemInfo).length
+            
+            if(informacionEditar<1){
+                var resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
+            }
+            else{
+                var resp =  await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
+             
+            }
+            // this.setState({newInfo: {}})
             this.props.updateTable()
+           
+
+
+            
             // let resp = "Testing";
             console.log(resp);
             if (resp.message === 'OK'){
@@ -67,7 +77,7 @@ class ModalCrud extends Component {
                 message.content = 'Speaker '+ resp.status;
             } else {
                 message.class = 'msg_danger';
-                message.content = 'Docmunet can`t be created';
+                message.content = 'Document can`t be created';
             }
             setTimeout(()=>{
                 message.class = message.content = '';
@@ -83,9 +93,13 @@ class ModalCrud extends Component {
 
 
     handleChange = (e,type) => {
+        // console.log('estamo cargando ==== ', this.state )
         const {value, name} = e.target;
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
+
     };
+
+
 
     renderForm = () => {
         let formUI = this.state.modalFields.map((data, key) => {
@@ -155,8 +169,7 @@ class ModalCrud extends Component {
         const file = files[0];
         const url = '/api/files/upload', path = [], self = this;
         if(file){
-            this.setState({imageFile: file,
-                speaker:{...this.state.image, picture: null}});
+            this.setState({imageFile: file, picture: null});
             const uploaders = files.map(file => {
                 let data = new FormData();
                 data.append('file',file);
@@ -168,7 +181,7 @@ class ModalCrud extends Component {
             axios.all(uploaders).then((data) => {
                 console.log(path);
                 console.log('SUCCESSFULL DONE');
-                this.setState({newInfo: {
+                this.setState({newInfo: {...this.state.newInfo,
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
                     // console.log('here info', this.state);
@@ -209,9 +222,10 @@ class ModalCrud extends Component {
                             {
                                     <footer className="modal-card-foot">
                                     {
-                                        this.state.create?<div>Creando...</div>:
+                                        this.state.create ? <div>Guardando...</div>:
                                             <div className="modal-buttons">
-                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.props.validInfo}>{(this.state.edit)?'Guardar':'Crear'}</button>
+
+                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.props.validInfo}>Guardar</button>
                                                 {
                                                     this.state.edit&&
                                                     <React.Fragment>

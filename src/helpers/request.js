@@ -38,7 +38,7 @@ export const Actions = {
     },
     edit: (url, data, id, unsafe) => {
         if(unsafe) return publicInstance.put(`${url}${id}`, data).then(({data})=>data);
-        return privateInstance.put(`${url}${id}`, data).then(({data})=>data);
+        return privateInstance.put(`${url}/${id}`, data).then(({data})=>data);
     },
     post: (url, data, unsafe) => {
         if(unsafe) return publicInstance.post(url,data).then(({data})=>data);
