@@ -125,7 +125,7 @@ class ModalCrud extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
-                                value={value}
+                                value={value || ""}
                                 onChange={value => this.handleChange(value, type)}
             />;
             if (type == "boolean") {
