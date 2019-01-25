@@ -32,7 +32,6 @@ class Landing extends Component {
     }
 
     async componentDidMount() {
-        console.log(this.props);
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
             status = searchParams.get("status");
@@ -64,7 +63,10 @@ class Landing extends Component {
     firebaseUI = () => {
         //FIREBSAE UI
         const firebaseui = global.firebaseui;
-        const authUi = new firebaseui.auth.AuthUI(firebase.auth());
+        let ui = firebaseui.auth.AuthUI.getInstance();
+        if (!ui) {
+            ui = new firebaseui.auth.AuthUI(firebase.auth());
+        }
         const uiConfig = {
             //POPUP Facebook/Google
             signInFlow: 'popup',
@@ -85,7 +87,7 @@ class Landing extends Component {
             // Privacy policy url.
             privacyPolicyUrl: `${BaseUrl}/privacy`,
         };
-        authUi.start('#firebaseui-auth-container', uiConfig);
+        ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
         const html = document.querySelector("html");
