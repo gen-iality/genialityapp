@@ -16,7 +16,6 @@ class ModalCrud extends Component {
             message: {},
             modalFields: [],
             newInfo: {},
-            valid: true,
             speaker: ""
         }
 
@@ -25,6 +24,7 @@ class ModalCrud extends Component {
     }
 
     componentDidMount() {
+
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
@@ -90,22 +90,13 @@ class ModalCrud extends Component {
         this.setState({message, create:false});
     }
 
-    validForm = () => {
-        const fieldsToSave = this.state.modalFields
-        // console.log('extraFields: ', fieldsToSave);
-        let mandatories = fieldsToSave.filter(field => field.mandatory), validations = [];
-        mandatories.map((field, key)=>{
-            let valid;
-            if(field.type === 'text' || field.type === 'list') console.log('here we are', field.type);
-        });
-        const valid = validations.reduce((sum, next) => sum && next, true);
-        this.setState({valid: !valid})
-    };
 
     handleChange = (e,type) => {
         console.log('estamo cargando ==== ', this.state )
         const {value, name} = e.target;
-        this.setState({newInfo:{...this.state.newInfo,[name]: value}});
+
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
+
     };
 
 
@@ -119,13 +110,12 @@ class ModalCrud extends Component {
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
-            console.log("her value", value)
             let input =  <input {...props}
                                 className="input"
                                 type={type}
                                 key={key}
                                 name={name}
-                                value={value}
+                                value={value || ''}
                                 onChange={value => this.handleChange(value, type)}
             />;
             if (type == "boolean") {
@@ -185,7 +175,7 @@ class ModalCrud extends Component {
                 let data = new FormData();
                 data.append('file',file);
                 return Actions.post(url,data).then((image) => {
-                    console.log(image);
+                    // console.log(image);
                     if(image) path.push(image);
                 });
             });
@@ -195,7 +185,7 @@ class ModalCrud extends Component {
                 this.setState({newInfo: {
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
-                    console.log('here info', this.state);
+                    // console.log('here info', this.state);
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
             }
@@ -218,21 +208,25 @@ class ModalCrud extends Component {
                                 <button className="delete" aria-label="close" onClick={this.props.hideModal}/>
                             </header>
                             <section className="modal-card-body">
-                            <ImageInput picture={this.state.speaker.picture} imageFile={this.state.imageFile}
-                                            divClass={'rsvp-pic-img'} content={<img src={this.state.speaker.image} alt={'Imagen Speaker'}/>}
-                                            classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                            contentZone={<div>Subir foto</div>}
-                                            changeImg={this.changeImg} errImg={this.state.errImg}/>
-                            {
-                                this.renderForm()
-                            }
+                                <div className="modal-card-body-img">
+                                    <ImageInput picture={this.state.speaker.picture} imageFile={this.state.imageFile}
+                                                divClass={'rsvp-pic-img'} content={<img src={this.state.speaker.image} alt={'Imagen Speaker'}/>}
+                                                classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                contentZone={(this.state.newInfo.picture) ? 
+                                                (<img src={this.state.newInfo.picture} alt="Pic" />) : (<div>Subir foto</div>)}
+                                                changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                </div>
+                                {
+                                    this.renderForm()
+                                }
                             </section>
                             {
                                     <footer className="modal-card-foot">
                                     {
                                         this.state.create ? <div>Guardando...</div>:
                                             <div className="modal-buttons">
-                                                <button className="button is-primary" onClick={this.submitForm} disabled={!this.state.valid}>{(this.state.edit)?'Guardar':'Guardar'}</button>
+
+                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.props.validInfo}>Guardar</button>
                                                 {
                                                     this.state.edit&&
                                                     <React.Fragment>
@@ -243,18 +237,12 @@ class ModalCrud extends Component {
                                             </div>
                                     }
                                     <div className={"msg"}>
-                                        {/* <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p> */}
+                                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
                                     </div>
                                 </footer>
                             }
                         </div>
                     </div>
-                    {/* <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
-                        
-                        <div className="column is-narrow has-text-centered">
-                            <button className="button is-primary" onClick={this.props.hideModal}>Cerrar</button>
-                        </div>
-                    </div> */}
             </React.Fragment>
         )
     }

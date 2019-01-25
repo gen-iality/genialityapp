@@ -13,12 +13,13 @@ class ContainerCrud extends Component {
             fields: [],
             pageOfItems: [],
             data: {},
-            itemInfo: {}
+            itemInfo: {},
+            valid: true
         };
     
         this.config = configCrud[this.props.idModel];
         this.eventId =this.props.eventId._id;   
-        
+        this.validForm = this.validForm.bind(this);
     }
     componentDidMount() {
         this.getData();
@@ -44,6 +45,25 @@ class ContainerCrud extends Component {
             pageOfItems: resp.data
         });
     }
+
+    /*
+        * Method to dynamic validations 
+    */
+    validForm = (dataFields, dataForm) => {
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\ \.[^@]+');
+        const fieldsForm = dataFields, infoNew = dataForm,
+            mandatories = fieldsForm.filter(field => field.mandatory), validations = [];
+        mandatories.map((field,key)=>{
+            let valid;
+            if(field.type === 'email')  valid = infoNew[field.name].length > 5 && infoNew[field.name].length < 61 && EMAIL_REGEX.test(infoNew[field.name]);
+            if(field.type === 'text' || field.type === 'list')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
+            if(field.type === 'number') valid = infoNew[field.name] && infoNew[field.name] >= 0;
+            if(field.type === 'boolean') valid = (typeof infoNew[field.name] === "boolean");
+            return validations[key] = valid;
+        });
+        const valid = validations.reduce((sum, next) => sum && next, true);
+        this.setState({valid:!valid})
+    };
    
 
     //consigue la informacion de elemento para cargarla en formulacion en caso de que se quiera editar
@@ -91,7 +111,9 @@ class ContainerCrud extends Component {
         return (
             <div>{
                 this.state.show ? 
-                (<ModalCrud itemInfo = {this.state.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}/>) : ("")
+                (<ModalCrud itemInfo = {this.state.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} 
+                modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}
+                validForm={this.validForm} validInfo={this.state.valid}/>) : ("")
             }
                 <div className="column is-narrow has-text-centered">
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
