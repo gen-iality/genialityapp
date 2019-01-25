@@ -16,7 +16,6 @@ class ModalCrud extends Component {
             message: {},
             modalFields: [],
             newInfo: {},
-            valid: true,
             speaker: ""
         }
 
@@ -26,12 +25,6 @@ class ModalCrud extends Component {
     componentDidMount() {
        
         console.log('brutaaaa!!!!',  this.renderForm())
-        if(this.props.itemInfo){
-            // this.setState({newInfo: this.props.itemInfo})
-            console.log("her the update info", this.props.itemInfo)
-        } else {
-            console.log("no")
-        }
         // console.log("here all info in modal", this.props.info.speakers.fieldsModal);
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
@@ -88,26 +81,10 @@ class ModalCrud extends Component {
         this.setState({message, create:false});
     }
 
-    validForm = () => {
-        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\ \.[^@]+');
-        const fieldsForm = this.state.modalFields, infoNew= this.state.newInfo,
-            mandatories = fieldsForm.filter(field => field.mandatory),validations = [];
-        mandatories.map((field,key)=>{
-            let valid;
-            if(field.type === 'email')  valid = infoNew[field.name].length > 5 && infoNew[field.name].length < 61 && EMAIL_REGEX.test(infoNew[field.name]);
-            if(field.type === 'text' || field.type === 'list')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
-            if(field.type === 'number') valid = infoNew[field.name] && infoNew[field.name] >= 0;
-            if(field.type === 'boolean') valid = (typeof infoNew[field.name] === "boolean");
-            return validations[key] = valid;
-        });
-        const valid = validations.reduce((sum, next) => sum && next, true);
-        this.setState({valid:!valid})
-    };
-
 
     handleChange = (e,type) => {
         const {value, name} = e.target;
-        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
 
     renderForm = () => {
@@ -234,7 +211,7 @@ class ModalCrud extends Component {
                                     {
                                         this.state.create?<div>Creando...</div>:
                                             <div className="modal-buttons">
-                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.state.valid}>{(this.state.edit)?'Guardar':'Crear'}</button>
+                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.props.validInfo}>{(this.state.edit)?'Guardar':'Crear'}</button>
                                                 {
                                                     this.state.edit&&
                                                     <React.Fragment>
