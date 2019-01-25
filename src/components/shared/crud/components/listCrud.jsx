@@ -3,18 +3,21 @@ import '../crud.css'
 import Table from '../../table';
 import Pagination from "../../../shared/pagination";
 
+
 class ListCrud extends Component {
     constructor(props){
         super(props);
-        console.log('props ===>> ', this.props)
+   
        this.state = {
             modalFields: [],
             pageOfItems: this.props.data
        }
 
-
+       
      
     }
+    open = () => this.setState({ open: true })
+    close = () => this.setState({ open: false })
 
     componentDidMount() {
 
@@ -30,15 +33,16 @@ class ListCrud extends Component {
     }
 
     onChangePage = (pageOfItems) => {
-        console.log('respondiendo =>> ', this.props.data,pageOfItems)
+      
         this.setState({ pageOfItems: pageOfItems });
     };
 
     render() {
-    
+       
         return(
             <React.Fragment>
-                 
+                
+
                 <table className="table"> 
                                             <thead>
                                                 <tr>                                                  
