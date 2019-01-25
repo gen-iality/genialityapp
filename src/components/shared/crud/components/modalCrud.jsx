@@ -16,7 +16,8 @@ class ModalCrud extends Component {
             message: {},
             modalFields: [],
             newInfo: {},
-            speaker: ""
+            speaker: "",
+            picture: null
         }
 
         this.submitForm = this.submitForm.bind(this)
@@ -92,9 +93,8 @@ class ModalCrud extends Component {
 
 
     handleChange = (e,type) => {
-        console.log('estamo cargando ==== ', this.state )
+        // console.log('estamo cargando ==== ', this.state )
         const {value, name} = e.target;
-
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
 
     };
@@ -169,8 +169,7 @@ class ModalCrud extends Component {
         const file = files[0];
         const url = '/api/files/upload', path = [], self = this;
         if(file){
-            this.setState({imageFile: file,
-                speaker:{...this.state.image, picture: null}});
+            this.setState({imageFile: file, picture: null});
             const uploaders = files.map(file => {
                 let data = new FormData();
                 data.append('file',file);
@@ -182,7 +181,7 @@ class ModalCrud extends Component {
             axios.all(uploaders).then((data) => {
                 console.log(path);
                 console.log('SUCCESSFULL DONE');
-                this.setState({newInfo: {
+                this.setState({newInfo: {...this.state.newInfo,
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
                     // console.log('here info', this.state);
