@@ -1,20 +1,64 @@
+.cabecera{
+    text-align: center;
+    margin-bottom: 50px;
+}
 .titulo{
     font-weight: 900;
-    margin-bottom: 60px
+    font-style: italic;
 }
-.cabecera{
-    text-align: center
+.sub-titulo{
+    font-style: italic;
+    font-size: 1.2em;
+    font-family: "Montserrat", sans-serif;
+    color: #B4B4B4;
+}
+.info-card{
+    position: relative;
+    top: 35px;
+    width: 80%;
+    left: 10%;
 }
 .verMas{
     font-weight: 900;
     color: #00f0be;
-    position: absolute;
-    right: 8px;
     bottom: 1px;
-    font-size: 26px;
+    font-size: 2em;
+    text-align: center;
+    position: relative;
+    top: -25px;
+    font-style: italic;
+    cursor: pointer;
 }
-.verMas > span{
-    position: absolute;
-    right: 80px;
-    top: 12px;
+.verMasPlus{
+    color: #00f0be;
+    text-align: center;
+    font-weight: 900;
+    font-size: 2em;
+    position: relative;
+    top: -10px;
+    cursor: pointer;
 }
+.card-content{
+    height: 150px;
+    width: 100%;
+}
+.img-modal{
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+}
+/* @media (max-width: 768px){
+    .info-card{
+        position: relative;
+        top: 40px;
+        width: 100%;
+        left: 0;
+    }
+    .verMas{
+        float: right;
+        top: -60px;
+        left: 25px;
+    }
+    .verMasPlus{
+        float: right;
+        top: -80px;
+    }
+} */

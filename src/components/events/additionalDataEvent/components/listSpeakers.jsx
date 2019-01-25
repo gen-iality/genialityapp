@@ -46,7 +46,7 @@ class ListSpeakers extends Component{
                     </div> */}
                     {this.props.speakers.map((item,key)=>{
                         return (
-                            <div className="column is-one-quarter" key={key} >
+                            <div className="column is-12-mobile is-6-tablet is-3-desktop" key={key} >
                                 <div className="card">
                                     <div className="card-image">
                                         <figure className="image is-4by3">
@@ -54,11 +54,20 @@ class ListSpeakers extends Component{
                                         </figure>
                                     </div>
                                     <div className="card-content">
-                                        <div className="media">                         
+                                        <div class="media">                         
                                             <div className="media-content">
                                                 {/* <p className="title is-4">{item.name}</p> */}
-                                                <p className="has-text-grey-dark is-size-3  titulo">{item.name}</p>
-                                                <a className="verMas" onClick={() => this.showModal(key)}><span>+ </span><br/> Ver Más</a>
+                                                <div class="columns info-card">
+                                                    <div class="column is-9">
+                                                        <p className="has-text-grey-dark is-size-4  titulo">{item.name}</p>
+                                                        <p class="sub-titulo">Temática</p>
+                                                    </div>
+                                                    <div class="column is-3" onClick={() => this.showModal(key)}>
+                                                        <p class="verMasPlus">+</p>
+                                                        <p className="verMas" >Más</p>
+                                                      </div>
+                                                </div>
+
                                                 {/* <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
                                                 <span className="has-text-grey-dark is-size-3">Ubicación</span>

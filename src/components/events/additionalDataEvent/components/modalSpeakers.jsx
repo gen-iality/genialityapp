@@ -25,7 +25,7 @@ class ModalSpeaker extends Component{
                             </header>
                             <section className="modal-card-body">
                                 <div>
-                                    <img src={this.props.infoSpeaker['picture'] ? this.props.infoSpeaker['picture'] : 'https://bulma.io/images/placeholders/1280x960.png'} alt="Pic" />
+                                    <img class="img-modal" src={this.props.infoSpeaker['picture'] ? this.props.infoSpeaker['picture'] : 'https://bulma.io/images/placeholders/1280x960.png'} alt="Pic" />
                                 </div>
                                 <div>
                                     <h1>{this.props.infoSpeaker.name}</h1>
