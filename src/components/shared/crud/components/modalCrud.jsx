@@ -25,7 +25,7 @@ class ModalCrud extends Component {
 
     componentDidMount() {
        
-        console.log('brutaaaa!!!!',  this.props.itemInfo, this.renderForm())
+        console.log('brutaaaa!!!!',  this.renderForm())
         if(this.props.itemInfo){
             // this.setState({newInfo: this.props.itemInfo})
             console.log("her the update info", this.props.itemInfo)
@@ -101,7 +101,6 @@ class ModalCrud extends Component {
     };
 
     handleChange = (e,type) => {
-        console.log('se esta cambiando ', e,type)
         const {value, name} = e.target;
         // console.log(`${name} changed ${value} type ${type}`);
         // (type === "boolean") ?
@@ -125,7 +124,7 @@ class ModalCrud extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
-                                value={value || ""}
+                                value={value}
                                 onChange={value => this.handleChange(value, type)}
             />;
             if (type == "boolean") {
@@ -137,22 +136,6 @@ class ModalCrud extends Component {
                             className="is-checkradio is-primary is-rtl"
                             type="checkbox"
                             // checked={value}
-                           
-                            onChange={(e)=>{this.onChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
-                    </React.Fragment>
-            }
-            if (type == "text") {
-                input =
-                    <React.Fragment>
-                        <input
-                            name={name}
-                            id={name}
-                            className="is-checkradio is-primary is-rtl"
-                            type="text"
-                            value= {this.props.itemInfo[name]}
-                            // checked={value}
-                           
                             onChange={(e)=>{this.onChange(e, type)}} />
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
