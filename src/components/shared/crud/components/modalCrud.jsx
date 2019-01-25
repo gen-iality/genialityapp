@@ -89,16 +89,21 @@ class ModalCrud extends Component {
     }
 
     validForm = () => {
-        const fieldsToSave = this.state.modalFields
-        // console.log('extraFields: ', fieldsToSave);
-        let mandatories = fieldsToSave.filter(field => field.mandatory), validations = [];
-        mandatories.map((field, key)=>{
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\ \.[^@]+');
+        const fieldsForm = this.state.modalFields, infoNew= this.state.newInfo,
+            mandatories = fieldsForm.filter(field => field.mandatory),validations = [];
+        mandatories.map((field,key)=>{
             let valid;
-            if(field.type === 'text' || field.type === 'list') console.log('here we are', field.type);
+            if(field.type === 'email')  valid = infoNew[field.name].length > 5 && infoNew[field.name].length < 61 && EMAIL_REGEX.test(infoNew[field.name]);
+            if(field.type === 'text' || field.type === 'list')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
+            if(field.type === 'number') valid = infoNew[field.name] && infoNew[field.name] >= 0;
+            if(field.type === 'boolean') valid = (typeof infoNew[field.name] === "boolean");
+            return validations[key] = valid;
         });
         const valid = validations.reduce((sum, next) => sum && next, true);
-        this.setState({valid: !valid})
+        this.setState({valid:!valid})
     };
+
 
     handleChange = (e,type) => {
         const {value, name} = e.target;
@@ -106,7 +111,7 @@ class ModalCrud extends Component {
         // (type === "boolean") ?
         //     this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
         // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
-        this.setState({newInfo:{...this.state.newInfo,[name]: value}});
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
     };
 
     renderForm = () => {
@@ -118,7 +123,6 @@ class ModalCrud extends Component {
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
-            console.log("her value", value)
             let input =  <input {...props}
                                 className="input"
                                 type={type}
@@ -234,7 +238,7 @@ class ModalCrud extends Component {
                                     {
                                         this.state.create?<div>Creando...</div>:
                                             <div className="modal-buttons">
-                                                <button className="button is-primary" onClick={this.submitForm} disabled={!this.state.valid}>{(this.state.edit)?'Guardar':'Crear'}</button>
+                                                <button className="button is-primary" onClick={this.submitForm} disabled={this.state.valid}>{(this.state.edit)?'Guardar':'Crear'}</button>
                                                 {
                                                     this.state.edit&&
                                                     <React.Fragment>
@@ -245,18 +249,12 @@ class ModalCrud extends Component {
                                             </div>
                                     }
                                     <div className={"msg"}>
-                                        {/* <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p> */}
+                                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
                                     </div>
                                 </footer>
                             }
                         </div>
                     </div>
-                    {/* <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
-                        
-                        <div className="column is-narrow has-text-centered">
-                            <button className="button is-primary" onClick={this.props.hideModal}>Cerrar</button>
-                        </div>
-                    </div> */}
             </React.Fragment>
         )
     }
