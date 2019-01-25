@@ -107,10 +107,6 @@ class ModalCrud extends Component {
 
     handleChange = (e,type) => {
         const {value, name} = e.target;
-        // console.log(`${name} changed ${value} type ${type}`);
-        // (type === "boolean") ?
-        //     this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
-        // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.validForm);
     };
 
