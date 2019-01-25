@@ -812,9 +812,9 @@ a {
     *If is necesary adjust this style 'modal-card-body-img', this one is for center image container when someone uploads an image
   */
   .modal-card-body-img{
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
     .tabs {
       li {
