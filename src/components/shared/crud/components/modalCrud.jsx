@@ -124,7 +124,7 @@ class ModalCrud extends Component {
                                 type={type}
                                 key={key}
                                 name={name}
-                                value={value}
+                                value={value || ''}
                                 onChange={value => this.handleChange(value, type)}
             />;
             if (type == "boolean") {
@@ -184,7 +184,7 @@ class ModalCrud extends Component {
                 let data = new FormData();
                 data.append('file',file);
                 return Actions.post(url,data).then((image) => {
-                    console.log(image);
+                    // console.log(image);
                     if(image) path.push(image);
                 });
             });
@@ -194,7 +194,7 @@ class ModalCrud extends Component {
                 this.setState({newInfo: {
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
-                    console.log('here info', this.state);
+                    // console.log('here info', this.state);
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
             }
@@ -217,14 +217,17 @@ class ModalCrud extends Component {
                                 <button className="delete" aria-label="close" onClick={this.props.hideModal}/>
                             </header>
                             <section className="modal-card-body">
-                            <ImageInput picture={this.state.speaker.picture} imageFile={this.state.imageFile}
-                                            divClass={'rsvp-pic-img'} content={<img src={this.state.speaker.image} alt={'Imagen Speaker'}/>}
-                                            classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                            contentZone={<div>Subir foto</div>}
-                                            changeImg={this.changeImg} errImg={this.state.errImg}/>
-                            {
-                                this.renderForm()
-                            }
+                                <div className="modal-card-body-img">
+                                    <ImageInput picture={this.state.speaker.picture} imageFile={this.state.imageFile}
+                                                divClass={'rsvp-pic-img'} content={<img src={this.state.speaker.image} alt={'Imagen Speaker'}/>}
+                                                classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                contentZone={(this.state.newInfo.picture) ? 
+                                                (<img src={this.state.newInfo.picture} alt="Pic" />) : (<div>Subir foto</div>)}
+                                                changeImg={this.changeImg} errImg={this.state.errImg}/>
+                                </div>
+                                {
+                                    this.renderForm()
+                                }
                             </section>
                             {
                                     <footer className="modal-card-foot">
