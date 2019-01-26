@@ -32,6 +32,12 @@ class ListCrud extends Component {
         this.setState({newInfo, edit:false});
     }
 
+    componentWillUnmount(){
+        // alert('saliendo de el componente')
+        this.setState({modalFields: [],
+            pageOfItems: []})
+    }
+
     onChangePage = (pageOfItems) => {
       
         this.setState({ pageOfItems: pageOfItems });
@@ -54,7 +60,7 @@ class ListCrud extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                           {
+                                           {/* {
                                                 this.state.pageOfItems.map((item,key)=>{
                                                     return <tr key={key}>
                                                    {Object.keys(item).map((keyField,key)=>{
@@ -74,7 +80,28 @@ class ListCrud extends Component {
                                                     </td>
                                                     </tr>
                                                 })
-                                            }                                         
+                                            }       */}
+                                             {
+                                                this.state.pageOfItems.map((item,key)=>{
+                                                    return <tr key={key}>
+                                                   { this.props.config.ListCrud.fieldsTable.map((keyField,key)=>{
+
+                                                       //Si el campo no se llama imagen no mostramos la imagen y si el campo es nulo igualmente no lo mostramos
+                                                       return  (item[keyField]) ? <td key={key}>{ (keyField != 'picture') ? item[keyField]: <img className="imageTable" src={item[keyField]} height="35" width= "35" alt=""/> } </td>   : <td  key={key}>-</td>;
+                                                        
+
+                                                    })}
+                                                    <td> 
+                                                        <a className="level-item"  onClick={(e)=>{this.props.update(item._id)}}>
+                                                        <i className="fas fa-edit"/>
+                                                        </a>
+                                                        <a className="level-item" onClick={(e)=>{this.props.delete(item._id)}}>
+                                                                                <span className="icon has-text-danger"><i className="fas fa-trash"></i></span>
+                                                        </a>
+                                                    </td>
+                                                    </tr>
+                                                })
+                                            }                                    
                                             </tbody>
                 </table>
                 <Pagination

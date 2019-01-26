@@ -16,7 +16,9 @@ class ContainerCrud extends Component {
             itemInfo: {},
             valid: true
         };
-    
+        
+       
+
         this.config = configCrud[this.props.idModel];
         this.eventId =this.props.eventId._id;   
         this.validForm = this.validForm.bind(this);
@@ -25,6 +27,21 @@ class ContainerCrud extends Component {
         this.getData();
       
     }
+
+    componentWillUnmount(){
+        this.setState({     show: false,
+            modal: false,
+            fields: [],
+            pageOfItems: [],
+            data: {},
+            itemInfo: {},
+            valid: true})
+    }
+
+     //Usamos esta funcion para generar las cabeceras de las tablas con su llave y su label, solo se usa como ayuda, no hace parte de el desarrollo
+     generaCabecerasDeConfiguracion(array){
+        console.log('HEADERS DE CONFIGURACION===>> ', array)
+     }
 
     // Consigue la informacion que se va a cargar en la lista de la tabla de el crud
     async getData(){
@@ -38,7 +55,8 @@ class ContainerCrud extends Component {
         }
         ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-        console.log('HEADERS ==>> ',Object.keys(resp.data[0]))
+        this.generaCabecerasDeConfiguracion(Object.keys(resp.data[0]))
+      
         this.setState({
             pageOfItems: []
         });
@@ -46,6 +64,8 @@ class ContainerCrud extends Component {
             pageOfItems: resp.data
         });
     }
+
+   
 
     /*
         * Method to dynamic validations 

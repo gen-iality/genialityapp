@@ -59,7 +59,10 @@ const configCrud = {
 
         ],
         ListCrud:{
-            headers: ["_id", "name", "position", "company", "country", "description", "picture", "event_id", "updated_at", "created_at", "acciones"],
+            //El numero de elementos de header y fieldsTable deben de ser los mismo , tienen un relacion por la posicion de cada uno
+            headers:     [ "Imagen",  "Nombre", "Posicion", "Compañia", "Pais", "acciones"],
+            fieldsTable: [ "picture", "name",   "position", "company", "country", "acciones"],
+         
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/speakers`,
                 create: (eventId) =>  `api/events/${eventId}/speakers`,
@@ -133,7 +136,9 @@ const configCrud = {
 
         ],
         ListCrud:{
-            headers: ["_id", "name", "position", "company", "country", "description", "picture", "event_id", "updated_at", "created_at"],
+             //El numero de elementos de header y fieldsTable deben de ser los mismo , tienen un relacion por la posicion de cada uno
+             headers:     [ "Imagen",  "Nombre", "Posicion", "Compañia", "Pais", "acciones"],
+             fieldsTable: [ "picture", "name",   "position", "company", "country", "acciones"],
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/sessions`,
                 create: (eventId) =>  `api/events/${eventId}/sessions`,
