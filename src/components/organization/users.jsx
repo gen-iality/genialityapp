@@ -72,7 +72,7 @@ class OrgUsers extends Component {
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
+        XLSX.writeFile(wb, `usuarios_${this.props.org.name}.xls`);
     };
 
     modalUser = (modal) => {
