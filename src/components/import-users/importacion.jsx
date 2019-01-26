@@ -66,8 +66,9 @@ class Importacion extends Component {
         });
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
+        const name = this.props.organization ? 'usersorganizationtemplate' : 'attendeestemplate';
         XLSX.utils.book_append_sheet(wb, ws, "Template");
-        XLSX.writeFile(wb, `attendeestemplate${Moment().format('DDMMYY')}.xls`);
+        XLSX.writeFile(wb, `${name}${Moment().format('DDMMYY')}.xls`);
     };
 
     componentWillReceiveProps(nextProps) {
