@@ -23,6 +23,7 @@ class ContainerCrud extends Component {
     }
     componentDidMount() {
         this.getData();
+      
     }
 
     // Consigue la informacion que se va a cargar en la lista de la tabla de el crud
@@ -37,7 +38,7 @@ class ContainerCrud extends Component {
         }
         ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-        console.log('popopooppopopopo ==+++ >>>> ',resp)
+        console.log('HEADERS ==>> ',Object.keys(resp.data[0]))
         this.setState({
             pageOfItems: []
         });
@@ -80,11 +81,10 @@ class ContainerCrud extends Component {
     }
 
     async delete(id){
-        
-        await Actions.delete(this.config.ListCrud.urls.delete(this.eventId),id);
+       
+            await Actions.delete(this.config.ListCrud.urls.delete(this.eventId),id);  
+            this.updateTable()
     
-        
-        this.updateTable()
     }
 
     showModal = () => {

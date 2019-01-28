@@ -165,7 +165,7 @@ class ModalCrud extends Component {
     };
 
     changeImg = (files) => {
-        console.log(files);
+      
         const file = files[0];
         const url = '/api/files/upload', path = [], self = this;
         if(file){
@@ -179,8 +179,7 @@ class ModalCrud extends Component {
                 });
             });
             axios.all(uploaders).then((data) => {
-                console.log(path);
-                console.log('SUCCESSFULL DONE');
+                
                 this.setState({newInfo: {...this.state.newInfo,
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
