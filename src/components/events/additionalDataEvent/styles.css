@@ -49,6 +49,13 @@
 .media-cont{
     overflow-x: visible !important;
 }
+.modal-contenido{
+    color: #B4B4B4;
+}
+.modal-titulo{
+    font-weight: bold;
+    font-style: italic;
+}
 @media (max-width: 768px){
     .info-card{
         position: relative;
