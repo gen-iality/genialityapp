@@ -14,19 +14,38 @@ class ContainerCrud extends Component {
             pageOfItems: [],
             data: {},
             itemInfo: {},
-            valid: true
+            valid: true,
+            refreshList: true
         };
         
        
 
-        this.config = configCrud[this.props.idModel];
+        
         this.eventId =this.props.eventId._id;   
         this.validForm = this.validForm.bind(this);
-    }
-    componentDidMount() {
-        this.getData();
       
     }
+    componentDidMount() {
+        // this.getData();
+        this.config = configCrud[this.props.idModel];
+        //setiar en blanco
+        this.getData();
+        console.log('en el metodoto mount ==>>> ', this.config)
+    }
+
+    componentDidUpdate(prevProps) {
+  
+        if(this.props.idModel != prevProps.idModel){
+            this.config = configCrud[this.props.idModel];
+            //setiar en blanco
+            this.getData();
+            console.log('en el metodoto update ==>>> ', this.config)
+        }
+    }
+    async refreshList() {
+        return await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
+    }
+
 
     componentWillUnmount(){
         this.setState({     show: false,
@@ -46,14 +65,14 @@ class ContainerCrud extends Component {
     // Consigue la informacion que se va a cargar en la lista de la tabla de el crud
     async getData(){
       
-        const pageOfItems = [
-        {
-            id: '',
-            name : '',
-            created_at: '',
-            updated_at: ''
-        }
-        ]
+        // const pageOfItems = [
+        // {
+        //     id: '',
+        //     name : '',
+        //     created_at: '',
+        //     updated_at: ''
+        // }
+        // ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
 
         try{
@@ -69,9 +88,13 @@ class ContainerCrud extends Component {
         this.setState({
             pageOfItems: resp.data
         });
+        this.refreshList() 
+
     }
 
-   
+    // componentWillUnmount(){
+    //     alert('Saliendo de el componente ')
+    // }
 
     /*
         * Method to dynamic validations 
@@ -96,6 +119,8 @@ class ContainerCrud extends Component {
     //consigue la informacion de elemento para cargarla en formulacion en caso de que se quiera editar
     async update(id){
         let data = await Actions.getOne(this.config.ListCrud.urls.getOne(this.eventId),`/${id}`);
+
+        console.log('esta es la informacion cargada==>> ',data)
         this.setState(
              {itemInfo: data}
         )
@@ -127,15 +152,26 @@ class ContainerCrud extends Component {
     hideModal = () => {
         this.setState({ show: false });
     };
+
     //Refresca la pagina para mostrar los cambios
     updateTable(){
         this.getData();
     };
 
+    componentWillUnmount(){
+        // alert('saliendo de el componente')
+        this.setState({modalFields: [],
+            pageOfItems: []})
+    }
+
+  
+
     render() {
-        
+        console.log('Este es el config ===>>> ',this.config)
         return (
-            <div>{
+            <div>
+                {/* <p>fruta</p> */}
+            {
                 this.state.show ? 
                 (<ModalCrud itemInfo = {this.state.itemInfo} hideModal={this.hideModal} updateTable= {this.updateTable.bind(this)} 
                 modal={this.state.modal} info={this.config} config={this.config} enventInfo={this.props.eventId}
@@ -145,11 +181,12 @@ class ContainerCrud extends Component {
                     <button className="button is-primary" onClick={this.showModal}>Agregar {this.props.buttonName} +</button>
                 </div>
                 <React.Fragment>
-                    <ListCrud  data={this.state.pageOfItems} config={this.config} delete={this.delete.bind(this)}  update={this.update.bind(this)} />
+                    {this.config &&
+                    <ListCrud  data={this.state.pageOfItems} config={this.config} delete={this.delete.bind(this)}  update={this.update.bind(this)} refreshList={this.refreshList}  updateTable= {this.updateTable.bind(this)}  />}
                 </React.Fragment>
             </div>
         );
     }
 }
 
-export default ContainerCrud;
+        export default ContainerCrud;
