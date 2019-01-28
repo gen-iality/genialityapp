@@ -55,7 +55,13 @@ class ContainerCrud extends Component {
         }
         ]
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-        this.generaCabecerasDeConfiguracion(Object.keys(resp.data[0]))
+
+        try{
+            this.generaCabecerasDeConfiguracion(Object.keys(resp.data[0]))
+        }catch(e){
+            console.log('no hay datos pra generar las cabeceras')
+        }
+        
       
         this.setState({
             pageOfItems: []

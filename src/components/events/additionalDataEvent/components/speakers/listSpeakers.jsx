@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import ModalSpeaker from '../components/modalSpeakers';
-import '../styles.css'
+import ModalSpeaker from './modalSpeakers';
+import '../../styles.css'
 class ListSpeakers extends Component{
 
     constructor(props){
@@ -14,8 +14,6 @@ class ListSpeakers extends Component{
     }
 
     showModal(key) {
-        // console.log("here speaker", this.props.speakers[key]);
-        
         this.setState(prevState => {
             return {modal: true, show: true, speakerData: this.props.speakers[key]}
         });
@@ -26,9 +24,6 @@ class ListSpeakers extends Component{
     };
 
     render() {
-
-    
-        console.log('====|=|======>>>>> ',this.props.speakers)
         return (
 
 
@@ -36,14 +31,7 @@ class ListSpeakers extends Component{
                 <br/>   <br/>
                 <p className="has-text-grey-dark is-size-2 cabecera">SPEAKERS</p>
                 <div className="columns is-multiline">
-                    {/* <div className="column">
-                    </div> */}
-                    {/* <div className="column">
-                        Second column
-                    </div> */}
-                    {/* <div className="column">
-                        Third column
-                    </div> */}
+                  
                     {this.props.speakers.map((item,key)=>{
                         return (
                             <div className="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" key={key} >
@@ -56,7 +44,6 @@ class ListSpeakers extends Component{
                                     <div className="card-content">
                                         <div className="media">                         
                                             <div className="media-content media-cont">
-                                                {/* <p className="title is-4">{item.name}</p> */}
                                                 <div className="columns info-card">
                                                     <div className="column is-9 texto-tarjetas">
                                                         <p className="has-text-grey-dark is-size-4  titulo">{item.name}</p>
@@ -67,12 +54,6 @@ class ListSpeakers extends Component{
                                                         <p className="verMas" >Más</p>
                                                     </div>
                                                 </div>
-
-                                                {/* <h2 className="data-title has-text-left">
-                                                <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                                <span className="has-text-grey-dark is-size-3">Ubicación</span>
-                                                </h2> */}
-                                                {/* <p className="subtitle is-6">@johnsmith</p> */}
                                                 </div>
                                                 </div>
                                             <div className="content">

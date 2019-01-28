@@ -102,6 +102,22 @@ const configCrud = {
                 unique: false
             },
             {
+                name: "date",
+                edit: false,
+                label: "Fecha",
+                mandatory: true,
+                type: "date",
+                unique: false
+            },
+            {
+                name: "time",
+                edit: false,
+                label: "Hora",
+                mandatory: false,
+                type: "time",
+                unique: false
+            },
+            {
                 name: "company",
                 edit: false,
                 label: "Empresa/Organización",
@@ -137,8 +153,8 @@ const configCrud = {
         ],
         ListCrud:{
              //El numero de elementos de header y fieldsTable deben de ser los mismo , tienen un relacion por la posicion de cada uno
-             headers:     [ "Imagen",  "Nombre", "Posicion", "Compañia", "Pais", "acciones"],
-             fieldsTable: [ "picture", "name",   "position", "company", "country", "acciones"],
+             headers:     [ "Imagen",  "Nombre", "Posicion", "Compañia", "Pais", 'Fecha','Hora',"acciones"],
+             fieldsTable: [ "picture", "name",   "position", "company", "country", 'date', 'time',"acciones"],
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/sessions`,
                 create: (eventId) =>  `api/events/${eventId}/sessions`,

@@ -1,17 +1,15 @@
 import React, {Component} from 'react';
-import {icon} from "../../../../helpers/constants";
+import {icon} from "../../../../../helpers/constants";
 
 class ModalSpeaker extends Component{
     constructor(props){
         super(props)
-        // this.state = {
-        //     speakerDetails: [] 
-        // };
+
     }
     
     
     render(){
-        // console.log("here array", this.props.infoSpeaker);
+      
         return(
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>

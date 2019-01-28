@@ -131,6 +131,32 @@ class ModalCrud extends Component {
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
+            if (type == "date") {
+                input =
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="date"
+                            // checked={value}
+                            onChange={(e)=>{this.handleChange(e, type)}} />
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}></label>
+                    </React.Fragment>
+            }
+            if (type == "time") {
+                input =
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="time"
+                            // checked={value}
+                            onChange={(e)=>{this.handleChange(e, type)}} />
+                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}></label>
+                    </React.Fragment>
+            }
             if (type == "list") {
                 input = data.options.map((o,key) => {
                     return (<option key={key} value={o.value}>{o.value}</option>);
