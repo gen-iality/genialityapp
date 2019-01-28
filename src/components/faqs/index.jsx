@@ -11,11 +11,12 @@ class Faqs extends Component {
             <div className="columns is-mobile">
                 <div className="column is-half is-offset-one-quarter">
                     <h1 className="title is-spaced">PREGUNTAS FRECUENTES SOBRE PAGOS ELECTRÓNICOS</h1>
+                    <p>En este documento, usted encontrará una sección de preguntas y respuestas que le ayudará a sus usuarios a aclarar sus dudas sobre los pagos electrónicos procesados a través de PlacetoPay.  Recuerde que debe incluirlas en su sitio web. </p>
                     <h2 className="subtitle has-text-weight-semibold">1. ¿Qué es PlacetoPay?</h2>
                     <p><span className="has-text-weight-semibold">PlacetoPay</span> es la plataforma de pagos electrónicos que usa <span className="has-text-weight-semibold">MOCION S.A.S.</span> para procesar en línea las transacciones generadas en la tienda virtual con las formas de pago habilitadas para tal fin.</p>
                     <br/>
                     <h2 className="subtitle has-text-weight-semibold">2. ¿Cómo puedo pagar?</h2>
-                    <p>En la tienda virtual de <span className="has-text-weight-semibold">MOCION S.A.S.</span>usted podrá realizar su pago con los medios habilitados para tal fin. Usted, de acuerdo a las opciones de pago escogidas por el comercio, podrá pagar a través de PSE (débitos desde cuentas de ahorros y corrientes en Colombia), tarjetas de crédito Visa, MasterCard, American Express, Credencial y Diners.</p>
+                    <p>En la tienda virtual de <span className="has-text-weight-semibold">MOCION S.A.S.</span>usted podrá realizar su pago con los medios habilitados para tal fin. Usted, de acuerdo a las opciones de pago escogidas por el comercio, podrá pagar a través de PSE (débitos desde cuentas de ahorros y corrientes en Colombia), tarjetas de crédito Visa, MasterCard y American Express.</p>
                     <br/>
                     <h2 className="subtitle has-text-weight-semibold">3. ¿Es seguro ingresar mis datos bancarios en este sitio web?</h2>
                     <p>Para proteger tus datos <span className="has-text-weight-semibold">MOCION S.A.S.</span>delega en <span className="has-text-weight-semibold">PlacetoPay</span> la captura de la información sensible. Nuestra plataforma de pagos cumple con los más altos estándares exigidos por la norma internacional PCI DSS de seguridad en transacciones con tarjeta de crédito. Además tiene certificado de seguridad SSL expedido por GeoTrust una compañía Verisign, el cual garantiza comunicaciones seguras mediante la encriptación de todos los datos hacia y desde el sitio; de esta manera te podrás sentir seguro a la hora de ingresar la información de su tarjeta.
