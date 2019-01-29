@@ -5,6 +5,8 @@ import ImageInput from "../../../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
 import {FormattedMessage} from "react-intl";
+import CKEditor from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 class ModalCrud extends Component {
     constructor(props){
@@ -97,6 +99,10 @@ class ModalCrud extends Component {
         const {value, name} = e.target;
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
+    handleChangeHtmlEditor = (name,value) => { 
+        alert('ui')
+        // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
+    };
 
     // currentDay(){
     //     let fecha = new Date();
@@ -165,6 +171,25 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
+            if (type == "htmlEditor") {
+                input =
+                <React.Fragment>
+                <CKEditor
+                editor={ ClassicEditor }
+                data="<p></p>"
+                onInit={ editor => {
+                    // You can store the "editor" and use when it is needed.
+                    console.log( 'Editor is ready to use!', editor );
+                } }
+                onChange={ ( event, editor ) => {
+                    const data = editor.getData();
+                    this.handleChangeHtmlEditor(name, data)
+                    console.log( { event, editor, data } );
+                } }
+            />
+             </React.Fragment>
+            }
+        
             if (type == "list") {
                 input = data.options.map((o,key) => {
                     return (<option key={key} value={o.value}>{o.value}</option>);
@@ -233,7 +258,9 @@ class ModalCrud extends Component {
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
                         <div className="modal-background"/>
+                     
                         <div className="modal-card">
+                      
                             <header className="modal-card-head">
                                 <div className="modal-card-title">
                                     <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
@@ -252,6 +279,7 @@ class ModalCrud extends Component {
                                 {
                                     this.renderForm()
                                 }
+                                  
                             </section>
                             {
                                     <footer className="modal-card-foot">
@@ -275,7 +303,9 @@ class ModalCrud extends Component {
                                 </footer>
                             }
                         </div>
+                       
                     </div>
+               
             </React.Fragment>
         )
     }

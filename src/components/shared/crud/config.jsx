@@ -122,7 +122,7 @@ const configCrud = {
                 edit: false,
                 label: "Descripción",
                 mandatory: false,
-                type: "text",
+                type: "htmlEditor",
                 unique: false
             },
             {

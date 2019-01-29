@@ -46,8 +46,7 @@ class TableProgramme extends Component{
                                                     </AccordionItemBody>
                                                 </AccordionItem>
                                             </Accordion>
-                                        </td>
-                                     
+                                        </td>                                   
                                     </tr>                       
                                 }
                             )                                                                                                                                                           

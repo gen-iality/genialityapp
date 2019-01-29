@@ -104,7 +104,7 @@ class Event extends Component {
     render() {
         
         const { match,permissions } = this.props;
-        console.log('======AQUI ESTA EL MATCH======= >>>',match)
+  
         const { timeout } = this.state;
         return (
             <React.Fragment>

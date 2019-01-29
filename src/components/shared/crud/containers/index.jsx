@@ -30,7 +30,7 @@ class ContainerCrud extends Component {
         this.config = configCrud[this.props.idModel];
         //setiar en blanco
         this.getData();
-        console.log('en el metodoto mount ==>>> ', this.config)
+        // console.log('en el metodoto mount ==>>> ', this.config)
     }
 
     componentDidUpdate(prevProps) {
@@ -59,20 +59,12 @@ class ContainerCrud extends Component {
 
      //Usamos esta funcion para generar las cabeceras de las tablas con su llave y su label, solo se usa como ayuda, no hace parte de el desarrollo
      generaCabecerasDeConfiguracion(array){
-        console.log('HEADERS DE CONFIGURACION===>> ', array)
+        // console.log('HEADERS DE CONFIGURACION===>> ', array)
      }
 
     // Consigue la informacion que se va a cargar en la lista de la tabla de el crud
     async getData(){
-      
-        // const pageOfItems = [
-        // {
-        //     id: '',
-        //     name : '',
-        //     created_at: '',
-        //     updated_at: ''
-        // }
-        // ]
+   
         let resp = await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
 
         try{
@@ -80,8 +72,7 @@ class ContainerCrud extends Component {
         }catch(e){
             console.log('no hay datos pra generar las cabeceras')
         }
-        
-      
+
         this.setState({
             pageOfItems: []
         });
@@ -109,11 +100,15 @@ class ContainerCrud extends Component {
             if(field.type === 'text' || field.type === 'list')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
             if(field.type === 'date')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
             if(field.type === 'time')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
+            if(field.type === 'htmlEditor')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
             if(field.type === 'number') valid = infoNew[field.name] && infoNew[field.name] >= 0;
             if(field.type === 'boolean') valid = (typeof infoNew[field.name] === "boolean");
             return validations[key] = valid;
         });
+
+    
         const valid = validations.reduce((sum, next) => sum && next, true);
+   
         this.setState({valid:!valid})
     };
    
