@@ -21,7 +21,7 @@ class ModalCrud extends Component {
         }
 
         this.submitForm = this.submitForm.bind(this)
-      
+        // this.currentDay= this.currentDay.bind(this)
     }
 
     componentDidMount() {
@@ -96,8 +96,17 @@ class ModalCrud extends Component {
         // console.log('estamo cargando ==== ', this.state )
         const {value, name} = e.target;
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
-
     };
+
+    // currentDay(){
+    //     let fecha = new Date();
+    //     let day = fecha.getDate();
+    //     let month = fecha.getMonth() ;
+    //     let year = fecha.getFullYear();
+
+    //     console.log('fecha actual ==> >> ',`${year}-1-${day}`)
+    //     return `${year}-1-${day}`;
+    // }
 
 
 
@@ -139,9 +148,9 @@ class ModalCrud extends Component {
                             id={name}
                             className="is-checkradio is-primary is-rtl"
                             type="date"
-                            // checked={value}
-                            onChange={(e)=>{this.handleChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}></label>
+                            min = '2018-01-15'
+                            value={value || ''}
+                            onChange={(e)=>{this.handleChange(e, type)}} />        
                     </React.Fragment>
             }
             if (type == "time") {
@@ -152,9 +161,8 @@ class ModalCrud extends Component {
                             id={name}
                             className="is-checkradio is-primary is-rtl"
                             type="time"
-                            // checked={value}
+                            value={value || ''}
                             onChange={(e)=>{this.handleChange(e, type)}} />
-                        <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}></label>
                     </React.Fragment>
             }
             if (type == "list") {
@@ -219,6 +227,7 @@ class ModalCrud extends Component {
     };
 
     render(){
+       
         const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         return(
             <React.Fragment>

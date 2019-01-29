@@ -44,11 +44,11 @@ class ModalSpeaker extends Component{
                                 </div>
                             </section>
                             {
-                                <footer className="modal-card-foot">
+                            <footer className="modal-card-foot">
                                 {
                                     
                                 }
-                                </footer>
+                            </footer>
                             }
                         </div>
                     </div>

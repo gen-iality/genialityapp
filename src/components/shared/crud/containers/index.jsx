@@ -107,6 +107,8 @@ class ContainerCrud extends Component {
             let valid;
             if(field.type === 'email')  valid = infoNew[field.name].length > 5 && infoNew[field.name].length < 61 && EMAIL_REGEX.test(infoNew[field.name]);
             if(field.type === 'text' || field.type === 'list')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
+            if(field.type === 'date')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
+            if(field.type === 'time')  valid = infoNew[field.name] && infoNew[field.name].length > 0 && infoNew[field.name] !== "";
             if(field.type === 'number') valid = infoNew[field.name] && infoNew[field.name] >= 0;
             if(field.type === 'boolean') valid = (typeof infoNew[field.name] === "boolean");
             return validations[key] = valid;
@@ -167,7 +169,6 @@ class ContainerCrud extends Component {
   
 
     render() {
-        console.log('Este es el config ===>>> ',this.config)
         return (
             <div>
                 {/* <p>fruta</p> */}

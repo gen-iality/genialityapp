@@ -39,7 +39,7 @@ class AdditonalDataEvent extends Component{
         if(!key)
         var key = array[0]['date']    
         let sessions = array.filter((element)=> element.date == key)
-        this.setState({filteredSessions: this.OrderByTime(sessions, 'time') })
+        this.setState({filteredSessions: this.OrderByTime(sessions, 'timeStart') })
     }
 
     //Prepara los headers de los tabs agrupandolos y agregandole la etiqueta de label para que la fecha sea mas legible
@@ -57,8 +57,7 @@ class AdditonalDataEvent extends Component{
     }
 
      //Ordenamos el array en base a la hora, enviamos el array a ordenar y el campo donde esta la hora en formato 'hh:mm' de tipo string
-     OrderByTime(array,field){
-        
+     OrderByTime(array,field){   
         let resp =  array.sort((a,b)=> this.converHourToNumber(a[field])- this.converHourToNumber((b[field])));
         return resp;
      }
@@ -81,7 +80,7 @@ class AdditonalDataEvent extends Component{
         return (
             <React.Fragment>
                 <ListSpeakers speakers = {this.props.eventInfo.speaker} /> 
-                <ListProgramme sessions = {this.state.sessions} filterByDays= {this.filterByDays.bind(this)} filteredSessions= {this.state.filteredSessions} headersTable={this.state.headersTable} /> 
+                <ListProgramme eventId={this.eventId} sessions = {this.state.sessions} filterByDays= {this.filterByDays.bind(this)} filteredSessions= {this.state.filteredSessions} headersTable={this.state.headersTable} /> 
              </React.Fragment>
         );
     }

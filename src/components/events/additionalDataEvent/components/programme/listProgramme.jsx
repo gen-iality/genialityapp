@@ -24,7 +24,7 @@ class ListProgramme extends Component{
                             }
                             </ul>
                 </div>
-                <TableProgramme filteredSessions= {this.props.filteredSessions} />
+                <TableProgramme eventId={this.props.eventId} filteredSessions= {this.props.filteredSessions} />
             </React.Fragment>
         );
     }

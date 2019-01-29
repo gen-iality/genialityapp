@@ -13,6 +13,7 @@ import Privacy from "../components/policies/privacyPolicy";
 import {ApiUrl} from "../helpers/constants";
 import ContainerCrud from '../components/shared/crud/containers';
 
+
 class ContentContainer extends Component {
     componentWillMount(){
         this.props.history.index=0
@@ -31,7 +32,6 @@ class ContentContainer extends Component {
                     <Route exact path="/terms" component={ Terms } />
                     <Route exact path="/privacy" component={ Privacy } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
-                    
                     {/* Enviamos el id de el modelo, de el crud al con el que queremos trabajar  Ejemplo: Speaker, Agenda, Sponsor Etc..*/}
                     <Route exact path="/crud/:idModel" component={ ContainerCrud } />
                 </Switch>

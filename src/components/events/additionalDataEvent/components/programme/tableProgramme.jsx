@@ -1,28 +1,64 @@
 import React, {Component} from 'react';
+import { Route, NavLink, Redirect, Switch } from "react-router-dom";
+import {
+    Accordion,
+    AccordionItem,
+    AccordionItemTitle,
+    AccordionItemBody,
+} from 'react-accessible-accordion';
+
+// Demo styles, see 'Styles' section below for some notes on use.
+
 import '../../styles.css';
 class TableProgramme extends Component{
 
     constructor(props){
         super(props)   
+        console.log('llego a a tabla ', this.props)
     }
 
+    
 
+    handleClick = (e) => {
+        if(!navigator.onLine) e.preventDefault();
+    };
     render() {  
+        console.log("here in table", this.props);
         return (
-            <React.Fragment>
-               
+            <React.Fragment>    
                 <table className="table"> 
-                    <tbody> 
-                       
-                        {
+                    <tbody>                   
+                        {   
                             this.props.filteredSessions.map((item,key)=>{
-                            return   <tr key={key}><td>{item.time}</td>    <td>{item.name}</td>  </tr> 
-                        
+                            return  <tr key={key} >
+                                        <td>{item.timeStart}</td>    
+                                        <td>
+                                            <Accordion>
+                                                <AccordionItem>
+                                                    <AccordionItemTitle>
+                                                    {item.name}
+                                                    </AccordionItemTitle>
+                                                    <AccordionItemBody>
+                                                        {/* <p>{JSON.stringify(item)}</p> */}
+                                                        <p>{item.description}</p>
+                                                        <p>{item.timeStart}</p>
+                                                        <p>{item.timeEnd}</p>
+                                                    </AccordionItemBody>
+                                                </AccordionItem>
+                                            </Accordion>
+                                        </td>
+                                     
+                                    </tr>                       
                                 }
-                                )                                                                                                                                                           
+                            )                                                                                                                                                           
                         }                   
                     </tbody> 
                  </table>
+            
+
+
+                 
+              
             </React.Fragment>
         )
     }

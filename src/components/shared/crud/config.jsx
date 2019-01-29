@@ -94,14 +94,6 @@ const configCrud = {
                 unique: false
             },
             {
-                name: "position",
-                edit: false,
-                label: "Cargo",
-                mandatory: false,
-                type: "text",
-                unique: false
-            },
-            {
                 name: "date",
                 edit: false,
                 label: "Fecha",
@@ -110,27 +102,19 @@ const configCrud = {
                 unique: false
             },
             {
-                name: "time",
+                name: "timeStart",
                 edit: false,
-                label: "Hora",
-                mandatory: false,
+                label: "Hora Inicio",
+                mandatory: true,
                 type: "time",
                 unique: false
             },
             {
-                name: "company",
+                name: "timeEnd",
                 edit: false,
-                label: "Empresa/Organización",
-                mandatory: false,
-                type: "text",
-                unique: false
-            },
-            {
-                name: "country",
-                edit: false,
-                label: "País",
-                manadatory: false,
-                type: "text",
+                label: "Hora Final",
+                mandatory: true,
+                type: "time",
                 unique: false
             },
             {
@@ -153,8 +137,8 @@ const configCrud = {
         ],
         ListCrud:{
              //El numero de elementos de header y fieldsTable deben de ser los mismo , tienen un relacion por la posicion de cada uno
-             headers:     [ "Imagen",  "Nombre", "Posicion", "Compañia", "Pais", 'Fecha','Hora',"acciones"],
-             fieldsTable: [ "picture", "name",   "position", "company", "country", 'date', 'time',"acciones"],
+             headers:     [ "Imagen",  "Nombre",  'Fecha','Hora',"acciones"],
+             fieldsTable: [ "picture", "name",  'date', 'time',"acciones"],
             urls: {
                 getAll: (eventId) =>  `api/events/${eventId}/sessions`,
                 create: (eventId) =>  `api/events/${eventId}/sessions`,
