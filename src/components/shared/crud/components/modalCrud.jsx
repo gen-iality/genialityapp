@@ -5,8 +5,7 @@ import ImageInput from "../../../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
 import {FormattedMessage} from "react-intl";
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import EditorHtml from './editorHtml';
 
 class ModalCrud extends Component {
     constructor(props){
@@ -19,10 +18,13 @@ class ModalCrud extends Component {
             modalFields: [],
             newInfo: {},
             speaker: "",
+   
             picture: null
         }
 
         this.submitForm = this.submitForm.bind(this)
+        this.handleChange = this.handleChange.bind( this );
+        
         // this.currentDay= this.currentDay.bind(this)
     }
 
@@ -95,12 +97,13 @@ class ModalCrud extends Component {
 
 
     handleChange = (e,type) => {
-        // console.log('estamo cargando ==== ', this.state )
+        
         const {value, name} = e.target;
+        console.log('estamo cargando ==== ', this.state.newInfo)
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
     handleChangeHtmlEditor = (name,value) => { 
-        alert('ui')
+   
         // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
 
@@ -125,14 +128,16 @@ class ModalCrud extends Component {
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
-            let input =  <input {...props}
-                                className="input"
-                                type={type}
-                                key={key}
-                                name={name}
-                                value={value || ''}
-                                onChange={value => this.handleChange(value, type)}
-            />;
+            let input = '';
+      
+            //    let input =  <input {...props}
+            //                     className="input"
+            //                     type={type}
+            //                     key={key}
+            //                     name={name}
+            //                     value={value || ''}
+            //                     onChange={value => this.handleChange(value, type)}
+            // />;
             if (type == "boolean") {
                 input =
                     <React.Fragment>
@@ -171,36 +176,46 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "htmlEditor") {
+            if (type == "text") {
                 input =
-                <React.Fragment>
-                <CKEditor
-                editor={ ClassicEditor }
-                data="<p></p>"
-                onInit={ editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log( 'Editor is ready to use!', editor );
-                } }
-                onChange={ ( event, editor ) => {
-                    const data = editor.getData();
-                    this.handleChangeHtmlEditor(name, data)
-                    console.log( { event, editor, data } );
-                } }
-            />
-             </React.Fragment>
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="text"
+                            value={value || ''}
+                            onChange={(e)=>{this.handleChange(e, type)}} />
+                    </React.Fragment>
+            }
+            if (type == "htmlEditor") {
+               input = <EditorHtml />
+            //     <React.Fragment>
+            //     <CKEditor
+            //     editor={ ClassicEditor }
+            //     data="<p></p>"
+               
+            //     onChange={ ( event, editor ) => {
+            //         const data = editor.getData();
+            //      alert('djj')
+            //         // this.handleChangeHtmlEditor(name, data)
+            //         console.log( { event, editor, data } );
+            //     } }
+            // />
+            //  </React.Fragment>
             }
         
-            if (type == "list") {
-                input = data.options.map((o,key) => {
-                    return (<option key={key} value={o.value}>{o.value}</option>);
-                });
-                input = <div className="select">
-                    <select name={name}  onChange={(e)=>{this.onChange(e, type)}}>
-                        <option value={""}>Seleccione...</option>
-                        {input}
-                    </select>
-                </div>;
-            }
+            // if (type == "list") {
+            //     input = data.options.map((o,key) => {
+            //         return (<option key={key} value={o.value}>{o.value}</option>);
+            //     });
+            //     input = <div className="select">
+            //         <select name={name}  onChange={(e)=>{this.onChange(e, type)}}>
+            //             <option value={""}>Seleccione...</option>
+            //             {input}
+            //         </select>
+            //     </div>;
+            // }
             return (
                 <div key={'g' + key} className="field">
                     {

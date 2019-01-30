@@ -14,8 +14,7 @@ class ContainerCrud extends Component {
             pageOfItems: [],
             data: {},
             itemInfo: {},
-            valid: true,
-            refreshList: true
+            valid: true
         };
         
        
@@ -34,7 +33,7 @@ class ContainerCrud extends Component {
     }
 
     componentDidUpdate(prevProps) {
-  
+        
         if(this.props.idModel != prevProps.idModel){
             this.config = configCrud[this.props.idModel];
             //setiar en blanco
@@ -42,9 +41,9 @@ class ContainerCrud extends Component {
             console.log('en el metodoto update ==>>> ', this.config)
         }
     }
-    async refreshList() {
-        return await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
-    }
+    // async refreshList() {
+    //     return await Actions.getAll(this.config.ListCrud.urls.getAll(this.eventId));
+    // }
 
 
     componentWillUnmount(){
@@ -79,7 +78,7 @@ class ContainerCrud extends Component {
         this.setState({
             pageOfItems: resp.data
         });
-        this.refreshList() 
+        // this.refreshList() 
 
     }
 
@@ -178,7 +177,7 @@ class ContainerCrud extends Component {
                 </div>
                 <React.Fragment>
                     {this.config &&
-                    <ListCrud  data={this.state.pageOfItems} config={this.config} delete={this.delete.bind(this)}  update={this.update.bind(this)} refreshList={this.refreshList}  updateTable= {this.updateTable.bind(this)}  />}
+                    <ListCrud  data={this.state.pageOfItems} config={this.config} delete={this.delete.bind(this)}  update={this.update.bind(this)}  updateTable= {this.updateTable.bind(this)}  />}
                 </React.Fragment>
             </div>
         );
