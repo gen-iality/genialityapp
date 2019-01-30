@@ -56,21 +56,12 @@ class ModalCrud extends Component {
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
             
-            let informacionEditar = Object.keys(this.props.itemInfo).length
-            
-            if(informacionEditar<1){
-                const resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
-            }
-            else{
-                const resp =  await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
-             
-            }
+            let informacionEditar = Object.keys(this.props.itemInfo).length;
+            const resp = (informacionEditar<1) ? await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData)
+                :await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
             // this.setState({newInfo: {}})
             this.props.updateTable()
-           
 
-
-            
             // let resp = "Testing";
             console.log(resp);
             if (resp.message === 'OK'){
