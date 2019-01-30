@@ -5,7 +5,8 @@ import ImageInput from "../../../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
 import {FormattedMessage} from "react-intl";
-import EditorHtml from './editorHtml';
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import CKEditor from "@ckeditor/ckeditor5-react";
 
 class ModalCrud extends Component {
     constructor(props){
@@ -23,8 +24,6 @@ class ModalCrud extends Component {
         }
 
         this.submitForm = this.submitForm.bind(this)
-        this.handleChange = this.handleChange.bind( this );
-        
         // this.currentDay= this.currentDay.bind(this)
     }
 
@@ -49,8 +48,7 @@ class ModalCrud extends Component {
         e.preventDefault();
         e.stopPropagation();
         const formData = this.state.newInfo;
-        
-    
+
         this.props.hideModal(); 
         
         let message = {};
@@ -61,10 +59,10 @@ class ModalCrud extends Component {
             let informacionEditar = Object.keys(this.props.itemInfo).length
             
             if(informacionEditar<1){
-                var resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
+                const resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
             }
             else{
-                var resp =  await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
+                const resp =  await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
              
             }
             // this.setState({newInfo: {}})
@@ -95,15 +93,13 @@ class ModalCrud extends Component {
         this.setState({message, create:false});
     }
 
-
     handleChange = (e,type) => {
-        
         const {value, name} = e.target;
         console.log('estamo cargando ==== ', this.state.newInfo)
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
-    handleChangeHtmlEditor = (name,value) => { 
-   
+    handleChangeHtmlEditor = (event,data) => {
+        console.log( { event, data } );
         // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
 
@@ -188,8 +184,17 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "htmlEditor") {
-               input = <EditorHtml />
+            if (type == "description") {
+               input =
+                   <CKEditor
+                       editor={ ClassicEditor }
+                       data="<p></p>"
+                       readOnly={false}
+                       onChange={ ( event, editor ) => {
+                           const data = editor.getData();
+                           this.handleChangeHtmlEditor(event, data)
+                       } }
+                   />
             //     <React.Fragment>
             //     <CKEditor
             //     editor={ ClassicEditor }
