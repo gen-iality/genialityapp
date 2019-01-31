@@ -5,11 +5,11 @@ import ImageInput from "../../../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
 import {FormattedMessage} from "react-intl";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import CKEditor from "@ckeditor/ckeditor5-react";
+import EditorHtml from './editorHtml';
 
 class ModalCrud extends Component {
     constructor(props){
+  
         super(props)
         this.state = {
             formValid:  false,
@@ -19,16 +19,18 @@ class ModalCrud extends Component {
             modalFields: [],
             newInfo: {},
             speaker: "",
-   
             picture: null
         }
-
+        this.estadoEditar = {};
         this.submitForm = this.submitForm.bind(this)
+        this.handleChangeHtmlEditor= this.handleChangeHtmlEditor.bind(this)
         // this.currentDay= this.currentDay.bind(this)
+  
     }
 
     componentDidMount() {
-
+        // console.log('this.refsEditor=> ', this.refsEditor)
+        // this.refsEditor.current.focus();
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
@@ -39,6 +41,8 @@ class ModalCrud extends Component {
             //cargamos la informacion en caso de que la queramos actualizar en el modal
             newInfo[info.name] = this.props.itemInfo[info.name] || ''));
         this.setState({newInfo, edit:false});
+
+      
     }
 
     /*
@@ -63,7 +67,6 @@ class ModalCrud extends Component {
             this.props.updateTable()
 
             // let resp = "Testing";
-            console.log(resp);
             if (resp.message === 'OK'){
                 this.props.addToList(resp.data);
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
@@ -77,36 +80,30 @@ class ModalCrud extends Component {
                 this.props.hideModal(); 
             },1000)
         } catch (err) {
-            console.log(err.response);
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
         this.setState({message, create:false});
     }
 
+
     handleChange = (e,type) => {
         const {value, name} = e.target;
-        console.log('estamo cargando ==== ', this.state.newInfo)
+       
+        // return
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
-    handleChangeHtmlEditor = (event,data) => {
-        console.log( { event, data } );
-        // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
+    handleChangeHtmlEditor = (name,value) => {
+        console.log('entraomos al padre ',name, value)
+        // this.estadoEditar = this.state.newInfo
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
 
-    // currentDay(){
-    //     let fecha = new Date();
-    //     let day = fecha.getDate();
-    //     let month = fecha.getMonth() ;
-    //     let year = fecha.getFullYear();
-
-    //     console.log('fecha actual ==> >> ',`${year}-1-${day}`)
-    //     return `${year}-1-${day}`;
-    // }
-
+   
 
 
     renderForm = () => {
+       
         let formUI = this.state.modalFields.map((data, key) => {
             let type = data.type || "text";
             let props = data.props || {};
@@ -175,17 +172,21 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "description") {
-               input =
-                   <CKEditor
-                       editor={ ClassicEditor }
-                       data="<p></p>"
-                       readOnly={false}
-                       onChange={ ( event, editor ) => {
-                           const data = editor.getData();
-                           this.handleChangeHtmlEditor(event, data)
-                       } }
-                   />
+            if (type == "htmlEditor") {
+                const { editorState } = this.state;
+               input = <EditorHtml name= {name} value={value || ''} dataEditor={this.state.newInfo[name]}  handleChangeHtmlEditor = {this.handleChangeHtmlEditor}/>
+            //    <Editor
+            //    ref={this.refsEditor}
+            //    editorState={editorState}
+            //    onChange={this.onChange} />
+                //    <CKEditor
+                //        editor={ ClassicEditor }
+                //        data="<p></p>"
+                //        onChange={ ( event, editor ) => {
+                //            const data = editor.getData();
+                //            this.handleChange({e:{target:{name:'description ',value:data}}}, type)
+                //        } }
+                //    />
             //     <React.Fragment>
             //     <CKEditor
             //     editor={ ClassicEditor }
@@ -195,7 +196,6 @@ class ModalCrud extends Component {
             //         const data = editor.getData();
             //      alert('djj')
             //         // this.handleChangeHtmlEditor(name, data)
-            //         console.log( { event, editor, data } );
             //     } }
             // />
             //  </React.Fragment>
@@ -244,7 +244,6 @@ class ModalCrud extends Component {
                 let data = new FormData();
                 data.append('file',file);
                 return Actions.post(url,data).then((image) => {
-                    // console.log(image);
                     if(image) path.push(image);
                 });
             });
@@ -253,7 +252,6 @@ class ModalCrud extends Component {
                 this.setState({newInfo: {...this.state.newInfo,
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
-                    // console.log('here info', this.state);
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
             }
