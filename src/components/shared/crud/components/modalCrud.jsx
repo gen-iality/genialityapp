@@ -5,11 +5,11 @@ import ImageInput from "../../../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
 import {FormattedMessage} from "react-intl";
-import CKEditor from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import EditorHtml from './editorHtml';
 
 class ModalCrud extends Component {
     constructor(props){
+  
         super(props)
         this.state = {
             formValid:  false,
@@ -21,13 +21,16 @@ class ModalCrud extends Component {
             speaker: "",
             picture: null
         }
-
+        this.estadoEditar = {};
         this.submitForm = this.submitForm.bind(this)
+        this.handleChangeHtmlEditor= this.handleChangeHtmlEditor.bind(this)
         // this.currentDay= this.currentDay.bind(this)
+  
     }
 
     componentDidMount() {
-
+        // console.log('this.refsEditor=> ', this.refsEditor)
+        // this.refsEditor.current.focus();
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
@@ -38,6 +41,8 @@ class ModalCrud extends Component {
             //cargamos la informacion en caso de que la queramos actualizar en el modal
             newInfo[info.name] = this.props.itemInfo[info.name] || ''));
         this.setState({newInfo, edit:false});
+
+      
     }
 
     /*
@@ -47,8 +52,7 @@ class ModalCrud extends Component {
         e.preventDefault();
         e.stopPropagation();
         const formData = this.state.newInfo;
-        
-    
+
         this.props.hideModal(); 
         
         let message = {};
@@ -56,23 +60,13 @@ class ModalCrud extends Component {
         try {
             // let resp = await UsersApi.createOne(snap,this.props.eventId);
             
-            let informacionEditar = Object.keys(this.props.itemInfo).length
-            
-            if(informacionEditar<1){
-                var resp =  await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData);
-            }
-            else{
-                var resp =  await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
-             
-            }
+            let informacionEditar = Object.keys(this.props.itemInfo).length;
+            const resp = (informacionEditar<1) ? await Actions.create(this.props.config.ListCrud.urls.create(this.props.enventInfo._id),formData)
+                :await Actions.edit(this.props.config.ListCrud.urls.edit(this.props.enventInfo._id),formData,this.props.itemInfo._id);
             // this.setState({newInfo: {}})
             this.props.updateTable()
-           
 
-
-            
             // let resp = "Testing";
-            console.log(resp);
             if (resp.message === 'OK'){
                 this.props.addToList(resp.data);
                 message.class = (resp.status === 'CREATED')?'msg_success':'msg_warning';
@@ -86,7 +80,6 @@ class ModalCrud extends Component {
                 this.props.hideModal(); 
             },1000)
         } catch (err) {
-            console.log(err.response);
             message.class = 'msg_error';
             message.content = 'ERROR...TRYING LATER';
         }
@@ -95,28 +88,22 @@ class ModalCrud extends Component {
 
 
     handleChange = (e,type) => {
-        // console.log('estamo cargando ==== ', this.state )
         const {value, name} = e.target;
+       
+        // return
         this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
-    handleChangeHtmlEditor = (name,value) => { 
-        alert('ui')
-        // this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
+    handleChangeHtmlEditor = (name,value) => {
+        console.log('entraomos al padre ',name, value)
+        // this.estadoEditar = this.state.newInfo
+        this.setState({newInfo:{...this.state.newInfo,[name]: value}}, this.props.validForm(this.state.modalFields, this.state.newInfo));
     };
 
-    // currentDay(){
-    //     let fecha = new Date();
-    //     let day = fecha.getDate();
-    //     let month = fecha.getMonth() ;
-    //     let year = fecha.getFullYear();
-
-    //     console.log('fecha actual ==> >> ',`${year}-1-${day}`)
-    //     return `${year}-1-${day}`;
-    // }
-
+   
 
 
     renderForm = () => {
+       
         let formUI = this.state.modalFields.map((data, key) => {
             let type = data.type || "text";
             let props = data.props || {};
@@ -125,14 +112,16 @@ class ModalCrud extends Component {
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
-            let input =  <input {...props}
-                                className="input"
-                                type={type}
-                                key={key}
-                                name={name}
-                                value={value || ''}
-                                onChange={value => this.handleChange(value, type)}
-            />;
+            let input = '';
+      
+            //    let input =  <input {...props}
+            //                     className="input"
+            //                     type={type}
+            //                     key={key}
+            //                     name={name}
+            //                     value={value || ''}
+            //                     onChange={value => this.handleChange(value, type)}
+            // />;
             if (type == "boolean") {
                 input =
                     <React.Fragment>
@@ -171,36 +160,58 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "htmlEditor") {
+            if (type == "text") {
                 input =
-                <React.Fragment>
-                <CKEditor
-                editor={ ClassicEditor }
-                data="<p></p>"
-                onInit={ editor => {
-                    // You can store the "editor" and use when it is needed.
-                    console.log( 'Editor is ready to use!', editor );
-                } }
-                onChange={ ( event, editor ) => {
-                    const data = editor.getData();
-                    this.handleChangeHtmlEditor(name, data)
-                    console.log( { event, editor, data } );
-                } }
-            />
-             </React.Fragment>
+                    <React.Fragment>
+                        <input
+                            name={name}
+                            id={name}
+                            className="is-checkradio is-primary is-rtl"
+                            type="text"
+                            value={value || ''}
+                            onChange={(e)=>{this.handleChange(e, type)}} />
+                    </React.Fragment>
+            }
+            if (type == "htmlEditor") {
+                const { editorState } = this.state;
+               input = <EditorHtml name= {name} value={value || ''} dataEditor={this.state.newInfo[name]}  handleChangeHtmlEditor = {this.handleChangeHtmlEditor}/>
+            //    <Editor
+            //    ref={this.refsEditor}
+            //    editorState={editorState}
+            //    onChange={this.onChange} />
+                //    <CKEditor
+                //        editor={ ClassicEditor }
+                //        data="<p></p>"
+                //        onChange={ ( event, editor ) => {
+                //            const data = editor.getData();
+                //            this.handleChange({e:{target:{name:'description ',value:data}}}, type)
+                //        } }
+                //    />
+            //     <React.Fragment>
+            //     <CKEditor
+            //     editor={ ClassicEditor }
+            //     data="<p></p>"
+               
+            //     onChange={ ( event, editor ) => {
+            //         const data = editor.getData();
+            //      alert('djj')
+            //         // this.handleChangeHtmlEditor(name, data)
+            //     } }
+            // />
+            //  </React.Fragment>
             }
         
-            if (type == "list") {
-                input = data.options.map((o,key) => {
-                    return (<option key={key} value={o.value}>{o.value}</option>);
-                });
-                input = <div className="select">
-                    <select name={name}  onChange={(e)=>{this.onChange(e, type)}}>
-                        <option value={""}>Seleccione...</option>
-                        {input}
-                    </select>
-                </div>;
-            }
+            // if (type == "list") {
+            //     input = data.options.map((o,key) => {
+            //         return (<option key={key} value={o.value}>{o.value}</option>);
+            //     });
+            //     input = <div className="select">
+            //         <select name={name}  onChange={(e)=>{this.onChange(e, type)}}>
+            //             <option value={""}>Seleccione...</option>
+            //             {input}
+            //         </select>
+            //     </div>;
+            // }
             return (
                 <div key={'g' + key} className="field">
                     {
@@ -233,7 +244,6 @@ class ModalCrud extends Component {
                 let data = new FormData();
                 data.append('file',file);
                 return Actions.post(url,data).then((image) => {
-                    // console.log(image);
                     if(image) path.push(image);
                 });
             });
@@ -242,7 +252,6 @@ class ModalCrud extends Component {
                 this.setState({newInfo: {...this.state.newInfo,
                         picture: path[0]
                     }, fileMsg:'Imagen subida con exito', imageFile:null, path});
-                    // console.log('here info', this.state);
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
             }
