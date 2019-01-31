@@ -78,7 +78,36 @@
   
 }
 
+/* ESTILOS DE LOS BOTONES */
+.botonera{
+    text-align: center;
+    overflow-wrap: break-word;
+}
+.botones{
+    font-size: 1.2em;
+    background-color: #EEEEEF;
+    color: #BBBBBB;
+    text-transform: uppercase;
+    /* display: inline; */
+    margin: 0px 20px;
+    padding: 10px 0px;
+    border: 0;
+    width: 200px;
+    height: 50px;
+    overflow-wrap: break-word;
+}
 
+.botones:hover{
+    background-color: #00EEBB;
+    color:  white;
+}
+@media (max-width: 768px){
+    .botones{
+        width: 100%;
+        margin: 0px 0px 5px 0px;
+
+    } 
+}
 
 
 
@@ -246,4 +275,5 @@
     animation-name: move-up;
     animation-duration: 1.5s;
 }
+
 /* ======================== */
