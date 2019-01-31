@@ -13,8 +13,14 @@ class ListProgramme extends Component{
     render() {
         return (
             <React.Fragment>
-                <br/>   <br/>
-                <p className="has-text-grey-dark is-size-2 cabecera">AGENDA</p>
+                <br/> <br/>
+                <div className="botonera">
+                    <p className="button botones is-rounded">agenda</p>
+                    <p className="button botones is-rounded">agenda</p>
+                    <p className="button botones is-rounded">agenda</p>
+                    <p className="button botones is-rounded">agenda</p>
+                    <p className="button botones is-rounded">agenda</p>
+                </div>
                 <div className="tabs">
                             <ul>
                                     {
