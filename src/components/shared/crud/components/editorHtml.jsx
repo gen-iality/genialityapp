@@ -1,56 +1,59 @@
 import React, {Component} from 'react';
 import '../crud.css'
-import Table from '../../table';
-import Pagination from "../../../shared/pagination";
-import {Editor, EditorState, convertFromRaw, convertToRaw} from 'draft-js';
+
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { EditorState,convertFromRaw ,convertToRaw} from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
 import {stateToHTML} from 'draft-js-export-html';
-import {stateFromHTML} from 'draft-js-import-html';
+import 'draft-js-static-toolbar-plugin/lib/plugin.css';
+
 class EditarHtml extends Component {
     constructor(props){
         super(props);
-        //convertimos el html en un objeto que el WYSIWYG lo pueda leer
-        // let dataEditor = stateFromHTML(this.props.value);
-        // console.log('^^^^^^^^^^^|^^^^^^^^^|^^^^^ ',this.props.value )
-        // let editorState = EditorState.createEmpty(this.props.value)
-        // console.log('=-=-=-=',JSON.parse(this.props.value) )
-        if (this.props.value) {
-            const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value));
-            var editorState =EditorState.createWithContent(rawContentFromStore);
-        }else{
-            var editorState = EditorState.createEmpty()
-        }
-        
-       this.state = {
-         editorState: editorState, // for empty content
+        this.state = {
+            editorState : EditorState.createEmpty(),
        }
-  
-       this.onChange = (editorState) => {
-        this.setState({ editorState });
-        // let html = stateToHTML(editorState.getCurrentContent());
-        let html = convertToRaw(editorState.getCurrentContent());
-        console.log('esta esta convertida en raw ', html)
-        //convertimos el objeto que devuelve el WYSIWYG en html para enviarlo al componente padre   
-        this.props.handleChangeHtmlEditor(this.props.name, JSON.stringify(html))
-      };
-
-
-       
-     
+       console.log('ppopopopo ',this.props)
+       if (this.props.value) {
+        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value.value));
+        var editorState =EditorState.createWithContent(rawContentFromStore);
+    }else{
+        var editorState = EditorState.createEmpty()
     }
+    
+   this.state = {
+     editorState: editorState, // for empty content
+   }
+    }
+   
 
+   
+    onEditorStateChange = (editorState) => {
+        this.setState({
+          editorState,
+        });
+        let html = editorState.getCurrentContent()
+        let dataEditor = convertToRaw(editorState.getCurrentContent());
+        let info = {value :JSON.stringify(dataEditor) ,html: stateToHTML(html) }
+        // console.log('esta esta convertida en raw ', html)
+        //convertimos el objeto que devuelve el WYSIWYG en html para enviarlo al componente padre   
+        this.props.handleChangeHtmlEditor(this.props.name ,info)
+        // console.log(editorState)
+      };
+    
   
-
     render() {
         const { editorState } = this.state;
-  
+       
         return(
             <React.Fragment>
-                
                 <Editor
-           
-               editorState={editorState}
-               onChange={this.onChange} />
-            
+                    editorState={editorState}
+                    toolbarClassName="toolbarClassName"
+                    wrapperClassName="wrapperClassName"
+                    editorClassName="editorClassName"
+                    onEditorStateChange={this.onEditorStateChange}
+                    />
             </React.Fragment>
         )
     }

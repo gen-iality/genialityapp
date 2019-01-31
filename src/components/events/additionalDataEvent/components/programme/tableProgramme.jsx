@@ -6,6 +6,7 @@ import {
     AccordionItemTitle,
     AccordionItemBody,
 } from 'react-accessible-accordion';
+import renderHTML from 'react-render-html';
 
 // Demo styles, see 'Styles' section below for some notes on use.
 
@@ -14,7 +15,7 @@ class TableProgramme extends Component{
 
     constructor(props){
         super(props)   
-        console.log('llego a a tabla ', this.props)
+
     }
 
     
@@ -23,7 +24,7 @@ class TableProgramme extends Component{
         if(!navigator.onLine) e.preventDefault();
     };
     render() {  
-        console.log("here in table", this.props);
+
         return (
             <React.Fragment>    
                 <table className="table"> 
@@ -40,7 +41,7 @@ class TableProgramme extends Component{
                                                     </AccordionItemTitle>
                                                     <AccordionItemBody>
                                                         {/* <p>{JSON.stringify(item)}</p> */}
-                                                        <p>{item.description}</p>
+                                                        <p>{renderHTML(item.description.html)}</p>
                                                         <p>{item.timeStart}</p>
                                                         <p>{item.timeEnd}</p>
                                                     </AccordionItemBody>
