@@ -47,7 +47,7 @@ class ListSpeakers extends Component{
                                             <div className="media-content media-cont">
                                                 <div className="columns info-card">
                                                     <div className="column is-9 texto-tarjetas">
-                                                        <p className="has-text-grey-dark is-size-4  titulo">{item.name}</p>
+                                                        <p className="has-text-grey-dark is-size-5  titulo">{item.name}</p>
                                                         <p className="sub-titulo">Temática</p>
                                                     </div>
                                                     <div className="column is-3" onClick={() => this.showModal(key)}>
