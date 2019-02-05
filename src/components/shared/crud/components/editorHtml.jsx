@@ -15,9 +15,11 @@ class EditarHtml extends Component {
        }
        console.log('ppopopopo ',this.props)
        if (this.props.value) {
-        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value.value));
+           //si tiene contenido lo muestra para editar
+        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value));
         var editorState =EditorState.createWithContent(rawContentFromStore);
     }else{
+        // de lo contrario inicia el archivo vacio
         var editorState = EditorState.createEmpty()
     }
     
