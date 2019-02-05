@@ -1,15 +1,17 @@
+/*global firebaseui*/
+/*global firebase*/
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-import Carousel from "react-slick";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import { EventsApi } from "../../helpers/request";
+import {EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {ApiUrl} from "../../helpers/constants";
+import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
+import app from "firebase";
 Moment.locale('es');
 momentLocalizer();
 
@@ -18,6 +20,8 @@ class Landing extends Component {
         super(props);
         this.state = {
             loading:true,
+            auth:false,
+            modal:false,
             tickets:[]
         }
     }
@@ -35,12 +39,13 @@ class Landing extends Component {
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const evius_token = Cookie.get('evius_token');
+        console.log(evius_token);
         let iframeUrl = `${ApiUrl}/e/${event._id}`;
         if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
-        console.log(event);
+        console.log(iframeUrl);
         const dateFrom = event.datetime_from.split(' ');
         const dateTo = event.datetime_to.split(' ');
         event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();
@@ -52,7 +57,54 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl},this.handleScroll);
+        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+            this.firebaseUI();
+            this.handleScroll();
+        });
+    }
+
+    firebaseUI = () => {
+        //FIREBSAE UI
+        const firebaseui = global.firebaseui;
+        let ui = firebaseui.auth.AuthUI.getInstance();
+        if (!ui) {
+            ui = new firebaseui.auth.AuthUI(firebase.auth());
+        }
+        const uiConfig = {
+            //POPUP Facebook/Google
+            signInFlow: 'popup',
+            //The list of providers enabled for signing
+            signInOptions: [app.auth.EmailAuthProvider.PROVIDER_ID,],
+            //Allow redirect
+            callbacks: {
+                signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+                    const user = authResult.user;
+                    this.closeLogin(user);
+                    return false;
+                }
+            },
+            //Disabled accountchooser
+            credentialHelper: 'none',
+            // Terms of service url.
+            tosUrl: `${BaseUrl}/terms`,
+            // Privacy policy url.
+            privacyPolicyUrl: `${BaseUrl}/privacy`,
+        };
+        ui.start('#firebaseui-auth-container', uiConfig);
+    };
+    openLogin = () => {
+        const html = document.querySelector("html");
+        html.classList.add('is-clipped');
+        this.setState({modal:true});
+    }
+    closeLogin = (user) => {
+        const html = document.querySelector("html");
+        html.classList.remove('is-clipped');
+        this.setState({modal:false});
+        if(user) {
+            const {event} = this.state;
+            window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
+        }
     }
 
     handleScroll = () => {
@@ -63,7 +115,7 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, tickets, iframeUrl } = this.state;
+        const { event, tickets, iframeUrl, auth, modal } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -145,7 +197,7 @@ class Landing extends Component {
                                                 <div style={{width:'134vh'}}>
                                                     <Slider images={event.picture}/>
                                                 </div>:
-                                                <figure className="image is-3by2">
+                                                <figure className="image">
                                                     <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
                                                 </figure>
                                         }
@@ -213,8 +265,9 @@ class Landing extends Component {
                                         </div>
                                     </div>*/}
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} src={iframeUrl} width={'100%'} height={'600px'}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
                                     </div>
+                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
                                         {/* <div className="column is-7">
                                 <div className="has-shadow">
@@ -268,18 +321,19 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className={`modal ${modal?'is-active':''}`}>
+                                <div className="modal-background"></div>
+                                <div className="modal-content">
+                                    <div id="firebaseui-auth-container"/>
+                                </div>
+                                <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
+                            </div>
                         </React.Fragment>
                 }
             </section>
         );
     }
 }
-
-const imagenes = [
-    "https://storage.googleapis.com/herba-images/evius/events/tRHV2dgzu7geS6O75ubJ6ftkfeDfBjel35iaB8gT.jpeg",
-    "https://storage.googleapis.com/herba-images/evius/events/Txf9UtFISnDaO7UAkLIKDZXESsTKXjJm0824KvdO.jpeg",
-    "https://storage.googleapis.com/herba-images/evius/events/AoK1u4iDEUaIabKSuZw1OzE1ZsPWhIGn9UZnDcrF.jpeg"
-];
 
 const MyMapComponent = withGoogleMap((props) =>
     <GoogleMap
@@ -290,4 +344,4 @@ const MyMapComponent = withGoogleMap((props) =>
     </GoogleMap>
 )
 
-export default Landing;
+export default withRouter(Landing);

@@ -68,7 +68,7 @@ class Properties extends Component {
     handleChangeField = (e,index,key) => {
         let {name, value} = e.target;
         const {fields,groups} = this.state;
-        if(name === 'name')value = toCapitalizeLower(value);
+        if(name === 'name')value = value.toLowerCase();
         if (key || key === 0) {
             let {fields} = groups[key];
             fields[index][name] = value;
@@ -283,10 +283,5 @@ class Properties extends Component {
 }
 
 const createOption = (label,key) => ({label, value: label, parent: key});
-
-function toCapitalizeLower(str){
-    str = str.toLowerCase();
-    return str.charAt(0).toUpperCase() + str.substr(1);
-}
 
 export default Properties;

@@ -72,7 +72,7 @@ class OrgUsers extends Component {
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
+        XLSX.writeFile(wb, `usuarios_${this.props.org.name}.xls`);
     };
 
     modalUser = (modal) => {
@@ -144,7 +144,7 @@ class OrgUsers extends Component {
     async modalImport() {
         try{
             const html = document.querySelector("html");
-            const {data} = await UsersApi.getAll(this.props.org._id);
+            const {data} = await OrganizationApi.getUsers(this.props.org._id);
             const users = handleUsers(data);
             this.setState((prevState) => {
                 !prevState.importUser ? html.classList.add('is-clipped') : html.classList.remove('is-clipped');
@@ -247,7 +247,7 @@ class OrgUsers extends Component {
                     <UserOrg handleModal={this.modalUser} modal={editUser} orgId={org._id}
                                value={selectedUser} extraFields={extraFields} edit={this.state.edit}/>
                 }
-                <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={org._id} organization={true} extraFields={org.user_properties}/>
+                <ImportUsers handleModal={this.modalImport} modal={importUser} eventId={org._id} organization={true} extraFields={org.user_properties}/>
                 {timeout&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
         );

@@ -104,6 +104,9 @@ export const UsersApi = {
     mineTickets: async () => {
         return await Actions.getAll(`/api/me/eventUsers`)
     },
+    mineOrdes: async (id) => {
+        return await Actions.getAll(`/api/users/${id}/orders`)
+    },
     createOne: async (data, id) => {
         return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`,data)
     },
