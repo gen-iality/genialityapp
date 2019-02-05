@@ -1,0 +1,279 @@
+.cabecera{
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 900;
+}
+.titulo{
+    font-weight: 900;
+    font-style: italic;
+}
+.sub-titulo{
+    font-style: italic;
+    font-size: 1.2em;
+    font-family: "Montserrat", sans-serif;
+    color: #B4B4B4;
+}
+.info-card{
+    position: relative;
+    top: 25px;
+    width: 100%;
+    left: 0%;
+}
+.verMas{
+    font-weight: 900;
+    color: #00f0be;
+    bottom: 1px;
+    font-size: 2em;
+    text-align: center;
+    position: relative;
+    top: -25px;
+    font-style: italic;
+    cursor: pointer;
+}
+.verMasPlus{
+    color: #00f0be;
+    text-align: center;
+    font-weight: 900;
+    font-size: 2em;
+    position: relative;
+    top: -10px;
+    cursor: pointer;
+}
+.card-content{
+    height: 150px;
+    width: 100%;
+}
+.img-modal{
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+}
+.media-cont{
+    overflow-x: visible !important;
+}
+.modal-contenido{
+    color: #B4B4B4;
+}
+.modal-titulo{
+    font-weight: bold;
+    font-style: italic;
+}
+@media (max-width: 768px){
+    .info-card{
+        position: relative;
+        top: 40px;
+        width: 100%;
+        left: 0;
+    }
+    .verMas{
+        float: right;
+        top: -60px;
+        left: 25px;
+    }
+    .verMasPlus{
+        float: right;
+        top: -80px;
+    }
+    .texto-tarjetas{
+        width: 80%;
+    }
+  
+}
+
+/* ESTILOS DE LOS BOTONES */
+.botonera{
+    text-align: center;
+    overflow-wrap: break-word;
+}
+.botones{
+    font-size: 1.2em;
+    background-color: #EEEEEF;
+    color: #BBBBBB;
+    text-transform: uppercase;
+    /* display: inline; */
+    margin: 0px 20px;
+    padding: 10px 0px;
+    border: 0;
+    width: 200px;
+    height: 50px;
+    overflow-wrap: break-word;
+}
+
+.botones:hover{
+    background-color: #00EEBB;
+    color:  white;
+}
+@media (max-width: 768px){
+    .botones{
+        width: 100%;
+        margin: 0px 0px 5px 0px;
+
+    } 
+}
+
+
+
+
+
+/* ESTILOS DE EL ACORDEON */
+/**
+* ----------------------------------------------
+* Demo styles
+* ----------------------------------------------
+**/
+.u-position-absolute {
+    position: absolute;
+}
+
+.u-position-relative {
+    position: relative;
+}
+
+.accordion {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+.accordion__item + .accordion__item {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.accordion__item--has-icon {
+    position: relative;
+}
+
+.accordion__title {
+    background-color: white;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+}
+
+.accordion__title:hover {
+    background-color: #ddd;
+}
+
+.accordion__body {
+    padding: 20px;
+    display: block;
+    animation: fadein 0.35s ease-in;
+}
+
+.accordion__body--hidden {
+    display: none;
+    opacity: 0;
+    animation: fadein 0.35s ease-in;
+}
+
+.accordion__title > *:last-child,
+.accordion__body > *:last-child {
+    margin-bottom: 0;
+}
+
+.accordion__arrow {
+    display: inline-block;
+    position: relative;
+    width: 24px;
+    height: 12px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -6px;
+}
+
+.accordion__arrow::after,
+.accordion__arrow::before {
+    display: block;
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 2px;
+    background-color: currentColor;
+    content: '';
+}
+
+.accordion__arrow::before {
+    left: 4px;
+    transform: rotate(45deg);
+}
+
+[aria-expanded='true'] .accordion__arrow::before, [aria-selected='true'] .accordion__arrow::before {
+    transform: rotate(-45deg);
+}
+
+.accordion__arrow::after {
+    right: 4px;
+    transform: rotate(-45deg);
+}
+
+[aria-expanded='true'] .accordion__arrow::after, [aria-selected='true'] .accordion__arrow::after {
+    transform: rotate(45deg);
+}
+
+.accordion__arrow::before,
+.accordion__arrow::after {
+    transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes move-down {
+    0% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(5px);
+    }
+    30% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes move-up {
+    0% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-5px);
+    }
+    30% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.accordion__title--animated:hover .accordion__arrow {
+    animation-name: move-down;
+    animation-duration: 1.5s;
+}
+
+.accordion__title--animated[aria-expanded='true']:hover .accordion__arrow {
+    animation-name: move-up;
+    animation-duration: 1.5s;
+}
+
+/* ======================== */

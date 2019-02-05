@@ -9,6 +9,7 @@ import Loading from "../loaders/loading";
 import {ApiUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
+import AdditonalDataEvent from "./additionalDataEvent/containers";
 Moment.locale('es');
 momentLocalizer();
 
@@ -173,6 +174,7 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <AdditonalDataEvent eventInfo={this.state.event}/>
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     {/*<div className="columns is-centered">
@@ -245,6 +247,7 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div> */}
+                   
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>

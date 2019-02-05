@@ -22,6 +22,7 @@ import TicketInfo from "../tickets";
 import TicketConfig from "../tickets/config";
 import DashboardEvent from "../dashboard";
 import OrdersEvent from "../orders";
+import ContainerCrud from '../shared/crud/containers';
 Moment.locale('es');
 momentLocalizer();
 
@@ -101,7 +102,9 @@ class Event extends Component {
     };
 
     render() {
+        
         const { match,permissions } = this.props;
+  
         const { timeout } = this.state;
         return (
             <React.Fragment>
@@ -168,6 +171,18 @@ class Event extends Component {
                                                     </li>
                                                 </ul>
                                             }
+                                            {
+                                               permissions.items.includes(rolPermissions.admin_staff._id) && 
+                                                <p className="menu-label has-text-centered-mobile">
+                                                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/programme`}>Agenda</NavLink>
+                                                </p>
+                                            }
+                                            {
+                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                                <p className="menu-label has-text-centered-mobile">
+                                                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/speakers`}>Speakers</NavLink>
+                                                </p>
+                                            }
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/dashboard`}>Dashboard</NavLink>
                                             </p>
@@ -219,6 +234,14 @@ class Event extends Component {
                                             {
                                                 permissions.items.includes(rolPermissions.admin_ticket._id) &&
                                                     <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
+                                            }
+                                            {
+                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                                    <Route path={`${match.url}/crud/speakers/`} render={(props) => <ContainerCrud idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>}/>
+                                            }
+                                            {
+                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                                    <Route path={`${match.url}/crud/programme`} render={() => <ContainerCrud idModel="programme" eventId={this.state.event} buttonName={"Sessión"}/>}/>
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
