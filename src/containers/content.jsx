@@ -11,12 +11,9 @@ import MyProfile from "../components/profile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
 import {ApiUrl} from "../helpers/constants";
-<<<<<<< HEAD
 import Faqs from "../components/faqs";
-=======
 import ContainerCrud from '../components/shared/crud/containers';
 
->>>>>>> programme-speakers
 
 class ContentContainer extends Component {
     componentWillMount(){
