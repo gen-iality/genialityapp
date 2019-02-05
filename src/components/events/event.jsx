@@ -154,7 +154,7 @@ class Event extends Component {
                                             {
                                                 permissions.items.includes(rolPermissions.admin_ticket._id) &&
                                                     <p className="menu-label has-text-centered-mobile">
-                                                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/ticket`}>Ticketes</NavLink>
+                                                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/ticket`}>Tickets</NavLink>
                                                     </p>
                                             }
                                             <p className="menu-label has-text-centered-mobile">
