@@ -5,10 +5,12 @@ class ListProgramme extends Component{
 
     constructor(props){
         super(props) 
+        this.activo = 0;
     }
     
-    filterByDays(array,key){
+    filterByDays(array,key,num){
         this.props.filterByDays(array,key)
+        this.activo = num
     }
     render() {
         return (
@@ -22,11 +24,11 @@ class ListProgramme extends Component{
                     <p className="button botones is-rounded">agenda</p>
                 </div>
                 <div className="tabs">
-                            <ul>
-                                    {
+                            <ul >
+                            {
                                 this.props.headersTable.map((item,key)=>{
-                                return  <li key= {key} ><a onClick={()=> this.filterByDays(this.props.sessions,item.date)}>{item.label}</a></li>                      
-                                    })                                                                                                                                                    
+                                return  <li className="fecha" key= {key} ><a className={` ${this.activo == key ? "activo" : ""}`} onClick={()=> this.filterByDays(this.props.sessions,item.date,key)}>{item.label}</a></li>                      
+                                    })                                              
                             }
                             </ul>
                 </div>

@@ -81,7 +81,8 @@
 /* ESTILOS DE LOS BOTONES */
 .botonera{
     text-align: center;
-    overflow-wrap: break-word;
+    margin: 40px 0px;
+    display: none;
 }
 .botones{
     font-size: 1.2em;
@@ -94,9 +95,12 @@
     border: 0;
     width: 200px;
     height: 50px;
-    overflow-wrap: break-word;
 }
 
+.activar{
+    background-color: #00EEBB;
+    color:  white;
+}
 .botones:hover{
     background-color: #00EEBB;
     color:  white;
@@ -109,6 +113,31 @@
     } 
 }
 
+/* ESTILOS FECHAS */
+.fecha a{
+    background-color: #EEEEEF;
+    margin-left: 0px;
+    font-weight: bold;
+    height: 50px;
+    
+}
+.fecha a:hover{
+    color: rgb(0, 0, 0) !important; 
+    height: 60px;
+}
+
+.fecha:hover{
+    background-color: rgb(255, 255, 255);
+    position: relative;
+    bottom: 5px !important;
+    border: solid 1px #00EEBB;
+}
+
+.activo{
+    background-color: #00EEBB !important;
+    color: white !important; 
+    height: 60px !important;
+}
 
 
 
