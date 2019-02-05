@@ -45,7 +45,7 @@ const configCrud = {
                 edit: false,
                 label: "Descripción",
                 mandatory: false,
-                type: "description",
+                type: "text",
                 unique: false
             },
             {
