@@ -41,7 +41,8 @@ class TableProgramme extends Component{
                                                     </AccordionItemTitle>
                                                     <AccordionItemBody>
                                                         {/* <p>{JSON.stringify(item)}</p> */}
-                                                        <p>{renderHTML(item.description.html)}</p>
+                                                        {/* <p>{renderHTML(item.description.html)}</p> */}
+                                                        <p>{item.description}</p>
                                                         <p>{item.timeStart}</p>
                                                         <p>{item.timeEnd}</p>
                                                     </AccordionItemBody>

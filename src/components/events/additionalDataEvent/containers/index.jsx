@@ -22,8 +22,11 @@ class AdditonalDataEvent extends Component{
         let resp = await Actions.getAll(`api/events/${this.eventId}/sessions`);
   
         this.setState({sessions :  this.OrderByDate(resp.data,'date') })
-        this.getHeadersTabs(this.state.sessions)
-        this.filterByDays(this.state.sessions)
+        if(this.state.sessions.length > 0){
+            this.getHeadersTabs(this.state.sessions)
+            this.filterByDays(this.state.sessions)
+        }
+
     }
    
     //Ordenamos el array en base a la fecha, enviamos el array a ordenar y el campo donde esta la fecha en formato 'yyyy-mm-dd' de tipo string
