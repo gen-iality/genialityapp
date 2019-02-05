@@ -29,7 +29,7 @@ class ModalSpeaker extends Component{
                                     <p className="is-size-4 modal-titulo">Name: 
                                         <span className="modal-contenido"> {this.props.infoSpeaker.name}</span>
                                     </p>
-                                    <p className="is-size-4 modal-titulo">Address:  
+                                    <p className="is-size-4 modal-titulo">Position:  
                                         <span className="modal-contenido"> {this.props.infoSpeaker.position} </span>
                                     </p>
                                     <p className="is-size-4 modal-titulo">Company:  
