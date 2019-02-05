@@ -25,13 +25,14 @@ class ListSpeakers extends Component{
 
     render() {
         return (
-
-
             <React.Fragment>
                 <br/>   <br/>
-                <p className="has-text-grey-dark is-size-2 cabecera">SPEAKERS</p>
+                {
+                    (this.props.speakers.length > 0) ?
+                    (<p className="has-text-grey-dark is-size-2 cabecera">SPEAKERS</p>) :
+                    (null)
+                }
                 <div className="columns is-multiline">
-                  
                     {this.props.speakers.map((item,key)=>{
                         return (
                             <div className="column is-12-mobile is-6-tablet is-4-desktop is-3-widescreen" key={key} >
