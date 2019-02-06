@@ -59,7 +59,7 @@ class ListEventUser extends Component {
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
                 //user.rol = roles.find(x => x.value === user.rol_id);
-                user.updated_at = user.updated_at.toDate();
+                user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     this.statesCounter(user.state.value);
