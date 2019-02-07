@@ -16,20 +16,20 @@ class Footer extends Component {
                         <div className="columns menu has-text-centered-mobile">
                             <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Evius.co</p>
-                                <div><Link to={"#"} className="has-text-grey-light">Inicio</Link></div>
-                                <div><Link to={"#"} className="has-text-grey-light">Boletería</Link></div>
-                                <div><Link to={"#"} className="has-text-grey-light">Eventos</Link></div>
+                                <div><Link to={"/"} className="has-text-grey-light">Inicio</Link></div>
+                                {/* <div><Link to={"#"} className="has-text-grey-light">Boletería</Link></div>
+                                <div><Link to={"#"} className="has-text-grey-light">Eventos</Link></div> */}
                             </div>
                             <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Ayuda</p>
-                                <div><Link to={"#"} className="has-text-grey-light">Quienes somos</Link></div>
+                                <div><Link to={"/about"} className="has-text-grey-light">Quienes somos</Link></div>
                                 <div><Link to={"/faqs"} className="has-text-grey-light">FAQ</Link></div>
                             </div>
                             <div className="column has-text-grey-light is-hidden-mobile">
                                 <p className="subtitle has-text-grey-light">Condiciones</p>
                                 <div><Link to={"/terms"} className="has-text-grey-light">Términos y Condiciones</Link></div>
                                 <div><Link to={"/privacy"} className="has-text-grey-light">Privacidad</Link></div>
-                                <div><Link to={"#"} className="has-text-grey-light">Políticas</Link></div>
+                                <div><Link to={"/policies"} className="has-text-grey-light">Políticas</Link></div>
                             </div>
                             <div className="column has-text-grey-light">
                                 <p className="subtitle has-text-grey-light is-hidden-mobile">Contáctanos</p>

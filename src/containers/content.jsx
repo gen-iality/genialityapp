@@ -10,6 +10,8 @@ import HomeProfile from "../components/home/profile";
 import MyProfile from "../components/profile";
 import Terms from "../components/policies/termsService";
 import Privacy from "../components/policies/privacyPolicy";
+import Policies from "../components/policies/policies";
+import About from "../components/policies/about";
 import {ApiUrl} from "../helpers/constants";
 import Faqs from "../components/faqs";
 import ContainerCrud from '../components/shared/crud/containers';
@@ -32,6 +34,8 @@ class ContentContainer extends Component {
                     <PrivateRoute path="/organization/:id" component={ Organization }/>
                     <Route exact path="/terms" component={ Terms } />
                     <Route exact path="/privacy" component={ Privacy } />
+                    <Route exact path="/policies" component={ Policies } />
+                    <Route exact path="/about" component={ About } />
                     <Route exact path="/faqs" component={ Faqs } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
                     {/* Enviamos el id de el modelo, de el crud al con el que queremos trabajar  Ejemplo: Speaker, Agenda, Sponsor Etc..*/}

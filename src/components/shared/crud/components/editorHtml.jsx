@@ -13,7 +13,7 @@ class EditarHtml extends Component {
         this.state = {
             editorState : EditorState.createEmpty(),
        }
-       console.log('ppopopopo ',this.props)
+       console.log('ppopopopo ',this.props.value)
        if (this.props.value) {
            //si tiene contenido lo muestra para editar
         const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value));
@@ -36,6 +36,7 @@ class EditarHtml extends Component {
         });
         let html = editorState.getCurrentContent()
         let dataEditor = convertToRaw(editorState.getCurrentContent());
+        console.log(JSON.stringify(dataEditor) )
         let info = {value :JSON.stringify(dataEditor) ,html: stateToHTML(html) }
         // console.log('esta esta convertida en raw ', html)
         //convertimos el objeto que devuelve el WYSIWYG en html para enviarlo al componente padre   
