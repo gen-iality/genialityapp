@@ -13,10 +13,10 @@ class EditarHtml extends Component {
         this.state = {
             editorState : EditorState.createEmpty(),
        }
-       console.log('ppopopopo ',this.props.value)
+       console.log('ppopopopo ',this.props)
        if (this.props.value) {
            //si tiene contenido lo muestra para editar
-        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value));
+        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value.value));
         var editorState =EditorState.createWithContent(rawContentFromStore);
     }else{
         // de lo contrario inicia el archivo vacio
@@ -31,16 +31,19 @@ class EditarHtml extends Component {
 
    
     onEditorStateChange = (editorState) => {
+   
+     
         this.setState({
           editorState,
         });
         let html = editorState.getCurrentContent()
         let dataEditor = convertToRaw(editorState.getCurrentContent());
-        console.log(JSON.stringify(dataEditor) )
+        
         let info = {value :JSON.stringify(dataEditor) ,html: stateToHTML(html) }
         // console.log('esta esta convertida en raw ', html)
         //convertimos el objeto que devuelve el WYSIWYG en html para enviarlo al componente padre   
         this.props.handleChangeHtmlEditor(this.props.name ,info)
+        console.log('esto ---------------->> >> ',JSON.stringify(dataEditor) ,stateToHTML(html))
         // console.log(editorState)
       };
     
