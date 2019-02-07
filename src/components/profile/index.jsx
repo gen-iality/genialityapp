@@ -22,6 +22,7 @@ import {DateTimePicker} from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 import {ApiUrl} from "../../helpers/constants";
+import * as Cookie from "js-cookie";
 
 class Index extends Component {
     constructor(props) {
@@ -220,6 +221,7 @@ class Index extends Component {
     render() {
         const { loading, timeout, events, user, valid, error } = this.state;
         let userId = this.props.match.params.id;
+        const evius_token = Cookie.get('evius_token');
         return (
             <section className="section profile">
                 {
@@ -330,7 +332,7 @@ class Index extends Component {
                                     <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br/>
                                     <span className="has-text-grey-dark is-size-3">Compras</span>
                                 </h2>
-                                <iframe title={'Compras'} src={`${ApiUrl}/es/viewOrdersUsers/${userId}`} width={'100%'} height={'600px'}/>
+                                <iframe title={'Compras'} src={`${ApiUrl}/es/viewOrdersUsers/${userId}?evius_token=${evius_token}`} width={'100%'} height={'600px'}/>
                             </div>
                             <div className="profile-data columns" id={'events'}>
                                 <div className="column is-8">
