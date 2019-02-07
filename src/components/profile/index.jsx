@@ -24,7 +24,6 @@ import {FormattedMessage} from "react-intl";
 import {ApiUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 
-const evius_token = Cookie.get('evius_token');
 class Index extends Component {
     constructor(props) {
         super(props);
@@ -222,6 +221,7 @@ class Index extends Component {
     render() {
         const { loading, timeout, events, user, valid, error } = this.state;
         let userId = this.props.match.params.id;
+        const evius_token = Cookie.get('evius_token');
         return (
             <section className="section profile">
                 {
