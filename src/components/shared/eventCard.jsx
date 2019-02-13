@@ -8,6 +8,7 @@ class EventCard extends Component {
         const {event,action,size,right} = this.props;
         return (
             <div className={size}>
+            <Link to={`${action.url}`}>
                 <div className="card">
                     <div className="card-image">
                         <figure className="image is-3by2">
@@ -36,14 +37,13 @@ class EventCard extends Component {
                         </div>
                         {
                             action&&(
-                                <Link to={`${action.url}`}>
+                                
                                     <button className="img-see button is-white is-small has-text-weight-bold">
                                         {action.name}
                                         <span className="icon is-small">
                                             <i className="fas fa-angle-right"></i>
                                         </span>
                                     </button>
-                                </Link>
                             )
                         }
                     </div>
@@ -67,6 +67,7 @@ class EventCard extends Component {
                         </div>
                     </div>
                 </div>
+            </Link>
             </div>
         );
     }
