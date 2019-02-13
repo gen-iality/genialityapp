@@ -138,7 +138,7 @@ export const OrganizationApi = {
         return await Actions.getOne('/api/organizations/', id)
     },
     editOne: async (data, id) => {
-        return await Actions.edit('/api/organizations/', data, id)
+        return await Actions.edit('/api/organizations', data, id)
     },
     events: async (id) => {
         return await Actions.getOne(`/api/organizations/${id}/`, 'events')
@@ -153,7 +153,7 @@ export const OrganizationApi = {
         return await Actions.post(`/api/organizations/${org}/users`,data)
     },
     editUser: async (org,member,data) => {
-        return await Actions.edit(`/api/organizations/${org}/users/`,data,member)
+        return await Actions.edit(`/api/organizations/${org}/users`,data,member)
     },
     deleteUser: async (org,member) => {
         return await Actions.delete(`/api/organizations/${org}/users/`,member)
