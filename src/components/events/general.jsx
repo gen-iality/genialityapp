@@ -344,7 +344,7 @@ class General extends Component {
     //Agregar campo al grupo de campos
     addFieldtoGroup = (key) => {
         const {groups} = this.state;
-        groups[key]['fields'] = [...groups[key]['fields'], {name:'',unique:false,mandatory:false,edit:true}];
+        groups[key]['fields'] = [...groups[key]['fields'], {name:'',unique:false,mandatory:false,edit:true,label:'',description:''}];
         this.setState({groups})
     };
     //Mostrar grupo de campos
@@ -695,6 +695,15 @@ class General extends Component {
                                                                 </div>
                                                             </div>
                                                             <div className="field column">
+                                                                <label className="label required has-text-grey-light">Label</label>
+                                                                <div className="control">
+                                                                    <input className="input" name={"label"} type="text" disabled={!field.edit}
+                                                                           placeholder="Nombre del campo" value={field.label}
+                                                                           onChange={(e)=>{this.handleChangeField(e,index,key)}}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div className="field column">
                                                                 <div className="control">
                                                                     <label className="label required">Tipo</label>
                                                                     <div className="control">
@@ -737,6 +746,11 @@ class General extends Component {
                                                                        onChange={(e)=>{this.changeFieldCheck(e,index,key)}} disabled={!field.edit}/>
                                                                 <label htmlFor={`mandatory${index}`}>Obligatorio</label>
                                                             </div>
+                                                        </div>
+                                                        <div className="field">
+                                                            <label className="label required has-text-grey-light">Descripción</label>
+                                                            <textarea className="textarea" placeholder="e.g. Hello world" name={'description'}
+                                                                      value={field.description} onChange={(e)=>{this.handleChangeField(e,index,key)}}></textarea>
                                                         </div>
                                                         {
                                                             field.name !== "email" &&
