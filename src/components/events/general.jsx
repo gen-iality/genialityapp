@@ -223,7 +223,7 @@ class General extends Component {
     //Agregar nuevo campo
     addField = () => {
         const {fields} = this.state;
-        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true}],newField:true})
+        this.setState({fields: [...fields, {name:'',unique:false,mandatory:false,edit:true,label:'',description:''}],newField:true})
     };
     //Guardar campo en el evento o lista
     saveField = (index,key) => {
@@ -266,13 +266,16 @@ class General extends Component {
     //Cambiar input del campo del evento o lista
     handleChangeField = (e,index,key) => {
         let {name, value} = e.target;
+        let label = '';
         const {fields,groups} = this.state;
-        if(name === 'name')value = toCapitalizeLower(value);
+        if(name === 'label')label = toCapitalizeLower(value);
         if (key || key === 0) {
             let {fields} = groups[key];
+            if(label.length > 0) fields[index].name = label;
             fields[index][name] = value;
             this.setState({groups})
         } else {
+            if(label.length > 0) fields[index].name = label;
             fields[index][name] = value;
             this.setState({fields})
         }
@@ -387,7 +390,7 @@ class General extends Component {
             properties_group
         };
         console.log(data);
-        try {
+        /*try {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
@@ -396,8 +399,8 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
-                /*let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
-                data.user_properties = [...extraFields,...data.user_properties];*/
+                /!*let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
+                data.user_properties = [...extraFields,...data.user_properties];*!/
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
@@ -428,7 +431,7 @@ class General extends Component {
                 this.setState({serverError:true,loader:false,errorData})
             }
             console.log(error.config);
-        }
+        }*/
     }
     //Delete event
     async deleteEvent() {
@@ -565,10 +568,10 @@ class General extends Component {
                                                 <div className="media-content">
                                                     <div className="columns">
                                                         <div className="field column">
-                                                            <label className="label required has-text-grey-light">Nombre</label>
+                                                            <label className="label required has-text-grey-light">Label</label>
                                                             <div className="control">
-                                                                <input className="input" name={"name"} type="text" disabled={!field.edit}
-                                                                       placeholder="Nombre del campo" value={field.name}
+                                                                <input className="input" name={"label"} type="text" disabled={!field.edit}
+                                                                       placeholder="Nombre del campo" value={field.label}
                                                                        onChange={(e)=>{this.handleChangeField(e,key)}}
                                                                 />
                                                             </div>
@@ -614,6 +617,20 @@ class General extends Component {
                                                                    type="checkbox" name={`mandatory`} checked={field.mandatory}
                                                                    onChange={(e)=>{this.changeFieldCheck(e,key)}} disabled={!field.edit}/>
                                                             <label htmlFor={`mandatory${key}`}>Obligatorio</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className="field">
+                                                        <label className="label required has-text-grey-light">Descripción</label>
+                                                        <textarea className="textarea" placeholder="e.g. Hello world" name={'description'}
+                                                                  value={field.description} onChange={(e)=>{this.handleChangeField(e,key)}}></textarea>
+                                                    </div>
+                                                    <div className="field column">
+                                                        <label className="label required has-text-grey-light">Nombre</label>
+                                                        <div className="control">
+                                                            <input className="input is-small" name={"name"} type="text" disabled={!field.edit}
+                                                                   placeholder="Nombre del campo" value={field.name}
+                                                                   onChange={(e)=>{this.handleChangeField(e,key)}}
+                                                            />
                                                         </div>
                                                     </div>
                                                     {
@@ -686,15 +703,6 @@ class General extends Component {
                                                     <div className="media-content">
                                                         <div className="columns">
                                                             <div className="field column">
-                                                                <label className="label required has-text-grey-light">Nombre</label>
-                                                                <div className="control">
-                                                                    <input className="input" name={"name"} type="text" disabled={!field.edit}
-                                                                           placeholder="Nombre del campo" value={field.name}
-                                                                           onChange={(e)=>{this.handleChangeField(e,index,key)}}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                            <div className="field column">
                                                                 <label className="label required has-text-grey-light">Label</label>
                                                                 <div className="control">
                                                                     <input className="input" name={"label"} type="text" disabled={!field.edit}
@@ -751,6 +759,15 @@ class General extends Component {
                                                             <label className="label required has-text-grey-light">Descripción</label>
                                                             <textarea className="textarea" placeholder="e.g. Hello world" name={'description'}
                                                                       value={field.description} onChange={(e)=>{this.handleChangeField(e,index,key)}}></textarea>
+                                                        </div>
+                                                        <div className="field">
+                                                            <label className="label required has-text-grey-light">Nombre Campo</label>
+                                                            <div className="control">
+                                                                <input className="input is-small" name={"name"} type="text" disabled={!field.edit}
+                                                                       placeholder="Nombre del campo" value={field.name}
+                                                                       onChange={(e)=>{this.handleChangeField(e,index,key)}}
+                                                                />
+                                                            </div>
                                                         </div>
                                                         {
                                                             field.name !== "email" &&
@@ -857,9 +874,15 @@ function handleProperties(event,fields,groups){
 
 const createOption = (label,key) => ({label, value: label, parent: key});
 
+//Función para convertir una frase en camelCase: "Hello New World" → "helloNewWorld"
 function toCapitalizeLower(str){
-    str = str.toLowerCase();
-    return str.charAt(0).toUpperCase() + str.substr(1);
+    const splitted = str.split(' ');
+    const init = splitted[0].toLowerCase();
+    const end = splitted.slice(1).map(item=>{
+        item = item.toLowerCase();
+        return item.charAt(0).toUpperCase() + item.substr(1);
+    });
+    return [init,...end].join('')
 }
 
 export default General;
