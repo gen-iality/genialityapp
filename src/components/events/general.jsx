@@ -34,6 +34,7 @@ class General extends Component {
             valid: !this.props.event._id,
             groups: [],
             errorData: {},
+            toggleFields: true,
             serverError: false
         };
         this.submit = this.submit.bind(this);
