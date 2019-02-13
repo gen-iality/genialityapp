@@ -202,7 +202,7 @@ class Home extends Component {
                                 loading ? <LoadingEvent/> :
                                     <div className="columns home is-multiline">
                                         {
-                                            events.length<=0 ? <p>No hay eventos próximos {(type || category)&&`para está sección`}</p> :
+                                            events.length<=0 ? <p className="sin-evento">No hay eventos próximos {(type || category)&&`para está sección`}</p> :
                                             events.map((event,key)=>{
                                                 return <EventCard key={event._id} event={event}
                                                                   action={{name:'Ver',url:`landing/${event._id}`}}
