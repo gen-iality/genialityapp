@@ -5,7 +5,7 @@ class RichEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            editorState: props.content.length>0 ? EditorState.createWithContent(convertFromRaw(props.content))
+            editorState: typeof props.content === 'object' ? EditorState.createWithContent(convertFromRaw(props.content))
                 : EditorState.createEmpty()
         };
 
