@@ -78,11 +78,14 @@ class General extends Component {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}},this.valid)
     };
+    changeDescription = (raw) => {
+        this.setState({event:{...this.state.event,description:raw}},this.valid)
+    };
     //Validación
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+            valid = (event.name.length>0 && (typeof event.description === 'object') && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         if(!event.location.FormattedAddress && !event.location.PlaceId){
             error.location = 'Fill a correct address'
         }
@@ -390,7 +393,7 @@ class General extends Component {
             properties_group
         };
         console.log(data);
-        /*try {
+        try {
             if(event._id){
                 const result = await EventsApi.editOne(data, event._id);
                 console.log(result);
@@ -399,8 +402,8 @@ class General extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
-                /!*let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
-                data.user_properties = [...extraFields,...data.user_properties];*!/
+                /*let extraFields = [{name:"email",mandatory:true,unique:true,type:"email"},{name:"Nombres",mandatory:false,unique:true,type:"text"}];
+                data.user_properties = [...extraFields,...data.user_properties];*/
                 const result = await Actions.create('/api/events', data);
                 console.log(result);
                 this.setState({loading:false});
@@ -431,7 +434,7 @@ class General extends Component {
                 this.setState({serverError:true,loader:false,errorData})
             }
             console.log(error.config);
-        }*/
+        }
     }
     //Delete event
     async deleteEvent() {
@@ -493,7 +496,7 @@ class General extends Component {
                                        {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                    </div>
                                }
-                               handleChange={this.handleChange} minDate={this.state.minDate}
+                               handleChange={this.handleChange} minDate={this.state.minDate} changeDescription={this.changeDescription}
                                selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                                changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                     <section className="accordions">

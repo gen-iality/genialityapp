@@ -12,6 +12,7 @@ import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase";
+import { Editor, EditorState, convertFromRaw } from "draft-js";
 Moment.locale('es');
 momentLocalizer();
 
@@ -57,7 +58,9 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+        const contentState = convertFromRaw(event.description);
+        const editorState = EditorState.createWithContent(contentState);
+        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token,editorState},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -115,7 +118,7 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, editorState } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -163,13 +166,14 @@ class Landing extends Component {
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
-                                                <p className="is-italic has-text-grey">
+                                                <Editor editorState={editorState} readOnly={true} />
+                                                {/*<p className="is-italic has-text-grey">
                                                     {event.description}
-                                                    {/*{
+                                                    {
                                                         event.description.length >= 160 ?
                                                             event.description.substring(0,160)+'...':
-                                                    }*/}
-                                                </p>
+                                                    }
+                                                </p>*/}
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
