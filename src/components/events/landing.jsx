@@ -58,8 +58,7 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        const contentState = convertFromRaw(event.description);
-        const editorState = EditorState.createWithContent(contentState);
+        const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description)) : EditorState.createEmpty();
         this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token,editorState},()=>{
             this.firebaseUI();
             this.handleScroll();
