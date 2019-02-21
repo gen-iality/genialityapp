@@ -237,7 +237,7 @@ class Badge extends Component {
         const {badge,qrExist,extraFields,newField,showPrev,fontSize,qrSize} = this.state;
         return (
             <React.Fragment>
-                <p>Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño</p>
+                <p>Acontinuación podrás crear la escarapela para tu evento. Agrega los Campos o QR, edita el tamaño de letra de los campos o del QR</p>
                 <p>Visualiza el resultado e imprime para realizar una prueba!! </p>
                 <div className="columns">
                     <div className="column is-4">
