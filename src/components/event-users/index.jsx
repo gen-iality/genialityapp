@@ -488,8 +488,8 @@ const parseData = (data) => {
         Object.keys(item.properties).map((obj, i) => (
             info[key][obj] = item.properties[obj]
         ));
-        info[key]['estado'] = item.state.label;
-        info[key]['rol'] = item.rol.label;
+        if(item.state) info[key]['estado'] = item.state.label;
+        if(item.rol) info[key]['rol'] = item.rol.label;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
