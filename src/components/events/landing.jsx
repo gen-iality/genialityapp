@@ -36,6 +36,7 @@ class Landing extends Component {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
             status = searchParams.get("status");
+        console.log(document.getElementById("idIframe").contentWindow.document.body.scrollHeight);
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const evius_token = Cookie.get('evius_token');
@@ -229,77 +230,11 @@ class Landing extends Component {
                             <AdditonalDataEvent eventInfo={this.state.event}/>
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
-                                    {/*<div className="columns is-centered">
-                                        <div className="column is-8">
-                                            <h2 className="data-title has-text-left has-text-dark is-size-3">Tiquetes</h2>
-                                            {
-                                                tickets.map((ticket,key)=>{
-                                                    return <div className="level is-mobile" key={key}>
-                                                            <div className="level-left">
-                                                                <div className='level-item'>
-                                                                    <p className="subtitle is-5">
-                                                                        <strong>{ticket.title}</strong>
-                                                                    </p><br/>
-                                                                    <p>{ticket.description}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="level-right">
-                                                                <div className="level-item">
-                                                                    <p>{ticket.price}</p>
-                                                                </div>
-                                                                <div className="level-item">
-                                                                    <div className="select">
-                                                                        <select onChange={this.handleQuantity} name={`quantity_${ticket._id}`}>
-                                                                            {
-                                                                                ticket.options.map(item => {
-                                                                                    return <option value={item} key={item}>{item}</option>
-                                                                                })
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                    </div>
-                                                })
-                                            }
-                                        </div>
-                                    </div>*/}
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
-                                        {/* <div className="column is-7">
-                                <div className="has-shadow">
-                                    <p>Acciones</p>
-                                    <div className="field is-grouped">
-                                        <div className="control">
-                                            <button className="button is-primary is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-share"/>
-                                                </span>
-                                                <span>Compartir</span>
-                                            </button>
-                                        </div>
-                                        <div className="control">
-                                            <button className="button is-text is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-check"/>
-                                                </span>
-                                                <span>Asistiré</span>
-                                            </button>
-                                        </div>
-                                        <div className="control">
-                                            <button className="button is-text is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-hearth"/>
-                                                </span>
-                                                <span>Me gusta</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                    
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left">
