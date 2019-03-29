@@ -22,7 +22,8 @@ class Landing extends Component {
             loading:true,
             auth:false,
             modal:false,
-            tickets:[]
+            tickets:[],
+            heightFrame: '480px'
         }
     }
 
@@ -115,12 +116,11 @@ class Landing extends Component {
     };
 
     onLoad = () => {
-
-        console.log(document.getElementById("idIframe").contentWindow.document.body.scrollHeight);
+        this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     }
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -235,7 +235,7 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'} onLoad={this.onLoad}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
