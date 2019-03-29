@@ -36,7 +36,6 @@ class Landing extends Component {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
             status = searchParams.get("status");
-        console.log(document.getElementById("idIframe").contentWindow.document.body.scrollHeight);
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const evius_token = Cookie.get('evius_token');
@@ -114,6 +113,11 @@ class Landing extends Component {
             document.getElementById(hash.substring(1)).scrollIntoView();
         }
     };
+
+    onLoad = () => {
+
+        console.log(document.getElementById("idIframe").contentWindow.document.body.scrollHeight);
+    }
 
     render() {
         const { event, tickets, iframeUrl, auth, modal } = this.state;
@@ -231,7 +235,7 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
