@@ -13,6 +13,7 @@ import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 
+const html = document.querySelector("html");
 class ListEventUser extends Component {
     constructor(props) {
         super(props);
@@ -186,7 +187,6 @@ class ListEventUser extends Component {
     };
 
     modalUser = () => {
-        const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:undefined}
@@ -262,6 +262,7 @@ class ListEventUser extends Component {
     };
     closeQr = () => {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+        html.classList.remove('is-clipped');
     }
 
     onChangePage = (pageOfItems) => {
