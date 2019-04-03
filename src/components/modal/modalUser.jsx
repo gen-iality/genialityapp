@@ -16,6 +16,7 @@ class UserModal extends Component {
             message: {},
             user: {},
             state: "",
+            prevState: "",
             userId: "mocionsoft",
             emailError:false,
             confirmCheck:true,
@@ -39,7 +40,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id});
+            this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
         }else {
             let user = {};
             this.props.extraFields
@@ -90,7 +91,7 @@ class UserModal extends Component {
         else{
             message.class = 'msg_warning';
             message.content = 'USER UPDATED';
-            if(snap.state_id !== this.state.state) this.props.statesCounter(snap.state_id,this.state.state);
+            if(snap.state_id !== this.state.prevState) this.props.statesCounter(snap.state_id,this.state.prevState);
             snap.updated_at = new Date();
             userRef.doc(this.state.userId).update(snap)
                 .then(() => {

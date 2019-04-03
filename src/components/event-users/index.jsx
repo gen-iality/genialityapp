@@ -277,7 +277,7 @@ class ListEventUser extends Component {
             return items.push(<tr key={key}>
                 <td>
                     <span className="icon has-text-primary action_pointer"
-                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                          onClick={(e)=>{this.openEditModalUser(item)}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
                     {
@@ -299,6 +299,11 @@ class ListEventUser extends Component {
         })
         return items
     };
+
+    openEditModalUser = (item) => {
+        html.classList.add('is-clipped');
+        this.setState({editUser:true,selectedUser:item,edit:true})
+    }
 
     //Search records at third column
     searchResult = (data) => {
