@@ -427,7 +427,7 @@ class ListEventUser extends Component {
                     <div className="modal-card">
                         <header className="modal-card-head">
                             <p className="modal-card-title">QR Reader</p>
-                            <button className="delete" aria-label="close" onClick={this.closeQr}/>
+                            <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
                             {

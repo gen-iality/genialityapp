@@ -329,7 +329,7 @@ class UserModal extends Component {
                             <div className="modal-card-title">
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </div>
-                            <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
+                            <button className="delete is-large" aria-label="close" onClick={this.props.handleModal}/>
                         </header>
                         <section className="modal-card-body">
                             {
