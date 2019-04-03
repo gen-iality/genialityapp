@@ -32,6 +32,7 @@
     "react-datetime": "^2.15.0",
     "react-dom": "^16.7.0",
     "react-draft-wysiwyg": "^1.13.1",
+    "react-dropdown": "^1.6.4",
     "react-dropzone": "^4.3.0",
     "react-geosuggest": "^2.8.0",
     "react-google-maps": "^9.4.5",

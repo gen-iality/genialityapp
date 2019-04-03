@@ -12,6 +12,8 @@ import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -312,6 +314,35 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
+        // Dropdown para movil
+        const options = [
+            <div className="checkin-tags-wrapper">
+              <div className="columns is-mobile is-multiline checkin-tags">
+                <div className="column is-narrow">
+                    <div className="tags is-centered">
+                        <span className="tag is-primary">{checkIn}</span>
+                        <span className="tag is-white">Check In</span>
+                    </div>
+                </div>
+                <div className="column is-narrow">
+                    <div className="tags is-centered">
+                        <span className="tag is-light">{total}</span>
+                        <span className="tag is-white">Total</span>
+                    </div>
+                </div>
+                {
+                    Object.keys(estados).map(item=>{
+                        return <div className="column is-narrow" key={item}>
+                                    <div className="tags is-centered">
+                                        <span className={'tag '+item}>{estados[item]}</span>
+                                        <span className="tag is-white">{item}</span>
+                                    </div>
+                                </div>
+                    })
+                }
+            </div>
+        </div>
+          ]
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -346,7 +377,19 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="checkin-tags-wrapper">
+                    <div className="menu-p">
+                        <Dropdown options={options} value={"Totales"} />
+                    </div>
+
+                    <div className="checkin-tags-wrapper menu-g">
+                        <div className="columns is-mobile is-multiline checkin-tags">
+                            {/* <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-primary">{checkIn}</span>
+                                    <span className="tag is-white">Check In</span>
+                                </div>
+                            </div> */}
+                        </div>
                         <div className="columns is-mobile is-multiline checkin-tags">
                             <div className="column is-narrow">
                                 <div className="tags is-centered">
@@ -354,8 +397,6 @@ class ListEventUser extends Component {
                                     <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
-                        </div>
-                        <div className="columns is-mobile is-multiline checkin-tags">
                             <div className="column is-narrow">
                                 <div className="tags is-centered">
                                     <span className="tag is-light">{total}</span>

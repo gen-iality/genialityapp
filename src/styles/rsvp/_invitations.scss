@@ -104,7 +104,7 @@
       order: 1;
       width: 100%;
       .checkin-tags {
-        justify-content: center;
+        // justify-content: center;
       }
     }
     .checkin-header {
@@ -120,4 +120,36 @@
       width: 100%;
     }
   }
+}
+
+.Dropdown-menu{
+  max-height: 1500px !important;
+}
+.Dropdown-control{
+  border: solid 0px black !important;
+  border-bottom: 1px solid #b5b5b5 !important;
+}
+.menu-g{
+  display: none;
+}
+.menu-p{
+  width: 90%;
+  margin-bottom: 20px;
+}
+.Dropdown-placeholder{
+  color: #7a7a7a;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.Dropdown-menu{
+  border: 2px solid #ccc !important;
+  background-color: white !important;
+}
+@media (min-width: 769px ){
+  .menu-g{
+     display: block;
+  }
+  .menu-p{
+    display: none;
+ }
 }
