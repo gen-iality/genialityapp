@@ -14,6 +14,7 @@ import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import Select from 'react-select';
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -315,8 +316,9 @@ class ListEventUser extends Component {
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
         // Dropdown para movil
-        const options = [
-            <div className="checkin-tags-wrapper">
+        const { selectedOption } = 'Totales';
+        const options = [{ value:'1', label:
+            <div className="checkin-tags-wrapper" >
               <div className="columns is-mobile is-multiline checkin-tags">
                 <div className="column is-narrow">
                     <div className="tags is-centered">
@@ -341,7 +343,7 @@ class ListEventUser extends Component {
                     })
                 }
             </div>
-        </div>
+        </div>,disabled: 'yes'}
           ]
         return (
             <React.Fragment>
@@ -378,7 +380,7 @@ class ListEventUser extends Component {
                         </div>
                     </div>
                     <div className="menu-p">
-                        <Dropdown options={options} value={"Totales"} />
+                        <Select  options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
                     </div>
 
                     <div className="checkin-tags-wrapper menu-g">

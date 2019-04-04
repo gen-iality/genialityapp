@@ -122,13 +122,18 @@
   }
 }
 
-.Dropdown-menu{
-  max-height: 1500px !important;
-}
-.Dropdown-control{
-  border: solid 0px black !important;
+
+.css-vj8t7z{
+  border-color:transparent !important;
   border-bottom: 1px solid #b5b5b5 !important;
 }
+
+.css-2o5izw{
+  border-color:transparent !important;
+  border-bottom: 1px solid #00FFBC !important;
+  box-shadow: 0 0 0 1px transparent !important;
+}
+
 .menu-g{
   display: none;
 }
@@ -136,14 +141,16 @@
   width: 90%;
   margin-bottom: 20px;
 }
-.Dropdown-placeholder{
+.css-1492t68{
   color: #7a7a7a;
   font-size: 1rem;
   font-weight: 700;
 }
-.Dropdown-menu{
+.css-15k3avv{
   border: 2px solid #ccc !important;
   background-color: white !important;
+  min-height: 350px !important; 
+  z-index: 1000 !important;
 }
 @media (min-width: 769px ){
   .menu-g{
