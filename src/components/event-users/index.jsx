@@ -326,12 +326,6 @@ class ListEventUser extends Component {
                         <span className="tag is-white">Check In</span>
                     </div>
                 </div>
-                <div className="column is-narrow">
-                    <div className="tags is-centered">
-                        <span className="tag is-light">{total}</span>
-                        <span className="tag is-white">Total</span>
-                    </div>
-                </div>
                 {
                     Object.keys(estados).map(item=>{
                         return <div className="column is-narrow" key={item}>
@@ -342,6 +336,12 @@ class ListEventUser extends Component {
                                 </div>
                     })
                 }
+                <div className="column is-narrow">
+                    <div className="tags is-centered">
+                        <span className="tag is-light">{total}</span>
+                        <span className="tag is-white">Total</span>
+                    </div>
+                </div>
             </div>
         </div>,disabled: 'yes'}
           ]
@@ -399,12 +399,7 @@ class ListEventUser extends Component {
                                     <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
-                            <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-light">{total}</span>
-                                    <span className="tag is-white">Total</span>
-                                </div>
-                            </div>
+
                             {
                                 Object.keys(estados).map(item=>{
                                     return <div className="column is-narrow" key={item}>
@@ -415,6 +410,12 @@ class ListEventUser extends Component {
                                             </div>
                                 })
                             }
+                            <div className="column is-narrow">
+                                <div className="tags is-centered">
+                                    <span className="tag is-light">{total}</span>
+                                    <span className="tag is-white">Total</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="columns checkin-table">
