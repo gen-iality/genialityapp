@@ -380,7 +380,7 @@ class ListEventUser extends Component {
                         </div>
                     </div>
                     <div className="menu-p">
-                        <Select  options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
+                        <Select isSearchable={false} options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
                     </div>
 
                     <div className="checkin-tags-wrapper menu-g">
