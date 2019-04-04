@@ -13,6 +13,7 @@ import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 
+const html = document.querySelector("html");
 class ListEventUser extends Component {
     constructor(props) {
         super(props);
@@ -186,7 +187,6 @@ class ListEventUser extends Component {
     };
 
     modalUser = () => {
-        const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:undefined}
@@ -262,6 +262,7 @@ class ListEventUser extends Component {
     };
     closeQr = () => {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+        html.classList.remove('is-clipped');
     }
 
     onChangePage = (pageOfItems) => {
@@ -276,7 +277,7 @@ class ListEventUser extends Component {
             return items.push(<tr key={key}>
                 <td>
                     <span className="icon has-text-primary action_pointer"
-                          onClick={(e)=>{this.setState({editUser:true,selectedUser:item,edit:true})}}><i className="fas fa-edit"/></span>
+                          onClick={(e)=>{this.openEditModalUser(item)}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
                     {
@@ -298,6 +299,11 @@ class ListEventUser extends Component {
         })
         return items
     };
+
+    openEditModalUser = (item) => {
+        html.classList.add('is-clipped');
+        this.setState({editUser:true,selectedUser:item,edit:true})
+    }
 
     //Search records at third column
     searchResult = (data) => {
@@ -421,7 +427,7 @@ class ListEventUser extends Component {
                     <div className="modal-card">
                         <header className="modal-card-head">
                             <p className="modal-card-title">QR Reader</p>
-                            <button className="delete" aria-label="close" onClick={this.closeQr}/>
+                            <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
                             {
@@ -446,14 +452,14 @@ class ListEventUser extends Component {
                                                 <div className="icon is-small is-left"><FaCamera/></div>
                                             </div>
                                         </div>
-                                        <div className="columns is-centered">
+                                        <div className="columns is-mobile">
                                             <QrReader
                                                 delay={500}
                                                 facingMode={facingMode}
                                                 onError={this.handleError}
                                                 onScan={this.handleScan}
                                                 style={{ width: "60%" }}
-                                                className={"column is-half"}
+                                                className={"column is-half is-offset-one-quarter"}
                                             />
                                         </div>
                                     </React.Fragment>
@@ -488,8 +494,8 @@ const parseData = (data) => {
         Object.keys(item.properties).map((obj, i) => (
             info[key][obj] = item.properties[obj]
         ));
-        info[key]['estado'] = item.state.label;
-        info[key]['rol'] = item.rol.label;
+        if(item.state) info[key]['estado'] = item.state.label;
+        if(item.rol) info[key]['rol'] = item.rol.label;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;

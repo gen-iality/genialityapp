@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link, NavLink, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
-import {AuthUrl,icon,rolPermissions} from "../helpers/constants";
+import {ApiUrl, AuthUrl, icon, rolPermissions} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
@@ -50,7 +50,7 @@ class Header extends Component {
                         const photo = (data.photoUrl) ? data.photoUrl : data.picture;
                         OrganizationApi.mine()
                             .then((organizations)=>{
-                                this.setState({name,photo,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
+                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
                             })
                             .catch(error => {
                                 if (error.response) {
@@ -133,6 +133,11 @@ class Header extends Component {
         this.setState((filterState) => {
             return {filterOpen:!filterState.filterOpen,menuOpen:false}
         });
+    };
+
+    goReport = (e) => {
+        e.preventDefault();
+        window.location.replace(`${ApiUrl}/events/reports`);
     };
 
     render() {
@@ -295,6 +300,7 @@ class Header extends Component {
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#compras`}>
                                                         <FormattedMessage id="header.my_orders" defaultMessage="Holi"/>
                                                     </Link>
+                                                    {this.state.uid.match('^(j4ZLBMDuh5UGiX5CKsmChv8UNFf1|JzPjRBtM85ehpKO4ylwiMmeo2jC3)$') && <a className="navbar-item item-sub has-text-grey-light" onClick={this.goReport}>Reportes</a>}
                                                     <hr className="navbar-divider"/>
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>

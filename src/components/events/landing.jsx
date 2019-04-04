@@ -12,7 +12,6 @@ import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase";
-import { Editor, EditorState, convertFromRaw } from "draft-js";
 Moment.locale('es');
 momentLocalizer();
 
@@ -23,7 +22,8 @@ class Landing extends Component {
             loading:true,
             auth:false,
             modal:false,
-            tickets:[]
+            tickets:[],
+            heightFrame: '480px'
         }
     }
 
@@ -56,8 +56,7 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description)) : EditorState.createEmpty();
-        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token,editorState},()=>{
+        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -114,8 +113,12 @@ class Landing extends Component {
         }
     };
 
+    onLoad = () => {
+        this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
+    }
+
     render() {
-        const { event, tickets, iframeUrl, auth, modal, editorState } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -163,14 +166,13 @@ class Landing extends Component {
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
-                                                <Editor editorState={editorState} readOnly={true} />
-                                                {/*<p className="is-italic has-text-grey">
+                                                <p className="is-italic has-text-grey">
                                                     {event.description}
-                                                    {
+                                                    {/*{
                                                         event.description.length >= 160 ?
                                                             event.description.substring(0,160)+'...':
-                                                    }
-                                                </p>*/}
+                                                    }*/}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
@@ -230,77 +232,11 @@ class Landing extends Component {
                             <AdditonalDataEvent eventInfo={this.state.event}/>
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
-                                    {/*<div className="columns is-centered">
-                                        <div className="column is-8">
-                                            <h2 className="data-title has-text-left has-text-dark is-size-3">Tiquetes</h2>
-                                            {
-                                                tickets.map((ticket,key)=>{
-                                                    return <div className="level is-mobile" key={key}>
-                                                            <div className="level-left">
-                                                                <div className='level-item'>
-                                                                    <p className="subtitle is-5">
-                                                                        <strong>{ticket.title}</strong>
-                                                                    </p><br/>
-                                                                    <p>{ticket.description}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="level-right">
-                                                                <div className="level-item">
-                                                                    <p>{ticket.price}</p>
-                                                                </div>
-                                                                <div className="level-item">
-                                                                    <div className="select">
-                                                                        <select onChange={this.handleQuantity} name={`quantity_${ticket._id}`}>
-                                                                            {
-                                                                                ticket.options.map(item => {
-                                                                                    return <option value={item} key={item}>{item}</option>
-                                                                                })
-                                                                            }
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                    </div>
-                                                })
-                                            }
-                                        </div>
-                                    </div>*/}
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={'480px'}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
-                                        {/* <div className="column is-7">
-                                <div className="has-shadow">
-                                    <p>Acciones</p>
-                                    <div className="field is-grouped">
-                                        <div className="control">
-                                            <button className="button is-primary is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-share"/>
-                                                </span>
-                                                <span>Compartir</span>
-                                            </button>
-                                        </div>
-                                        <div className="control">
-                                            <button className="button is-text is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-check"/>
-                                                </span>
-                                                <span>Asistiré</span>
-                                            </button>
-                                        </div>
-                                        <div className="control">
-                                            <button className="button is-text is-small">
-                                                <span className="icon">
-                                                    <i className="fas fa-hearth"/>
-                                                </span>
-                                                <span>Me gusta</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                    
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left">
