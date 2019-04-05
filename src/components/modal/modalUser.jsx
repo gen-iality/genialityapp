@@ -34,6 +34,7 @@ class UserModal extends Component {
         self.setState({ statesList: states, state: states[1].value });
         if (this.props.edit) {
             const {value} = this.props;
+            this.nameInput.focus();
             let user = {};
             Object.keys(value.properties)
                 .map((obj) => {
@@ -193,6 +194,20 @@ class UserModal extends Component {
             let mandatory = m.mandatory;
             let target = name;
             let value =  this.state.user[target];
+            if(name === 'cedula'){
+                return <div className="field column is-half" key={key}>
+                    <label className={`label has-text-grey-light is-capitalized required`}>{m.name}</label>
+                    <div className="control">
+                        <input className="input"
+                               type={type}
+                               name={name}
+                               onChange={(e)=>{this.onChange(e, type)}}
+                               value={value}
+                               onBlur={this.searchCC}
+                               ref={this.nameInput} />
+                    </div>
+                </div>
+            }
             let input =  <input {...props}
                                 className="input"
                                 type={type}
@@ -317,6 +332,30 @@ class UserModal extends Component {
         this.setState({uncheck:false})
     }
 
+    searchCC = (e) => {
+        console.log('searching');
+        const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        let {user} = this.state;
+        usersRef.where('properties.cedula','==',`${user.cedula}`)
+            .get()
+            .then((querySnapshot)=> {
+                if(querySnapshot.empty){
+                    this.setState({found:0,disabledFields:false,edit:false})
+                }
+                else{
+                    querySnapshot.forEach((doc)=> {
+                        console.log(doc.id, " => ", doc.data().properties);
+                        user = doc.data().properties;
+                        this.setState({user,found:1,disabledFields:true,edit:true,userId:doc.id,valid:false})
+                    });
+                }
+            })
+            .catch(error => {
+                this.setState({found:0})
+                console.log("Error getting documents: ", error);
+            });
+    }
+
     render() {
         const {user,checked_in,state,statesList,userId} = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
@@ -332,6 +371,12 @@ class UserModal extends Component {
                             <button className="delete is-large" aria-label="close" onClick={this.props.handleModal}/>
                         </header>
                         <section className="modal-card-body">
+                            {
+                                (this.state.found===1) ?
+                                    <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
+                                    (this.state.found===0) ?
+                                        <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
+                            }
                             {
                                 Object.keys(user).length > 0 && this.renderForm()
                             }
