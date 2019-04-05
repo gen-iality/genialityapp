@@ -104,7 +104,7 @@ class Landing extends Component {
         this.setState({modal:false});
         if(user) {
             const {event} = this.state;
-            window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
+            window.location.replace(`http://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
         }
     }
 
@@ -116,7 +116,7 @@ class Landing extends Component {
     };
 
     onLoad = () => {
-        this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
+        // this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     }
 
     render() {
