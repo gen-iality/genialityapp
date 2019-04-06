@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import Geosuggest from 'react-geosuggest'
 import { DateTimePicker } from 'react-widgets'
 import SelectInput from "./selectInput";
+import RichEditor from "./richEditor";
 
 class FormEvent extends Component {
     render() {
@@ -40,7 +41,7 @@ class FormEvent extends Component {
                                     <div className="control">
                                         <DateTimePicker
                                             value={event.date_start}
-                                            format={'L'}
+                                            format={'DD/MM/YYYY'}
                                             time={false}
                                             onChange={value => this.props.changeDate(value,"date_start")}/>
                                     </div>
@@ -70,7 +71,7 @@ class FormEvent extends Component {
                                         <DateTimePicker
                                             value={event.date_end}
                                             min={this.props.minDate}
-                                            format={'L'}
+                                            format={'DD/MM/YYYY'}
                                             time={false}
                                             onChange={value => this.props.changeDate(value,"date_end")}/>
                                     </div>
@@ -94,7 +95,8 @@ class FormEvent extends Component {
                     <div className="field">
                         <label className="label required has-text-grey-light">Descripción</label>
                         <div className="control">
-                            <textarea className="textarea" name={"description"} placeholder="Descripción del evento" value={event.description} onChange={this.props.handleChange}/>
+                            <RichEditor content={event.description} changeDescription={this.props.changeDescription}/>
+                            {/*<textarea className="textarea" name={"description"} placeholder="Descripción del evento" value={event.description} onChange={this.props.handleChange}/>*/}
                         </div>
                     </div>
                 </div>

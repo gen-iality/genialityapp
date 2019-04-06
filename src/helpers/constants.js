@@ -1,6 +1,6 @@
 import React from "react";
 
-export const ApiUrl  = 'https://api.evius.co';
+export const ApiUrl  = 'https://dev.evius.co';
 //export const ApiUrl  = 'https://dev.mocionsoft.com/evius/eviusapilaravel/public';
 export const AuthUrl = process.env.REACT_APP_AUTH_URL;
 export const BaseUrl = process.env.REACT_APP_BASE_URL;

@@ -40,13 +40,11 @@ class Landing extends Component {
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const evius_token = Cookie.get('evius_token');
-        console.log(evius_token);
         let iframeUrl = `${ApiUrl}/e/${event._id}`;
         if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
-        console.log(iframeUrl);
         const dateFrom = event.datetime_from.split(' ');
         const dateTo = event.datetime_to.split(' ');
         event.hour_start = Moment(dateFrom[1], 'HH:mm').toDate();

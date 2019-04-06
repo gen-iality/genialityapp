@@ -78,11 +78,14 @@ class General extends Component {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}},this.valid)
     };
+    changeDescription = (raw) => {
+        this.setState({event:{...this.state.event,description:raw}},this.valid)
+    };
     //Validación
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && event.description.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+            valid = (event.name.length>0 && (typeof event.description === 'object') && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         if(!event.location.FormattedAddress && !event.location.PlaceId){
             error.location = 'Fill a correct address'
         }
@@ -493,7 +496,7 @@ class General extends Component {
                                        {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                                    </div>
                                }
-                               handleChange={this.handleChange} minDate={this.state.minDate}
+                               handleChange={this.handleChange} minDate={this.state.minDate} changeDescription={this.changeDescription}
                                selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
                                changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
                     <section className="accordions">
