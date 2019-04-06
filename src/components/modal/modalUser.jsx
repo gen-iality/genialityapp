@@ -19,12 +19,14 @@ class UserModal extends Component {
             prevState: "",
             userId: "mocionsoft",
             emailError:false,
+            found: 0,
+            newCC: 0,
             confirmCheck:true,
             valid: true,
             checked_in: false,
         };
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.printUser = this.printUser.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.printUser = this.printUser.bind(this);
     }
 
     componentDidMount() {
@@ -34,7 +36,6 @@ class UserModal extends Component {
         self.setState({ statesList: states, state: states[1].value });
         if (this.props.edit) {
             const {value} = this.props;
-            this.nameInput.focus();
             let user = {};
             Object.keys(value.properties)
                 .map((obj) => {
@@ -42,12 +43,6 @@ class UserModal extends Component {
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
             this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
-        }else {
-            let user = {};
-            this.props.extraFields
-                .map((obj) => (
-                    user[obj.name] =  obj.type==="boolean" ? false :  obj.type==="number" ? 0: ""));
-            this.setState({user,edit:false});
         }
     }
 
@@ -194,20 +189,6 @@ class UserModal extends Component {
             let mandatory = m.mandatory;
             let target = name;
             let value =  this.state.user[target];
-            if(name === 'cedula'){
-                return <div className="field column is-half" key={key}>
-                    <label className={`label has-text-grey-light is-capitalized required`}>{m.name}</label>
-                    <div className="control">
-                        <input className="input"
-                               type={type}
-                               name={name}
-                               onChange={(e)=>{this.onChange(e, type)}}
-                               value={value}
-                               onBlur={this.searchCC}
-                               ref={this.nameInput} />
-                    </div>
-                </div>
-            }
             let input =  <input {...props}
                                 className="input"
                                 type={type}
@@ -332,21 +313,28 @@ class UserModal extends Component {
         this.setState({uncheck:false})
     }
 
-    searchCC = (e) => {
+    searchCC = () => {
         console.log('searching');
         const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        let {user} = this.state;
-        usersRef.where('properties.cedula','==',`${user.cedula}`)
+        let value = this.state.newCC;
+        let user = {};
+        usersRef.where('properties.cedula','==',`${value}`)
             .get()
             .then((querySnapshot)=> {
                 if(querySnapshot.empty){
-                    this.setState({found:0,disabledFields:false,edit:false})
+                    this.props.extraFields
+                        .map((obj) => {
+                            user[obj.name] = obj.type === "boolean" ? false : obj.type === "number" ? 0 : "";
+                            if(obj.name === 'cedula') user[obj.name] = value;
+                            return user
+                        });
+                    this.setState({found:1,user,edit:false});
                 }
                 else{
                     querySnapshot.forEach((doc)=> {
                         console.log(doc.id, " => ", doc.data().properties);
                         user = doc.data().properties;
-                        this.setState({user,found:1,disabledFields:true,edit:true,userId:doc.id,valid:false})
+                        this.setState({user,found:2,disabledFields:true,edit:true,userId:doc.id,valid:false})
                     });
                 }
             })
@@ -354,14 +342,20 @@ class UserModal extends Component {
                 this.setState({found:0})
                 console.log("Error getting documents: ", error);
             });
-    }
+    };
+
+    changeCC = (e) => {
+        const {value} = e.target;
+        this.setState({newCC:value.substring(0,10)})
+    };
 
     render() {
-        const {user,checked_in,state,statesList,userId} = this.state;
+        const {user,checked_in,state,statesList,userId,found} = this.state;
+        const {modal,edit} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
-                <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
+                <div className={`modal modal-add-user ${modal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
@@ -372,10 +366,21 @@ class UserModal extends Component {
                         </header>
                         <section className="modal-card-body">
                             {
-                                (this.state.found===1) ?
+                                (!edit && found===2) ?
                                     <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
-                                    (this.state.found===0) ?
+                                    (!edit && found===1) ?
                                         <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
+                            }
+                            {
+                                (!edit && Object.keys(user).length <= 0) && <React.Fragment>
+                                    <div className="field">
+                                        <div className="control">
+                                            <label className={`label has-text-grey-light is-capitalized required`}>Cédula</label>
+                                            <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC}/>
+                                        </div>
+                                    </div>
+                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                </React.Fragment>
                             }
                             {
                                 Object.keys(user).length > 0 && this.renderForm()
@@ -397,52 +402,58 @@ class UserModal extends Component {
                                     </div>
                                 )
                             }
-                            <div className="field is-grouped">
-                                <div className="control">
-                                    <label className="label">Estado</label>
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={state} onChange={this.selectChange} name={'state'}>
-                                                {
-                                                    statesList.map((item,key)=>{
-                                                        return <option key={key} value={item.value}>{item.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                {
-                                    !this.state.edit&&
-                                    <div className="control">
-                                        <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
-                                               type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
-                                               onChange={(e)=>{this.setState(prevState=>{
-                                                   return {confirmCheck:!prevState.confirmCheck}})}}/>
-                                        <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
-                                    </div>
-                                }
-                            </div>
-                        </section>
-                        <footer className="modal-card-foot">
                             {
-                                this.state.create?<div>Creando...</div>:
-                                    <div className="modal-buttons">
-                                        <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>Guardar</button>
+                                Object.keys(user).length > 0 &&
+                                    <div className="field is-grouped">
+                                        <div className="control">
+                                            <label className="label">Estado</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={state} onChange={this.selectChange} name={'state'}>
+                                                        {
+                                                            statesList.map((item,key)=>{
+                                                                return <option key={key} value={item.value}>{item.label}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {
-                                            this.state.edit&&
-                                            <React.Fragment>
-                                                <button className="button" onClick={this.printUser}>Imprimir</button>
-                                                <button className="button" onClick={(e)=>{this.setState({modal:true})}}>Borrar</button>
-                                            </React.Fragment>
+                                            !this.state.edit&&
+                                            <div className="control">
+                                                <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
+                                                       type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
+                                                       onChange={(e)=>{this.setState(prevState=>{
+                                                           return {confirmCheck:!prevState.confirmCheck}})}}/>
+                                                <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                                            </div>
                                         }
-                                        <button className="button" onClick={this.closeModal}>Cancel</button>
                                     </div>
                             }
-                            <div className={"msg"}>
-                                <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-                            </div>
-                        </footer>
+                        </section>
+                        {
+                            Object.keys(user).length > 0 &&
+                                <footer className="modal-card-foot">
+                                    {
+                                        this.state.create?<div>Creando...</div>:
+                                            <div className="modal-buttons">
+                                                <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>Guardar</button>
+                                                {
+                                                    this.state.edit&&
+                                                    <React.Fragment>
+                                                        <button className="button" onClick={this.printUser}>Imprimir</button>
+                                                        <button className="button" onClick={(e)=>{this.setState({modal:true})}}>Borrar</button>
+                                                    </React.Fragment>
+                                                }
+                                                <button className="button" onClick={this.closeModal}>Cancel</button>
+                                            </div>
+                                    }
+                                    <div className={"msg"}>
+                                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+                                    </div>
+                                </footer>
+                        }
                     </div>
                     <div style={{opacity:0, display:'none'}}>
                         <QRCode value={userId}/>
