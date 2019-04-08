@@ -102,7 +102,7 @@ class Landing extends Component {
         this.setState({modal:false});
         if(user) {
             const {event} = this.state;
-            window.location.replace(`https://dev.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
+            window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
         }
     }
 
