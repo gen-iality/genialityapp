@@ -114,7 +114,7 @@ class Landing extends Component {
     };
 
     onLoad = () => {
-        // this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
+        this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     }
 
     render() {
