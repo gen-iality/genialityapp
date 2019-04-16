@@ -174,7 +174,8 @@ class ListEventUser extends Component {
     exportFile = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        const data = parseData(this.state.userReq);
+        const attendees = [...this.state.userReq].sort((a, b) => b.created_at - a.created_at);
+        const data = parseData(attendees);
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
@@ -543,6 +544,7 @@ const parseData = (data) => {
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
+        info[key]['Creado'] = item.created_at;
         return info
     });
     return info
