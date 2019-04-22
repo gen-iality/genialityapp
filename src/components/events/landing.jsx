@@ -122,7 +122,7 @@ class Landing extends Component {
     }
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -183,7 +183,7 @@ class Landing extends Component {
                                             {/*{
                                                 (event.description.length >= 80 && !this.state.showFull) && (
                                                     <div className="column is-5 is-offset-6 button-cont">
-                                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
+                                                        <span className="has-text-weight-semibold has-text-grey">Ver mï¿½s</span>
                                                         <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
                                                             <i className="icon fa fa-plus"></i>
                                                         </div>
@@ -239,7 +239,7 @@ class Landing extends Component {
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                                <span className="has-text-grey-dark is-size-3">Ubicación</span>
+                                                <span className="has-text-grey-dark is-size-3">Ubicaciï¿½n</span>
                                             </h2>
                                             {
                                                 !this.state.loading&&(
