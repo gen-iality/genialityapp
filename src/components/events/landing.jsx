@@ -12,6 +12,7 @@ import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase";
+import {convertFromRaw, Editor, EditorState} from "draft-js";
 Moment.locale('es');
 momentLocalizer();
 
@@ -23,6 +24,7 @@ class Landing extends Component {
             auth:false,
             modal:false,
             tickets:[],
+            editorState:'',
             heightFrame: '480px'
         }
     }
@@ -52,11 +54,13 @@ class Landing extends Component {
         event.date_start = dateFrom[0];
         event.date_end = dateTo[0];
         event.organizer = event.organizer ? event.organizer : event.author;
+        const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
+            : EditorState.createEmpty();
         const tickets = event.tickets.map(ticket => {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+        this.setState({editorState,event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -166,13 +170,7 @@ class Landing extends Component {
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
-                                                <p className="is-italic has-text-grey">
-                                                    {event.description}
-                                                    {/*{
-                                                        event.description.length >= 160 ?
-                                                            event.description.substring(0,160)+'...':
-                                                    }*/}
-                                                </p>
+                                                <Editor readOnly={true} editorState={editorState}/>
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
@@ -185,7 +183,7 @@ class Landing extends Component {
                                             {/*{
                                                 (event.description.length >= 80 && !this.state.showFull) && (
                                                     <div className="column is-5 is-offset-6 button-cont">
-                                                        <span className="has-text-weight-semibold has-text-grey">Ver m√°s</span>
+                                                        <span className="has-text-weight-semibold has-text-grey">Ver m·s</span>
                                                         <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
                                                             <i className="icon fa fa-plus"></i>
                                                         </div>
@@ -241,7 +239,7 @@ class Landing extends Component {
                                         <div className="column is-8">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                                <span className="has-text-grey-dark is-size-3">Ubicaci√≥n</span>
+                                                <span className="has-text-grey-dark is-size-3">UbicaciÛn</span>
                                             </h2>
                                             {
                                                 !this.state.loading&&(
