@@ -89,8 +89,7 @@ section.landing{
     background-color: $color-evius;
     color: white;
     border-color: white;
-    margin-top: -94px;
-
+    margin-top: -26px;
   }
   .data {
     .data-title {
@@ -131,10 +130,14 @@ section.landing{
     .columns{
       flex-direction: row;
     }
+    
   }
   @media only screen and (min-width: $breakpoint-tablet) {
     .columns{
       flex-direction: row;
+    }
+    .button-buy{
+      margin-top: -55px;
     }
   }
 }
