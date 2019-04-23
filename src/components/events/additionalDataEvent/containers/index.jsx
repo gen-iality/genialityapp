@@ -1,9 +1,8 @@
 import React,{Component} from 'react';
-import Slider from "react-slick";
 import ListSpeakers from '../components/speakers/listSpeakers';
 import ListProgramme  from '../components/programme/listProgramme';
-import {Actions} from "../../../../helpers/request";
 import Moment from "moment";
+
 // Muestra la información adicional de el evento como speakers, agenta, boleteria etc...
 class AdditonalDataEvent extends Component{
     constructor(props){
@@ -18,10 +17,8 @@ class AdditonalDataEvent extends Component{
     }
 
     async componentDidMount(){
-        
-        let resp = await Actions.getAll(`api/events/${this.eventId}/sessions`);
-  
-        this.setState({sessions :  this.OrderByDate(resp.data,'date') })
+        const {sessions} = this.props.eventInfo;
+        this.setState({sessions :  this.OrderByDate(sessions,'date') })
         if(this.state.sessions.length > 0){
             this.getHeadersTabs(this.state.sessions)
             this.filterByDays(this.state.sessions)
