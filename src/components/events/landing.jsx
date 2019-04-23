@@ -236,7 +236,7 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'80%'} height={heightFrame} onLoad={this.onLoad}/>
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
                                     <div className="columns is-centered">
