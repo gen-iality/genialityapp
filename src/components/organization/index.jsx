@@ -81,7 +81,7 @@ class Organization extends Component {
                                 </p>
                                 {
                                     (!create) && (
-                                        <div className={`is-hidden-mobile`}>
+                                        <div /*className={`is-hidden-mobile`}*/>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/profile`}>Detalles</NavLink>
                                             </p>

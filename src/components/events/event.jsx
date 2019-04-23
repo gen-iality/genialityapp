@@ -118,7 +118,7 @@ class Event extends Component {
                                 </p>
                                 {
                                     (!this.state.newEvent) && (
-                                        <div className={`is-hidden-mobile`}>
+                                        <div /*className={`is-hidden-mobile`*/}>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
                                             </p>
