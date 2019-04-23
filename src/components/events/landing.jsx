@@ -238,7 +238,7 @@ class Landing extends Component {
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
-                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
+                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Reservar</button>}
                                     <div className="columns is-centered">
                    
                                         <div className="column is-8">
