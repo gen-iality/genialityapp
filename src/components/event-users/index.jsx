@@ -54,7 +54,7 @@ class ListEventUser extends Component {
         const {states} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
-        const { usersRef, pilaRef } = this.state;
+        const { usersRef, ticket, stage } = this.state;
         let newItems= [...this.state.userReq];
         this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
             let user;
@@ -63,32 +63,24 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
-                //user.rol = roles.find(x => x.value === user.rol_id);
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     this.statesCounter(user.state.value);
-                    /*if(change.doc._hasPendingWrites){
-                        console.log('en pilando ==>',change.doc.data());
-                        pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }*/
                 }
                 if (change.type === 'modified'){
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
-                    /*if(change.doc._hasPendingWrites){
-                        console.log('en pilando ==>',change.doc.data());
-                        pilaRef.doc(change.doc.id).set(change.doc.data());
-                    }*/
                 }
                 if (change.type === 'removed'){
                     newItems.splice(change.oldIndex, 1);
                 }
             });
             this.setState((prevState) => {
+                const usersToShow = (ticket.value.length <= 0 || stage.value.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                 return {
-                    userReq: newItems, auxArr: newItems, users: newItems.slice(0,50), changeItem,
+                    userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
                     loading: false,total: snapshot.size, checkIn, clearSearch: !prevState.clearSearch
                 }
             });
