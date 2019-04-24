@@ -314,7 +314,12 @@ class ListEventUser extends Component {
         if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
         else{
             const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
-            this.setState({ticket:value,users});
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0}},()=>{
+                users.forEach(user=>{
+                    this.statesCounter(user.state.value);
+                });
+                this.setState({ticket:value,users,total:users.length});
+            })
         }
     };
 
