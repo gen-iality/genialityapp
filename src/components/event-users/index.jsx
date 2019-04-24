@@ -12,8 +12,6 @@ import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
-import Dropdown from 'react-dropdown';
-import 'react-dropdown/style.css';
 import Select from 'react-select';
 
 const html = document.querySelector("html");
