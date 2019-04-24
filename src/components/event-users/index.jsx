@@ -305,7 +305,7 @@ class ListEventUser extends Component {
     changeStage = (e) => {
         const {value} = e.target;
         const {event:{tickets}} = this.props;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
+        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:''}});
         const options = tickets.filter(ticket=>ticket.stage_id === value);
         this.setState({stage:value,ticketsOptions:options});
     };
