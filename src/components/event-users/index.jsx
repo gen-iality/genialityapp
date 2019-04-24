@@ -78,7 +78,7 @@ class ListEventUser extends Component {
                 }
             });
             this.setState((prevState) => {
-                const usersToShow = (ticket.value.length <= 0 || stage.value.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
+                const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                 return {
                     userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
                     loading: false,total: snapshot.size, checkIn, clearSearch: !prevState.clearSearch
