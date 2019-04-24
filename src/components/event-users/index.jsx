@@ -44,6 +44,9 @@ class ListEventUser extends Component {
             changeItem: false,
             errorData: {},
             serverError: false,
+            stage: '',
+            ticket: '',
+            ticketsOptions: []
         };
     }
 
@@ -309,13 +312,30 @@ class ListEventUser extends Component {
         this.setState({editUser:true,selectedUser:item,edit:true})
     }
 
+    changeStage = (e) => {
+        const {value} = e.target;
+        const {event:{tickets}} = this.props;
+        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
+        const options = tickets.filter(ticket=>ticket.stage_id === value);
+        this.setState({stage:value,ticketsOptions:options});
+    };
+    changeTicket = (e) => {
+        const {value} = e.target;
+        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
+        else{
+            const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
+            this.setState({ticket:value,users});
+        }
+    };
+
     //Search records at third column
     searchResult = (data) => {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
+        const {event:{event_stages}} = this.props;
         // Dropdown para movil
         const { selectedOption } = 'Totales';
         const options = [{ value:'1', label:
@@ -383,16 +403,7 @@ class ListEventUser extends Component {
                     <div className="menu-p">
                         <Select isSearchable={false} options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
                     </div>
-
                     <div className="checkin-tags-wrapper menu-g">
-                        <div className="columns is-mobile is-multiline checkin-tags">
-                            {/* <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-primary">{checkIn}</span>
-                                    <span className="tag is-white">Check In</span>
-                                </div>
-                            </div> */}
-                        </div>
                         <div className="columns is-mobile is-multiline checkin-tags">
                             <div className="column is-narrow">
                                 <div className="tags is-centered">
@@ -400,7 +411,6 @@ class ListEventUser extends Component {
                                     <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
-
                             {
                                 Object.keys(estados).map(item=>{
                                     return <div className="column is-narrow" key={item}>
@@ -416,6 +426,45 @@ class ListEventUser extends Component {
                                     <span className="tag is-light">{total}</span>
                                     <span className="tag is-white">Total</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='checkin-header'>
+                        <p>Filtra Usuarios por Tiquete</p>
+                        <div className="columns">
+                             <div className="column field">
+                                 <div className="control">
+                                     <label className="label">Etapa</label>
+                                     <div className="control">
+                                         <div className="select">
+                                             <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                 <option value={''}>Escoge la etapa...</option>
+                                                 {
+                                                     event_stages.map((item,key)=>{
+                                                         return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                     })
+                                                 }
+                                             </select>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                             <div className="column field">
+                                 <div className="control">
+                                     <label className="label">Tiquete</label>
+                                     <div className="control">
+                                         <div className="select">
+                                             <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                 <option value={''}>Escoge el tiquete...</option>
+                                                 {
+                                                     ticketsOptions.map((item,key)=>{
+                                                         return <option key={key} value={item._id}>{item.title}</option>
+                                                     })
+                                                 }
+                                             </select>
+                                         </div>
+                                     </div>
+                                 </div>
                             </div>
                         </div>
                     </div>
