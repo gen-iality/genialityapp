@@ -64,6 +64,7 @@ class UserModal extends Component {
         if(!this.state.edit){
             snap.updated_at = new Date();
             snap.checked_in = false;
+            if(this.props.ticket.length > 0 ) snap.ticket_id = this.props.ticket;
             snap.created_at = new Date();
             if(this.state.confirmCheck) {
                 snap.checked_in = true;
