@@ -5,7 +5,7 @@ import {Link, withRouter} from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import {EventsApi} from "../../helpers/request";
+import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
@@ -41,6 +41,7 @@ class Landing extends Component {
             status = searchParams.get("status");
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
+        const sessions = await Actions.getAll(`api/events/${id}/sessions`);
         const evius_token = Cookie.get('evius_token');
         let iframeUrl = `${ApiUrl}/e/${event._id}`;
         if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
@@ -53,6 +54,7 @@ class Landing extends Component {
         event.hour_end = Moment(dateTo[1], 'HH:mm').toDate();
         event.date_start = dateFrom[0];
         event.date_end = dateTo[0];
+        event.sessions = sessions;
         event.organizer = event.organizer ? event.organizer : event.author;
         const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
             : EditorState.createEmpty();
