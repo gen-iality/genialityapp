@@ -5,7 +5,7 @@ import {Link, withRouter} from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import {Actions, EventsApi} from "../../helpers/request";
+import {EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
@@ -41,7 +41,6 @@ class Landing extends Component {
             status = searchParams.get("status");
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
-        const sessions = await Actions.getAll(`api/events/${id}/sessions`);
         const evius_token = Cookie.get('evius_token');
         let iframeUrl = `${ApiUrl}/e/${event._id}`;
         if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
@@ -55,14 +54,13 @@ class Landing extends Component {
         event.date_start = dateFrom[0];
         event.date_end = dateTo[0];
         event.organizer = event.organizer ? event.organizer : event.author;
-        event.sessions = sessions;
         const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
             : EditorState.createEmpty();
         const tickets = event.tickets.map(ticket => {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({event,loading:false,tickets,iframeUrl,auth:!!evius_token,editorState},()=>{
+        this.setState({editorState,event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -124,7 +122,7 @@ class Landing extends Component {
     // }
 
     render() {
-        const { event, editorState, iframeUrl, auth, modal, heightFrame } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
         return (
             <section className="section hero landing">
                 {
