@@ -120,7 +120,8 @@ class Landing extends Component {
     };
 
      onLoad = () => {
-         this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
+         if(window.location.hostname === 'evius.co')
+            this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
     render() {
