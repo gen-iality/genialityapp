@@ -1,4 +1,8 @@
 section.landing{
+  .columns{
+    display: flex;
+    flex-direction: column-reverse;
+  }
   .info {
     background-color: #eeeeee;
     .fecha {
@@ -81,6 +85,12 @@ section.landing{
       width: 45px;
     }
   }
+  .button-buy{
+    background-color: $color-evius;
+    color: white;
+    border-color: white;
+    margin-top: -26px;
+  }
   .data {
     .data-title {
       line-height: 1.1;
@@ -114,6 +124,20 @@ section.landing{
       &.right {
         right: 0;
       }
+    }
+  }
+  @media only screen and (min-width: $breakpoint-mobile) {
+    .columns{
+      flex-direction: row;
+    }
+    
+  }
+  @media only screen and (min-width: $breakpoint-tablet) {
+    .columns{
+      flex-direction: row;
+    }
+    .button-buy{
+      margin-top: -55px;
     }
   }
 }

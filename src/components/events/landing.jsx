@@ -119,9 +119,9 @@ class Landing extends Component {
         }
     };
 
-    onLoad = () => {
-        this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
-    }
+    // onLoad = () => {
+    //     this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
+    // }
 
     render() {
         const { event, editorState, iframeUrl, auth, modal, heightFrame } = this.state;
@@ -238,7 +238,7 @@ class Landing extends Component {
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
-                                    {!auth && <button className="button is-link is-large" onClick={this.openLogin}>Comprar</button>}
+                                    {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
                                     <div className="columns is-centered">
                    
                                         <div className="column is-8">
