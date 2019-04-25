@@ -136,12 +136,7 @@ section.landing{
       }
     }
   }
-  @media only screen and (min-width: $breakpoint-mobile) {
-    .columns{
-      flex-direction: row;
-    }
-    
-  }
+  
   @media only screen and (min-width: $breakpoint-tablet) {
     .columns{
       flex-direction: row;
