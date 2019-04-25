@@ -305,20 +305,46 @@ class ListEventUser extends Component {
     changeStage = (e) => {
         const {value} = e.target;
         const {event:{tickets}} = this.props;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:''}});
-        const options = tickets.filter(ticket=>ticket.stage_id === value);
-        this.setState({stage:value,ticketsOptions:options});
+        if(value === '') {
+            let check = 0;
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+                const list = this.state.userReq;
+                list.forEach(user => {
+                    if (user.checked_in) check += 1;
+                    this.statesCounter(user.state.value);
+                });
+                this.setState((state) => {
+                    return {users: state.auxArr.slice(0, 50), ticket: '', stage: value, total: list.length, checkIn: check}
+                });
+            })
+        }
+        else {
+            const options = tickets.filter(ticket => ticket.stage_id === value);
+            this.setState({stage: value, ticketsOptions: options});
+        }
     };
     changeTicket = (e) => {
         const {value} = e.target;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
-        else{
-            const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
-            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0}},()=>{
-                users.forEach(user=>{
+        if(value === '') {
+            let check = 0;
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+                const list = this.state.userReq;
+                list.forEach(user=>{
+                    if(user.checked_in) check += 1;
                     this.statesCounter(user.state.value);
                 });
-                this.setState({ticket:value,users,total:users.length});
+                this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',checkIn:check,total: list.length}});
+            })
+        }
+        else{
+            let check = 0;
+            const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=>{
+                users.forEach(user=>{
+                    if(user.checked_in) check += 1;
+                    this.statesCounter(user.state.value);
+                });
+                this.setState({ticket:value,users,total:users.length,checkIn:check});
             })
         }
     };
