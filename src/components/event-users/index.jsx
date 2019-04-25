@@ -313,7 +313,7 @@ class ListEventUser extends Component {
     };
     changeTicket = (e) => {
         const {value} = e.target;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50)}});
+        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:''}});
         else{
             let check = 0;
             const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
