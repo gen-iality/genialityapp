@@ -140,6 +140,12 @@ class Landing extends Component {
                     this.state.loading?<Loading/> :
                         <React.Fragment>
                             <div className="hero-head">
+                                <div className="nombre item columns is-centered">
+                                            <div className="column">
+                                                <h2 className="is-size-3 bold-text">{event.name}</h2>
+                                                <span className="is-size-6 has-text-grey">Por: <Link className="has-text-grey" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
+                                            </div>
+                                        </div>
                                 <div className="columns is-gapless">
                                     <div className="column is-4 info">
                                         <div className="fecha item columns">
@@ -163,12 +169,6 @@ class Landing extends Component {
                                             </div>
                                             <div className="column is-9">
                                                 <span className="subtitle is-size-6">{event.location.FormattedAddress}</span>
-                                            </div>
-                                        </div>
-                                        <div className="nombre item columns is-centered">
-                                            <div className="column is-10">
-                                                <h2 className="is-size-3">{event.name}</h2>
-                                                <span className="is-size-6 has-text-grey">Por: <Link className="has-text-grey" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
                                             </div>
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
@@ -242,7 +242,7 @@ class Landing extends Component {
                                     {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
                                     <div className="columns is-centered">
                    
-                                        <div className="column is-8">
+                                        <div className="column is-12">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
                                                 <span className="has-text-grey-dark is-size-3">Ubicación</span>
