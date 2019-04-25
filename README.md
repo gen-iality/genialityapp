@@ -40,6 +40,16 @@ Your app is ready to be deployed!
 
 See the section about [deployment](#deployment) for more information.
 
+#### `npm run dev`
+
+Builds the app for production dev branch to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
+
+See the section about [deployment](#deployment) for more information.
+
 #### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
