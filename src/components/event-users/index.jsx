@@ -307,12 +307,16 @@ class ListEventUser extends Component {
         const {event:{tickets}} = this.props;
         if(value === '') {
             let check = 0;
-            const list = this.state.userReq;
-            list.forEach(user=>{
-                if(user.checked_in) check += 1;
-                this.statesCounter(user.state.value);
-            });
-            this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',stage:value,checkIn:check}});
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+                const list = this.state.userReq;
+                list.forEach(user => {
+                    if (user.checked_in) check += 1;
+                    this.statesCounter(user.state.value);
+                });
+                this.setState((state) => {
+                    return {users: state.auxArr.slice(0, 50), ticket: '', stage: value, total: list.length, checkIn: check}
+                });
+            })
         }
         else {
             const options = tickets.filter(ticket => ticket.stage_id === value);
@@ -323,12 +327,14 @@ class ListEventUser extends Component {
         const {value} = e.target;
         if(value === '') {
             let check = 0;
-            const list = this.state.userReq;
-            list.forEach(user=>{
-                if(user.checked_in) check += 1;
-                this.statesCounter(user.state.value);
-            });
-            this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',checkIn:check}});
+            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+                const list = this.state.userReq;
+                list.forEach(user=>{
+                    if(user.checked_in) check += 1;
+                    this.statesCounter(user.state.value);
+                });
+                this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',checkIn:check,total: list.length}});
+            })
         }
         else{
             let check = 0;
