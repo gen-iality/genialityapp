@@ -305,7 +305,15 @@ class ListEventUser extends Component {
     changeStage = (e) => {
         const {value} = e.target;
         const {event:{tickets}} = this.props;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',stage:value}});
+        if(value === '') {
+            let check = 0;
+            const list = this.state.userReq;
+            list.forEach(user=>{
+                if(user.checked_in) check += 1;
+                this.statesCounter(user.state.value);
+            });
+            this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',stage:value,checkIn:check}});
+        }
         else {
             const options = tickets.filter(ticket => ticket.stage_id === value);
             this.setState({stage: value, ticketsOptions: options});
@@ -313,7 +321,15 @@ class ListEventUser extends Component {
     };
     changeTicket = (e) => {
         const {value} = e.target;
-        if(value === '') this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:''}});
+        if(value === '') {
+            let check = 0;
+            const list = this.state.userReq;
+            list.forEach(user=>{
+                if(user.checked_in) check += 1;
+                this.statesCounter(user.state.value);
+            });
+            this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',checkIn:check}});
+        }
         else{
             let check = 0;
             const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
