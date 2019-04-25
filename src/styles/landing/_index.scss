@@ -12,9 +12,10 @@ section.landing{
   }
   .info {
     background-color: white;
-    margin: 0 60px 0 0 !important;
     .fecha {
       margin: 1.2rem;
+      display: flex;
+      flex-direction: row;
       .fecha-uno, .fecha-dos {
         span {
           margin: 0 auto;
@@ -30,6 +31,8 @@ section.landing{
       }
     }
     .lugar {
+      flex-direction: column;
+      align-items: center;
       .column {
         display: flex;
         align-items: center;
@@ -136,8 +139,22 @@ section.landing{
       }
     }
   }
-  
+
+  @media only screen and (min-width: $breakpoint-mobile) {
+    .info{
+      margin: 0 !important;
+    }
+  }
+
   @media only screen and (min-width: $breakpoint-tablet) {
+    .info{
+      margin: 0 60px 0 0 !important;
+      flex: none;
+      width: 33.33333%;
+    }
+    .lugar{
+      flex-direction: row !important;
+    }
     .columns{
       flex-direction: row;
     }
