@@ -182,6 +182,7 @@ class Landing extends Component {
 <b> Conoce  la carta de los mejores platos aquí</b>
 </a>
 <br/>
+<br/>
 <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
 </p>
 <br/>
@@ -197,7 +198,8 @@ class Landing extends Component {
 Aforo: 180 pax
 </p>
 <br/>
-<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'> Conoce  la carta de los mejores platos aquí
+<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'> 
+<b> Conoce  la carta de los mejores platos aquí</b>
 </a>
 </div>
                                            
