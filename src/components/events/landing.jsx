@@ -24,16 +24,20 @@ class Landing extends Component {
             auth:false,
             modal:false,
             editorState:'',
+            stage:'',
+            stages:[],
+            ticket:'',
             tickets:[],
+            ticketsOptions:[],
             heightFrame: '480px'
         }
     }
 
-    componentDidUpdate(prevProps) {
+    /*componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) {
             window.scrollTo(0, 0)
         }
-    }
+    }*/
 
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
@@ -62,7 +66,11 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
-        this.setState({editorState,event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+        const stage = localStorage.getItem('stage');
+        const options = (stage) ? tickets.filter(ticket => ticket.stage_id === stage) : [];
+        const ticket = localStorage.getItem('ticket');
+        const stages = event.event_stages;
+        this.setState({editorState,event,loading:false,tickets,ticket,ticketsOptions:options,stage,stages,iframeUrl,auth:!!evius_token},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -101,16 +109,18 @@ class Landing extends Component {
         const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState({modal:true});
-    }
+    };
     closeLogin = (user) => {
         const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
         if(user) {
-            const {event} = this.state;
+            const {event,stage,ticket} = this.state;
+            localStorage.setItem('stage',stage);
+            localStorage.setItem('ticket',ticket);
             window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
         }
-    }
+    };
 
     handleScroll = () => {
         const hash = this.props.location.hash;
@@ -119,13 +129,24 @@ class Landing extends Component {
         }
     };
 
+    changeStage = (e) => {
+        const {value} = e.target;
+        const {tickets} = this.state;
+        const options = tickets.filter(ticket => ticket.stage_id === value);
+        this.setState({stage: value, ticketsOptions: options});
+    };
+    changeTicket = (e) => {
+        const {value} = e.target;
+        this.setState({ticket:value});
+    };
+
      onLoad = () => {
          if(window.location.hostname === 'evius.co')
             this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
+        const { event, stages, stage, ticket, ticketsOptions, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -240,10 +261,49 @@ class Landing extends Component {
                                     <h2 className="data-title has-text-left">
                                     <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
                                     </h2>
-                                    <div id={'tickets'}>
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
+                                    <div className="columns is-centered">
+                                        <div className="column is-8">
+                                            <div className="field">
+                                                <p className="title is-4">Fecha</p>
+                                                <p className="subtitle is-6 has-text-grey">Elija el día de su reserva</p>
+                                                <div className="control">
+                                                    <div className="control">
+                                                        <div className="select">
+                                                            <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                                <option value={''}>Seleccione...</option>
+                                                                {
+                                                                    stages.map((item,key)=>{
+                                                                        return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="field">
+                                                <p className="title is-4">Hora</p>
+                                                <p className="subtitle is-6 has-text-grey">Elija la hora que desee</p>
+                                                <div className="control">
+                                                    <div className="control">
+                                                        <div className="select">
+                                                            <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                                <option value={''}>Seleccione...</option>
+                                                                {
+                                                                    ticketsOptions.map((item,key)=>{
+                                                                        return <option key={key} value={item._id}>{item.title}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {!auth ?
+                                                <button className="button is-primary is-large" onClick={this.openLogin} disabled={ticket === '' || !ticket}>Reservar</button>
+                                                :<button className="button is-primary is-large" onClick={this.openLogin} disabled={ticket === '' || !ticket}>Comprar</button>}
+                                        </div>
                                     </div>
-                                    {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
                                     {
                                         event._id === '5cbe5231d74d5c0d251fa1e2' &&
                                             <React.Fragment>
