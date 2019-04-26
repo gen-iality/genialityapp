@@ -173,7 +173,8 @@ class Landing extends Component {
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
-                                                <Editor readOnly={true} editorState={editorState}/>
+                                             
+                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
