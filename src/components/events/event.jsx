@@ -120,7 +120,10 @@ class Event extends Component {
                                     (!this.state.newEvent) && (
                                         <div className={``}>
                                             <p className="menu-label has-text-centered-mobile">
-                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>General</NavLink>
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/dashboard`}>Dashboard</NavLink>
+                                            </p>
+                                            <p className="menu-label has-text-centered-mobile">
+                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>Información General</NavLink>
                                             </p>
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
@@ -183,9 +186,6 @@ class Event extends Component {
                                                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/speakers`}>Host</NavLink>
                                                 </p>
                                             }
-                                            <p className="menu-label has-text-centered-mobile">
-                                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/dashboard`}>Dashboard</NavLink>
-                                            </p>
                                             <p className="menu-label has-text-centered-mobile">
                                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
                                             </p>

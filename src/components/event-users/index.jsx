@@ -57,7 +57,7 @@ class ListEventUser extends Component {
         const { usersRef, ticket, stage } = this.state;
         let newItems= [...this.state.userReq];
         this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
-            let user;
+            let user,acompanates = 0;
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
                 user._id = change.doc.id;
@@ -66,6 +66,7 @@ class ListEventUser extends Component {
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                    if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
                     this.statesCounter(user.state.value);
                 }
                 if (change.type === 'modified'){
@@ -81,7 +82,7 @@ class ListEventUser extends Component {
                 const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                 return {
                     userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                    loading: false,total: snapshot.size, checkIn, clearSearch: !prevState.clearSearch
+                    loading: false,total: snapshot.size + acompanates, checkIn, clearSearch: !prevState.clearSearch
                 }
             });
         },(error => {
@@ -306,15 +307,16 @@ class ListEventUser extends Component {
         const {value} = e.target;
         const {event:{tickets}} = this.props;
         if(value === '') {
-            let check = 0;
+            let check = 0, acompanates = 0;
             this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
                 const list = this.state.userReq;
                 list.forEach(user => {
                     if (user.checked_in) check += 1;
+                    if(user.properties.acompanates)  acompanates += parseInt(user.properties.acompanates,10);
                     this.statesCounter(user.state.value);
                 });
                 this.setState((state) => {
-                    return {users: state.auxArr.slice(0, 50), ticket: '', stage: value, total: list.length, checkIn: check}
+                    return {users: state.auxArr.slice(0, 50), ticket: '', stage: value, total: list.length+acompanates, checkIn: check}
                 });
             })
         }
@@ -325,28 +327,17 @@ class ListEventUser extends Component {
     };
     changeTicket = (e) => {
         const {value} = e.target;
-        if(value === '') {
-            let check = 0;
-            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
-                const list = this.state.userReq;
-                list.forEach(user=>{
-                    if(user.checked_in) check += 1;
-                    this.statesCounter(user.state.value);
-                });
-                this.setState((state)=>{return {users:state.auxArr.slice(0,50),ticket:'',checkIn:check,total: list.length}});
-            })
-        }
-        else{
-            let check = 0;
-            const users = [...this.state.userReq].filter(user=>user.ticket_id === value);
-            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=>{
-                users.forEach(user=>{
-                    if(user.checked_in) check += 1;
-                    this.statesCounter(user.state.value);
-                });
-                this.setState({ticket:value,users,total:users.length,checkIn:check});
-            })
-        }
+        let check = 0, acompanates = 0;
+        this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+            const list = value === '' ? this.state.userReq : [...this.state.userReq].filter(user=>user.ticket_id === value);
+            list.forEach(user=>{
+                if(user.checked_in) check += 1;
+                if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
+                this.statesCounter(user.state.value);
+            });
+            const users = value === '' ? [...this.state.auxArr].slice(0,50) : list;
+            this.setState({users,ticket:value,checkIn:check,total:list.length+acompanates});
+        })
     };
 
     //Search records at third column
