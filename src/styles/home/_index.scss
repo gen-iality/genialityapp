@@ -3,11 +3,17 @@ div.icon-header {
   width: 115px;
 }
 
+
 .main{
   padding-top: 6rem;
   .columns {
     margin: 0;
   }
+}
+
+.menu-filter{
+  display: flex;
+  flex-direction: row;
 }
 
 section.home{
