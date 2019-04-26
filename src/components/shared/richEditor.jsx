@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import createLinkifyPlugin from 'draft-js-linkify-plugin';
 import {Editor, EditorState, RichUtils, convertFromRaw, convertToRaw} from 'draft-js';
 
 class RichEditor extends Component {
@@ -50,6 +51,8 @@ class RichEditor extends Component {
 
     render() {
         const {editorState} = this.state;
+        // Creates an Instance. At this step, a configuration object can be passed in as an argument.
+        const linkifyPlugin = createLinkifyPlugin();
 
         // If the user changes block type before entering any text, we can
         // either style the placeholder or hide it. Let's just hide it now.
@@ -81,6 +84,8 @@ class RichEditor extends Component {
                         placeholder="Descripción del evento..."
                         ref="editor"
                         spellCheck={true}
+                        plugins={[linkifyPlugin]}
+
                     />
                 </div>
             </div>
