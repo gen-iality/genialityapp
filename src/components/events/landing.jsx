@@ -177,21 +177,22 @@ class Landing extends Component {
                                                 { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
                                            
       <div> 
-                                              <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
+
+<p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
 </p>
-<p>
-Bienvenido a Sabores de Colombia,
-</p>
-<p>
-Horarios de operación:
-</p>
-<p>Inicio de operación: miércoles 24 de abril.
-</p>
-<p>Sabores Colombia: 12m – 8 pm
-</p>
+<br/>
+<p>Bienvenido a Sabores de Colombia,</p>
+<br/>
+<p>Horarios:</p>
+<br/>
+<p>Desde: miércoles 24 de abril.</p>
+<br/>
+<p>Sabores Colombia: 12m – 8 pm</p>
+<br/>
 <p>
 Aforo: 180 pax
 </p>
+<br/>
 <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'> Conoce  la carta de los mejores platos aquí
 </a>
 </div>
