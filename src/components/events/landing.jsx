@@ -237,16 +237,44 @@ class Landing extends Component {
                             }
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
+                                    <h2 className="data-title has-text-left">
+                                    <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
+                                    </h2>
                                     <div id={'tickets'}>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
+                                    <div class= "menu-imagenes">
+                                        <div className="columns is-centered">
+                                            <div className="column is-12">
+                                                <h2 className="data-title has-text-left">
+                                                    <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
+                                                    <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                        <div class="columns">
+                                            <figure class="column image">
+                                                <img class="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu1.png?alt=media&token=1e541de6-bc82-4588-8221-6e71aec7dca1"/>
+                                            </figure>
+                                            <figure class="column image">
+                                                <img class="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu2.png?alt=media&token=2284a69d-5d1a-4349-a34f-dd1fe2d519a9"/>
+                                            </figure>
+                                        </div>
+                                        <div class="columns">
+                                            <figure class="column image">
+                                                <img class="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu3.png?alt=media&token=558f18a1-043c-484b-a68c-1136286ade44"/>
+                                            </figure>
+                                            <figure class="column image">
+                                                <img class="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu4.png?alt=media&token=4919d68b-0b04-47dc-aa04-324098f45241"/>
+                                            </figure>
+                                        </div>
+                                     </div>
                                     <div className="columns is-centered">
-                   
                                         <div className="column is-12">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                                <span className="has-text-grey-dark is-size-3">Ubicación</span>
+                                                <span className="has-text-grey-dark is-size-3 subtitle">Ubicación</span>
                                             </h2>
                                             {
                                                 !this.state.loading&&(

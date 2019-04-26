@@ -81,6 +81,7 @@ section.landing{
       }
     }
   }
+  
   .button-cont {
     display: flex;
     align-items: center;
@@ -107,11 +108,14 @@ section.landing{
   .data {
     .data-title {
       line-height: 1.1;
-      margin-bottom: 2em;
-      span {
-        font-weight: 900;
-      }
+      margin-bottom: 2em 0;
     }
+  }
+  .subtitle {
+    font-weight: 900;
+  }
+  .image-4-1{
+    max-width: 100%;
   }
   .arrows {
     .arrow {
