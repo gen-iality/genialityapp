@@ -176,6 +176,7 @@ class Landing extends Component {
                                              
                                                 { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
                                            
+      {event._id === '5cbe5231d74d5c0d251fa1e2' && 
       <div> 
 
 <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'>
@@ -202,6 +203,7 @@ Aforo: 180 pax
 <b> Conoce  la carta de los mejores platos aquí</b>
 </a>
 </div>
+      }
                                            
                                             </div>
                                         </div>
