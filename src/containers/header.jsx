@@ -165,7 +165,7 @@ class Header extends Component {
                 }
                 <hr className="navbar-divider"/>
                 <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
-                    <span>CategorÃ­a</span>
+                    <span>Categoría</span>
                     <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
                 </p>
                 {
@@ -262,19 +262,6 @@ class Header extends Component {
                             </div>
                             <div className="navbar-end">
                                 {
-                                    this.state.user &&
-                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        <Link to={'/event/new_event'}>
-                                            <button className="button is-primary has-text-weight-bold">
-                                                <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                            </button>
-                                        </Link>
-                                    </div>
-                                }
-                                <a className="navbar-item has-text-weight-bold has-text-grey-light" href="/">
-                                    <FormattedMessage id="header.help" defaultMessage="Help"/>
-                                </a>
-                                {
                                     this.state.loader ?
                                     <div><FormattedMessage id="header.wait" defaultMessage="Tico..."/></div>:
                                     this.state.user ?
@@ -288,27 +275,18 @@ class Header extends Component {
                                                     {this.state.name}
                                                 </a>
                                                 <div className="navbar-dropdown is-right">
-                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-dark" to={`/profile/${this.state.id}`}>
                                                         <FormattedMessage id="header.profile" defaultMessage="Profile"/>
-                                                    </p>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}`}>
-                                                        <FormattedMessage id="header.profile_edit" defaultMessage="Profile"/>
                                                     </Link>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#events`}>
+                                                    <hr className="navbar-divider"/>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-dark" to={`/profile/${this.state.id}#events`}>
+                                                        <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
+                                                    </Link>
+                                                    <hr className="navbar-divider"/>
+                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-dark" to={`/profile/${this.state.id}#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#compras`}>
-                                                        <FormattedMessage id="header.my_orders" defaultMessage="Holi"/>
-                                                    </Link>
-                                                    {this.state.uid.match('^(j4ZLBMDuh5UGiX5CKsmChv8UNFf1|JzPjRBtM85ehpKO4ylwiMmeo2jC3)$') && <a className="navbar-item item-sub has-text-grey-light" onClick={this.goReport}>Reportes</a>}
-                                                    <hr className="navbar-divider"/>
-                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">
-                                                        <FormattedMessage id="header.my_events" defaultMessage="Eventos"/>
-                                                    </p>
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/profile/${this.state.id}#events`}>
-                                                        <FormattedMessage id="header.my_events_create" defaultMessage="Eventos"/>
-                                                    </Link>
-                                                    <hr className="navbar-divider"/>
+                                                    {/*
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>
                                                     </p>
@@ -320,6 +298,18 @@ class Header extends Component {
                                                         })
                                                     }
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/create`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
+                                                    */}
+                                                    
+                                {
+                                    this.state.user &&
+                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        <Link to={'/event/new_event'}>
+                                            <button className="button is-primary has-text-weight-bold">
+                                                <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                            </button>
+                                        </Link>
+                                    </div>
+                                }
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
