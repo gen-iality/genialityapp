@@ -165,7 +165,7 @@ class Header extends Component {
                 }
                 <hr className="navbar-divider"/>
                 <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
-                    <span>Categoría</span>
+                    <span>Categorï¿½a</span>
                     <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
                 </p>
                 {
@@ -246,6 +246,11 @@ class Header extends Component {
                             <div className="navbar-item" data-target="filterMenu" onClick={this.openFilter}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </div>
+                            <div className="navbar-item is-hidden-desktop">
+                                <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
+                                    <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                </button>
+                            </div>
                             <div className={`navbar-burger burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
                                 <span></span>
                                 <span></span>
@@ -317,7 +322,7 @@ class Header extends Component {
                                                 </div>
                                             </div>
                                         </React.Fragment>:
-                                        <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                        <div className="navbar-item">
                                             <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
                                                 <FormattedMessage id="header.login" defaultMessage="Sign In"/>
                                             </button>
