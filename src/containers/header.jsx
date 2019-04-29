@@ -260,7 +260,8 @@ class Header extends Component {
                                     }
                                     <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
                                         {
-                                            this.state.user && <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                            (this.state.user && photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                                : <LetterAvatar name={name}/>
                                         }
                                     </div>
                                 </React.Fragment>
