@@ -163,7 +163,7 @@ class Landing extends Component {
                             <div className="hero-head">
                                 <div className="nombre item columns is-centered">
                                             <div className="column">
-                                                <h2 className="is-size-2 bold-text">{event.name}</h2>
+                                                <h2 className="is-size-3 bold-text">{event.name}</h2>
                                                 <span className="is-size-6 has-text-grey">Por: <Link className="has-text-grey" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
                                             </div>
                                 </div>
