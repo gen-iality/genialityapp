@@ -6,8 +6,10 @@ import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
-import connect from "react-redux/es/connect/connect";
 import LetterAvatar from "../components/shared/letterAvatar";
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import {addLoginInformation} from "../redux/user/actions";
 
 class Header extends Component {
     constructor(props) {
@@ -43,14 +45,15 @@ class Header extends Component {
         else {
             API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
                 .then((resp) => {
-                    console.log(resp);
                     if(resp.status === 200){
                         const data = resp.data;
                         const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
                         const photo = (data.photoUrl) ? data.photoUrl : data.picture;
                         OrganizationApi.mine()
                             .then((organizations)=>{
-                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
+                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations},()=>{
+                                    this.props.addLoginInformation(data);
+                                });
                             })
                             .catch(error => {
                                 if (error.response) {
@@ -344,6 +347,10 @@ class Header extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+});
+
 const mapStateToProps = state => ({
     categories: state.categories.items,
     types: state.types.items,
@@ -351,4 +358,4 @@ const mapStateToProps = state => ({
     permissions: state.permissions,
     error: state.categories.error});
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));

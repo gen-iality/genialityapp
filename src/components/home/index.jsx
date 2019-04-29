@@ -32,7 +32,6 @@ class Home extends Component {
     async componentDidMount() {
         try{
             const resp = await EventsApi.getPublic('?pageSize=30');
-            console.log(resp);
             const events = resp.data.filter(item => item.organizer);
             this.setState({events,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
             /*this.refs.iScroll.addEventListener("scroll", () => {
@@ -75,10 +74,9 @@ class Home extends Component {
         this.setState({loading:true});
         API.get(`/api/events${query}`)
             .then(({data})=>{
-            console.log(data);
-            const events = data.data.filter(item => item.organizer);
-            this.setState({events,loading:false,type,category});
-        })
+                const events = data.data.filter(item => item.organizer);
+                this.setState({events,loading:false,type,category});
+            })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
@@ -113,81 +111,17 @@ class Home extends Component {
 
     render() {
         const {category,type,timeout, serverError, errorData, events, loading} = this.state;
-        const {match,categories,types} = this.props;
         return (
             <React.Fragment>
-                <div className="filter-bar column is-3 is-offset-9">
-                    <div className="buttons is-right has-text-weight-bold">
-                        <p className="control">
-                            <a className="button is-white has-text-grey-light">
-                                <span className="icon is-small"><i className="fas fa-map-marker-alt"></i></span>
-                                <span>Ciudad</span>
-                            </a>
-                        </p>
-                        <p className="control">
-                            <a className="button is-white has-text-grey-light">
-                                <span className="icon is-small"><i className="fas fa-calendar-alt"></i></span>
-                                <span>Fecha</span>
-                            </a>
-                        </p>
-                    </div>
-                </div>
-                <div className="submenu-home item columns is-centered">
+                <div className="columns is-mobile">
                     <div className="column">
                         <h2 className="is-size-2 bold-text">Eventos</h2>
-                    <nav class="navbar has-text-weight-bold is-hidden" role="navigation" aria-label="main navigation">
-                        <div class="navbar-menu">
-                            <div class="navbar-start">
-                                <div class="navbar-item has-dropdown is-hoverable">
-                                    <a class="navbar-link">
-                                        Eventos
-                                    </a>
-                                    <div class="navbar-dropdown">
-                                        <a className="is-size-6 has-text-grey-light">Lo màs nuevo</a>
-                                    </div>
-                                </div>
-                                <div class="navbar-item has-dropdown is-hoverable">
-                                    <a class="navbar-link">
-                                        Tipo de Evento
-                                    </a>
-                                    <div class="navbar-dropdown">
-                                        <ul className="menu-list">
-                                        {
-                                            types.map((item,key)=>{
-                                                return <li key={key}>
-                                                    <Link className={`has-text-grey-light is-size-6 ${type===item.value?'active':''}`}
-                                                        to={`${match.url}?type=${item.value}`}>
-                                                        {item.label}
-                                                    </Link>
-                                                </li>
-                                            })
-                                        }
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="navbar-item has-dropdown is-hoverable">
-                                    <a class="navbar-link">
-                                        Categoría
-                                    </a>
-                                    <div class="navbar-dropdown">
-                                        <ul className="menu-list">
-                                        {
-                                            categories.map((item,key)=>{
-                                                return <li key={key}>
-                                                    <Link className={`has-text-grey-light is-size-6 ${category===item.value?'active':''}`}
-                                                        to={`${match.url}?category=${item.value}`}>
-                                                        {item.label}
-                                                    </Link>
-                                                </li>
-                                            })
-                                        }
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
+                    </div>
+                    <div className="column has-text-centered">
+                        <Link to={`/profile/${this.props.loginInfo._id}#events`}>
+                            <button className='button is-pulled-right is-info is-outlined'>Mis Eventos</button>
+                        </Link>
+                    </div>
                 </div>
                 <div className="columns">
                     <section className="home column is-12">
@@ -238,6 +172,7 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
     categories: state.categories.items,
+    loginInfo: state.user.data,
     types: state.types.items,
     error: state.categories.error
 });
