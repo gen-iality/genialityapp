@@ -246,28 +246,27 @@ class Header extends Component {
                 <header>
                     <nav className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile">
                         <div className="navbar-brand">
-                            <div className="navbar-item" data-target="filterMenu" onClick={this.openFilter}>
+                            <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                            </div>
-                            <div className="navbar-item is-hidden-desktop">
-                                <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
-                                    <FormattedMessage id="header.login" defaultMessage="Sign In"/>
-                                </button>
-                            </div>
-                            <div className={`navbar-burger burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
+                            </Link>
+                            {
+                                !this.state.loader && <React.Fragment>
+                                    {
+                                        !this.state.user && <div className="navbar-item is-hidden-desktop">
+                                            <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
+                                                <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                            </button>
+                                        </div>
+                                    }
+                                    <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
+                                        {
+                                            this.state.user && <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                        }
+                                    </div>
+                                </React.Fragment>
+                            }
                         </div>
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
-                            <div className="navbar-start">
-                                <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                    <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={'/'}>
-                                        <FormattedMessage id="header.home" defaultMessage="Main"/>
-                                    </Link>
-                                </div>
-                            </div>
                             <div className="navbar-end">
                                 {
                                     this.state.loader ?
@@ -333,11 +332,11 @@ class Header extends Component {
                                 }
                             </div>
                         </div>
-                        <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
+                        {/*<div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
                             <div className="navbar-dropdown">
                                 {menuEvius[filterEvius]}
                             </div>
-                        </div>
+                        </div>*/}
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
