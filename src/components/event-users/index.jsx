@@ -385,7 +385,7 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[...extraFields.slice(0,2),{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>
