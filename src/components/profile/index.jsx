@@ -347,9 +347,9 @@ class Index extends Component {
                                                     <div className="edit">
                                                         <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
                                                                 <span className="icon is-medium">
-                                                                    <i className="fas fa-lg fa-pencil-alt"/>
+                                                                    <i className="fas fa-lg fa-cogs"/>
                                                                 </span>
-                                                            <span className="is-size-7 is-italic">Editar</span>
+                                                            <span className="is-size-7 is-italic">Administrar</span>
                                                         </Link>
                                                     </div>
                                                 }
