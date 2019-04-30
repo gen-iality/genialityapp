@@ -122,7 +122,7 @@ class Index extends Component {
             emailValid = !(email.length > 6 && email.length < 61 && EMAIL_REGEX.test(email));
             error.email = emailValid && 'Fill a valid email';
         }
-        if(dni_number.length < 4) {
+        if(!dni_number || dni_number.length < 4) {
             dniValid = true;
             error.dni = dniValid && 'Fill a dni with a least 5 digits';
         }
