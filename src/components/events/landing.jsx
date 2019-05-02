@@ -186,7 +186,7 @@ class Landing extends Component {
           <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
             </p>
           <br/>
-          <p>Sabores Colombia es una experiencia gastronómica para todos, nuestro espacio funciona bajo el concepto de mesas compartidades por lo que es posible que te pidamos compartir tu mesa con otros comensales.</p>
+          <p>Sabores Colombia es una experiencia gastronómica para todos, nuestro espacio funciona bajo el concepto de mesas compartidas por lo que es posible que te pidamos compartir tu mesa con otros comensales.</p>
           <br/>
           <p>Bienvenido a Sabores de Colombia,</p>
           <br/>
