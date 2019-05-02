@@ -200,7 +200,7 @@ class Landing extends Component {
       {event._id === '5cbe5231d74d5c0d251fa1e2' && 
       <div> 
 
-<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'>
+<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
 <b> Conoce  la carta de los mejores platos aquí</b>
 </a>
 <br/>
@@ -220,7 +220,7 @@ class Landing extends Component {
 Aforo: 180 pax
 </p>
 <br/>
-<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'> 
+<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
 <b> Conoce  la carta de los mejores platos aquí</b>
 </a>
 </div>
