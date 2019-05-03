@@ -13,15 +13,18 @@ import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
+import Dialog from "../modal/twoAction";
 Moment.locale('es');
 momentLocalizer();
 
+const html = document.querySelector("html");
 class Landing extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading:true,
             auth:false,
+            modalTicket:false,
             modal:false,
             editorState:'',
             tickets:[],
@@ -98,9 +101,8 @@ class Landing extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
-        this.setState({modal:true});
+        this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
         const html = document.querySelector("html");
@@ -124,8 +126,18 @@ class Landing extends Component {
             this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
+    handleModal = () => {
+        html.classList.add('is-clipped');
+        this.setState({modal:false,modalTicket:true})
+    }
+
+    closeModal = () => {
+        html.classList.remove('is-clipped');
+        this.setState({modal:false,modalTicket:false})
+    };
+
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState, modalTicket } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -269,6 +281,7 @@ class Landing extends Component {
                                     <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
                                     </h2>
                                     <div id={'tickets'}>
+                                        <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
@@ -345,6 +358,10 @@ class Landing extends Component {
                                 </div>
                                 <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
+                            <Dialog modal={modalTicket} title={'Atención!!'}
+                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión !!</p>}
+                                    first={{title:'Iniciar Sesión',class:'is-info',action:this.openLogin}}
+                                    second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                         </React.Fragment>
                 }
             </section>
