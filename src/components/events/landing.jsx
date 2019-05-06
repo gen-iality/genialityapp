@@ -61,7 +61,7 @@ class Landing extends Component {
         const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
             : EditorState.createEmpty();
         const tickets = event.tickets.map(ticket => {
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
+            ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
         this.setState({editorState,event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
@@ -292,34 +292,34 @@ class Landing extends Component {
                                                 </div>
                                                 <div className="columns">
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
+                                                        <img alt={'image1'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
                                                     </figure>
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
-                                                    </figure>
-                                                </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
+                                                        <img alt={'image2'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
                                                     </figure>
                                                 </div>
                                                 <div className="columns">
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
+                                                        <img alt={'image3'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
                                                     </figure>
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
+                                                        <img alt={'image4'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
                                                     </figure>
                                                 </div>
                                                 <div className="columns">
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
+                                                        <img alt={'image5'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
                                                     </figure>
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
+                                                        <img alt={'image6'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
+                                                    </figure>
+                                                </div>
+                                                <div className="columns">
+                                                    <figure className="column image">
+                                                        <img alt={'image7'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
+                                                    </figure>
+                                                    <figure className="column image">
+                                                        <img alt={'image8'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
                                                     </figure>
                                                 </div>
                                             </React.Fragment>
