@@ -135,7 +135,7 @@ class Home extends Component {
                 <div className="submenu-home item columns is-centered">
                     <div className="column">
                         <h2 className="is-size-2 bold-text">Eventos</h2>
-                    <nav class="navbar has-text-weight-bold" role="navigation" aria-label="main navigation">
+                    <nav class="navbar has-text-weight-bold is-hidden" role="navigation" aria-label="main navigation">
                         <div class="navbar-menu">
                             <div class="navbar-start">
                                 <div class="navbar-item has-dropdown is-hoverable">

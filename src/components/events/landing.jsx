@@ -13,15 +13,18 @@ import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
+import Dialog from "../modal/twoAction";
 Moment.locale('es');
 momentLocalizer();
 
+const html = document.querySelector("html");
 class Landing extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading:true,
             auth:false,
+            modalTicket:false,
             modal:false,
             editorState:'',
             tickets:[],
@@ -98,9 +101,8 @@ class Landing extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
-        this.setState({modal:true});
+        this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
         const html = document.querySelector("html");
@@ -124,8 +126,18 @@ class Landing extends Component {
             this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
+    handleModal = () => {
+        html.classList.add('is-clipped');
+        this.setState({modal:false,modalTicket:true})
+    }
+
+    closeModal = () => {
+        html.classList.remove('is-clipped');
+        this.setState({modal:false,modalTicket:false})
+    };
+
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
+        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState, modalTicket } = this.state;
         return (
             <section className="section hero landing">
                 {
@@ -176,32 +188,32 @@ class Landing extends Component {
                                              
                                                 { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
                                            
-      <div> 
-
-<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'>
-<b> Conoce  la carta de los mejores platos aquí</b>
-</a>
-<br/>
-<br/>
-<p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
-</p>
-<br/>
-<p>Bienvenido a Sabores de Colombia,</p>
-<br/>
-<p>Horarios:</p>
-<br/>
-<p>Desde: miércoles 24 de abril.</p>
-<br/>
-<p>Sabores Colombia: 12m – 8 pm</p>
-<br/>
-<p >
-Aforo: 180 pax
-</p>
-<br/>
-<a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/MenuSaboresColombiaFinal.pdf?alt=media&token=fa1a440c-1fc4-4a4f-80aa-1173832836e6'> 
-<b> Conoce  la carta de los mejores platos aquí</b>
-</a>
-</div>
+      {event._id === '5cbe5231d74d5c0d251fa1e2' && 
+      <div>
+          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
+                <b> Conoce  la carta de los mejores platos aquí</b>
+            </a>
+          <br/>
+          <br/>
+          <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
+            </p>
+          <br/>
+          <p>Sabores Colombia es una experiencia gastronómica para todos, nuestro espacio funciona bajo el concepto de mesas compartidas por lo que es posible que te pidamos compartir tu mesa con otros comensales.</p>
+          <br/>
+          <p>Bienvenido a Sabores de Colombia,</p>
+          <br/>
+          <p>Horarios:</p>
+          <br/>
+          <p>Desde: miércoles 24 de abril.</p>
+          <br/>
+          <p>Sabores Colombia: 12m – 8 pm</p><br/>
+          <p >Aforo: 180 pax</p>
+          <br/>
+          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
+              <b> Conoce  la carta de los mejores platos aquí</b>
+          </a>
+      </div>
+      }
                                            
                                             </div>
                                         </div>
@@ -269,6 +281,7 @@ Aforo: 180 pax
                                     <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
                                     </h2>
                                     <div id={'tickets'}>
+                                        {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
@@ -285,18 +298,34 @@ Aforo: 180 pax
                                                 </div>
                                                 <div className="columns">
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu1.png?alt=media&token=1e541de6-bc82-4588-8221-6e71aec7dca1"/>
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
                                                     </figure>
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu2.png?alt=media&token=2284a69d-5d1a-4349-a34f-dd1fe2d519a9"/>
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
                                                     </figure>
                                                 </div>
                                                 <div className="columns">
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu3.png?alt=media&token=558f18a1-043c-484b-a68c-1136286ade44"/>
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
                                                     </figure>
                                                     <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/menu4.png?alt=media&token=4919d68b-0b04-47dc-aa04-324098f45241"/>
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
+                                                    </figure>
+                                                </div>
+                                                <div className="columns">
+                                                    <figure className="column image">
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
+                                                    </figure>
+                                                    <figure className="column image">
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
+                                                    </figure>
+                                                </div>
+                                                <div className="columns">
+                                                    <figure className="column image">
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
+                                                    </figure>
+                                                    <figure className="column image">
+                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
                                                     </figure>
                                                 </div>
                                             </React.Fragment>
@@ -329,6 +358,10 @@ Aforo: 180 pax
                                 </div>
                                 <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
+                            <Dialog modal={modalTicket} title={'Atención!!'}
+                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión !!</p>}
+                                    first={{title:'Iniciar Sesión',class:'is-info',action:this.openLogin}}
+                                    second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                         </React.Fragment>
                 }
             </section>
