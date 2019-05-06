@@ -17,7 +17,6 @@ import Dialog from "../modal/twoAction";
 Moment.locale('es');
 momentLocalizer();
 
-const html = document.querySelector("html");
 class Landing extends Component {
     constructor(props) {
         super(props);
@@ -101,12 +100,9 @@ class Landing extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
-        html.classList.add('is-clipped');
         this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
-        const html = document.querySelector("html");
-        html.classList.remove('is-clipped');
         this.setState({modal:false});
         if(user) {
             const {event} = this.state;
@@ -127,12 +123,10 @@ class Landing extends Component {
     };
 
     handleModal = () => {
-        html.classList.add('is-clipped');
         this.setState({modal:false,modalTicket:true})
     }
 
     closeModal = () => {
-        html.classList.remove('is-clipped');
         this.setState({modal:false,modalTicket:false})
     };
 
