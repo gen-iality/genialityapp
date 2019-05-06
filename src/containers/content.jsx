@@ -32,8 +32,8 @@ class ContentContainer extends Component {
                     <Route exact path="/landing/:event" component={ AsyncLanding }/>
                     <PrivateRoute path="/my_events" component={ AsyncEvents }/>
                     <PrivateRoute path="/event/:event" component={ Event }/>
-                    <PrivateRoute path="/profile/:id" component={ AsyncOrganization }/>
-                    <PrivateRoute path="/organization/:id" component={ AsyncMyProfile }/>
+                    <PrivateRoute path="/profile/:id" component={ AsyncMyProfile }/>
+                    <PrivateRoute path="/organization/:id" component={ AsyncOrganization }/>
                     <Route exact path="/terms" component={ AsyncTerms } />
                     <Route exact path="/privacy" component={ AsyncPrivacy } />
                     <Route exact path="/policies" component={ AsyncPolicies } />
