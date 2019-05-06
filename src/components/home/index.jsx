@@ -32,7 +32,6 @@ class Home extends Component {
     async componentDidMount() {
         try{
             const resp = await EventsApi.getPublic('?pageSize=30');
-            console.log(resp);
             const events = resp.data.filter(item => item.organizer);
             this.setState({events,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
             /*this.refs.iScroll.addEventListener("scroll", () => {
@@ -75,10 +74,9 @@ class Home extends Component {
         this.setState({loading:true});
         API.get(`/api/events${query}`)
             .then(({data})=>{
-            console.log(data);
-            const events = data.data.filter(item => item.organizer);
-            this.setState({events,loading:false,type,category});
-        })
+                const events = data.data.filter(item => item.organizer);
+                this.setState({events,loading:false,type,category});
+            })
             .catch(error => {
                 if (error.response) {
                     console.log(error.response);
