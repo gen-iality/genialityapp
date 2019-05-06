@@ -275,7 +275,7 @@ class Landing extends Component {
                                     <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
                                     </h2>
                                     <div id={'tickets'}>
-                                        <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>
+                                        {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>
                                     {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
