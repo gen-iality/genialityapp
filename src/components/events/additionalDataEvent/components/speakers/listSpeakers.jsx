@@ -39,7 +39,7 @@ class ListSpeakers extends Component{
                                 <div className="card">
                                     <div className="card-image">
                                         <figure className="image is-4by3">
-                                            <img src={(item.picture) ? item.picture :'https://bulma.io/images/placeholders/1280x960.png'} alt={`image${key}`} />
+                                            <img src={(item.picture) ? item.picture :'https://bulma.io/images/placeholders/1280x960.png'} alt={item.name} />
                                         </figure>
                                     </div>
                                     <div className="card-content">
