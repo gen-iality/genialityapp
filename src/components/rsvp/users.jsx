@@ -195,6 +195,7 @@ class UsersRsvp extends Component {
                         ...selection.slice(pos + 1)
                     ];
                 }
+                return '';
             });
             this.setState({loading:false,items:[],scrollNow:10});
         }
@@ -450,6 +451,7 @@ class UsersRsvp extends Component {
                 let queryFilter = [];
                 filtered.map(filter=>{
                     if(filter.value!=='all') return queryFilter.push({"id":filter.id,"value":filter.value,"comparator":"like"})
+                    return ''
                 });
                 queryFilter = JSON.stringify(queryFilter);
                 query = query+`filtered=${queryFilter}`;
@@ -605,7 +607,7 @@ class UsersRsvp extends Component {
                             <div className="dropdown-menu" id="dropdown-selected" role="menu">
                                 <div className="dropdown-content inv-selected-content">
                                     {
-                                        this.state.auxArr.length == 0 &&
+                                        this.state.auxArr.length === 0 &&
                                         <div className="has-text-centered">
                                             <span className="has-text-weight-bold has-text-grey-dark">Aun no has seleccionado asistentes</span>
                                         </div>

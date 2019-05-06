@@ -109,7 +109,7 @@ class ModalCrud extends Component {
             let target = name;
             let value =  this.state.newInfo[target];
             let input = '';
-            if (type == "boolean") {
+            if (type === "boolean") {
                 input =
                     <React.Fragment>
                         <input
@@ -160,7 +160,6 @@ class ModalCrud extends Component {
                     </React.Fragment>
             }
             if (type === "htmlEditor") {
-                const { editorState } = this.state;
                input = <EditorHtml name= {name} value={value || ''} dataEditor={this.state.newInfo[name]}  handleChangeHtmlEditor = {this.handleChangeHtmlEditor}/>
             }
 
