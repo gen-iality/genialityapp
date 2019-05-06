@@ -112,6 +112,9 @@ section.landing{
       margin-bottom: 2em 0;
     }
   }
+  .title-frame{
+    padding: 13px;
+  }
   .subtitle {
     font-weight: 900;
   }
@@ -143,6 +146,9 @@ section.landing{
         right: 0;
       }
     }
+  }
+  .hero-body{
+    padding: 0;
   }
 
   @media only screen and (min-width: $breakpoint-mobile) {
