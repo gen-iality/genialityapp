@@ -217,7 +217,7 @@ class Event extends Component {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
                                         <Switch>
                                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                                            <Route exact path={`${match.url}/main`} component={General} event={this.state.event} updateEvent={this.updateEvent} />
+                                            <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
                                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             {
                                                 permissions.items.includes(rolPermissions.admin_badge._id) &&
@@ -226,26 +226,26 @@ class Event extends Component {
                                             <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                             {
                                                 permissions.items.includes(rolPermissions.history_invitations._id) &&
-                                                <Route path={`${match.url}/messages`} component={Invitations} event={this.state.event}/>
+                                                <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                <Route path={`${match.url}/roles`} component={AdminRol} event={this.state.event} />
+                                                <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_ticket._id) &&
-                                                    <Route path={`${match.url}/ticket`} component={TicketInfo} eventId={this.state.event._id}/>
+                                                    <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/speakers/`} component={ContainerCrud} idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>
+                                                    <Route path={`${match.url}/crud/speakers/`} render={() => <ContainerCrud idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/programme`} component={ContainerCrud} idModel="programme" eventId={this.state.event} buttonName={"Sessión"}/>
+                                                    <Route path={`${match.url}/crud/programme`} render={() => <ContainerCrud idModel="programme" eventId={this.state.event} buttonName={"Sessión"}/>}/>
                                             }
-                                            <Route path={`${match.url}/dashboard`} component={DashboardEvent} eventId={this.state.event._id}/>
-                                            <Route path={`${match.url}/orders`} component={OrdersEvent} eventId={this.state.event._id}/>
+                                            <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
+                                            <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>
                                     </section>
