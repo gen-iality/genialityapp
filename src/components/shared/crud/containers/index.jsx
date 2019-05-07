@@ -34,7 +34,7 @@ class ContainerCrud extends Component {
 
     componentDidUpdate(prevProps) {
         
-        if(this.props.idModel != prevProps.idModel){
+        if(this.props.idModel !== prevProps.idModel){
             this.config = configCrud[this.props.idModel];
             //setiar en blanco
             this.getData();
@@ -49,7 +49,7 @@ class ContainerCrud extends Component {
     componentWillUnmount(){
         this.setState({     show: false,
             modal: false,
-            fields: [],
+            fields: [],modalFields: [],
             pageOfItems: [],
             data: {},
             itemInfo: {},
@@ -81,10 +81,6 @@ class ContainerCrud extends Component {
         // this.refreshList() 
 
     }
-
-    // componentWillUnmount(){
-    //     alert('Saliendo de el componente ')
-    // }
 
     /*
         * Method to dynamic validations 
@@ -153,13 +149,6 @@ class ContainerCrud extends Component {
     updateTable(){
         this.getData();
     };
-
-    componentWillUnmount(){
-        // alert('saliendo de el componente')
-        this.setState({modalFields: [],
-            pageOfItems: []})
-    }
-
   
 
     render() {

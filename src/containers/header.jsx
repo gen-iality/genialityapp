@@ -297,6 +297,9 @@ class Header extends Component {
                                                     <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-dark" to={`/profile/${this.state.id}#events`}>
                                                         <FormattedMessage id="header.my_tickets" defaultMessage="Ticket"/>
                                                     </Link>
+                                                    <hr className="navbar-divider"/>
+                                                    {this.state.uid.match('^(j4ZLBMDuh5UGiX5CKsmChv8UNFf1|JzPjRBtM85ehpKO4ylwiMmeo2jC3)$') && <a className="navbar-item item-sub has-text-grey-light" onClick={this.goReport}>Reportes</a>}
+                                                    <hr className="navbar-divider"/>
                                                     {/*
                                                     <p className="navbar-item has-text-weight-bold has-text-grey-dark">
                                                         <FormattedMessage id="header.org" defaultMessage="Org"/>

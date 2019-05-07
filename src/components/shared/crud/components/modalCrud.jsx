@@ -8,8 +8,8 @@ import {FormattedMessage} from "react-intl";
 import EditorHtml from './editorHtml';
 
 class ModalCrud extends Component {
+
     constructor(props){
-  
         super(props)
         this.state = {
             formValid:  false,
@@ -24,13 +24,10 @@ class ModalCrud extends Component {
         this.estadoEditar = {};
         this.submitForm = this.submitForm.bind(this)
         this.handleChangeHtmlEditor= this.handleChangeHtmlEditor.bind(this)
-        // this.currentDay= this.currentDay.bind(this)
   
     }
 
     componentDidMount() {
-        // console.log('this.refsEditor=> ', this.refsEditor)
-        // this.refsEditor.current.focus();
         const fields = this.props.info.fieldsModal;
         this.setState({modalFields: fields});
         let newInfo = {};
@@ -106,23 +103,13 @@ class ModalCrud extends Component {
        
         let formUI = this.state.modalFields.map((data, key) => {
             let type = data.type || "text";
-            let props = data.props || {};
             let name= data.name;
             let label = data.label;
             let mandatory = data.mandatory;
             let target = name;
             let value =  this.state.newInfo[target];
             let input = '';
-      
-            //    let input =  <input {...props}
-            //                     className="input"
-            //                     type={type}
-            //                     key={key}
-            //                     name={name}
-            //                     value={value || ''}
-            //                     onChange={value => this.handleChange(value, type)}
-            // />;
-            if (type == "boolean") {
+            if (type === "boolean") {
                 input =
                     <React.Fragment>
                         <input
@@ -135,7 +122,7 @@ class ModalCrud extends Component {
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
-            if (type == "date") {
+            if (type === "date") {
                 input =
                     <React.Fragment>
                         <input
@@ -148,7 +135,7 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />        
                     </React.Fragment>
             }
-            if (type == "time") {
+            if (type === "time") {
                 input =
                     <React.Fragment>
                         <input
@@ -160,7 +147,7 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "text") {
+            if (type === "text") {
                 input =
                     <React.Fragment>
                         <input
@@ -172,46 +159,10 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "htmlEditor") {
-                const { editorState } = this.state;
+            if (type === "htmlEditor") {
                input = <EditorHtml name= {name} value={value || ''} dataEditor={this.state.newInfo[name]}  handleChangeHtmlEditor = {this.handleChangeHtmlEditor}/>
-            //    <Editor
-            //    ref={this.refsEditor}
-            //    editorState={editorState}
-            //    onChange={this.onChange} />
-                //    <CKEditor
-                //        editor={ ClassicEditor }
-                //        data="<p></p>"
-                //        onChange={ ( event, editor ) => {
-                //            const data = editor.getData();
-                //            this.handleChange({e:{target:{name:'description ',value:data}}}, type)
-                //        } }
-                //    />
-            //     <React.Fragment>
-            //     <CKEditor
-            //     editor={ ClassicEditor }
-            //     data="<p></p>"
-               
-            //     onChange={ ( event, editor ) => {
-            //         const data = editor.getData();
-            //      alert('djj')
-            //         // this.handleChangeHtmlEditor(name, data)
-            //     } }
-            // />
-            //  </React.Fragment>
             }
-        
-            // if (type == "list") {
-            //     input = data.options.map((o,key) => {
-            //         return (<option key={key} value={o.value}>{o.value}</option>);
-            //     });
-            //     input = <div className="select">
-            //         <select name={name}  onChange={(e)=>{this.onChange(e, type)}}>
-            //             <option value={""}>Seleccione...</option>
-            //             {input}
-            //         </select>
-            //     </div>;
-            // }
+
             return (
                 <div key={'g' + key} className="field">
                     {
@@ -237,7 +188,7 @@ class ModalCrud extends Component {
     changeImg = (files) => {
       
         const file = files[0];
-        const url = '/api/files/upload', path = [], self = this;
+        const url = '/api/files/upload', path = [];
         if(file){
             this.setState({imageFile: file, picture: null});
             const uploaders = files.map(file => {
@@ -261,8 +212,6 @@ class ModalCrud extends Component {
     };
 
     render(){
-       
-        const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         return(
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>

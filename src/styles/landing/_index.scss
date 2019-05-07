@@ -1,4 +1,5 @@
 section.landing{
+  padding: 0;
   .nombre{
     padding: 19px;
     .bold-text{
@@ -105,6 +106,9 @@ section.landing{
       margin-bottom: 2em 0;
     }
   }
+  .title-frame{
+    padding: 13px;
+  }
   .subtitle {
     font-weight: 900;
   }
@@ -137,10 +141,16 @@ section.landing{
       }
     }
   }
+  .hero-body{
+    padding: 0;
+  }
 
   @media only screen and (min-width: $breakpoint-mobile) {
     .info{
       margin: 0 !important;
+    }
+    .section{
+      padding: 3rem 1.5rem;
     }
   }
 
