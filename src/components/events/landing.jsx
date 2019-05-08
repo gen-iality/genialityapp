@@ -32,12 +32,6 @@ class Landing extends Component {
         }
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.location === prevProps.location) {
-            window.scrollTo(0, 0)
-        }
-    }
-
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
             searchParams = new URLSearchParams( queryParamsString ),
@@ -101,11 +95,9 @@ class Landing extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
-        html.classList.add('is-clipped');
         this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
-        const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
         if(user) {
@@ -126,7 +118,9 @@ class Landing extends Component {
             this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
-    handleModal = () => {
+    handleModal = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         html.classList.add('is-clipped');
         this.setState({modal:false,modalTicket:true})
     }
