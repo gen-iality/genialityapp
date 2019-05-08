@@ -278,7 +278,7 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <h2 className="data-title has-text-left title-frame">
-                                    <span className="has-text-grey-dark is-size-3 subtitle">Boleteria</span>
+                                    <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
                                     <div id={'tickets'}>
                                         {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
