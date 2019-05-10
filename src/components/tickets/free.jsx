@@ -14,6 +14,7 @@ class TicketFree extends Component {
             active: '',
             tickets: [],
             ticketstoshow: [],
+            selectValues: {},
             summaryList: [],
             ticketsadded: {},
             haspayments: false,
@@ -43,15 +44,23 @@ class TicketFree extends Component {
         let {name,value} = e.target;
         name = name.split('_')[1];
         const ticketsadded = Object.assign(this.state.ticketsadded);
-        if(value === '0') delete ticketsadded[name];
-        else ticketsadded[name] = value;
-        this.setState({ticketsadded},()=>{this.renderSummary()})
+        if(value === '0') this.removeTicket(name);
+        else {
+            ticketsadded[name] = value;
+            this.setState({ticketsadded}, () => {
+                this.renderSummary()
+            })
+        }
+        this.setState({selectValues:{...this.state.selectValues,[name]:value}})
     };
 
     removeTicket = (id) => {
         const ticketsadded = Object.assign(this.state.ticketsadded);
+        const summaryList = [...this.state.summaryList];
+        const pos = summaryList.map(item=>item.id).indexOf(id);
+        summaryList.splice(pos,1);
         delete ticketsadded[id];
-        this.setState({ticketsadded})
+        this.setState({ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'}})
     };
 
     renderSummary = () => {
@@ -76,14 +85,15 @@ class TicketFree extends Component {
         });
         Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
             .then(resp=>{
-                if(resp.status === 'success'){
+                console.log(resp);
+                /*if(resp.status === 'success'){
                     const evius_token = Cookie.get('evius_token');
                     const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;
                     window.location.replace(url);
                 }else{
                     this.setState({loading:false});
                     toast.error(JSON.stringify(resp));
-                }
+                }*/
             })
             .catch(err=>{
                 console.log(err);
@@ -92,7 +102,7 @@ class TicketFree extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading},props:{stages},selectStage,handleQuantity,onClick} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues},props:{stages},selectStage,handleQuantity,onClick} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -143,7 +153,7 @@ class TicketFree extends Component {
                                             <div className="media-right">
                                                 {ticket.price === '0' ? 'Gratis' : `$ ${ticket.price}`}
                                                 <div className="select">
-                                                    <select onChange={handleQuantity} name={`quantity_${ticket._id}`}>
+                                                    <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
                                                         <option value={0}>0</option>
                                                         {
                                                             ticket.options.map(item => {
@@ -166,8 +176,8 @@ class TicketFree extends Component {
                                 <div className="card-content">
                                     {
                                         summaryList.map(item=>{
-                                            return <div className='box'>
-                                                <article key={item.id} className='media'>
+                                            return <div className='box' key={item.id}>
+                                                <article className='media'>
                                                     <div className='media-content'>
                                                         <div className='content'>
                                                             <p><strong>{item.name}</strong></p>
