@@ -86,14 +86,15 @@ class TicketFree extends Component {
         Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
             .then(resp=>{
                 console.log(resp);
-                /*if(resp.status === 'success'){
-                    const evius_token = Cookie.get('evius_token');
-                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;
+                if(resp.status === 'success'){
+                    /*const evius_token = Cookie.get('evius_token');
+                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;*/
+                    const url = resp.redirectUrl;
                     window.location.replace(url);
                 }else{
                     this.setState({loading:false});
                     toast.error(JSON.stringify(resp));
-                }*/
+                }
             })
             .catch(err=>{
                 console.log(err);
