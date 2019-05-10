@@ -116,22 +116,23 @@ class TicketFree extends Component {
                     </div>*/}
                     <div className='columns'>
                         <div className='column is-8'>
-                            <div className='columns'>
+                            <div className='columns content-tabs'>
                                 {
 
                                     stages.map(stage=>{
-                                        return <div className={`column box has-text-weight-bold stage ${active===stage.stage_id?'is-active':''} ${!stage.status?'is-disabled':''}`}
+                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${!stage.status?'is-disabled':''}`}
                                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                                             <p>{stage.title}</p>
+                                            <hr className="separador"/>
                                             <div className='columns is-vcentered'>
-                                                <div className='column is-5'>
-                                                    <span className='is-size-3'>{Moment(stage.start_sale_date).format('DD')}</span>
+                                                <div className='column is-5 date-etapa'>
+                                                    <span className='is-size-4'>{Moment(stage.start_sale_date).format('DD')}</span>
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
                                                 </div>
-                                                <div className='column is-2'>hasta</div>
-                                                <div className='column is-5'>
-                                                    <span className='is-size-3'>{Moment(stage.end_sale_date).format('DD')}</span>
+                                                <div className='column is-2 date-etapa hasta'>hasta</div>
+                                                <div className='column is-5 date-etapa'>
+                                                    <span className='is-size-4'>{Moment(stage.end_sale_date).format('DD')}</span>
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
                                                 </div>
@@ -151,7 +152,7 @@ class TicketFree extends Component {
                                                 <p className='has-text-weight-normal is-italic is-8'>Un {ticket.title} equivale a {ticket.number_person_per_ticket} de personas</p>}
                                             </div>
                                             <div className="media-right">
-                                                {ticket.price === '0' ? 'Gratis' : `$ ${ticket.price}`}
+                                                <span className="title price"> {ticket.price === '0' ? 'Gratis' : `$ ${ticket.price}`}</span>
                                                 <div className="select">
                                                     <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
                                                         <option value={0}>0</option>
