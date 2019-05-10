@@ -26,7 +26,7 @@ class TicketFree extends Component {
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
         const evius_token = Cookie.get('evius_token');
         const tickets = this.props.tickets.map(ticket => {
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
+            ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
         const id = this.props.stages.find(stage=>!!stage.status).stage_id;
