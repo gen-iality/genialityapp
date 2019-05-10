@@ -11,7 +11,7 @@ import {ApiUrl, BaseUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
-import app from "firebase";
+import app from "firebase/app";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
 Moment.locale('es');

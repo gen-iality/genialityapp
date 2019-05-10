@@ -131,12 +131,6 @@ class Header extends Component {
             return {menuOpen:!menuState.menuOpen,filterOpen:false}
         });
     };
-    
-    openFilter = () => {
-        this.setState((filterState) => {
-            return {filterOpen:!filterState.filterOpen,menuOpen:false}
-        });
-    };
 
     goReport = (e) => {
         e.preventDefault();
@@ -144,103 +138,7 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError, filterEvius, errorData, photo, name } = this.state;
-        const { categories, types, permissions } = this.props;
-        const menuEvius = [
-            '',
-            <React.Fragment>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
-                    <span>Tipo de Evento</span>
-                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
-                </p>
-                {
-                    this.state.tabEvtType && (
-                        <ul>
-                            {
-                                types.map((item,key)=>{
-                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        {item.label}
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    )
-                }
-                <hr className="navbar-divider"/>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
-                    <span>Categor�a</span>
-                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
-                </p>
-                {
-                    this.state.tabEvtCat && (
-                        <ul>
-                            {
-                                categories.map((item,key)=>{
-                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        {item.label}
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    )
-                }
-            </React.Fragment>,
-            <React.Fragment>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark">Evento</p>
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
-                </p>
-                {
-                    permissions.items.includes(rolPermissions.admin_staff) &&
-                    <ul className="menu-list">
-                        <li>
-                            <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
-                        </li>
-                    </ul>
-                }
-                {
-                    (permissions.items.includes(rolPermissions.admin_invitations) || permissions.items.includes(rolPermissions.history_invitations)) &&
-                        <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                            <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
-                            <span className="icon">
-                                <i className={`${this.state.userTab?'up':'down'}`}/>
-                            </span>
-                        </p>
-                }
-                {
-                    (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations)) && (
-                        <ul className="menu-list">
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
-                            </li>
-                            {
-                                permissions.items.includes(rolPermissions.history_invitations) &&
-                                <li>
-                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
-                                </li>
-                            }
-                        </ul>
-                    )
-                }
-                {
-                    permissions.items.includes(rolPermissions.admin_ticket) &&
-                        <p className="navbar-item has-text-centered-mobile">
-                            <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`ticket`}>General</NavLink>
-                        </p>
-                }
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
-                </p>
-                {
-                    permissions.items.includes(rolPermissions.admin_badge) &&
-                        <ul className="menu-list">
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
-                            </li>
-                        </ul>
-                }
-            </React.Fragment>
-        ];
+        const { timeout, serverError, errorData, photo, name } = this.state;
         return (
             <React.Fragment>
                 <header>
@@ -339,11 +237,6 @@ class Header extends Component {
                                 }
                             </div>
                         </div>
-                        {/*<div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
-                            <div className="navbar-dropdown">
-                                {menuEvius[filterEvius]}
-                            </div>
-                        </div>*/}
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
