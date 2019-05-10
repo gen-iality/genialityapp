@@ -1,4 +1,3 @@
-/*global firebaseui*/
 /*global firebase*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
@@ -385,8 +384,8 @@ class Landing extends Component {
                                 <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
                             <Dialog modal={modalTicket} title={'Atención!!'}
-                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión !!</p>}
-                                    first={{title:'Iniciar Sesión',class:'is-info',action:this.openLogin}}
+                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>}
+                                    first={{title:'Iniciar Sesión o Registrarse',class:'is-info',action:this.openLogin}}
                                     second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                         </React.Fragment>
                 }

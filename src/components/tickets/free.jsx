@@ -178,21 +178,27 @@ class TicketFree extends Component {
                                 </header>
                                 <div className="card-content">
                                     {
-                                        summaryList.map(item=>{
-                                            return <div className='box' key={item.id}>
-                                                <article className='media'>
-                                                    <div className='media-content'>
-                                                        <div className='content'>
-                                                            <p><strong>{item.name}</strong></p>
-                                                            <p><small>Cantidad: {item.quantity}</small></p>
+                                        summaryList.length<=0 ?
+                                            <p>Aún no tienes tiquetes seleccionados :(</p>:
+                                            <React.Fragment>
+                                                {
+                                                    summaryList.map(item=>{
+                                                        return <div className='box' key={item.id}>
+                                                            <article className='media'>
+                                                                <div className='media-content'>
+                                                                    <div className='content'>
+                                                                        <p><strong>{item.name}</strong></p>
+                                                                        <p><small>Cantidad: {item.quantity}</small></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="media-right">
+                                                                    <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                                                                </div>
+                                                            </article>
                                                         </div>
-                                                    </div>
-                                                    <div className="media-right">
-                                                        <button className="delete" onClick={event => this.removeTicket(item.id)}/>
-                                                    </div>
-                                                </article>
-                                            </div>
-                                        })
+                                                    })
+                                                }
+                                            </React.Fragment>
                                     }
                                 </div>
                                 <footer className="card-footer">
