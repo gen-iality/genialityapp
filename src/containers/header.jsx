@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Link, NavLink, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
-import {ApiUrl, AuthUrl, icon, rolPermissions} from "../helpers/constants";
+import {ApiUrl, AuthUrl, icon} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
