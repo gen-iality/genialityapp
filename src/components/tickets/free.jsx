@@ -24,13 +24,14 @@ class TicketFree extends Component {
 
     componentDidMount() {
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
+        const evius_token = Cookie.get('evius_token');
         const tickets = this.props.tickets.map(ticket => {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
             return ticket
         });
         const id = this.props.stages.find(stage=>!!stage.status).stage_id;
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id);
-        this.setState({haspayments,active:id,tickets,ticketstoshow})
+        this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
     selectStage = (stage) => {
@@ -75,6 +76,7 @@ class TicketFree extends Component {
 
     onClick = () => {
         if(this.state.summaryList.length<=0) return;
+        if(!this.state.auth) return this.props.handleModal();
         this.setState({loading:true});
         const data = {
             tickets:[]

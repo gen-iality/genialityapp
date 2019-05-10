@@ -25,16 +25,9 @@ class Landing extends Component {
         super(props);
         this.state = {
             loading:true,
-            auth:false,
             modalTicket:false,
             modal:false,
-            editorState:'',
-            stage:'',
-            stages:[],
-            ticket:'',
-            tickets:[],
-            ticketsOptions:[],
-            heightFrame: '480px'
+            editorState:''
         }
     }
 
@@ -51,9 +44,6 @@ class Landing extends Component {
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-        const evius_token = Cookie.get('evius_token');
-        let iframeUrl = `${ApiUrl}/e/${event._id}`;
-        if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
@@ -67,12 +57,7 @@ class Landing extends Component {
         event.organizer = event.organizer ? event.organizer : event.author;
         const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
             : EditorState.createEmpty();
-        const tickets = event.tickets.map(ticket => {
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
-            return ticket
-        });
-        const stages = event.event_stages;
-        this.setState({editorState,event,loading:false,tickets,stages,iframeUrl,auth:!!evius_token},()=>{
+        this.setState({editorState,event,loading:false},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -129,22 +114,6 @@ class Landing extends Component {
         }
     };
 
-    changeStage = (e) => {
-        const {value} = e.target;
-        const {tickets} = this.state;
-        const options = tickets.filter(ticket => ticket.stage_id === value);
-        this.setState({stage: value, ticketsOptions: options});
-    };
-    changeTicket = (e) => {
-        const {value} = e.target;
-        this.setState({ticket:value});
-    };
-
-     onLoad = () => {
-         if(window.location.hostname === 'evius.co')
-            this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
-    };
-
     handleModal = () => {
         html.classList.add('is-clipped');
         this.setState({modal:false,modalTicket:true})
@@ -156,7 +125,7 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, stage, stages, ticket, tickets, ticketsOptions, auth, modal, editorState, modalTicket } = this.state;
+        const { event, modal, editorState, modalTicket } = this.state;
         return (
             <section className="section landing">
                 {
@@ -299,7 +268,7 @@ class Landing extends Component {
                                     <h2 className="data-title has-text-left title-frame">
                                         <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
-                                    <TicketFree stages={stages} tickets={tickets} eventId={event._id}/>
+                                    <TicketFree stages={event.event_stages} tickets={event.tickets} eventId={event._id} handleModal={this.handleModal}/>
                                     {/*<div className="columns is-centered">
                                         <div className="column">
                                             <div className="field">
