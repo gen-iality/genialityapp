@@ -44,15 +44,42 @@ class TicketFree extends Component {
         this.setState({ticketsadded})
     };
 
+    removeTicket = (id) => {
+        const ticketsadded = Object.assign(this.state.ticketsadded);
+        delete ticketsadded[id];
+        this.setState({ticketsadded})
+    }
+
     renderSummary = () => {
-        const list = this.state.ticketsadded;
         const tickets = this.props.tickets;
-        return
+        const show = [];
+        Object.keys(this.state.ticketsadded).map(key=>{
+            const info = tickets.find(ticket=>ticket._id === key);
+            return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id})
+        });
+        return <div className="card-content">
+            {
+                show.map(item=>{
+                    return <div className='box'>
+                        <article key={item.id} className='media'>
+                            <div className='media-content'>
+                                <div className='content'>
+                                    <p><strong>{item.name}</strong></p>
+                                    <p><small>Cantidad: {item.quantity}</small></p>
+                                </div>
+                            </div>
+                            <div className="media-right">
+                                <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                            </div>
+                        </article>
+                    </div>
+                })
+            }
+        </div>
     };
 
     render() {
         const {state:{active,ticketstoshow,ticketsadded},props:{stages,tickets},selectStage,handleQuantity} = this;
-        console.log(ticketsadded);
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -123,12 +150,10 @@ class TicketFree extends Component {
                                 <header className="card-header has-text-centered">
                                     <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>
                                 </header>
-                                <div className="card-content">
-                                    content
-                                </div>
+                                {this.renderSummary()}
                                 <footer className="card-footer">
                                     <div className='card-footer-item'>
-                                        <button className='button is-rounded is-primary'>Reservar</button>
+                                        <button className='button is-rounded is-primary' disabled={Object.keys(ticketsadded).length<=0}>Reservar</button>
                                     </div>
                                 </footer>
                             </div>
