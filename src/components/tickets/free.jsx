@@ -24,13 +24,14 @@ class TicketFree extends Component {
 
     componentDidMount() {
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
+        const evius_token = Cookie.get('evius_token');
         const tickets = this.props.tickets.map(ticket => {
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
+            ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
         const id = this.props.stages.find(stage=>!!stage.status).stage_id;
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id);
-        this.setState({haspayments,active:id,tickets,ticketstoshow})
+        this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
     selectStage = (stage) => {
@@ -75,6 +76,7 @@ class TicketFree extends Component {
 
     onClick = () => {
         if(this.state.summaryList.length<=0) return;
+        if(!this.state.auth) return this.props.handleModal();
         this.setState({loading:true});
         const data = {
             tickets:[]
@@ -86,14 +88,15 @@ class TicketFree extends Component {
         Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
             .then(resp=>{
                 console.log(resp);
-                /*if(resp.status === 'success'){
-                    const evius_token = Cookie.get('evius_token');
-                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;
+                if(resp.status === 'success'){
+                    /*const evius_token = Cookie.get('evius_token');
+                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;*/
+                    const url = resp.redirectUrl;
                     window.location.replace(url);
                 }else{
                     this.setState({loading:false});
                     toast.error(JSON.stringify(resp));
-                }*/
+                }
             })
             .catch(err=>{
                 console.log(err);
@@ -143,7 +146,7 @@ class TicketFree extends Component {
                             </div>
                             {
                                 ticketstoshow.map(ticket=>{
-                                    return <div className='box ticket' key={ticket._id}>
+                                    return <div className='box' key={ticket._id}>
                                         <div className="media">
                                             <div className="media-content">
                                                 <p className="title is-4">{ticket.title}</p>
@@ -176,21 +179,27 @@ class TicketFree extends Component {
                                 </header>
                                 <div className="card-content">
                                     {
-                                        summaryList.map(item=>{
-                                            return <div className='box' key={item.id}>
-                                                <article className='media'>
-                                                    <div className='media-content'>
-                                                        <div className='content'>
-                                                            <p><strong>{item.name}</strong></p>
-                                                            <p><small>Cantidad: {item.quantity}</small></p>
+                                        summaryList.length<=0 ?
+                                            <p>Aún no tienes tiquetes seleccionados :(</p>:
+                                            <React.Fragment>
+                                                {
+                                                    summaryList.map(item=>{
+                                                        return <div className='box ticket' key={item.id}>
+                                                            <article className='media'>
+                                                                <div className='media-content'>
+                                                                    <div className='content'>
+                                                                        <p><strong>{item.name}</strong></p>
+                                                                        <p><small>Cantidad: {item.quantity}</small></p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="media-right">
+                                                                    <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                                                                </div>
+                                                            </article>
                                                         </div>
-                                                    </div>
-                                                    <div className="media-right">
-                                                        <button className="delete" onClick={event => this.removeTicket(item.id)}/>
-                                                    </div>
-                                                </article>
-                                            </div>
-                                        })
+                                                    })
+                                                }
+                                            </React.Fragment>
                                     }
                                 </div>
                                 <footer className="card-footer">
