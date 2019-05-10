@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import Moment from "moment";
 import "moment/locale/es";
+import {Actions} from "../../helpers/request";
+import * as Cookie from "js-cookie";
+import {toast} from "react-toastify";
 Moment.locale('es');
 
 class TicketFree extends Component {
@@ -11,13 +14,14 @@ class TicketFree extends Component {
             active: '',
             tickets: [],
             ticketstoshow: [],
+            summaryList: [],
             ticketsadded: {},
-            haspayments: false
+            haspayments: false,
+            loading: false
         }
     }
 
     componentDidMount() {
-        console.log(this.props);
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
         const tickets = this.props.tickets.map(ticket => {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
@@ -41,14 +45,14 @@ class TicketFree extends Component {
         const ticketsadded = Object.assign(this.state.ticketsadded);
         if(value === '0') delete ticketsadded[name];
         else ticketsadded[name] = value;
-        this.setState({ticketsadded})
+        this.setState({ticketsadded},()=>{this.renderSummary()})
     };
 
     removeTicket = (id) => {
         const ticketsadded = Object.assign(this.state.ticketsadded);
         delete ticketsadded[id];
         this.setState({ticketsadded})
-    }
+    };
 
     renderSummary = () => {
         const tickets = this.props.tickets;
@@ -57,29 +61,38 @@ class TicketFree extends Component {
             const info = tickets.find(ticket=>ticket._id === key);
             return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id})
         });
-        return <div className="card-content">
-            {
-                show.map(item=>{
-                    return <div className='box'>
-                        <article key={item.id} className='media'>
-                            <div className='media-content'>
-                                <div className='content'>
-                                    <p><strong>{item.name}</strong></p>
-                                    <p><small>Cantidad: {item.quantity}</small></p>
-                                </div>
-                            </div>
-                            <div className="media-right">
-                                <button className="delete" onClick={event => this.removeTicket(item.id)}/>
-                            </div>
-                        </article>
-                    </div>
-                })
-            }
-        </div>
+        this.setState({summaryList:show});
+    };
+
+    onClick = () => {
+        if(this.state.summaryList.length<=0) return;
+        this.setState({loading:true});
+        const data = {
+            tickets:[]
+        };
+        this.state.summaryList.map(item=>{
+            data[`ticket_${item.id}`] = item.quantity;
+            return data.tickets.push(item.id)
+        });
+        Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
+            .then(resp=>{
+                if(resp.status === 'success'){
+                    const evius_token = Cookie.get('evius_token');
+                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;
+                    window.location.replace(url);
+                }else{
+                    this.setState({loading:false});
+                    toast.error(JSON.stringify(resp));
+                }
+            })
+            .catch(err=>{
+                console.log(err);
+                this.setState({loading:false})
+            })
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded},props:{stages,tickets},selectStage,handleQuantity} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading},props:{stages},selectStage,handleQuantity,onClick} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -150,10 +163,28 @@ class TicketFree extends Component {
                                 <header className="card-header has-text-centered">
                                     <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>
                                 </header>
-                                {this.renderSummary()}
+                                <div className="card-content">
+                                    {
+                                        summaryList.map(item=>{
+                                            return <div className='box'>
+                                                <article key={item.id} className='media'>
+                                                    <div className='media-content'>
+                                                        <div className='content'>
+                                                            <p><strong>{item.name}</strong></p>
+                                                            <p><small>Cantidad: {item.quantity}</small></p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="media-right">
+                                                        <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        })
+                                    }
+                                </div>
                                 <footer className="card-footer">
                                     <div className='card-footer-item'>
-                                        <button className='button is-rounded is-primary' disabled={Object.keys(ticketsadded).length<=0}>Reservar</button>
+                                        <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
                                     </div>
                                 </footer>
                             </div>
