@@ -6,8 +6,7 @@ import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {ApiUrl, BaseUrl} from "../../helpers/constants";
-import * as Cookie from "js-cookie";
+import {BaseUrl} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
