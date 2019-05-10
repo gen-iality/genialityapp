@@ -9,8 +9,18 @@ $pagination-current-border-color: #00b89c;
 $input-shadow: transparent;
 $input-focus-border-color: transparent;
 $input-focus-box-shadow-color: transparent;
+$tabs-border-bottom-color: #000000;
+$tabs-border-bottom-width: 2px;
+$tabs-link-hover-border-bottom-color: $primary;
+$tabs-link-active-border-bottom-color: $primary;
+$tabs-link-active-color: #000000;
+$tabs-link-padding: 0.5em 3em;
 $breakpoint-mobile: 768px;
 $breakpoint-tablet: 1024px;
+.box:not(:last-child) {
+  margin-bottom: 0 !important;
+}
+@import "~medium-draft/lib/index.css";
 @import "../../node_modules/bulma/bulma";
 @import "../../node_modules/react-widgets/lib/scss/react-widgets";
 @import '../../node_modules/bulma-switch/src/sass/index';
@@ -19,6 +29,7 @@ $breakpoint-tablet: 1024px;
 
 
 @import "./loading";
+@import "./tickets";
 @import "./msg";
 @import "./accordion";
 @import "./commons";

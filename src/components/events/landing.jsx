@@ -14,8 +14,11 @@ import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
+import TicketFree from "../tickets/free";
 Moment.locale('es');
 momentLocalizer();
+
+const html = document.querySelector("html");
 
 class Landing extends Component {
     constructor(props) {
@@ -68,11 +71,8 @@ class Landing extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = localStorage.getItem('stage');
-        const options = (stage) ? tickets.filter(ticket => ticket.stage_id === stage) : [];
-        const ticket = localStorage.getItem('ticket');
         const stages = event.event_stages;
-        this.setState({editorState,event,loading:false,tickets,ticket,ticketsOptions:options,stage,stages,iframeUrl,auth:!!evius_token},()=>{
+        this.setState({editorState,event,loading:false,tickets,stages,iframeUrl,auth:!!evius_token},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -108,12 +108,10 @@ class Landing extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
     };
     openLogin = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
-        const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
         if(user) {
@@ -158,10 +156,9 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState, modalTicket } = this.state;
-        const { event, stages, stage, ticket, ticketsOptions, iframeUrl, auth, modal, heightFrame, editorState } = this.state;
+        const { event, stage, stages, ticket, tickets, ticketsOptions, auth, modal, editorState, modalTicket } = this.state;
         return (
-            <section className="section hero landing">
+            <section className="section landing">
                 {
                     this.state.showConfirm && (
                         <div className="notification is-success">
@@ -300,10 +297,11 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <h2 className="data-title has-text-left title-frame">
-                                    <span className="has-text-grey-dark is-size-3 subtitle">Reservas</span>
+                                        <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
-                                    <div className="columns is-centered">
-                                        <div className="column is-8">
+                                    <TicketFree stages={stages} tickets={tickets}/>
+                                    {/*<div className="columns is-centered">
+                                        <div className="column">
                                             <div className="field">
                                                 <p className="title is-4">Fecha</p>
                                                 <p className="subtitle is-6 has-text-grey">Elija el día de su reserva</p>
@@ -340,62 +338,59 @@ class Landing extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            {!auth ?
-                                                <button className="button is-primary is-large" onClick={this.openLogin} disabled={ticket === '' || !ticket}>Reservar</button>
-                                                :<button className="button is-primary is-large" onClick={this.openLogin} disabled={ticket === '' || !ticket}>Comprar</button>}
                                         </div>
-                                    <div id={'tickets'}>
+                                    </div>*/}
+                                    {/*<div id={'tickets'}>
                                         {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
-                                    </div>
-                                    {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
+                                    </div>*/}
                                     {
                                         event._id === '5cbe5231d74d5c0d251fa1e2' &&
-                                            <React.Fragment>
-                                                <div className="columns is-centered">
-                                                    <div className="column is-12">
-                                                        <h2 className="data-title has-text-left">
-                                                            <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
-                                                            <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
-                                                        </h2>
-                                                    </div>
+                                        <React.Fragment>
+                                            <div className="columns is-centered">
+                                                <div className="column">
+                                                    <h2 className="data-title has-text-left">
+                                                        <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
+                                                        <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
+                                                    </h2>
                                                 </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img alt={'image1'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img alt={'image2'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
-                                                    </figure>
-                                                </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img alt={'image3'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img alt={'image4'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
-                                                    </figure>
-                                                </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img alt={'image5'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img alt={'image6'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
-                                                    </figure>
-                                                </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img alt={'image7'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img alt={'image8'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
-                                                    </figure>
-                                                </div>
-                                            </React.Fragment>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image1'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image2'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image3'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image4'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image5'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image6'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image7'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image8'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
+                                                </figure>
+                                            </div>
+                                        </React.Fragment>
                                     }
                                     <div className="columns is-centered">
-                                        <div className="column is-12">
+                                        <div className="column">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
                                                 <span className="has-text-grey-dark is-size-3 subtitle">Ubicación</span>
@@ -417,9 +412,7 @@ class Landing extends Component {
                             </div>
                             <div className={`modal ${modal?'is-active':''}`}>
                                 <div className="modal-background"></div>
-                                <div className="modal-content">
-                                    <div id="firebaseui-auth-container"/>
-                                </div>
+                                <div className="modal-content"><div id="firebaseui-auth-container"/></div>
                                 <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
                             <Dialog modal={modalTicket} title={'Atención!!'}
