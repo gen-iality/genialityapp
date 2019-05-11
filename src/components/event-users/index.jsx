@@ -312,7 +312,7 @@ class ListEventUser extends Component {
                 const list = this.state.userReq;
                 list.forEach(user => {
                     if (user.checked_in) check += 1;
-                    if(user.properties.acompanates)  acompanates += parseInt(user.properties.acompanates,10);
+                    if(user.properties.acompanates && /^\d+$/.test(user.properties.acompanates))  acompanates += parseInt(user.properties.acompanates,10);
                     this.statesCounter(user.state.value);
                 });
                 this.setState((state) => {
@@ -385,7 +385,7 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div>
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={extraFields.slice(0,2)} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
                             </div>
                         </div>

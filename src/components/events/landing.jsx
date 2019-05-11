@@ -1,4 +1,3 @@
-/*global firebaseui*/
 /*global firebase*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
@@ -7,36 +6,34 @@ import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {ApiUrl, BaseUrl} from "../../helpers/constants";
-import * as Cookie from "js-cookie";
+import {BaseUrl} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
-import app from "firebase";
+import app from "firebase/app";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
+import TicketFree from "../tickets/free";
 Moment.locale('es');
 momentLocalizer();
 
 const html = document.querySelector("html");
+
 class Landing extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading:true,
-            auth:false,
             modalTicket:false,
             modal:false,
-            editorState:'',
-            tickets:[],
-            heightFrame: '480px'
+            editorState:''
         }
     }
 
-    componentDidUpdate(prevProps) {
+    /*componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) {
             window.scrollTo(0, 0)
         }
-    }
+    }*/
 
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
@@ -45,9 +42,6 @@ class Landing extends Component {
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-        const evius_token = Cookie.get('evius_token');
-        let iframeUrl = `${ApiUrl}/e/${event._id}`;
-        if(evius_token) iframeUrl = `${ApiUrl}/e/${event._id}?evius_token=${evius_token}`;
         if(status === '5b859ed02039276ce2b996f0'){
             this.setState({showConfirm:true})
         }
@@ -61,11 +55,7 @@ class Landing extends Component {
         event.organizer = event.organizer ? event.organizer : event.author;
         const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
             : EditorState.createEmpty();
-        const tickets = event.tickets.map(ticket => {
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person))).map((e,i)=>i+1);
-            return ticket
-        });
-        this.setState({editorState,event,loading:false,tickets,iframeUrl,auth:!!evius_token},()=>{
+        this.setState({editorState,event,loading:false},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -105,25 +95,21 @@ class Landing extends Component {
         this.setState({modal:true,modalTicket:false});
     }
     closeLogin = (user) => {
-        const html = document.querySelector("html");
         html.classList.remove('is-clipped');
         this.setState({modal:false});
         if(user) {
-            const {event} = this.state;
+            const {event,stage,ticket} = this.state;
+            localStorage.setItem('stage',stage);
+            localStorage.setItem('ticket',ticket);
             window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
         }
-    }
+    };
 
     handleScroll = () => {
         const hash = this.props.location.hash;
         if (hash) {
             document.getElementById(hash.substring(1)).scrollIntoView();
         }
-    };
-
-     onLoad = () => {
-         if(window.location.hostname === 'evius.co')
-            this.setState({heightFrame: `${document.getElementById("idIframe").contentWindow.document.body.scrollHeight}px`});
     };
 
     handleModal = () => {
@@ -137,9 +123,9 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, tickets, iframeUrl, auth, modal, heightFrame, editorState, modalTicket } = this.state;
+        const { event, modal, editorState, modalTicket } = this.state;
         return (
-            <section className="section hero landing">
+            <section className="section landing">
                 {
                     this.state.showConfirm && (
                         <div className="notification is-success">
@@ -154,7 +140,7 @@ class Landing extends Component {
                             <div className="hero-head">
                                 <div className="nombre item columns is-centered">
                                             <div className="column">
-                                                <h2 className="is-size-2 bold-text">{event.name}</h2>
+                                                <h2 className="is-size-3 bold-text">{event.name}</h2>
                                                 <span className="is-size-6 has-text-grey">Por: <Link className="has-text-grey" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
                                             </div>
                                 </div>
@@ -278,60 +264,100 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <h2 className="data-title has-text-left title-frame">
-                                    <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
+                                        <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
-                                    <div id={'tickets'}>
-                                        {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
-                                    </div>
-                                    {!auth && <button className="button button-buy is-large" onClick={this.openLogin}>Reservar</button>}
-                                    {
-                                        event._id === '5cbe5231d74d5c0d251fa1e2' &&
-                                            <React.Fragment>
-                                                <div className="columns is-centered">
-                                                    <div className="column is-12">
-                                                        <h2 className="data-title has-text-left">
-                                                            <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
-                                                            <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
-                                                        </h2>
+                                    <TicketFree stages={event.event_stages} tickets={event.tickets} eventId={event._id} handleModal={this.handleModal}/>
+                                    {/*<div className="columns is-centered">
+                                        <div className="column">
+                                            <div className="field">
+                                                <p className="title is-4">Fecha</p>
+                                                <p className="subtitle is-6 has-text-grey">Elija el día de su reserva</p>
+                                                <div className="control">
+                                                    <div className="control">
+                                                        <div className="select">
+                                                            <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                                <option value={''}>Seleccione...</option>
+                                                                {
+                                                                    stages.map((item,key)=>{
+                                                                        return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
-                                                    </figure>
+                                            </div>
+                                            <div className="field">
+                                                <p className="title is-4">Hora</p>
+                                                <p className="subtitle is-6 has-text-grey">Elija la hora que desee</p>
+                                                <div className="control">
+                                                    <div className="control">
+                                                        <div className="select">
+                                                            <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                                <option value={''}>Seleccione...</option>
+                                                                {
+                                                                    ticketsOptions.map((item,key)=>{
+                                                                        return <option key={key} value={item._id}>{item.title}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
-                                                    </figure>
+                                            </div>
+                                        </div>
+                                    </div>*/}
+                                    {/*<div id={'tickets'}>
+                                        {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
+                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
+                                    </div>*/}
+                                    {
+                                        event._id === '5cbe5231d74d5c0d251fa1e2' &&
+                                        <React.Fragment>
+                                            <div className="columns is-centered">
+                                                <div className="column">
+                                                    <h2 className="data-title has-text-left">
+                                                        <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
+                                                        <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
+                                                    </h2>
                                                 </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
-                                                    </figure>
-                                                </div>
-                                                <div className="columns">
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
-                                                    </figure>
-                                                    <figure className="column image">
-                                                        <img className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
-                                                    </figure>
-                                                </div>
-                                            </React.Fragment>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image1'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image2'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image3'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image4'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image5'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image6'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
+                                                </figure>
+                                            </div>
+                                            <div className="columns">
+                                                <figure className="column image">
+                                                    <img alt={'image7'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
+                                                </figure>
+                                                <figure className="column image">
+                                                    <img alt={'image8'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
+                                                </figure>
+                                            </div>
+                                        </React.Fragment>
                                     }
                                     <div className="columns is-centered">
-                                        <div className="column is-12">
+                                        <div className="column">
                                             <h2 className="data-title has-text-left">
                                                 <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
                                                 <span className="has-text-grey-dark is-size-3 subtitle">Ubicación</span>
@@ -353,14 +379,12 @@ class Landing extends Component {
                             </div>
                             <div className={`modal ${modal?'is-active':''}`}>
                                 <div className="modal-background"></div>
-                                <div className="modal-content">
-                                    <div id="firebaseui-auth-container"/>
-                                </div>
+                                <div className="modal-content"><div id="firebaseui-auth-container"/></div>
                                 <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
                             </div>
                             <Dialog modal={modalTicket} title={'Atención!!'}
-                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión !!</p>}
-                                    first={{title:'Iniciar Sesión',class:'is-info',action:this.openLogin}}
+                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>}
+                                    first={{title:'Iniciar Sesión o Registrarse',class:'is-info',action:this.openLogin}}
                                     second={{title:'Cancelar',class:'',action:this.closeModal}}/>
                         </React.Fragment>
                 }
