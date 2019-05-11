@@ -29,7 +29,8 @@ class TicketFree extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const id = this.props.stages.find(stage=>!!stage.status).stage_id;
+        const stage = this.props.stages.find(stage=>!!stage.status);
+        const id = stage ? stage.stage_id : '';
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id);
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
