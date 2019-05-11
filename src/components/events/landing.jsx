@@ -156,7 +156,7 @@ class Landing extends Component {
                                             <div className="column fecha-dos has-text-centered">
                                                 <span className="title is-size-4">{Moment(event.date_end).format('DD')} <small className="is-size-6">{Moment(event.date_end).format('MMM YY')}</small></span>
                                                 <br/>
-                                                <span className="subt is-size-6 is-italic has-text-grey">Hasta {Moment(event.hour_end).format('HH:mm')}</span>
+                                                <span className="subt is-size-6 is-italic has-text-grey">a {Moment(event.hour_end).format('HH:mm')}</span>
                                             </div>
                                         </div>
                                         <div className="lugar item columns is-centered">
@@ -172,35 +172,7 @@ class Landing extends Component {
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
                                              
-                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
-                                           
-      {event._id === '5cbe5231d74d5c0d251fa1e2' && 
-      <div>
-          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
-                <b> Conoce  la carta de los mejores platos aquí</b>
-            </a>
-          <br/>
-          <br/>
-          <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
-            </p>
-          <br/>
-          <p>Sabores Colombia es una experiencia gastronómica para todos, nuestro espacio funciona bajo el concepto de mesas compartidas por lo que es posible que te pidamos compartir tu mesa con otros comensales.</p>
-          <br/>
-          <p>Bienvenido a Sabores de Colombia,</p>
-          <br/>
-          <p>Horarios:</p>
-          <br/>
-          <p>Desde: miércoles 24 de abril.</p>
-          <br/>
-          <p>Sabores Colombia: 12m – 8 pm</p><br/>
-          <p >Aforo: 180 pax</p>
-          <br/>
-          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
-              <b> Conoce  la carta de los mejores platos aquí</b>
-          </a>
-      </div>
-      }
-                                           
+                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }                                 
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
