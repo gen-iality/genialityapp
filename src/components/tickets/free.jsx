@@ -147,7 +147,8 @@ class TicketFree extends Component {
                             </div>
                             {
                                 ticketstoshow.map(ticket=>{
-                                    return <div className='box' key={ticket._id}>
+
+                                    return  (ticket.is_hidden? "": (<div className='box' key={ticket._id}>
                                         <div className="media">
                                             <div className="media-content">
                                                 <p className="title is-4">{ticket.title}</p>
@@ -169,7 +170,8 @@ class TicketFree extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>))
+                                
                                 })
                             }
                         </div>
