@@ -36,9 +36,10 @@ class SearchComponent extends Component {
         if (this.props.kind === 'user') {
             const filters = this.props.filter.map(item=>item.name);
             arrAux = this.props.data.filter( (item) =>{
-                if(item.properties[filters[0]] && item.properties[filters[1]]){
+                if(item.properties[filters[0]] && item.properties[filters[1]] && item.properties[filters[2]]){
                     return (item.properties[filters[0]].search(new RegExp(value, 'i')) >= 0 ||
-                        (item.properties[filters[1]] && item.properties[filters[1]].search(new RegExp(value, 'i'))) >= 0);
+                        (item.properties[filters[1]] && item.properties[filters[1]].search(new RegExp(value, 'i'))) >= 0 ||
+                        (item.properties[filters[2]] && item.properties[filters[2]].search(new RegExp(value, 'i'))) >= 0);
                 }
             });
         }else if(this.props.kind === 'invitation'){

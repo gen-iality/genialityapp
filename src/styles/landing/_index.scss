@@ -100,12 +100,6 @@ section.landing{
       width: 45px;
     }
   }
-  .button-buy{
-    background-color: $color-evius;
-    color: white;
-    border-color: white;
-    margin-top: -26px;
-  }
   .data {
     .data-title {
       line-height: 1.1;
@@ -171,9 +165,6 @@ section.landing{
     }
     .columns{
       flex-direction: row;
-    }
-    .button-buy{
-      margin-top: -55px;
     }
   }
 }

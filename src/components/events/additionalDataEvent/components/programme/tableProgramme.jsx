@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import { Route, NavLink, Redirect, Switch } from "react-router-dom";
+import React from 'react';
 import {
     Accordion,
     AccordionItem,

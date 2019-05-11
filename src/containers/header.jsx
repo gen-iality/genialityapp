@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {Link, NavLink, withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import * as Cookie from "js-cookie";
-import {ApiUrl, AuthUrl, icon, rolPermissions} from "../helpers/constants";
+import {ApiUrl, AuthUrl, icon} from "../helpers/constants";
 import API, {OrganizationApi} from "../helpers/request"
 import {FormattedMessage} from 'react-intl';
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
-import connect from "react-redux/es/connect/connect";
 import LetterAvatar from "../components/shared/letterAvatar";
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import {addLoginInformation} from "../redux/user/actions";
 
 class Header extends Component {
     constructor(props) {
@@ -43,14 +45,15 @@ class Header extends Component {
         else {
             API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
                 .then((resp) => {
-                    console.log(resp);
                     if(resp.status === 200){
                         const data = resp.data;
                         const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
                         const photo = (data.photoUrl) ? data.photoUrl : data.picture;
                         OrganizationApi.mine()
                             .then((organizations)=>{
-                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations});
+                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations},()=>{
+                                    this.props.addLoginInformation(data);
+                                });
                             })
                             .catch(error => {
                                 if (error.response) {
@@ -128,12 +131,6 @@ class Header extends Component {
             return {menuOpen:!menuState.menuOpen,filterOpen:false}
         });
     };
-    
-    openFilter = () => {
-        this.setState((filterState) => {
-            return {filterOpen:!filterState.filterOpen,menuOpen:false}
-        });
-    };
 
     goReport = (e) => {
         e.preventDefault();
@@ -141,130 +138,37 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError, filterEvius, errorData, photo, name } = this.state;
-        const { categories, types, permissions } = this.props;
-        const menuEvius = [
-            '',
-            <React.Fragment>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtType:!this.state.tabEvtType})}}>
-                    <span>Tipo de Evento</span>
-                    <span className="icon"><i className={`${this.state.tabEvtType?'up':'down'}`}/></span>
-                </p>
-                {
-                    this.state.tabEvtType && (
-                        <ul>
-                            {
-                                types.map((item,key)=>{
-                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        {item.label}
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    )
-                }
-                <hr className="navbar-divider"/>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark" onClick={(e)=>{this.setState({tabEvtCat:!this.state.tabEvtCat})}}>
-                    <span>Categor�a</span>
-                    <span className="icon"><i className={`${this.state.tabEvtCat?'up':'down'}`}/></span>
-                </p>
-                {
-                    this.state.tabEvtCat && (
-                        <ul>
-                            {
-                                categories.map((item,key)=>{
-                                    return <li key={key} className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        {item.label}
-                                    </li>
-                                })
-                            }
-                        </ul>
-                    )
-                }
-            </React.Fragment>,
-            <React.Fragment>
-                <p className="navbar-item has-text-weight-bold has-text-grey-dark">Evento</p>
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`main`}>General</NavLink>
-                </p>
-                {
-                    permissions.items.includes(rolPermissions.admin_staff) &&
-                    <ul className="menu-list">
-                        <li>
-                            <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`roles`}>Staff</NavLink>
-                        </li>
-                    </ul>
-                }
-                {
-                    (permissions.items.includes(rolPermissions.admin_invitations) || permissions.items.includes(rolPermissions.history_invitations)) &&
-                        <p className="navbar-item has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
-                            <span className="item has-text-weight-bold has-text-grey-light">Invitaciones</span>
-                            <span className="icon">
-                                <i className={`${this.state.userTab?'up':'down'}`}/>
-                            </span>
-                        </p>
-                }
-                {
-                    (this.state.userTab && permissions.items.includes(rolPermissions.admin_invitations)) && (
-                        <ul className="menu-list">
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`rsvp`}>Enviar</NavLink>
-                            </li>
-                            {
-                                permissions.items.includes(rolPermissions.history_invitations) &&
-                                <li>
-                                    <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`messages`}>Historial</NavLink>
-                                </li>
-                            }
-                        </ul>
-                    )
-                }
-                {
-                    permissions.items.includes(rolPermissions.admin_ticket) &&
-                        <p className="navbar-item has-text-centered-mobile">
-                            <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={"active"} to={`ticket`}>General</NavLink>
-                        </p>
-                }
-                <p className="navbar-item has-text-centered-mobile">
-                    <NavLink className="item has-text-weight-bold has-text-grey-light" onClick={this.handleClick} activeClassName={'active'} to={`assistants`}>Asistentes</NavLink>
-                </p>
-                {
-                    permissions.items.includes(rolPermissions.admin_badge) &&
-                        <ul className="menu-list">
-                            <li>
-                                <NavLink className={'item has-text-weight-bold has-text-grey-lighter'} onClick={this.handleClick} activeClassName={'active'} to={`badge`}>Escarapela</NavLink>
-                            </li>
-                        </ul>
-                }
-            </React.Fragment>
-        ];
+        const { timeout, serverError, errorData, photo, name } = this.state;
         return (
             <React.Fragment>
                 <header>
                     <nav className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile">
                         <div className="navbar-brand">
-                            <div className="navbar-item" data-target="filterMenu" onClick={this.openFilter}>
+                            <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                            </div>
-                            <div className="navbar-item is-hidden-desktop">
-                                <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
-                                    <FormattedMessage id="header.login" defaultMessage="Sign In"/>
-                                </button>
-                            </div>
-                            <div className={`navbar-burger burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
+                            </Link>
+                            {
+                                !this.state.loader && <React.Fragment>
+                                    {
+                                        !this.state.user && <div className="navbar-item is-hidden-desktop">
+                                            <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
+                                                <FormattedMessage id="header.login" defaultMessage="Sign In"/>
+                                            </button>
+                                        </div>
+                                    }
+                                    {
+                                        this.state.user &&
+                                            <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
+                                                {
+                                                    (photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                                        : <LetterAvatar name={name}/>
+                                                }
+                                            </div>
+                                    }
+                                </React.Fragment>
+                            }
                         </div>
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
-                            <div className="navbar-start">
-                                <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                    <Link className="navbar-item has-text-weight-bold has-text-grey-light" to={'/'}>
-                                        <FormattedMessage id="header.home" defaultMessage="Main"/>
-                                    </Link>
-                                </div>
-                            </div>
                             <div className="navbar-end">
                                 {
                                     this.state.loader ?
@@ -333,11 +237,6 @@ class Header extends Component {
                                 }
                             </div>
                         </div>
-                        <div id="filterMenu" className={`is-hidden-desktop navbar-menu ${this.state.filterOpen ? "is-active" : ""}`}>
-                            <div className="navbar-dropdown">
-                                {menuEvius[filterEvius]}
-                            </div>
-                        </div>
                     </nav>
                 </header>
                 {timeout&&(<LogOut/>)}
@@ -347,6 +246,10 @@ class Header extends Component {
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
+});
+
 const mapStateToProps = state => ({
     categories: state.categories.items,
     types: state.types.items,
@@ -354,4 +257,4 @@ const mapStateToProps = state => ({
     permissions: state.permissions,
     error: state.categories.error});
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));

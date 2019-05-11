@@ -637,7 +637,7 @@ class General extends Component {
                                                         </div>
                                                     </div>
                                                     {
-                                                        field.name !== "email" &&
+                                                        !field.name.match('^(email|document|names)$') &&
                                                         <div className="columns">
                                                             <div className="column is-1">
                                                                 <nav className="level is-mobile">
