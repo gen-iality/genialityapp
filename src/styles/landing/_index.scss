@@ -1,4 +1,5 @@
 section.landing{
+  
   padding: 0;
   .nombre{
     padding: 19px;
@@ -9,7 +10,15 @@ section.landing{
   }
   .columns{
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
+    
+
+  }
+  .columns.content-tabs{
+  flex-direction: row;
+  width:100%;
+  align-items: center;
+  justify-content: center;
   }
   .info {
     background-color: white;
@@ -152,7 +161,12 @@ section.landing{
     .section{
       padding: 3rem 1.5rem;
     }
+
+    .columns{
+      flex-direction: column-reverse;
+    }
   }
+
 
   @media only screen and (min-width: $breakpoint-tablet) {
     .info{
