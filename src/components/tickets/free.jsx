@@ -29,7 +29,7 @@ class TicketFree extends Component {
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = this.props.stages.find(stage=>!!stage.status);
+        const stage = this.props.stages.find(stage=>stage.status=="active");
         const id = stage ? stage.stage_id : '';
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id);
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
@@ -124,7 +124,7 @@ class TicketFree extends Component {
                                 {
 
                                     stages.map(stage=>{
-                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${!stage.status?'is-disabled':''}`}
+                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                                             <p>{stage.title}</p>
                                             <hr className="separador"/>
@@ -134,7 +134,7 @@ class TicketFree extends Component {
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
                                                 </div>
-                                                <div className='column is-2 date-etapa hasta'>hasta</div>
+                                                <div className='column is-2 date-etapa hasta'>a</div>
                                                 <div className='column is-5 date-etapa'>
                                                     <span className='is-size-4'>{Moment(stage.end_sale_date).format('DD')}</span>
                                                     <br/>
