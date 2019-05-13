@@ -143,8 +143,8 @@ class TicketFree extends Component {
                             <li><a className='has-text-weight-semibold' onClick={onClick}>Confirmación</a></li>
                         </ul>
                     </div>*/}
-                    <div className='columns'>
-                        <div className='column is-8'>
+                    <div className='columns tickets-frame'>
+                        <div className='column is-8 tickets-content'>
                             <div className='columns content-tabs'>
                                 {
 
@@ -201,7 +201,7 @@ class TicketFree extends Component {
                                 })
                             }
                         </div>
-                        <div className='column is-4'>
+                        <div className='column is-4 resume'>
                             <div className="card">
                                 <header className="card-header has-text-centered">
                                     <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>
