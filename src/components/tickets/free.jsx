@@ -18,7 +18,8 @@ class TicketFree extends Component {
             summaryList: [],
             ticketsadded: {},
             haspayments: false,
-            loading: false
+            loading: false,
+            total:0
         }
     }
 
@@ -81,11 +82,15 @@ class TicketFree extends Component {
     renderSummary = () => {
         const tickets = this.props.tickets;
         const show = [];
+        let total = 0;
         Object.keys(this.state.ticketsadded).map(key=>{
             const info = tickets.find(ticket=>ticket._id === key);
+            let price = info.price.replace(/[^0-9]/g, '');
+            price = parseInt(price,10);
+            total += price;
             return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id,price:info.price})
         });
-        this.setState({summaryList:show});
+        this.setState({summaryList:show,total});
     };
 
     //Función botón RESERVAR
@@ -118,7 +123,7 @@ class TicketFree extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues},props:{stages},selectStage,handleQuantity,onClick} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total},props:{stages},selectStage,handleQuantity,onClick} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -222,6 +227,7 @@ class TicketFree extends Component {
                                 </div>
                                 <footer className="card-footer">
                                     <div className='card-footer-item'>
+                                    <p>Subtotal {total}</p>
                                         <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
                                     </div>
                                 </footer>
