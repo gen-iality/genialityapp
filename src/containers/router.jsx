@@ -20,6 +20,7 @@ class MainRouter extends Component {
     }
 
     render() {
+        const language = navigator.language.slice(0, 2);
         return (
             <Router>
                 <div>

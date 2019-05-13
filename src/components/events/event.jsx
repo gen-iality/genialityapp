@@ -5,25 +5,24 @@ import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
 import {EventsApi} from "../../helpers/request";
 import {rolPermissions} from "../../helpers/constants";
+import General from "./general";
+import RSVP from "../rsvp";
 import ListEventUser from "../event-users";
+import Agenda from "../agenda";
+import AgendaEdit from "../agenda/edit";
+import Invitations from "../invitations";
 import LogOut from "../shared/logOut";
 import {fetchState} from "../../redux/states/actions";
 import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
-import asyncComponent from '../../containers/AsyncComponent';
-
-//Code Splitting
-const General = asyncComponent(()=> import("./general"));
-const Badge = asyncComponent(()=> import("../badge")) ;
-const RSVP = asyncComponent(()=> import("../rsvp")) ;
-const Invitations = asyncComponent(()=> import("../invitations")) ;
-const AdminRol = asyncComponent(()=> import("../roles")) ;
-const TicketInfo = asyncComponent(()=> import("../tickets")) ;
-const DashboardEvent = asyncComponent(()=> import("../dashboard")) ;
-const OrdersEvent = asyncComponent(()=> import("../orders")) ;
-const ContainerCrud =  asyncComponent(()=> import('../shared/crud/containers'));
-
+import Badge from "../badge";
+import AdminRol from "../roles";
+import TicketInfo from "../tickets";
+import TicketConfig from "../tickets/config";
+import DashboardEvent from "../dashboard";
+import OrdersEvent from "../orders";
+import ContainerCrud from '../shared/crud/containers';
 Moment.locale('es');
 momentLocalizer();
 
@@ -238,7 +237,7 @@ class Event extends Component {
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/speakers/`} render={() => <ContainerCrud idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>}/>
+                                                    <Route path={`${match.url}/crud/speakers/`} render={(props) => <ContainerCrud idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>}/>
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&

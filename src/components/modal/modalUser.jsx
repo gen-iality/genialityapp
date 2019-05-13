@@ -197,7 +197,7 @@ class UserModal extends Component {
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
             />;
-            if (type === "boolean") {
+            if (type == "boolean") {
                 input =
                     <React.Fragment>
                         <input
@@ -210,7 +210,7 @@ class UserModal extends Component {
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
-            if (type === "list") {
+            if (type == "list") {
                 input = m.options.map((o,key) => {
                     return (<option key={key} value={o.value}>{o.value}</option>);
                 });

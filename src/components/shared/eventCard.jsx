@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment";
 import {Link} from "react-router-dom";
+import Slider from "./sliderImage";
 
 class EventCard extends Component {
     render() {

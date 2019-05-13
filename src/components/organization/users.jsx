@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import connect from "react-redux/es/connect/connect";
-import {OrganizationApi} from "../../helpers/request";
+import {OrganizationApi, UsersApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";

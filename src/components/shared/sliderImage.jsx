@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Carousel from "react-slick/lib/index";
 
 function NextArrow(props) {

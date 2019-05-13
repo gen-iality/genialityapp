@@ -1,4 +1,5 @@
 import {Actions} from "../../helpers/request";
+import {rolPermissions} from "../../helpers/constants";
 
 export function fetchPermissions(event) {
     return async dispatch => {
