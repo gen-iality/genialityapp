@@ -25,23 +25,31 @@ class TicketFree extends Component {
     componentDidMount() {
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
         const evius_token = Cookie.get('evius_token');
+        //Arreglo de tiquetes
         const tickets = this.props.tickets.map(ticket => {
+            //Formateo de precio
+            ticket.price =
+                ticket.price === '0' ? 'Gratis' :
+                new Intl.NumberFormat('es-CO', { style: 'currency', currency: ticket.currency}).format(ticket.price);
+            //Lista de opciones para el select
             ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = this.props.stages.find(stage=>!!stage.status);
-        const id = stage ? stage.stage_id : '';
-        const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id);
+        const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+        const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
+        const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
+    //Función CLICK para los tabs stage
     selectStage = (stage) => {
-        if(!stage.status) return;
+        if(stage.status === 'ended') return; //Si el stage está finalizado no hace nada, prevenir clickeo raro
         const id = stage.stage_id;
-        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id === id);
+        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id === id); //Filtra tiquetes del stage
         this.setState({active:id,ticketstoshow})
     };
 
+    //Función para el select tiquetes
     handleQuantity = (e) => {
         let {name,value} = e.target;
         name = name.split('_')[1];
@@ -56,6 +64,7 @@ class TicketFree extends Component {
         this.setState({selectValues:{...this.state.selectValues,[name]:value}})
     };
 
+    //Función para remover tiquete del resument
     removeTicket = (id) => {
         const ticketsadded = Object.assign(this.state.ticketsadded);
         const summaryList = [...this.state.summaryList];
@@ -65,6 +74,7 @@ class TicketFree extends Component {
         this.setState({ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'}})
     };
 
+    //Función para mostrar el resumen
     renderSummary = () => {
         const tickets = this.props.tickets;
         const show = [];
@@ -75,13 +85,13 @@ class TicketFree extends Component {
         this.setState({summaryList:show});
     };
 
+    //Función botón RESERVAR
     onClick = () => {
-        if(this.state.summaryList.length<=0) return;
-        if(!this.state.auth) return this.props.handleModal();
+        if(this.state.summaryList.length<=0) return;//Si no hay tiquetes no hace nada, prevenir click raro
+        if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
         this.setState({loading:true});
-        const data = {
-            tickets:[]
-        };
+        const data = {tickets:[]};
+        //Construyo body de acuerdo a peticiones de api
         this.state.summaryList.map(item=>{
             data[`ticket_${item.id}`] = item.quantity;
             return data.tickets.push(item.id)
@@ -90,11 +100,10 @@ class TicketFree extends Component {
             .then(resp=>{
                 console.log(resp);
                 if(resp.status === 'success'){
-                    /*const evius_token = Cookie.get('evius_token');
-                    const url = `${resp.redirectUrl}/?evius_token=${evius_token}`;*/
-                    const url = resp.redirectUrl;
-                    window.location.replace(url);
+                    //Si la peteción es correcta redirijo a la url que enviaron
+                    window.location.replace(resp.redirectUrl);
                 }else{
+                    //Muestro error parseado
                     this.setState({loading:false});
                     toast.error(JSON.stringify(resp));
                 }
@@ -124,7 +133,7 @@ class TicketFree extends Component {
                                 {
 
                                     stages.map(stage=>{
-                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${!stage.status?'is-disabled':''}`}
+                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                                             <p>{stage.title}</p>
                                             <hr className="separador"/>
@@ -134,7 +143,7 @@ class TicketFree extends Component {
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
                                                 </div>
-                                                <div className='column is-2 date-etapa hasta'>hasta</div>
+                                                <div className='column is-2 date-etapa hasta'>a</div>
                                                 <div className='column is-5 date-etapa'>
                                                     <span className='is-size-4'>{Moment(stage.end_sale_date).format('DD')}</span>
                                                     <br/>
@@ -147,7 +156,7 @@ class TicketFree extends Component {
                             </div>
                             {
                                 ticketstoshow.map(ticket=>{
-                                    return <div className='box' key={ticket._id}>
+                                    return  <div className='box' key={ticket._id}>
                                         <div className="media">
                                             <div className="media-content">
                                                 <p className="title is-4">{ticket.title}</p>
@@ -156,7 +165,7 @@ class TicketFree extends Component {
                                                 <p className='has-text-weight-normal is-italic is-8'>Un {ticket.title} equivale a {ticket.number_person_per_ticket} de personas</p>}
                                             </div>
                                             <div className="media-right">
-                                                <span className="title price"> {ticket.price === '0' ? 'Gratis' : `$ ${ticket.price}`}</span>
+                                                <span className="title price"> {ticket.price}</span>
                                                 <div className="select">
                                                     <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
                                                         <option value={0}>0</option>
