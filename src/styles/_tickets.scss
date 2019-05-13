@@ -18,7 +18,7 @@ div.stage{
   box-shadow: none;
   .tab{
     height: fit-content;
-    padding: 10.500px 18px;
+    padding: 3px 18px;
     border-radius: 0;
   }
   p{
@@ -46,4 +46,22 @@ div.stage{
 .separador{
   height: 1px;
   margin: 1px 0;
+}
+
+.box-ticket{
+  border-radius: 0;
+}
+.card-content{
+  .ticket{
+    padding: 0;
+  }
+  .no-tickets{
+    padding-top: 20%;
+    padding-left: 5%;
+    color: grey;
+  }
+}
+.card-header-title{
+  justify-content: center;
+  font-size: large;
 }

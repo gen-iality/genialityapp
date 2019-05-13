@@ -142,13 +142,13 @@ class TicketFree extends Component {
                                             <hr className="separador"/>
                                             <div className='columns is-vcentered'>
                                                 <div className='column is-5 date-etapa'>
-                                                    <span className='is-size-4'>{Moment(stage.start_sale_date).format('DD')}</span>
+                                                    <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
                                                 </div>
                                                 <div className='column is-2 date-etapa hasta'>a</div>
                                                 <div className='column is-5 date-etapa'>
-                                                    <span className='is-size-4'>{Moment(stage.end_sale_date).format('DD')}</span>
+                                                    <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
                                                     <br/>
                                                     <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
                                                 </div>
@@ -159,7 +159,7 @@ class TicketFree extends Component {
                             </div>
                             {
                                 ticketstoshow.map(ticket=>{
-                                    return  <div className='box' key={ticket._id}>
+                                    return  <div className='box box-ticket' key={ticket._id}>
                                         <div className="media">
                                             <div className="media-content">
                                                 <p className="title is-4">{ticket.title}</p>
@@ -196,13 +196,13 @@ class TicketFree extends Component {
                                 <div className="card-content">
                                     {
                                         summaryList.length<=0 ?
-                                            <p>Aún no tienes tiquetes seleccionados :(</p>:
+                                            <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
                                             <React.Fragment>
                                                 {
                                                     summaryList.map(item=>{
                                                         return <div className='box ticket' key={item.id}>
-                                                            <article className='media'>
-                                                                <div className='media-content'>
+                                                            <article className='media columns'>
+                                                                <div className='column is-10'>
                                                                     <div className='content'>
                                                                         <p><strong>{item.name}</strong></p>
                                                                         <p>
@@ -210,7 +210,7 @@ class TicketFree extends Component {
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                                <div className="media-right">
+                                                                <div className="column is-2">
                                                                     <button className="delete" onClick={event => this.removeTicket(item.id)}/>
                                                                 </div>
                                                             </article>

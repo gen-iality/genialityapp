@@ -11,12 +11,9 @@ section.landing{
   .columns{
     display: flex;
     flex-direction: column;
-    
-
   }
   .columns.content-tabs{
   flex-direction: row;
-  width:100%;
   align-items: center;
   justify-content: center;
   }
