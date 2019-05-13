@@ -59,7 +59,7 @@ div.stage{
   .no-tickets{
     color: grey;
     height: 100%;
-    padding: 10%;
+    padding: 10px;
   }
 }
 
@@ -92,6 +92,21 @@ div.stage{
     flex-direction: column !important;
     .resume{
       width: 100%;
+      .card{
+        display: flex;
+        flex-direction: row;
+        .card-content .media{
+            flex-direction: row;
+            height: 100px;
+            .column .is-10{
+              width: 100%;
+            }
+        }
+        .card-footer-item{
+          flex-direction: row;
+          justify-content: flex-end;
+        }
+      }
     }
   }
 }
