@@ -156,7 +156,7 @@ class Landing extends Component {
                                             <div className="column fecha-dos has-text-centered">
                                                 <span className="title is-size-4">{Moment(event.date_end).format('DD')} <small className="is-size-6">{Moment(event.date_end).format('MMM YY')}</small></span>
                                                 <br/>
-                                                <span className="subt is-size-6 is-italic has-text-grey">Hasta {Moment(event.hour_end).format('HH:mm')}</span>
+                                                <span className="subt is-size-6 is-italic has-text-grey">a {Moment(event.hour_end).format('HH:mm')}</span>
                                             </div>
                                         </div>
                                         <div className="lugar item columns is-centered">
@@ -173,34 +173,6 @@ class Landing extends Component {
                                             <div className="column is-10">
                                              
                                                 { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }
-                                           
-      {event._id === '5cbe5231d74d5c0d251fa1e2' && 
-      <div>
-          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
-                <b> Conoce  la carta de los mejores platos aquí</b>
-            </a>
-          <br/>
-          <br/>
-          <p>Un espacio para disfrutar los mejores platos de las regiones que mantienen vivo el legado de la gastronomía tradicional colombiana. Durante 15 días, puede probar y saborear los platos más representativos de las diferentes culturas colombianas, desde el Amazonas hasta San Andrés, platos para deleitar y repetir con la familia.
-            </p>
-          <br/>
-          <p>Sabores Colombia es una experiencia gastronómica para todos, nuestro espacio funciona bajo el concepto de mesas compartidas por lo que es posible que te pidamos compartir tu mesa con otros comensales.</p>
-          <br/>
-          <p>Bienvenido a Sabores de Colombia,</p>
-          <br/>
-          <p>Horarios:</p>
-          <br/>
-          <p>Desde: miércoles 24 de abril.</p>
-          <br/>
-          <p>Sabores Colombia: 12m – 8 pm</p><br/>
-          <p >Aforo: 180 pax</p>
-          <br/>
-          <a target="_blank" href='https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/LPI%20SABORES%20MENU_PAGINAS_FINAL%20copy%20LASTV2.pdf?alt=media&token=17983443-fcad-46f9-8fc3-a686d7968086'>
-              <b> Conoce  la carta de los mejores platos aquí</b>
-          </a>
-      </div>
-      }
-                                           
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
@@ -311,51 +283,7 @@ class Landing extends Component {
                                         {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
                                         <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
                                     </div>*/}
-                                    {
-                                        event._id === '5cbe5231d74d5c0d251fa1e2' &&
-                                        <React.Fragment>
-                                            <div className="columns is-centered">
-                                                <div className="column">
-                                                    <h2 className="data-title has-text-left">
-                                                        <small className="is-italic has-text-grey-light has-text-weight-300">Conoce nuestro delicioso</small><br/>
-                                                        <span className="has-text-grey-dark is-size-3 subtitle">Menú</span>
-                                                    </h2>
-                                                </div>
-                                            </div>
-                                            <div className="columns">
-                                                <figure className="column image">
-                                                    <img alt={'image1'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-A.jpg?alt=media&token=021c44eb-1666-4102-93f5-d91c1698bbb2"/>
-                                                </figure>
-                                                <figure className="column image">
-                                                    <img alt={'image2'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-B.jpg?alt=media&token=690ffb6e-fa76-4a29-ac33-8c0d400933dd"/>
-                                                </figure>
-                                            </div>
-                                            <div className="columns">
-                                                <figure className="column image">
-                                                    <img alt={'image3'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-C.jpg?alt=media&token=069e022f-33bb-4c9a-b6fc-76cefdde812a"/>
-                                                </figure>
-                                                <figure className="column image">
-                                                    <img alt={'image4'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-D.jpg?alt=media&token=c774d1e6-9bca-412d-8b7f-8117bbfafbb9"/>
-                                                </figure>
-                                            </div>
-                                            <div className="columns">
-                                                <figure className="column image">
-                                                    <img alt={'image5'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-E.jpg?alt=media&token=d4382a7e-e5f0-4898-a83d-5dbab648f224"/>
-                                                </figure>
-                                                <figure className="column image">
-                                                    <img alt={'image6'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-F.jpg?alt=media&token=ebb81af5-e137-460a-8bfb-8d70af51ea8a"/>
-                                                </figure>
-                                            </div>
-                                            <div className="columns">
-                                                <figure className="column image">
-                                                    <img alt={'image7'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-G.jpg?alt=media&token=61519097-68d7-458a-b260-2720516d64e2"/>
-                                                </figure>
-                                                <figure className="column image">
-                                                    <img alt={'image8'} className="image-4-1"src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Menu-Sabores-H.jpg?alt=media&token=3932df58-b6e7-49b4-a546-4b20c17fbc99"/>
-                                                </figure>
-                                            </div>
-                                        </React.Fragment>
-                                    }
+
                                     <div className="columns is-centered">
                                         <div className="column">
                                             <h2 className="data-title has-text-left">

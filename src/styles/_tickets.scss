@@ -26,7 +26,17 @@ div.stage{
     font-size: 18px;
   }
   .columns .is-vcentered{
-    justify-content: center
+    align-items: center;
+    justify-content: center;
+    
+    
+  }
+
+  .columns.is-vcentered{
+    align-items: center;
+    justify-content: center;
+    
+    
   }
   .date-etapa{
     padding: 0;
