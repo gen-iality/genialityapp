@@ -145,7 +145,7 @@ class TicketFree extends Component {
                                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                                             <p>{stage.title}</p>
                                             <hr className="separador"/>
-                                            <div className='columns is-vcentered'>
+                                            <div className='columns is-vcentered date-media'>
                                                 <div className='column is-5 date-etapa'>
                                                     <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
                                                     <br/>
