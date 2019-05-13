@@ -224,13 +224,13 @@ class TicketFree extends Component {
                                                 }
                                             </React.Fragment>
                                     }
-                                </div>
-                                <footer className="card-footer">
+                                    <footer className="card-footer">
                                     <div className='card-footer-item'>
                                     <p>Subtotal {total}</p>
                                         <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
                                     </div>
                                 </footer>
+                                </div>
                             </div>
                         </div>
                     </div>
