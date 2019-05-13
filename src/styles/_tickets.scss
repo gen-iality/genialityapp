@@ -1,11 +1,3 @@
-div.step{
-  border-bottom: 2px solid black;
-  cursor: pointer;
-  &:hover,&.is-active{
-    border-bottom-color: $primary;
-  }
-}
-
 div.stage{
   cursor: pointer;
   &.is-active{
