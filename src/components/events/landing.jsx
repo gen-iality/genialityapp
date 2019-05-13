@@ -238,7 +238,7 @@ class Landing extends Component {
                                     <h2 className="data-title has-text-left title-frame">
                                         <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
-                                    <TicketsForm stages={event.event_stages} tickets={event.tickets} event={event} handleModal={this.handleModal}/>
+                                    <TicketsForm stages={event.event_stages} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>
                                     {/*<div className="columns is-centered">
                                         <div className="column">
                                             <div className="field">
