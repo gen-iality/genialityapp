@@ -52,15 +52,26 @@ div.stage{
   border-radius: 0;
 }
 .card-content{
+  height: auto !important;
   .ticket{
-    padding: 0;
+    padding: 0px;
   }
   .no-tickets{
     color: grey;
-    padding-top: 10%;
     height: 100%;
+    padding: 5px;
   }
 }
+
+.card-footer-item{
+  flex-direction: column;
+  .Subtotal{
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 10px;
+  }
+}
+
 .card-header-title{
   justify-content: center;
   font-size: large;

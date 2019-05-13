@@ -31,7 +31,7 @@ class TicketFree extends Component {
             //Formateo de precio
             ticket.price =
                 ticket.price === '0' ? 'Gratis' :
-                new Intl.NumberFormat('es-CO', { style: 'currency', currency: ticket.currency}).format(ticket.price);
+                new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0 , maximumFractionDigits: 0, currency: ticket.currency}).format(ticket.price);
             //Encuentro el stage relacionado
             const stage =  this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
             //Lista de opciones para el select
@@ -224,13 +224,17 @@ class TicketFree extends Component {
                                                 }
                                             </React.Fragment>
                                     }
-                                    <footer className="card-footer">
-                                    <div className='card-footer-item'>
-                                    <p>Subtotal {new Intl.NumberFormat('es-CO', { style: 'currency', currency: "COP"}).format(total)}</p>
-                                        <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
-                                    </div>
-                                </footer>
                                 </div>
+                                 <footer className="card-footer">
+                                        <div className='card-footer-item'>
+                                            <div className='Subtotal'>
+                                                <p>Subtotal {new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)}</p>
+                                            </div>
+                                            <div className='Button-reserva'>
+                                                <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
+                                            </div>
+                                        </div>
+                                </footer>
                             </div>
                         </div>
                     </div>
