@@ -18,7 +18,8 @@ class TicketFree extends Component {
             summaryList: [],
             ticketsadded: {},
             haspayments: false,
-            loading: false
+            loading: false,
+            total:0
         }
     }
 
@@ -31,19 +32,22 @@ class TicketFree extends Component {
             ticket.price =
                 ticket.price === '0' ? 'Gratis' :
                 new Intl.NumberFormat('es-CO', { style: 'currency', currency: ticket.currency}).format(ticket.price);
+            //Encuentro el stage relacionado
+            const stage =  this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
             //Lista de opciones para el select
-            ticket.options = Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
+            ticket.options = (stage.status === 'ended' || stage.status === 'notstarted') ? [] :
+                Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
         const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
         const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+        console.log(tickets);
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
     //Función CLICK para los tabs stage
     selectStage = (stage) => {
-        if(stage.status === 'ended') return; //Si el stage está finalizado no hace nada, prevenir clickeo raro
         const id = stage.stage_id;
         const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id === id); //Filtra tiquetes del stage
         this.setState({active:id,ticketstoshow})
@@ -78,11 +82,15 @@ class TicketFree extends Component {
     renderSummary = () => {
         const tickets = this.props.tickets;
         const show = [];
+        let total = 0;
         Object.keys(this.state.ticketsadded).map(key=>{
             const info = tickets.find(ticket=>ticket._id === key);
-            return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id})
+            let price = info.price.replace(/[^0-9]/g, '');
+            price = parseInt(price,10);
+            total += price;
+            return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id,price:info.price})
         });
-        this.setState({summaryList:show});
+        this.setState({summaryList:show,total});
     };
 
     //Función botón RESERVAR
@@ -115,7 +123,7 @@ class TicketFree extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues},props:{stages},selectStage,handleQuantity,onClick} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total},props:{stages},selectStage,handleQuantity,onClick} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -166,16 +174,19 @@ class TicketFree extends Component {
                                             </div>
                                             <div className="media-right">
                                                 <span className="title price"> {ticket.price}</span>
-                                                <div className="select">
-                                                    <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
-                                                        <option value={0}>0</option>
-                                                        {
-                                                            ticket.options.map(item => {
-                                                                return <option value={item} key={item}>{item}</option>
-                                                            })
-                                                        }
-                                                    </select>
-                                                </div>
+                                                {
+                                                    ticket.options.length>0&&
+                                                    <div className="select">
+                                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
+                                                            <option value={0}>0</option>
+                                                            {
+                                                                ticket.options.map(item => {
+                                                                    return <option value={item} key={item}>{item}</option>
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -199,7 +210,9 @@ class TicketFree extends Component {
                                                                 <div className='media-content'>
                                                                     <div className='content'>
                                                                         <p><strong>{item.name}</strong></p>
-                                                                        <p><small>Cantidad: {item.quantity}</small></p>
+                                                                        <p>
+                                                                            <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                                 <div className="media-right">
@@ -214,6 +227,7 @@ class TicketFree extends Component {
                                 </div>
                                 <footer className="card-footer">
                                     <div className='card-footer-item'>
+                                    <p>Subtotal {total}</p>
                                         <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
                                     </div>
                                 </footer>

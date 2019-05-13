@@ -5,7 +5,6 @@ div.stage{
     color: white
   }
   &.is-disabled{
-    cursor: not-allowed;
     background-color: lightgray;
   }
 }
@@ -28,15 +27,6 @@ div.stage{
   .columns .is-vcentered{
     align-items: center;
     justify-content: center;
-    
-    
-  }
-
-  .columns.is-vcentered{
-    align-items: center;
-    justify-content: center;
-    
-    
   }
   .date-etapa{
     padding: 0;
