@@ -226,7 +226,7 @@ class TicketFree extends Component {
                                     }
                                     <footer className="card-footer">
                                     <div className='card-footer-item'>
-                                    <p>Subtotal {total}</p>
+                                    <p>Subtotal {new Intl.NumberFormat('es-CO', { style: 'currency', currency: "COP"}).format(total)}</p>
                                         <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0}  onClick={onClick}>Reservar</button>
                                     </div>
                                 </footer>
