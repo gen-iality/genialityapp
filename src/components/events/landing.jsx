@@ -12,7 +12,7 @@ import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
-import TicketFree from "../tickets/free";
+import TicketsForm from "../tickets/formLanding";
 Moment.locale('es');
 momentLocalizer();
 
@@ -238,7 +238,7 @@ class Landing extends Component {
                                     <h2 className="data-title has-text-left title-frame">
                                         <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
-                                    <TicketFree stages={event.event_stages} tickets={event.tickets} eventId={event._id} handleModal={this.handleModal}/>
+                                    <TicketsForm stages={event.event_stages} tickets={event.tickets} event={event} handleModal={this.handleModal}/>
                                     {/*<div className="columns is-centered">
                                         <div className="column">
                                             <div className="field">

@@ -4,9 +4,11 @@ import "moment/locale/es";
 import {Actions} from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import {toast} from "react-toastify";
+import {SinSilla} from "./forms/SinSilla";
+import ConSilla from "./forms/ConSilla";
 Moment.locale('es');
 
-class TicketFree extends Component {
+class TicketsForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,6 +46,11 @@ class TicketFree extends Component {
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
+
+    changeStep = (step) => {
+        if(step === 1 && this.state.summaryList.length <= 0 ) return;
+        this.setState({step})
+    };
 
     //Función CLICK para los tabs stage
     selectStage = (stage) => {
@@ -112,7 +119,7 @@ class TicketFree extends Component {
             data[`ticket_${item.id}`] = item.quantity;
             return data.tickets.push(item.id)
         });
-        Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
+        Actions.post(`/es/e/${this.props.event.id}/checkout`,data)
             .then(resp=>{
                 console.log(resp);
                 if(resp.status === 'success'){
@@ -131,75 +138,23 @@ class TicketFree extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total},props:{stages},selectStage,handleQuantity,onClick} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step},props:{stages},selectStage,handleQuantity,onClick,changeStep} = this;
+        const steps = [
+            <SinSilla stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/>,
+            <ConSilla />
+        ];
         return (
             <div className="columns is-centered">
                 <div className="column">
-                    {/*<div className="tabs">
-                        <ul>
-                            <li><a className='has-text-weight-semibold' onClick={onClick}>Escoge tu Boleta</a></li>
-                            <li><a className='has-text-weight-semibold' onClick={onClick}>Confirma tus Datos</a></li>
-                            {haspayments&&<li><a className='has-text-weight-semibold' onClick={onClick}>Paga</a></li>}
-                            <li><a className='has-text-weight-semibold' onClick={onClick}>Confirmación</a></li>
-                        </ul>
+                   {/* <div className="columns">
+                        <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
+                             onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
+                        <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                             onClick={e=>changeStep(1)}>Escoge tu Silla</div>
                     </div>*/}
                     <div className='columns'>
                         <div className='column is-8'>
-                            <div className='columns content-tabs'>
-                                {
-
-                                    stages.map(stage=>{
-                                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
-                                                    key={stage.stage_id} onClick={event => selectStage(stage)}>
-                                            <p>{stage.title}</p>
-                                            <hr className="separador"/>
-                                            <div className='columns is-vcentered'>
-                                                <div className='column is-5 date-etapa'>
-                                                    <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
-                                                    <br/>
-                                                    <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
-                                                </div>
-                                                <div className='column is-2 date-etapa hasta'>a</div>
-                                                <div className='column is-5 date-etapa'>
-                                                    <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
-                                                    <br/>
-                                                    <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            {
-                                ticketstoshow.map(ticket=>{
-                                    return  <div className='box box-ticket' key={ticket._id}>
-                                        <div className="media">
-                                            <div className="media-content">
-                                                <p className="title is-4">{ticket.title}</p>
-                                                <p className="subtitle is-6 has-text-weight-normal">{ticket.description}</p>
-                                                {parseInt(ticket.number_person_per_ticket,10)>1&&
-                                                <p className='has-text-weight-normal is-italic is-8'>Un {ticket.title} equivale a {ticket.number_person_per_ticket} de personas</p>}
-                                            </div>
-                                            <div className="media-right">
-                                                <span className="title price"> {ticket.price}</span>
-                                                {
-                                                    ticket.options.length>0&&
-                                                    <div className="select">
-                                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
-                                                            <option value={0}>0</option>
-                                                            {
-                                                                ticket.options.map(item => {
-                                                                    return <option value={item} key={item}>{item}</option>
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                })
-                            }
+                            {steps[step]}
                         </div>
                         <div className='column is-4'>
                             <div className="card">
@@ -252,32 +207,4 @@ class TicketFree extends Component {
     }
 }
 
-/*function SeleccionTiquete({...props}){
-    const {stages} = props;
-    return (
-        <React.Fragment>
-            {
-                stages.map(stage=>{
-                    return <div className='column box has-text-weight-bold' key={stage.stage_id}>
-                        <p>{stage.title}</p>
-                        <div className='columns is-vcentered'>
-                            <div className='column is-5'>
-                                <span className='is-size-3'>{Moment(stage.start_sale_date).format('DD')}</span>
-                                <br/>
-                                <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
-                            </div>
-                            <div className='column is-2'>hasta</div>
-                            <div className='column is-5'>
-                                <span className='is-size-3'>{Moment(stage.end_sale_date).format('DD')}</span>
-                                <br/>
-                                <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
-                            </div>
-                        </div>
-                    </div>
-                })
-            }
-        </React.Fragment>
-    )
-}*/
-
-export default TicketFree
+export default TicketsForm
