@@ -156,7 +156,7 @@ class TicketsForm extends Component {
                         <div className='column is-8'>
                             {steps[step]}
                         </div>
-                        <div className='column is-4'>
+                        <div className='column is-4 resume'>
                             <div className="card">
                                 <header className="card-header has-text-centered">
                                     <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>

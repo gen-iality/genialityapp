@@ -59,7 +59,7 @@ div.stage{
   .no-tickets{
     color: grey;
     height: 100%;
-    padding: 5px;
+    padding: 10%;
   }
 }
 
@@ -75,4 +75,23 @@ div.stage{
 .card-header-title{
   justify-content: center;
   font-size: large;
+}
+
+@media only screen and (max-width: 1024px) {
+  .column .tickets-content{
+    width: 100%;
+  }
+  .columns .content-tabs{
+    width: 100%;
+    .date-media{
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  .columns .tickets-frame{
+    flex-direction: column !important;
+    .resume{
+      width: 100%;
+    }
+  }
 }
