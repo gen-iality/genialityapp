@@ -42,7 +42,6 @@ class TicketFree extends Component {
         const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
         const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
-        console.log(tickets);
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
@@ -73,9 +72,13 @@ class TicketFree extends Component {
         const ticketsadded = Object.assign(this.state.ticketsadded);
         const summaryList = [...this.state.summaryList];
         const pos = summaryList.map(item=>item.id).indexOf(id);
+        const info = summaryList[pos];
+        const price = parseInt(info.price.replace(/[^0-9]/g, ''), 10);
         summaryList.splice(pos,1);
         delete ticketsadded[id];
-        this.setState({ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'}})
+        this.setState((prevState)=>{
+            return {ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'},total:prevState.total-price}
+        })
     };
 
     //Función para mostrar el resumen
@@ -85,10 +88,15 @@ class TicketFree extends Component {
         let total = 0;
         Object.keys(this.state.ticketsadded).map(key=>{
             const info = tickets.find(ticket=>ticket._id === key);
-            let price = info.price.replace(/[^0-9]/g, '');
-            price = parseInt(price,10);
+            const amount = this.state.ticketsadded[key];
+            const price = parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
             total += price;
-            return show.push({name:info.title,quantity:this.state.ticketsadded[key],id:info._id,price:info.price})
+            const cost = new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                minimumFractionDigits:0 ,
+                maximumFractionDigits: 0,
+                currency: info.currency}).format(price);
+            return show.push({name:info.title,quantity:amount,id:info._id,price:cost})
         });
         this.setState({summaryList:show,total});
     };
