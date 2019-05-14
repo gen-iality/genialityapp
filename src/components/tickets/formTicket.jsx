@@ -133,6 +133,7 @@ class TicketsForm extends Component {
         if(seats) this.chart.listSelectedObjects(list=>{
             data.seats = list;
         });
+        console.log(data);
         Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
             .then(resp=>{
                 console.log(resp);
