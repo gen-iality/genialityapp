@@ -1,5 +1,6 @@
 /*global seatsio*/
 import React, {Component} from "react";
+import { SeatsioSeatingChart } from '@seatsio/seatsio-react'
 import Moment from "moment";
 import "moment/locale/es";
 import {Actions} from "../../helpers/request";
@@ -51,7 +52,6 @@ class TicketsForm extends Component {
 
     changeStep = (step) => {
         if(step === 1 && this.state.summaryList.length <= 0 ) return;
-        else this.renderSeats();
         this.setState({step})
     };
 
@@ -116,9 +116,7 @@ class TicketsForm extends Component {
         if(this.state.summaryList.length<=0) return;//Si no hay tiquetes no hace nada, prevenir click raro
         if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
         if(this.state.step === 0) {
-            if (this.props.seatsConfig) return this.setState({step: 1}, () => {
-                this.renderSeats()
-            });
+            if (this.props.seatsConfig) return this.setState({step: 1});
             else return this.submit(false);
         }
         if(this.state.step ===1) return this.submit(true)
@@ -153,21 +151,8 @@ class TicketsForm extends Component {
             })
     };
 
-    renderSeats = () => {
-        const {seatsConfig} = this.props;
-        this.chart = new seatsio.SeatingChart({
-            divId: 'chart',
-            publicKey: seatsConfig["keys"]["public"],
-            language: seatsConfig["language"],
-            maxSelectedObjects: this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0),
-            event: seatsConfig["keys"]["event"],
-            availableCategories: this.state.summaryList.map(ticket=>ticket.name),
-            showMinimap: seatsConfig["minimap"],
-        }).render();
-    };
-
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages,seatsconfig},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -175,7 +160,7 @@ class TicketsForm extends Component {
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
                              onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
                         {
-                            seatsconfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                            seatsConfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
                                                 onClick={e=>changeStep(1)}>Escoge tu Silla</div>
                         }
                     </div>
@@ -184,7 +169,15 @@ class TicketsForm extends Component {
                             {
                                 step === 0 ?
                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
-                                    <div id={'chart'}></div>
+                                    <SeatsioSeatingChart
+                                        publicKey={seatsConfig["keys"]["public"]}
+                                        event={seatsConfig["keys"]["event"]}
+                                        language={seatsConfig["language"]}
+                                        maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
+                                        availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
+                                        showMinimap={seatsConfig["minimap"]}
+                                        onRenderStarted={createdChart => { this.chart = createdChart }}
+                                    />
                             }
                         </div>
                         <div className='column is-4 resume'>
