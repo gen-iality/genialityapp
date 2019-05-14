@@ -18,6 +18,7 @@ class TicketsForm extends Component {
             ticketstoshow: [],
             selectValues: {},
             summaryList: [],
+            listSeats: [],
             ticketsadded: {},
             haspayments: false,
             disabled: false,
@@ -130,29 +131,58 @@ class TicketsForm extends Component {
             data[`ticket_${item.id}`] = item.quantity;
             return data.tickets.push(item.id)
         });
-        if(seats) this.chart.listSelectedObjects(list=>{
-            data.seats = list;
-        });
-        Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
-            .then(resp=>{
-                console.log(resp);
-                if(resp.status === 'success'){
-                    //Si la peteción es correcta redirijo a la url que enviaron
-                    window.location.replace(resp.redirectUrl);
-                }else{
-                    //Muestro error parseado
-                    this.setState({loading:false});
-                    toast.error(JSON.stringify(resp));
-                }
-            })
-            .catch(err=>{
-                console.log(err);
-                this.setState({loading:false})
-            })
+        if(seats) {
+            this.chart.listSelectedObjects(list => {
+                data.seats = list;
+                Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                    .then(resp => {
+                        console.log(resp);
+                        if (resp.status === 'success') {
+                            //Si la peteción es correcta redirijo a la url que enviaron
+                            window.location.replace(resp.redirectUrl);
+                        } else {
+                            //Muestro error parseado
+                            this.setState({loading: false});
+                            toast.error(JSON.stringify(resp));
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.setState({loading: false})
+                    })
+            });
+        }
+        else{
+            Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                .then(resp => {
+                    console.log(resp);
+                    if (resp.status === 'success') {
+                        //Si la peteción es correcta redirijo a la url que enviaron
+                        window.location.replace(resp.redirectUrl);
+                    } else {
+                        //Muestro error parseado
+                        this.setState({loading: false});
+                        toast.error(JSON.stringify(resp));
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.setState({loading: false})
+                })
+        }
+    };
+
+    handleObject = (object,flag) => {
+        const listSeats = [...this.state.listSeats];
+        if(flag)
+            listSeats.push({parent:object.category.label,name:object.seatId});
+        else
+            listSeats.splice(listSeats.map(e=>e.seatId).indexOf(object.seatId),1);
+        this.setState({listSeats})
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -177,6 +207,8 @@ class TicketsForm extends Component {
                                         availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
                                         showMinimap={seatsConfig["minimap"]}
                                         onRenderStarted={createdChart => { this.chart = createdChart }}
+                                        onObjectSelected={object=>{this.handleObject(object,true)}}
+                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
                                     />
                             }
                         </div>
@@ -206,6 +238,9 @@ class TicketsForm extends Component {
                                                                         <p><strong>{item.name}</strong></p>
                                                                         <p>
                                                                             <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
+                                                                        </p>
+                                                                        <p>
+                                                                            <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
                                                                         </p>
                                                                     </div>
                                                                 </div>
