@@ -57,6 +57,9 @@ div.stage{
     border-top: 1px solid #dbdbdb;
     box-shadow: none;
     height: 100%;
+    .column-content p{
+      margin-bottom: 0;
+    }
   }
   .no-tickets{
     color: grey;
@@ -113,9 +116,6 @@ div.stage{
             border-right: 1px solid #dbdbdb;
             .media{
               flex-direction: row;
-              .column-content{
-                width: 100%;
-              }
               .column-delete{
                 flex:none;
                 width: 16%;
