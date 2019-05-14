@@ -84,7 +84,7 @@ class ContainerCrud extends Component {
         * Method to dynamic validations 
     */
     validForm = (dataFields, dataForm) => {
-        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\ \.[^@]+');
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
         const fieldsForm = dataFields, infoNew = dataForm,
             mandatories = fieldsForm.filter(field => field.mandatory), validations = [];
         mandatories.map((field,key)=>{

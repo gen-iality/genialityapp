@@ -605,7 +605,7 @@ class UsersRsvp extends Component {
                             <div className="dropdown-menu" id="dropdown-selected" role="menu">
                                 <div className="dropdown-content inv-selected-content">
                                     {
-                                        this.state.auxArr.length == 0 &&
+                                        this.state.auxArr.length === 0 &&
                                         <div className="has-text-centered">
                                             <span className="has-text-weight-bold has-text-grey-dark">Aun no has seleccionado asistentes</span>
                                         </div>
