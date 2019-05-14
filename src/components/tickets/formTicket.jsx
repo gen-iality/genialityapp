@@ -115,35 +115,42 @@ class TicketsForm extends Component {
     onClick = () => {
         if(this.state.summaryList.length<=0) return;//Si no hay tiquetes no hace nada, prevenir click raro
         if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
-        if(this.state.step === 0) return this.setState({step:1},()=>{this.renderSeats()});
-        if(this.state.step ===1){
-            this.setState({loading:true});
-            const data = {tickets:[]};
-            //Construyo body de acuerdo a peticiones de api
-            this.state.summaryList.map(item=>{
-                data[`ticket_${item.id}`] = item.quantity;
-                return data.tickets.push(item.id)
+        if(this.state.step === 0) {
+            if (this.props.seatsConfig) return this.setState({step: 1}, () => {
+                this.renderSeats()
             });
-            this.chart.listSelectedObjects(list=>{
-                data.seats = list;
-            });
-            Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
-                .then(resp=>{
-                    console.log(resp);
-                    if(resp.status === 'success'){
-                        //Si la peteción es correcta redirijo a la url que enviaron
-                        window.location.replace(resp.redirectUrl);
-                    }else{
-                        //Muestro error parseado
-                        this.setState({loading:false});
-                        toast.error(JSON.stringify(resp));
-                    }
-                })
-                .catch(err=>{
-                    console.log(err);
-                    this.setState({loading:false})
-                })
+            else return this.submit(false);
         }
+        if(this.state.step ===1) return this.submit(true)
+    };
+
+    submit = (seats) => {
+        this.setState({loading:true});
+        const data = {tickets:[]};
+        //Construyo body de acuerdo a peticiones de api
+        this.state.summaryList.map(item=>{
+            data[`ticket_${item.id}`] = item.quantity;
+            return data.tickets.push(item.id)
+        });
+        if(seats) this.chart.listSelectedObjects(list=>{
+            data.seats = list;
+        });
+        Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
+            .then(resp=>{
+                console.log(resp);
+                if(resp.status === 'success'){
+                    //Si la peteción es correcta redirijo a la url que enviaron
+                    window.location.replace(resp.redirectUrl);
+                }else{
+                    //Muestro error parseado
+                    this.setState({loading:false});
+                    toast.error(JSON.stringify(resp));
+                }
+            })
+            .catch(err=>{
+                console.log(err);
+                this.setState({loading:false})
+            })
     };
 
     renderSeats = () => {
@@ -157,18 +164,20 @@ class TicketsForm extends Component {
             availableCategories: this.state.summaryList.map(ticket=>ticket.name),
             showMinimap: seatsConfig["minimap"],
         }).render();
-    }
+    };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages,seatsconfig},selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
                     <div className="columns">
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
                              onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
-                        <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
-                             onClick={e=>changeStep(1)}>Escoge tu Silla</div>
+                        {
+                            seatsconfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                                                onClick={e=>changeStep(1)}>Escoge tu Silla</div>
+                        }
                     </div>
                     <div className='columns tickets-frame'>
                         <div className='column is-8 tickets-content'>

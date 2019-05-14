@@ -22,8 +22,6 @@ class UserOrg extends Component {
     }
 
     componentDidMount() {
-        const self = this;
-        console.log(this.props);
         const {edit,extraFields} = this.props;
         if (edit) {
             const {value} = this.props;
@@ -65,7 +63,7 @@ class UserOrg extends Component {
                 message.class = 'msg_warning';
                 message.content = 'USER UPDATED';
                 const res = await OrganizationApi.editUser(this.props.orgId,this.state.userId,this.state.user);
-                console.log("Document successfully updated!");
+                console.log(res);
                 message.class = 'msg_warning';
                 message.content = 'USER UPDATED';
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
@@ -117,7 +115,7 @@ class UserOrg extends Component {
                                 value={value}
                                 onChange={(e)=>{this.onChange(e, type)}}
             />;
-            if (type == "boolean") {
+            if (type === "boolean") {
                 input =
                     <React.Fragment>
                         <input
@@ -130,7 +128,7 @@ class UserOrg extends Component {
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
-            if (type == "list") {
+            if (type === "list") {
                 input = m.options.map((o,key) => {
                     return (<option key={key} value={o.value}>{o.value}</option>);
                 });

@@ -12,7 +12,7 @@ import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
-import TicketsForm from "../tickets/formLanding";
+import TicketsForm from "../tickets/formTicket";
 Moment.locale('es');
 momentLocalizer();
 

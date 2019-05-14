@@ -27,7 +27,7 @@ class ListProgramme extends Component{
                             <ul >
                             {
                                 this.props.headersTable.map((item,key)=>{
-                                return  <li className="fecha" key= {key} ><a className={` ${this.activo == key ? "activo" : ""}`} onClick={()=> this.filterByDays(this.props.sessions,item.date,key)}>{item.label}</a></li>                      
+                                return  <li className="fecha" key= {key} ><a className={` ${this.activo === key ? "activo" : ""}`} onClick={()=> this.filterByDays(this.props.sessions,item.date,key)}>{item.label}</a></li>
                                     })                                              
                             }
                             </ul>
