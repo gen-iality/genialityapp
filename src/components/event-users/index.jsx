@@ -349,7 +349,6 @@ class ListEventUser extends Component {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
         const {event:{event_stages}} = this.props;
         // Dropdown para movil
-        const { selectedOption } = 'Totales';
         const options = [{ value:'1', label:
             <div className="checkin-tags-wrapper" >
               <div className="columns is-mobile is-multiline checkin-tags">

@@ -10,26 +10,19 @@ import 'draft-js-static-toolbar-plugin/lib/plugin.css';
 class EditarHtml extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            editorState : EditorState.createEmpty(),
-       }
-       console.log('ppopopopo ',this.props)
-       if (this.props.value) {
-           //si tiene contenido lo muestra para editar
-        const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value.value));
-        var editorState =EditorState.createWithContent(rawContentFromStore);
-    }else{
-        // de lo contrario inicia el archivo vacio
-        var editorState = EditorState.createEmpty()
+        this.state = {editorState : EditorState.createEmpty(),}
     }
-    
-   this.state = {
-     editorState: editorState, // for empty content
-   }
-    }
-   
 
-   
+    componentDidMount() {
+        if (this.props.value) {
+            //si tiene contenido lo muestra para editar
+            const rawContentFromStore = convertFromRaw(JSON.parse(this.props.value.value));
+            const editorState =EditorState.createWithContent(rawContentFromStore);
+            this.setState({editorState})
+        }
+    }
+
+
     onEditorStateChange = (editorState) => {
    
      

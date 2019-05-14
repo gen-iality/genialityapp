@@ -34,7 +34,7 @@ class ContainerCrud extends Component {
 
     componentDidUpdate(prevProps) {
         
-        if(this.props.idModel != prevProps.idModel){
+        if(this.props.idModel !== prevProps.idModel){
             this.config = configCrud[this.props.idModel];
             //setiar en blanco
             this.getData();
@@ -47,13 +47,7 @@ class ContainerCrud extends Component {
 
 
     componentWillUnmount(){
-        this.setState({     show: false,
-            modal: false,
-            fields: [],
-            pageOfItems: [],
-            data: {},
-            itemInfo: {},
-            valid: true})
+        this.setState({show: false, modal: false, fields: [], pageOfItems: [], data: {}, itemInfo: {},modalFields: [], valid: true})
     }
 
      //Usamos esta funcion para generar las cabeceras de las tablas con su llave y su label, solo se usa como ayuda, no hace parte de el desarrollo
@@ -154,14 +148,6 @@ class ContainerCrud extends Component {
         this.getData();
     };
 
-    componentWillUnmount(){
-        // alert('saliendo de el componente')
-        this.setState({modalFields: [],
-            pageOfItems: []})
-    }
-
-  
-
     render() {
         return (
             <div>
@@ -184,4 +170,4 @@ class ContainerCrud extends Component {
     }
 }
 
-        export default ContainerCrud;
+export default ContainerCrud;
