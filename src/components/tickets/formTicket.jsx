@@ -182,8 +182,15 @@ class TicketsForm extends Component {
                         </div>
                         <div className='column is-4 resume'>
                             <div className="card">
-                                <header className="card-header has-text-centered">
-                                    <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>
+                                <header className="card-header">
+                                    <div className='title-header'>
+                                        <p className="card-header-title has-text-primary has-text-weight-bold">
+                                            <span className="icon is-medium">
+                                            <i class="fas fa-receipt fa-lg"></i>
+                                            </span>
+                                            <span className='ticket-resume-title'> Resumen de reserva </span>
+                                        </p>
+                                    </div>
                                 </header>
                                 <div className="card-content">
                                     {
@@ -194,7 +201,7 @@ class TicketsForm extends Component {
                                                     summaryList.map(item=>{
                                                         return <div className='box ticket' key={item.id}>
                                                             <article className='media columns'>
-                                                                <div className='column is-10'>
+                                                                <div className='column is-10 column-content'>
                                                                     <div className='content'>
                                                                         <p><strong>{item.name}</strong></p>
                                                                         <p>
@@ -202,7 +209,7 @@ class TicketsForm extends Component {
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                                <div className="column is-2">
+                                                                <div className="column is-2 column-delete">
                                                                     <button className="delete" onClick={event => this.removeTicket(item.id)}/>
                                                                 </div>
                                                             </article>
