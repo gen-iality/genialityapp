@@ -170,8 +170,8 @@ class TicketsForm extends Component {
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
                              onClick={e=>changeStep(1)}>Escoge tu Silla</div>
                     </div>
-                    <div className='columns'>
-                        <div className='column is-8'>
+                    <div className='columns tickets-frame'>
+                        <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
@@ -242,7 +242,7 @@ function ListadoTiquetes({...props}) {
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
                             <hr className="separador"/>
-                            <div className='columns is-vcentered'>
+                            <div className='columns is-vcentered date-media'>
                                 <div className='column is-5 date-etapa'>
                                     <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
                                     <br/>

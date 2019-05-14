@@ -90,8 +90,10 @@ div.stage{
   }
   .columns .tickets-frame{
     flex-direction: column !important;
+    width: 100%;
     .resume{
       width: 100%;
+    }
       .card{
         display: flex;
         flex-direction: row;
@@ -107,6 +109,5 @@ div.stage{
           justify-content: flex-end;
         }
       }
-    }
   }
 }
