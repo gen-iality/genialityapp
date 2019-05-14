@@ -1,20 +1,23 @@
 import React, {Component} from 'react';
 import { Route, Redirect, withRouter, Switch } from "react-router-dom";
-import Home from "../components/home";
-import Organization from "../components/organization";
-import Landing from "../components/events/landing";
-import Events from "../components/events";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
-import HomeProfile from "../components/home/profile";
-import MyProfile from "../components/profile";
-import Terms from "../components/policies/termsService";
-import Privacy from "../components/policies/privacyPolicy";
-import Policies from "../components/policies/policies";
-import About from "../components/policies/about";
 import {ApiUrl} from "../helpers/constants";
-import Faqs from "../components/faqs";
 import ContainerCrud from '../components/shared/crud/containers';
+import asyncComponent from "./AsyncComponent";
+
+//Code splitting
+const Home = asyncComponent(() => import("../components/home"));
+const HomeProfile = asyncComponent(() => import("../components/home/profile"));
+const Landing = asyncComponent(() => import("../components/events/landing"));
+const Events = asyncComponent(() => import("../components/events"));
+const Organization = asyncComponent(()=> import("../components/organization"));
+const MyProfile = asyncComponent(()=> import("../components/profile"));
+const Terms = asyncComponent(()=> import("../components/policies/termsService"));
+const Privacy = asyncComponent(()=> import("../components/policies/privacyPolicy"));
+const Policies = asyncComponent(()=> import("../components/policies/policies"));
+const About = asyncComponent(()=> import("../components/policies/about"));
+const Faqs = asyncComponent(()=> import("../components/faqs"));
 
 
 class ContentContainer extends Component {
