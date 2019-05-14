@@ -18,6 +18,7 @@ class TicketsForm extends Component {
             ticketstoshow: [],
             selectValues: {},
             summaryList: [],
+            listSeats: [],
             ticketsadded: {},
             haspayments: false,
             disabled: false,
@@ -171,8 +172,17 @@ class TicketsForm extends Component {
         }
     };
 
+    handleObject = (object,flag) => {
+        const listSeats = [...this.state.listSeats];
+        if(flag)
+            listSeats.push({parent:object.category.label,name:object.seatId});
+        else
+            listSeats.splice(listSeats.map(e=>e.seatId).indexOf(object.seatId),1);
+        this.setState({listSeats})
+    };
+
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -197,6 +207,8 @@ class TicketsForm extends Component {
                                         availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
                                         showMinimap={seatsConfig["minimap"]}
                                         onRenderStarted={createdChart => { this.chart = createdChart }}
+                                        onObjectSelected={object=>{this.handleObject(object,true)}}
+                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
                                     />
                             }
                         </div>
@@ -219,6 +231,9 @@ class TicketsForm extends Component {
                                                                         <p><strong>{item.name}</strong></p>
                                                                         <p>
                                                                             <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
+                                                                        </p>
+                                                                        <p>
+                                                                            <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
                                                                         </p>
                                                                     </div>
                                                                 </div>
