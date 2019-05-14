@@ -130,26 +130,45 @@ class TicketsForm extends Component {
             data[`ticket_${item.id}`] = item.quantity;
             return data.tickets.push(item.id)
         });
-        if(seats) this.chart.listSelectedObjects(list=>{
-            data.seats = list;
-        });
-        console.log(data);
-        Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
-            .then(resp=>{
-                console.log(resp);
-                if(resp.status === 'success'){
-                    //Si la peteción es correcta redirijo a la url que enviaron
-                    window.location.replace(resp.redirectUrl);
-                }else{
-                    //Muestro error parseado
-                    this.setState({loading:false});
-                    toast.error(JSON.stringify(resp));
-                }
-            })
-            .catch(err=>{
-                console.log(err);
-                this.setState({loading:false})
-            })
+        if(seats) {
+            this.chart.listSelectedObjects(list => {
+                data.seats = list;
+                Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                    .then(resp => {
+                        console.log(resp);
+                        if (resp.status === 'success') {
+                            //Si la peteción es correcta redirijo a la url que enviaron
+                            window.location.replace(resp.redirectUrl);
+                        } else {
+                            //Muestro error parseado
+                            this.setState({loading: false});
+                            toast.error(JSON.stringify(resp));
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.setState({loading: false})
+                    })
+            });
+        }
+        else{
+            Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                .then(resp => {
+                    console.log(resp);
+                    if (resp.status === 'success') {
+                        //Si la peteción es correcta redirijo a la url que enviaron
+                        window.location.replace(resp.redirectUrl);
+                    } else {
+                        //Muestro error parseado
+                        this.setState({loading: false});
+                        toast.error(JSON.stringify(resp));
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.setState({loading: false})
+                })
+        }
     };
 
     render() {
