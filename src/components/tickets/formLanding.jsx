@@ -131,18 +131,19 @@ class TicketsForm extends Component {
             return data.tickets.push(item.id)
         });
 
-        
-        if((this.state.step === 0 && tienesilla))  {
+
+        if((this.state.step === 0 && tienesilla && this.props.seatsConfig))  {
             return this.setState({step:1},()=>{this.renderSeats()});
         
         } else { //if(this.state.step ===1 )
         
             this.setState({loading:true});
 
-           
+                if (this.chart.listSelectedObjects){
                 this.chart.listSelectedObjects(list=>{
                     data.seats = list;
                 });
+            }
             
             Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
                 .then(resp=>{
@@ -165,6 +166,7 @@ class TicketsForm extends Component {
 
     renderSeats = () => {
         const {seatsConfig} = this.props;
+        if (!seatsConfig) return false;
         this.chart = new seatsio.SeatingChart({
             divId: 'chart',
             publicKey: seatsConfig["keys"]["public"],
