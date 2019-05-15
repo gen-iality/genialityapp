@@ -248,10 +248,10 @@ class TicketsForm extends Component {
                                 </header>
                                 <div className="card-content">
                                     {
-                                        summaryList.length<=0 ?
-                                            <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
+                                    summaryList.length<=0 ?
+                                        <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
                                             <React.Fragment>
-                                                <div className='is-hidden-mobile'>
+                                                <div className='card-content'>
                                                     {
                                                         summaryList.map(item=>{
                                                             return <div className='box ticket' key={item.id}>
@@ -275,17 +275,7 @@ class TicketsForm extends Component {
                                                         })
                                                     }
                                                 </div>
-                                                <div className='is-hidden-tablet'>
-                                                    <div className='content'>
-                                                        <p>
-                                                            <small>Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)} - Valor: </small>
-                                                        </p>
-                                                        <p>
-                                                            <small>Sillas: </small>
-                                                        </p>
-                                                    </div>
-                                                    
-                                                </div>
+                                           
                                             </React.Fragment>
                                     }
                                 </div>

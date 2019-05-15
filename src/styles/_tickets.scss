@@ -16,6 +16,7 @@ div.stage{
 .menu-steps{
   .is-active{
     color: $primary;
+    text-decoration: underline;
   }
 }
 
@@ -59,7 +60,7 @@ div.stage{
 
 .card{
   position: sticky;
-  top: 0;
+  top: 17%;
 }
 
 .card-content{
@@ -77,6 +78,7 @@ div.stage{
     color: grey;
     height: 100%;
     padding: 10px;
+    width: 100%;
   }
 }
 .card-footer-item{
@@ -103,6 +105,11 @@ div.stage{
 }
 
 @media only screen and (max-width: 1024px) {
+
+  .columns .menu-steps{
+    flex-direction: row !important;
+  }
+
   .column .tickets-content{
     width: 100%;
   }
@@ -122,8 +129,16 @@ div.stage{
       .card{
         display: flex;
         flex-direction: row;
+        position: fixed;
+        width: 100%;
+        left: 0;
+        top: 83%;
+        z-index: 10;
         .card-content{
-          .ticket{
+          display: flex;
+          .ticket{  
+            flex: 1 1 auto;
+            padding: 2px;
             border-left: 1px solid #dbdbdb;
             border-right: 1px solid #dbdbdb;
             .media{
@@ -137,6 +152,13 @@ div.stage{
         }
         .card-footer-item{
           justify-content: flex-end;
+          padding: 0;
+          .Subtotal{
+            margin: 2px;
+          }
+          .Button-reserva{
+            margin: 5px;
+          }
         }
       }
       .title-header{
