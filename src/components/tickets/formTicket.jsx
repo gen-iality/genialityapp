@@ -29,7 +29,6 @@ class TicketsForm extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         const haspayments = !!this.props.tickets.find(item=>item.price !== "0");
         const evius_token = Cookie.get('evius_token');
         //Arreglo de tiquetes
@@ -48,10 +47,16 @@ class TicketsForm extends Component {
         const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
         const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+        let info = localStorage.getItem('info');
+        if(info && evius_token){
+            info = JSON.parse(info);
+            this.setState({total:info.total,summaryList:info.show})
+        }
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
 
     changeStep = (step) => {
+        if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
         if(step === 1 && this.state.summaryList.length <= 0 ) return;
         this.setState({step})
     };
@@ -109,13 +114,9 @@ class TicketsForm extends Component {
                 currency: info.currency}).format(price);
             return show.push({name:info.title,quantity:amount,id:info._id,price:cost})
         });
+        if(!this.state.auth)localStorage.setItem('info',JSON.stringify({total,show}));
         this.setState({summaryList:show,total});
     };
-
-
-
-
-  
 
     //Función botón RESERVAR
     onClick = () => {
