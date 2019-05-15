@@ -251,7 +251,7 @@ class TicketsForm extends Component {
                                     summaryList.length<=0 ?
                                         <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
                                             <React.Fragment>
-                                                <div className='card-content'>
+                                                <div className='is-hidden-mobile'>
                                                     {
                                                         summaryList.map(item=>{
                                                             return <div className='box ticket' key={item.id}>
@@ -275,7 +275,16 @@ class TicketsForm extends Component {
                                                         })
                                                     }
                                                 </div>
-                                           
+                                                <div className='is-hidden-tablet'>
+                                                    <div className='content'>
+                                                        <p>
+                                                            <small>Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)}</small>
+                                                        </p>
+                                                        <p>
+                                                            <small>Sillas: </small>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </React.Fragment>
                                     }
                                 </div>
