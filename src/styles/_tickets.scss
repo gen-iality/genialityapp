@@ -13,6 +13,12 @@ div.stage{
   border-radius: 0;
 }
 
+.menu-steps{
+  .is-active{
+    color: $primary;
+  }
+}
+
 .content-tabs{
   width: fit-content;
   box-shadow: none;
@@ -50,6 +56,12 @@ div.stage{
 .box-ticket{
   border-radius: 0;
 }
+
+.card{
+  position: sticky;
+  top: 0;
+}
+
 .card-content{
   height: auto !important;
   .ticket{

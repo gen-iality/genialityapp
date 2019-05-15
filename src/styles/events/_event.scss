@@ -1,3 +1,20 @@
+
+ .name-event{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin: 5px 22px;
+  .subtitle{
+    display: inline-flex;
+    align-items: center;
+    word-break: normal;
+  }
+  .title{
+    display: inline-flex;
+    align-items: center;
+    word-break: normal;
+  }
+}
 .event-main {
   padding: 0;
   .event-wrapper {

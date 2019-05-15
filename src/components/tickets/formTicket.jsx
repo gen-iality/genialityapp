@@ -208,7 +208,7 @@ class TicketsForm extends Component {
         return (
             <div className="columns is-centered">
                 <div className="column">
-                    <div className="columns">
+                    <div className="columns menu-steps">
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
                              onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
                         {
@@ -275,8 +275,16 @@ class TicketsForm extends Component {
                                                         })
                                                     }
                                                 </div>
-                                                <div className='is-hidden-desktop'>
-                                                    Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)}
+                                                <div className='is-hidden-tablet'>
+                                                    <div className='content'>
+                                                        <p>
+                                                            <small>Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)} - Valor: </small>
+                                                        </p>
+                                                        <p>
+                                                            <small>Sillas: </small>
+                                                        </p>
+                                                    </div>
+                                                    
                                                 </div>
                                             </React.Fragment>
                                     }

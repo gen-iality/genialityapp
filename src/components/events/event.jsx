@@ -112,11 +112,14 @@ class Event extends Component {
                 {
                     this.state.loading ? <Loading/>:
                         <section className="columns">
-                            <aside className="column menu event-aside is-2 has-text-weight-bold">
+                            <div className='name-event'>
                                 <p className="subtitle">Evento</p>
                                 <p className="title">
                                     {this.state.newEvent?'Nuevo evento':this.state.event.name}
                                 </p>
+                            </div>
+                            <aside className="column menu event-aside is-2 has-text-weight-bold">
+                                
                                 {
                                     (!this.state.newEvent) && (
                                         <div className='is-hidden-mobile'>
