@@ -278,7 +278,7 @@ class TicketsForm extends Component {
                                                 <div className='is-hidden-tablet'>
                                                     <div className='content'>
                                                         <p>
-                                                            <small>Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)} - Valor: </small>
+                                                            <small>Cantidad {summaryList.map(i=>parseInt(i.quantity,10)).reduce((prev,next)=>prev+next)}</small>
                                                         </p>
                                                         <p>
                                                             <small>Sillas: </small>
