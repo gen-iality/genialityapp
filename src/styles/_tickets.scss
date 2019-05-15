@@ -37,7 +37,6 @@ div.stage{
     padding: 12px;
   }
 }
-
 .price{
   font-size: 1.2rem;
   padding-right: 16px;
@@ -55,6 +54,12 @@ div.stage{
   height: auto !important;
   .ticket{
     padding: 0px;
+    border-top: 1px solid #dbdbdb;
+    box-shadow: none;
+    height: 100%;
+    .column-content p{
+      margin-bottom: 0;
+    }
   }
   .no-tickets{
     color: grey;
@@ -62,7 +67,6 @@ div.stage{
     padding: 10px;
   }
 }
-
 .card-footer-item{
   flex-direction: column;
   .Subtotal{
@@ -75,6 +79,15 @@ div.stage{
 .card-header-title{
   justify-content: center;
   font-size: large;
+}
+
+.title-header{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  .icon{
+    margin: 0 10px;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -90,22 +103,73 @@ div.stage{
   }
   .columns .tickets-frame{
     flex-direction: column !important;
+    width: 100%;
     .resume{
       width: 100%;
+    }
       .card{
         display: flex;
         flex-direction: row;
-        .card-content .media{
-            flex-direction: row;
-            height: 100px;
-            .column .is-10{
-              width: 100%;
+        .card-content{
+          .ticket{
+            border-left: 1px solid #dbdbdb;
+            border-right: 1px solid #dbdbdb;
+            .media{
+              flex-direction: row;
+              .column-delete{
+                flex:none;
+                width: 16%;
+              }
             }
+          }
         }
         .card-footer-item{
-          flex-direction: row;
           justify-content: flex-end;
         }
+      }
+      .title-header{
+        .icon{
+          margin: 0 10px;
+        }
+        .ticket-resume-title{
+          display: none;
+        }
+      }
+  }
+  @media only screen and (max-width: 600px) {
+
+    .columns .content-tabs{
+      justify-content: inherit !important;
+      overflow: hidden;
+    }
+    .card-header-title{
+      padding: 0;
+    }
+    .title-header{
+      .icon{
+        margin: 0 !important;
+      }
+    }
+    .card-footer-item{
+      .Subtotal{
+        font-size: 1rem;
+        margin: 10px 1px;
+      }
+      .button{
+        font-size: 0.7rem;
+      }
+    }
+    .media{
+      flex-direction: column;
+      .media-content{
+        .title{
+          font-size: 1.2rem;
+        }
+      }
+      .media-right{
+        margin: 1.5rem 0;
+        width: 100%;
+        text-align: end;
       }
     }
   }

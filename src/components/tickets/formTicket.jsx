@@ -1,5 +1,6 @@
 /*global seatsio*/
 import React, {Component} from "react";
+import { SeatsioSeatingChart } from '@seatsio/seatsio-react'
 import Moment from "moment";
 import "moment/locale/es";
 import {Actions} from "../../helpers/request";
@@ -17,6 +18,7 @@ class TicketsForm extends Component {
             ticketstoshow: [],
             selectValues: {},
             summaryList: [],
+            listSeats: [],
             ticketsadded: {},
             haspayments: false,
             disabled: false,
@@ -51,7 +53,6 @@ class TicketsForm extends Component {
 
     changeStep = (step) => {
         if(step === 1 && this.state.summaryList.length <= 0 ) return;
-        else this.renderSeats();
         this.setState({step})
     };
 
@@ -111,96 +112,138 @@ class TicketsForm extends Component {
         this.setState({summaryList:show,total});
     };
 
+
+
+
+  
+
     //Función botón RESERVAR
     onClick = () => {
         if(this.state.summaryList.length<=0) return;//Si no hay tiquetes no hace nada, prevenir click raro
         if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
-        
-        let tienesilla = false;
-
-        const data = {tickets:[]};
 
         //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca
         //Construyo body de acuerdo a peticiones de api
+        let tienesilla = false;
         this.state.summaryList.map(item=>{
-            
             if (item.name != "General" ){
                 tienesilla = true;
             }
+        });
+
+        if(this.state.step === 0  && !tienesilla){
+            return this.submit(false);
+        }
+        if(this.state.step === 0 )  {
+
+            if (this.props.seatsConfig) return this.setState({step: 1});
+
+            else return this.submit(false);
+        }
+
+        if(this.state.step ===1) return this.submit(true)
+    };
+
+    submit = (seats) => {
+        this.setState({loading:true});
+        const data = {tickets:[]};
+        //Construyo body de acuerdo a peticiones de api
+        this.state.summaryList.map(item=>{
             data[`ticket_${item.id}`] = item.quantity;
             return data.tickets.push(item.id)
         });
-
-
-        if((this.state.step === 0 && tienesilla && this.props.seatsConfig))  {
-            return this.setState({step:1},()=>{this.renderSeats()});
-        
-        } else { //if(this.state.step ===1 )
-        
-            this.setState({loading:true});
-
-                if (this.chart.listSelectedObjects){
-                this.chart.listSelectedObjects(list=>{
-                    data.seats = list;
-                });
-            }
-            
-            Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
-                .then(resp=>{
+        if(seats) {
+            this.chart.listSelectedObjects(list => {
+                data.seats = list;
+                Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                    .then(resp => {
+                        console.log(resp);
+                        if (resp.status === 'success') {
+                            //Si la peteción es correcta redirijo a la url que enviaron
+                            window.location.replace(resp.redirectUrl);
+                        } else {
+                            //Muestro error parseado
+                            this.setState({loading: false});
+                            toast.error(JSON.stringify(resp));
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.setState({loading: false})
+                    })
+            });
+        }
+        else{
+            Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+                .then(resp => {
                     console.log(resp);
-                    if(resp.status === 'success'){
+                    if (resp.status === 'success') {
                         //Si la peteción es correcta redirijo a la url que enviaron
                         window.location.replace(resp.redirectUrl);
-                    }else{
+                    } else {
                         //Muestro error parseado
-                        this.setState({loading:false});
+                        this.setState({loading: false});
                         toast.error(JSON.stringify(resp));
                     }
                 })
-                .catch(err=>{
+                .catch(err => {
                     console.log(err);
-                    this.setState({loading:false})
+                    this.setState({loading: false})
                 })
         }
     };
 
-    renderSeats = () => {
-        const {seatsConfig} = this.props;
-        if (!seatsConfig) return false;
-        this.chart = new seatsio.SeatingChart({
-            divId: 'chart',
-            publicKey: seatsConfig["keys"]["public"],
-            language: seatsConfig["language"],
-            maxSelectedObjects: this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0),
-            event: seatsConfig["keys"]["event"],
-            availableCategories: this.state.summaryList.map(ticket=>ticket.name),
-            showMinimap: seatsConfig["minimap"],
-        }).render();
-    }
+    handleObject = (object,flag) => {
+        const listSeats = [...this.state.listSeats];
+        if(flag)
+            listSeats.push({parent:object.category.label,name:object.seatId});
+        else
+            listSeats.splice(listSeats.map(e=>e.seatId).indexOf(object.seatId),1);
+        this.setState({listSeats})
+    };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled},props:{stages},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
                     <div className="columns">
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
                              onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
-                        <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
-                             onClick={e=>changeStep(1)}>Escoge tu Silla</div>
+                        {
+                            seatsConfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                                                onClick={e=>changeStep(1)}>Escoge tu Silla</div>
+                        }
                     </div>
-                    <div className='columns'>
-                        <div className='column is-8'>
+                    <div className='columns tickets-frame'>
+                        <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
-                                    <div id={'chart'}></div>
+                                    <SeatsioSeatingChart
+                                        publicKey={seatsConfig["keys"]["public"]}
+                                        event={seatsConfig["keys"]["event"]}
+                                        language={seatsConfig["language"]}
+                                        maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
+                                        availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
+                                        showMinimap={seatsConfig["minimap"]}
+                                        onRenderStarted={createdChart => { this.chart = createdChart }}
+                                        onObjectSelected={object=>{this.handleObject(object,true)}}
+                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
+                                    />
                             }
                         </div>
                         <div className='column is-4 resume'>
                             <div className="card">
-                                <header className="card-header has-text-centered">
-                                    <p className="card-header-title has-text-primary has-text-weight-bold">Resumen de reserva</p>
+                                <header className="card-header">
+                                    <div className='title-header'>
+                                        <p className="card-header-title has-text-primary has-text-weight-bold">
+                                            <span className="icon is-medium">
+                                            <i className="fas fa-receipt fa-lg"></i>
+                                            </span>
+                                            <span className='ticket-resume-title'> Resumen de reserva </span>
+                                        </p>
+                                    </div>
                                 </header>
                                 <div className="card-content">
                                     {
@@ -211,15 +254,18 @@ class TicketsForm extends Component {
                                                     summaryList.map(item=>{
                                                         return <div className='box ticket' key={item.id}>
                                                             <article className='media columns'>
-                                                                <div className='column is-10'>
+                                                                <div className='column is-10 column-content'>
                                                                     <div className='content'>
                                                                         <p><strong>{item.name}</strong></p>
                                                                         <p>
                                                                             <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
                                                                         </p>
+                                                                        <p>
+                                                                            <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
+                                                                        </p>
                                                                     </div>
                                                                 </div>
-                                                                <div className="column is-2">
+                                                                <div className="column is-2 column-delete">
                                                                     <button className="delete" onClick={event => this.removeTicket(item.id)}/>
                                                                 </div>
                                                             </article>
@@ -261,7 +307,7 @@ function ListadoTiquetes({...props}) {
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
                             <hr className="separador"/>
-                            <div className='columns is-vcentered'>
+                            <div className='columns is-vcentered date-media'>
                                 <div className='column is-5 date-etapa'>
                                     <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
                                     <br/>
