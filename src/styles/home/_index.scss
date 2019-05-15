@@ -37,6 +37,10 @@ section.home{
   width: 100%;
 }
 
+.content-ticket{
+  flex-direction: column !important;
+}
+
 @media only screen and (max-width: $breakpoint-mobile) {
   .main {
     padding-top: 3em;

@@ -337,7 +337,7 @@ function ListadoTiquetes({...props}) {
             {
                 ticketstoshow.map(ticket=>{
                     return  <div className='box box-ticket' key={ticket._id}>
-                        <div className="media">
+                        <div className="media content-ticket">
                             <div className="media-content">
                                 <p className="title is-4">{ticket.title}</p>
                                 <p className="subtitle is-6 has-text-weight-normal">{ticket.description}</p>
