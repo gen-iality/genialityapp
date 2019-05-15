@@ -104,6 +104,12 @@ div.stage{
   }
 }
 
+.quantity{
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 10px;
+}
+
 @media only screen and (max-width: 1024px) {
 
   .columns .menu-steps{
@@ -134,7 +140,7 @@ div.stage{
         left: 0;
         top: 83%;
         z-index: 10;
-        .card-content{
+        .is-hidden-mobile{
           display: flex;
           .ticket{  
             flex: 1 1 auto;
