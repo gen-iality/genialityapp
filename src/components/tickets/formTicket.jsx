@@ -251,28 +251,33 @@ class TicketsForm extends Component {
                                         summaryList.length<=0 ?
                                             <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
                                             <React.Fragment>
-                                                {
-                                                    summaryList.map(item=>{
-                                                        return <div className='box ticket' key={item.id}>
-                                                            <article className='media columns'>
-                                                                <div className='column is-10 column-content'>
-                                                                    <div className='content'>
-                                                                        <p><strong>{item.name}</strong></p>
-                                                                        <p>
-                                                                            <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
-                                                                        </p>
-                                                                        <p>
-                                                                            <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
-                                                                        </p>
+                                                <div className='is-hidden-mobile'>
+                                                    {
+                                                        summaryList.map(item=>{
+                                                            return <div className='box ticket' key={item.id}>
+                                                                <article className='media columns'>
+                                                                    <div className='column is-10 column-content'>
+                                                                        <div className='content'>
+                                                                            <p><strong>{item.name}</strong></p>
+                                                                            <p>
+                                                                                <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
+                                                                            </p>
+                                                                            <p>
+                                                                                <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div className="column is-2 column-delete">
-                                                                    <button className="delete" onClick={event => this.removeTicket(item.id)}/>
-                                                                </div>
-                                                            </article>
-                                                        </div>
-                                                    })
-                                                }
+                                                                    <div className="column is-2 column-delete">
+                                                                        <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                                                                    </div>
+                                                                </article>
+                                                            </div>
+                                                        })
+                                                    }
+                                                </div>
+                                                <div className='is-hidden-desktop'>
+                                                    Cantidad {summaryList.map(i=>i.quantity).reduce((prev,next)=>prev+next)}
+                                                </div>
                                             </React.Fragment>
                                     }
                                 </div>
