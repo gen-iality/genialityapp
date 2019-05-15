@@ -115,18 +115,35 @@ class TicketsForm extends Component {
     onClick = () => {
         if(this.state.summaryList.length<=0) return;//Si no hay tiquetes no hace nada, prevenir click raro
         if(!this.state.auth) return this.props.handleModal(); //Si no está logueado muestro popup
-        if(this.state.step === 0) return this.setState({step:1},()=>{this.renderSeats()});
-        if(this.state.step ===1){
+        
+        let tienesilla = false;
+
+        const data = {tickets:[]};
+
+        //@TODO si no tiene sillas debe pasar derecho al checkout y si el tickete tiene silla debe ir en el tickete eso es del API y usado aca
+        //Construyo body de acuerdo a peticiones de api
+        this.state.summaryList.map(item=>{
+            
+            if (item.name != "General" ){
+                tienesilla = true;
+            }
+            data[`ticket_${item.id}`] = item.quantity;
+            return data.tickets.push(item.id)
+        });
+
+        
+        if((this.state.step === 0 && tienesilla))  {
+            return this.setState({step:1},()=>{this.renderSeats()});
+        
+        } else { //if(this.state.step ===1 )
+        
             this.setState({loading:true});
-            const data = {tickets:[]};
-            //Construyo body de acuerdo a peticiones de api
-            this.state.summaryList.map(item=>{
-                data[`ticket_${item.id}`] = item.quantity;
-                return data.tickets.push(item.id)
-            });
-            this.chart.listSelectedObjects(list=>{
-                data.seats = list;
-            });
+
+           
+                this.chart.listSelectedObjects(list=>{
+                    data.seats = list;
+                });
+            
             Actions.post(`/es/e/${this.props.eventId}/checkout`,data)
                 .then(resp=>{
                     console.log(resp);
