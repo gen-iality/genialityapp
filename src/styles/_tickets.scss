@@ -178,6 +178,9 @@ div.stage{
   }
   @media only screen and (max-width: 600px) {
 
+    .content-ticket{
+      flex-direction: column !important;
+    }
     .columns .content-tabs{
       justify-content: inherit !important;
       overflow: hidden;
