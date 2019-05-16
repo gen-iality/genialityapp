@@ -146,8 +146,12 @@ div.stage{
         position: fixed;
         width: 100%;
         left: 0;
-        top: 83%;
+        top: 80%;
         z-index: 10;
+        .card-content{
+          display: flex;
+          justify-content: center;
+        }
         .is-hidden-mobile{
           display: flex;
           .ticket{  
@@ -163,6 +167,13 @@ div.stage{
               }
             }
           }
+        }
+        .is-hidden-tablet{
+          padding: 10px;
+        }
+        .field{
+          padding: 10px;
+          margin: 0;
         }
         .card-footer-item{
           justify-content: flex-end;

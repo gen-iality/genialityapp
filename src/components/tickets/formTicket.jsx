@@ -311,14 +311,15 @@ class TicketsForm extends Component {
                                                         </p>
                                                     </div>
                                                 </div>
+                                            <div className="field">
+                                                <label className="label">Código Promocional</label>
+                                                <div className="control">
+                                                    <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
+                                                </div>
+                                            </div>
                                             </React.Fragment>
                                     }
-                                    <div className="field">
-                                        <label className="label">Código Promocional</label>
-                                        <div className="control">
-                                            <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                  <footer className="card-footer">
                                         <div className='card-footer-item'>
