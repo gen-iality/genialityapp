@@ -26,6 +26,7 @@ class TicketsForm extends Component {
             total:0
         };
         this.chart = [];
+        this.request = this.request.bind(this)
     }
 
     componentDidMount() {
@@ -146,7 +147,6 @@ class TicketsForm extends Component {
     };
 
     submit = (seats) => {
-        this.setState({loading:true});
         const data = {tickets:[]};
         //Construyo body de acuerdo a peticiones de api
         this.state.summaryList.map(item=>{
@@ -154,45 +154,38 @@ class TicketsForm extends Component {
             return data.tickets.push(item.id)
         });
         if(seats) {
+            const quantity = this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0);
             this.chart.listSelectedObjects(list => {
-                data.seats = list;
-                Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
-                    .then(resp => {
-                        console.log(resp);
-                        if (resp.status === 'success') {
-                            //Si la peteción es correcta redirijo a la url que enviaron
-                            window.location.replace(resp.redirectUrl);
-                        } else {
-                            //Muestro error parseado
-                            this.setState({loading: false});
-                            toast.error(JSON.stringify(resp));
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        this.setState({loading: false})
-                    })
+                if(quantity === list.length) {
+                    data.seats = list;
+                    this.request(data);
+                }else{
+                    toast.info(`Te quedan ${quantity-list.length} puestos por seleccionar`);
+                }
             });
         }
-        else{
-            Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
-                .then(resp => {
-                    console.log(resp);
-                    if (resp.status === 'success') {
-                        //Si la peteción es correcta redirijo a la url que enviaron
-                        window.location.replace(resp.redirectUrl);
-                    } else {
-                        //Muestro error parseado
-                        this.setState({loading: false});
-                        toast.error(JSON.stringify(resp));
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.setState({loading: false})
-                })
-        }
+        else this.request(data);
     };
+
+    async request(data){
+        this.setState({loading:true});
+        try {
+            const resp = await Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
+            console.log(resp);
+            if (resp.status === 'success') {
+                //Si la peteción es correcta redirijo a la url que enviaron
+                window.location.replace(resp.redirectUrl);
+            } else {
+                //Muestro error parseado
+                this.setState({loading: false});
+                toast.error(JSON.stringify(resp));
+            }
+        }catch (err) {
+            toast.error(JSON.stringify(err));
+            console.log(err);
+            this.setState({loading: false})
+        }
+    }
 
     handleObject = (object,flag) => {
         const listSeats = [...this.state.listSeats];
