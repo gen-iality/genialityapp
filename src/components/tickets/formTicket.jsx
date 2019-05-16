@@ -14,9 +14,11 @@ class TicketsForm extends Component {
         this.state = {
             step: 0,
             active: '',
+            code_discount: '',
             tickets: [],
             ticketstoshow: [],
             selectValues: {},
+            disabledSelect: [],
             summaryList: [],
             listSeats: [],
             ticketsadded: {},
@@ -48,12 +50,20 @@ class TicketsForm extends Component {
         const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
         const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
-        let info = localStorage.getItem('info');
+        //Persistencia de tiquetes seleccionados después de login
+        let info = localStorage.getItem('info'); //Se trae info
         if(info && evius_token){
             info = JSON.parse(info);
-            this.setState({total:info.total,summaryList:info.show})
+            const values = {};
+            info.show.map(item=>values[item.id] = item.quantity);
+            this.setState({total:info.total,summaryList:info.show,selectValues:values})
         }
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
+    }
+
+    //Al salir del landing se limpia la informacion de los tiquetes seleccionados.
+    componentWillUnmount() {
+        localStorage.removeItem('info');
     }
 
     changeStep = (step) => {
@@ -77,7 +87,8 @@ class TicketsForm extends Component {
         if(value === '0') this.removeTicket(name);
         else {
             ticketsadded[name] = value;
-            this.setState({ticketsadded}, () => {
+            const list = this.props.seatsConfig ? [...this.state.ticketstoshow].map(i=>i._id) : [];
+            this.setState({ticketsadded,disabledSelect:list.filter(i=>i!==name)}, () => {
                 this.renderSummary()
             })
         }
@@ -94,7 +105,7 @@ class TicketsForm extends Component {
         summaryList.splice(pos,1);
         delete ticketsadded[id];
         this.setState((prevState)=>{
-            return {ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'},total:prevState.total-price,step:0}
+            return {ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'},total:prevState.total-price,step:0,disabledSelect:[]}
         })
     };
 
@@ -146,6 +157,7 @@ class TicketsForm extends Component {
         if(this.state.step ===1) return this.submit(true)
     };
 
+    //Función COMPRAR, recibe sillas si tiene o no
     submit = (seats) => {
         const data = {tickets:[]};
         //Construyo body de acuerdo a peticiones de api
@@ -154,8 +166,10 @@ class TicketsForm extends Component {
             return data.tickets.push(item.id)
         });
         if(seats) {
+            //Si tiene sillas hago validaciones de cantidad de tiquetes y sillas seleccionadas
             const quantity = this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0);
             this.chart.listSelectedObjects(list => {
+                //Si las sillas son iguales a los tiquetes lo deja pasar, sino muestra toast
                 if(quantity === list.length) {
                     data.seats = list;
                     this.request(data);
@@ -167,9 +181,11 @@ class TicketsForm extends Component {
         else this.request(data);
     };
 
+    //Función que hace la petición, carga loading y muestra reusltado en log si hay error muestra en log y en un toast
     async request(data){
         this.setState({loading:true});
         try {
+            data.code_discount = this.state.code_discount;
             const resp = await Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
             console.log(resp);
             if (resp.status === 'success') {
@@ -187,6 +203,7 @@ class TicketsForm extends Component {
         }
     }
 
+    //Función para manejar si se selecciona o no alguna silla. Para mostrar o quitar del resumen
     handleObject = (object,flag) => {
         const listSeats = [...this.state.listSeats];
         if(flag)
@@ -197,7 +214,7 @@ class TicketsForm extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;        console.log(this.state.disabledSelect);
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -213,7 +230,7 @@ class TicketsForm extends Component {
                         <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
-                                    <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
+                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues} disabledSelect={disabledSelect}/> :
                                     <div>
                                         <div class="card">
                                             <header class="card-header has-text-left">
@@ -228,17 +245,18 @@ class TicketsForm extends Component {
                                             </header>
                                             <div class="card-content">
                                                 <div class="content is-center">
-                                                 <SeatsioSeatingChart
-                                                    publicKey={seatsConfig["keys"]["public"]}
-                                                    event={seatsConfig["keys"]["event"]}
-                                                    language={seatsConfig["language"]}
-                                                    maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
-                                                    availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
-                                                    showMinimap={seatsConfig["minimap"]}
-                                                    onRenderStarted={createdChart => { this.chart = createdChart }}
-                                                    onObjectSelected={object=>{this.handleObject(object,true)}}
-                                                    onObjectDeselected={object=>{this.handleObject(object,false)}}
-                                                />
+                                                    
+                                                    <SeatsioSeatingChart
+                                                        publicKey={seatsConfig["keys"]["public"]}
+                                                        event={seatsConfig["keys"]["event"]}
+                                                        language={seatsConfig["language"]}
+                                                        maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
+                                                        availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
+                                                        showMinimap={seatsConfig["minimap"]}
+                                                        onRenderStarted={createdChart => { this.chart = createdChart }}
+                                                        onObjectSelected={object=>{this.handleObject(object,true)}}
+                                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
+                                                    />
                                                 </div>
                                             </div>
                                             </div>  
@@ -295,6 +313,12 @@ class TicketsForm extends Component {
                                                 </div>
                                             </React.Fragment>
                                     }
+                                    <div className="field">
+                                        <label className="label">Código Promocional</label>
+                                        <div className="control">
+                                            <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
+                                        </div>
+                                    </div>
                                 </div>
                                  <footer className="card-footer">
                                         <div className='card-footer-item'>
@@ -318,7 +342,7 @@ class TicketsForm extends Component {
 }
 
 function ListadoTiquetes({...props}) {
-    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues} = props;
+    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
     return (
         <React.Fragment>
             <div className='columns content-tabs'>
@@ -358,7 +382,7 @@ function ListadoTiquetes({...props}) {
                                 {
                                     ticket.options.length>0&&
                                     <div className="select">
-                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
+                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]} disabled={disabledSelect.includes(ticket._id)}>
                                             <option value={0}>0</option>
                                             {
                                                 ticket.options.map(item => {

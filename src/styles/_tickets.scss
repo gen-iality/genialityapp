@@ -15,6 +15,7 @@ div.stage{
 
 .menu-steps{
   font-size: 1.2rem;
+  cursor: pointer;
   .is-active{
     color: $primary;
     text-decoration: underline;
