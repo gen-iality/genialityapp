@@ -14,6 +14,7 @@ div.stage{
 }
 
 .menu-steps{
+  cursor: pointer;
   .is-active{
     color: $primary;
     text-decoration: underline;

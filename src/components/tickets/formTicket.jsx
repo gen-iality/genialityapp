@@ -48,12 +48,20 @@ class TicketsForm extends Component {
         const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
         const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
         const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
-        let info = localStorage.getItem('info');
+        //Persistencia de tiquetes seleccionados después de login
+        let info = localStorage.getItem('info'); //Se trae info
         if(info && evius_token){
             info = JSON.parse(info);
-            this.setState({total:info.total,summaryList:info.show})
+            const values = {};
+            info.show.map(item=>values[item.id] = item.quantity);
+            this.setState({total:info.total,summaryList:info.show,selectValues:values})
         }
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
+    }
+
+    //Al salir del landing se limpia la informacion de los tiquetes seleccionados.
+    componentWillUnmount() {
+        localStorage.removeItem('info');
     }
 
     changeStep = (step) => {
@@ -146,6 +154,7 @@ class TicketsForm extends Component {
         if(this.state.step ===1) return this.submit(true)
     };
 
+    //Función COMPRAR, recibe sillas si tiene o no
     submit = (seats) => {
         const data = {tickets:[]};
         //Construyo body de acuerdo a peticiones de api
@@ -154,8 +163,10 @@ class TicketsForm extends Component {
             return data.tickets.push(item.id)
         });
         if(seats) {
+            //Si tiene sillas hago validaciones de cantidad de tiquetes y sillas seleccionadas
             const quantity = this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0);
             this.chart.listSelectedObjects(list => {
+                //Si las sillas son iguales a los tiquetes lo deja pasar, sino muestra toast
                 if(quantity === list.length) {
                     data.seats = list;
                     this.request(data);
@@ -167,6 +178,7 @@ class TicketsForm extends Component {
         else this.request(data);
     };
 
+    //Función que hace la petición, carga loading y muestra reusltado en log si hay error muestra en log y en un toast
     async request(data){
         this.setState({loading:true});
         try {
@@ -187,6 +199,7 @@ class TicketsForm extends Component {
         }
     }
 
+    //Función para manejar si se selecciona o no alguna silla. Para mostrar o quitar del resumen
     handleObject = (object,flag) => {
         const listSeats = [...this.state.listSeats];
         if(flag)
