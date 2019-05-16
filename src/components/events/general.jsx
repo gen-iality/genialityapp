@@ -451,7 +451,7 @@ class General extends Component {
         catch (error) {
             if (error.response) {
                 console.log(error.response);
-                this.setState({message:{...this.state.message,class:'msg_error',content:'Algo salió mal. Intentalo de nuevo'},isLoading:false})
+                this.setState({message:{...this.state.message,class:'msg_error',content:JSON.stringify(error.response)},isLoading:false})
             }
             else if (error.request) {
                 console.log(error.request);
