@@ -14,6 +14,7 @@ class TicketsForm extends Component {
         this.state = {
             step: 0,
             active: '',
+            code_discount: '',
             tickets: [],
             ticketstoshow: [],
             selectValues: {},
@@ -184,6 +185,7 @@ class TicketsForm extends Component {
     async request(data){
         this.setState({loading:true});
         try {
+            data.code_discount = this.state.code_discount;
             const resp = await Actions.post(`/es/e/${this.props.eventId}/checkout`, data)
             console.log(resp);
             if (resp.status === 'success') {
@@ -292,6 +294,12 @@ class TicketsForm extends Component {
                                                 </div>
                                             </React.Fragment>
                                     }
+                                    <div className="field">
+                                        <label className="label">Código Promocional</label>
+                                        <div className="control">
+                                            <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
+                                        </div>
+                                    </div>
                                 </div>
                                  <footer className="card-footer">
                                         <div className='card-footer-item'>
