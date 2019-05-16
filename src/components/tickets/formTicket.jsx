@@ -214,21 +214,39 @@ class TicketsForm extends Component {
                             {
                                 step === 0 ?
                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
-                                    <SeatsioSeatingChart
-                                        publicKey={seatsConfig["keys"]["public"]}
-                                        event={seatsConfig["keys"]["event"]}
-                                        language={seatsConfig["language"]}
-                                        maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
-                                        availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
-                                        showMinimap={seatsConfig["minimap"]}
-                                        onRenderStarted={createdChart => { this.chart = createdChart }}
-                                        onObjectSelected={object=>{this.handleObject(object,true)}}
-                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
-                                    />
+                                    <div>
+                                        <div class="card">
+                                            <header class="card-header has-text-left">
+                                                <p class="title-map has-text-primary has-text-weight-bold">
+                                                    Mapa del evento
+                                                    <p class="subtitle is-6 has-text-weight-normal">
+                                                        En el mapa del evento seleccione su ubicación para verlo reflejado
+                                                        en el resumen de compra.
+                                                    </p>
+                                                </p>
+                                                
+                                            </header>
+                                            <div class="card-content">
+                                                <div class="content is-center">
+                                                 <SeatsioSeatingChart
+                                                    publicKey={seatsConfig["keys"]["public"]}
+                                                    event={seatsConfig["keys"]["event"]}
+                                                    language={seatsConfig["language"]}
+                                                    maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
+                                                    availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
+                                                    showMinimap={seatsConfig["minimap"]}
+                                                    onRenderStarted={createdChart => { this.chart = createdChart }}
+                                                    onObjectSelected={object=>{this.handleObject(object,true)}}
+                                                    onObjectDeselected={object=>{this.handleObject(object,false)}}
+                                                />
+                                                </div>
+                                            </div>
+                                            </div>  
+                                    </div>
                             }
                         </div>
                         <div className='column is-4 resume'>
-                            <div className="card">
+                            <div className="card card-resume">
                                 <header className="card-header">
                                     <div className='title-header'>
                                         <p className="card-header-title has-text-primary has-text-weight-bold">
