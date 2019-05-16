@@ -17,6 +17,7 @@ class TicketsForm extends Component {
             tickets: [],
             ticketstoshow: [],
             selectValues: {},
+            disabledSelect: [],
             summaryList: [],
             listSeats: [],
             ticketsadded: {},
@@ -85,7 +86,8 @@ class TicketsForm extends Component {
         if(value === '0') this.removeTicket(name);
         else {
             ticketsadded[name] = value;
-            this.setState({ticketsadded}, () => {
+            const list = this.props.seatsConfig ? [...this.state.ticketstoshow].map(i=>i._id) : [];
+            this.setState({ticketsadded,disabledSelect:list.filter(i=>i!==name)}, () => {
                 this.renderSummary()
             })
         }
@@ -102,7 +104,7 @@ class TicketsForm extends Component {
         summaryList.splice(pos,1);
         delete ticketsadded[id];
         this.setState((prevState)=>{
-            return {ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'},total:prevState.total-price,step:0}
+            return {ticketsadded,summaryList,selectValues:{...this.state.selectValues,[id]:'0'},total:prevState.total-price,step:0,disabledSelect:[]}
         })
     };
 
@@ -210,7 +212,7 @@ class TicketsForm extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;
+        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;        console.log(this.state.disabledSelect);
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -226,7 +228,7 @@ class TicketsForm extends Component {
                         <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
-                                    <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues}/> :
+                                    <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues} disabledSelect={disabledSelect}/> :
                                     <SeatsioSeatingChart
                                         publicKey={seatsConfig["keys"]["public"]}
                                         event={seatsConfig["keys"]["event"]}
@@ -313,7 +315,7 @@ class TicketsForm extends Component {
 }
 
 function ListadoTiquetes({...props}) {
-    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues} = props;
+    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
     return (
         <React.Fragment>
             <div className='columns content-tabs'>
@@ -353,7 +355,7 @@ function ListadoTiquetes({...props}) {
                                 {
                                     ticket.options.length>0&&
                                     <div className="select">
-                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]}>
+                                        <select onChange={handleQuantity} name={`quantity_${ticket._id}`} value={selectValues[ticket._id]} disabled={disabledSelect.includes(ticket._id)}>
                                             <option value={0}>0</option>
                                             {
                                                 ticket.options.map(item => {
