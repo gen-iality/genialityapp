@@ -10,7 +10,6 @@ import {BaseUrl} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
-import {convertFromRaw, Editor, EditorState} from "draft-js";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 Moment.locale('es');
@@ -53,9 +52,7 @@ class Landing extends Component {
         event.date_end = dateTo[0];
         event.sessions = sessions;
         event.organizer = event.organizer ? event.organizer : event.author;
-        const editorState = typeof event.description === 'object' ? EditorState.createWithContent(convertFromRaw(event.description))
-            : EditorState.createEmpty();
-        this.setState({editorState,event,loading:false},()=>{
+        this.setState({event,loading:false},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -123,7 +120,7 @@ class Landing extends Component {
     };
 
     render() {
-        const { event, modal, editorState, modalTicket } = this.state;
+        const { event, modal, modalTicket } = this.state;
         return (
             <section className="section landing">
                 {
@@ -172,7 +169,7 @@ class Landing extends Component {
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
                                              
-                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): <Editor readOnly={true} editorState={editorState}/>  }                                 
+                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): 'json'  }
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
