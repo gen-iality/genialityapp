@@ -163,13 +163,12 @@ class Landing extends Component {
                                                     </span>
                                             </div>
                                             <div className="column is-9">
-                                                <span className="subtitle is-size-6">{event.location.FormattedAddress}</span>
+                                                <span className="subtitle is-size-6">{event.venue} {event.location.FormattedAddress}</span>
                                             </div>
                                         </div>
                                         <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
-                                             
-                                                { typeof event.description === 'string'?  (<div>{event.description}</div>): 'json'  }
+                                                { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
                                             </div>
                                         </div>
                                         <div className="ver-mas item columns">
@@ -236,51 +235,6 @@ class Landing extends Component {
                                         <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
                                     <TicketsForm stages={event.event_stages} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>
-                                    {/*<div className="columns is-centered">
-                                        <div className="column">
-                                            <div className="field">
-                                                <p className="title is-4">Fecha</p>
-                                                <p className="subtitle is-6 has-text-grey">Elija el día de su reserva</p>
-                                                <div className="control">
-                                                    <div className="control">
-                                                        <div className="select">
-                                                            <select value={stage} onChange={this.changeStage} name={'stage'}>
-                                                                <option value={''}>Seleccione...</option>
-                                                                {
-                                                                    stages.map((item,key)=>{
-                                                                        return <option key={key} value={item.stage_id}>{item.title}</option>
-                                                                    })
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="field">
-                                                <p className="title is-4">Hora</p>
-                                                <p className="subtitle is-6 has-text-grey">Elija la hora que desee</p>
-                                                <div className="control">
-                                                    <div className="control">
-                                                        <div className="select">
-                                                            <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                                                                <option value={''}>Seleccione...</option>
-                                                                {
-                                                                    ticketsOptions.map((item,key)=>{
-                                                                        return <option key={key} value={item._id}>{item.title}</option>
-                                                                    })
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>*/}
-                                    {/*<div id={'tickets'}>
-                                        {!auth && <div style={{height:heightFrame,width:'100%',position:'absolute'}} onClick={this.handleModal}/>}
-                                        <iframe title={'Tiquetes'} id={'idIframe'} src={iframeUrl} width={'100%'} height={heightFrame} onLoad={this.onLoad}/>
-                                    </div>*/}
-
                                     <div className="columns is-centered">
                                         <div className="column">
                                             <h2 className="data-title has-text-left">

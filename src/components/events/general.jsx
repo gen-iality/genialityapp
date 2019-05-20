@@ -84,14 +84,11 @@ class General extends Component {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}},this.valid)
     };
-    changeDescription = (raw) => {
-        this.setState({event:{...this.state.event,description:raw}},this.valid)
-    };
     //Validación
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && (typeof event.description === 'object') && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+            valid = (event.name.length>0 && event.venue.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         if(!event.location.FormattedAddress && !event.location.PlaceId){
             error.location = 'Fill a correct address'
         }
@@ -143,42 +140,6 @@ class General extends Component {
                     },fileMsg:'Imagen subida con exito',imageFile:null,path});
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
-            /*this.setState({imageFile: file,
-                event:{...this.state.event, picture: null}});
-            let data = new FormData();
-            const url = '/api/files/upload',
-                self = this;
-            data.append('file',this.state.imageFile);
-            Actions.post(url, data)
-                .then((image) => {
-                    self.setState({
-                        event: {
-                            ...self.state.event,
-                            picture: image
-                        },fileMsg:'Imagen subida con exito',imageFile:null
-                    });
-                    toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
-                })
-                .catch(error => {
-                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-                    if (error.response) {
-                        console.log(error.response);
-                        const {status,data} = error.response;
-                        console.log('STATUS',status,status === 401);
-                        if(status === 401) this.setState({timeout:true,loader:false});
-                        else this.setState({serverError:true,loader:false,errorData:data})
-                    } else {
-                        let errorData = error.message;
-                        console.log('Error', error.message);
-                        if(error.request) {
-                            console.log(error.request);
-                            errorData = error.request
-                        };
-                        errorData.status = 708;
-                        this.setState({serverError:true,loader:false,errorData})
-                    }
-                    console.log(error.config);
-                });*/
         }
         else{
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
@@ -389,10 +350,12 @@ class General extends Component {
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             picture: path.length > 1 ? path : event.picture,
+            venue: event.venue,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: this.editor.getContent(),
             category_ids: categories,
+            organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value,
             user_properties : [...this.state.fields, ...user_properties],
             properties_group
@@ -497,6 +460,15 @@ class General extends Component {
                                 </div>
                             </div>
                             <div className="field">
+                                <label className="label required has-text-grey-light">Lugar</label>
+                                <div className="control">
+                                    <input className="input" name={"venue"} type="text"
+                                           placeholder="Lugar del evento" value={event.venue}
+                                           onChange={this.handleChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="field">
                                 <label className="label required has-text-grey-light">Dirección</label>
                                 <div className="control">
                                     <Geosuggest
@@ -572,8 +544,6 @@ class General extends Component {
                                 <label className="label required has-text-grey-light">Descripción</label>
                                 <div className="control">
                                     <div className="editable"></div>
-                                    {/*<RichEditor content={event.description} changeDescription={this.props.changeDescription}/>*/}
-                                    <textarea className="textarea" name={"description"} placeholder="Descripción del evento" value={event.description} onChange={this.props.handleChange}/>
                                 </div>
                             </div>
                         </div>
@@ -605,25 +575,6 @@ class General extends Component {
                             <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
                         </div>
                     </div>
-                    {/*<FormEvent event={event} categories={categories} organizers={organizers} types={types} error={error} changeSuggest={this.changeSuggest}
-                               selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType} editor={this.editor}
-                               imgComp={
-                                   <div className="field picture">
-                                       <label className="label has-text-grey-light">Foto</label>
-                                       <div className="control">
-                                           <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                       divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                       classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                       contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                                       changeImg={this.changeImg} errImg={this.state.errImg}
-                                                       style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                                       </div>
-                                       {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                                   </div>
-                               }
-                               handleChange={this.handleChange} minDate={this.state.minDate} changeDescription={this.changeDescription}
-                               selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
-                               changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>*/}
                     <section className="accordions">
                         <article className={`accordion ${this.state.toggleFields ? 'is-active':''}`}>
                             <div className="accordion-header">
