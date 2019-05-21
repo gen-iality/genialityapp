@@ -440,45 +440,48 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className='filter'>
-                        <p>Filtra Usuarios por Tiquete</p>
-                        <div className="columns">
-                             <div className="column field">
-                                 <div className="control">
-                                     <label className="label">Etapa</label>
-                                     <div className="control">
-                                         <div className="select">
-                                             <select value={stage} onChange={this.changeStage} name={'stage'}>
-                                                 <option value={''}>Escoge la etapa...</option>
-                                                 {
-                                                     event_stages.map((item,key)=>{
-                                                         return <option key={key} value={item.stage_id}>{item.title}</option>
-                                                     })
-                                                 }
-                                             </select>
-                                         </div>
-                                     </div>
-                                 </div>
-                            </div>
-                             <div className="column field">
-                                 <div className="control">
-                                     <label className="label">Tiquete</label>
-                                     <div className="control">
-                                         <div className="select">
-                                             <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                                                 <option value={''}>Escoge el tiquete...</option>
-                                                 {
-                                                     ticketsOptions.map((item,key)=>{
-                                                         return <option key={key} value={item._id}>{item.title}</option>
-                                                     })
-                                                 }
-                                             </select>
-                                         </div>
-                                     </div>
-                                 </div>
+                    {
+                        (event_stages && event_stages.length > 0) &&
+                        <div className='filter'>
+                            <p>Filtra Usuarios por Tiquete</p>
+                            <div className="columns">
+                                <div className="column field">
+                                    <div className="control">
+                                        <label className="label">Etapa</label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                    <option value={''}>Escoge la etapa...</option>
+                                                    {
+                                                        event_stages.map((item,key)=>{
+                                                            return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="column field">
+                                    <div className="control">
+                                        <label className="label">Tiquete</label>
+                                        <div className="control">
+                                            <div className="select">
+                                                <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                    <option value={''}>Escoge el tiquete...</option>
+                                                    {
+                                                        ticketsOptions.map((item,key)=>{
+                                                            return <option key={key} value={item._id}>{item.title}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
