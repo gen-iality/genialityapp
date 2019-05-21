@@ -129,7 +129,7 @@ div.stage{
   margin: 10px;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1023px) {
 
   .columns .menu-steps{
     flex-direction: row !important;
@@ -157,7 +157,8 @@ div.stage{
         position: fixed;
         width: 100%;
         left: 0;
-        top: 80%;
+        bottom: 0;
+        top: auto;
         z-index: 10;
         .card-content{
           display: flex;
@@ -230,7 +231,7 @@ div.stage{
         margin: 10px 1px;
       }
       .button{
-        font-size: 0.7rem;
+        font-size: 1rem;
       }
     }
     .media{

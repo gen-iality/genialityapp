@@ -386,13 +386,13 @@ class ListEventUser extends Component {
                                 {
                                     total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
-                            </div>
+                            </div>  
                         </div>
                         <div className="column">
-                            <div className="columns is-mobile is-multiline is-centered">
+                            <div className="columns is-mobile is-centered">
                                 {
                                     userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered">
+                                        <div className="column is-narrow has-text-centered export">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -440,7 +440,7 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className='checkin-header'>
+                    <div className='filter'>
                         <p>Filtra Usuarios por Tiquete</p>
                         <div className="columns">
                              <div className="column field">
