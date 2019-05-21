@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
+import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
 import { toast } from 'react-toastify';
@@ -44,6 +45,7 @@ class ListEventUser extends Component {
             serverError: false,
             stage: '',
             ticket: '',
+            tabActive: 'camera',
             ticketsOptions: []
         };
     }
@@ -259,9 +261,44 @@ class ListEventUser extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:''});
         html.classList.remove('is-clipped');
-    }
+    };
+    searchCC = () => {
+        console.log('searching');
+        const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        let value = this.state.newCC;
+        let user = {};
+        usersRef.where('_id','==',`${value}`)
+            .get()
+            .then((querySnapshot)=> {
+                const qrData = {};
+                if(querySnapshot.empty){
+                    qrData.msg = 'User not found';
+                    qrData.another = true;
+                    qrData.user = null;
+                    this.setState({qrData})
+                }
+                else{
+                    querySnapshot.forEach((doc)=> {
+                        console.log(doc.id, " => ", doc.data());
+                        qrData.msg = 'User found';
+                        qrData.user = doc.data();
+                        qrData.another = !!qrData.user.checked_in;
+                        console.log(qrData);
+                        this.setState({qrData});
+                    });
+                }
+            })
+            .catch(error => {
+                this.setState({found:0})
+                console.log("Error getting documents: ", error);
+            });
+    };
+    changeCC = (e) => {
+        const {value} = e.target;
+        this.setState({newCC:value})
+    };
 
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
@@ -377,6 +414,7 @@ class ListEventUser extends Component {
             </div>
         </div>,disabled: 'yes'}
           ]
+        console.log(this.state.users);
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -534,7 +572,7 @@ class ListEventUser extends Component {
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
-                            <p className="modal-card-title">QR Reader</p>
+                            <p className="modal-card-title">Lector QR</p>
                             <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
@@ -549,26 +587,59 @@ class ListEventUser extends Component {
                                             return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
                                     </div>:
                                     <React.Fragment>
-                                        <div className="field">
-                                            <div className="control has-icons-left">
-                                                <div className="select">
-                                                    <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
-                                                        <option value="user">Selfie</option>
-                                                        <option value="environment">Rear</option>
-                                                    </select>
-                                                </div>
-                                                <div className="icon is-small is-left"><FaCamera/></div>
-                                            </div>
+                                        <div className="tabs is-centered">
+                                            <ul>
+                                                <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
+                                                    onClick={e=>this.setState({tabActive:'camera'})}>
+                                                    <a>
+                                                        <div className="icon is-medium"><IoIosCamera/></div>
+                                                        <span>Cámara</span>
+                                                    </a>
+                                                </li>
+                                                <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
+                                                    onClick={e=>this.setState({tabActive:'qr'})}>
+                                                    <a>
+                                                        <div className="icon is-medium"><IoIosQrScanner/></div>
+                                                        <span>Pistola</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div className="columns is-mobile">
-                                            <QrReader
-                                                delay={500}
-                                                facingMode={facingMode}
-                                                onError={this.handleError}
-                                                onScan={this.handleScan}
-                                                style={{ width: "60%" }}
-                                                className={"column is-half is-offset-one-quarter"}
-                                            />
+                                        <div>
+                                            {this.state.tabActive === 'camera' ?
+                                                <React.Fragment>
+                                                    <div className="field">
+                                                        <div className="control has-icons-left">
+                                                            <div className="select">
+                                                                <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                                    <option value="user">Selfie</option>
+                                                                    <option value="environment">Rear</option>
+                                                                </select>
+                                                            </div>
+                                                            <div className="icon is-small is-left"><FaCamera/></div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="columns is-mobile">
+                                                        <QrReader
+                                                            delay={500}
+                                                            facingMode={facingMode}
+                                                            onError={this.handleError}
+                                                            onScan={this.handleScan}
+                                                            style={{ width: "60%" }}
+                                                            className={"column is-half is-offset-one-quarter"}
+                                                        />
+                                                    </div>
+                                                </React.Fragment>:
+                                                <React.Fragment>
+                                                    <div className="field">
+                                                        <div className="control">
+                                                            <label className={`label has-text-grey-light is-capitalized required`}>Cédula</label>
+                                                            <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
+                                                        </div>
+                                                    </div>
+                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                                </React.Fragment>
+                                            }
                                         </div>
                                     </React.Fragment>
                             }
