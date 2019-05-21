@@ -33,15 +33,22 @@ class UserModal extends Component {
         const self = this;
         const {states} = this.props;
         self.setState({ statesList: states, state: states[1].value });
+        let user = {};
         if (this.props.edit) {
             const {value} = this.props;
-            let user = {};
             Object.keys(value.properties)
                 .map((obj) => {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
             this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+        }else{
+            this.props.extraFields
+                .map((obj) => {
+                    user[obj.name] = obj.type === "boolean" ? false : obj.type === "number" ? 0 : "";
+                    return user
+                });
+            this.setState({found:1,user,edit:false});
         }
     }
 
@@ -365,7 +372,7 @@ class UserModal extends Component {
                             <button className="delete is-large" aria-label="close" onClick={this.props.handleModal}/>
                         </header>
                         <section className="modal-card-body">
-                            {
+                            {/*
                                 (!edit && found===2) ?
                                     <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
                                     (!edit && found===1) ?
@@ -384,6 +391,9 @@ class UserModal extends Component {
                             }
                             {
                                 Object.keys(user).length > 0 && this.renderForm()
+                            */}
+                            {
+                                this.renderForm()
                             }
                             {
                                 checked_in && (
