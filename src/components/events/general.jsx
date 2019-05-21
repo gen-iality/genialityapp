@@ -58,7 +58,7 @@ class General extends Component {
             });
             const {fields,groups} = parseProperties(event);
             this.editor = new MediumEditor(".editable");
-            if (event.description.length > 0) this.editor.setContent(event.description);
+            if (event.description && event.description.length > 0) this.editor.setContent(event.description);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups})
         }
@@ -72,7 +72,7 @@ class General extends Component {
             } else {
                 console.log('Error', error.message);
                 if(error.request) console.log(error.request);
-                this.setState({serverError:true,loader:false})
+                this.setState({serverError:true,loader:false,errorData:{status:400,message:JSON.stringify(error)}})
             }
             console.log(error.config);
         }
@@ -445,6 +445,7 @@ class General extends Component {
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue, newField, groups, listValue,
             valid, timeout, error , errorData, serverError} = this.state;
+        console.log(errorData);
         return (
             <React.Fragment>
                 <div className="event-general">
