@@ -420,10 +420,11 @@ class ListEventUser extends Component {
                 <div className="checkin">
                     <div className="columns checkin-header">
                         <div className="column">
-                            <div>
+                            <div className="search">
                                 {
                                     total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
+                                
                             </div>  
                         </div>
                         <div className="column">
@@ -435,16 +436,26 @@ class ListEventUser extends Component {
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
                                                 </span>
-                                                <span>Exportar</span>
+                                                <span className="text-button">Exportar</span>
                                             </button>
                                         </div>
                                     )
                                 }
                                 <div className="column is-narrow has-text-centered">
-                                    <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
+                                    <button className="button is-inverted" onClick={this.checkModal}>
+                                        <span className="icon">
+                                            <i class="fas fa-qrcode"></i>
+                                        </span>
+                                        <span className="text-button">Leer Código QR</span>
+                                    </button>
                                 </div>
                                 <div className="column is-narrow has-text-centered">
-                                    <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
+                                    <button className="button is-primary" onClick={this.addUser}>
+                                        <span className="icon">
+                                            <i class="fas fa-user-plus"></i>
+                                        </span>
+                                        <span className="text-button">Agregar Usuario</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -480,7 +491,15 @@ class ListEventUser extends Component {
                     </div>
                     {
                         (event_stages && event_stages.length > 0) &&
-                        <div className='filter'>
+                        
+                    <div className='filter'>
+                        <button className="button icon-filter">
+                            <span className="icon">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                            <span className="text-button">Filtrar</span>
+                        </button>
+                        <div className='filter-menu'>
                             <p>Filtra Usuarios por Tiquete</p>
                             <div className="columns">
                                 <div className="column field">
@@ -519,6 +538,7 @@ class ListEventUser extends Component {
                                 </div>
                             </div>
                         </div>
+                    </div>
                     }
                     <div className="columns checkin-table">
                         <div className="column">
