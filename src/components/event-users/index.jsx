@@ -493,9 +493,12 @@ class ListEventUser extends Component {
                         (event_stages && event_stages.length > 0) &&
                         
                     <div className='filter'>
-                        <span className="icon icon-filter is-hidden-desktop">
-                                    <i class="fas fa-filter"></i>
-                        </span>
+                        <button className="button icon-filter">
+                            <span className="icon">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                            <span className="text-button">Filtrar</span>
+                        </button>
                         <div className='filter-menu'>
                             <p>Filtra Usuarios por Tiquete</p>
                             <div className="columns">

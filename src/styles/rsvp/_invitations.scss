@@ -94,12 +94,7 @@
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
-
-  .icon-filter{
-    display: flex;
-    font-size: large;
-    margin-left: 2px;
-  }
+  
   .field{
     width: 100%;
   }
@@ -129,7 +124,7 @@
     padding-right: 0.55em;
     border-radius: 10px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: fit-content;
     font-size: smaller;
   }
