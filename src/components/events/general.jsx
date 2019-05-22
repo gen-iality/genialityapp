@@ -1,8 +1,9 @@
+/*global google*/
 import React, {Component} from 'react';
 import Moment from "moment"
+import MediumEditor from 'medium-editor'
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
-import FormEvent from "../shared/formEvent";
 import {BaseUrl,typeInputs} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +14,9 @@ import {FormattedMessage} from "react-intl";
 import CreatableSelect from 'react-select/lib/Creatable';
 import LogOut from "../shared/logOut";
 import axios from "axios/index"
+import Geosuggest from "react-geosuggest";
+import {DateTimePicker} from "react-widgets";
+import SelectInput from "../shared/selectInput";
 Moment.locale('es');
 
 class General extends Component {
@@ -37,12 +41,12 @@ class General extends Component {
             toggleFields: true,
             serverError: false
         };
+        this.editor = {};
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount(){
-        console.log(this.props);
         try{
             const {event} = this.state;
             event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
@@ -53,6 +57,8 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {fields,groups} = parseProperties(event);
+            this.editor = new MediumEditor(".editable");
+            if (event.description && event.description.length > 0) this.editor.setContent(event.description);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups})
         }
@@ -66,7 +72,7 @@ class General extends Component {
             } else {
                 console.log('Error', error.message);
                 if(error.request) console.log(error.request);
-                this.setState({serverError:true,loader:false})
+                this.setState({serverError:true,loader:false,errorData:{status:400,message:JSON.stringify(error)}})
             }
             console.log(error.config);
         }
@@ -78,14 +84,11 @@ class General extends Component {
         const {name, value} = e.target;
         this.setState({event:{...this.state.event,[name]:value}},this.valid)
     };
-    changeDescription = (raw) => {
-        this.setState({event:{...this.state.event,description:raw}},this.valid)
-    };
     //Validación
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && (typeof event.description === 'object') && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+            valid = (event.name.length>0 && event.venue.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         if(!event.location.FormattedAddress && !event.location.PlaceId){
             error.location = 'Fill a correct address'
         }
@@ -137,42 +140,6 @@ class General extends Component {
                     },fileMsg:'Imagen subida con exito',imageFile:null,path});
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
-            /*this.setState({imageFile: file,
-                event:{...this.state.event, picture: null}});
-            let data = new FormData();
-            const url = '/api/files/upload',
-                self = this;
-            data.append('file',this.state.imageFile);
-            Actions.post(url, data)
-                .then((image) => {
-                    self.setState({
-                        event: {
-                            ...self.state.event,
-                            picture: image
-                        },fileMsg:'Imagen subida con exito',imageFile:null
-                    });
-                    toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
-                })
-                .catch(error => {
-                    toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-                    if (error.response) {
-                        console.log(error.response);
-                        const {status,data} = error.response;
-                        console.log('STATUS',status,status === 401);
-                        if(status === 401) this.setState({timeout:true,loader:false});
-                        else this.setState({serverError:true,loader:false,errorData:data})
-                    } else {
-                        let errorData = error.message;
-                        console.log('Error', error.message);
-                        if(error.request) {
-                            console.log(error.request);
-                            errorData = error.request
-                        };
-                        errorData.status = 708;
-                        this.setState({serverError:true,loader:false,errorData})
-                    }
-                    console.log(error.config);
-                });*/
         }
         else{
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
@@ -383,9 +350,10 @@ class General extends Component {
             datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             picture: path.length > 1 ? path : event.picture,
+            venue: event.venue,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: event.description,
+            description: this.editor.getContent(),
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value,
@@ -451,7 +419,7 @@ class General extends Component {
         catch (error) {
             if (error.response) {
                 console.log(error.response);
-                this.setState({message:{...this.state.message,class:'msg_error',content:'Algo salió mal. Intentalo de nuevo'},isLoading:false})
+                this.setState({message:{...this.state.message,class:'msg_error',content:JSON.stringify(error.response)},isLoading:false})
             }
             else if (error.request) {
                 console.log(error.request);
@@ -477,28 +445,137 @@ class General extends Component {
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue, newField, groups, listValue,
             valid, timeout, error , errorData, serverError} = this.state;
+        console.log(errorData);
         return (
             <React.Fragment>
                 <div className="event-general">
-                    <FormEvent event={event} categories={categories} organizers={organizers} types={types} error={error} changeSuggest={this.changeSuggest}
-                               selectedCategories={selectedCategories} selectedOrganizer={selectedOrganizer} selectedType={selectedType}
-                               imgComp={
-                                   <div className="field picture">
-                                       <label className="label has-text-grey-light">Foto</label>
-                                       <div className="control">
-                                           <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                       divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                       classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                       contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                                       changeImg={this.changeImg} errImg={this.state.errImg}
-                                                       style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                                       </div>
-                                       {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                                   </div>
-                               }
-                               handleChange={this.handleChange} minDate={this.state.minDate} changeDescription={this.changeDescription}
-                               selectCategory={this.selectCategory} selectOrganizer={this.selectOrganizer} selectType={this.selectType}
-                               changeDate={this.changeDate} onSuggestSelect={this.onSuggestSelect}/>
+                    <div className="columns">
+                        <div className="column">
+                            <div className="field">
+                                <label className="label required has-text-grey-light">Nombre</label>
+                                <div className="control">
+                                    <input className="input" name={"name"} type="text"
+                                           placeholder="Nombre del evento" value={event.name}
+                                           onChange={this.handleChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label required has-text-grey-light">Lugar</label>
+                                <div className="control">
+                                    <input className="input" name={"venue"} type="text"
+                                           placeholder="Lugar del evento" value={event.venue}
+                                           onChange={this.handleChange}
+                                    />
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label required has-text-grey-light">Dirección</label>
+                                <div className="control">
+                                    <Geosuggest
+                                        placeholder={'Ubicación del evento'}
+                                        onKeyDown={this.changeSuggest}
+                                        onSuggestSelect={this.onSuggestSelect}
+                                        initialValue={event.location.FormattedAddress}
+                                        location={new google.maps.LatLng(event.location.Latitude,event.location.Longitude)}
+                                        radius="20"/>
+                                </div>
+                                {error.location && <p className="help is-danger">{error.location}</p>}
+                            </div>
+                            <div className="field">
+                                <div className="columns is-mobile">
+                                    <div className="column inner-column">
+                                        <div className="field">
+                                            <label className="label required has-text-grey-light">Fecha Inicio</label>
+                                            <div className="control">
+                                                <DateTimePicker
+                                                    value={event.date_start}
+                                                    format={'DD/MM/YYYY'}
+                                                    time={false}
+                                                    onChange={value => this.changeDate(value,"date_start")}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="vertical-line"></div>
+                                    <div className="column inner-column">
+                                        <div className="field">
+                                            <label className="label required has-text-grey-light">Hora Inicio</label>
+                                            <div className="control">
+                                                <DateTimePicker
+                                                    value={event.hour_start}
+                                                    step={60}
+                                                    date={false}
+                                                    onChange={value => this.changeDate(value,"hour_start")}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <div className="columns is-mobile">
+                                    <div className="column inner-column">
+                                        <div className="field">
+                                            <label className="label required has-text-grey-light">Fecha Fin</label>
+                                            <div className="control">
+                                                <DateTimePicker
+                                                    value={event.date_end}
+                                                    min={this.minDate}
+                                                    format={'DD/MM/YYYY'}
+                                                    time={false}
+                                                    onChange={value => this.changeDate(value,"date_end")}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="vertical-line"></div>
+                                    <div className="column inner-column">
+                                        <div className="field">
+                                            <label className="label required has-text-grey-light">Hora Fin</label>
+                                            <div className="control">
+                                                <DateTimePicker
+                                                    value={event.hour_end}
+                                                    step={60}
+                                                    date={false}
+                                                    onChange={value => this.changeDate(value,"hour_end")}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label required has-text-grey-light">Descripción</label>
+                                <div className="control">
+                                    <div className="editable"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="column">
+                            <div className="field picture">
+                                <label className="label has-text-grey-light">Foto</label>
+                                <div className="control">
+                                    <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                                divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
+                                                classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
+                                                changeImg={this.changeImg} errImg={this.state.errImg}
+                                                style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                                </div>
+                                {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                            </div>
+                            <div className="field">
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={event.visibility} onChange={this.handleChange} name={'visibility'}>
+                                            <option value={'PUBLIC'}>Crear un evento público</option>
+                                            <option value={'ORGANIZATION'}>Crear un evento privado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer} options={organizers} required={true}/>
+                            <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.selectType} options={types} required={true}/>
+                            <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
+                        </div>
+                    </div>
                     <section className="accordions">
                         <article className={`accordion ${this.state.toggleFields ? 'is-active':''}`}>
                             <div className="accordion-header">
@@ -887,5 +964,86 @@ function toCapitalizeLower(str){
     });
     return [init,...end].join('')
 }
+
+/**
+ * CustomHtml
+ * Creates a new instance of CustomHtml extension.
+ *
+ * Licensed under the MIT license.
+ * Copyright (c) 2014 jillix
+ *
+ * @name CustomHtml
+ * @function
+ * @param {Object} options An object containing the extension configuration. The
+ * following fields should be provided:
+ *  - buttonText: the text of the button (default: `</>`)
+ *  - htmlToInsert: the HTML code that should be inserted
+ */
+function CustomHtml (options) {
+    this.button = document.createElement('button');
+    this.button.className = 'medium-editor-action';
+    this.button.innerText = options.buttonText || "</>";
+    this.button.onclick = this.onClick.bind(this);
+    this.options = options;
+    this.insertHtmlAtCaret = function (html) {
+        var sel, range;
+        if (window.getSelection) {
+            // IE9 and non-IE
+            sel = window.getSelection();
+            if (sel.getRangeAt && sel.rangeCount) {
+                range = sel.getRangeAt(0);
+                range.deleteContents();
+
+                // Range.createContextualFragment() would be useful here but is
+                // only relatively recently standardized and is not supported in
+                // some browsers (IE9, for one)
+                var el = document.createElement("div");
+                el.innerHTML = html;
+                var frag = document.createDocumentFragment(), node, lastNode;
+                while ( (node = el.firstChild) ) {
+                    lastNode = frag.appendChild(node);
+                }
+                range.insertNode(frag);
+
+                // Preserve the selection
+                if (lastNode) {
+                    range = range.cloneRange();
+                    range.setStartAfter(lastNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+            }
+        } else if (document.selection && document.selection.type != "Control") {
+            // IE < 9
+            document.selection.createRange().pasteHTML(html);
+        }
+    }
+}
+
+/**
+ * onClick
+ * The click event handler that calls `insertHtmlAtCaret` method.
+ *
+ * @name onClick
+ * @function
+ */
+CustomHtml.prototype.onClick = function() {
+    this.insertHtmlAtCaret(this.options.htmlToInsert);
+};
+
+/**
+ * getButton
+ * This function is called by the Medium Editor and returns the button that is
+ * added in the toolbar
+ *
+ * @name getButton
+ * @function
+ * @return {HTMLButtonElement} The button that is attached in the Medium Editor
+ * toolbar
+ */
+CustomHtml.prototype.getButton = function() {
+    return this.button;
+};
 
 export default General;

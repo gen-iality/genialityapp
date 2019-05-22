@@ -37,8 +37,13 @@ section.home{
   width: 100%;
 }
 
+
+
 @media only screen and (max-width: $breakpoint-mobile) {
   .main {
     padding-top: 3em;
+  }
+  .media{
+    flex-direction: row;
   }
 }

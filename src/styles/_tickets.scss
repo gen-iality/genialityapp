@@ -13,12 +13,21 @@ div.stage{
   border-radius: 0;
 }
 
+.menu-steps{
+  font-size: 1.2rem;
+  cursor: pointer;
+  .is-active{
+    color: $primary;
+    text-decoration: underline;
+  }
+}
+
 .content-tabs{
   width: fit-content;
   box-shadow: none;
   .tab{
     height: fit-content;
-    padding: 10.500px 18px;
+    padding: 3px 18px;
     border-radius: 0;
   }
   p{
@@ -37,7 +46,6 @@ div.stage{
     padding: 12px;
   }
 }
-
 .price{
   font-size: 1.2rem;
   padding-right: 16px;
@@ -46,4 +54,198 @@ div.stage{
 .separador{
   height: 1px;
   margin: 1px 0;
+}
+
+.box-ticket{
+  border-radius: 0;
+}
+
+.card-resume{
+  position: sticky;
+  top: 17%;
+}
+
+.card-content{
+  height: auto !important;
+  .ticket{
+    padding: 0px;
+    border-top: 1px solid #dbdbdb;
+    box-shadow: none;
+    height: 100%;
+    .column-content p{
+      margin-bottom: 0;
+    }
+    .column-delete{
+      text-align: center;
+    }
+  }
+  .no-tickets{
+    color: grey;
+    height: 100%;
+    padding: 10px;
+    width: 100%;
+  }
+}
+.card-footer-item{
+  flex-direction: column;
+  .Subtotal{
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 10px;
+  }
+}
+.is-hidden-mobile{
+  box-shadow: 0 1px 2px rgba(10, 10, 10, 0.1);
+}
+.title-map {
+  font-size: large;
+  padding: 15px;
+}
+.card-header-title{
+  justify-content: center;
+  font-size: large;
+}
+
+.title-header{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  .icon{
+    margin: 0 10px;
+  }
+}
+
+.field{
+  margin-top: 11px;
+}
+
+.field .control{
+  margin: 1em;
+}
+
+.quantity{
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 10px;
+}
+
+@media only screen and (max-width: 1023px) {
+
+  .columns .menu-steps{
+    flex-direction: row !important;
+  }
+
+  .column .tickets-content{
+    width: 100%;
+  }
+  .columns .content-tabs{
+    width: 100%;
+    .date-media{
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  .columns .tickets-frame{
+    flex-direction: column !important;
+    width: 100%;
+    .resume{
+      width: 100%;
+    }
+      .card-resume{
+        display: flex;
+        flex-direction: row;
+        position: fixed;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        z-index: 10;
+        .card-content{
+          display: flex;
+          justify-content: center;
+        }
+        .is-hidden-mobile{
+          display: flex;
+          width: 100%;
+          .ticket{  
+            flex: 1 1 auto;
+            padding: 2px;
+            border-left: 1px solid #dbdbdb;
+            border-right: 1px solid #dbdbdb;
+            .media{
+              flex-direction: row;
+              .column-delete{
+                flex:none;
+                width: 16%;
+              }
+            }
+          }
+        }
+        .is-hidden-tablet{
+          padding: 10px;
+        }
+        .field{
+          padding: 10px;
+          margin: 0;
+        }
+        .card-footer-item{
+          justify-content: flex-end;
+          padding: 0;
+          .Subtotal{
+            margin: 2px;
+          }
+          .Button-reserva{
+            margin: 5px;
+          }
+        }
+      }
+      .title-header{
+        .icon{
+          margin: 0 10px;
+        }
+        .ticket-resume-title{
+          display: none;
+        }
+      }
+  }
+  @media only screen and (max-width: 600px) {
+
+    .content-ticket{
+      flex-direction: column !important;
+    }
+    .columns .content-tabs{
+      justify-content: inherit !important;
+      overflow: hidden;
+    }
+    .card-header-title{
+      padding: 0;
+    }
+    .title-header{
+      .icon{
+        margin: 0 !important;
+      }
+    }
+    .card-footer-item{
+      .Subtotal{
+        font-size: 1rem;
+        margin: 10px 1px;
+      }
+      .button{
+        font-size: 1rem;
+      }
+    }
+    .media{
+      flex-direction: column;
+      .media-content{
+        .title{
+          font-size: 1.2rem;
+        }
+      }
+      .media-right{
+        margin: 1.5rem 0;
+        width: 100%;
+        text-align: end;
+      }
+    }
+  }
 }

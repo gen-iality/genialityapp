@@ -32,6 +32,9 @@
   .checkin-header {
     width: 100%;
   }
+  .filter{
+    width: 100%;
+  }
   .checkin-tags-wrapper {
     width: 100%;
     .checkin-tags {
@@ -83,10 +86,26 @@
     }
   }
 }
-
-
+ .column{
+   padding: 0rem 0.75rem;
+ }
+.icon-filter{
+  display: none;
+}
 
 @media only screen and (max-width: $breakpoint-mobile) {
+  
+  .field{
+    width: 100%;
+  }
+  .search{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .table td{
+    padding: 0;
+  }
   .pagination.is-centered .pagination-previous {
     -ms-flex-order: 1;
     order: 1;
@@ -99,26 +118,49 @@
     -ms-flex-order: 2;
     order: 2;
   }
+  
+  .button{
+    padding-left: 0.55em;
+    padding-right: 0.55em;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    font-size: smaller;
+  }
   .checkin {
+    padding: 0;
     .checkin-tags-wrapper {
       order: 1;
       width: 100%;
-      .checkin-tags {
-        // justify-content: center;
-      }
     }
     .checkin-header {
       order: 2;
       width: 100%;
+      display: flex;
+      flex-direction: column-reverse;
     }
-    .checkin-table {
+    .filter{
       order: 3;
       width: 100%;
     }
-    .checkin-warning {
+    .checkin-table {
       order: 4;
       width: 100%;
     }
+    .checkin-warning {
+      order: 5;
+      width: 100%;
+    }
+  }
+  .filter-menu{
+    display: none;
+  }
+  .icon-filter:hover~.filter-menu{
+    display: block;
+  }
+  .filter-menu:hover{
+    display: block;
   }
 }
 

@@ -14,7 +14,7 @@
     .icon {
       margin-left: 0.5em;
       i {
-        border: solid black;
+        border: solid black; 
         border-width: 0 2px 2px 0;
         display: inline-block;
         padding: 3px;
@@ -44,7 +44,7 @@
 
 .event-aside {
   height: auto;
-  margin: 3.5rem 0;
+  margin: 5.5rem 0;
   padding: 1.25rem 2rem !important;
   .subtitle {
     display: inline-flex;
@@ -54,6 +54,8 @@
       margin-left: 0.5em;
     }
   }
+
+
   .menu-label{
     cursor: pointer;
     display: inline-flex;
@@ -105,6 +107,48 @@
   .active {
     color: $primary !important;
   }
+}
+.dropdown-content{
+  font-weight: 700;
+  padding: 1rem;
+  .menu-label{
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1em;
+    letter-spacing: .1px;
+    text-transform: none;
+    width: 100%;
+  }
+  a{
+    color: #7a7a7a;
+    padding-left: 1em;
+    .item{
+      .active{
+        border-left: 2px solid #00f0be;
+        color: #00f0be;
+        padding-left: calc(1em - 2px);
+      }
+    }
+  }
+  ul{
+    .item{
+      color: #b5b5b5;
+      margin: .75rem .75rem .75rem 1rem;
+      padding: 0 0 0 1rem;
+      .active{
+        border-left: 2px solid #00f0be;
+        color: #00f0be;
+        padding-left: calc(1em - 2px);
+      }
+    }
+  }
+}
+.icon-menu{
+  margin-left: 40px;
+}
+.is-hidden-mobile{
+  box-shadow: none;
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {

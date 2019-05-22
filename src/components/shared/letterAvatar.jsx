@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 export default function LetterAvatar(props){
     let {name,size} = props;
@@ -10,12 +10,12 @@ export default function LetterAvatar(props){
         ],
         nameSplit = String(name).toUpperCase().split(' '),
         initials, charIndex, colourIndex, canvas, context, dataURI;
-    if (nameSplit.length == 1) {
+    if (nameSplit.length === 1) {
         initials = nameSplit[0] ? nameSplit[0].charAt(0):'?';
     } else {
         initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
     }
-    charIndex     = (initials == '?' ? 72 : initials.charCodeAt(0)) - 64;
+    charIndex     = (initials === '?' ? 72 : initials.charCodeAt(0)) - 64;
     colourIndex   = charIndex % 20;
     canvas        = document.createElement('canvas');
     canvas.width  = size;

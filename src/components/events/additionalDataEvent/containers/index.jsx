@@ -36,15 +36,14 @@ class AdditonalDataEvent extends Component{
 
     //filtra por el dia seleccionado segun el tab
     filterByDays(array,key){
-        if(!key)
-        var key = array[0]['date']    
-        let sessions = array.filter((element)=> element.date == key)
+        if(!key) key = array[0]['date'];
+        let sessions = array.filter((element)=> element.date === key);
         this.setState({filteredSessions: this.OrderByTime(sessions, 'timeStart') })
     }
 
     //Prepara los headers de los tabs agrupandolos y agregandole la etiqueta de label para que la fecha sea mas legible
     getHeadersTabs(array){
-       let indexes = array.map((item)=>  array.findIndex((elemento)=> elemento.date == item.date))
+       let indexes = array.map((item)=>  array.findIndex((elemento)=> elemento.date === item.date))
        let indexesGroup = indexes.filter((item, index, array) => array.indexOf(item) === index)
        let group = indexesGroup.map((index)=>  this.addLabelHeadertab(array[index]))
        this.setState({headersTable : group})
@@ -70,13 +69,6 @@ class AdditonalDataEvent extends Component{
     }
 
     render() {
-        const settings = {
-          dots: true,
-          infinite: true,
-          speed: 500,
-          slidesToShow: 1,
-          slidesToScroll: 1
-        };
         return (
             <React.Fragment>
                 <ListSpeakers speakers = {this.props.eventInfo.speaker} /> 

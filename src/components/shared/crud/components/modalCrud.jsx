@@ -106,7 +106,6 @@ class ModalCrud extends Component {
        
         let formUI = this.state.modalFields.map((data, key) => {
             let type = data.type || "text";
-            let props = data.props || {};
             let name= data.name;
             let label = data.label;
             let mandatory = data.mandatory;
@@ -122,7 +121,7 @@ class ModalCrud extends Component {
             //                     value={value || ''}
             //                     onChange={value => this.handleChange(value, type)}
             // />;
-            if (type == "boolean") {
+            if (type === "boolean") {
                 input =
                     <React.Fragment>
                         <input
@@ -135,7 +134,7 @@ class ModalCrud extends Component {
                         <label className={`label has-text-grey-light is-capitalized ${mandatory?'required':''}`} htmlFor={name}>{name}</label>
                     </React.Fragment>
             }
-            if (type == "date") {
+            if (type === "date") {
                 input =
                     <React.Fragment>
                         <input
@@ -148,7 +147,7 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />        
                     </React.Fragment>
             }
-            if (type == "time") {
+            if (type === "time") {
                 input =
                     <React.Fragment>
                         <input
@@ -160,7 +159,7 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "text") {
+            if (type === "text") {
                 input =
                     <React.Fragment>
                         <input
@@ -172,8 +171,7 @@ class ModalCrud extends Component {
                             onChange={(e)=>{this.handleChange(e, type)}} />
                     </React.Fragment>
             }
-            if (type == "htmlEditor") {
-                const { editorState } = this.state;
+            if (type === "htmlEditor") {
                input = <EditorHtml name= {name} value={value || ''} dataEditor={this.state.newInfo[name]}  handleChangeHtmlEditor = {this.handleChangeHtmlEditor}/>
             //    <Editor
             //    ref={this.refsEditor}
@@ -237,7 +235,7 @@ class ModalCrud extends Component {
     changeImg = (files) => {
       
         const file = files[0];
-        const url = '/api/files/upload', path = [], self = this;
+        const url = '/api/files/upload', path = [];
         if(file){
             this.setState({imageFile: file, picture: null});
             const uploaders = files.map(file => {
@@ -261,8 +259,6 @@ class ModalCrud extends Component {
     };
 
     render(){
-       
-        const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         return(
             <React.Fragment>
                 <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
@@ -319,7 +315,5 @@ class ModalCrud extends Component {
         )
     }
 }
-
-
 
 export default ModalCrud;

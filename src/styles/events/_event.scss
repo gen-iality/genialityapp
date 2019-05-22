@@ -1,7 +1,24 @@
+
+ .name-event{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin: 5px 22px;
+  .subtitle{
+    display: inline-flex;
+    align-items: center;
+    word-break: normal;
+  }
+  .title{
+    display: inline-flex;
+    align-items: center;
+    word-break: normal;
+  }
+}
 .event-main {
   padding: 0;
   .event-wrapper {
-    margin: 3.5rem 0;
+    margin: 5.5rem 0;
     padding: 0;
     .event-general {
       padding: 0.5rem 2.25rem;
@@ -172,6 +189,11 @@
 @media only screen and (max-width: $breakpoint-mobile) {
   .event-vertical-line {
     display: none;
+  }
+  .name-event{
+    .title{
+      font-size: 1.30rem;
+    }
   }
   .event-inv-send {
     .big-col {

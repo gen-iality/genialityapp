@@ -23,6 +23,7 @@ import FormNetwork from "../shared/networkForm";
 import {FormattedMessage} from "react-intl";
 import {ApiUrl} from "../../helpers/constants";
 import * as Cookie from "js-cookie";
+import ErrorServe from "../modal/serverError";
 
 class Index extends Component {
     constructor(props) {
@@ -59,7 +60,7 @@ class Index extends Component {
             this.setState({loading:false,user,events,categories,valid:false},this.handleScroll);
         }catch (e) {
             console.log(e.response);
-            this.setState({timeout:true,loading:false});
+            this.setState({timeout:true,loading:false,errorData:{status:e.response.status,message:JSON.stringify(e.response.data)}});
         }
     }
 
@@ -219,7 +220,7 @@ class Index extends Component {
     };
 
     render() {
-        const { loading, timeout, events, user, valid, error } = this.state;
+        const { loading, timeout, events, user, valid, error, errorData } = this.state;
         let userId = this.props.match.params.id;
         const evius_token = Cookie.get('evius_token');
         return (
@@ -272,8 +273,6 @@ class Index extends Component {
                                                 <Geosuggest
                                                     placeholder={'Ingresa tu dirección'}
                                                     onSuggestSelect={this.onSuggestSelect}
-                                                    initialValue={user.location.FormattedAddress}
-                                                    location={new google.maps.LatLng(user.location.Latitude,user.location.Longitude)}
                                                     radius="20"/>
                                             </div>
                                             {error.location && <p className="help is-danger">{error.location}</p>}
@@ -369,7 +368,7 @@ class Index extends Component {
                         </div>
                 }
                 {
-                    timeout&&(<LogOut/>)
+                    timeout&&(<ErrorServe errorData={errorData}/>)
                 }
                 <Dialog modal={this.state.modal} title={'Reestablecer Contraseña'}
                         content={<p>Se ha enviado un correo a <i>{user.email}</i> con instrucciones para cambiar la contraseña</p>}
