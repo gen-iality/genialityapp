@@ -53,6 +53,7 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        const listTickets = [...event.tickets];
         const {states} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
@@ -66,6 +67,7 @@ class ListEventUser extends Component {
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
+                user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
@@ -330,6 +332,7 @@ class ListEventUser extends Component {
                         return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
                     })
                 }
+                <td>{item.tiquete?item.tiquete.title:'Sin Tiquete'}</td>
             </tr>)
         })
         return items
@@ -413,8 +416,7 @@ class ListEventUser extends Component {
                 </div>
             </div>
         </div>,disabled: 'yes'}
-          ]
-        console.log(this.state.users);
+          ];
         return (
             <React.Fragment>
                 <div className="checkin">
@@ -559,6 +561,7 @@ class ListEventUser extends Component {
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
                                                             })
                                                         }
+                                                        <th>Tiquete</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -699,6 +702,7 @@ const parseData = (data) => {
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
+        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'Sin Tiquete';
         return info
     });
     return info
