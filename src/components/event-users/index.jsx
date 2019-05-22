@@ -427,11 +427,11 @@ class ListEventUser extends Component {
                                 
                             </div>  
                         </div>
-                        <div className="column">
-                            <div className="columns is-mobile is-centered">
+                        <div className="column buttons-row">
+                            <div className="columns is-mobile is-centered buttons-g">
                                 {
                                     userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered export">
+                                        <div className="column is-narrow has-text-centered export button-c">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -441,7 +441,7 @@ class ListEventUser extends Component {
                                         </div>
                                     )
                                 }
-                                <div className="column is-narrow has-text-centered">
+                                <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
                                             <i class="fas fa-qrcode"></i>
@@ -449,7 +449,7 @@ class ListEventUser extends Component {
                                         <span className="text-button">Leer Código QR</span>
                                     </button>
                                 </div>
-                                <div className="column is-narrow has-text-centered">
+                                <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
                                             <i class="fas fa-user-plus"></i>
@@ -492,53 +492,53 @@ class ListEventUser extends Component {
                     {
                         (event_stages && event_stages.length > 0) &&
                         
-                    <div className='filter'>
-                        <button className="button icon-filter">
-                            <span className="icon">
-                                <i class="fas fa-filter"></i>
-                            </span>
-                            <span className="text-button">Filtrar</span>
-                        </button>
-                        <div className='filter-menu'>
-                            <p>Filtra Usuarios por Tiquete</p>
-                            <div className="columns">
-                                <div className="column field">
-                                    <div className="control">
-                                        <label className="label">Etapa</label>
+                        <div className='filter'>
+                            <button className="button icon-filter">
+                                <span className="icon">
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                                <span className="text-button">Filtrar</span>
+                            </button>
+                            <div className='filter-menu'>
+                                <p className='filter-help'>Filtra Usuarios por Tiquete</p>
+                                <div className="columns">
+                                    <div className="column field">
                                         <div className="control">
-                                            <div className="select">
-                                                <select value={stage} onChange={this.changeStage} name={'stage'}>
-                                                    <option value={''}>Escoge la etapa...</option>
-                                                    {
-                                                        event_stages.map((item,key)=>{
-                                                            return <option key={key} value={item.stage_id}>{item.title}</option>
-                                                        })
-                                                    }
-                                                </select>
+                                            <label className="label">Etapa</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                        <option value={''}>Escoge la etapa...</option>
+                                                        {
+                                                            event_stages.map((item,key)=>{
+                                                                return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="column field">
-                                    <div className="control">
-                                        <label className="label">Tiquete</label>
+                                    <div className="column field">
                                         <div className="control">
-                                            <div className="select">
-                                                <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                                                    <option value={''}>Escoge el tiquete...</option>
-                                                    {
-                                                        ticketsOptions.map((item,key)=>{
-                                                            return <option key={key} value={item._id}>{item.title}</option>
-                                                        })
-                                                    }
-                                                </select>
+                                            <label className="label">Tiquete</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                        <option value={''}>Escoge el tiquete...</option>
+                                                        {
+                                                            ticketsOptions.map((item,key)=>{
+                                                                return <option key={key} value={item._id}>{item.title}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     }
                     <div className="columns checkin-table">
                         <div className="column">
