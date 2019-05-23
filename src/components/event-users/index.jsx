@@ -610,7 +610,7 @@ class ListEventUser extends Component {
                                             return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
                                     </div>:
                                     <React.Fragment>
-                                        <div className="tabs is-centered">
+                                        <div className="tabs is-centered tab-qr">
                                             <ul>
                                                 <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
                                                     onClick={e=>this.setState({tabActive:'camera'})}>
@@ -642,7 +642,7 @@ class ListEventUser extends Component {
                                                             <div className="icon is-small is-left"><FaCamera/></div>
                                                         </div>
                                                     </div>
-                                                    <div className="columns is-mobile">
+                                                    <div className="columns is-mobile is-centered qr">
                                                         <QrReader
                                                             delay={500}
                                                             facingMode={facingMode}

@@ -179,6 +179,26 @@
     display: block;
   }
 }
+.tab-qr{
+  overflow: hidden;
+  width: 100%;
+  ul{
+    width: 100%;
+    border: none;
+    a{
+      margin-right: 5px;
+    }
+    .is-active a{
+      border-bottom: #00FFBC solid 5px;
+    }
+  }
+}
+.qr{
+  margin: 0;
+  section{
+    margin: 0 !important;
+  }
+}
 
 
 .css-vj8t7z{
