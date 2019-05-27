@@ -215,7 +215,7 @@ class Event extends Component {
                                     <div className='dropdown-trigger'>
                                         <p className="title">
                                             {this.state.newEvent?'Nuevo evento':this.state.event.name}
-                                            <span className='icon is-small is-hidden-desktop icon-menu' onClick={this.openMenu} aria-haspopup='true' aria-controls={'dropdown-menuevent'}>
+                                            <span className='icon is-small is-hidden-desktop is-hidden-tablet icon-menu' onClick={this.openMenu} aria-haspopup='true' aria-controls={'dropdown-menuevent'}>
                                                 {
                                                     menuMobile? <i className="fas fa-times" aria-hidden="true"/>:<i className="fas fa-bars"></i>
                                                 }
