@@ -91,18 +91,33 @@
  }
 .icon-filter{
   display: none;
+  margin-top: -60px;
+}
+.filter-help{
+  font-weight: 600;
+  color: #00FFBC;
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
   
+  .buttons-row{
+    padding: 0;
+    .buttons-g{
+      width: 100%;
+      .button-c{
+        margin: 3px;
+        padding: 0;
+      }
+    }
+  }
   .field{
     width: 100%;
   }
   .search{
     display: flex;
     flex-direction: row;
+    margin-left: 15%;
   }
-
   .table td{
     padding: 0;
   }
@@ -124,7 +139,7 @@
     padding-right: 0.55em;
     border-radius: 10px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     height: fit-content;
     font-size: smaller;
   }
@@ -155,12 +170,33 @@
   }
   .filter-menu{
     display: none;
+    padding-top: 3%;
   }
   .icon-filter:hover~.filter-menu{
     display: block;
   }
   .filter-menu:hover{
     display: block;
+  }
+}
+.tab-qr{
+  overflow: hidden;
+  width: 100%;
+  ul{
+    width: 100%;
+    border: none;
+    a{
+      margin-right: 5px;
+    }
+    .is-active a{
+      border-bottom: #00FFBC solid 5px;
+    }
+  }
+}
+.qr{
+  margin: 0;
+  section{
+    margin: 0 !important;
   }
 }
 
