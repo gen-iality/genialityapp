@@ -117,9 +117,9 @@ class TicketsForm extends Component {
         Object.keys(this.state.ticketsadded).map(key=>{
             const info = tickets.find(ticket=>ticket._id === key);
             const amount = this.state.ticketsadded[key];
-            const price = parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
+            const price = info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
             total += price;
-            const cost = new Intl.NumberFormat('es-CO', {
+            const cost = price <= 0 ? 'Gratis' : new Intl.NumberFormat('es-CO', {
                 style: 'currency',
                 minimumFractionDigits:0 ,
                 maximumFractionDigits: 0,
@@ -323,9 +323,15 @@ class TicketsForm extends Component {
                                 </div>
                                  <footer className="card-footer">
                                         <div className='card-footer-item'>
-                                            <div className='Subtotal'>
-                                                <p>Subtotal {new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)}</p>
-                                            </div>
+                                            {
+                                                summaryList.length > 0 &&
+                                                    <div className='Subtotal'>
+                                                        <p>Subtotal: {
+                                                            total === 0 ? 'Gratis' :
+                                                            new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)
+                                                        }</p>
+                                                    </div>
+                                            }
                                             <div className='Button-reserva'>
                                                 <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0 || disabled} onClick={onClick}>
                                                     {step===0?'Reservar':'Comprar'}
