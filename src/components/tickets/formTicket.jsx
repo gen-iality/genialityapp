@@ -56,7 +56,7 @@ class TicketsForm extends Component {
             info = JSON.parse(info);
             const values = {};
             info.show.map(item=>values[item.id] = item.quantity);
-            this.setState({total:info.total,summaryList:info.show,selectValues:values})
+            this.setState({total:info.total,summaryList:info.show,selectValues:values,disabled:false})
         }
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
@@ -333,7 +333,7 @@ class TicketsForm extends Component {
                                                     </div>
                                             }
                                             <div className='Button-reserva'>
-                                                <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0 || disabled} onClick={onClick}>
+                                                <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={summaryList.length<=0 || disabled} onClick={onClick}>
                                                     {step===0?'Reservar':'Comprar'}
                                                 </button>
                                             </div>
