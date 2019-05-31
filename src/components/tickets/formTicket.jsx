@@ -214,7 +214,9 @@ class TicketsForm extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;        console.log(this.state.disabledSelect);
+        const {state:{active,ticketstoshow,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},
+            props:{stages,seatsConfig,experience,fees},
+            selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -230,7 +232,7 @@ class TicketsForm extends Component {
                         <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
-                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues} disabledSelect={disabledSelect}/> :
+                                     <ListadoTiquetes stages={stages} experience={experience} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues} disabledSelect={disabledSelect}/> :
                                     <div>
                                         <div class="card">
                                             <header class="card-header has-text-left">
@@ -325,12 +327,24 @@ class TicketsForm extends Component {
                                         <div className='card-footer-item'>
                                             {
                                                 summaryList.length > 0 &&
-                                                    <div className='Subtotal'>
-                                                        <p>Subtotal: {
-                                                            total === 0 ? 'Gratis' :
-                                                            new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)
-                                                        }</p>
-                                                    </div>
+                                                    <React.Fragment>
+                                                        <div className='Subtotal'>
+                                                            <p>Subtotal: {
+                                                                total === 0 ? 'Gratis' :
+                                                                new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)
+                                                            }</p>
+                                                        </div>
+                                                        {fees &&
+                                                            <React.Fragment>
+                                                                <p>Servicio: {fees}</p>
+                                                                <div className='Subtotal'>
+                                                                    <p>Total: {
+                                                                        total === 0 ? 'Gratis' :
+                                                                            new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total+total*fees)
+                                                                    }</p>
+                                                                </div>
+                                                            </React.Fragment>}
+                                                    </React.Fragment>
                                             }
                                             <div className='Button-reserva'>
                                                 <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={summaryList.length<=0 || disabled} onClick={onClick}>
@@ -349,7 +363,7 @@ class TicketsForm extends Component {
 }
 
 function ListadoTiquetes({...props}) {
-    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
+    const {stages,experience,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
     return (
         <React.Fragment>
             <div className='columns content-tabs'>
@@ -358,20 +372,25 @@ function ListadoTiquetes({...props}) {
                         return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
-                            <hr className="separador"/>
-                            <div className='columns is-vcentered date-media'>
-                                <div className='column is-5 date-etapa'>
-                                    <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
-                                    <br/>
-                                    <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
-                                </div>
-                                <div className='column is-2 date-etapa hasta'>a</div>
-                                <div className='column is-5 date-etapa'>
-                                    <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
-                                    <br/>
-                                    <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
-                                </div>
-                            </div>
+                            {
+                                !experience &&
+                                    <React.Fragment>
+                                        <hr className="separador"/>
+                                        <div className='columns is-vcentered date-media'>
+                                            <div className='column is-5 date-etapa'>
+                                                <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
+                                                <br/>
+                                                <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
+                                            </div>
+                                            <div className='column is-2 date-etapa hasta'>a</div>
+                                            <div className='column is-5 date-etapa'>
+                                                <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
+                                                <br/>
+                                                <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                            }
                         </div>
                     })
                 }
