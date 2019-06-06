@@ -12,6 +12,7 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
+import Pages from "../pages";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -130,6 +131,12 @@ class Event extends Component {
                     </ul>
                 }
                 {
+                    permissions.items.includes(rolPermissions.admin_staff._id) &&
+                    <p className="menu-label has-text-centered-mobile">
+                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/pages`}>Contenido</NavLink>
+                    </p>
+                }
+                {
                     (permissions.items.includes(rolPermissions.admin_invitations._id) || permissions.items.includes(rolPermissions.history_invitations._id)) &&
                     <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({userTab:!this.state.userTab})}}>
                         <span className="item has-text-grey">Invitaciones</span>
@@ -169,18 +176,6 @@ class Event extends Component {
                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/badge`}>Escarapela</NavLink>
                         </li>
                     </ul>
-                }
-                {
-                    permissions.items.includes(rolPermissions.admin_staff._id) &&
-                    <p className="menu-label has-text-centered-mobile">
-                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/programme`}>Agenda</NavLink>
-                    </p>
-                }
-                {
-                    permissions.items.includes(rolPermissions.admin_staff._id) &&
-                    <p className="menu-label has-text-centered-mobile">
-                        <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/crud/speakers`}>Host</NavLink>
-                    </p>
                 }
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
@@ -262,11 +257,7 @@ class Event extends Component {
                                             }
                                             {
                                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/speakers/`} render={() => <ContainerCrud idModel="speakers" eventId={this.state.event} buttonName={"Conferencista"}/>}/>
-                                            }
-                                            {
-                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/crud/programme`} render={() => <ContainerCrud idModel="programme" eventId={this.state.event} buttonName={"Sessión"}/>}/>
+                                                    <Route path={`${match.url}/pages`} component={Pages}/>
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
