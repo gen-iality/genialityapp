@@ -57,7 +57,7 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {fields,groups} = parseProperties(event);
-            this.editor = new MediumEditor(".editable");
+            this.editor = new MediumEditor(".editable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
             if (event.description && event.description.length > 0) this.editor.setContent(event.description);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups})
