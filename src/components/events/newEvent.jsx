@@ -10,7 +10,6 @@ class NewEvent extends Component {
     render() {
         return (
             <div>
-                <InfoGeneral/>
                 <div className="steps">
                     <div className="step-item is-completed">
                         <div className="step-marker">1</div>
@@ -37,6 +36,7 @@ class NewEvent extends Component {
                         </div>
                     </div>
                 </div>
+                <InfoGeneral/>
             </div>
         )
     }

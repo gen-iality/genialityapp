@@ -18,14 +18,17 @@ class InfoGeneral extends Component {
         this.state = {
             event:{},
             error:{},
-            loading:true
+            loading:true,
+            valid:true,
+            selectedOrganizer:[],
+            selectedType:[],
+            selectedCategories:[]
         }
     }
 
     async componentDidMount(){
         try{
-            const event = {name:'',location:{}, description: '', categories: [],
-                properties_group:[], user_properties:[],
+            const event = {name:'',location:{}, description: '', categories: [], venue: '',
                 hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
@@ -60,7 +63,7 @@ class InfoGeneral extends Component {
     valid = () => {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && event.venue.length>0 && !!event.location.PlaceId && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+            valid = (event.name.length>0 && event.venue.length>0 && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         if(!event.location.FormattedAddress && !event.location.PlaceId){
             error.location = 'Fill a correct address'
         }
@@ -160,168 +163,201 @@ class InfoGeneral extends Component {
         this.setState({error})
     };
 
+    //Envío de datos
+    submit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const { event,path } = this.state;
+        const self = this;
+        //this.setState({loading:true});
+        const hour_start = Moment(event.hour_start).format('HH:mm');
+        const date_start = Moment(event.date_start).format('YYYY-MM-DD');
+        const hour_end = Moment(event.hour_end).format('HH:mm');
+        const date_end = Moment(event.date_end).format('YYYY-MM-DD');
+        const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
+        const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
+        const categories = this.state.selectedCategories.map(item=>{
+            return item.value
+        });
+        const data = {
+            name: event.name,
+            datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
+            datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+            picture: path.length > 1 ? path : event.picture,
+            venue: event.venue,
+            location: event.location,
+            visibility: event.visibility?event.visibility:'PUBLIC',
+            description: this.editor.getContent(),
+            category_ids: categories,
+            organizer_id: this.state.selectedOrganizer.value,
+            event_type_id : this.state.selectedType.value
+        };
+        console.log(data);
+    }
+
     render() {
-        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, error} = this.state;
+        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, error, loading, valid} = this.state;
+        if(loading) return <Loading/>;
         return (
             <React.Fragment>
-                {
-                    this.state.loading ? <Loading/> :
-                        <div className="columns">
-                            <div className="column">
-                                <div className="field">
-                                    <label className="label required has-text-grey-light">Nombre</label>
-                                    <div className="control">
-                                        <input className="input" name={"name"} type="text"
-                                               placeholder="Nombre del evento" value={event.name}
-                                               onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="field">
-                                    <label className="label required has-text-grey-light">Lugar</label>
-                                    <div className="control">
-                                        <input className="input" name={"venue"} type="text"
-                                               placeholder="Lugar del evento" value={event.venue}
-                                               onChange={this.handleChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="field">
-                                    <label className="label required has-text-grey-light">Dirección</label>
-                                    <div className="control">
-                                        <Geosuggest
-                                            placeholder={'Ubicación del evento'}
-                                            onKeyDown={this.changeSuggest}
-                                            onSuggestSelect={this.onSuggestSelect}
-                                            initialValue={event.location.FormattedAddress}
-                                            location={new google.maps.LatLng(event.location.Latitude, event.location.Longitude)}
-                                            radius="20"/>
-                                    </div>
-                                    {error.location && <p className="help is-danger">{error.location}</p>}
-                                </div>
-                                <div className="field">
-                                    <div className="columns is-mobile">
-                                        <div className="column inner-column">
-                                            <div className="field">
-                                                <label className="label required has-text-grey-light">Fecha
-                                                    Inicio</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.date_start}
-                                                        format={'DD/MM/YYYY'}
-                                                        time={false}
-                                                        onChange={value => this.changeDate(value, "date_start")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="vertical-line"></div>
-                                        <div className="column inner-column">
-                                            <div className="field">
-                                                <label className="label required has-text-grey-light">Hora
-                                                    Inicio</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.hour_start}
-                                                        step={60}
-                                                        date={false}
-                                                        onChange={value => this.changeDate(value, "hour_start")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="field">
-                                    <div className="columns is-mobile">
-                                        <div className="column inner-column">
-                                            <div className="field">
-                                                <label className="label required has-text-grey-light">Fecha Fin</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.date_end}
-                                                        min={this.minDate}
-                                                        format={'DD/MM/YYYY'}
-                                                        time={false}
-                                                        onChange={value => this.changeDate(value, "date_end")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="vertical-line"></div>
-                                        <div className="column inner-column">
-                                            <div className="field">
-                                                <label className="label required has-text-grey-light">Hora Fin</label>
-                                                <div className="control">
-                                                    <DateTimePicker
-                                                        value={event.hour_end}
-                                                        step={60}
-                                                        date={false}
-                                                        onChange={value => this.changeDate(value, "hour_end")}/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="field">
-                                    <label className="label required has-text-grey-light">Descripción</label>
-                                    <div className="control">
-                                        <div className="editable"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="column">
-                                <div className="field picture">
-                                    <label className="label has-text-grey-light">Foto</label>
-                                    <div className="control">
-                                        <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                                    divClass={'drop-img'}
-                                                    content={<img src={event.picture} alt={'Imagen Perfil'}/>}
-                                                    classDrop={'dropzone'} contentDrop={<button onClick={(e) => {
-                                            e.preventDefault()
-                                        }}
-                                                                                                className={`button is-primary is-inverted is-outlined ${this.state.imageFile ? 'is-loading' : ''}`}>Cambiar
-                                            foto</button>}
-                                                    contentZone={<div
-                                                        className="has-text-grey has-text-weight-bold has-text-centered">
-                                                        <span>Subir foto</span><br/>
-                                                        <small>(Tamaño recomendado: 1280px x 960px)</small>
-                                                    </div>}
-                                                    changeImg={this.changeImg} errImg={this.state.errImg}
-                                                    style={{
-                                                        cursor: 'pointer',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        position: 'relative',
-                                                        height: 250,
-                                                        width: '100%',
-                                                        borderWidth: 2,
-                                                        borderColor: '#b5b5b5',
-                                                        borderStyle: 'dashed',
-                                                        borderRadius: 10
-                                                    }}/>
-                                    </div>
-                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                                </div>
-                                <div className="field">
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={event.visibility} onChange={this.handleChange}
-                                                    name={'visibility'}>
-                                                <option value={'PUBLIC'}>Crear un evento público</option>
-                                                <option value={'ORGANIZATION'}>Crear un evento privado</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <SelectInput name={'Organizado por:'} isMulti={false}
-                                             selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer}
-                                             options={organizers} required={true}/>
-                                <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType}
-                                             selectOption={this.selectType} options={types} required={true}/>
-                                <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories}
-                                             selectOption={this.selectCategory} options={categories} required={true}/>
+                <div className="columns">
+                    <div className="column">
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Nombre</label>
+                            <div className="control">
+                                <input className="input" name={"name"} type="text"
+                                       placeholder="Nombre del evento" value={event.name}
+                                       onChange={this.handleChange}
+                                />
                             </div>
                         </div>
-                }
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Lugar</label>
+                            <div className="control">
+                                <input className="input" name={"venue"} type="text"
+                                       placeholder="Lugar del evento" value={event.venue}
+                                       onChange={this.handleChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Dirección</label>
+                            <div className="control">
+                                <Geosuggest
+                                    placeholder={'Ubicación del evento'}
+                                    onKeyDown={this.changeSuggest}
+                                    onSuggestSelect={this.onSuggestSelect}
+                                    initialValue={event.location.FormattedAddress}
+                                    location={new google.maps.LatLng(event.location.Latitude, event.location.Longitude)}
+                                    radius="20"/>
+                            </div>
+                            {error.location && <p className="help is-danger">{error.location}</p>}
+                        </div>
+                        <div className="field">
+                            <div className="columns is-mobile">
+                                <div className="column inner-column">
+                                    <div className="field">
+                                        <label className="label required has-text-grey-light">Fecha
+                                            Inicio</label>
+                                        <div className="control">
+                                            <DateTimePicker
+                                                value={event.date_start}
+                                                format={'DD/MM/YYYY'}
+                                                time={false}
+                                                onChange={value => this.changeDate(value, "date_start")}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="vertical-line"></div>
+                                <div className="column inner-column">
+                                    <div className="field">
+                                        <label className="label required has-text-grey-light">Hora
+                                            Inicio</label>
+                                        <div className="control">
+                                            <DateTimePicker
+                                                value={event.hour_start}
+                                                step={60}
+                                                date={false}
+                                                onChange={value => this.changeDate(value, "hour_start")}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="field">
+                            <div className="columns is-mobile">
+                                <div className="column inner-column">
+                                    <div className="field">
+                                        <label className="label required has-text-grey-light">Fecha Fin</label>
+                                        <div className="control">
+                                            <DateTimePicker
+                                                value={event.date_end}
+                                                min={this.minDate}
+                                                format={'DD/MM/YYYY'}
+                                                time={false}
+                                                onChange={value => this.changeDate(value, "date_end")}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="vertical-line"></div>
+                                <div className="column inner-column">
+                                    <div className="field">
+                                        <label className="label required has-text-grey-light">Hora Fin</label>
+                                        <div className="control">
+                                            <DateTimePicker
+                                                value={event.hour_end}
+                                                step={60}
+                                                date={false}
+                                                onChange={value => this.changeDate(value, "hour_end")}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Descripción</label>
+                            <div className="control">
+                                <div className="editable"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <div className="field picture">
+                            <label className="label has-text-grey-light">Foto</label>
+                            <div className="control">
+                                <ImageInput picture={event.picture} imageFile={this.state.imageFile}
+                                            divClass={'drop-img'}
+                                            content={<img src={event.picture} alt={'Imagen Perfil'}/>}
+                                            classDrop={'dropzone'} contentDrop={<button onClick={(e) => {
+                                    e.preventDefault()
+                                }}
+                                                                                        className={`button is-primary is-inverted is-outlined ${this.state.imageFile ? 'is-loading' : ''}`}>Cambiar
+                                    foto</button>}
+                                            contentZone={<div
+                                                className="has-text-grey has-text-weight-bold has-text-centered">
+                                                <span>Subir foto</span><br/>
+                                                <small>(Tamaño recomendado: 1280px x 960px)</small>
+                                            </div>}
+                                            changeImg={this.changeImg} errImg={this.state.errImg}
+                                            style={{
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                position: 'relative',
+                                                height: 250,
+                                                width: '100%',
+                                                borderWidth: 2,
+                                                borderColor: '#b5b5b5',
+                                                borderStyle: 'dashed',
+                                                borderRadius: 10
+                                            }}/>
+                            </div>
+                            {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                        </div>
+                        <div className="field">
+                            <div className="control">
+                                <div className="select">
+                                    <select value={event.visibility} onChange={this.handleChange}
+                                            name={'visibility'}>
+                                        <option value={'PUBLIC'}>Crear un evento público</option>
+                                        <option value={'ORGANIZATION'}>Crear un evento privado</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <SelectInput name={'Organizado por:'} isMulti={false}
+                                     selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer}
+                                     options={organizers} required={true}/>
+                        <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType}
+                                     selectOption={this.selectType} options={types} required={true}/>
+                        <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories}
+                                     selectOption={this.selectCategory} options={categories} required={true}/>
+                    </div>
+                </div>
+                <div className="buttons is-left">
+                    <button onClick={this.submit} className={`button is-primary`} disabled={valid}>Siguiente</button>
+                </div>
             </React.Fragment>
         )
     }
