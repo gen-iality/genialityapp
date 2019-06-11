@@ -12,7 +12,6 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
-import Pages from "../pages";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -23,7 +22,7 @@ const AdminRol = asyncComponent(()=> import("../roles")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
 const DashboardEvent = asyncComponent(()=> import("../dashboard")) ;
 const OrdersEvent = asyncComponent(()=> import("../orders")) ;
-const ContainerCrud =  asyncComponent(()=> import('../shared/crud/containers'));
+const Pages =  asyncComponent(()=> import('../pages'));
 
 Moment.locale('es');
 momentLocalizer();
@@ -180,24 +179,6 @@ class Event extends Component {
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
                 </p>
-                {/* <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({contentTab:!this.state.contentTab})}}>
-                                                <span className="item has-text-grey">Contenido</span>
-                                                <span className="icon">
-                                                    <i className={`${this.state.contentTab?'up':'down'}`}/>
-                                                </span>
-                                            </p>
-                                            {
-                                                this.state.contentTab && (
-                                                    <ul className="menu-list">
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/agenda`}>Agenda</NavLink>
-                                                        </li>
-                                                        <li>
-                                                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/speakers`}>Speakers</NavLink>
-                                                        </li>
-                                                    </ul>
-                                                )
-                                            } */}
             </React.Fragment>
         return (
             <React.Fragment>

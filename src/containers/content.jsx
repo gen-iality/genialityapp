@@ -3,7 +3,6 @@ import { Route, Redirect, withRouter, Switch } from "react-router-dom";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
 import {ApiUrl} from "../helpers/constants";
-import ContainerCrud from '../components/shared/crud/containers';
 import asyncComponent from "./AsyncComponent";
 
 //Code splitting
