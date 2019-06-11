@@ -12,6 +12,7 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
+import NewEvent from "./newEvent";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -217,7 +218,11 @@ class Event extends Component {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
                                         <Switch>
                                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                                            <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} updateEvent={this.updateEvent} />}/>
+                                            <Route exact path={`${match.url}/main`} render={()=><React.Fragment>{
+                                                this.state.newEvent?
+                                                    <NewEvent/>:
+                                                    <General event={this.state.event} updateEvent={this.updateEvent}/>
+                                            }</React.Fragment>}/>
                                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                             {
                                                 permissions.items.includes(rolPermissions.admin_badge._id) &&
