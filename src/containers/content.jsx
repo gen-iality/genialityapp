@@ -40,8 +40,6 @@ class ContentContainer extends Component {
                     <Route exact path="/about" component={ About } />
                     <Route exact path="/faqs" component={ Faqs } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
-                    {/* Enviamos el id de el modelo, de el crud al con el que queremos trabajar  Ejemplo: Speaker, Agenda, Sponsor Etc..*/}
-                    <Route exact path="/crud/:idModel" component={ ContainerCrud } />
                 </Switch>
             </main>
         );
