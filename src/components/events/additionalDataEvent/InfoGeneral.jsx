@@ -20,6 +20,7 @@ class InfoGeneral extends Component {
             error:{},
             loading:true,
             valid:true,
+            path:[],
             selectedOrganizer:[],
             selectedType:[],
             selectedCategories:[]
