@@ -21,24 +21,24 @@ class InfoGeneral extends Component {
             loading:true,
             valid:true,
             path:[],
-            selectedOrganizer:[],
-            selectedType:[],
-            selectedCategories:[]
+            selectedCategories: [],
+            selectedOrganizer: {},
+            selectedType: {},
         }
     }
 
     async componentDidMount(){
         try{
-            const event = {name:'',location:{}, description: '', categories: [], venue: '',
-                hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()};
+            const event = this.props.data;
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
-            this.editor = new MediumEditor(".editable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
-            this.setState({newEvent:true,loading:false,event,categories,organizers,types})
+            this.editor = new MediumEditor(".neweditable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
+            const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
+            this.setState({newEvent:true,loading:false,event,categories,organizers,types,selectedCategories,selectedOrganizer,selectedType},this.valid)
         }
         catch (error) {
             // Error
@@ -169,21 +169,15 @@ class InfoGeneral extends Component {
         e.preventDefault();
         e.stopPropagation();
         const { event,path } = this.state;
-        const self = this;
-        //this.setState({loading:true});
-        const hour_start = Moment(event.hour_start).format('HH:mm');
-        const date_start = Moment(event.date_start).format('YYYY-MM-DD');
-        const hour_end = Moment(event.hour_end).format('HH:mm');
-        const date_end = Moment(event.date_end).format('YYYY-MM-DD');
-        const datetime_from = Moment(date_start+' '+hour_start, 'YYYY-MM-DD HH:mm');
-        const datetime_to = Moment(date_end+' '+hour_end, 'YYYY-MM-DD HH:mm');
         const categories = this.state.selectedCategories.map(item=>{
             return item.value
         });
         const data = {
             name: event.name,
-            datetime_from : datetime_from.format('YYYY-MM-DD HH:mm:ss'),
-            datetime_to : datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+            hour_start:event.hour_start,
+            date_start:event.date_start,
+            hour_end:event.hour_end,
+            date_end:event.date_end,
             picture: path.length > 1 ? path : event.picture,
             venue: event.venue,
             location: event.location,
@@ -193,12 +187,12 @@ class InfoGeneral extends Component {
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value
         };
-        console.log(data);
+        this.props.nextStep('info',data)
     }
 
     render() {
-        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, error, loading, valid} = this.state;
-        if(loading) return <Loading/>;
+        if(this.state.loading) return <Loading/>;
+        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, error, valid} = this.state;
         return (
             <React.Fragment>
                 <div className="columns">
@@ -298,7 +292,7 @@ class InfoGeneral extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <div className="editable"></div>
+                                <div className="neweditable"></div>
                             </div>
                         </div>
                     </div>
@@ -362,6 +356,26 @@ class InfoGeneral extends Component {
             </React.Fragment>
         )
     }
+}
+
+//Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
+function handleFields(organizers,types,categories,event){
+    let selectedCategories = [];
+    let selectedType = {};
+    const {category_ids,organizer_id,event_type_id} = event;
+    if(category_ids){
+        categories.map(item=>{
+            let pos = category_ids.indexOf(item.value);
+            return (pos>=0)?selectedCategories.push(item):''
+        });
+    }
+    const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
+    const selectedOrganizer = organizers[pos];
+    if(event_type_id){
+        const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
+        selectedType = types[pos];
+    }else selectedType = undefined;
+    return {selectedOrganizer,selectedCategories,selectedType}
 }
 
 export default InfoGeneral

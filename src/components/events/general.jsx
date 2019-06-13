@@ -17,6 +17,7 @@ import axios from "axios/index"
 import Geosuggest from "react-geosuggest";
 import {DateTimePicker} from "react-widgets";
 import SelectInput from "../shared/selectInput";
+import Loading from "../loaders/loading";
 Moment.locale('es');
 
 class General extends Component {
@@ -39,7 +40,8 @@ class General extends Component {
             groups: [],
             errorData: {},
             toggleFields: true,
-            serverError: false
+            serverError: false,
+            loading: true
         };
         this.editor = {};
         this.submit = this.submit.bind(this);
@@ -60,7 +62,7 @@ class General extends Component {
             this.editor = new MediumEditor(".editable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
             if (event.description && event.description.length > 0) this.editor.setContent(event.description);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups})
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups,loading:false})
         }
         catch (error) {
             // Error
@@ -441,6 +443,7 @@ class General extends Component {
     };
 
     render() {
+        if(this.state.loading) return <Loading/>;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
             fields, inputValue, newField, groups, listValue,
