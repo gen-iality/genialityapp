@@ -46,8 +46,6 @@ class ImportUsers extends Component {
                 }
             },
             function(items,newUsers,cb){
-                console.log(items);
-                console.log(newUsers);
                 let len = newUsers.length;
                 for(let i=0;i<items.length;i++){
                     for(let j=0;j<len;j++){
