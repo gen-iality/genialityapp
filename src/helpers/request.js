@@ -58,6 +58,8 @@ export const Actions = {
     },
     getAll: (url, unsafe) => {
         if(unsafe) return publicInstance.get(`${url}`).then(({data})=>data);
+        console.log(url);
+        console.log(unsafe);
         return privateInstance.get(`${url}`).then(({data})=>data);
     }
 };
