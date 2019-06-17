@@ -61,6 +61,9 @@ class UserModal extends Component {
             properties: this.state.user,
             state_id: this.state.state,
         };
+        Object.keys(snap.properties).map((obj, i) => (
+            snap.properties[obj] = snap.properties[obj].toUpperCase()
+        ));
         const self = this;
         let message = {};
         this.setState({create:true});

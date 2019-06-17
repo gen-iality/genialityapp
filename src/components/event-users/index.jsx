@@ -332,7 +332,7 @@ class ListEventUser extends Component {
                         return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
                     })
                 }
-                <td>{item.tiquete?item.tiquete.title:'Sin Tiquete'}</td>
+                <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
             </tr>)
         })
         return items
@@ -426,8 +426,8 @@ class ListEventUser extends Component {
                                 {
                                     total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
-                                
-                            </div>  
+
+                            </div>
                         </div>
                         <div className="column buttons-row">
                             <div className="columns is-mobile is-centered buttons-g">
@@ -493,7 +493,7 @@ class ListEventUser extends Component {
                     </div>
                     {
                         (event_stages && event_stages.length > 0) &&
-                        
+
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
@@ -694,7 +694,7 @@ const parseData = (data) => {
     data.map((item,key) => {
         info[key] = {};
         Object.keys(item.properties).map((obj, i) => (
-            info[key][obj] = item.properties[obj]
+            info[key][obj] = item.properties[obj].toUpperCase()
         ));
         if(item.state) info[key]['estado'] = item.state.label;
         if(item.rol) info[key]['rol'] = item.rol.label;
@@ -702,7 +702,7 @@ const parseData = (data) => {
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
-        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'Sin Tiquete';
+        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'SIN TIQUETE';
         return info
     });
     return info
