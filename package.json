@@ -49,10 +49,10 @@
     "xlsx": "^0.13.5"
   },
   "scripts": {
-    "start": "set REACT_APP_API_URL=https://api.evius.co&&react-scripts start",
-    "start:dev": "set REACT_APP_API_URL=https://dev.evius.co&&react-scripts start",
-    "build": "set REACT_APP_API_URL=https://api.evius.co&&react-scripts build",
-    "dev": "set REACT_APP_API_URL=https://dev.evius.co&&react-scripts build",
+    "start": "REACT_APP_API_URL=https://api.evius.co react-scripts start",
+    "start:dev": "REACT_APP_API_URL=https://dev.evius.co react-scripts start",
+    "build": "REACT_APP_API_URL=https://api.evius.co react-scripts build",
+    "dev": "REACT_APP_API_URL=https://dev.evius.co react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "styleguide": "styleguidist server",
