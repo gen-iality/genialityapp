@@ -114,16 +114,7 @@ class Home extends Component {
         const {category,type,timeout, serverError, errorData, events, loading} = this.state;
         return (
             <React.Fragment>
-                <div className="columns is-mobile">
-                    <div className="column">
-                        <h2 className="is-size-2 bold-text">Eventos</h2>
-                    </div>
-                    <div className="column has-text-centered">
-                        <Link to={`/profile/${this.props.loginInfo._id}#events`}>
-                            <button className='button is-pulled-right is-info is-outlined'>Mis Eventos</button>
-                        </Link>
-                    </div>
-                </div>
+                <h2 className="is-size-2 bold-text">Eventos</h2>
                 <div className="columns">
                     <section className="home column is-12">
                         <div className="dynamic-content">
