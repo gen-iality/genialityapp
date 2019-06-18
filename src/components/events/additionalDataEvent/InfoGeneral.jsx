@@ -24,7 +24,8 @@ class InfoGeneral extends Component {
             selectedCategories: [],
             selectedOrganizer: {},
             selectedType: {},
-        }
+        };
+        this.editorRef = React.createRef();
     }
 
     async componentDidMount(){
@@ -36,9 +37,11 @@ class InfoGeneral extends Component {
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
-            this.editor = new MediumEditor(".neweditable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({newEvent:true,loading:false,event,categories,organizers,types,selectedCategories,selectedOrganizer,selectedType},this.valid)
+            this.setState({newEvent:true,loading:false,event,categories,organizers,types,selectedCategories,selectedOrganizer,selectedType},()=>{
+                this.editor = new MediumEditor(this.editorRef.current,{toolbar:{buttons:['bold','italic','underline','anchor']}});
+                this.valid()
+            })
         }
         catch (error) {
             // Error
@@ -292,7 +295,7 @@ class InfoGeneral extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <div className="neweditable"></div>
+                                <div ref={this.editorRef}></div>
                             </div>
                         </div>
                     </div>
