@@ -44,6 +44,7 @@ class General extends Component {
             loading: true
         };
         this.editor = {};
+        this.editorRef = React.createRef();
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
     }
@@ -59,10 +60,11 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {fields,groups} = parseProperties(event);
-            this.editor = new MediumEditor(".editable",{toolbar:{buttons:['bold','italic','underline','anchor']}});
-            if (event.description && event.description.length > 0) this.editor.setContent(event.description);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups,loading:false})
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,fields,groups,loading:false},()=>{
+                this.editor = new MediumEditor(this.editorRef.current,{toolbar:{buttons:['bold','italic','underline','anchor']}});
+                if (event.description && event.description.length > 0) this.editor.setContent(event.description);
+            })
         }
         catch (error) {
             // Error
@@ -546,7 +548,7 @@ class General extends Component {
                             <div className="field">
                                 <label className="label required has-text-grey-light">Descripción</label>
                                 <div className="control">
-                                    <div className="editable"></div>
+                                    <div ref={this.editorRef}></div>
                                 </div>
                             </div>
                         </div>
