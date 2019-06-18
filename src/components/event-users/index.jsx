@@ -693,9 +693,11 @@ const parseData = (data) => {
     let info = [];
     data.map((item,key) => {
         info[key] = {};
-        Object.keys(item.properties).map((obj, i) => (
-            info[key][obj] = item.properties[obj].toUpperCase()
-        ));
+        Object.keys(item.properties).map((obj, i) => {
+            let str = item.properties[obj];
+            if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
+            return info[key][obj] = str
+        });
         if(item.state) info[key]['estado'] = item.state.label;
         if(item.rol) info[key]['rol'] = item.rol.label;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
