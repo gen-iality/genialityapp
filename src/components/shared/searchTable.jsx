@@ -34,12 +34,13 @@ class SearchComponent extends Component {
     filterByAllColums(value) {
         let arrAux;
         if (this.props.kind === 'user') {
-            const filters = this.props.filter.map(item=>item.name);
-            arrAux = this.props.data.filter( (item) =>{
-                if(item.properties[filters[0]] && item.properties[filters[1]] && item.properties[filters[2]]){
-                    return (item.properties[filters[0]].search(new RegExp(value, 'i')) >= 0 ||
-                        (item.properties[filters[1]] && item.properties[filters[1]].search(new RegExp(value, 'i'))) >= 0 ||
-                        (item.properties[filters[2]] && item.properties[filters[2]].search(new RegExp(value, 'i'))) >= 0);
+            arrAux = this.props.data.filter((item)=>{
+                if(item.properties){
+                    for(let key in item.properties){
+                        const propertyValue = item.properties[key];
+                        if(propertyValue && propertyValue.search(new RegExp(value, 'i')) >= 0 )
+                            return true;
+                    }
                 }
             });
         }else if(this.props.kind === 'invitation'){

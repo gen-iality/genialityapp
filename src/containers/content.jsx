@@ -3,7 +3,6 @@ import { Route, Redirect, withRouter, Switch } from "react-router-dom";
 import Event from "../components/events/event";
 import * as Cookie from "js-cookie";
 import {ApiUrl} from "../helpers/constants";
-import ContainerCrud from '../components/shared/crud/containers';
 import asyncComponent from "./AsyncComponent";
 
 //Code splitting
@@ -41,8 +40,6 @@ class ContentContainer extends Component {
                     <Route exact path="/about" component={ About } />
                     <Route exact path="/faqs" component={ Faqs } />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect}/>
-                    {/* Enviamos el id de el modelo, de el crud al con el que queremos trabajar  Ejemplo: Speaker, Agenda, Sponsor Etc..*/}
-                    <Route exact path="/crud/:idModel" component={ ContainerCrud } />
                 </Switch>
             </main>
         );

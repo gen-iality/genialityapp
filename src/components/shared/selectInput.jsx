@@ -10,13 +10,7 @@ class SelectInput extends Component {
         this.state = {
             maxReached: false,
             options: this.props.options,
-            selectedOptions: []
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.options !== this.props.options) {
-            this.setState({options:nextProps.options,selectedOptions:nextProps.selectedOptions});
+            selectedOptions: this.props.selectedOptions
         }
     }
 

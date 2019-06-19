@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
+import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
 import XLSX from "xlsx";
 import UserModal from "../modal/modalUser";
 import { toast } from 'react-toastify';
@@ -44,6 +45,7 @@ class ListEventUser extends Component {
             serverError: false,
             stage: '',
             ticket: '',
+            tabActive: 'camera',
             ticketsOptions: []
         };
     }
@@ -51,6 +53,7 @@ class ListEventUser extends Component {
     componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        const listTickets = [...event.tickets];
         const {states} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
@@ -64,6 +67,7 @@ class ListEventUser extends Component {
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
+                user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
@@ -259,9 +263,44 @@ class ListEventUser extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false})
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:''});
         html.classList.remove('is-clipped');
-    }
+    };
+    searchCC = () => {
+        console.log('searching');
+        const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        let value = this.state.newCC;
+        let user = {};
+        usersRef.where('_id','==',`${value}`)
+            .get()
+            .then((querySnapshot)=> {
+                const qrData = {};
+                if(querySnapshot.empty){
+                    qrData.msg = 'User not found';
+                    qrData.another = true;
+                    qrData.user = null;
+                    this.setState({qrData})
+                }
+                else{
+                    querySnapshot.forEach((doc)=> {
+                        console.log(doc.id, " => ", doc.data());
+                        qrData.msg = 'User found';
+                        qrData.user = doc.data();
+                        qrData.another = !!qrData.user.checked_in;
+                        console.log(qrData);
+                        this.setState({qrData});
+                    });
+                }
+            })
+            .catch(error => {
+                this.setState({found:0})
+                console.log("Error getting documents: ", error);
+            });
+    };
+    changeCC = (e) => {
+        const {value} = e.target;
+        this.setState({newCC:value})
+    };
 
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
@@ -293,6 +332,7 @@ class ListEventUser extends Component {
                         return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
                     })
                 }
+                <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
             </tr>)
         })
         return items
@@ -376,37 +416,48 @@ class ListEventUser extends Component {
                 </div>
             </div>
         </div>,disabled: 'yes'}
-          ]
+          ];
         return (
             <React.Fragment>
                 <div className="checkin">
                     <div className="columns checkin-header">
                         <div className="column">
-                            <div>
+                            <div className="search">
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} filter={[{name:'document'},{name:'email'},{name:'names'}]} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
-                            </div>  
+
+                            </div>
                         </div>
-                        <div className="column">
-                            <div className="columns is-mobile is-centered">
+                        <div className="column buttons-row">
+                            <div className="columns is-mobile is-centered buttons-g">
                                 {
                                     userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered export">
+                                        <div className="column is-narrow has-text-centered export button-c">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
                                                 </span>
-                                                <span>Exportar</span>
+                                                <span className="text-button">Exportar</span>
                                             </button>
                                         </div>
                                     )
                                 }
-                                <div className="column is-narrow has-text-centered">
-                                    <button className="button is-inverted" onClick={this.checkModal}>Leer Código QR</button>
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button is-inverted" onClick={this.checkModal}>
+                                        <span className="icon">
+                                            <i class="fas fa-qrcode"></i>
+                                        </span>
+                                        <span className="text-button">Leer Código QR</span>
+                                    </button>
                                 </div>
-                                <div className="column is-narrow has-text-centered">
-                                    <button className="button is-primary" onClick={this.addUser}>Agregar Usuario +</button>
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button is-primary" onClick={this.addUser}>
+                                        <span className="icon">
+                                            <i class="fas fa-user-plus"></i>
+                                        </span>
+                                        <span className="text-button">Agregar Usuario</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -442,39 +493,48 @@ class ListEventUser extends Component {
                     </div>
                     {
                         (event_stages && event_stages.length > 0) &&
+
                         <div className='filter'>
-                            <p>Filtra Usuarios por Tiquete</p>
-                            <div className="columns">
-                                <div className="column field">
-                                    <div className="control">
-                                        <label className="label">Etapa</label>
+                            <button className="button icon-filter">
+                                <span className="icon">
+                                    <i class="fas fa-filter"></i>
+                                </span>
+                                <span className="text-button">Filtrar</span>
+                            </button>
+                            <div className='filter-menu'>
+                                <p className='filter-help'>Filtra Usuarios por Tiquete</p>
+                                <div className="columns">
+                                    <div className="column field">
                                         <div className="control">
-                                            <div className="select">
-                                                <select value={stage} onChange={this.changeStage} name={'stage'}>
-                                                    <option value={''}>Escoge la etapa...</option>
-                                                    {
-                                                        event_stages.map((item,key)=>{
-                                                            return <option key={key} value={item.stage_id}>{item.title}</option>
-                                                        })
-                                                    }
-                                                </select>
+                                            <label className="label">Etapa</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                        <option value={''}>Escoge la etapa...</option>
+                                                        {
+                                                            event_stages.map((item,key)=>{
+                                                                return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="column field">
-                                    <div className="control">
-                                        <label className="label">Tiquete</label>
+                                    <div className="column field">
                                         <div className="control">
-                                            <div className="select">
-                                                <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                                                    <option value={''}>Escoge el tiquete...</option>
-                                                    {
-                                                        ticketsOptions.map((item,key)=>{
-                                                            return <option key={key} value={item._id}>{item.title}</option>
-                                                        })
-                                                    }
-                                                </select>
+                                            <label className="label">Tiquete</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                        <option value={''}>Escoge el tiquete...</option>
+                                                        {
+                                                            ticketsOptions.map((item,key)=>{
+                                                                return <option key={key} value={item._id}>{item.title}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -501,6 +561,7 @@ class ListEventUser extends Component {
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
                                                             })
                                                         }
+                                                        <th>Tiquete</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -526,7 +587,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} ticket={ticket}
+                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
@@ -534,7 +595,7 @@ class ListEventUser extends Component {
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
-                            <p className="modal-card-title">QR Reader</p>
+                            <p className="modal-card-title">Lector QR</p>
                             <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
                         </header>
                         <section className="modal-card-body">
@@ -549,26 +610,59 @@ class ListEventUser extends Component {
                                             return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
                                     </div>:
                                     <React.Fragment>
-                                        <div className="field">
-                                            <div className="control has-icons-left">
-                                                <div className="select">
-                                                    <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
-                                                        <option value="user">Selfie</option>
-                                                        <option value="environment">Rear</option>
-                                                    </select>
-                                                </div>
-                                                <div className="icon is-small is-left"><FaCamera/></div>
-                                            </div>
+                                        <div className="tabs is-centered tab-qr">
+                                            <ul>
+                                                <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
+                                                    onClick={e=>this.setState({tabActive:'camera'})}>
+                                                    <a>
+                                                        <div className="icon is-medium"><IoIosCamera/></div>
+                                                        <span>Cámara</span>
+                                                    </a>
+                                                </li>
+                                                <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
+                                                    onClick={e=>this.setState({tabActive:'qr'})}>
+                                                    <a>
+                                                        <div className="icon is-medium"><IoIosQrScanner/></div>
+                                                        <span>Pistola</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div className="columns is-mobile">
-                                            <QrReader
-                                                delay={500}
-                                                facingMode={facingMode}
-                                                onError={this.handleError}
-                                                onScan={this.handleScan}
-                                                style={{ width: "60%" }}
-                                                className={"column is-half is-offset-one-quarter"}
-                                            />
+                                        <div>
+                                            {this.state.tabActive === 'camera' ?
+                                                <React.Fragment>
+                                                    <div className="field">
+                                                        <div className="control has-icons-left">
+                                                            <div className="select">
+                                                                <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                                    <option value="user">Selfie</option>
+                                                                    <option value="environment">Rear</option>
+                                                                </select>
+                                                            </div>
+                                                            <div className="icon is-small is-left"><FaCamera/></div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="columns is-mobile is-centered qr">
+                                                        <QrReader
+                                                            delay={500}
+                                                            facingMode={facingMode}
+                                                            onError={this.handleError}
+                                                            onScan={this.handleScan}
+                                                            style={{ width: "60%" }}
+                                                            className={"column is-half is-offset-one-quarter"}
+                                                        />
+                                                    </div>
+                                                </React.Fragment>:
+                                                <React.Fragment>
+                                                    <div className="field">
+                                                        <div className="control">
+                                                            <label className={`label has-text-grey-light is-capitalized required`}>Cédula</label>
+                                                            <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
+                                                        </div>
+                                                    </div>
+                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                                </React.Fragment>
+                                            }
                                         </div>
                                     </React.Fragment>
                             }
@@ -599,15 +693,18 @@ const parseData = (data) => {
     let info = [];
     data.map((item,key) => {
         info[key] = {};
-        Object.keys(item.properties).map((obj, i) => (
-            info[key][obj] = item.properties[obj]
-        ));
+        Object.keys(item.properties).map((obj, i) => {
+            let str = item.properties[obj];
+            if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
+            return info[key][obj] = str
+        });
         if(item.state) info[key]['estado'] = item.state.label;
         if(item.rol) info[key]['rol'] = item.rol.label;
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
+        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'SIN TIQUETE';
         return info
     });
     return info

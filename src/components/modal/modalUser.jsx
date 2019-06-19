@@ -19,8 +19,6 @@ class UserModal extends Component {
             prevState: "",
             userId: "mocionsoft",
             emailError:false,
-            found: 0,
-            newCC: 0,
             confirmCheck:true,
             valid: true,
             checked_in: false,
@@ -33,15 +31,22 @@ class UserModal extends Component {
         const self = this;
         const {states} = this.props;
         self.setState({ statesList: states, state: states[1].value });
+        let user = {};
         if (this.props.edit) {
             const {value} = this.props;
-            let user = {};
             Object.keys(value.properties)
                 .map((obj) => {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+            this.setState({user, ticketId:user.ticket_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+        }else{
+            this.props.extraFields
+                .map((obj) => {
+                    user[obj.name] = obj.type === "boolean" ? false : obj.type === "number" ? 0 : "";
+                    return user
+                });
+            this.setState({found:1,user,edit:false,ticketId:this.props.ticket});
         }
     }
 
@@ -56,14 +61,17 @@ class UserModal extends Component {
             properties: this.state.user,
             state_id: this.state.state,
         };
+        Object.keys(snap.properties).map((obj, i) => (
+            snap.properties[obj] = snap.properties[obj].toUpperCase()
+        ));
         const self = this;
         let message = {};
         this.setState({create:true});
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        snap.ticket_id = this.state.ticketId;
         if(!this.state.edit){
             snap.updated_at = new Date();
             snap.checked_in = false;
-            if(this.props.ticket.length > 0 ) snap.ticket_id = this.props.ticket;
             snap.created_at = new Date();
             if(this.state.confirmCheck) {
                 snap.checked_in = true;
@@ -313,45 +321,9 @@ class UserModal extends Component {
         this.setState({uncheck:false})
     }
 
-    searchCC = () => {
-        console.log('searching');
-        const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        let value = this.state.newCC;
-        let user = {};
-        usersRef.where('properties.cedula','==',`${value}`)
-            .get()
-            .then((querySnapshot)=> {
-                if(querySnapshot.empty){
-                    this.props.extraFields
-                        .map((obj) => {
-                            user[obj.name] = obj.type === "boolean" ? false : obj.type === "number" ? 0 : "";
-                            if(obj.name === 'cedula') user[obj.name] = value;
-                            return user
-                        });
-                    this.setState({found:1,user,edit:false});
-                }
-                else{
-                    querySnapshot.forEach((doc)=> {
-                        console.log(doc.id, " => ", doc.data().properties);
-                        user = doc.data().properties;
-                        this.setState({user,found:2,disabledFields:true,edit:true,userId:doc.id,valid:false})
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({found:0})
-                console.log("Error getting documents: ", error);
-            });
-    };
-
-    changeCC = (e) => {
-        const {value} = e.target;
-        this.setState({newCC:value.substring(0,10)})
-    };
-
     render() {
-        const {user,checked_in,state,statesList,userId,found} = this.state;
-        const {modal,edit} = this.props;
+        const {user,checked_in,state,statesList,userId} = this.state;
+        const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
@@ -366,24 +338,7 @@ class UserModal extends Component {
                         </header>
                         <section className="modal-card-body">
                             {
-                                (!edit && found===2) ?
-                                    <div className="msg"><p className="msg_info has-text-centered is-size-5">ENCONTRADO !!</p></div> :
-                                    (!edit && found===1) ?
-                                        <div className="msg"><p className="msg_warning has-text-centered is-size-5">NO ENCONTRADO</p></div> : ''
-                            }
-                            {
-                                (!edit && Object.keys(user).length <= 0) && <React.Fragment>
-                                    <div className="field">
-                                        <div className="control">
-                                            <label className={`label has-text-grey-light is-capitalized required`}>Cédula</label>
-                                            <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC}/>
-                                        </div>
-                                    </div>
-                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
-                                </React.Fragment>
-                            }
-                            {
-                                Object.keys(user).length > 0 && this.renderForm()
+                                this.renderForm()
                             }
                             {
                                 checked_in && (
@@ -431,6 +386,21 @@ class UserModal extends Component {
                                         }
                                     </div>
                             }
+                            <div className="control">
+                                <label className="label">Tiquete</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={state} onChange={this.selectChange} name={'ticket_id'}>
+                                            <option value={''}>..Seleccione</option>
+                                            {
+                                                this.props.tickets.map((item,key)=>{
+                                                    return <option key={key} value={item._id}>{item.title}</option>
+                                                })
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </section>
                         {
                             Object.keys(user).length > 0 &&

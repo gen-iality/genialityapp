@@ -44,7 +44,7 @@ class Importacion extends Component {
                         if (sheetObj[abc[i] + j] &&
                             sheetObj[abc[i] + j].w &&
                             sheetObj[abc[i] + j].w.trim().length >= 0) {
-                            fields[i].list.push(sheetObj[abc[i] + j].w.trim())
+                            fields[i].list.push(sheetObj[abc[i] + j].w.trim().toUpperCase())
                         }else{
                             fields[i].list.push(undefined)
                         }
@@ -64,6 +64,7 @@ class Importacion extends Component {
         this.props.extraFields.map((extra)=>{
            return data[0][extra.name] = ''
         });
+        data[0]['tiquete'] = '';
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         const name = this.props.organization ? 'usersorganizationtemplate' : 'attendeestemplate';
