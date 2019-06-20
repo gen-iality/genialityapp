@@ -13,10 +13,7 @@ class NewEvent extends Component {
             info:{name:'',location:{}, description: '', category_ids: [], venue: '',event_type_id: "",
                 hour_start : Moment().toDate(), date_start : Moment().toDate(), hour_end : Moment().toDate(), date_end : Moment().toDate()
             },
-            fields:{
-                properties_group:[],
-                user_properties:[]
-            },
+            fields:[],
             tickets:{},
             content:[],
             stepsValid:{
