@@ -10,6 +10,7 @@ const Home = asyncComponent(() => import("../components/home"));
 const HomeProfile = asyncComponent(() => import("../components/home/profile"));
 const Landing = asyncComponent(() => import("../components/events/landing"));
 const Events = asyncComponent(() => import("../components/events"));
+const NewEvent = asyncComponent(() => import("../components/events/newEvent"));
 const Organization = asyncComponent(()=> import("../components/organization"));
 const MyProfile = asyncComponent(()=> import("../components/profile"));
 const Terms = asyncComponent(()=> import("../components/policies/termsService"));
@@ -32,6 +33,7 @@ class ContentContainer extends Component {
                     <Route exact path="/landing/:event" component={ Landing }/>
                     <PrivateRoute path="/my_events" component={ Events }/>
                     <PrivateRoute path="/event/:event" component={ Event }/>
+                    <PrivateRoute path="/create-event" component={ NewEvent }/>
                     <PrivateRoute path="/profile/:id" component={ MyProfile }/>
                     <PrivateRoute path="/organization/:id" component={ Organization }/>
                     <Route exact path="/terms" component={ Terms } />

@@ -198,30 +198,16 @@ class Header extends Component {
                                                     <hr className="navbar-divider"/>
                                                     {this.state.uid.match('^(j4ZLBMDuh5UGiX5CKsmChv8UNFf1|JzPjRBtM85ehpKO4ylwiMmeo2jC3)$') && <a className="navbar-item item-sub has-text-grey-light" onClick={this.goReport}>Reportes</a>}
                                                     <hr className="navbar-divider"/>
-                                                    {/*
-                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">
-                                                        <FormattedMessage id="header.org" defaultMessage="Org"/>
-                                                    </p>
                                                     {
-                                                        this.state.organizations.map((org,key)=>{
-                                                            return  <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/${org.id}`} key={key}>
-                                                                {org.name}
+                                                        this.state.user &&
+                                                        <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                                            <Link to={'/create-event'}>
+                                                                <button className="button is-primary has-text-weight-bold">
+                                                                    <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                                                </button>
                                                             </Link>
-                                                        })
+                                                        </div>
                                                     }
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/create`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
-                                                    */}
-                                                    
-                                {
-                                    this.state.user &&
-                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        <Link to={'/event/new_event'}>
-                                            <button className="button is-primary has-text-weight-bold">
-                                                <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                            </button>
-                                        </Link>
-                                    </div>
-                                }
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
