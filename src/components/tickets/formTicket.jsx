@@ -314,10 +314,11 @@ class TicketsForm extends Component {
                                                     </div>
                                                 </div>
                                             <div className="field">
-                                                <label className="label">Código Promocional</label>
+                                                <label className="label" for="codpromocional" >Código Promocional</label>
                                                 <div className="control">
-                                                    <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
+                                                    <input type="text" placeholder="Ingrese aqui su código promocional" id='codpromocional' className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
                                                 </div>
+                                                <span>* El descuento será calculado al hacer clic en reservar</span>
                                             </div>
                                             </React.Fragment>
                                     }
