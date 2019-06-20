@@ -96,7 +96,7 @@ class InfoAsistentes extends Component {
         const data = {
             user_properties : [...this.state.fields,...initOpt]
         };
-        flag? this.props.nextStep('fields',data) : this.props.prevStep('fields',data)
+        flag? this.props.nextStep('fields',data,'tickets') : this.props.prevStep('fields',data,'main')
     };
 
     closeModal = () => {

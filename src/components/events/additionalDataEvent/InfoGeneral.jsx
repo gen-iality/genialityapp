@@ -190,7 +190,7 @@ class InfoGeneral extends Component {
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value
         };
-        this.props.nextStep('info',data)
+        this.props.nextStep('info',data, 'attendees')
     }
 
     render() {
