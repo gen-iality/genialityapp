@@ -38,8 +38,14 @@ class SearchComponent extends Component {
                 if(item.properties){
                     for(let key in item.properties){
                         const propertyValue = item.properties[key];
-                        if(propertyValue && propertyValue.search(new RegExp(value, 'i')) >= 0 )
-                            return true;
+                        if(propertyValue){
+                            if(typeof propertyValue === "string" && propertyValue.search(new RegExp(value, 'i')) >= 0){
+                                return true;
+                            }else if(typeof propertyValue === "number"){
+                                const value = propertyValue.toString();
+                                return value.search(new RegExp(value, 'i')) >= 0
+                            }
+                        }
                     }
                 }
             });

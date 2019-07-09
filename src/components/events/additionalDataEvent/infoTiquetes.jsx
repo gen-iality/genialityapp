@@ -7,7 +7,7 @@ class InfoTiquetes extends Component {
     }
 
     submit = (flag) => {
-        flag? this.props.nextStep('tickets',[]) : this.props.prevStep('tickets',[])
+        flag? this.props.nextStep('tickets',[], 'pages') : this.props.prevStep('tickets',[], 'attendees')
     };
 
     render() {

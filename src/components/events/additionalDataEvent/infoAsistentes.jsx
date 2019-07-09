@@ -19,7 +19,7 @@ class InfoAsistentes extends Component {
     }
 
     componentDidMount() {
-        const {fields} = parseProperties(this.props.data);
+        const fields = this.props.data;
         this.setState({fields})
     }
 
@@ -93,10 +93,8 @@ class InfoAsistentes extends Component {
     };
 
     submit = (flag) => {
-        const data = {
-            user_properties : [...this.state.fields,...initOpt]
-        };
-        flag? this.props.nextStep('fields',data) : this.props.prevStep('fields',data)
+        const data = [...this.state.fields];
+        flag? this.props.nextStep('fields',data,'tickets') : this.props.prevStep('fields',data,'main')
     };
 
     closeModal = () => {
@@ -251,13 +249,6 @@ class InfoAsistentes extends Component {
             </div>
         )
     }
-}
-
-//Función para mostrar los campos y grupos por separado
-function parseProperties(event){
-    const {user_properties} = event;
-    let fields = user_properties.filter(item => !item.group_id);
-    return {fields}
 }
 
 const createOption = (label) => ({label, value: label});
