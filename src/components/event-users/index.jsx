@@ -695,6 +695,7 @@ const parseData = (data) => {
         info[key] = {};
         Object.keys(item.properties).map((obj, i) => {
             let str = item.properties[obj];
+            if(typeof str === "number") str = str.toString();
             if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
             return info[key][obj] = str
         });
