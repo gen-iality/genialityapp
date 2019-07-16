@@ -125,13 +125,6 @@ class NewEvent extends Component {
                                 <p className="step-title">Información <br/> Asistentes</p>
                             </div>
                         </NavLink>
-                        <NavLink activeClassName={"is-active"} to={`${this.props.match.url}/tickets`} onClick={e=>{e.preventDefault()}}
-                                 className={`step-item ${(this.state.stepsValid.tickets)?'is-completed':''}`}>
-                            <div className="step-marker">3</div>
-                            <div className="step-details">
-                                <p className="step-title">Tiquetes</p>
-                            </div>
-                        </NavLink>
                     </div>
                     <Switch>
                         <Route exact path={`${this.props.match.url}/`} render={()=><Redirect to={`${this.props.match.url}/main`} />}/>
