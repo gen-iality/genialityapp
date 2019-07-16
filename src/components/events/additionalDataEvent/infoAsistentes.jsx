@@ -94,7 +94,7 @@ class InfoAsistentes extends Component {
 
     submit = (flag) => {
         const data = [...this.state.fields];
-        flag? this.props.nextStep('fields',data,'tickets') : this.props.prevStep('fields',data,'main')
+        flag? this.props.nextStep(data) : this.props.prevStep('fields',data,'main')
     };
 
     closeModal = () => {
@@ -243,7 +243,7 @@ class InfoAsistentes extends Component {
                     </div>
                 </div>
                 <div className="buttons is-right">
-                    <button onClick={e=>{this.submit(true)}} className={`button is-primary`}>Siguiente</button>
+                    <button onClick={e=>{this.submit(true)}} className={`button is-primary`}>Crear</button>
                     <button onClick={e=>{this.submit(false)}} className={`button is-text`}>Anterior</button>
                 </div>
             </div>
