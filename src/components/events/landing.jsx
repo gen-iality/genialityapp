@@ -231,6 +231,15 @@ class Landing extends Component {
                             }
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
+                                    {
+                                        this.state.event._id === "5d2de182d74d5c28047d1f85" &&
+                                        <React.Fragment>
+                                            <h2 className="data-title has-text-left title-frame">
+                                                <span className="has-text-grey-dark is-size-3 subtitle">Agenda</span>
+                                            </h2>
+                                            <img src="https://firebasestorage.googleapis.com/v0/b/firebase-evius.appspot.com/o/pmi-calendar.png?alt=media&token=4aecfee1-684d-4c55-a9c5-f434cfc0c5fa" alt=""/>
+                                        </React.Fragment>
+                                    }
                                     <h2 className="data-title has-text-left title-frame">
                                         <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
                                     </h2>
