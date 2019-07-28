@@ -33,30 +33,38 @@ class SearchComponent extends Component {
 
     filterByAllColums(value) {
         let arrAux;
-        if (this.props.kind === 'user') {
-            arrAux = this.props.data.filter((item)=>{
-                if(item.properties){
-                    for(let key in item.properties){
-                        const propertyValue = item.properties[key];
-                        if(propertyValue){
-                            if(typeof propertyValue === "string" && propertyValue.search(new RegExp(value, 'i')) >= 0){
-                                return true;
-                            }else if(typeof propertyValue === "number"){
-                                const value = propertyValue.toString();
-                                return value.search(new RegExp(value, 'i')) >= 0
+        if(this.props.event=== "5d24e15c1c9d4400004b4e0a"){
+            arrAux = this.props.data.filter((item) => {
+                if(item.properties && item.properties.dni){
+                    return item.properties.dni.search(new RegExp(value, 'i')) >= 0
+                }
+            });
+        }else{
+            if (this.props.kind === 'user') {
+                arrAux = this.props.data.filter((item)=>{
+                    if(item.properties){
+                        for(let key in item.properties){
+                            const propertyValue = item.properties[key];
+                            if(propertyValue){
+                                if(typeof propertyValue === "string" && propertyValue.search(new RegExp(value, 'i')) >= 0){
+                                    return true;
+                                }else if(typeof propertyValue === "number"){
+                                    const value = propertyValue.toString();
+                                    return value.search(new RegExp(value, 'i')) >= 0
+                                }
                             }
                         }
                     }
-                }
-            });
-        }else if(this.props.kind === 'invitation'){
-            arrAux = this.props.data.filter(item =>
-                item.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.state.search(new RegExp(value, 'i')) >= 0);
-        }else if(this.props.kind === 'helpers'){
-            arrAux = this.props.data.filter(item =>
-                item.user.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.user.displayName.search(new RegExp(value, 'i')) >= 0);
+                });
+            }else if(this.props.kind === 'invitation'){
+                arrAux = this.props.data.filter(item =>
+                    item.email.search(new RegExp(value, 'i')) >= 0 ||
+                    item.state.search(new RegExp(value, 'i')) >= 0);
+            }else if(this.props.kind === 'helpers'){
+                arrAux = this.props.data.filter(item =>
+                    item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+                    item.user.displayName.search(new RegExp(value, 'i')) >= 0);
+            }
         }
         return arrAux
     }

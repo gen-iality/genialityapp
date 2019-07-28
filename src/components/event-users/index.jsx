@@ -424,7 +424,7 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div className="search">
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
 
                             </div>
