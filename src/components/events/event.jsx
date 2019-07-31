@@ -12,7 +12,6 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
-import NewEvent from "./newEvent";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
