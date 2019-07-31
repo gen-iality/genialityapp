@@ -374,7 +374,6 @@ class General extends Component {
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
             fields, newField, valid, timeout, error , errorData, serverError} = this.state;
-        console.log(fields);
         return (
             <React.Fragment>
                 <div className="event-general">
