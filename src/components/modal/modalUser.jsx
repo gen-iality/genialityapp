@@ -39,14 +39,14 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticketId:user.ticket_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+            this.setState({user, ticket_id:user.ticket_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
         }else{
             this.props.extraFields
                 .map((obj) => {
                     user[obj.name] = obj.type === "boolean" ? false : obj.type === "number" ? 0 : "";
                     return user
                 });
-            this.setState({found:1,user,edit:false,ticketId:this.props.ticket});
+            this.setState({found:1,user,edit:false,ticket_id:this.props.ticket});
         }
     }
 
@@ -322,7 +322,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,checked_in,state,statesList,userId} = this.state;
+        const {user,checked_in,ticket_id,state,statesList,userId} = this.state;
         const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
@@ -386,11 +386,11 @@ class UserModal extends Component {
                                         }
                                     </div>
                             }
-                            <div className="control">
-                                <label className="label">Tiquete</label>
+                            <div className="field">
                                 <div className="control">
+                                    <label className="label">Tiquete</label>
                                     <div className="select">
-                                        <select value={state} onChange={this.selectChange} name={'ticket_id'}>
+                                        <select value={ticket_id} onChange={this.selectChange} name={'ticket_id'}>
                                             <option value={''}>..Seleccione</option>
                                             {
                                                 this.props.tickets.map((item,key)=>{
