@@ -699,13 +699,13 @@ const parseData = (data) => {
             if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
             return info[key][obj] = str
         });
-        if(item.state) info[key]['estado'] = item.state.label;
-        if(item.rol) info[key]['rol'] = item.rol.label;
+        if(item.state) info[key]['estado'] = item.state.label.toUpperCase();
+        if(item.rol) info[key]['rol'] = item.rol.label.toUpperCase();
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
-        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'SIN TIQUETE';
+        info[key]['Tiquete'] = item.tiquete?item.tiquete.title.toUpperCase():'SIN TIQUETE';
         return info
     });
     return info
