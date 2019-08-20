@@ -41,6 +41,7 @@ class General extends Component {
             valid: !this.props.event._id,
             groups: [],
             errorData: {},
+            fieldInfo: {},
             toggleFields: true,
             serverError: false,
             fieldModal:false,
@@ -219,17 +220,8 @@ class General extends Component {
         }
     };
     //Editar campo en el evento o lista
-    editField = (index,key) => {
-        const {fields,groups} = this.state;
-        if(key || key === 0){
-            const obj = groups[key].fields[index];
-            obj['edit'] = !obj['edit'];
-            this.setState({groups})
-        }
-        else{
-            fields[index].edit = !fields[index].edit;
-            this.setState({fields,newField:true});
-        }
+    editField = (field) => {
+        this.setState({fieldModal:true,fieldInfo:field})
     };
     //Borrar campo en el evento o lista
     removeField = (index,key) => {
@@ -584,7 +576,7 @@ class General extends Component {
                         </button>
                     }
                 </div>
-                {this.state.fieldModal&&<FieldEvent edit={this.state.fieldEdit} modal={this.state.fieldModal} saveField={this.saveField} closeModal={this.closeFieldModal}/>}
+                {this.state.fieldModal&&<FieldEvent infoModal={this.state.fieldInfo} edit={this.state.fieldEdit} modal={this.state.fieldModal} saveField={this.saveField} closeModal={this.closeFieldModal}/>}
                 {timeout&&(<LogOut/>)}
                 {serverError&&(<ErrorServe errorData={errorData}/>)}
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}

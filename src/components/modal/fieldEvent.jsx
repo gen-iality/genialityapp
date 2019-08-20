@@ -4,6 +4,7 @@ import CreatableSelect from "react-select/lib/Creatable";
 import {uniqueID} from "../../helpers/utils";
 
 const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
+const html = document.querySelector("html");
 class FieldEvent extends Component {
     constructor(props) {
         super(props);
@@ -11,6 +12,16 @@ class FieldEvent extends Component {
             info:initModal
         }
     }
+
+    componentDidMount() {
+        html.classList.add('is-clipped');
+        if (this.props.infoModal) this.setState({info:this.props.infoModal});
+    }
+
+    componentWillUnmount() {
+        html.classList.remove('is-clipped');
+    }
+
     //Cambiar input del campo del evento
     handleChange = (e) => {
         let {name, value} = e.target;
