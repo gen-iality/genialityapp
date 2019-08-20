@@ -15,12 +15,14 @@ class FieldEvent extends Component {
 
     componentDidMount() {
         html.classList.add('is-clipped');
-        if (this.props.infoModal) this.setState({info:this.props.infoModal});
+        if (this.props.edit) this.setState({info:this.props.infoModal});
+        else this.setState({info:initModal})
     }
 
-    componentWillUnmount() {
+    closeModal = () => {
         html.classList.remove('is-clipped');
-    }
+        this.setState({info:initModal}, this.props.closeModal)
+    };
 
     //Cambiar input del campo del evento
     handleChange = (e) => {
@@ -71,7 +73,7 @@ class FieldEvent extends Component {
                 <div className="modal-card">
                     <header className="modal-card-head">
                         <p className="modal-card-title">{this.props.edit?'Editar Campo':'Agregar Campo'}</p>
-                        <button className="delete is-large" aria-label="close" onClick={this.props.closeModal}/>
+                        <button className="delete is-large" aria-label="close" onClick={this.closeModal}/>
                     </header>
                     <section className="modal-card-body">
                         <div className="field">

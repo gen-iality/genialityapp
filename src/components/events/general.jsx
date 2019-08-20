@@ -221,7 +221,7 @@ class General extends Component {
     };
     //Editar campo en el evento o lista
     editField = (field) => {
-        this.setState({fieldModal:true,fieldInfo:field})
+        this.setState({fieldModal:true,fieldInfo:field,fieldEdit:true})
     };
     //Borrar campo en el evento o lista
     removeField = (index,key) => {
