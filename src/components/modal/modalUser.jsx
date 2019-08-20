@@ -68,7 +68,7 @@ class UserModal extends Component {
         let message = {};
         this.setState({create:true});
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        snap.ticket_id = this.state.ticketId;
+        snap.ticket_id = this.state.ticket_id;
         if(!this.state.edit){
             snap.updated_at = new Date();
             snap.checked_in = false;
@@ -77,7 +77,6 @@ class UserModal extends Component {
                 snap.checked_in = true;
                 snap.checked_at = new Date();
             }
-            console.log(snap);
             userRef.add(snap)
                 .then(docRef => {
                     console.log("Document written with ID: ", docRef.id);
