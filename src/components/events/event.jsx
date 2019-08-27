@@ -12,6 +12,7 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
+import Certificado from "../certificados/certificado";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -23,6 +24,8 @@ const TicketInfo = asyncComponent(()=> import("../tickets")) ;
 const DashboardEvent = asyncComponent(()=> import("../dashboard")) ;
 const OrdersEvent = asyncComponent(()=> import("../orders")) ;
 const Pages =  asyncComponent(()=> import('../pages'));
+const ListCertificados = asyncComponent( ()=> import("../certificados"));
+const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 
 Moment.locale('es');
 momentLocalizer();
@@ -35,6 +38,7 @@ class Event extends Component {
             userTab:true,
             ticketTab:true,
             contentTab:true,
+            certTab:true,
             menuMobile:false
         };
         this.props.history.listen((location, action) => {
@@ -147,6 +151,22 @@ class Event extends Component {
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/orders`}>Orders</NavLink>
                 </p>
+                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({certTab:!this.state.certTab})}}>
+                    <span className="item has-text-grey">Certificados</span>
+                    <span className="icon"><i className={`${this.state.certTab?'up':'down'}`}/></span>
+                </p>
+            {
+                (this.state.certTab) && (
+                    <ul className="menu-list">
+                        <li>
+                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/certificados`}>Listado</NavLink>
+                        </li>
+                        <li>
+                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/reporte-certificados`}>Reportes</NavLink>
+                        </li>
+                    </ul>
+                )
+            }
             </React.Fragment>
         return (
             <React.Fragment>
@@ -208,6 +228,8 @@ class Event extends Component {
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
+                                            <Route path={`${match.url}/certificados`} render={()=><ListCertificados eventId={this.state.event._id}/>}/>
+                                            <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>
                                     </section>
