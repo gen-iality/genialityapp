@@ -12,7 +12,7 @@ class Certificado extends Component {
 
     render() {
         return (
-            <div>
+            <div className="editor-certificado">
                 <nav className="level">
                     <div className="level-left">
                         <div className="level-item">
@@ -26,6 +26,9 @@ class Certificado extends Component {
                             <button className="button is-info">Tags disponibles</button>
                         </div>
                         <div className="level-item">
+                            <button className="button is-link">Imagen de Fondo</button>
+                        </div>
+                        <div className="level-item">
                             <button className="button is-primary">Preview</button>
                         </div>
                         <div className="level-item">
@@ -36,8 +39,18 @@ class Certificado extends Component {
                         </div>
                     </div>
                 </nav>
-                <div>
-                    Certificado
+                <div className="contenedor">
+                    <img src="" alt="background-image" className="bg"/>
+                    <div className="texto-certificado">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>Certificamos
+                        que <strong>participante.nome}</strong>, participou com êxito do
+                        evento evento.titulo} realizado em evento.data.realizacao}, na cidade de evento.cidade},
+                        contabilizando carga horária total de evento.carga.horaria} horas.</p><p>&nbsp;</p>
+                        <p>&nbsp;</p><p>evento.cidade},
+                        informe a data aqui.</p>
+                    </div>
                 </div>
             </div>
         )
