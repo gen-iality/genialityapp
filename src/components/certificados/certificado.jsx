@@ -1,14 +1,36 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
+import Dropzone from "react-dropzone";
+import {toast} from "react-toastify";
 
 class Certificado extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            showEditor:false,
+            imageFile:"https://even3.blob.core.windows.net/certificados/Certificado-02.jpg"
+        };
     }
 
     componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
     }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleImage = (files) => {
+        const file = files[0];
+        if(file) this.setState({imageFile: URL.createObjectURL(file)});
+        else toast.error("Solo se permiten imágenes. Intentalo de nuevo");
+    };
+
+    setContenedorRef = (node) => {this.contenedor=node};
+
+    handleClickOutside = (e) => {
+        this.setState({showEditor:!(this.contenedor && !this.contenedor.contains(e.target))});
+    };
 
     render() {
         return (
@@ -26,7 +48,9 @@ class Certificado extends Component {
                             <button className="button is-info">Tags disponibles</button>
                         </div>
                         <div className="level-item">
-                            <button className="button is-link">Imagen de Fondo</button>
+                            <Dropzone onDrop={this.handleImage} accept=".png,.jpeg" className="zone">
+                                <button className="button is-link">Imagen de Fondo</button>
+                            </Dropzone>
                         </div>
                         <div className="level-item">
                             <button className="button is-primary">Preview</button>
@@ -39,9 +63,46 @@ class Certificado extends Component {
                         </div>
                     </div>
                 </nav>
+                {this.state.showEditor&&<div className="editor">
+                    <div className="edit-option">
+                        <div className="edit-element">Font Family</div>
+                    </div><div className="edit-option">
+                        <div className="edit-element">Font Sizes</div>
+                    </div>
+                    <div className="edit-option">
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-tint"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-paint-roller"/></span></div>
+                    </div>
+                    <div className="edit-option">
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-bold"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-italic"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-underline"/></span></div>
+                    </div>
+                    <div className="edit-option">
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-align-right"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-align-center"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-align-left"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-align-justify"/></span></div>
+                    </div>
+                    <div className="edit-option">
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-indent"/></span></div>
+                        <div className="edit-element">
+                            <span className="icon"><i className="fas fa-outdent"/></span></div>
+                    </div>
+                </div>}
                 <div className="contenedor">
-                    <img src="" alt="background-image" className="bg"/>
-                    <div className="texto-certificado">
+                    <img src={this.state.imageFile} alt="background-image" className="bg"/>
+                    <div className="texto-certificado" contentEditable={true} ref={this.setContenedorRef}>
                         <p>&nbsp;</p>
                         <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
                         <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>Certificamos
