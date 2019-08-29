@@ -7,9 +7,10 @@ class Certificado extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showEditor:false,
+            showEditor:true,
             imageFile:"https://even3.blob.core.windows.net/certificados/Certificado-02.jpg"
         };
+        this.elementEdit = null;
     }
 
     componentDidMount() {
@@ -26,13 +27,29 @@ class Certificado extends Component {
         else toast.error("Solo se permiten imágenes. Intentalo de nuevo");
     };
 
-    setContenedorRef = (node) => {this.contenedor=node};
+    setContenedorRef = (node) => { this.contenedor = node };
 
     handleClickOutside = (e) => {
-        this.setState({showEditor:!(this.contenedor && !this.contenedor.contains(e.target))});
+        if ( ( this.contenedor && this.contenedor.contains(e.target) ) ) {
+            this.elementEdit = e.target;
+            this.setState({showEditor:true});
+        }else {
+            if( e.target.classList.contains("icon") || e.target.classList.contains("editor-element") || e.target.classList.contains("fas") ){
+                this.setState({showEditor:true});
+            }else{
+                this.elementEdit = null;
+                this.setState({showEditor:false});
+            }
+        }
+    };
+
+    editClick = (action) => {
+      this.setState({showEditor:true});
+      this.elementEdit.style.marginLeft = "30px"
     };
 
     render() {
+        console.log(this.elementEdit);
         return (
             <div className="editor-certificado">
                 <nav className="level">
@@ -66,7 +83,8 @@ class Certificado extends Component {
                 {this.state.showEditor&&<div className="editor">
                     <div className="edit-option">
                         <div className="edit-element">Font Family</div>
-                    </div><div className="edit-option">
+                    </div>
+                    <div className="edit-option">
                         <div className="edit-element">Font Sizes</div>
                     </div>
                     <div className="edit-option">
@@ -94,7 +112,7 @@ class Certificado extends Component {
                             <span className="icon"><i className="fas fa-align-justify"/></span></div>
                     </div>
                     <div className="edit-option">
-                        <div className="edit-element">
+                        <div className="edit-element" onClick={e=>{this.editClick('indent')}}>
                             <span className="icon"><i className="fas fa-indent"/></span></div>
                         <div className="edit-element">
                             <span className="icon"><i className="fas fa-outdent"/></span></div>
