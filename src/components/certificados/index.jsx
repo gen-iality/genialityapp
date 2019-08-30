@@ -20,10 +20,14 @@ class Certificados extends Component {
         this.setState({step:1,data})
     };
 
+    listTab = () => {
+        this.setState({step:0})
+    };
+
     render() {
         const layout = [
             <List certTab={this.certTab}/>,
-            <Certificado data={this.state.data}/>
+            <Certificado data={this.state.data} listTab={this.listTab}/>
         ];
         return (
             <section>

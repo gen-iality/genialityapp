@@ -20,7 +20,8 @@ class List extends Component {
 
     newCert = () => {
         if(this.state.name.length>0){
-            this.props.certTab({name:this.state.name})
+            this.props.certTab({name:this.state.name});
+            this.closeModal()
         }else{
             this.setState({message:"Por favor coloca un nombre"})
         }
@@ -29,7 +30,7 @@ class List extends Component {
     onChange = e => {this.setState({name:e.target.value,message:""})};
 
     closeModal = () => {
-        this.setState({modalCert:false})
+        this.setState({modalCert:false,name:"",message:""})
     };
 
     editCert = (data) => {
