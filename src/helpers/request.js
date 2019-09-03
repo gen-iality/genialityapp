@@ -188,6 +188,17 @@ export const HelperApi = {
         return await Actions.delete(`api/contributors/`,id)
     }
 };
+export const CertsApi = {
+    get: async(event) => {
+        return await Actions.get(`api/certificate/`,event)
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/certificate/`,id)
+    },
+    create: async(data) => {
+        return await Actions.post(`api/certificate/`,data)
+    }
+};
 const handleCat = (data) => {
     let list = [];
     data.map(item=>{

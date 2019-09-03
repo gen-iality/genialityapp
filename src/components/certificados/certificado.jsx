@@ -76,7 +76,6 @@ class Certificado extends Component {
                 html2canvas(document.querySelector("#contenedorCert"))
                     .then((canvas) => {
                         const contentData = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
-                        console.log(contentData);
                         this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
                         this.img2 = this.loadImage(contentData, this.drawImg);
                     });
@@ -100,19 +99,20 @@ class Certificado extends Component {
             var ctx = canvas.getContext("2d");
             ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
             ctx.drawImage(this.img2,
-                (canvas.width - 880) / 2,
-                (canvas.height - 630) / 2, 880, 630);
+                (canvas.width - 850) / 2,
+                (canvas.height - 600) / 2, 850, 600);
             var combined = new Image;
             combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
             const pdf = new jsPDF({orientation: 'landscape'});
             pdf.addImage(combined.src, imageData.type ? imageData.type.toUpperCase() : 'PNG', 0, 0);
             pdf.output('dataurlnewwindow');
             imagesLoaded = 0;
-            self.setState({newContent:false})
+            //self.setState({newContent:false})
         }
     }
 
     loadImage = (src, onload) => {
+        console.log(src);
         var img = new Image();
         img.onload = onload;
         img.src = src;
@@ -165,7 +165,7 @@ class Certificado extends Component {
                         </div>
                     </div>
                     {this.state.newContent &&
-                        <div id="contenedorCert" className="texto-certificado" dangerouslySetInnerHTML={{__html:this.state.newContent}}/>}
+                        <div id="contenedorCert" className="texto-toprint" dangerouslySetInnerHTML={{__html:this.state.newContent}}/>}
                     {this.state.newContent &&
                         <canvas width="1100" height="793" id="canvas"></canvas>}
                 </div>
