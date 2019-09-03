@@ -228,7 +228,7 @@ class Event extends Component {
                                             }
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
-                                            <Route path={`${match.url}/certificados`} render={()=><ListCertificados eventId={this.state.event._id}/>}/>
+                                            <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
                                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>

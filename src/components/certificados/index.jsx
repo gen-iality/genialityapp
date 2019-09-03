@@ -26,8 +26,8 @@ class Certificados extends Component {
 
     render() {
         const layout = [
-            <List certTab={this.certTab}/>,
-            <Certificado data={this.state.data} listTab={this.listTab}/>
+            <List certTab={this.certTab} event={this.props.event}/>,
+            <Certificado data={this.state.data} event={this.props.event} listTab={this.listTab}/>
         ];
         return (
             <section>
