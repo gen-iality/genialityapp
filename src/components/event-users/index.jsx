@@ -329,7 +329,9 @@ class ListEventUser extends Component {
                 <td>{item.state.label}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
-                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
+                        const value = field.type !== 'boolean' ? item.properties[field.name] :
+                            item.properties[field.name] ? 'SI' : 'NO';
+                        return <td key={`${item._id}_${field.name}`}>{value}</td>
                     })
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
