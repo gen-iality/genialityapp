@@ -331,7 +331,7 @@ class ListEventUser extends Component {
                     extraFields.slice(0, limit).map((field,key)=>{
                         const value = field.type !== 'boolean' ? item.properties[field.name] :
                             item.properties[field.name] ? 'SI' : 'NO';
-                        return <td key={`${item._id}_${field.name}`}>{value}</td>
+                        return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
@@ -385,6 +385,12 @@ class ListEventUser extends Component {
     //Search records at third column
     searchResult = (data) => {
         !data ? this.setState({users:[]}) : this.setState({users:data})
+    };
+
+    editQRUser = (user) => {
+        this.setState({qrModal:false},()=>{
+            this.openEditModalUser(user)
+        });
     };
 
     render() {
@@ -678,6 +684,7 @@ class ListEventUser extends Component {
                                             !qrData.another &&
                                             <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
+                                        <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
                                 )
