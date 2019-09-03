@@ -5,6 +5,7 @@ import * as jsPDF from 'jspdf';
 import Dropzone from "react-dropzone";
 import {toast} from "react-toastify";
 
+const html = document.querySelector("html");
 class Certificado extends Component {
     constructor(props) {
         super(props);
@@ -22,8 +23,6 @@ class Certificado extends Component {
             imageFile:"https://even3.blob.core.windows.net/certificados/Certificado-02.jpg",
             imageData:{}
         };
-        this.elementEdit = null;
-        this.editor = {};
     }
 
     componentDidMount() {
@@ -72,7 +71,13 @@ class Certificado extends Component {
                 pdf.addImage(contentData, 'PNG', 0, 0);
                 pdf.save("download.pdf");
             });
-    }
+    };
+
+    handleTAG = (open) => {
+        this.setState({openTAG:open});
+        if(open) html.classList.add('is-clipped');
+        else html.classList.remove('is-clipped');
+    };
 
     render() {
         return (
@@ -88,7 +93,7 @@ class Certificado extends Component {
                         </div>
                         <div className="level-right">
                             <div className="level-item">
-                                <button className="button is-info" onClick={e=>{this.setState({openTAG:true})}}>Tags disponibles</button>
+                                <button className="button is-info" onClick={e=>{this.handleTAG(true)}}>Tags disponibles</button>
                             </div>
                             <div className="level-item">
                                 <Dropzone onDrop={this.handleImage} accept="image/*" className="zone">
@@ -127,7 +132,7 @@ class Certificado extends Component {
                             <div className="modal-card">
                                 <header className="modal-card-head">
                                     <p className="modal-card-title">Etiquetas Disponibles</p>
-                                    <button className="delete is-large" aria-label="close" onClick={e=>{this.setState({openTAG:false})}}/>
+                                    <button className="delete is-large" aria-label="close" onClick={e=>{this.handleTAG(false)}}/>
                                 </header>
                                 <section className="modal-card-body tags-certificado">
                                     <p>Use etiquetas para ingresar información referente al evento o los asistentes</p>
@@ -141,7 +146,7 @@ class Certificado extends Component {
                                     </dl>
                                 </section>
                                 <footer className="modal-card-foot">
-                                    <button className="button is-text" onClick={e=>{this.setState({openTAG:false})}}>Cerrar</button>
+                                    <button className="button is-text" onClick={e=>{this.handleTAG(false)}}>Cerrar</button>
                                 </footer>
                             </div>
                         </div>
