@@ -12,6 +12,7 @@ import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
+import CertificadoLanding from "../certificados/cerLanding";
 Moment.locale('es');
 momentLocalizer();
 
@@ -61,7 +62,7 @@ class Landing extends Component {
                     <img src="https://firebasestorage.googleapis.com/v0/b/firebase-evius.appspot.com/o/pmi-calendar.png?alt=media&token=4aecfee1-684d-4c55-a9c5-f434cfc0c5fa" alt=""/>
                 </div>,
             tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>,
-            certs: <h1>Certificados</h1>
+            certs: <CertificadoLanding eventId={event._id} />
         };
         this.setState({event,loading:false,sections},()=>{
             this.firebaseUI();
@@ -253,12 +254,12 @@ class Landing extends Component {
                                         <div className="column box" onClick={e=>{this.showSection('certs')}}>
                                             <span className="has-text-grey-dark is-size-5 subtitle">Certificados</span>
                                         </div>
-                                        <div className="column box" onClick={e=>{this.showSection('agenda')}}>
-                                            {
-                                                this.state.event._id === "5d2de182d74d5c28047d1f85" &&
+                                        {
+                                            this.state.event._id === "5d2de182d74d5c28047d1f85" &&
+                                            <div className="column box" onClick={e=>{this.showSection('agenda')}}>
                                                 <span className="has-text-grey-dark is-size-5 subtitle">Agenda</span>
-                                            }
-                                        </div>
+                                            </div>
+                                        }
                                     </div>
                                     {
                                         sections[section]
