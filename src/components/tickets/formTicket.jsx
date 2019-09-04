@@ -47,9 +47,16 @@ class TicketsForm extends Component {
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
-        const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-        const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+        if (this.props.stages){
+            const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+            const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
+            const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+        }else{
+            const stage = null;
+            const id = "";
+            const ticketstoshow = [];
+        }
+
         //Persistencia de tiquetes seleccionados después de login
         let info = localStorage.getItem('info'); //Se trae info
         if(info && evius_token){
