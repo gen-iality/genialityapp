@@ -41,21 +41,17 @@ class TicketsForm extends Component {
                 ticket.price === '0' ? 'Gratis' :
                 new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0 , maximumFractionDigits: 0, currency: ticket.currency}).format(ticket.price);
             //Encuentro el stage relacionado
-            const stage =  this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
+            const stage =  (!this.props.stages)?null:this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
             //Lista de opciones para el select
-            ticket.options = (stage.status === 'ended' || stage.status === 'notstarted') ? [] :
+            ticket.options = (stage && (stage.status === 'ended' || stage.status === 'notstarted')) ? [] :
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        if (this.props.stages){
-            const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+        
+            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
             const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
             const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
-        }else{
-            const stage = null;
-            const id = "";
-            const ticketstoshow = [];
-        }
+
 
         //Persistencia de tiquetes seleccionados después de login
         let info = localStorage.getItem('info'); //Se trae info
