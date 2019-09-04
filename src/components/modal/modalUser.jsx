@@ -107,7 +107,7 @@ class UserModal extends Component {
                 snap.ticket_id = null;
             }
             if (snap.rol_id == undefined || !snap.rol_id || snap.rol_id == "undefined"){
-                snap.rol_id = "null";
+                snap.rol_id = null;
             }
 
             userRef.doc(this.state.userId).update(snap)
