@@ -52,6 +52,7 @@ class Landing extends Component {
         event.date_end = dateTo[0];
         event.sessions = sessions;
         event.organizer = event.organizer ? event.organizer : event.author;
+        event.event_stages = event.event_stages ? event.event_stages : [];
         this.setState({event,loading:false},()=>{
             this.firebaseUI();
             this.handleScroll();
