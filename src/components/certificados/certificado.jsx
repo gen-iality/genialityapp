@@ -99,8 +99,8 @@ class Certificado extends Component {
             var ctx = canvas.getContext("2d");
             ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
             ctx.drawImage(this.img2,
-                (canvas.width - 850) / 2,
-                (canvas.height - 600) / 2, 850, 600);
+                (canvas.width - 550) / 2,
+                (canvas.height - 395) / 2, 550, 395);
             var combined = new Image;
             combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
             const pdf = new jsPDF({orientation: 'landscape'});
