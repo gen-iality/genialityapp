@@ -369,7 +369,7 @@ function ListadoTiquetes({...props}) {
         <React.Fragment>
             <div className='columns content-tabs'>
                 {
-                    stages.map(stage=>{
+                    (!stages)?<div></div>:stages.map(stage=>{
                         return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
