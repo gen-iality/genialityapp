@@ -47,7 +47,7 @@ class TicketsForm extends Component {
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        
+
             const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
             const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
             const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
@@ -246,11 +246,11 @@ class TicketsForm extends Component {
                                                         en el resumen de compra.
                                                     </p>
                                                 </p>
-                                                
+
                                             </header>
                                             <div class="card-content">
                                                 <div class="content is-center">
-                                                    
+
                                                     <SeatsioSeatingChart
                                                         publicKey={seatsConfig["keys"]["public"]}
                                                         event={seatsConfig["keys"]["event"]}
@@ -264,7 +264,7 @@ class TicketsForm extends Component {
                                                     />
                                                 </div>
                                             </div>
-                                            </div>  
+                                            </div>
                                     </div>
                             }
                         </div>
@@ -325,7 +325,7 @@ class TicketsForm extends Component {
                                             </div>
                                             </React.Fragment>
                                     }
-                                    
+
                                 </div>
                                  <footer className="card-footer">
                                         <div className='card-footer-item'>
@@ -372,7 +372,7 @@ function ListadoTiquetes({...props}) {
         <React.Fragment>
             <div className='columns content-tabs'>
                 {
-                    (!stages)?<div></div>:stages.map(stage=>{
+                    stages.map(stage=>{
                         return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
