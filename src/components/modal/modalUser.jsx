@@ -98,6 +98,12 @@ class UserModal extends Component {
             message.content = 'USER UPDATED';
             if(snap.state_id !== this.state.prevState) this.props.statesCounter(snap.state_id,this.state.prevState);
             snap.updated_at = new Date();
+
+            //Mejor hacer un map pero no se como
+            if (snap.ticket_id == undefined || !snap.ticket_id || snap.ticket_id == "undefined"){
+                snap.ticket_id = null;
+            } 
+
             userRef.doc(this.state.userId).update(snap)
                 .then(() => {
                     console.log("Document successfully updated!");
