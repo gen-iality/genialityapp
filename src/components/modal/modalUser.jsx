@@ -13,9 +13,11 @@ class UserModal extends Component {
         super(props);
         this.state = {
             statesList: [],
+            rolesList: [],
             message: {},
             user: {},
             state: "",
+            rol:"",
             prevState: "",
             userId: "mocionsoft",
             emailError:false,
@@ -29,8 +31,8 @@ class UserModal extends Component {
 
     componentDidMount() {
         const self = this;
-        const {states} = this.props;
-        self.setState({ statesList: states, state: states[1].value });
+        const {roles,states} = this.props;
+        self.setState({ statesList: states, rolesList: roles, state: states[1].value, rol: roles[1].value });
         let user = {};
         if (this.props.edit) {
             const {value} = this.props;
@@ -39,7 +41,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:user.ticket_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+            this.setState({user, ticket_id:user.ticket_id, rol:value.rol_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
         }else{
             this.props.extraFields
                 .map((obj) => {
@@ -59,6 +61,7 @@ class UserModal extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
+            rol_id: this.state.rol,
             state_id: this.state.state,
         };
         /*
@@ -328,7 +331,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,checked_in,ticket_id,state,statesList,userId} = this.state;
+        const {user,checked_in,ticket_id,rol,rolesList,state,statesList,userId} = this.state;
         const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
@@ -365,14 +368,14 @@ class UserModal extends Component {
                             }
                             {
                                 Object.keys(user).length > 0 &&
-                                    <div className="field is-grouped">
-                                        <div className="control">
-                                            <label className="label">Estado</label>
+                                    <React.Fragment>
+                                        <div className="field">
+                                            <label className="label">Rol</label>
                                             <div className="control">
                                                 <div className="select">
-                                                    <select value={state} onChange={this.selectChange} name={'state'}>
+                                                    <select value={rol} onChange={this.selectChange} name={'rol'}>
                                                         {
-                                                            statesList.map((item,key)=>{
+                                                            rolesList.map((item,key)=>{
                                                                 return <option key={key} value={item.value}>{item.label}</option>
                                                             })
                                                         }
@@ -380,17 +383,33 @@ class UserModal extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        {
-                                            !this.state.edit&&
+                                        <div className="field is-grouped">
                                             <div className="control">
-                                                <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
-                                                       type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
-                                                       onChange={(e)=>{this.setState(prevState=>{
-                                                           return {confirmCheck:!prevState.confirmCheck}})}}/>
-                                                <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                                                <label className="label">Estado</label>
+                                                <div className="control">
+                                                    <div className="select">
+                                                        <select value={state} onChange={this.selectChange} name={'state'}>
+                                                            {
+                                                                statesList.map((item,key)=>{
+                                                                    return <option key={key} value={item.value}>{item.label}</option>
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        }
-                                    </div>
+                                            {
+                                                !this.state.edit&&
+                                                <div className="control">
+                                                    <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
+                                                           type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
+                                                           onChange={(e)=>{this.setState(prevState=>{
+                                                               return {confirmCheck:!prevState.confirmCheck}})}}/>
+                                                    <label htmlFor={"confirmCheckIn"}>Chequear Usuario?</label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </React.Fragment>
                             }
                             {
                                 this.props.tickets.length > 0 &&
@@ -438,7 +457,6 @@ class UserModal extends Component {
                         <QRCode value={userId}/>
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
-                    {/*<iframe title={'Print User'} ref="ifrmPrint" style={{backgroundColor:"aliceblue",width:"900px",height:"900px",zIndex:9}}/>*/}
                 </div>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                         content={<p>Seguro de borrar este usuario?</p>}

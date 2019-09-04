@@ -595,7 +595,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets}
+                           states={this.props.states} roles={this.props.roles} ticket={ticket} tickets={this.props.event.tickets}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
@@ -722,6 +722,7 @@ const parseData = (data) => {
 
 const mapStateToProps = state => ({
     states: state.states.items,
+    roles: state.rols.items,
     loading: state.states.loading,
     error: state.states.error
 });
