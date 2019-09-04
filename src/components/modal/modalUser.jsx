@@ -132,9 +132,8 @@ class UserModal extends Component {
         const {user} = this.state;
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas ? canvas.toDataURL() : '';
-        //if(this.props.value) this.props.checkIn(this.props.value);
-        console.log(resp);
         if(resp._id){
+            if(!this.props.value.checked_in) this.props.checkIn(this.props.value);
             let oIframe = this.refs.ifrmPrint;
             let badge = resp.BadgeFields;
             let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
