@@ -102,7 +102,7 @@ class UserModal extends Component {
             //Mejor hacer un map pero no se como
             if (snap.ticket_id == undefined || !snap.ticket_id || snap.ticket_id == "undefined"){
                 snap.ticket_id = null;
-            } 
+            }
 
             userRef.doc(this.state.userId).update(snap)
                 .then(() => {
@@ -393,21 +393,24 @@ class UserModal extends Component {
                                         }
                                     </div>
                             }
-                            <div className="field">
-                                <div className="control">
-                                    <label className="label">Tiquete</label>
-                                    <div className="select">
-                                        <select value={ticket_id} onChange={this.selectChange} name={'ticket_id'}>
-                                            <option value={''}>..Seleccione</option>
-                                            {
-                                                this.props.tickets.map((item,key)=>{
-                                                    return <option key={key} value={item._id}>{item.title}</option>
-                                                })
-                                            }
-                                        </select>
+                            {
+                                this.props.tickets.length > 0 &&
+                                    <div className="field">
+                                        <div className="control">
+                                            <label className="label">Tiquete</label>
+                                            <div className="select">
+                                                <select value={ticket_id} onChange={this.selectChange} name={'ticket_id'}>
+                                                    <option value={''}>..Seleccione</option>
+                                                    {
+                                                        this.props.tickets.map((item,key)=>{
+                                                            return <option key={key} value={item._id}>{item.title}</option>
+                                                        })
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                            }
                         </section>
                         {
                             Object.keys(user).length > 0 &&
