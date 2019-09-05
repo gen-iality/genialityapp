@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {typeInputs} from "../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
-import {uniqueID} from "../../helpers/utils";
 
 const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
 const html = document.querySelector("html");

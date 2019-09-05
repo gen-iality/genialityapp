@@ -214,7 +214,6 @@ class ListEventUser extends Component {
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
             if(!userReq[pos].checked_in){
-                toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
                 self.setState((prevState) => {
                     return {checkIn: prevState.checkIn+1, qrData}
                 });
@@ -224,7 +223,7 @@ class ListEventUser extends Component {
                     checked_at: new Date()
                 })
                     .then(()=> {
-                        console.log("Document successfully updated!");
+                        toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
                     })
                     .catch(error => {
                         console.error("Error updating document: ", error);
@@ -242,7 +241,6 @@ class ListEventUser extends Component {
                 qrData.msg = 'User found';
                 qrData.user = this.state.userReq[pos];
                 qrData.another = !!qrData.user.checked_in;
-                console.log(qrData);
                 this.setState({qrData});
             }else{
                 qrData.msg = 'User not found';
@@ -267,10 +265,8 @@ class ListEventUser extends Component {
         html.classList.remove('is-clipped');
     };
     searchCC = () => {
-        console.log('searching');
         const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         let value = this.state.newCC;
-        let user = {};
         usersRef.where('_id','==',`${value}`)
             .get()
             .then((querySnapshot)=> {
@@ -283,11 +279,9 @@ class ListEventUser extends Component {
                 }
                 else{
                     querySnapshot.forEach((doc)=> {
-                        console.log(doc.id, " => ", doc.data());
                         qrData.msg = 'User found';
                         qrData.user = doc.data();
                         qrData.another = !!qrData.user.checked_in;
-                        console.log(qrData);
                         this.setState({qrData});
                     });
                 }
@@ -614,14 +608,14 @@ class ListEventUser extends Component {
                                             <ul>
                                                 <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
                                                     onClick={e=>this.setState({tabActive:'camera'})}>
-                                                    <a>
+                                                    <a href="#">
                                                         <div className="icon is-medium"><IoIosCamera/></div>
                                                         <span>Cámara</span>
                                                     </a>
                                                 </li>
                                                 <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
                                                     onClick={e=>this.setState({tabActive:'qr'})}>
-                                                    <a>
+                                                    <a href="#">
                                                         <div className="icon is-medium"><IoIosQrScanner/></div>
                                                         <span>Pistola</span>
                                                     </a>
