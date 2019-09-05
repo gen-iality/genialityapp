@@ -71,16 +71,11 @@ class Certificado extends Component {
             const value = item.tag.includes('event.') ? event[item.value] : 'Usuario';
             return content = content.replace(`[${item.tag}]`,value)
         });
-        setTimeout(()=>{
-            this.setState({newContent:content},()=>{
-                html2canvas(document.querySelector("#contenedorCert"))
-                    .then((canvas) => {
-                        const contentData = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
-                        this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
-                        this.img2 = this.loadImage(contentData, this.drawImg);
-                    });
-            })
-        }, 2500)
+        content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
+        content = content.map(i=>i.replace(/<\/?br>/g,''));
+        this.setState({newContent:content},()=>{
+            this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
+        })
     };
 
     handleTAG = (open) => {
@@ -92,27 +87,31 @@ class Certificado extends Component {
     drawImg = () => {
         const {imageData } = this.state;
         const self = this;
+        let posY = 100;
         imagesLoaded += 1;
-        if(imagesLoaded == 2) {
-            // composite now
+        if(imagesLoaded == 1) {
             var canvas = document.getElementById("canvas");
             var ctx = canvas.getContext("2d");
             ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(this.img2,
-                (canvas.width - 550) / 2,
-                (canvas.height - 395) / 2, 550, 395);
+            for(let i = 0; i < self.state.newContent.length; i++) {
+                const item = self.state.newContent[i];
+                const txtWidth = ctx.measureText(item).width;
+                ctx.font = "bold 32px Arial";
+                ctx.fillText(item, (canvas.width/2) - (txtWidth/2), posY);
+                posY += 10;
+            }
             var combined = new Image;
             combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
             const pdf = new jsPDF({orientation: 'landscape'});
             pdf.addImage(combined.src, imageData.type ? imageData.type.toUpperCase() : 'PNG', 0, 0);
-            pdf.output('dataurlnewwindow');
+            pdf.save("certificado.pdf");
+            //pdf.output('dataurlnewwindow');
             imagesLoaded = 0;
-            //self.setState({newContent:false})
+            self.setState({newContent:false})
         }
     }
 
     loadImage = (src, onload) => {
-        console.log(src);
         var img = new Image();
         img.onload = onload;
         img.src = src;
@@ -153,19 +152,19 @@ class Certificado extends Component {
                     </nav>
                     <div className="contenedor">
                         <img src={this.state.imageFile} alt="background-image" className="bg"/>
-                        <div className="texto-certificado" contentEditable={true} ref={this.setContenedorRef}>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                            <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-                            <p>Certificamos que <strong>[user.names]</strong>, participo con êxito de
-                                evento [event.name] realizado del [event.start] al [event.end].</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
+                        <div className="texto-certificado" id="contentCert" contentEditable={true} ref={this.setContenedorRef}>
+                            <p><br></br></p>
+                            <p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p>
+                            <p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p><p><br></br></p>
+                            <p>Certificamos que [user.names], participo con êxito de
+                                evento [event.name]</p>
+                            <p><br></br></p>
+                            <p>realizado del [event.start] al [event.end].</p>
+                            <p><br></br></p>
+                            <p><br></br></p>
                             <p>[event.venue], información.</p>
                         </div>
                     </div>
-                    {this.state.newContent &&
-                        <div id="contenedorCert" className="texto-toprint" dangerouslySetInnerHTML={{__html:this.state.newContent}}/>}
                     {this.state.newContent &&
                         <canvas width="1100" height="793" id="canvas"></canvas>}
                 </div>
