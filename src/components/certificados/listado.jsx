@@ -54,10 +54,13 @@ class List extends Component {
 
     async deleteCert() {
         this.setState({isLoading:'Cargando....'});
+        const self = this;
         try {
             await CertsApi.deleteOne(this.state.id);
             this.setState({message:{...this.state.message,class:'msg_success',content:'Certificado borrado'},isLoading:false},()=>{
-                this.setState({deleteModal:false});
+                setTimeout(()=>{
+                    self.setState({deleteModal:false,id:false,message:""});
+                },1200)
                 this.fetchCerts()
             });
         }
