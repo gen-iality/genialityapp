@@ -195,6 +195,9 @@ export const CertsApi = {
     getOne: async(id) => {
         return await Actions.get(`api/certificate/`,id)
     },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/certificates', data, id)
+    },
     deleteOne: async (id) => {
         return await Actions.delete('/api/certificates', id);
     },
