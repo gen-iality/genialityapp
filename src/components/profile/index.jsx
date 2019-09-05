@@ -11,7 +11,6 @@ import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
 import EventCard from "../shared/eventCard";
 import Moment from "moment"
-import LogOut from "../shared/logOut";
 import ImageInput from "../shared/imageInput";
 import {TiArrowLoopOutline} from "react-icons/ti";
 import { toast } from 'react-toastify';

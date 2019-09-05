@@ -491,7 +491,7 @@ class ListEventUser extends Component {
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
-                                    <i class="fas fa-filter"></i>
+                                    <i className="fas fa-filter"></i>
                                 </span>
                                 <span className="text-button">Filtrar</span>
                             </button>

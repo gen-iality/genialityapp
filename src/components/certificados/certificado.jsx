@@ -142,7 +142,7 @@ class Certificado extends Component {
                 wrapText(ctx, item, (canvas.width/2) - (txtWidth/2), posY, 700, 28);
                 posY += 10;
             }
-            var combined = new Image;
+            const combined = new Image();
             combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
             const pdf = new jsPDF({orientation: 'landscape'});
             pdf.addImage(combined.src, imageData.type ? imageData.type.toUpperCase() : 'PNG', 0, 0);
@@ -192,7 +192,7 @@ class Certificado extends Component {
                         </div>
                     </nav>
                     <div className="contenedor">
-                        <img src={this.state.imageFile} alt="background-image" className="bg"/>
+                        <img src={this.state.imageFile} alt="background-cert" className="bg"/>
                         <div className="texto-certificado" id="contentCert"
                              dangerouslySetInnerHTML={{__html:this.state.content}}
                              contentEditable={true} ref={this.setContenedorRef}>
