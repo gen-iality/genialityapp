@@ -189,14 +189,17 @@ export const HelperApi = {
     }
 };
 export const CertsApi = {
-    get: async(event) => {
-        return await Actions.get(`api/certificate/`,event)
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/certificates`)
     },
     getOne: async(id) => {
         return await Actions.get(`api/certificate/`,id)
     },
+    deleteOne: async (id) => {
+        return await Actions.delete('/api/certificates', id);
+    },
     create: async(data) => {
-        return await Actions.post(`api/certificate/`,data)
+        return await Actions.create(`api/certificates`,data)
     }
 };
 const handleCat = (data) => {
