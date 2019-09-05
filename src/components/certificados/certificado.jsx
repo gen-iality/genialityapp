@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
-import * as html2canvas from "html2canvas";
+import {firestore} from "../../helpers/firebase";
 import * as jsPDF from 'jspdf';
 import Dropzone from "react-dropzone";
 import {toast} from "react-toastify";
@@ -17,8 +17,8 @@ class Certificado extends Component {
                 {tag:'event.end', label:'Fecha Fin del Evento', value:'datetime_to'},
                 {tag:'event.venue', label:'Lugar del Evento', value:'venue'},
                 {tag:'event.address', label:'Dirección del Evento', value:'location.FormattedAddress'},
-                {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'USUARIO'},
-                {tag: 'user.email', label: 'Correo de asistente', value: ''},
+                {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names'},
+                {tag: 'user.email', label: 'Correo de asistente', value: 'email'},
             ],
             openTAG:false,
             newContent:false,
@@ -33,6 +33,7 @@ class Certificado extends Component {
         const list = [...this.state.tags];
         fields.map(field=> list.push({
             tag:`user.${field.name}`,
+            value:field.name,
             label:field.label}));
         this.setState({tags:list})
     }
@@ -67,15 +68,28 @@ class Certificado extends Component {
         const {imageData,imageFile} = this.state;
         const {event} = this.props;
         let content =  this.contenedor.innerHTML;
-        this.state.tags.map(item=>{
-            const value = item.tag.includes('event.') ? event[item.value] : 'Usuario';
-            return content = content.replace(`[${item.tag}]`,value)
-        });
-        content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
-        content = content.map(i=>i.replace(/<\/?br>/g,''));
-        this.setState({newContent:content},()=>{
-            this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
-        })
+        const userRef = firestore.collection(`${event._id}_event_attendees`);
+        userRef.orderBy("updated_at", "desc")
+            .limit(1)
+            .get()
+            .then(querySnapshot => {
+                if (!querySnapshot.empty) {
+                    //We know there is one doc in the querySnapshot
+                    const oneUser = querySnapshot.docs[0].data();
+                    this.state.tags.map(item=>{
+                        const value = item.tag.includes('event.') ? event[item.value] : oneUser.properties[item.value];
+                        return content = content.replace(`[${item.tag}]`,value)
+                    });
+                    content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
+                    content = content.map(i=>i.replace(/<\/?br>/g,''));
+                    this.setState({newContent:content},()=>{
+                        this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
+                    })
+                } else {
+                    alert("Para mirar el preview hay que tener un asistente si quiera");
+                    return null;
+                }
+            });
     };
 
     handleTAG = (open) => {
