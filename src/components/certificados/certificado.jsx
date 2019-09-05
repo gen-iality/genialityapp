@@ -131,9 +131,9 @@ class Certificado extends Component {
         const self = this;
         let posY = 100;
         imagesLoaded += 1;
-        if(imagesLoaded == 1) {
-            var canvas = document.getElementById("canvas");
-            var ctx = canvas.getContext("2d");
+        if(imagesLoaded === 1) {
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
             ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
             for(let i = 0; i < self.state.newContent.length; i++) {
                 const item = self.state.newContent[i];

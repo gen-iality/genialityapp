@@ -440,7 +440,7 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
-                                            <i class="fas fa-qrcode"></i>
+                                            <i className="fas fa-qrcode"></i>
                                         </span>
                                         <span className="text-button">Leer Código QR</span>
                                     </button>
@@ -448,7 +448,7 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
-                                            <i class="fas fa-user-plus"></i>
+                                            <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
                                     </button>
