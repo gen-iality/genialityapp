@@ -1,9 +1,11 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
+import Moment from "moment"
 import {firestore} from "../../helpers/firebase";
 import * as jsPDF from 'jspdf';
 import Dropzone from "react-dropzone";
 import {toast} from "react-toastify";
+Moment.locale('es');
 
 const html = document.querySelector("html");
 let imagesLoaded = 0;
@@ -67,6 +69,8 @@ class Certificado extends Component {
     previewCert = (e) => {
         const {imageData,imageFile} = this.state;
         const {event} = this.props;
+        event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
+        event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
         let content =  this.contenedor.innerHTML;
         const userRef = firestore.collection(`${event._id}_event_attendees`);
         userRef.orderBy("updated_at", "desc")
@@ -118,8 +122,8 @@ class Certificado extends Component {
             combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
             const pdf = new jsPDF({orientation: 'landscape'});
             pdf.addImage(combined.src, imageData.type ? imageData.type.toUpperCase() : 'PNG', 0, 0);
-            pdf.save("certificado.pdf");
-            //pdf.output('dataurlnewwindow');
+            //pdf.save("certificado.pdf");
+            pdf.output('dataurlnewwindow');
             imagesLoaded = 0;
             self.setState({newContent:false})
         }
