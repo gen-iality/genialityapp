@@ -25,6 +25,11 @@ class Dialog extends Component {
                     </header>
                     <section className="modal-card-body">
                         {this.props.content}
+                        {
+                            message && <div className={"msg"}>
+                                <p className={`help ${message.class}`}>{message.content}</p>
+                            </div>
+                        }
                     </section>
                     <footer className="modal-card-foot">
                         {
@@ -34,11 +39,6 @@ class Dialog extends Component {
                                     <button className={`button ${first.class} ${first.disabled?'is-loading':''}`} onClick={first.action}>{first.title}</button>
                                     {
                                         second && <button className={`button ${second.class}`}  onClick={second.action}>{second.title}</button>
-                                    }
-                                    {
-                                        message && <div className={"msg"}>
-                                            <p className={`help ${message.class}`}>{message.content}</p>
-                                        </div>
                                     }
                                 </React.Fragment>
                         }
