@@ -1,0 +1,43 @@
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 80;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,240,190, 0.9); /* Black w/opacity */
+  overflow-x: hidden;
+  transition: 0.5s;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  background: $white-bis;
+  width: 80%;
+  height: 190px;
+  margin: 10px;
+  padding:5px;
+}
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
+  &:hover{
+    color: #f1f1f1;
+  }
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}

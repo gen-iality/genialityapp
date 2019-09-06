@@ -14,6 +14,7 @@ import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 import Select from 'react-select';
+import PointCheckin from "../modal/pointCheckin";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -34,6 +35,7 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
+            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
@@ -379,6 +381,11 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
+    handlePoints = (flag) => {
+        flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
+        this.setState({modalPoints:flag})
+    };
+
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
         const {event:{event_stages}} = this.props;
@@ -451,6 +458,11 @@ class ListEventUser extends Component {
                                             <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
+                                    </button>
+                                </div>
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button" onClick={e=>{this.handlePoints(true)}}>
+                                        <span className="text-button">Puntos de CheckIN</span>
                                     </button>
                                 </div>
                             </div>
@@ -677,6 +689,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
+                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );

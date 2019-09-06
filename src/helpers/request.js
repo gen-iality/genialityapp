@@ -205,6 +205,23 @@ export const CertsApi = {
         return await Actions.create(`api/certificates`,data)
     }
 };
+export const PointsApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/rolesattendees`)
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/rolesattendees/`,id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/rolesattendees', data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete('/api/rolesattendees', id);
+    },
+    create: async(data) => {
+        return await Actions.create(`api/rolesattendees`,data)
+    }
+};
 const handleCat = (data) => {
     let list = [];
     data.map(item=>{
