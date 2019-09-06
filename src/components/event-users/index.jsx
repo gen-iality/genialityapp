@@ -462,7 +462,7 @@ class ListEventUser extends Component {
                                 </div>
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button" onClick={e=>{this.handlePoints(true)}}>
-                                        <span className="text-button">Puntos de CheckIN</span>
+                                        <span className="text-button">Roles Asistentes</span>
                                     </button>
                                 </div>
                             </div>

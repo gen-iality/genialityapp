@@ -205,7 +205,7 @@ export const CertsApi = {
         return await Actions.create(`api/certificates`,data)
     }
 };
-export const PointsApi = {
+export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)
     },
