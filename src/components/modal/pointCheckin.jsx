@@ -42,6 +42,15 @@ class PointCheckin extends Component {
         });
     };
 
+    removeNewRole = () => {
+        this.setState(state => {
+            const list = state.roles.filter(item => item._id !== "new");
+            return {
+                roles:list,id:"",name:""
+            };
+        });
+    };
+
     async saveRole() {
         try{
             if(this.state.id !== 'new') {
@@ -140,8 +149,13 @@ class PointCheckin extends Component {
                                                 <span className="icon has-text-primary action_pointer"
                                                       onClick={(e)=>this.setState({id:cert._id,name:cert.name})}><i className="fas fa-edit"/></span>
                                         }
-                                        <span className='icon has-text-danger action_pointer'
-                                              onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span>
+                                        {
+                                            cert._id === 'new' ?
+                                                <span className='icon action_pointer'
+                                                      onClick={this.removeNewRole}><i className='fas fa-times'/></span>:
+                                                <span className='icon has-text-danger action_pointer'
+                                                      onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span>
+                                        }
                                     </td>
                                 </tr>
                             })}
