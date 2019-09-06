@@ -9,7 +9,7 @@ import {CertsApi} from "../../helpers/request";
 Moment.locale('es');
 
 const html = document.querySelector("html");
-const initContent = "<p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p>Certificamos que <br></p><p><br></p><p>[user.names], <br></p><p><br></p><p>participo con êxito de    evento</p><p><br></p><p> [event.name]</p><p><br></p><p>realizado del [event.start] al [event.end].</p><p><br></p><p><br></p><p>[event.venue], información.</p>";
+const initContent = "<p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p><br></p><p>Certificamos que <br></p><p><br></p><p>[user.names], <br></p><p><br></p><p>participo con êxito de    evento</p><p><br></p><p> [event.name]</p><p><br></p><p>realizado del [event.start] al [event.end].</p><p><br></p><p><br></p><p>[event.venue], información.</p>";
 let imagesLoaded = 0;
 class Certificado extends Component {
     constructor(props) {
@@ -174,21 +174,21 @@ class Certificado extends Component {
                         </div>
                         <div className="level-right">
                             <div className="level-item">
-                                <button className="button is-info" onClick={e=>{this.handleTAG(true)}}>Tags disponibles</button>
+                                <button className="button" onClick={e=>{this.handleTAG(true)}}>Tags disponibles</button>
                             </div>
                             <div className="level-item">
                                 <Dropzone onDrop={this.handleImage} accept="image/*" className="zone">
-                                    <button className="button is-link">Imagen de Fondo</button>
+                                    <button className="button">Imagen de Fondo</button>
                                 </Dropzone>
                             </div>
                             <div className="level-item">
-                                <button className="button is-primary" onClick={this.previewCert}>Preview</button>
+                                <button className="button" onClick={this.previewCert}>Preview</button>
                             </div>
                             <div className="level-item">
-                                <button className="button" onClick={this.props.listTab}>Cancelar</button>
+                                <button className="button" onClick={this.props.listTab}>Regresar</button>
                             </div>
                             <div className="level-item">
-                                <button className="button is-success" onClick={this.saveCert}>{this.props.data.content?'Editar':'Guardar'}</button>
+                                <button className="button is-primary" onClick={this.saveCert}>{this.props.data.content?'Editar':'Guardar'}</button>
                             </div>
                         </div>
                     </nav>
