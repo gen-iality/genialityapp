@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import NewCert from "./modalNewCert";
-import {CertsApi} from "../../helpers/request";
+import {CertsApi, RolAttApi} from "../../helpers/request";
 import Moment from "moment";
 import Dialog from "../modal/twoAction";
 Moment.locale('es');
@@ -10,10 +10,12 @@ class List extends Component {
         super(props);
         this.state = {
             list:[],
+            roles:[],
             modalCert:false,
             id:false,
             deleteModal:false,
             name:"",
+            rol:"",
             message:""
         };
         this.fetchCerts = this.fetchCerts.bind(this);
@@ -27,7 +29,8 @@ class List extends Component {
     async fetchCerts() {
         try{
             const list = await CertsApi.byEvent(this.props.event._id);
-            this.setState({list})
+            const roles = await RolAttApi.byEvent(this.props.event._id);
+            this.setState({list,roles})
         }catch (e) {
             console.log(e);
         }
@@ -35,7 +38,7 @@ class List extends Component {
 
     newCert = () => {
         if(this.state.name.length>0){
-            this.props.certTab({name:this.state.name});
+            this.props.certTab({name:this.state.name,rol:this.state.rol});
             this.closeModal()
         }else{
             this.setState({message:"Por favor coloca un nombre"})
@@ -43,6 +46,8 @@ class List extends Component {
     };
 
     onChange = e => {this.setState({name:e.target.value,message:""})};
+
+    handleSelect = (e) => {this.setState({rol:e.target.value,message:""})};
 
     closeModal = () => {
         this.setState({modalCert:false,name:"",message:""})
@@ -123,6 +128,7 @@ class List extends Component {
                 </div>
                 {
                     this.state.modalCert && <NewCert modal={this.state.modalCert} name={this.state.name} onChange={this.onChange}
+                                                     roles={this.state.roles} rol={this.state.rol} handleSelect={this.handleSelect}
                                                      message={this.state.message} newCert={this.newCert} closeModal={this.closeModal}/>
                 }
                 {

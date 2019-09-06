@@ -19,6 +19,20 @@ export default function NewCert({...props}) {
                                 onChange={props.onChange}/>
                         </div>
                     </div>
+                    <div className="field">
+                        <label className={`label has-text-grey-light is-capitalized required`}>Asignación</label>
+                        <div className="control">
+                            <div className="select">
+                                <select value={props.rol} onChange={props.handleSelect} name={'rol'}>
+                                    {
+                                        props.roles.map((item,key)=>{
+                                            return <option key={key} value={item._id}>{item.name}</option>
+                                        })
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                     {
                         props.message &&
                         <div className="msg">

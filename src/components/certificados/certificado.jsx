@@ -78,6 +78,7 @@ class Certificado extends Component {
             }else{
                 const data = {
                     name: this.props.data.name,
+                    rol_id: this.props.data.rol,
                     content: this.contenedor.innerHTML,
                     event_id: this.props.event._id,
                     background: this.state.imageData.data ? this.state.imageData.data : this.state.imageFile
