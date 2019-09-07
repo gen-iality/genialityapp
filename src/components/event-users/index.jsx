@@ -703,6 +703,7 @@ const parseData = (data) => {
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
+        info[key]['Creado2'] = item.created_at?item.created_at.toDate():'';
         info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'Sin Tiquete';
         return info
     });
