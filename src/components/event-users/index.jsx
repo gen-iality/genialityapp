@@ -66,6 +66,7 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
+                user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
@@ -714,7 +715,6 @@ const parseData = (data) => {
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
-         info[key]['Creado2'] = item.created_at?item.created_at:'sinfecha';
         info[key]['Tiquete'] = item.tiquete?item.tiquete.title.toUpperCase():'SIN TIQUETE';
         return info
     });
