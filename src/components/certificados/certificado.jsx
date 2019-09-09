@@ -23,6 +23,7 @@ class Certificado extends Component {
                 {tag:'event.address', label:'Dirección del Evento', value:'location.FormattedAddress'},
                 {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names'},
                 {tag: 'user.email', label: 'Correo de asistente', value: 'email'},
+                {tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title'},
             ],
             content:'',
             openTAG:false,
@@ -37,6 +38,7 @@ class Certificado extends Component {
         const {user_properties} = this.props.event;
         let fields = user_properties.filter(item=>item.name!=="names"&&item.name!=="email");
         const list = [...this.state.tags];
+        //Se llenan los tags con las propiedades de los attendees del evento
         fields.map(field=> list.push({
             tag:`user.${field.name}`,
             value:field.name,
@@ -44,11 +46,14 @@ class Certificado extends Component {
         this.setState({tags:list,content:this.props.data.content?this.props.data.content:initContent})
     }
 
+    //Funciòn para manejar la imagen de fondo
     handleImage = (files) => {
         const file = files[0];
         if(file) {
+            //Si la imagen cumple con el formato se crea el URL para mostrarlo
             this.setState({imageFile: URL.createObjectURL(file)});
             const self = this;
+            //Se crea un elemento Image para convertir la image en Base64 y tener el tipo y el formato
             const i = new Image();
             i.onload = () => {
                 let reader = new FileReader()
@@ -58,7 +63,6 @@ class Certificado extends Component {
                     self.setState({imageData:imageData})
                 }
             };
-
             i.src = file.preview
         }
         else toast.error("Solo se permiten imágenes. Intentalo de nuevo");
@@ -68,6 +72,7 @@ class Certificado extends Component {
 
     async saveCert(e) {
         try {
+            //Si es un certtificado ya creado, solo se edita y se envìa la imagen nueva y el contenido
             if(this.props.data.content){
                 const data = {
                     content:this.contenedor.innerHTML,
@@ -76,6 +81,7 @@ class Certificado extends Component {
                 await CertsApi.editOne(data, this.props.data._id);
                 toast.info("Certificado Actualizado");
             }else{
+                //Si es un certificado nuevo, se crea el name y rol con las porpiedades del padre, mas imagen y contenido
                 const data = {
                     name: this.props.data.name,
                     rol_id: this.props.data.rol,
@@ -94,21 +100,29 @@ class Certificado extends Component {
     previewCert = (e) => {
         const {imageData,imageFile} = this.state;
         const {event} = this.props;
+        //Parseo de fechas para facil lectura
         event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
         event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
+        //Se trae el contenido del textArea
         let content =  this.contenedor.innerHTML;
+        //Se hace una consulta al firestore para traer un solo usuario para llenar el preview
         const userRef = firestore.collection(`${event._id}_event_attendees`);
         userRef.orderBy("updated_at", "desc")
             .limit(1)
             .get()
             .then(querySnapshot => {
                 if (!querySnapshot.empty) {
-                    //We know there is one doc in the querySnapshot
                     const oneUser = querySnapshot.docs[0].data();
+                    //Se mapea el listado de tags para llenarlo de acuerdo si es evento, propiedad o tiquete
                     this.state.tags.map(item=>{
-                        const value = item.tag.includes('event.') ? event[item.value] : oneUser.properties[item.value];
+                        let value;
+                        if(item.tag.includes('event.')) value = event[item.value];
+                        else if(item.tag.includes('ticket.')) value = oneUser.ticket.title ? oneUser.ticket.title : 'Sin Tiquete';
+                        else value = oneUser.properties[item.value];
                         return content = content.replace(`[${item.tag}]`,value)
                     });
+                    //El contenido es un HTML entonces se reemplazan las etiquetas y los espacios para quedar un arreglo
+                    //de solo texto. Esto facilita la creaciòn de PDF
                     content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
                     content = content.map(i=>i.replace(/<\/?br>/g,''));
                     this.setState({newContent:content},()=>{
@@ -133,7 +147,9 @@ class Certificado extends Component {
         let posY = 100;
         imagesLoaded += 1;
         if(imagesLoaded === 1) {
-            const canvas = document.getElementById("canvas");
+            const canvas = document.createElement("canvas");
+            canvas.width = 1100;
+            canvas.height = 743;
             const ctx = canvas.getContext("2d");
             ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
             for(let i = 0; i < self.state.newContent.length; i++) {
@@ -199,8 +215,6 @@ class Certificado extends Component {
                              contentEditable={true} ref={this.setContenedorRef}>
                         </div>
                     </div>
-                    {this.state.newContent &&
-                        <canvas width="1100" height="793" id="canvas"></canvas>}
                 </div>
                 {
                     this.state.openTAG &&
