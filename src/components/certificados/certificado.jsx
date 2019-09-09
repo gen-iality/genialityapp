@@ -117,7 +117,7 @@ class Certificado extends Component {
                     this.state.tags.map(item=>{
                         let value;
                         if(item.tag.includes('event.')) value = event[item.value];
-                        else if(item.tag.includes('ticket.')) value = oneUser.ticket.title ? oneUser.ticket.title : 'Sin Tiquete';
+                        else if(item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
                         else value = oneUser.properties[item.value];
                         return content = content.replace(`[${item.tag}]`,value)
                     });
@@ -125,9 +125,12 @@ class Certificado extends Component {
                     //de solo texto. Esto facilita la creaciòn de PDF
                     content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
                     content = content.map(i=>i.replace(/<\/?br>/g,''));
-                    this.setState({newContent:content},()=>{
-                        this.img1 = this.loadImage(imageData.data ? imageData.data : imageFile, this.drawImg);
-                    })
+                    //Creamos un constante con el base64 de la imagen cargada o predefinida
+                    const bckImg = imageData.data ? imageData.data : imageFile;
+                    //Variable de la clase que recibe una <img/> para poder usada en drawImg
+                    this.img = this.loadImage(bckImg,()=>{
+                        this.drawImg(bckImg,content)
+                    });
                 } else {
                     alert("Para mirar el preview hay que tener un asistente si quiera");
                     return null;
@@ -135,40 +138,40 @@ class Certificado extends Component {
             });
     };
 
+    //Muestra u oculta modal con los tags disponibles
     handleTAG = (open) => {
         this.setState({openTAG:open});
         if(open) html.classList.add('is-clipped');
         else html.classList.remove('is-clipped');
     };
 
-    drawImg = () => {
-        const {imageData } = this.state;
-        const self = this;
+    drawImg = (bckImg,newContent) => {
         let posY = 100;
         imagesLoaded += 1;
         if(imagesLoaded === 1) {
             const canvas = document.createElement("canvas");
             canvas.width = 1100;
             canvas.height = 743;
+            const type = bckImg.split(';')[0].split('/')[1];
             const ctx = canvas.getContext("2d");
-            ctx.drawImage(this.img1, 0, 0, canvas.width, canvas.height);
-            for(let i = 0; i < self.state.newContent.length; i++) {
-                const item = self.state.newContent[i];
+            ctx.drawImage(this.img, 0, 0, canvas.width, canvas.height);
+            for(let i = 0; i < newContent.length; i++) {
+                const item = newContent[i];
                 const txtWidth = ctx.measureText(item).width;
                 ctx.font = "bold 32px Arial";
                 wrapText(ctx, item, (canvas.width/2) - (txtWidth/2), posY, 700, 28);
                 posY += 10;
             }
             const combined = new Image();
-            combined.src = canvas.toDataURL(imageData.data ? imageData.full : 'image/png');
+            combined.src = canvas.toDataURL('image/'+type);
             const pdf = new jsPDF({orientation: 'landscape'});
-            pdf.addImage(combined.src, imageData.type ? imageData.type.toUpperCase() : 'PNG', 0, 0);
+            pdf.addImage(combined.src, type.toUpperCase(), 0, 0);
             pdf.save("certificado.pdf");
             imagesLoaded = 0;
-            self.setState({newContent:false})
         }
     }
 
+    //Basicamente crea un elemento img con el src de la imagen y al finalizar carga la funciòn drawImage
     loadImage = (src, onload) => {
         var img = new Image();
         img.onload = onload;
