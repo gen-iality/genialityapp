@@ -68,6 +68,7 @@ class ListEventUser extends Component {
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
                 if(user.checked_in) checkIn = checkIn + 1;
+                user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
@@ -225,7 +226,7 @@ class ListEventUser extends Component {
                     checked_at: new Date()
                 })
                     .then(()=> {
-                        toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
+                        console.log("Document successfully updated!");
                     })
                     .catch(error => {
                         console.error("Error updating document: ", error);
@@ -325,7 +326,9 @@ class ListEventUser extends Component {
                 <td>{item.state.label}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
-                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
+                        const value = field.type !== 'boolean' ? item.properties[field.name] :
+                            item.properties[field.name] ? 'SI' : 'NO';
+                        return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
@@ -384,6 +387,12 @@ class ListEventUser extends Component {
     handlePoints = (flag) => {
         flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
         this.setState({modalPoints:flag})
+    };
+
+    editQRUser = (user) => {
+        this.setState({qrModal:false},()=>{
+            this.openEditModalUser(user)
+        });
     };
 
     render() {
@@ -620,14 +629,14 @@ class ListEventUser extends Component {
                                             <ul>
                                                 <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
                                                     onClick={e=>this.setState({tabActive:'camera'})}>
-                                                    <a href="#">
+                                                    <a>
                                                         <div className="icon is-medium"><IoIosCamera/></div>
                                                         <span>Cámara</span>
                                                     </a>
                                                 </li>
                                                 <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
                                                     onClick={e=>this.setState({tabActive:'qr'})}>
-                                                    <a href="#">
+                                                    <a>
                                                         <div className="icon is-medium"><IoIosQrScanner/></div>
                                                         <span>Pistola</span>
                                                     </a>
@@ -682,6 +691,7 @@ class ListEventUser extends Component {
                                             !qrData.another &&
                                             <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
+                                        <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
                                 )

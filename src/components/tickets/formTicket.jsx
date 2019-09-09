@@ -41,15 +41,18 @@ class TicketsForm extends Component {
                 ticket.price === '0' ? 'Gratis' :
                 new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0 , maximumFractionDigits: 0, currency: ticket.currency}).format(ticket.price);
             //Encuentro el stage relacionado
-            const stage =  this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
+            const stage =  (!this.props.stages)?null:this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
             //Lista de opciones para el select
-            ticket.options = (stage.status === 'ended' || stage.status === 'notstarted') ? [] :
+            ticket.options = (stage && (stage.status === 'ended' || stage.status === 'notstarted')) ? [] :
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
-        const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-        const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+
+            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+            const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
+            const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+
+
         //Persistencia de tiquetes seleccionados después de login
         let info = localStorage.getItem('info'); //Se trae info
         if(info && evius_token){
@@ -221,14 +224,11 @@ class TicketsForm extends Component {
             <div className="columns is-centered">
                 <div className="column">
                     <div className="columns menu-steps">
-                        <div
-                            className={`column is-3 has-text-centered has-text-weight-semibold step ${step === 0 ? 'is-active' : ''}`}
-                            onClick={e => changeStep(0)}>Escoge tu Boleta
-                        </div>
+                        <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
+                             onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
                         {
-                            seatsConfig && <div
-                                className={`column is-3 has-text-centered has-text-weight-semibold step ${step === 1 ? 'is-active' : ''}`}
-                                onClick={e => changeStep(1)}>Escoge tu Silla</div>
+                            seatsConfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                                                onClick={e=>changeStep(1)}>Escoge tu Silla</div>
                         }
                     </div>
                     <div className='columns tickets-frame'>
@@ -250,7 +250,6 @@ class TicketsForm extends Component {
                                                         en el resumen de compra.
                                                     </p>
                                                 </p>
-
                                             </header>
                                             <div className="card-content">
                                                 <div className="content is-center">
@@ -262,15 +261,9 @@ class TicketsForm extends Component {
                                                         maxSelectedObjects={this.state.summaryList.map(i => parseInt(i.quantity, 10)).reduce((a, b) => a + b, 0)}
                                                         availableCategories={this.state.summaryList.map(ticket => ticket.name)}
                                                         showMinimap={seatsConfig["minimap"]}
-                                                        onRenderStarted={createdChart => {
-                                                            this.chart = createdChart
-                                                        }}
-                                                        onObjectSelected={object => {
-                                                            this.handleObject(object, true)
-                                                        }}
-                                                        onObjectDeselected={object => {
-                                                            this.handleObject(object, false)
-                                                        }}
+                                                        onRenderStarted={createdChart => { this.chart = createdChart }}
+                                                        onObjectSelected={object=>{this.handleObject(object,true)}}
+                                                        onObjectDeselected={object=>{this.handleObject(object,false)}}
                                                     />
                                                 </div>
                                             </div>
@@ -304,8 +297,7 @@ class TicketsForm extends Component {
                                                                         <div className='content'>
                                                                             <p><strong>{item.name}</strong></p>
                                                                             <p>
-                                                                                <small>Cantidad: {item.quantity} -
-                                                                                    Valor: {item.price}</small>
+                                                                                <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
                                                                             </p>
                                                                             <p>
                                                                                 <small>Sillas: {listSeats.filter(i => i.parent === item.name).map(i => i.name)}</small>
@@ -324,8 +316,7 @@ class TicketsForm extends Component {
                                                 <div className='is-hidden-tablet'>
                                                     <div className='content'>
                                                         <p className='quantity'>
-                                                            <small>Cantidad de
-                                                                tiquetes: {summaryList.map(i => parseInt(i.quantity, 10)).reduce((prev, next) => prev + next)}</small>
+                                                            <small>Cantidad de tiquetes: {summaryList.map(i=>parseInt(i.quantity,10)).reduce((prev,next)=>prev+next)}</small>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -343,7 +334,6 @@ class TicketsForm extends Component {
                                                 </div>
                                             </React.Fragment>
                                     }
-
                                 </div>
                                 <footer className="card-footer">
                                     <div className='card-footer-item'>
