@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi} from "../../helpers/request";
+import Moment from "moment";
+import * as jsPDF from "jspdf";
 
 class CertificadoLanding extends Component {
     constructor(props) {
@@ -60,8 +62,55 @@ class CertificadoLanding extends Component {
     };
 
     async generateCert() {
-        const certs = await CertsApi.byEvent(this.props.event._id);
+        const {event} = this.props;
+        const {dataUser} = this.state;
+        const certs = await CertsApi.byEvent(event._id);
+        event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
+        event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
+        const rolCert = certs.find(cert=>cert.rol_id === dataUser.properties.rol_id);
+        let content =  rolCert.content;
+        this.state.tags.map(item=>{
+            let value;
+            if(item.tag.includes('event.')) value = event[item.value];
+            else if(item.tag.includes('ticket.')) value = dataUser.ticket ? dataUser.ticket.title : 'Sin Tiquete';
+            else value = dataUser.properties[item.value];
+            return content = content.replace(`[${item.tag}]`,value)
+        });
+        content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
+        content = content.map(i=>i.replace(/<\/?br>/g,''));
+        this.img = this.loadImage(rolCert.background,()=>{
+            this.drawImg(rolCert.background,content)
+        });
     };
+
+    drawImg = (bckImg,newContent) => {
+        let posY = 100;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 1100;
+        canvas.height = 743;
+        const type = bckImg.split(';')[0].split('/')[1];
+        ctx.drawImage(this.img, 0, 0, canvas.width, canvas.height);
+        for(let i = 0; i < newContent.length; i++) {
+            const item = newContent[i];
+            const txtWidth = ctx.measureText(item).width;
+            ctx.font = "bold 32px Arial";
+            wrapText(ctx, item, (canvas.width/2) - (txtWidth/2), posY, 700, 28);
+            posY += 10;
+        }
+        const combined = new Image();
+        combined.src = canvas.toDataURL('image/'+type);
+        const pdf = new jsPDF({orientation: 'landscape'});
+        pdf.addImage(combined.src, type.toUpperCase(), 0, 0);
+        pdf.save("certificado_"+this.props.event.name+".pdf");
+    }
+
+    loadImage = (src, onload) => {
+        var img = new Image();
+        img.onload = onload;
+        img.src = src;
+        return img;
+    }
 
     render() {
         return (
@@ -84,6 +133,26 @@ class CertificadoLanding extends Component {
             </section>
         )
     }
+}
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+
+    for(var n = 0; n < words.length; n++) {
+        var testLine = line + words[n] + ' ';
+        var metrics = context.measureText(testLine);
+        var testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        }
+        else {
+            line = testLine;
+        }
+    }
+    context.fillText(line, x, y+40);
 }
 
 export default CertificadoLanding
