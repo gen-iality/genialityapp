@@ -76,21 +76,25 @@ class CertificadoLanding extends Component {
         event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
         event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
         //Se trae lcertificado que concuerde con el rol_id, si no tiene rol_id tra el certificado sin rol_id
-        const rolCert = dataUser.properties.rol_id ? certs.find(cert=>cert.rol_id === dataUser.properties.rol_id) : certs.find(cert=>!cert.rol_id);
-        let content =  rolCert.content;
-        this.state.tags.map(item=>{
-            let value;
-            if(item.tag.includes('event.')) value = event[item.value];
-            else if(item.tag.includes('ticket.')) value = dataUser.ticket;
-            else value = dataUser.properties[item.value];
-            return content = content.replace(`[${item.tag}]`,value)
-        });
-        content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
-        content = content.map(i=>i.replace(/<\/?br>/g,''));
-        this.img = this.loadImage(rolCert.background,()=>{
-            this.drawImg(rolCert.background,content)
-        });
-    };
+        const rolCert = dataUser.rol_id ? certs.find(cert=>cert.rol_id === dataUser.rol_id) : certs.find(cert=>!cert.rol_id);
+        if(rolCert && rolCert.content) {
+            let content = rolCert.content;
+            this.state.tags.map(item => {
+                let value;
+                if (item.tag.includes('event.')) value = event[item.value];
+                else if (item.tag.includes('ticket.')) value = dataUser.ticket;
+                else value = dataUser.properties[item.value];
+                return content = content.replace(`[${item.tag}]`, value)
+            });
+            content = content.match(/<p>(.*?)<\/p>/g).map(i => i.replace(/<\/?p>/g, ''));
+            content = content.map(i => i.replace(/<\/?br>/g, ''));
+            this.img = this.loadImage(rolCert.background, () => {
+                this.drawImg(rolCert.background, content)
+            });
+        }else{
+            alert("No hay plantillas de certificados. Contactese con el admin");
+        }
+    }
 
     drawImg = (bckImg,newContent) => {
         let posY = 100;
