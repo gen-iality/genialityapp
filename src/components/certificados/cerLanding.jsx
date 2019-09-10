@@ -19,7 +19,7 @@ class CertificadoLanding extends Component {
             ],
             disabled:true,
             toSearch:"",
-            dataUser:{},
+            dataUser:[],
             message:false
         };
         this.usersRef = '';
@@ -46,6 +46,7 @@ class CertificadoLanding extends Component {
 
     async searchCert () {
         try{
+            const {tickets} = this.props;
             //Busca por cedula primero
             let record = await this.usersRef.where("properties.cedula", "==", this.state.toSearch).get();
             //Si no encuentra busca por email
@@ -53,10 +54,14 @@ class CertificadoLanding extends Component {
                 record = await this.usersRef.where("properties.email", "==", this.state.toSearch).get();
             //Si encuentra sigue secuencia
             if(record.docs.length>0){
-                const dataUser = record.docs[0].data();
+                const dataUser = record.docs.map(doc=>{
+                    const data = doc.data();
+                    data.ticket = data.ticket_id ? tickets.find(ticket=>ticket._id === data.ticket_id).title : 'Sin Tiquete';
+                    return data;
+                });
                 //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
-                if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
-                else this.setState({dataUser})
+                //if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
+                this.setState({dataUser})
             }else{
                 this.setState({message:'No se encontraron certificados para este documento'})
             }
@@ -65,18 +70,18 @@ class CertificadoLanding extends Component {
         }
     };
 
-    async generateCert() {
+    async generateCert(dataUser) {
         const {event} = this.props;
-        const {dataUser} = this.state;
         const certs = await CertsApi.byEvent(event._id);
         event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
         event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
-        const rolCert = certs.find(cert=>cert.rol_id === dataUser.properties.rol_id);
+        //Se trae lcertificado que concuerde con el rol_id, si no tiene rol_id tra el certificado sin rol_id
+        const rolCert = dataUser.properties.rol_id ? certs.find(cert=>cert.rol_id === dataUser.properties.rol_id) : certs.find(cert=>!cert.rol_id);
         let content =  rolCert.content;
         this.state.tags.map(item=>{
             let value;
             if(item.tag.includes('event.')) value = event[item.value];
-            else if(item.tag.includes('ticket.')) value = dataUser.ticket ? dataUser.ticket.title : 'Sin Tiquete';
+            else if(item.tag.includes('ticket.')) value = dataUser.ticket;
             else value = dataUser.properties[item.value];
             return content = content.replace(`[${item.tag}]`,value)
         });
@@ -117,6 +122,7 @@ class CertificadoLanding extends Component {
     }
 
     render() {
+        const {dataUser} = this.state;
         return (
             <section>
                 <div className="field has-addons">
@@ -130,9 +136,13 @@ class CertificadoLanding extends Component {
                     </div>
                 </div>
                 {this.state.message && <p>{this.state.message}</p>}
-                {this.state.dataUser.properties && <div className="box">
-                    <h3>Certificado encontrado</h3>
-                    <button className="button is-primary" onClick={this.generateCert}>Descargar</button>
+                {dataUser.length > 0 && <div className="box">
+                    <h3>Usuario encontrado</h3>
+                    {
+                        dataUser.filter(user=>user.checked_in).map(user=>(
+                            <button className="button is-primary" onClick={e=>this.generateCert(user)}>Descargar Certifcado - {user.ticket}</button>
+                        ))
+                    }
                 </div>}
             </section>
         )

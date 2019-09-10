@@ -62,7 +62,7 @@ class Landing extends Component {
                     <img src="https://firebasestorage.googleapis.com/v0/b/firebase-evius.appspot.com/o/pmi-calendar.png?alt=media&token=4aecfee1-684d-4c55-a9c5-f434cfc0c5fa" alt=""/>
                 </div>,
             tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>,
-            certs: <CertificadoLanding event={event} />
+            certs: <CertificadoLanding event={event} tickets={event.tickets} />
         };
         this.setState({event,loading:false,sections},()=>{
             this.firebaseUI();
