@@ -23,7 +23,8 @@ class CertificadoLanding extends Component {
             message:false
         };
         this.usersRef = '';
-        this.generateCert = this.generateCert.bind(this)
+        this.generateCert = this.generateCert.bind(this);
+        this.searchCert = this.searchCert.bind(this)
     }
 
     componentDidMount() {
@@ -43,22 +44,25 @@ class CertificadoLanding extends Component {
         this.setState({toSearch:value,disabled:!(value.length>0),message:false,dataUser:{}})
     };
 
-    searchCert = () => {
-        this.usersRef.where("properties.cedula", "==", this.state.toSearch)
-            .get()
-            .then((snap)=>{
-                if(snap.docs.length>0){
-                    //Existe F25867078
-                    const dataUser = snap.docs[0].data();
-                    if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
-                    else this.setState({dataUser})
-                }else{
-                    this.setState({message:'No se encontraron certificados para este documento'})
-                }
-            })
-            .catch(function(error) {
-                console.log("Error getting documents: ", error);
-            });
+    async searchCert () {
+        try{
+            //Busca por cedula primero
+            let record = await this.usersRef.where("properties.cedula", "==", this.state.toSearch).get();
+            //Si no encuentra busca por email
+            if(record.docs.length<=0)
+                record = await this.usersRef.where("properties.email", "==", this.state.toSearch).get();
+            //Si encuentra sigue secuencia
+            if(record.docs.length>0){
+                const dataUser = record.docs[0].data();
+                //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
+                if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
+                else this.setState({dataUser})
+            }else{
+                this.setState({message:'No se encontraron certificados para este documento'})
+            }
+        }catch (error) {
+            console.log("Error getting documents: ", error);
+        }
     };
 
     async generateCert() {
