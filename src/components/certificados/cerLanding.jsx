@@ -16,6 +16,7 @@ class CertificadoLanding extends Component {
                 {tag:'event.address', label:'Dirección del Evento', value:'location.FormattedAddress'},
                 {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names'},
                 {tag: 'user.email', label: 'Correo de asistente', value: 'email'},
+                {tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title'},
             ],
             disabled:true,
             toSearch:"",
