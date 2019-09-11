@@ -13,7 +13,7 @@ class CertificadoLanding extends Component {
                 {tag:'event.start', label:'Fecha Inicio del Evento', value:'datetime_from'},
                 {tag:'event.end', label:'Fecha Fin del Evento', value:'datetime_to'},
                 {tag:'event.venue', label:'Lugar del Evento', value:'venue'},
-                {tag:'event.address', label:'DirecciÃ³n del Evento', value:'location.FormattedAddress'},
+                {tag:'event.address', label:'Dirección del Evento', value:'location.FormattedAddress'},
                 {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names'},
                 {tag: 'user.email', label: 'Correo de asistente', value: 'email'},
                 {tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title'},
@@ -89,6 +89,7 @@ class CertificadoLanding extends Component {
             });
             content = content.match(/<p>(.*?)<\/p>/g).map(i => i.replace(/<\/?p>/g, ''));
             content = content.map(i => i.replace(/<\/?br>/g, ''));
+             window.location = "https://api.evius.co/api/pdfcertificate?content=ddgdfgdfg&image=https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-hero-00e10b1f.jpg?download=1";return;
             this.img = this.loadImage(rolCert.background, () => {
                 this.drawImg(rolCert.background, content)
             });
