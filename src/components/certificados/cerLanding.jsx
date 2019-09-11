@@ -89,7 +89,7 @@ class CertificadoLanding extends Component {
             });
             content = content.match(/<p>(.*?)<\/p>/g).map(i => i.replace(/<\/?p>/g, ''));
             content = content.map(i => i.replace(/<\/?br>/g, ''));
-             window.location = "https://api.evius.co/api/pdfcertificate?content=ddgdfgdfg&image=https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-hero-00e10b1f.jpg?download=1";return;
+             window.location = "https://api.evius.co/api/pdfcertificate?content=ddgdfgdfg&image=https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-hero-00e10b1f.jpg&download=1";return;
             this.img = this.loadImage(rolCert.background, () => {
                 this.drawImg(rolCert.background, content)
             });
