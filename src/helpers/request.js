@@ -203,6 +203,13 @@ export const CertsApi = {
     },
     create: async(data) => {
         return await Actions.create(`api/certificates`,data)
+    },
+    generateCert: async(body) => {
+        return new Promise((resolve, reject)=>{
+            privateInstance.post('/api/generatecertificate?download=1',body,{responseType:'blob'}).then((response) => {
+                resolve({type:response.headers['content-type'],blob:response.data});
+            })
+        })
     }
 };
 export const RolAttApi = {

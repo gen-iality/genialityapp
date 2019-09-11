@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi} from "../../helpers/request";
 import Moment from "moment";
-import * as jsPDF from "jspdf";
 
 class CertificadoLanding extends Component {
     constructor(props) {
@@ -87,17 +86,33 @@ class CertificadoLanding extends Component {
                 else value = dataUser.properties[item.value];
                 return content = content.replace(`[${item.tag}]`, value)
             });
-            content = content.match(/<p>(.*?)<\/p>/g).map(i => i.replace(/<\/?p>/g, ''));
-            content = content.map(i => i.replace(/<\/?br>/g, ''));
-            this.img = this.loadImage(rolCert.background, () => {
-                this.drawImg(rolCert.background, content)
-            });
+            //content = content.match(/<p>(.*?)<\/p>/g).map(i => i.replace(/<\/?p>/g, ''));
+            //content = content.map(i => i.replace(/<\/?br>/g, ''));
+            const body = {content, image:rolCert.background};
+            const file = await CertsApi.generateCert(body);
+            const blob = new Blob([file.blob], { type: file.type, charset: "UTF-8" })
+            // IE doesn't allow using a blob object directly as link href
+            // instead it is necessary to use msSaveOrOpenBlob
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(blob);
+                return;
+            }
+            const data = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.dataType = "json";
+            link.href = data;
+            link.download = "file.pdf";
+            link.dispatchEvent(new MouseEvent('click'));
+            setTimeout( ()=> {
+                // For Firefox it is necessary to delay revoking the ObjectURL
+                window.URL.revokeObjectURL(data)
+            }, 60);
         }else{
             alert("No hay plantillas de certificados. Contactese con el admin");
         }
     }
 
-    drawImg = (bckImg,newContent) => {
+    /*drawImg = (bckImg,newContent) => {
         let posY = 100;
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -124,7 +139,7 @@ class CertificadoLanding extends Component {
         img.onload = onload;
         img.src = src;
         return img;
-    }
+    }*/
 
     render() {
         const {dataUser} = this.state;
