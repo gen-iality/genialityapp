@@ -65,21 +65,23 @@ class ListEventUser extends Component {
                 user = change.doc.data();
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
-                if(user.checked_in) checkIn = checkIn + 1;
                 user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
+                    if(user.checked_in) checkIn += 1;
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
                     this.statesCounter(user.state.value);
                 }
                 if (change.type === 'modified'){
+                    if(user.checked_in) checkIn += 1;
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
                 }
                 if (change.type === 'removed'){
+                    if(user.checked_in) checkIn -= 1;
                     newItems.splice(change.oldIndex, 1);
                 }
             });
@@ -87,7 +89,7 @@ class ListEventUser extends Component {
                 const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                 return {
                     userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                    loading: false,total: snapshot.size + acompanates, checkIn, clearSearch: !prevState.clearSearch
+                    loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
                 }
             });
         },(error => {
