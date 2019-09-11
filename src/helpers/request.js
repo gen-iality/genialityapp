@@ -19,7 +19,7 @@ if (evius_token){
 privateInstance.interceptors.response.use((response)=> {
     const {headers} = response;
     if(headers.new_token){
-        console.log('Se acabÃ³ la moneda');
+        console.log('Se acab— la moneda');
         Cookie.set("evius_token", headers.new_token);
         privateInstance.defaults.params = {};
         privateInstance.defaults.params['evius_token'] = headers.new_token;
@@ -194,6 +194,9 @@ export const CertsApi = {
     },
     getOne: async(id) => {
         return await Actions.get(`api/certificate/`,id)
+    },    
+    generate: async(content,image) => {
+        return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1')
     },
     editOne: async (data, id) => {
         return await Actions.edit('/api/certificates', data, id)
@@ -211,6 +214,7 @@ export const CertsApi = {
             })
         })
     }
+    
 };
 export const RolAttApi = {
     byEvent: async(event) => {
