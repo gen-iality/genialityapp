@@ -24,6 +24,7 @@ export default function NewCert({...props}) {
                         <div className="control">
                             <div className="select">
                                 <select value={props.rol} onChange={props.handleSelect} name={'rol'}>
+                                    <option>...Seleccione</option>
                                     {
                                         props.roles.map((item,key)=>{
                                             return <option key={key} value={item._id}>{item.name}</option>
