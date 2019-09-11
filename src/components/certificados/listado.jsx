@@ -103,6 +103,7 @@ class List extends Component {
                         <thead>
                         <tr>
                             <th>Nombre</th>
+                            <th>Rol</th>
                             <th>Fecha Creación</th>
                             <th/>
                             <th/>
@@ -112,6 +113,7 @@ class List extends Component {
                         {this.state.list.map((cert,key)=>{
                             return <tr key={key}>
                                 <td>{cert.name}</td>
+                                <td>{cert.rol_id?this.state.roles.find(rol=>rol._id===cert.rol_id).name:'Sin Rol'}</td>
                                 <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
                                 <td>
                                     <span className="icon has-text-primary action_pointer"

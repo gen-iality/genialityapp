@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {firestore} from "../../helpers/firebase";
-import {CertsApi} from "../../helpers/request";
+import {CertsApi, RolAttApi} from "../../helpers/request";
 import Moment from "moment";
 
 class CertificadoLanding extends Component {
@@ -16,6 +16,7 @@ class CertificadoLanding extends Component {
                 {tag: 'user.names', label: 'Nombre(s) de asistente', value: 'names'},
                 {tag: 'user.email', label: 'Correo de asistente', value: 'email'},
                 {tag: 'ticket.name', label: 'Nombre del tiquete', value: 'ticket.title'},
+                {tag: 'rol.name', label: 'Nombre del Rol'}
             ],
             disabled:true,
             toSearch:"",
@@ -73,6 +74,7 @@ class CertificadoLanding extends Component {
     async generateCert(dataUser) {
         const {event} = this.props;
         const certs = await CertsApi.byEvent(event._id);
+        const roles = await RolAttApi.byEvent(event._id);
         event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
         event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
         //Se trae lcertificado que concuerde con el rol_id, si no tiene rol_id tra el certificado sin rol_id
@@ -83,6 +85,7 @@ class CertificadoLanding extends Component {
                 let value;
                 if (item.tag.includes('event.')) value = event[item.value];
                 else if (item.tag.includes('ticket.')) value = dataUser.ticket;
+                else if(item.tag.includes('rol.')) value = dataUser.rol_id ? roles.find(ticket=>ticket._id === dataUser.rol_id).name.toUpperCase() : 'Sin Rol';
                 else value = dataUser.properties[item.value];
                 return content = content.replace(`[${item.tag}]`, value)
             });
@@ -112,35 +115,6 @@ class CertificadoLanding extends Component {
         }
     }
 
-    /*drawImg = (bckImg,newContent) => {
-        let posY = 100;
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        canvas.width = 1100;
-        canvas.height = 743;
-        const type = bckImg.split(';')[0].split('/')[1];
-        ctx.drawImage(this.img, 0, 0, canvas.width, canvas.height);
-        for(let i = 0; i < newContent.length; i++) {
-            const item = newContent[i];
-            const txtWidth = ctx.measureText(item).width;
-            ctx.font = "bold 32px Arial";
-            wrapText(ctx, item, (canvas.width/2) - (txtWidth/2), posY, 700, 28);
-            posY += 10;
-        }
-        const combined = new Image();
-        combined.src = canvas.toDataURL('image/'+type);
-        const pdf = new jsPDF({orientation: 'landscape'});
-        pdf.addImage(combined.src, type.toUpperCase(), 0, 0);
-        pdf.save("certificado_"+this.props.event.name+".pdf");
-    }
-
-    loadImage = (src, onload) => {
-        var img = new Image();
-        img.onload = onload;
-        img.src = src;
-        return img;
-    }*/
-
     render() {
         const {dataUser} = this.state;
         return (
@@ -167,26 +141,6 @@ class CertificadoLanding extends Component {
             </section>
         )
     }
-}
-
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
-    var words = text.split(' ');
-    var line = '';
-
-    for(var n = 0; n < words.length; n++) {
-        var testLine = line + words[n] + ' ';
-        var metrics = context.measureText(testLine);
-        var testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-        }
-        else {
-            line = testLine;
-        }
-    }
-    context.fillText(line, x, y+40);
 }
 
 export default CertificadoLanding
