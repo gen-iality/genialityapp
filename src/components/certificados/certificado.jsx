@@ -126,12 +126,6 @@ class Certificado extends Component {
                         else value = oneUser.properties[item.value];
                         return content = content.replace(`[${item.tag}]`,value)
                     });
-                    //El contenido es un HTML entonces se reemplazan las etiquetas y los espacios para quedar un arreglo
-                    //de solo texto. Esto facilita la creaciòn de PDF
-                    //content = content.match(/<p>(.*?)<\/p>/g).map(i=>i.replace(/<\/?p>/g,''));
-                    //content = content.map(i=>i.replace(/<\/?br>/g,''));
-                    //Creamos un constante con el base64 de la imagen cargada o predefinida
-                    //const bckImg = imageData.data ? imageData.data : imageFile;
                     const body = {content, image:imageData.data ? imageData.data : imageFile};
                     CertsApi.generateCert(body)
                         .then(file=>{
