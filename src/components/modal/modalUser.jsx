@@ -33,7 +33,7 @@ class UserModal extends Component {
         const rolesList = await RolAttApi.byEvent(this.props.eventId);
         const self = this;
         const {states} = this.props;
-        self.setState({ statesList: states, state: states[1].value, rolesList, rol: rolesList[0]._id });
+        self.setState({ statesList: states, state: states[1].value, rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
         let user = {};
         if (this.props.edit) {
             const {value} = this.props;
