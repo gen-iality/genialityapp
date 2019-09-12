@@ -77,39 +77,38 @@ class CertificadoLanding extends Component {
         const roles = await RolAttApi.byEvent(event._id);
         event.datetime_from = Moment(event.datetime_from).format('DD/MM/YYYY');
         event.datetime_to = Moment(event.datetime_to).format('DD/MM/YYYY');
-        if(dataUser.rol_id && roles.find(rol=>rol._id === dataUser.rol_id)) {
-            //Se trae lcertificado que concuerde con el rol_id, si no tiene rol_id tra el certificado sin rol_id
-            const rolCert = dataUser.rol_id ? certs.find(cert => cert.rol_id === dataUser.rol_id) : certs.find(cert => !cert.rol_id);
-            let content = rolCert.content;
-            this.state.tags.map(item => {
-                let value;
-                if (item.tag.includes('event.')) value = event[item.value];
-                else if (item.tag.includes('ticket.')) value = dataUser.ticket;
-                else if (item.tag.includes('rol.')) value = dataUser.rol_id ? roles.find(ticket => ticket._id === dataUser.rol_id).name.toUpperCase() : 'Sin Rol';
-                else value = dataUser.properties[item.value];
-                return content = content.replace(`[${item.tag}]`, value)
-            });
-            const body = {content, image: rolCert.background};
-            const file = await CertsApi.generateCert(body);
-            const blob = new Blob([file.blob], {type: file.type, charset: "UTF-8"})
-            // IE doesn't allow using a blob object directly as link href
-            // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(blob);
-                return;
-            }
-            const data = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.dataType = "json";
-            link.href = data;
-            link.download = "certificado.pdf";
-            link.dispatchEvent(new MouseEvent('click'));
-            setTimeout(() => {
-                // For Firefox it is necessary to delay revoking the ObjectURL
-                window.URL.revokeObjectURL(data)
-            }, 60);
+        //Por defecto se trae el certificado sin rol
+        let rolCert = certs.find(cert => !cert.rol_id);
+        //Si el asistente tiene rol_id y este corresponde con uno de los roles attendees, encuentra el certificado ligado
+        if(dataUser.rol_id && roles.find(rol=>rol._id === dataUser.rol_id)) rolCert = certs.find(cert => cert.rol_id === dataUser.rol_id);
+        let content = rolCert.content;
+        this.state.tags.map(item => {
+            let value;
+            if (item.tag.includes('event.')) value = event[item.value];
+            else if (item.tag.includes('ticket.')) value = dataUser.ticket;
+            else if (item.tag.includes('rol.')) value = dataUser.rol_id ? roles.find(ticket => ticket._id === dataUser.rol_id).name.toUpperCase() : 'Sin Rol';
+            else value = dataUser.properties[item.value];
+            return content = content.replace(`[${item.tag}]`, value)
+        });
+        const body = {content, image: rolCert.background};
+        const file = await CertsApi.generateCert(body);
+        const blob = new Blob([file.blob], {type: file.type, charset: "UTF-8"})
+        // IE doesn't allow using a blob object directly as link href
+        // instead it is necessary to use msSaveOrOpenBlob
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob);
+            return;
         }
-        else alert("Usuario con rol de staff. Cambiarlo por uno de asistente");
+        const data = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.dataType = "json";
+        link.href = data;
+        link.download = "certificado.pdf";
+        link.dispatchEvent(new MouseEvent('click'));
+        setTimeout(() => {
+            // For Firefox it is necessary to delay revoking the ObjectURL
+            window.URL.revokeObjectURL(data)
+        }, 60);
     }
 
     render() {
