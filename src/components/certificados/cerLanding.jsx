@@ -100,7 +100,11 @@ class CertificadoLanding extends Component {
             let value;
             if (item.tag.includes('event.')) value = event[item.value];
             else if (item.tag.includes('ticket.')) value = dataUser.ticket;
-            else if (item.tag.includes('rol.')) value = dataUser.rol_id ? roles.find(ticket => ticket._id === dataUser.rol_id).name.toUpperCase() : 'Sin Rol';
+            else if (item.tag.includes('rol.')) {
+                if(dataUser.rol_id && roles.find(ticket => ticket._id === dataUser.rol_id))
+                    value = roles.find(ticket => ticket._id === dataUser.rol_id).name.toUpperCase();
+                else value = 'ASISTENTE';
+            }
             else value = dataUser.properties[item.value];
             return content = content.replace(`[${item.tag}]`, value)
         });
