@@ -1,7 +1,8 @@
 import React, {Component} from "react";
+import Moment from "moment";
+import Swal from "sweetalert2";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi, RolAttApi} from "../../helpers/request";
-import Moment from "moment";
 
 class CertificadoLanding extends Component {
     constructor(props) {
@@ -45,15 +46,23 @@ class CertificadoLanding extends Component {
         this.setState({toSearch:value,disabled:!(value.length>0),message:false,dataUser:{}})
     };
 
-    async searchCert () {
+    async searchCert (e) {
         try{
+            e.preventDefault();
+            const valueToSearch = this.state.toSearch;
+            Swal.fire({
+                title:`Buscando usuario para: ${valueToSearch}`,
+                text: "Espera :)",
+                onBeforeOpen: () => {Swal.showLoading()}
+            });
             const {tickets} = this.props;
             //Busca por cedula primero
-            let record = await this.usersRef.where("properties.cedula", "==", this.state.toSearch).get();
+            let record = await this.usersRef.where("properties.cedula", "==", valueToSearch.trim()).get();
             //Si no encuentra busca por email
             if(record.docs.length<=0)
-                record = await this.usersRef.where("properties.email", "==", this.state.toSearch).get();
+                record = await this.usersRef.where("properties.email", "==", valueToSearch.trim()).get();
             //Si encuentra sigue secuencia
+            Swal.close();
             if(record.docs.length>0){
                 const dataUser = record.docs.map(doc=>{
                     const data = doc.data();
@@ -72,6 +81,11 @@ class CertificadoLanding extends Component {
     };
 
     async generateCert(dataUser) {
+        Swal.fire({
+            title:"Generando certificado",
+            text:"Espera :)",
+            onBeforeOpen: () => {Swal.showLoading()}
+        });
         const {event} = this.props;
         const certs = await CertsApi.byEvent(event._id);
         const roles = await RolAttApi.byEvent(event._id);
@@ -107,7 +121,8 @@ class CertificadoLanding extends Component {
         link.dispatchEvent(new MouseEvent('click'));
         setTimeout(() => {
             // For Firefox it is necessary to delay revoking the ObjectURL
-            window.URL.revokeObjectURL(data)
+            window.URL.revokeObjectURL(data);
+            Swal.close()
         }, 60);
     }
 
@@ -117,12 +132,12 @@ class CertificadoLanding extends Component {
             <section>
                 <div className="field has-addons">
                     <div className="control is-expanded">
-                        <input className="input is-fullwidth" type="text" onChange={this.onChange} placeholder="Ingresa tu documento para buscar tu certificado"/>
+                        <form onSubmit={this.searchCert}>
+                        <input className="input is-fullwidth" type="text" onChange={this.onChange} autoFocus={true} placeholder="Escribe tu Documento de Identidad O Correo Electrónico para buscar tu certificado"/>
+                        </form>
                     </div>
                     <div className="control">
-                        <button className="button is-primary" onClick={this.searchCert} disabled={this.state.disabled}>
-                            Buscar
-                        </button>
+                        <button className="button is-primary" onClick={this.searchCert} disabled={this.state.disabled}>Buscar</button>
                     </div>
                 </div>
                 {this.state.message && <p>{this.state.message}</p>}
