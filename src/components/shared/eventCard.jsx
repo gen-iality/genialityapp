@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Moment from "moment";
 import {Link} from "react-router-dom";
+import EventImage from "../../eventimage.png";
 
 class EventCard extends Component {
     render() {
@@ -11,7 +12,11 @@ class EventCard extends Component {
                 <div className="card">
                     <div className="card-image">
                         <figure className="image is-3by2">
-                            <img src={typeof event.picture === 'object'?event.picture[0]:event.picture} alt="Evius.co"/>
+                            {
+                                event.picture ?
+                                    <img src={typeof event.picture === 'object'?event.picture[0]:event.picture} alt="Evius.co"/>:
+                                    <img src={EventImage} alt="Evius.co"/>
+                            }
                         </figure>
                         <div className="header-event">
                             <div className="is-pulled-left dates">
@@ -36,7 +41,7 @@ class EventCard extends Component {
                         </div>
                         {
                             action&&(
-                                
+
                                     <button className="img-see button is-white is-small has-text-weight-bold">
                                         {action.name}
                                         <span className="icon is-small">
