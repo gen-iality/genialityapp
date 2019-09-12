@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
-import {BadgeApi} from "../../helpers/request";
+import {BadgeApi, RolAttApi} from "../../helpers/request";
 import {icon} from "../../helpers/constants";
 import {Redirect} from "react-router-dom";
 
@@ -29,10 +29,11 @@ class UserModal extends Component {
         this.printUser = this.printUser.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const rolesList = await RolAttApi.byEvent(this.props.eventId);
         const self = this;
-        const {roles,states} = this.props;
-        self.setState({ statesList: states, rolesList: roles, state: states[1].value, rol: roles[1].value });
+        const {states} = this.props;
+        self.setState({ statesList: states, state: states[1].value, rolesList, rol: rolesList[0]._id });
         let user = {};
         if (this.props.edit) {
             const {value} = this.props;
@@ -41,7 +42,8 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:user.ticket_id, rol:value.rol_id, state:value.state_id, edit:true, checked_in, userId:value._id, prevState: value.state_id});
+            this.setState({user, ticket_id:value.ticket_id, state:value.state_id, edit:true,
+                rol:value.rol_id, checked_in, userId:value._id, prevState: value.state_id});
         }else{
             this.props.extraFields
                 .map((obj) => {
@@ -64,11 +66,6 @@ class UserModal extends Component {
             rol_id: this.state.rol,
             state_id: this.state.state,
         };
-        /*
-        Object.keys(snap.properties).map((obj, i) => (
-            snap.properties[obj] = snap.properties[obj].toUpperCase()
-        ));
-        */
         const self = this;
         let message = {};
         this.setState({create:true});
@@ -148,7 +145,6 @@ class UserModal extends Component {
             }
             // Head
             oDoc.write('<head><title>Escarapela</title>');
-            //oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
             // body
             oDoc.write('<body onload="window.print()"><div>');
             // Datos
@@ -379,7 +375,7 @@ class UserModal extends Component {
                                                     <select value={rol} onChange={this.selectChange} name={'rol'}>
                                                         {
                                                             rolesList.map((item,key)=>{
-                                                                return <option key={key} value={item.value}>{item.label}</option>
+                                                                return <option key={key} value={item._id}>{item.name}</option>
                                                             })
                                                         }
                                                     </select>

@@ -4,14 +4,13 @@ import Moment from "moment"
 import MediumEditor from 'medium-editor'
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
-import {BaseUrl,typeInputs} from "../../helpers/constants";
+import {BaseUrl} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
 import ErrorServe from "../modal/serverError";
 import Dialog from "../modal/twoAction";
 import {FormattedMessage} from "react-intl";
-import CreatableSelect from 'react-select/lib/Creatable';
 import LogOut from "../shared/logOut";
 import axios from "axios/index"
 import Geosuggest from "react-geosuggest";
@@ -682,8 +681,7 @@ function CustomHtml (options) {
                     sel.addRange(range);
                 }
             }
-        } else if (document.selection && document.selection.type != "Control") {
-            // IE < 9
+        } else if (document.selection && document.selection.type !== "Control") {
             document.selection.createRange().pasteHTML(html);
         }
     }

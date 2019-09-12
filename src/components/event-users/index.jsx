@@ -14,6 +14,7 @@ import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 import Select from 'react-select';
+import PointCheckin from "../modal/pointCheckin";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -34,6 +35,7 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
+            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
@@ -217,7 +219,6 @@ class ListEventUser extends Component {
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
             if(!userReq[pos].checked_in){
-                toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
                 self.setState((prevState) => {
                     return {checkIn: prevState.checkIn+1, qrData}
                 });
@@ -245,7 +246,6 @@ class ListEventUser extends Component {
                 qrData.msg = 'User found';
                 qrData.user = this.state.userReq[pos];
                 qrData.another = !!qrData.user.checked_in;
-                console.log(qrData);
                 this.setState({qrData});
             }else{
                 qrData.msg = 'User not found';
@@ -270,10 +270,8 @@ class ListEventUser extends Component {
         html.classList.remove('is-clipped');
     };
     searchCC = () => {
-        console.log('searching');
         const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         let value = this.state.newCC;
-        let user = {};
         usersRef.where('_id','==',`${value}`)
             .get()
             .then((querySnapshot)=> {
@@ -286,11 +284,9 @@ class ListEventUser extends Component {
                 }
                 else{
                     querySnapshot.forEach((doc)=> {
-                        console.log(doc.id, " => ", doc.data());
                         qrData.msg = 'User found';
                         qrData.user = doc.data();
                         qrData.another = !!qrData.user.checked_in;
-                        console.log(qrData);
                         this.setState({qrData});
                     });
                 }
@@ -390,6 +386,11 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
+    handlePoints = (flag) => {
+        flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
+        this.setState({modalPoints:flag})
+    };
+
     editQRUser = (user) => {
         this.setState({qrModal:false},()=>{
             this.openEditModalUser(user)
@@ -457,7 +458,7 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
-                                            <i class="fas fa-qrcode"></i>
+                                            <i className="fas fa-qrcode"></i>
                                         </span>
                                         <span className="text-button">Leer Código QR</span>
                                     </button>
@@ -465,9 +466,14 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
-                                            <i class="fas fa-user-plus"></i>
+                                            <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
+                                    </button>
+                                </div>
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button" onClick={e=>{this.handlePoints(true)}}>
+                                        <span className="text-button">Roles Asistentes</span>
                                     </button>
                                 </div>
                             </div>
@@ -508,7 +514,7 @@ class ListEventUser extends Component {
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
-                                    <i class="fas fa-filter"></i>
+                                    <i className="fas fa-filter"></i>
                                 </span>
                                 <span className="text-button">Filtrar</span>
                             </button>
@@ -598,7 +604,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} roles={this.props.roles} ticket={ticket} tickets={this.props.event.tickets}
+                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets}
                            value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
@@ -695,6 +701,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
+                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
@@ -725,7 +732,6 @@ const parseData = (data) => {
 
 const mapStateToProps = state => ({
     states: state.states.items,
-    roles: state.rols.items,
     loading: state.states.loading,
     error: state.states.error
 });

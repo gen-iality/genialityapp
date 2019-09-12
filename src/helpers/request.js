@@ -19,7 +19,7 @@ if (evius_token){
 privateInstance.interceptors.response.use((response)=> {
     const {headers} = response;
     if(headers.new_token){
-        console.log('Se acabÃ³ la moneda');
+        console.log('Se acab— la moneda');
         Cookie.set("evius_token", headers.new_token);
         privateInstance.defaults.params = {};
         privateInstance.defaults.params['evius_token'] = headers.new_token;
@@ -186,6 +186,51 @@ export const HelperApi = {
     },
     removeHelper: async(id) => {
         return await Actions.delete(`api/contributors/`,id)
+    }
+};
+export const CertsApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/certificates`)
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/certificate/`,id)
+    },    
+    generate: async(content,image) => {
+        return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1')
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/certificates', data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete('/api/certificates', id);
+    },
+    create: async(data) => {
+        return await Actions.create(`api/certificates`,data)
+    },
+    generateCert: async(body) => {
+        return new Promise((resolve, reject)=>{
+            privateInstance.post('/api/generatecertificate?download=1',body,{responseType:'blob'}).then((response) => {
+                resolve({type:response.headers['content-type'],blob:response.data});
+            })
+        })
+    }
+    
+};
+export const RolAttApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/rolesattendees`)
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/rolesattendees/`,id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit('/api/rolesattendees', data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete('/api/rolesattendees', id);
+    },
+    create: async(data) => {
+        return await Actions.create(`api/rolesattendees`,data)
     }
 };
 const handleCat = (data) => {

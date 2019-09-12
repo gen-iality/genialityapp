@@ -36,10 +36,8 @@ class AdminRol extends Component {
     }
 
     async componentDidMount(){
-        console.log('PROPS ',this.props);
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
-            console.log(res);
             this.setState({users:res,pageOfItems:res,loading:false})
         }
         catch (error) {

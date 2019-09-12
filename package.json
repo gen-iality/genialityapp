@@ -15,6 +15,7 @@
     "bulma-tooltip": "^2.0.1",
     "firebase": "^5.5.6",
     "js-cookie": "^2.2.0",
+    "jspdf": "^1.5.3",
     "medium-editor": "^5.23.3",
     "moment": "^2.22.2",
     "moment-with-locales-es6": "^1.0.1",
