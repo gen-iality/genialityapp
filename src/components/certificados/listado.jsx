@@ -32,7 +32,7 @@ class List extends Component {
         try{
             const list = await CertsApi.byEvent(this.props.event._id);
             const roles = await RolAttApi.byEvent(this.props.event._id);
-            this.setState({list,roles})
+            this.setState({list,roles,loading:false})
         }catch (e) {
             console.log(e);
         }
