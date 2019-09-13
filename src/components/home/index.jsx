@@ -37,7 +37,7 @@ class Home extends Component {
     async fetchEvent(type) {
         try{
             this.setState({loading:true,typeEvent:type});
-            const resp = await EventsApi.getPublic('?pageSize=30');
+            const resp = type === 'next' ?  await EventsApi.getPublic('?pageSize=30') : await EventsApi.getOldEvents('?pageSize=30');
             const events = resp.data.filter(item => item.organizer);
             this.setState({events,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
         }
