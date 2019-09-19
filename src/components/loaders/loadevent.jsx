@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import EventImage from "../../eventimage.png";
 
 class LoadingEvent extends Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class LoadingEvent extends Component {
                             <div className="card">
                                 <div className="card-image">
                                     <figure className="image is-3by2">
-                                        <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Evius.co"/>
+                                        <img src={EventImage} alt="Evius.co"/>
                                     </figure>
                                 </div>
                                 <div className="card-content">

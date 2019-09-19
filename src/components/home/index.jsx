@@ -17,6 +17,7 @@ class Home extends Component {
         super(props);
         this.state = {
             loading:true,
+            typeEvent:"next",
             events:[],
             tabEvt:false,
             tabEvtType:false,
@@ -26,33 +27,29 @@ class Home extends Component {
             serverError: false,
             errorData: {}
         };
-        //this.loadMoreItems = this.loadMoreItems.bind(this);
+        this.fetchEvent = this.fetchEvent.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.fetchEvent("next")
+    }
+
+    async fetchEvent(type) {
         try{
-            const resp = await EventsApi.getPublic('?pageSize=30');
+            this.setState({loading:true,typeEvent:type});
+            const resp = type === 'next' ?  await EventsApi.getPublic('?pageSize=30') : await EventsApi.getOldEvents('?pageSize=30');
             const events = resp.data.filter(item => item.organizer);
             this.setState({events,loading:false,current_page:resp.meta.current_page,total:resp.meta.total});
-            /*this.refs.iScroll.addEventListener("scroll", () => {
-                if (this.refs.iScroll.scrollTop + this.refs.iScroll.clientHeight >= this.refs.iScroll.scrollHeight - 20){
-                    this.loadMoreItems();
-                }
-            });*/
         }
         catch (error) {
-            // Error
             if (error.response) {
-                console.log(error.response);
                 const {status} = error.response;
                 if(status === 401) this.setState({timeout:true,loader:false});
                 else this.setState({serverError:true,loader:false})
             } else {
-                console.log('Error', error.message);
                 if(error.request) console.log(error.request);
                 this.setState({serverError:true,loader:false})
             }
-            console.log(error.config);
         }
     }
 
@@ -96,65 +93,55 @@ class Home extends Component {
             });
     }
 
-    /*async loadMoreItems() {
-        if(!this.state.loadingState && this.state.events.length<this.state.total){
-            this.setState({ loadingState: true });
-            try{
-                const resp = await EventsApi.getPublic(`?pageSize=6&page=${this.state.current_page+1}`);
-                let listEvents = [...this.state.events];
-                resp.data.map(event => {return listEvents.push(event)});
-                this.setState({ events: listEvents, loadingState: false, current_page:resp.meta.current_page });
-            }catch (e) {
-
-            }
-        }
-    }*/
-
     render() {
-        const {category,type,timeout, serverError, errorData, events, loading} = this.state;
+        const {timeout, typeEvent, serverError, errorData, events, loading} = this.state;
         return (
             <React.Fragment>
                 <h2 className="is-size-2 bold-text">Eventos</h2>
-                <div className="columns">
-                    <section className="home column is-12">
-                        <div className="dynamic-content">
-                            {
-                                loading ? <LoadingEvent/> :
-                                    <div className="columns home is-multiline">
-                                        {
-                                            events.length<=0 ? <p className="sin-evento">No hay eventos próximos {(type || category)&&`para está sección`}</p> :
-                                            events.map((event,key)=>{
-                                                return <EventCard key={event._id} event={event}
-                                                                  action={{name:'Ver',url:`landing/${event._id}`}}
-                                                                  size={'column is-one-third'}
-                                                                  right={<div className="actions">
-                                                                      <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-share"/>
-                                                                                    </span>
-                                                                          <span>Compartir</span>
-                                                                      </p>
-                                                                      <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-check"/>
-                                                                                    </span>
-                                                                          <span>Asistiré</span>
-                                                                      </p>
-                                                                      <p className="is-size-7">
-                                                                                    <span className="icon is-small has-text-grey">
-                                                                                        <i className="fas fa-heart"/>
-                                                                                    </span>
-                                                                          <span>Me interesa</span>
-                                                                      </p>
-                                                                  </div>}
-                                                />
-                                            })
-                                        }
-                                    </div>
-                            }
-                        </div>
-                    </section>
-                </div>
+                <section className="home">
+                    <div className="tabs">
+                        <ul>
+                            <li onClick={e=>this.fetchEvent('next')} className={typeEvent==="next"?"is-active":""}><a>Próximos</a></li>
+                            <li onClick={e=>this.fetchEvent('prev')} className={typeEvent==="prev"?"is-active":""}><a>Pasados</a></li>
+                        </ul>
+                    </div>
+                    <div className="dynamic-content">
+                        {
+                            loading ? <LoadingEvent/> :
+                                <div className="columns home is-multiline">
+                                    {
+                                        events.length<=0 ? <p className="sin-evento">No hay eventos próximos</p> :
+                                        events.map((event,key)=>{
+                                            return <EventCard key={event._id} event={event}
+                                                              action={{name:'Ver',url:`landing/${event._id}`}}
+                                                              size={'column is-one-third'}
+                                                              right={<div className="actions">
+                                                                  <p className="is-size-7">
+                                                                                <span className="icon is-small has-text-grey">
+                                                                                    <i className="fas fa-share"/>
+                                                                                </span>
+                                                                      <span>Compartir</span>
+                                                                  </p>
+                                                                  <p className="is-size-7">
+                                                                                <span className="icon is-small has-text-grey">
+                                                                                    <i className="fas fa-check"/>
+                                                                                </span>
+                                                                      <span>Asistiré</span>
+                                                                  </p>
+                                                                  <p className="is-size-7">
+                                                                                <span className="icon is-small has-text-grey">
+                                                                                    <i className="fas fa-heart"/>
+                                                                                </span>
+                                                                      <span>Me interesa</span>
+                                                                  </p>
+                                                              </div>}
+                                            />
+                                        })
+                                    }
+                                </div>
+                        }
+                    </div>
+                </section>
                 {timeout&&(<LogOut/>)}
                 {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>

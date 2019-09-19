@@ -3,6 +3,7 @@ import NewCert from "./modalNewCert";
 import {CertsApi, RolAttApi} from "../../helpers/request";
 import Moment from "moment";
 import Dialog from "../modal/twoAction";
+import Loading from "../loaders/loading";
 Moment.locale('es');
 
 class List extends Component {
@@ -12,6 +13,7 @@ class List extends Component {
             list:[],
             roles:[],
             modalCert:false,
+            loading:true,
             id:false,
             deleteModal:false,
             name:"",
@@ -30,7 +32,7 @@ class List extends Component {
         try{
             const list = await CertsApi.byEvent(this.props.event._id);
             const roles = await RolAttApi.byEvent(this.props.event._id);
-            this.setState({list,roles})
+            this.setState({list,roles,loading:false})
         }catch (e) {
             console.log(e);
         }
@@ -98,36 +100,42 @@ class List extends Component {
                         <span className="text-button">Nuevo Certificado</span>
                     </button>
                 </div>
-                <div className="table">
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Rol</th>
-                            <th>Fecha Creación</th>
-                            <th/>
-                            <th/>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.list.map((cert,key)=>{
-                            return <tr key={key}>
-                                <td>{cert.name}</td>
-                                <td>{cert.rol_id?this.state.roles.find(rol=>rol._id===cert.rol_id).name:'Sin Rol'}</td>
-                                <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
-                                <td>
-                                    <span className="icon has-text-primary action_pointer"
-                                          onClick={(e)=>{this.editCert(cert)}}><i className="fas fa-edit"/></span>
-                                </td>
-                                <td className='has-text-centered'>
-                                    <span className='icon has-text-danger action_pointer'
-                                          onClick={(e)=>{this.setState({id:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span>
-                                </td>
+                {this.state.loading ? <Loading/> :
+                    <div className="table">
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Rol</th>
+                                <th>Fecha Creación</th>
+                                <th/>
+                                <th/>
                             </tr>
-                        })}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                            {this.state.list.map((cert, key) => {
+                                return <tr key={key}>
+                                    <td>{cert.name}</td>
+                                    <td>{cert.rol_id ? this.state.roles.find(rol => rol._id === cert.rol_id).name : 'Sin Rol'}</td>
+                                    <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
+                                    <td>
+                                    <span className="icon has-text-primary action_pointer"
+                                          onClick={(e) => {
+                                              this.editCert(cert)
+                                          }}><i className="fas fa-edit"/></span>
+                                    </td>
+                                    <td className='has-text-centered'>
+                                    <span className='icon has-text-danger action_pointer'
+                                          onClick={(e) => {
+                                              this.setState({id: cert._id, deleteModal: true})
+                                          }}><i className='far fa-trash-alt'/></span>
+                                    </td>
+                                </tr>
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+                }
                 {
                     this.state.modalCert && <NewCert modal={this.state.modalCert} name={this.state.name} onChange={this.onChange}
                                                      roles={this.state.roles} rol={this.state.rol} handleSelect={this.handleSelect}
