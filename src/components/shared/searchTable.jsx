@@ -41,20 +41,25 @@ class SearchComponent extends Component {
             });
         }else{
             if (this.props.kind === 'user') {
+
                 arrAux = this.props.data.filter((item)=>{
-                    if(item.properties){
-                        for(let key in item.properties){
-                            const propertyValue = item.properties[key];
-                            if(propertyValue){
-                                if(typeof propertyValue === "string" && propertyValue.search(new RegExp(value, 'i')) >= 0){
-                                    return true;
-                                }else if(typeof propertyValue === "number"){
-                                    const value = propertyValue.toString();
-                                    return value.search(new RegExp(value, 'i')) >= 0
-                                }
-                            }
-                        }
+
+                    if(!item.properties){return false}
+                    var encontrado = false;
+                    //buscamos coindicencia por cada una de las propiedades
+                    for(let key in item.properties){
+                        let propertyValue = item.properties[key];
+                      
+                        if(!propertyValue){continue;}
+    
+                        propertyValue = String(propertyValue);
+                        encontrado = encontrado || (propertyValue.search(new RegExp(value, 'i')) >= 0)
+                        //encontrado = encontrado || (propertyValue.indexOf(value) !=-1)    
                     }
+                    return encontrado;
+
+                    
+
                 });
             }else if(this.props.kind === 'invitation'){
                 arrAux = this.props.data.filter(item =>
@@ -72,12 +77,16 @@ class SearchComponent extends Component {
     handleFilter = (input) => {
         let value = input.target.value;
         this.setState({value});
+
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
             if (filtered.length > 0) {
+                console.log("el filtro funciono");
                 this.setState({ showMessage: false, message: "", filtered });
+
             } else {
                 this.setState({ showMessage: true, message: "not" });
+                console.log("paila no encontrado");
             }
             this.props.searchResult(filtered);
         }
