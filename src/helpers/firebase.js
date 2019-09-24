@@ -14,9 +14,8 @@ app.initializeApp(config);
 
 const firestore = app.firestore();
 firestore.settings({
-timestampsInSnapshots: true
 });
-firestore.enablePersistence()
+firestore.enablePersistence(experimentalTabSynchronization:true)
     .catch((err)=> {
         console.log(err);
     });
