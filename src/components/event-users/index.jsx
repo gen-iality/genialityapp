@@ -14,6 +14,7 @@ import Loading from "../loaders/loading";
 import connect from "react-redux/es/connect/connect";
 import ErrorServe from "../modal/serverError";
 import Select from 'react-select';
+import PointCheckin from "../modal/pointCheckin";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -34,6 +35,7 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
+            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
@@ -65,20 +67,23 @@ class ListEventUser extends Component {
                 user = change.doc.data();
                 user._id = change.doc.id;
                 user.state = states.find(x => x.value === user.state_id);
-                if(user.checked_in) checkIn = checkIn + 1;
+                user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
                 if (change.type === 'added'){
+                    if(user.checked_in) checkIn += 1;
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
                     this.statesCounter(user.state.value);
                 }
                 if (change.type === 'modified'){
+                    if(user.checked_in) checkIn += 1;
                     newItems.unshift(user);
                     newItems.splice(change.oldIndex+1, 1);
                     changeItem = !changeItem;
                 }
                 if (change.type === 'removed'){
+                    if(user.checked_in) checkIn -= 1;
                     newItems.splice(change.oldIndex, 1);
                 }
             });
@@ -86,7 +91,7 @@ class ListEventUser extends Component {
                 const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                 return {
                     userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                    loading: false,total: snapshot.size + acompanates, checkIn, clearSearch: !prevState.clearSearch
+                    loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
                 }
             });
         },(error => {
@@ -214,7 +219,6 @@ class ListEventUser extends Component {
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
             if(!userReq[pos].checked_in){
-                toast.success(<FormattedMessage id="toast.checkin" defaultMessage="Ok!"/>);
                 self.setState((prevState) => {
                     return {checkIn: prevState.checkIn+1, qrData}
                 });
@@ -242,7 +246,6 @@ class ListEventUser extends Component {
                 qrData.msg = 'User found';
                 qrData.user = this.state.userReq[pos];
                 qrData.another = !!qrData.user.checked_in;
-                console.log(qrData);
                 this.setState({qrData});
             }else{
                 qrData.msg = 'User not found';
@@ -267,10 +270,8 @@ class ListEventUser extends Component {
         html.classList.remove('is-clipped');
     };
     searchCC = () => {
-        console.log('searching');
         const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         let value = this.state.newCC;
-        let user = {};
         usersRef.where('_id','==',`${value}`)
             .get()
             .then((querySnapshot)=> {
@@ -283,11 +284,9 @@ class ListEventUser extends Component {
                 }
                 else{
                     querySnapshot.forEach((doc)=> {
-                        console.log(doc.id, " => ", doc.data());
                         qrData.msg = 'User found';
                         qrData.user = doc.data();
                         qrData.another = !!qrData.user.checked_in;
-                        console.log(qrData);
                         this.setState({qrData});
                     });
                 }
@@ -329,7 +328,9 @@ class ListEventUser extends Component {
                 <td>{item.state.label}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
-                        return <td key={`${item._id}_${field.name}`}>{item.properties[field.name]}</td>
+                        const value = field.type !== 'boolean' ? item.properties[field.name] :
+                            item.properties[field.name] ? 'SI' : 'NO';
+                        return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
@@ -385,6 +386,17 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
+    handlePoints = (flag) => {
+        flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
+        this.setState({modalPoints:flag})
+    };
+
+    editQRUser = (user) => {
+        this.setState({qrModal:false},()=>{
+            this.openEditModalUser(user)
+        });
+    };
+
     render() {
         const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
         const {event:{event_stages}} = this.props;
@@ -424,7 +436,7 @@ class ListEventUser extends Component {
                         <div className="column">
                             <div className="search">
                                 {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                 }
 
                             </div>
@@ -446,7 +458,7 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
-                                            <i class="fas fa-qrcode"></i>
+                                            <i className="fas fa-qrcode"></i>
                                         </span>
                                         <span className="text-button">Leer Código QR</span>
                                     </button>
@@ -454,9 +466,14 @@ class ListEventUser extends Component {
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
-                                            <i class="fas fa-user-plus"></i>
+                                            <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
+                                    </button>
+                                </div>
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button" onClick={e=>{this.handlePoints(true)}}>
+                                        <span className="text-button">Roles Asistentes</span>
                                     </button>
                                 </div>
                             </div>
@@ -497,7 +514,7 @@ class ListEventUser extends Component {
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
-                                    <i class="fas fa-filter"></i>
+                                    <i className="fas fa-filter"></i>
                                 </span>
                                 <span className="text-button">Filtrar</span>
                             </button>
@@ -676,6 +693,7 @@ class ListEventUser extends Component {
                                             !qrData.another &&
                                             <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
                                         }
+                                        <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
                                         <button className="button" onClick={this.readQr}>Read Other</button>
                                     </React.Fragment>
                                 )
@@ -683,6 +701,7 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
+                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
@@ -695,16 +714,17 @@ const parseData = (data) => {
         info[key] = {};
         Object.keys(item.properties).map((obj, i) => {
             let str = item.properties[obj];
+            if(typeof str === "number") str = str.toString();
             if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
             return info[key][obj] = str
         });
-        if(item.state) info[key]['estado'] = item.state.label;
-        if(item.rol) info[key]['rol'] = item.rol.label;
+        if(item.state) info[key]['estado'] = item.state.label.toUpperCase();
+        if(item.rol) info[key]['rol'] = item.rol.label.toUpperCase();
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;
         info[key]['Creado'] = item.created_at;
-        info[key]['Tiquete'] = item.tiquete?item.tiquete.title:'SIN TIQUETE';
+        info[key]['Tiquete'] = item.tiquete?item.tiquete.title.toUpperCase():'SIN TIQUETE';
         return info
     });
     return info

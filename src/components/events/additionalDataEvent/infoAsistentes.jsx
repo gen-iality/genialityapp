@@ -1,19 +1,15 @@
 import React, {Component} from "react";
-import {typeInputs} from "../../../helpers/constants";
 import {uniqueID} from "../../../helpers/utils";
-import CreatableSelect from "react-select/lib/Creatable";
+import FieldEvent from "../../modal/fieldEvent";
 
 const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
-const initOpt = [
-    {label: "Nombres",mandatory: true,name: "names",type: "text",unique: false},
-    {label: "Correo",mandatory: true,name: "email",type: "email",unique: true}
-];
 class InfoAsistentes extends Component {
     constructor(props) {
         super(props);
         this.state = {
             fields:[],
             modal:false,
+            edit:false,
             info:initModal
         }
     }
@@ -27,16 +23,16 @@ class InfoAsistentes extends Component {
         this.setState({info:initModal,modal:true})
     };
     //Guardar campo en el evento
-    saveField = () => {
+    saveField = (field) => {
         if(this.state.edit){
             const fields = [...this.state.fields];
-            const pos = fields.map(f=>f.uuid).indexOf(this.state.info.uuid);
-            fields[pos] = this.state.info;
-            this.setState({fields,modal:false,info:initModal})
+            const pos = fields.map(f=>f.uuid).indexOf(field.uuid);
+            fields[pos] = field;
+            this.setState({fields,modal:false,edit:false,newField:false})
         }else{
-            const info = Object.assign({},this.state.info);
+            const info = Object.assign({},field);
             info.uuid = uniqueID();
-            this.setState({fields:[...this.state.fields,info],modal:false,info:initModal,edit:false})
+            this.setState({fields:[...this.state.fields,info],modal:false,edit:false,newField:false})
         }
     };
     //Editar campo en el evento
@@ -49,52 +45,10 @@ class InfoAsistentes extends Component {
         fields.splice(key, 1);
         this.setState({fields})
     };
-    //Cambiar input del campo del evento
-    handleChange = (e) => {
-        let {name, value} = e.target;
-        if(name === 'label'){
-            this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}});
-        }else this.setState({info:{...this.state.info,[name]:value}});
-    };
-    //Cambiar mandatory del campo del evento o lista
-    changeFieldCheck = (e,id) => {
-        if(id){
-            const fields = [...this.state.fields];
-            const pos = fields.map(f=>f.uuid).indexOf(id);
-            fields[pos].mandatory = !fields[pos].mandatory;
-            this.setState({fields,modal:false,info:initModal})
-        }
-        else
-        {
-            this.setState(prevState => {
-                return {info: {...this.state.info, mandatory: !prevState.info.mandatory}}
-            })
-        }
-    };
-    //Funciones para lista de opciones del campo
-    handleInputChange = (inputValue) => {
-        this.setState({ inputValue });
-    };
-    changeOption = (option) => {
-        this.setState({ info:{...this.state.info,options:option} });
-    };
-    handleKeyDown = (event) => {
-        const { inputValue } = this.state;
-        const value = inputValue;
-        if (!value) return;
-        switch (event.keyCode) {
-            case 9:
-            case 13:
-                this.setState({inputValue: '',info:{...this.state.info,options:[...this.state.info.options,createOption(value)]}});
-                event.preventDefault();
-                break;
-            default: {}
-        }
-    };
 
     submit = (flag) => {
         const data = [...this.state.fields];
-        flag? this.props.nextStep('fields',data,'tickets') : this.props.prevStep('fields',data,'main')
+        flag? this.props.nextStep(data) : this.props.prevStep('fields',data,'main')
     };
 
     closeModal = () => {
@@ -102,7 +56,7 @@ class InfoAsistentes extends Component {
     };
 
     render() {
-        const { fields, inputValue, newField, info} = this.state;
+        const { fields, newField } = this.state;
         return (
             <div>
                 <h1>Información Asistentes</h1>
@@ -164,104 +118,14 @@ class InfoAsistentes extends Component {
                         })}
                     </tbody>
                 </table>
-                <div className={`modal ${this.state.modal ? "is-active" : ""}`}>
-                    <div className="modal-background"/>
-                    <div className="modal-card">
-                        <header className="modal-card-head">
-                            <p className="modal-card-title">{this.state.edit?'Editar Campo':'Agregar Campo'}</p>
-                            <button className="delete is-large" aria-label="close" onClick={this.closeModal}/>
-                        </header>
-                        <section className="modal-card-body">
-                            <div className="field">
-                                <label className="label required has-text-grey-light">Nombre para mostrar</label>
-                                <div className="control">
-                                    <input className="input" name={"label"} type="text"
-                                           placeholder="Nombre del campo" value={info.label}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                            <div className="field">
-                                <div className="control">
-                                    <label className="label required">Tipo</label>
-                                    <div className="control">
-                                        <div className="select">
-                                            <select onChange={this.handleChange} name={'type'} value={info.type}>
-                                                <option value={''}>Seleccione...</option>
-                                                {
-                                                    typeInputs.map((type,key)=>{
-                                                        return <option key={key} value={type.value}>{type.label}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                {
-                                    info.type === 'list' && (
-                                        <div className="control">
-                                            <CreatableSelect
-                                                components={{DropdownIndicator: null,}}
-                                                inputValue={inputValue}
-                                                isClearable
-                                                isMulti
-                                                menuIsOpen={false}
-                                                onChange={this.changeOption}
-                                                onInputChange={this.handleInputChange}
-                                                onKeyDown={(e)=>{this.handleKeyDown(e)}}
-                                                placeholder="Escribe la opción y presiona Enter o Tab..."
-                                                value={info.options}
-                                            />
-                                        </div>
-                                    )
-                                }
-                            </div>
-                            <div className="field">
-                                <input className="is-checkradio is-primary" id={`mandatoryModal`}
-                                       type="checkbox" name={`mandatory`} checked={info.mandatory}
-                                       onChange={this.changeFieldCheck}/>
-                                <label htmlFor={`mandatoryModal`}>Obligatorio</label>
-                            </div>
-                            <div className="field">
-                                <label className="label required has-text-grey-light">Descripción</label>
-                                <textarea className="textarea" placeholder="e.g. Hello world" name={'description'}
-                                          value={info.description} onChange={this.handleChange}></textarea>
-                            </div>
-                            <div className="field column">
-                                <label className="label required has-text-grey-light">Etiqueta</label>
-                                <div className="control">
-                                    <input className="input is-small" name={"name"} type="text"
-                                           placeholder="Nombre del campo" value={info.name}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </section>
-                        <footer className="modal-card-foot">
-                            <button className="button is-primary" onClick={this.saveField}>{this.state.edit?'Editar Campo':'Agregar Campo'}</button>
-                        </footer>
-                    </div>
-                </div>
+                {this.state.modal&&<FieldEvent edit={this.state.fieldEdit} modal={this.state.modal} saveField={this.saveField} closeModal={this.closeModal}/>}
                 <div className="buttons is-right">
-                    <button onClick={e=>{this.submit(true)}} className={`button is-primary`}>Siguiente</button>
+                    <button onClick={e=>{this.submit(true)}} className={`button is-primary`}>Crear</button>
                     <button onClick={e=>{this.submit(false)}} className={`button is-text`}>Anterior</button>
                 </div>
             </div>
         )
     }
-}
-
-const createOption = (label) => ({label, value: label});
-
-//Función para convertir una frase en camelCase: "Hello New World" → "helloNewWorld"
-function toCapitalizeLower(str){
-    const splitted = str.split(' ');
-    const init = splitted[0].toLowerCase();
-    const end = splitted.slice(1).map(item=>{
-        item = item.toLowerCase();
-        return item.charAt(0).toUpperCase() + item.substr(1);
-    });
-    return [init,...end].join('')
 }
 
 export default InfoAsistentes

@@ -12,6 +12,7 @@ import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
+import CertificadoLanding from "../certificados/cerLanding";
 Moment.locale('es');
 momentLocalizer();
 
@@ -24,7 +25,9 @@ class Landing extends Component {
             loading:true,
             modalTicket:false,
             modal:false,
-            editorState:''
+            editorState:'',
+            sections:{},
+            section:'tickets'
         }
     }
 
@@ -52,7 +55,16 @@ class Landing extends Component {
         event.date_end = dateTo[0];
         event.sessions = sessions;
         event.organizer = event.organizer ? event.organizer : event.author;
-        this.setState({event,loading:false},()=>{
+        event.event_stages = event.event_stages ? event.event_stages : [];
+        const sections = {
+            agenda:
+                <div>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/firebase-evius.appspot.com/o/pmi-calendar.png?alt=media&token=4aecfee1-684d-4c55-a9c5-f434cfc0c5fa" alt=""/>
+                </div>,
+            tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>,
+            certs: <CertificadoLanding event={event} tickets={event.tickets} />
+        };
+        this.setState({event,loading:false,sections},()=>{
             this.firebaseUI();
             this.handleScroll();
         });
@@ -119,8 +131,12 @@ class Landing extends Component {
         this.setState({modal:false,modalTicket:false})
     };
 
+    showSection = (section) => {
+        this.setState({section})
+    }
+
     render() {
-        const { event, modal, modalTicket } = this.state;
+        const { event, modal, modalTicket, section, sections } = this.state;
         return (
             <section className="section landing">
                 {
@@ -229,31 +245,42 @@ class Landing extends Component {
                                 (this.state.event.speaker.length > 0 || this.state.event.sessions.length > 0) &&
                                    <AdditonalDataEvent eventInfo={this.state.event}/>
                             }
-                            <div className="hero-body">
-                                <div className="data container has-text-centered">
-                                    <h2 className="data-title has-text-left title-frame">
-                                        <span className="has-text-grey-dark is-size-3 subtitle">Boletería</span>
-                                    </h2>
-                                    <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>
-                                    <div className="columns is-centered">
-                                        <div className="column">
-                                            <h2 className="data-title has-text-left">
-                                                <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
-                                                <span className="has-text-grey-dark is-size-3 subtitle">Ubicación</span>
-                                            </h2>
-                                            {
-                                                !this.state.loading&&(
-                                                    <MyMapComponent
-                                                        lat={event.location.Latitude} long={event.location.Longitude}
-                                                        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-                                                        loadingElement={<div style={{height: `100%`}}/>}
-                                                        containerElement={<div style={{height: `400px`}}/>}
-                                                        mapElement={<div style={{height: `100%`}}/>}
-                                                    />
-                                                )
-                                            }
+                            <div className="hero-body columns">
+                                <div className="data container has-text-centered column is-9">
+                                    <div className="columns">
+                                        <div className="column box" onClick={e=>{this.showSection('tickets')}}>
+                                            <span className="has-text-grey-dark is-size-5 subtitle">Boletería</span>
                                         </div>
+                                        <div className="column box" onClick={e=>{this.showSection('certs')}}>
+                                            <span className="has-text-grey-dark is-size-5 subtitle">Certificados</span>
+                                        </div>
+                                        {
+                                            this.state.event._id === "5d2de182d74d5c28047d1f85" &&
+                                            <div className="column box" onClick={e=>{this.showSection('agenda')}}>
+                                                <span className="has-text-grey-dark is-size-5 subtitle">Agenda</span>
+                                            </div>
+                                        }
                                     </div>
+                                    {
+                                        sections[section]
+                                    }
+                                </div>
+                                <div className="column">
+                                    <h2 className="data-title has-text-left">
+                                        <small className="is-italic has-text-grey-light has-text-weight-300">Encuentra la</small><br/>
+                                        <span className="has-text-grey-dark is-size-3 subtitle">Ubicación</span>
+                                    </h2>
+                                    {
+                                        !this.state.loading&&(
+                                            <MyMapComponent
+                                                lat={event.location.Latitude} long={event.location.Longitude}
+                                                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+                                                loadingElement={<div style={{height: `100%`}}/>}
+                                                containerElement={<div style={{height: `400px`}}/>}
+                                                mapElement={<div style={{height: `100%`}}/>}
+                                            />
+                                        )
+                                    }
                                 </div>
                             </div>
                             <div className={`modal ${modal?'is-active':''}`}>
