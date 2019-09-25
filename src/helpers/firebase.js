@@ -13,6 +13,8 @@ const config = {
 app.initializeApp(config);
 
 const firestore = app.firestore();
+const settings = {timestampsInSnapshots: true};
+firestore.settings(settings);
 firestore.enablePersistence()
     .catch((err)=> {
         console.log(err);
