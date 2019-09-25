@@ -13,9 +13,7 @@ const config = {
 app.initializeApp(config);
 
 const firestore = app.firestore();
-firestore.settings({
-});
-firestore.enablePersistence(experimentalTabSynchronization:true)
+firestore.enablePersistence()
     .catch((err)=> {
         console.log(err);
     });
