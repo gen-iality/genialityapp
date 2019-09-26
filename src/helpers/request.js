@@ -223,17 +223,17 @@ export const SpacesApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/spaces`)
     },
-    getOne: async(id) => {
-        return await Actions.get(`api/certificate/`,id)
+    getOne: async(event,id) => {
+        return await Actions.get(`api/events/${event}/spaces/`,id)
     },
     editOne: async (data, id, event) => {
-        return await Actions.edit('/api/events/spaces/'+id+'/update', data, event)
+        return await Actions.edit(`api/events/${event}/spaces`, data, id)
     },
     deleteOne: async (id, event) => {
-        return await Actions.delete('/api/events/spaces/'+id+'/delete', event);
+        return await Actions.delete(`api/events/${event}/spaces`, id);
     },
-    create: async(data) => {
-        return await Actions.create(`api/events/spaces/store`,data)
+    create: async(data,event) => {
+        return await Actions.create(`api/events/${event}/spaces`,data)
     }
 
 };
