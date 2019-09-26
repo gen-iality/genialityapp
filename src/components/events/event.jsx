@@ -12,6 +12,7 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
+import Espacios from "../espacios";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -97,6 +98,9 @@ class Event extends Component {
                     <ul className="menu-list">
                         <li>
                             <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
+                        </li>
+                        <li>
+                            <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/espacios`}>Espacios</NavLink>
                         </li>
                     </ul>
                 }
@@ -228,6 +232,7 @@ class Event extends Component {
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
                                             <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
+                                            <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
                                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>
