@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import SearchComponent from "../shared/searchTable";
 import Loading from "../loaders/loading";
 import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
 import { icon} from "../../helpers/constants";
 import connect from "react-redux/es/connect/connect";
-import { HelperApi, UsersApi} from "../../helpers/request";
+import { HelperApi, UsersApi, SpacesApi} from "../../helpers/request";
 import Dialog from "../modal/twoAction";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
@@ -17,6 +17,7 @@ class AdminRol extends Component {
         this.state = {
             user:       {Nombres:'',email:'',rol:''},
             users:      [],
+            spaces:      [],
             loading:    true,
             pageOfItems:[],
             message:    {},
@@ -38,7 +39,9 @@ class AdminRol extends Component {
     async componentDidMount(){
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
-            this.setState({users:res,pageOfItems:res,loading:false})
+            const spaces = await SpacesApi.byEvent(this.props.event._id);
+            console.log(this.props);
+            this.setState({users:res,pageOfItems:res,spaces,loading:false})
         }
         catch (error) {
             if (error.response) {
@@ -61,6 +64,7 @@ class AdminRol extends Component {
             Nombres:item.user.Nombres?item.user.Nombres:item.user.displayName?item.user.displayName:item._id,
             email:item.user.email,
             rol:item.role_id,
+            space:item.space_id,
             id:item._id,
             model_id:item.model_id
         };
@@ -98,13 +102,6 @@ class AdminRol extends Component {
             default:
                 break;
         }
-        /*console.group('VALIDATING ?');
-        console.log(fieldName);
-        console.log(value);
-        console.log(this.state.emailValid);
-        console.log(this.state.nameValid);
-        console.log(this.state.rolValid);
-        console.groupEnd();*/
         this.setState({formErrors, emailValid, nameValid, rolValid }, this.validateForm);
     };
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
@@ -155,6 +152,7 @@ class AdminRol extends Component {
                 const data = {
                     "properties": {"email":user.email, "Nombres":user.Nombres},
                     "role_id":user.rol,
+                    "espacio_id":user.space,
                     "event_id":this.props.event._id
                 };
                 console.log(data);
@@ -244,7 +242,7 @@ class AdminRol extends Component {
     };
 
     render() {
-        const {timeout, users, pageOfItems, modal, user, edit, serverError, errorData} = this.state;
+        const {timeout, users, pageOfItems, spaces, modal, user, edit, serverError, errorData} = this.state;
         const {formValid, formErrors:{name,email}, emailValid, found} = this.state;
         const {roles} = this.props;
         return (
@@ -266,20 +264,6 @@ class AdminRol extends Component {
                             </div>
                         </div>
                     </div>
-                    {/*<div className="checkin-tags-wrapper">
-                        <div className="columns is-mobile is-multiline checkin-tags">
-                            {
-                                Object.keys(estados).map(item=>{
-                                    return <div className="column is-narrow" key={item}>
-                                        <div className="tags is-centered">
-                                            <span className={'tag '+item}>{estados[item]}</span>
-                                            <span className="tag is-white">{item}</span>
-                                        </div>
-                                    </div>
-                                })
-                            }
-                        </div>
-                    </div>*/}
                     <div className="columns checkin-table">
                         <div className="column">
                             {this.state.loading ? <Loading/>:
@@ -364,21 +348,41 @@ class AdminRol extends Component {
                             }
                             {
                                 (found===2 || edit || found===1) &&
-                                    <div className="field">
-                                        <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
-                                        <div className="control">
-                                            <div className="select">
-                                                <select value={user.rol} onChange={this.onChange} name={'rol'}>
-                                                    <option value={''}>Seleccione...</option>
-                                                    {
-                                                        roles.map((item,key)=>{
-                                                            return <option key={key} value={item.value}>{item.label}</option>
-                                                        })
-                                                    }
-                                                </select>
+                                    <Fragment>
+                                        <div className="field">
+                                            <label className={`label has-text-grey-light is-capitalized required`}>Rol</label>
+                                            <div className="control">
+                                                <div className="select">
+                                                    <select value={user.rol} onChange={this.onChange} name={'rol'}>
+                                                        <option value={''}>Seleccione...</option>
+                                                        {
+                                                            roles.map((item,key)=>{
+                                                                return <option key={key} value={item.value}>{item.label}</option>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                        {
+                                            user.rol === "5c1a5a45f33bd420173f7a22" &&
+                                                <div className="field">
+                                                    <label className={`label has-text-grey-light`}>Espacio</label>
+                                                    <div className="control">
+                                                        <div className="select">
+                                                            <select value={user.space} onChange={this.onChange} name={'space'}>
+                                                                <option value={''}>Seleccione...</option>
+                                                                {
+                                                                    spaces.map((item,key)=>{
+                                                                        return <option key={key} value={item._id}>{item.name}</option>
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        }
+                                    </Fragment>
                             }
                         </section>
                         {
