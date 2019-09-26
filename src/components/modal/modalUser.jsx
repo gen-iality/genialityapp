@@ -453,7 +453,7 @@ class UserModal extends Component {
                         }
                     </div>
                     <div style={{opacity:0, display:'none'}}>
-                        <QRCode value={userId}/>
+                        <QRCode value={user.properties.identificacion}/>
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
