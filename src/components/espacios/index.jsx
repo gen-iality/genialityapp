@@ -24,8 +24,8 @@ class Espacios extends Component {
     }
 
     fetchItem = async() => {
-        const list = await SpacesApi.byEvent(this.props.eventID);
-        this.setState({list,loading:false})
+        const {data} = await SpacesApi.byEvent(this.props.eventID);
+        this.setState({list:data,loading:false})
     };
 
     onChange = (e) => {
@@ -60,7 +60,7 @@ class Espacios extends Component {
                     return {list, id: "", name: ""};
                 });
             }else{
-                const newRole = await SpacesApi.create({name: this.state.name, event_id:this.props.eventID});
+                const newRole = await SpacesApi.create({name: this.state.name}, this.props.eventID);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
