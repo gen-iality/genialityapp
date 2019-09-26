@@ -31,17 +31,13 @@ class AdminRol extends Component {
             errorData: {},
             serverError: false
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.deleteHelper = this.deleteHelper.bind(this);
-        this.updateContributors = this.updateContributors.bind(this)
     }
 
     async componentDidMount(){
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
-            const spaces = await SpacesApi.byEvent(this.props.event._id);
-            console.log(this.props);
-            this.setState({users:res,pageOfItems:res,spaces,loading:false})
+            const {data} = await SpacesApi.byEvent(this.props.event._id);
+            this.setState({users:res,pageOfItems:res,spaces:data,loading:false})
         }
         catch (error) {
             if (error.response) {
@@ -105,45 +101,44 @@ class AdminRol extends Component {
         this.setState({formErrors, emailValid, nameValid, rolValid }, this.validateForm);
     };
     validateForm = () => {this.setState({formValid: this.state.emailValid && this.state.nameValid && this.state.rolValid});};
-    searchByEmail = () => {
+    searchByEmail = async () => {
         const {user:{email}} = this.state;
-        UsersApi.findByEmail(email)
-            .then(res=>{
-                console.log(res);
-                if(res.length>0){
-                    this.setState({found:1,user:{...this.state.user,rol:''},emailValid:true,nameValid:true,rolValid:false},this.validateForm)
-                }
-                else{
-                    this.setState({found:2,user:{...this.state.user,rol:'',Nombres:''},emailValid:true,nameValid:false,rolValid:false},this.validateForm)
-                }
-            })
-            .catch(error => {
-                if (error.response) {
-                    console.log(error.response);
-                    const {status,data} = error.response;
-                    console.log('STATUS',status,status === 401);
-                    if(status === 401) this.setState({timeout:true,loader:false});
-                    else this.setState({serverError:true,loader:false,errorData:data})
-                } else {
-                    let errorData = error.message;
-                    console.log('Error', error.message);
-                    if(error.request) {
-                        console.log(error.request);
-                        errorData = error.request
-                    };
-                    errorData.status = 708;
-                    this.setState({serverError:true,loader:false,errorData})
-                }
-                console.log(error.config);
-            });
+        try{
+            const res = await UsersApi.findByEmail(email);
+            if(res.length>0){
+                this.setState({found:1,user:{...this.state.user,Nombres:res[0].names,space:'',rol:''},emailValid:true,nameValid:true,rolValid:false},this.validateForm)
+            }
+            else{
+                this.setState({found:2,user:{...this.state.user,rol:'',Nombres:''},emailValid:true,nameValid:false,rolValid:false},this.validateForm)
+            }
+        }
+        catch(error) {
+            if (error.response) {
+                console.log(error.response);
+                const {status,data} = error.response;
+                console.log('STATUS',status,status === 401);
+                if(status === 401) this.setState({timeout:true,loader:false});
+                else this.setState({serverError:true,loader:false,errorData:data})
+            } else {
+                let errorData = error.message;
+                console.log('Error', error.message);
+                if(error.request) {
+                    console.log(error.request);
+                    errorData = error.request
+                };
+                errorData.status = 708;
+                this.setState({serverError:true,loader:false,errorData})
+            }
+            console.log(error.config);
+        }
     };
-    async handleSubmit() {
+    handleSubmit = async() => {
         const {user,edit} = this.state;
         const self = this;
         this.setState({create:true});
         try {
             if(edit){
-                const update = await HelperApi.editHelper(user.id,{"role_id": user.rol});
+                const update = await HelperApi.editHelper(user.id,{"role_id": user.rol,"space_id": user.space});
                 console.log(update);
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
                 this.setState({message:{...this.state.message,class:'msg_warning',content:'CONTRIBUTOR UPDATED'},isLoading:false});
@@ -152,7 +147,7 @@ class AdminRol extends Component {
                 const data = {
                     "properties": {"email":user.email, "Nombres":user.Nombres},
                     "role_id":user.rol,
-                    "espacio_id":user.space,
+                    "space_id":user.space,
                     "event_id":this.props.event._id
                 };
                 console.log(data);
@@ -184,7 +179,7 @@ class AdminRol extends Component {
         }
     };
     //Delete Helper
-    async deleteHelper() {
+    deleteHelper = async() => {
         const self = this;
         try {
             const res = await HelperApi.removeHelper(self.state.user.id);
@@ -213,7 +208,7 @@ class AdminRol extends Component {
     };
     closeDelete = () => {this.setState({deleteModal:false,edit:false})};
 
-    async updateContributors() {
+    updateContributors = async() => {
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
             this.setState({users:res,pageOfItems:res,loading:false})
