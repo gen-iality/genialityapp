@@ -13,12 +13,8 @@ const config = {
 app.initializeApp(config);
 
 const firestore = app.firestore();
-const settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
 firestore.enablePersistence()
-    .catch((err)=> {
-        console.log(err);
-    });
+    .catch((err)=> {console.log(err);});
 const auth = app.auth();
 window.firebase = app;
 export {app,auth,firestore};

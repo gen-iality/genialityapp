@@ -219,6 +219,24 @@ export const CertsApi = {
     }
 
 };
+export const SpacesApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/spaces`)
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/certificate/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit('/api/events/spaces/'+id+'/update', data, event)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete('/api/events/spaces/'+id+'/delete', event);
+    },
+    create: async(data) => {
+        return await Actions.create(`api/events/spaces/store`,data)
+    }
+
+};
 export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)

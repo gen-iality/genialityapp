@@ -12,6 +12,7 @@ import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
+import Espacios from "../espacios";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -92,11 +93,9 @@ class Event extends Component {
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/main`}>Información General</NavLink>
                 </p>
-                <ul className="menu-list">
-                <li>
+                <p className="menu-label has-text-centered-mobile">
                     <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${match.url}/roles`}>Staff</NavLink>
-                </li>
-            </ul>
+                </p>
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${match.url}/pages`}>Contenido</NavLink>
                 </p>
@@ -195,6 +194,7 @@ class Event extends Component {
                                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
                                             <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
+                                            <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
                                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                                             <Route component={NoMatch} />
                                         </Switch>
