@@ -27,7 +27,7 @@ class Badge extends Component {
             return extraFields.push({value:prop.name,label:prop.name})
         });
         if(resp._id) {
-            badge = resp.BadgeFields;
+            badge = resp.BadgeFields.filter(i=>i.qr || (!i.qr && i.id_properties));
             showPrev = true;
         }
         this.setState({ extraFields,badge,showPrev });
