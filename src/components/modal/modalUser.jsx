@@ -452,12 +452,9 @@ class UserModal extends Component {
                                 </footer>
                         }
                     </div>
-                    {
-                        user.identificacion &&
-                            <div style={{opacity:0, display:'none'}}>
-                                <QRCode value={user.identificacion}/>
-                            </div>
-                    }
+                    <div style={{opacity:0, display:'none'}}>
+                        <QRCode value={userId}/>
+                    </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{opacity:0, display:'none'}}/>
                 </div>
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
