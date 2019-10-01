@@ -13,6 +13,9 @@ const config = {
 app.initializeApp(config);
 
 const firestore = app.firestore();
+firestore.settings({
+    cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED
+})
 firestore.enablePersistence()
     .catch((err)=> {console.log(err);});
 const auth = app.auth();
