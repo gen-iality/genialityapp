@@ -561,7 +561,10 @@ class ListEventUser extends Component {
                     }
                     <div className="columns checkin-table">
                         <div className="column">
-                            {this.state.loading ? <Loading/>:
+                            {this.state.loading ? <Fragment>
+                                    <Loading/>
+                                    <h2 className="has-text-centered">Cargando...</h2>
+                                </Fragment>:
                                 <div className="table-wrapper">
                                     {
                                         users.length>0&&
