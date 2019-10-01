@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
-import {firestore} from "../../helpers/firebase";
+import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QrReader from "react-qr-reader";
+import XLSX from "xlsx";
+import Select from 'react-select';
+import { toast } from 'react-toastify';
 import { FaCamera} from "react-icons/fa";
 import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
-import XLSX from "xlsx";
+import connect from "react-redux/es/connect/connect";
+import {firestore} from "../../helpers/firebase";
+import {BadgeApi, RolAttApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ErrorServe from "../modal/serverError";
+import PointCheckin from "../modal/pointCheckin";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
-import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
-import connect from "react-redux/es/connect/connect";
-import ErrorServe from "../modal/serverError";
-import Select from 'react-select';
-import PointCheckin from "../modal/pointCheckin";
+import 'react-toastify/dist/ReactToastify.css';
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -39,11 +40,13 @@ class ListEventUser extends Component {
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
+            rolesList:     [],
             facingMode: 'user',
             qrData:     {},
             clearSearch:false,
             changeItem: false,
             errorData: {},
+            badgeEvent: {},
             serverError: false,
             stage: '',
             ticket: '',
@@ -52,13 +55,15 @@ class ListEventUser extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { event } = this.props;
         const properties = event.user_properties;
+        const rolesList = await RolAttApi.byEvent(this.props.event._id);
+        const badgeEvent = await BadgeApi.get(this.props.event._id);
         const listTickets = [...event.tickets];
         const {states} = this.props;
         let {checkIn,changeItem} = this.state;
-        this.setState({ extraFields: properties });
+        this.setState({ extraFields: properties, rolesList, badgeEvent });
         const { usersRef, ticket, stage } = this.state;
         let newItems= [...this.state.userReq];
         this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
@@ -201,7 +206,6 @@ class ListEventUser extends Component {
     };
 
     checkModal = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {qrModal:!prevState.qrModal}
@@ -604,8 +608,8 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets}
-                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
+                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets} rolesList={this.state.rolesList}
+                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter} badgeEvent={this.state.badgeEvent}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
