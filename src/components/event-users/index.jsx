@@ -56,101 +56,57 @@ class ListEventUser extends Component {
     }
 
     async componentDidMount() {
-        const { event } = this.props;
-        const properties = event.user_properties;
-        const rolesList = await RolAttApi.byEvent(this.props.event._id);
-        const badgeEvent = await BadgeApi.get(this.props.event._id);
-        const listTickets = [...event.tickets];
-        const {states} = this.props;
-        let {checkIn,changeItem} = this.state;
-        this.setState({ extraFields: properties, rolesList, badgeEvent });
-        const { usersRef, ticket, stage } = this.state;
-        let newItems= [...this.state.userReq];
-        this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
-            let user,acompanates = 0;
-            snapshot.docChanges().forEach((change)=> {
-                user = change.doc.data();
-                user._id = change.doc.id;
-                user.state = states.find(x => x.value === user.state_id);
-                user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
-                user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
-                user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
-                if (change.type === 'added'){
-                    if(user.checked_in) checkIn += 1;
-                    change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                    if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                    this.statesCounter(user.state.value);
-                }
-                if (change.type === 'modified'){
-                    if(user.checked_in) checkIn += 1;
-                    newItems.unshift(user);
-                    newItems.splice(change.oldIndex+1, 1);
-                    changeItem = !changeItem;
-                }
-                if (change.type === 'removed'){
-                    if(user.checked_in) checkIn -= 1;
-                    newItems.splice(change.oldIndex, 1);
-                }
-            });
-            this.setState((prevState) => {
-                const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
-                return {
-                    userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                    loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
-                }
-            });
-        },(error => {
-            console.log(error);
-            this.setState({timeout:true,errorData:{message:error,status:708}});
-        }));
-        /*this.pilaListener = pilaRef.onSnapshot({
-            includeMetadataChanges: true
-        },querySnapshot => {
-            querySnapshot.docChanges().forEach(change => {
-                console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
-                const data = change.doc.data();
-                data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
-                data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
-                if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                /!*if (change.type === 'added') {
-                    pilaRef.doc(change.doc.id)
-                        .onSnapshot({
-                            includeMetadataChanges: true
-                        }, (doc) => {
-                            if(!doc._hasPendingWrites){
-                                console.log('this is data: ', data)
-                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,{"properties":data.properties,"role_id":data.role_id,"state_id":data.state_id,"checked_in": data.checked_in,"role_id": data.rol_id,    "state_id": data.state_id })
-                                    .then((response)=>{
-                                        console.log(response);
-                                        pilaRef.doc(change.doc.id).delete();
-                                        if(response.status == "CREATED"){
-                                            usersRef.doc(change.doc.id).delete();
-                                        }
-                                    })
-                            }
-                        });
-                }
-                if (change.type === 'modified') {
-                    pilaRef.doc(change.doc.id)
-                        .onSnapshot({
-                            includeMetadataChanges: true
-                        }, (doc) => {
-                            if(!doc._hasPendingWrites){
-                                Actions.put(`/api/eventUsers/${event._id}`,data)
-                                    .then((response) => {
-                                        console.log('desenpilando ==>',change.doc.data());
-                                        pilaRef.doc(change.doc.id).delete();
-                                        console.log(response);
-                                    })
-                            }
-                        });
-                }
-                if (change.type === 'removed') {
-                }*!/
-            });
-        }, err => {
-            console.log(`Encountered error: ${err}`);
-        });*/
+        try{
+            const { event } = this.props;
+            const properties = event.user_properties;
+            const rolesList = await RolAttApi.byEvent(this.props.event._id);
+            const badgeEvent = await BadgeApi.get(this.props.event._id);
+            const listTickets = [...event.tickets];
+            const {states} = this.props;
+            let {checkIn,changeItem} = this.state;
+            this.setState({ extraFields: properties, rolesList, badgeEvent });
+            const { usersRef, ticket, stage } = this.state;
+            let newItems= [...this.state.userReq];
+            this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
+                let user,acompanates = 0;
+                snapshot.docChanges().forEach((change)=> {
+                    user = change.doc.data();
+                    user._id = change.doc.id;
+                    user.state = states.find(x => x.value === user.state_id);
+                    user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
+                    user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
+                    user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
+                    if (change.type === 'added'){
+                        if(user.checked_in) checkIn += 1;
+                        change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                        if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
+                        this.statesCounter(user.state.value);
+                    }
+                    if (change.type === 'modified'){
+                        if(user.checked_in) checkIn += 1;
+                        newItems.unshift(user);
+                        newItems.splice(change.oldIndex+1, 1);
+                        changeItem = !changeItem;
+                    }
+                    if (change.type === 'removed'){
+                        if(user.checked_in) checkIn -= 1;
+                        newItems.splice(change.oldIndex, 1);
+                    }
+                });
+                this.setState((prevState) => {
+                    const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
+                    return {
+                        userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
+                        loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
+                    }
+                });
+            },(error => {
+                console.log(error);
+                this.setState({timeout:true,errorData:{message:error,status:708}});
+            }));
+        }catch (error) {
+            this.setState({timeout:true,errorData:{message:error,status:710}});
+        }
     }
 
     componentWillUnmount() {
