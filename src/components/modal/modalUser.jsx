@@ -25,13 +25,11 @@ class UserModal extends Component {
             valid: true,
             checked_in: false,
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.printUser = this.printUser.bind(this);
     }
 
-    async componentDidMount() {
-        const rolesList = await RolAttApi.byEvent(this.props.eventId);
+    componentDidMount() {
         const self = this;
+        const {states, rolesList} = this.props;
         self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
         let user = {};
         if (this.props.edit) {
@@ -57,7 +55,7 @@ class UserModal extends Component {
         this.setState({user:{},edit:false});
     }
 
-    async handleSubmit(e) {
+    handleSubmit = async(e) => {
         e.preventDefault();
         e.stopPropagation();
         const snap = {
@@ -128,8 +126,8 @@ class UserModal extends Component {
         this.setState({message,create:false});
     }
 
-    async printUser() {
-        const resp = await BadgeApi.get(this.props.eventId);
+    printUser = () => {
+        const resp = this.props.badgeEvent;
         const {user} = this.state;
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas ? canvas.toDataURL() : '';
