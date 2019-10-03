@@ -22,9 +22,12 @@ $breakpoint-tablet: 1024px;
 }
 @import "~medium-editor/dist/css/medium-editor.css";
 @import "~medium-editor/dist/css/themes/mani.css";
-@import "../../node_modules/bulma/bulma";
-@import "../../node_modules/react-widgets/lib/scss/react-widgets";
-@import '../../node_modules/bulma-extensions/bulma-steps/src/sass/index';
+@import "~bulma/bulma";
+@import "~react-widgets/lib/scss/react-widgets";
+@import "~bulma-extensions/bulma-switch/src/sass/index";
+@import "~bulma-extensions/bulma-steps/src/sass/index";
+@import "~bulma-extensions/bulma-tooltip/src/sass/index";
+@import "~bulma-extensions/bulma-checkradio/src/sass/index";
 
 @import "./loading";
 @import "./tickets";
