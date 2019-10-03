@@ -182,30 +182,29 @@ class Event extends Component {
                 {
                     this.state.loading ? <Loading/>:
                         <section className="columns">
-                            <div className='name-event'>
-                                <p className="subtitle">Evento</p>
-                                <div className={`dropdown ${menuMobile?'is-active':''}`}>
-                                    <div className='dropdown-trigger'>
-                                        <p className="title">
-                                            {this.state.event.name}
+                            <aside className="column menu event-aside is-2 is-hidden-mobile">
+                                {menu}
+                            </aside>
+                            <div className="column event-main is-10">
+                                <div className='name-event'>
+                                    <div className={`dropdown ${menuMobile?'is-active':''}`}>
+                                        <div className='dropdown-trigger'>
+                                            <p className="title">
                                             <span className='icon is-small is-hidden-desktop is-hidden-tablet icon-menu' onClick={this.openMenu} aria-haspopup='true' aria-controls={'dropdown-menuevent'}>
                                                 {
                                                     menuMobile? <i className="fas fa-times" aria-hidden="true"/>:<i className="fas fa-bars"></i>
                                                 }
                                             </span>
-                                        </p>
-                                    </div>
-                                    <div className='dropdown-menu' id='dropdown-menuevent' role={"menu"}>
-                                        <div className='dropdown-content'>
-                                            {menu}
+                                            </p>
+                                        </div>
+                                        <div className='dropdown-menu' id='dropdown-menuevent' role={"menu"}>
+                                            <div className='dropdown-content'>
+                                                {menu}
+                                            </div>
                                         </div>
                                     </div>
+                                    <h3>{this.state.event.name}</h3>
                                 </div>
-                            </div>
-                            <aside className="column menu event-aside is-2 is-hidden-mobile">
-                                {menu}
-                            </aside>
-                            <div className="column event-main is-10">
                                 {
                                     this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
                                         <Switch>

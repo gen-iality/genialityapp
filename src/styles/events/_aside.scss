@@ -3,32 +3,6 @@
   padding: 2rem !important;
   min-height: 100vh;
   height: auto;
-  .menu-label{
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    font-size: 1em;
-    text-transform: none;
-    letter-spacing: 0.1px;
-    width: 100%;
-    .icon {
-      margin-left: 0.5em;
-      i {
-        border: solid black; 
-        border-width: 0 2px 2px 0;
-        display: inline-block;
-        padding: 3px;
-        &.up {
-          transform: rotate(-135deg);
-          -webkit-transform: rotate(-135deg);
-        }
-        &.down {
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
-        }
-      }
-    }
-  }
   .item {
     border-radius: 2px;
     font-weight: bold;
@@ -44,8 +18,7 @@
 
 .event-aside {
   height: auto;
-  margin: 5.5rem 0;
-  padding: 1.25rem 2rem !important;
+  padding: 1.25rem 0 !important;
   .subtitle {
     display: inline-flex;
     align-items: center;
@@ -108,18 +81,35 @@
     color: $primary !important;
   }
 }
+.menu-label{
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+  text-transform: none;
+  letter-spacing: 0.1px;
+  width: 100%;
+  .icon {
+    margin-left: 0.5em;
+    i {
+      border: solid black;
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 3px;
+      &.up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+      }
+      &.down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+      }
+    }
+  }
+}
 .dropdown-content{
   font-weight: 700;
   padding: 1rem;
-  .menu-label{
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    font-size: 1em;
-    letter-spacing: .1px;
-    text-transform: none;
-    width: 100%;
-  }
   a{
     color: #7a7a7a;
     padding-left: 1em;
@@ -145,7 +135,7 @@
   }
 }
 .icon-menu{
-  margin-left: 40px;
+  margin-right: 1em;
 }
 .is-hidden-mobile{
   box-shadow: none;
