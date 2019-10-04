@@ -642,11 +642,11 @@ class UsersRsvp extends Component {
                                 </div>
                             </div>
                         </div>
-                    </div>     
+                    </div>
                 </div>
                 {(!this.props.loading && this.state.addUser) &&
                 <AddUser handleModal={this.closeModal} modal={this.state.addUser} eventId={this.props.event._id}
-                         value={this.state.selectedUser} addToList={this.addToList} states={this.props.states}
+                         value={this.state.selectedUser} addToList={this.addToList}
                          extraFields={this.props.event.user_properties} edit={this.state.edit}/>}
                 <ImportUsers handleModal={this.modalImport} modal={this.state.importUser} eventId={this.props.event._id} extraFields={this.props.event.user_properties}/>
                 <Dialog modal={this.state.ticket} title='Tiquetes' message={{class:'',content:''}}
@@ -708,10 +708,6 @@ const columns = [
     }
 ];
 
-const mapStateToProps = state => ({
-    states: state.states.items,
-    loading: state.states.loading,
-    error: state.states.error
-});
+export default UsersRsvp;
 
 export default connect(mapStateToProps)(UsersRsvp);

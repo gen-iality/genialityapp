@@ -7,10 +7,8 @@ class AddUser extends Component {
     constructor(props) {
     super(props);
     this.state = {
-        statesList: [],
         message: {},
         user: {},
-        state: "",
         emailError:false,
         valid: true
     };
@@ -18,9 +16,6 @@ class AddUser extends Component {
 }
 
     componentDidMount() {
-        const self = this,
-            {states} = this.props;
-        self.setState({ statesList: states, state: states[0].value });
         let user = {};
         this.props.extraFields
             .map((obj) => (
@@ -32,8 +27,7 @@ class AddUser extends Component {
         e.preventDefault();
         e.stopPropagation();
         const snap = {
-            properties: this.state.user,
-            state_id: this.state.state,
+            properties: this.state.user
         };
         console.log(snap);
         let message = {};
@@ -174,20 +168,6 @@ class AddUser extends Component {
                         {
                             Object.keys(this.state.user).length > 0 && this.renderForm()
                         }
-                        <div className="field">
-                            <label className="label">Estado</label>
-                            <div className="control">
-                                <div className="select">
-                                    <select value={this.state.state} onChange={this.selectChange} name={'state'}>
-                                        {
-                                            this.state.statesList.map((item,key)=>{
-                                                return <option key={key} value={item.value}>{item.label}</option>
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </section>
                     <footer className="modal-card-foot">
                         {
