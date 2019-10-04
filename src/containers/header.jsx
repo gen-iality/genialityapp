@@ -22,6 +22,7 @@ class Header extends Component {
             organizations: [],
             name: 'user',
             user: false,
+            menuOpen: false,
             timeout: false,
             modal: false,
             loader: true,
@@ -29,6 +30,7 @@ class Header extends Component {
             valid: true,
             serverError: false,
             showAdmin: false,
+            showEventMenu: false,
             tabEvtType:true,
             tabEvtCat: true,
         };
@@ -81,8 +83,7 @@ class Header extends Component {
         if(splited[1]===""){
             this.setState({showAdmin:false})
         }else if(splited[1]==="event"){
-            this.props.dispatch(showMenu());
-            this.setState({showAdmin:true});
+            this.setState({showAdmin:true,showEventMenu:false});
             window.scrollTo(0, 0);
         }
     }
@@ -112,9 +113,15 @@ class Header extends Component {
         window.location.replace(`${ApiUrl}/events/reports`);
     };
 
+    handleMenuEvent = () => {
+        this.setState({showEventMenu:true},()=>{
+            this.props.dispatch(showMenu())
+        })
+    }
+
     render() {
-        const { timeout, serverError, errorData, photo, name, showAdmin } = this.state;
-        const { eventMenu } = this.props;
+        const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
+        const { eventMenu, match } = this.props;
         return (
             <React.Fragment>
                 <header>
@@ -125,7 +132,7 @@ class Header extends Component {
                             </Link>
                             {showAdmin && <div className="navbar-item" data-target="navbarBasicExample">
                                 <p>
-                                <span className="icon" onClick={()=>this.props.dispatch(showMenu())}><i className="fas fa-th"></i></span>
+                                <span className="icon" onClick={this.handleMenuEvent}><i className="fas fa-th"></i></span>
                                 <span>Administrar evento</span>
                                 </p>
                             </div>}
@@ -147,10 +154,10 @@ class Header extends Component {
                                 </React.Fragment>
                             }
                         </div>
-                        {showAdmin&&
+                        {(showAdmin&&showEventMenu)&&
                         <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
                             <div className="navbar-start">
-                                <Menu/>
+                                <Menu match={match}/>
                             </div>
                         </div>}
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>

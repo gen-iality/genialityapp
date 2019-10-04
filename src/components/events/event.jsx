@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Route, Redirect, Switch } from "react-router-dom";
+import {Route, Redirect, Switch} from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
@@ -84,51 +84,49 @@ class Event extends Component {
         return (
             <React.Fragment>
                 {
-                    this.state.loading ? <Loading/>:
+                    this.state.loading || this.props.loading ? <Loading/>:
                         <section className="columns">
                             <aside className={`column menu event-aside is-2 is-hidden-mobile ${!showMenu?'is-hidden':""}`}>
-                                <Menu/>
+                                <Menu match={match}/>
                             </aside>
                             <div className="column event-main">
                                 <h3 className='name-event'>{this.state.event.name}</h3>
-                                {
-                                    this.props.loading?<p>Cargando</p>:<section className="section event-wrapper">
-                                        <Switch>
-                                            <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                                            <Route exact path={`${match.url}/main`} render={()=>
-                                                <General event={this.state.event} updateEvent={this.updateEvent}/>}
-                                            />
-                                            <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
-                                            {
-                                                permissions.items.includes(rolPermissions.admin_badge._id) &&
-                                                <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
-                                            }
-                                            <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
-                                            {
-                                                permissions.items.includes(rolPermissions.history_invitations._id) &&
-                                                <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
-                                            }
-                                            {
-                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
-                                            }
-                                            {
-                                                permissions.items.includes(rolPermissions.admin_ticket._id) &&
-                                                    <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
-                                            }
-                                            {
-                                                permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                                    <Route path={`${match.url}/pages`} component={Pages}/>
-                                            }
-                                            <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
-                                            <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
-                                            <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
-                                            <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
-                                            <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
-                                            <Route component={NoMatch} />
-                                        </Switch>
-                                    </section>
-                                }
+                                <section className="section event-wrapper">
+                                    <Switch>
+                                        <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
+                                        <Route exact path={`${match.url}/main`} render={()=>
+                                            <General event={this.state.event} updateEvent={this.updateEvent}/>}
+                                        />
+                                        <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                        {
+                                            permissions.items.includes(rolPermissions.admin_badge._id) &&
+                                            <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
+                                        }
+                                        <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
+                                        {
+                                            permissions.items.includes(rolPermissions.history_invitations._id) &&
+                                            <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
+                                        }
+                                        {
+                                            permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                            <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                        }
+                                        {
+                                            permissions.items.includes(rolPermissions.admin_ticket._id) &&
+                                            <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
+                                        }
+                                        {
+                                            permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                            <Route path={`${match.url}/pages`} component={Pages}/>
+                                        }
+                                        <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
+                                        <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
+                                        <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
+                                        <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
+                                        <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
+                                        <Route component={NoMatch} />
+                                    </Switch>
+                                </section>
                             </div>
                         </section>
                 }

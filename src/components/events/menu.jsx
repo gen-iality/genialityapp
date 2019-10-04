@@ -11,7 +11,7 @@ class Menu extends Component {
             guestTab:true,
             ticketTab:true,
             url:""
-        }
+        };
     }
 
     handleClick = (e) => {
@@ -22,6 +22,13 @@ class Menu extends Component {
         const {pathname} = this.props.location;
         const splitted = pathname.split('/');
         this.setState({url:"/"+ splitted[1] + "/" + splitted[2]})
+    }
+
+    componentDidUpdate(prevProps) {
+        const {match} = this.props;
+        if(this.props.match !== prevProps.match) {
+            this.setState({url:match.url});
+        }
     }
 
     render(){
