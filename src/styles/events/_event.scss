@@ -1,13 +1,10 @@
 
- .name-event{
-  display: flex;
-  flex-direction: row;
-  margin: 5px 22px;
-  h3{
+.name-event{
     display: inline-flex;
+    color: #4462DC;
+    font: Italic 12px/15px Montserrat;
     align-items: center;
     word-break: normal;
-  }
 }
 .event-main {
   padding: 0;

@@ -8,30 +8,27 @@ import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
 import LetterAvatar from "../components/shared/letterAvatar";
 import { connect } from "react-redux";
-import { bindActionCreators } from 'redux';
-import {addLoginInformation} from "../redux/user/actions";
+import {addLoginInformation,showMenu} from "../redux/user/actions";
+import Menu from "../components/events/menu";
 
 class Header extends Component {
     constructor(props) {
         super(props);
         this.props.history.listen((location, action) => {
-            console.log("on route change");
             this.handleMenu(location)
         });
         this.state = {
             selection: [],
             organizations: [],
-            filterEvius: 0,
             name: 'user',
             user: false,
-            menuOpen: false,
-            filterOpen: false,
             timeout: false,
             modal: false,
             loader: true,
             create: false,
             valid: true,
             serverError: false,
+            showAdmin: false,
             tabEvtType:true,
             tabEvtCat: true,
         };
@@ -51,7 +48,7 @@ class Header extends Component {
                     const photo = (data.photoUrl) ? data.photoUrl : data.picture;
                     const organizations = await OrganizationApi.mine()
                     this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations},()=>{
-                        this.props.addLoginInformation(data);
+                        this.props.dispatch(addLoginInformation(data));
                     });
                     this.handleMenu(this.props.location)
                 }else{
@@ -82,12 +79,12 @@ class Header extends Component {
     handleMenu = (location) => {
         const splited = location.pathname.split('/');
         if(splited[1]===""){
-            this.setState({filterEvius:1})
+            this.setState({showAdmin:false})
         }else if(splited[1]==="event"){
-            this.setState({filterEvius:2,eventUrl:splited[2]})
-        }else this.setState({filterEvius:0});
-        window.scrollTo(0, 0);
-        this.setState({menuOpen:false,filterOpen:false})
+            this.props.dispatch(showMenu());
+            this.setState({showAdmin:true});
+            window.scrollTo(0, 0);
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -116,7 +113,8 @@ class Header extends Component {
     };
 
     render() {
-        const { timeout, serverError, errorData, photo, name } = this.state;
+        const { timeout, serverError, errorData, photo, name, showAdmin } = this.state;
+        const { eventMenu } = this.props;
         return (
             <React.Fragment>
                 <header>
@@ -125,27 +123,36 @@ class Header extends Component {
                             <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </Link>
+                            {showAdmin && <div className="navbar-item" data-target="navbarBasicExample">
+                                <p>
+                                <span className="icon" onClick={()=>this.props.dispatch(showMenu())}><i className="fas fa-th"></i></span>
+                                <span>Administrar evento</span>
+                                </p>
+                            </div>}
                             {
                                 !this.state.loader && <React.Fragment>
                                     {
-                                        !this.state.user && <div className="navbar-item is-hidden-desktop">
+                                        !this.state.user ? <div className="navbar-item is-hidden-desktop">
                                             <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
                                                 <FormattedMessage id="header.login" defaultMessage="Sign In"/>
                                             </button>
+                                        </div>:
+                                        <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
+                                            {
+                                                (photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                                    : <LetterAvatar name={name}/>
+                                            }
                                         </div>
-                                    }
-                                    {
-                                        this.state.user &&
-                                            <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
-                                                {
-                                                    (photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
-                                                        : <LetterAvatar name={name}/>
-                                                }
-                                            </div>
                                     }
                                 </React.Fragment>
                             }
                         </div>
+                        {showAdmin&&
+                        <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
+                            <div className="navbar-start">
+                                <Menu/>
+                            </div>
+                        </div>}
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-end">
                                 {
@@ -210,15 +217,12 @@ class Header extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
-});
-
 const mapStateToProps = state => ({
     categories: state.categories.items,
     types: state.types.items,
     loginInfo: state.user.data,
+    eventMenu: state.user.menu,
     permissions: state.permissions,
     error: state.categories.error});
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));
+export default connect(mapStateToProps)(withRouter(Header));
