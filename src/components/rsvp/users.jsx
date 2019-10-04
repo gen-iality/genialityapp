@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AddUser from "../modal/addUser";
 import ErrorServe from "../modal/serverError";
-import connect from "react-redux/es/connect/connect";
 import LogOut from "../shared/logOut";
 
 class UsersRsvp extends Component {
@@ -709,5 +708,3 @@ const columns = [
 ];
 
 export default UsersRsvp;
-
-export default connect(mapStateToProps)(UsersRsvp);
