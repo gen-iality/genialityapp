@@ -224,8 +224,8 @@ class General extends Component {
         };
         try {
             if(event._id){
-                await EventsApi.editOne(data, event._id);
-                this.props.updateEvent(data);
+                const info = await EventsApi.editOne(data, event._id);
+                this.props.updateEvent(info);
                 self.setState({loading:false});
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }

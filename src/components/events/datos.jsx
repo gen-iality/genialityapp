@@ -11,7 +11,6 @@ class Datos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            event : {},
             info : {},
             newField: false,
             edit: false,
@@ -21,8 +20,8 @@ class Datos extends Component {
 
     async componentDidMount(){
         const {event} = this.props;
-        const {fields,groups} = parseProperties(event);
-        this.setState({fields,groups,loading:false});
+        const fields = event.user_properties.filter(item=>item.name!=="names"&&item.name!=="email");
+        this.setState({fields,loading:false});
     }
 
     //*********** CAMPOS EVENTO
@@ -74,10 +73,9 @@ class Datos extends Component {
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-        const { event,groups,fields } = this.state;
+        const { event } = this.props;
         const self = this;
-        const {properties_group,user_properties} = handleProperties(event,fields,groups);
-        const data = {user_properties : [...this.state.fields, ...user_properties], properties_group};
+        const data = {user_properties : [...this.state.fields]};
         console.log(data);
         try {
             if(event._id){
@@ -183,30 +181,6 @@ class Datos extends Component {
             </div>
         )
     }
-}
-
-//Función para mostrar los campos y grupos por separado
-function parseProperties(event){
-    let groups = [];
-    const {user_properties,properties_group} = event;
-    let fields = user_properties.filter(item => !item.group_id).filter(item=>item.name!=="names"&&item.name!=="email");
-    properties_group.map((group,key) => groups[key] = {group_id:group,fields:user_properties.filter(item => item.group_id === group)});
-    return {fields,groups}
-}
-
-//Función para construir el campo user_properties y properties_group con los nuevos campos|grupos
-function handleProperties(event,fields,groups){
-    let properties_group = [];
-    let user_properties = [];
-    for(let i = 0;i < groups.length; i++){
-        properties_group.push(groups[i].group_id);
-        for(let j = 0;j < groups[i].fields.length; j++){
-            const list = groups[i].fields[j];
-            list.group_id = groups[i].group_id;
-            user_properties.push(list);
-        }
-    }
-    return {properties_group,user_properties}
 }
 
 export default Datos
