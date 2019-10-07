@@ -13,6 +13,7 @@ import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
 import Espacios from "../espacios";
 import Menu from "./menu";
+import Datos from "./datos";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -62,10 +63,6 @@ class Event extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps);
-    }
-
     componentWillUnmount(){
         this.setState({newEvent:false})
     }
@@ -97,6 +94,7 @@ class Event extends Component {
                                         <Route exact path={`${match.url}/main`} render={()=>
                                             <General event={this.state.event} updateEvent={this.updateEvent}/>}
                                         />
+                                        <Route path={`${match.url}/datos`} render={()=><Datos event={this.state.event}/>}/>
                                         <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                         {
                                             permissions.items.includes(rolPermissions.admin_badge._id) &&

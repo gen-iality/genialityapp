@@ -623,12 +623,6 @@ a {
       &:hover {
         background: rgba($color: $black, $alpha: 0.05) !important;
       }
-      &:nth-child(odd) {
-        background: white;
-      }
-      &:nth-child(even) {
-        background: #f9f9f9;
-      }
       td {
         border: none !important;
         a {
