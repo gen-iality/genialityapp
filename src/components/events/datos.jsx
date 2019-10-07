@@ -130,7 +130,7 @@ class Datos extends Component {
                 <h2 className="title-section">Recopilación de datos</h2>
                 <p>Configure los datos que desea recolectar de los asistentes del evento</p>
                 <button className="button add is-pulled-right" onClick={this.addField} disabled={newField}>
-                    <span className="icon"><i className="fab fa-plus-circle"/></span>
+                    <span className="icon"><i className="fas fa-plus-circle"/></span>
                     <span>Agregar dato</span>
                 </button>
                 <table className="table">
