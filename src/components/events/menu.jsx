@@ -9,6 +9,7 @@ class Menu extends Component {
         this.state = {
             generalTab:true,
             guestTab:true,
+            checkInTab:true,
             ticketTab:true,
             url:""
         };
@@ -33,7 +34,7 @@ class Menu extends Component {
 
     render(){
         const {permissions} = this.props;
-        const {generalTab,guestTab,ticketTab,url} = this.state;
+        const {generalTab,guestTab,checkInTab,ticketTab,url} = this.state;
         return (
             <Fragment>
                 <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
@@ -59,7 +60,7 @@ class Menu extends Component {
                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
                                 <Fragment>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Programa y salas</NavLink></li>
-                                    <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/roles`}>Organizadores</NavLink></li>
+                                    <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
                                 </Fragment>
                             }
                             {
@@ -94,11 +95,26 @@ class Menu extends Component {
                                     </li>
                                 </Fragment>
                             }
-                            <li>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/assistants`}>Check In</NavLink>
-                            </li>
                         </ul>
                     )
+                }
+                {
+                    permissions.items.includes(rolPermissions.checkin._id) &&
+                        <Fragment>
+                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({checkInTab:!checkInTab})}}>
+                                <span className="item has-text-grey">Check In</span>
+                                <span className="icon"><i className={`${checkInTab?'up':'down'}`}/></span>
+                            </p>
+                            {
+                                checkInTab && (
+                                    <ul className="menu-list">
+                                        <li>
+                                            <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/assistants`}>Check In</NavLink>
+                                        </li>
+                                    </ul>
+                                )
+                            }
+                        </Fragment>
                 }
                 {
                     permissions.items.includes(rolPermissions.admin_ticket._id) &&

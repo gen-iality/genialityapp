@@ -12,8 +12,8 @@ export function fetchPermissions(event) {
         dispatch(fetchPermissionsBegin());
         Actions.get(`api/contributors/events/${event}/me`)
             .then((data)=> {
-                const permissions = data.map(item => (item._id));
-                dispatch(fetchPermissionsSuccess(permissions));
+                const {permission_ids} = data.role;
+                dispatch(fetchPermissionsSuccess(permission_ids));
             })
             .catch((e)=>{
                 dispatch(fetchPermissionsFailure(e))

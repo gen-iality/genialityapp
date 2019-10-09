@@ -41,6 +41,8 @@ $breakpoint-tablet: 1024px;
 @import "./events/aside";
 @import "./events/event";
 @import "./events/card";
+@import "./events/general";
+@import "./events/datos";
 @import "./users/import";
 @import "./rsvp/send";
 @import "./rsvp/invitations";

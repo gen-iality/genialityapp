@@ -13,6 +13,7 @@ import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
 import Espacios from "../espacios";
 import Menu from "./menu";
+import Datos from "./datos";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -43,10 +44,10 @@ class Event extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(fetchRol());
-        let eventId = this.props.match.params.event;
-        this.props.dispatch(fetchPermissions(eventId));
         try {
+            await this.props.dispatch(fetchRol());
+            let eventId = this.props.match.params.event;
+            await this.props.dispatch(fetchPermissions(eventId));
             const event = await EventsApi.getOne(eventId);
             const dateFrom = event.datetime_from.split(' ');
             const dateTo = event.datetime_to.split(' ');
@@ -60,10 +61,6 @@ class Event extends Component {
             console.log(e.response);
             this.setState({timeout:true,loading:false});
         }
-    }
-
-    componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps);
     }
 
     componentWillUnmount(){
@@ -97,6 +94,7 @@ class Event extends Component {
                                         <Route exact path={`${match.url}/main`} render={()=>
                                             <General event={this.state.event} updateEvent={this.updateEvent}/>}
                                         />
+                                        <Route path={`${match.url}/datos`} render={()=><Datos event={this.state.event}/>}/>
                                         <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                         {
                                             permissions.items.includes(rolPermissions.admin_badge._id) &&
@@ -109,7 +107,7 @@ class Event extends Component {
                                         }
                                         {
                                             permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                            <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>
                                         }
                                         {
                                             permissions.items.includes(rolPermissions.admin_ticket._id) &&
