@@ -44,10 +44,10 @@ class Event extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(fetchRol());
-        let eventId = this.props.match.params.event;
-        this.props.dispatch(fetchPermissions(eventId));
         try {
+            await this.props.dispatch(fetchRol());
+            let eventId = this.props.match.params.event;
+            await this.props.dispatch(fetchPermissions(eventId));
             const event = await EventsApi.getOne(eventId);
             const dateFrom = event.datetime_from.split(' ');
             const dateTo = event.datetime_to.split(' ');
