@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {firestore} from "../../helpers/firebase";
 import QrReader from "react-qr-reader";
 import { FaCamera} from "react-icons/fa";
