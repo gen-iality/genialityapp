@@ -59,7 +59,7 @@ class Menu extends Component {
                                 permissions.items.includes(rolPermissions.admin_staff._id) &&
                                 <Fragment>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Programa y salas</NavLink></li>
-                                    <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/roles`}>Organizadores</NavLink></li>
+                                    <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
                                 </Fragment>
                             }
                             {

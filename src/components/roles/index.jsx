@@ -105,8 +105,10 @@ class AdminRol extends Component {
         const {user:{email}} = this.state;
         try{
             const res = await UsersApi.findByEmail(email);
-            if(res.length>0){
-                this.setState({found:1,user:{...this.state.user,Nombres:res[0].names,space:'',rol:''},emailValid:true,nameValid:true,rolValid:false},this.validateForm)
+            const data = res.find(user => user.name || user.names);
+            if(data){
+                this.setState({found:1,user:{...this.state.user,Nombres:data.names?data.names:data.name,space:'',rol:''},
+                    emailValid:true,nameValid:true,rolValid:false},this.validateForm)
             }
             else{
                 this.setState({found:2,user:{...this.state.user,rol:'',Nombres:''},emailValid:true,nameValid:false,rolValid:false},this.validateForm)
@@ -137,8 +139,9 @@ class AdminRol extends Component {
         const self = this;
         this.setState({create:true});
         try {
+            const eventID = this.props.event._id;
             if(edit){
-                const update = await HelperApi.editHelper(user.id,{"role_id": user.rol,"space_id": user.space});
+                const update = await HelperApi.editHelper(eventID, user.id,{"role_id": user.rol,"space_id": user.space});
                 console.log(update);
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
                 this.setState({message:{...this.state.message,class:'msg_warning',content:'CONTRIBUTOR UPDATED'},isLoading:false});
@@ -147,12 +150,9 @@ class AdminRol extends Component {
                 const data = {
                     "properties": {"email":user.email, "Nombres":user.Nombres},
                     "role_id":user.rol,
-                    "space_id":user.space,
-                    "event_id":this.props.event._id
+                    "space_id":user.space
                 };
-                console.log(data);
-                const res = await HelperApi.saveHelper(data);
-                console.log(res);
+                const res = await HelperApi.saveHelper(eventID, data);
                 if(res._id){
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
                     this.setState({message:{...this.state.message,class:'msg_success',content:'CONTRIBUTOR CREATED'},isLoading:false});
@@ -182,8 +182,7 @@ class AdminRol extends Component {
     deleteHelper = async() => {
         const self = this;
         try {
-            const res = await HelperApi.removeHelper(self.state.user.id);
-            console.log(res);
+            await HelperApi.removeHelper(self.state.user.id, this.props.event._id);
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!"/>);
             this.setState({message:{...this.state.message,class:'msg_error',content:'CONTRIBUTOR DELETED'},create:false});
             self.updateContributors();

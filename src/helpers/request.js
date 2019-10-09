@@ -181,14 +181,14 @@ export const HelperApi = {
     rolesOne: async(event) => {
         return await Actions.get(`api/contributors/events/${event}/me`)
     },
-    saveHelper: async(data) => {
-        return await Actions.post(`api/contributors`,data)
+    saveHelper: async(event, data) => {
+        return await Actions.post(`api/events/${event}/contributors`,data)
     },
-    editHelper: async(id,data) => {
-        return await Actions.put(`api/contributors/${id}`,data)
+    editHelper: async(event, id,data) => {
+        return await Actions.put(`api/events/${event}/contributors/${id}`,data)
     },
-    removeHelper: async(id) => {
-        return await Actions.delete(`api/contributors/`,id)
+    removeHelper: async(id, event) => {
+        return await Actions.delete(`api/events/${event}/contributors`,id)
     }
 };
 export const CertsApi = {

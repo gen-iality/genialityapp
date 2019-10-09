@@ -107,7 +107,7 @@ class Event extends Component {
                                         }
                                         {
                                             permissions.items.includes(rolPermissions.admin_staff._id) &&
-                                            <Route path={`${match.url}/roles`} render={()=><AdminRol event={this.state.event} />}/>
+                                            <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>
                                         }
                                         {
                                             permissions.items.includes(rolPermissions.admin_ticket._id) &&
