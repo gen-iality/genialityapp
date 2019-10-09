@@ -65,11 +65,13 @@ class Header extends Component {
                     if(status === 401) this.setState({timeout:true,loader:false});
                     else this.setState({serverError:true,loader:false,errorData:data})
                 } else {
-                    let errorData = error.message;
+                    let errorData = {};
                     console.log('Error', error.message);
-                    if(error.request) {
+                    if(error.message) {
+                        errorData.message = error.message;
+                    }else if(error.request) {
                         console.log(error.request);
-                        errorData = error.request
+                        errorData.message = JSON.stringify(error.request)
                     };
                     errorData.status = 708;
                     this.setState({serverError:true,loader:false,errorData})

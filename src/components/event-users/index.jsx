@@ -266,7 +266,7 @@ class ListEventUser extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:''});
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:'',tabActive:"camera"});
         html.classList.remove('is-clipped');
     };
     searchCC = () => {
@@ -626,8 +626,10 @@ class ListEventUser extends Component {
                                             <h1 className="title">Usuario Chequeado</h1>
                                             <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
                                         </div>)}
-                                        {Object.keys(qrData.user.properties).map((obj,key)=>{
-                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
+                                        {extraFields.map((obj,key)=>{
+                                            let val = qrData.user.properties[obj.name];
+                                            if(obj.type === "boolean") val = qrData.user.properties[obj.name] ? "SI" : "NO";
+                                            return <p key={key}>{obj.label}: {val}</p>})}
                                     </div>:
                                     <React.Fragment>
                                         <div className="tabs is-centered tab-qr">
