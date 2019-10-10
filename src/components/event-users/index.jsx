@@ -433,7 +433,7 @@ class ListEventUser extends Component {
             <React.Fragment>
                 <div className="checkin">
                     <div className="columns checkin-header">
-                        <div className="column">
+                        <div className="">
                             <div className="search">
                                 {
                                     total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
@@ -441,11 +441,11 @@ class ListEventUser extends Component {
 
                             </div>
                         </div>
-                        <div className="column buttons-row">
-                            <div className="columns is-mobile is-centered buttons-g">
+                        <div className="buttons-row">
+                            <div className="columns is-mobile is-centered buttons-g container-buttons">
                                 {
                                     userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered export button-c">
+                                        <div className="column is-narrow has-text-centered export button-c is-hidden-mobile">
                                             <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
@@ -471,7 +471,7 @@ class ListEventUser extends Component {
                                         <span className="text-button">Agregar Usuario</span>
                                     </button>
                                 </div>
-                                <div className="column is-narrow has-text-centered button-c">
+                                <div className="column is-narrow has-text-centered button-c is-hidden-mobile">
                                     <button className="button" onClick={e=>{this.handlePoints(true)}}>
                                         <span className="text-button">Roles Asistentes</span>
                                     </button>
