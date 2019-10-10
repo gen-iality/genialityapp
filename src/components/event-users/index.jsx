@@ -2,18 +2,19 @@ import React, {Component, Fragment} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QrReader from "react-qr-reader";
 import XLSX from "xlsx";
-import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { FaCamera} from "react-icons/fa";
 import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
 import {firestore} from "../../helpers/firebase";
-import {BadgeApi, RolAttApi} from "../../helpers/request";
+import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import 'react-toastify/dist/ReactToastify.css';
+import {connect} from "react-redux";
+import CheckSpace from "./checkSpace";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -28,6 +29,7 @@ class ListEventUser extends Component {
             total:      0,
             checkIn:    0,
             extraFields:[],
+            spacesEvent:[],
             addUser:    false,
             editUser:   false,
             deleteUser: false,
@@ -57,9 +59,10 @@ class ListEventUser extends Component {
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
+            const {data} = await SpacesApi.byEvent(this.props.event._id);
             const listTickets = [...event.tickets];
             let {checkIn,changeItem} = this.state;
-            this.setState({ extraFields: properties, rolesList, badgeEvent });
+            this.setState({ extraFields: properties, rolesList, badgeEvent, spacesEvent: data });
             const { usersRef, ticket, stage } = this.state;
             let newItems= [...this.state.userReq];
             this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
@@ -86,6 +89,8 @@ class ListEventUser extends Component {
                             if(user.checked_in) checkIn -= 1;
                             newItems.splice(change.oldIndex, 1);
                             break;
+                        default:
+                            break;
                     }
                     user = {};
                 });
@@ -93,7 +98,7 @@ class ListEventUser extends Component {
                     const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                     return {
                         userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                        loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
+                        loading: false,total: newItems.length + acompanates, checkIn, clearSearch: !prevState.clearSearch
                     }
                 });
             },(error => {
@@ -140,6 +145,19 @@ class ListEventUser extends Component {
         html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {qrModal:!prevState.qrModal}
+        });
+    };
+
+    spaceQModal = () => {
+        html.classList.add('is-clipped');
+        this.setState((prevState) => {
+            return {spaceModal:!prevState.spaceModal}
+        });
+    };
+    closeSpaceModal = () => {
+        html.classList.remove('is-clipped');
+        this.setState((prevState) => {
+            return {spaceModal:!prevState.spaceModal}
         });
     };
 
@@ -201,7 +219,7 @@ class ListEventUser extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:''});
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:'',tabActive:"camera"});
         html.classList.remove('is-clipped');
     };
     searchCC = () => {
@@ -242,7 +260,7 @@ class ListEventUser extends Component {
 
     renderRows = () => {
         const items = [];
-        const {extraFields} = this.state;
+        const {extraFields, spacesEvent} = this.state;
         const limit = extraFields.length;
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
@@ -266,6 +284,9 @@ class ListEventUser extends Component {
                             item.properties[field.name] ? 'SI' : 'NO';
                         return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
+                }
+                {
+                    spacesEvent.map((space,key)=><td key={`space${key}`}>{space.name}: {(item.spaces&&item.spaces[space._id]) ? 'SI' : 'NO'}</td>)
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
             </tr>)
@@ -325,36 +346,15 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, editUser, stage, ticket, ticketsOptions} = this.state;
-        const {event:{event_stages}} = this.props;
-        // Dropdown para movil
-        const options = [{ value:'1', label:
-            <div className="checkin-tags-wrapper" >
-              <div className="columns is-mobile is-multiline checkin-tags">
-                <div className="column is-narrow">
-                    <div className="tags is-centered">
-                        <span className="tag is-primary">{checkIn}</span>
-                        <span className="tag is-white">Check In</span>
-                    </div>
-                </div>
-                <div className="column is-narrow">
-                    <div className="tags is-centered">
-                        <span className="tag is-light">{total}</span>
-                        <span className="tag is-white">Total</span>
-                    </div>
-                </div>
-            </div>
-        </div>,disabled: 'yes'}
-          ];
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions} = this.state;
+        const {event:{event_stages},permissions} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin">
                     <h2 className="title-section">Check In</h2>
                     <div className="columns">
                         <div className="search column is-8">
-                            {
-                                total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                            }
+                            <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         </div>
                         <div className="checkin-tags-wrapper column is-4">
                             <div className="columns is-mobile is-multiline checkin-tags">
@@ -386,20 +386,23 @@ class ListEventUser extends Component {
                                 </div>
                             )
                         }
-                        <div className="column is-narrow has-text-centered button-c">
-                            <button className="button is-inverted" onClick={this.checkModal}>
-                                        <span className="icon">
-                                            <i className="fas fa-qrcode"></i>
-                                        </span>
-                                <span className="text-button">Leer Código QR</span>
-                            </button>
-                        </div>
-                        {/*<div className="column is-narrow has-text-centered button-c">
-                            <button className="button is-inverted" onClick={this.spaceQModal}>
-                                <span className="icon"><i className="fas fa-qrcode"></i></span>
-                                <span className="text-button">CheckIn Espacio</span>
-                            </button>
-                        </div>*/}
+                        {
+                            permissions.data.space ?
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button is-inverted" onClick={this.spaceQModal}>
+                                        <span className="icon"><i className="fas fa-qrcode"></i></span>
+                                        <span className="text-button">CheckIn Espacio</span>
+                                    </button>
+                                </div>:
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button is-inverted" onClick={this.checkModal}>
+                                                <span className="icon">
+                                                    <i className="fas fa-qrcode"></i>
+                                                </span>
+                                        <span className="text-button">Leer Código QR</span>
+                                    </button>
+                                </div>
+                        }
                         <div className="column is-narrow has-text-centered button-c">
                             <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
@@ -411,7 +414,6 @@ class ListEventUser extends Component {
                     </div>
                     {
                         (event_stages && event_stages.length > 0) &&
-
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
@@ -467,37 +469,35 @@ class ListEventUser extends Component {
                                     <h2 className="has-text-centered">Cargando...</h2>
                                 </Fragment>:
                                 <div className="table-wrapper">
-                                    {
-                                        users.length>0&&
-                                        <React.Fragment>
-                                            <div className="table">
-                                                <table className="table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th/>
-                                                        <th className="is-capitalized">Check</th>
-                                                        {
-                                                            extraFields.map((field,key)=>{
-                                                                return <th key={key} className="is-capitalized">{field.name}</th>
-                                                            })
-                                                        }
-                                                        <th>Tiquete</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {
-                                                        this.renderRows()
-                                                    }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <Pagination
-                                                items={users}
-                                                change={this.state.changeItem}
-                                                onChangePage={this.onChangePage}
-                                            />
-                                        </React.Fragment>
-                                    }
+                                    <div className="table">
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th/>
+                                                <th className="is-capitalized">Check</th>
+                                                {
+                                                    extraFields.map((field,key)=>{
+                                                        return <th key={key} className="is-capitalized">{field.name}</th>
+                                                    })
+                                                }
+                                                {
+                                                    spacesEvent.map((space,key)=><th key={key}>{space.name}</th>)
+                                                }
+                                                <th>Tiquete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                this.renderRows()
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <Pagination
+                                        items={users}
+                                        change={this.state.changeItem}
+                                        onChangePage={this.onChangePage}
+                                    />
                                 </div>}
                         </div>
                     </div>
@@ -507,7 +507,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets} rolesList={this.state.rolesList}
+                           ticket={ticket} tickets={this.props.event.tickets} rolesList={this.state.rolesList}
                            value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
                            extraFields={this.state.extraFields} edit={this.state.edit}/>
                 }
@@ -606,6 +606,8 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
+                {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
+                                                      closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
@@ -633,4 +635,8 @@ const parseData = (data) => {
     return info
 };
 
-export default ListEventUser;
+const mapStateToProps = state => ({
+    permissions: state.permissions
+});
+
+export default connect(mapStateToProps)(ListEventUser);

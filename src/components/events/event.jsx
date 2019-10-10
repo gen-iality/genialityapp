@@ -82,7 +82,7 @@ class Event extends Component {
         return (
             <React.Fragment>
                 {
-                    this.state.loading || this.props.loading ? <Loading/>:
+                    this.state.loading || this.props.loading || permissions.loading ? <Loading/>:
                         <section className="columns">
                             <aside className={`column menu event-aside is-2 is-hidden-mobile ${!showMenu?'is-hidden':""}`}>
                                 <Menu match={match}/>
@@ -98,25 +98,25 @@ class Event extends Component {
                                         <Route path={`${match.url}/datos`} render={()=><Datos event={this.state.event}/>}/>
                                         <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                         {
-                                            permissions.items.includes(rolPermissions.admin_badge._id) &&
+                                            permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                             <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                                         }
                                         <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
                                         {
-                                            permissions.items.includes(rolPermissions.history_invitations._id) &&
+                                            permissions.data.ids.includes(rolPermissions.history_invitations._id) &&
                                             <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
                                         }
                                         {
-                                            permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                            permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                             <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>
                                         }
                                         <Route path={`${match.url}/tipo-asistentes`} render={()=><PointCheckin eventID={this.state.event._id} />}/>
                                         {
-                                            permissions.items.includes(rolPermissions.admin_ticket._id) &&
+                                            permissions.data.ids.includes(rolPermissions.admin_ticket._id) &&
                                             <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
                                         }
                                         {
-                                            permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                            permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                             <Route path={`${match.url}/pages`} component={Pages}/>
                                         }
                                         <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>

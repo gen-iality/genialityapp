@@ -13,7 +13,7 @@ export function fetchPermissions(event) {
         Actions.get(`api/contributors/events/${event}/me`)
             .then((data)=> {
                 const {permission_ids} = data.role;
-                dispatch(fetchPermissionsSuccess(permission_ids));
+                dispatch(fetchPermissionsSuccess({ids:permission_ids,space:data.space}));
             })
             .catch((e)=>{
                 dispatch(fetchPermissionsFailure(e))

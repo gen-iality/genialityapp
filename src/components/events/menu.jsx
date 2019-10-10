@@ -48,7 +48,7 @@ class Menu extends Component {
                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/main`}>Datos del evento</NavLink>
                             </li>
                             {
-                                permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <li>
                                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Contenido</NavLink>
                                 </li>
@@ -57,7 +57,7 @@ class Menu extends Component {
                                 <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/datos`}>Recopilación de datos</NavLink>
                             </li>
                             {
-                                permissions.items.includes(rolPermissions.admin_staff._id) &&
+                                permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Fragment>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Programa y salas</NavLink></li>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
@@ -65,7 +65,7 @@ class Menu extends Component {
                                 </Fragment>
                             }
                             {
-                                permissions.items.includes(rolPermissions.admin_badge._id) &&
+                                permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Fragment>
                                     <li>
                                         <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/badge`}>Escarapela</NavLink>
@@ -86,7 +86,7 @@ class Menu extends Component {
                     guestTab && (
                         <ul className="menu-list">
                             {
-                                permissions.items.includes(rolPermissions.admin_invitations._id) &&
+                                permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
                                 <Fragment>
                                     <li>
                                         <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/rsvp`}>Lista de invitados</NavLink>
@@ -100,7 +100,7 @@ class Menu extends Component {
                     )
                 }
                 {
-                    permissions.items.includes(rolPermissions.checkin._id) &&
+                    permissions.data.ids.includes(rolPermissions.checkin._id) &&
                         <Fragment>
                             <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({checkInTab:!checkInTab})}}>
                                 <span className="item has-text-grey">Check In</span>
@@ -118,7 +118,7 @@ class Menu extends Component {
                         </Fragment>
                 }
                 {
-                    permissions.items.includes(rolPermissions.admin_ticket._id) &&
+                    permissions.data.ids.includes(rolPermissions.admin_ticket._id) &&
                     <Fragment>
                         <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({ticketTab:!ticketTab})}}>
                             <span className="item has-text-grey">Entradas</span>

@@ -110,7 +110,7 @@ class AdminRol extends Component {
             const res = await UsersApi.findByEmail(email);
             const data = res.find(user => user.name || user.names);
             if(data){
-                this.setState({found:1,user:{...this.state.user,Nombres:data.names?data.names:data.name,space:'',rol:''},
+                this.setState({found:1,user:{...this.state.user,id:data._id,Nombres:data.names?data.names:data.name,space:'',rol:''},
                     emailValid:true,nameValid:true,rolValid:false},this.validateForm)
             }
             else{
@@ -144,22 +144,17 @@ class AdminRol extends Component {
         try {
             const eventID = this.props.event._id;
             if(edit){
-                const update = await HelperApi.editHelper(eventID, user.id,{"role_id": user.rol,"space_id": user.space});
-                console.log(update);
+                await HelperApi.editHelper(eventID, user.id,{"role_id": user.rol,"space_id": user.space});
                 toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!"/>);
                 this.setState({message:{...this.state.message,class:'msg_warning',content:'CONTRIBUTOR UPDATED'},isLoading:false});
             }
             else{
-                const data = {
-                    "properties": {"email":user.email, "Nombres":user.Nombres},
-                    "role_id":user.rol,
-                    "space_id":user.space
-                };
-                const res = await HelperApi.saveHelper(eventID, data);
-                if(res._id){
-                    toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
-                    this.setState({message:{...this.state.message,class:'msg_success',content:'CONTRIBUTOR CREATED'},isLoading:false});
-                }
+                const data = {"role_id":user.rol, "space_id":user.space};
+                if(user.id) data.model_id = user.id;
+                else data.properties = {"email":user.email, "Nombres":user.Nombres};
+                await HelperApi.saveHelper(eventID, data);
+                toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
+                this.setState({message:{...this.state.message,class:'msg_success',content:'CONTRIBUTOR CREATED'},isLoading:false});
             }
             self.updateContributors();
             setTimeout(()=>{
