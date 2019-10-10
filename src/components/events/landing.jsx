@@ -27,7 +27,7 @@ class Landing extends Component {
             modal:false,
             editorState:'',
             sections:{},
-            section:'tickets'
+            section:'evento'
         }
     }
 
@@ -64,13 +64,16 @@ class Landing extends Component {
             tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>,
             certs: <CertificadoLanding event={event} tickets={event.tickets} />,
             evento:
-                <div className="description-container">
+            <div className="columns">
+                <div className="description-container column is-8">
                     <h3 className="title-description is-size-5 column is-10">Descripción</h3>
-                    <div className="column is-10 description">                   
+                    <div className="column is-10 description">
                         { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
                     </div>
                     <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
                 </div>
+                <MapComponent event={event}/>
+            </div>
         };
         this.setState({event,loading:false,sections},()=>{
             this.firebaseUI();
@@ -142,7 +145,7 @@ class Landing extends Component {
     showSection = (section) => {
         this.setState({section})
         console.log(this.state.section);
-        
+
     }
 
     render() {
@@ -165,7 +168,7 @@ class Landing extends Component {
                                     <div className="column info is-half">
                                         <div className="column is-10 container-nombre">
                                         <div className="fecha item columns">
-                                            <div className="column fecha-uno ">                                                
+                                            <div className="column fecha-uno ">
                                                 <span className="title is-size-5">Del {Moment(event.date_start).format('DD')}</span>
                                                 <span className="title is-size-5"> al {Moment(event.date_end).format('DD')} <span className="is-size-5">{Moment(event.date_end).format('MMM YY')}</span></span>
                                                 {/* <span className="subt is-size-6 is-italic has-text-white">Desde {Moment(event.hour_start).format('HH:mm')}</span> */}
@@ -180,7 +183,7 @@ class Landing extends Component {
                                                 <span className="is-size-6 has-text-white">Organizado por: <Link className="has-text-white" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="lugar item columns">
                                             <div className="column is-1 container-icon">
                                                     <span className="icon is-medium">
@@ -255,7 +258,7 @@ class Landing extends Component {
                                 (this.state.event.speaker.length > 0 || this.state.event.sessions.length > 0) &&
                                    <AdditonalDataEvent eventInfo={this.state.event}/>
                             }
-                            <div className="hero-body columns">
+                            <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div className="columns container-nav-item">
                                     <div className={this.state.section == 'evento' ? 'nav-item-active column' : 'nav-item column'} onClick={e=>{this.showSection('evento')}}>
@@ -278,45 +281,6 @@ class Landing extends Component {
                                         sections[section]
                                     }
                                 </div>
-                                <div className="column container-map">
-                                    <div className="map-head">
-                                    <h2 className="data-title has-text-left">
-                                        <span className="has-text-grey-dark is-size-5 subtitle"> Encuentra la ubicación</span>
-                                    </h2>
-                                    <div className="lugar item columns">
-                                            <div className="column is-1 container-icon hours">
-                                                    <span className="icon is-small">
-                                                        <i className="far fa-clock"/>
-                                                    </span>
-                                            </div>
-                                        <div className="column is-10 container-subtitle hours">                                               
-                                            <span className="subt is-size-6">Desde {Moment(event.hour_start).format('HH:mm')}</span>
-                                            <span className="subt is-size-6"> a {Moment(event.hour_end).format('HH:mm')}</span>
-                                        </div>
-                                    </div>
-                                    <div className="lugar item columns">
-                                            <div className="column is-1 container-icon">
-                                                    <span className="icon is-small">
-                                                        <i className="fas fa-map-marker-alt"/>
-                                                    </span>
-                                            </div>
-                                            <div className="column is-10 container-subtitle">
-                                                <span className="">{event.venue} {event.location.FormattedAddress}</span>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    {
-                                        !this.state.loading&&(
-                                            <MyMapComponent
-                                                lat={event.location.Latitude} long={event.location.Longitude}
-                                                googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-                                                loadingElement={<div style={{height: `100%`}}/>}
-                                                containerElement={<div style={{height: `400px`}}/>}
-                                                mapElement={<div style={{height: `100%`}}/>}
-                                            />
-                                        )
-                                    }
-                                </div>
                             </div>
                             <div className={`modal ${modal?'is-active':''}`}>
                                 <div className="modal-background"></div>
@@ -332,6 +296,46 @@ class Landing extends Component {
             </section>
         );
     }
+}
+
+//Component del lado del mapa
+const MapComponent = (props) => {
+    const {event} = props;
+    return <div className="column container-map">
+        <div className="map-head">
+            <h2 className="data-title has-text-left">
+                <span className="has-text-grey-dark is-size-5 subtitle"> Encuentra la ubicación</span>
+            </h2>
+            <div className="lugar item columns">
+                <div className="column is-1 container-icon hours">
+                                                    <span className="icon is-small">
+                                                        <i className="far fa-clock"/>
+                                                    </span>
+                </div>
+                <div className="column is-10 container-subtitle hours">
+                    <span className="subt is-size-6">Desde {Moment(event.hour_start).format('HH:mm')}</span>
+                    <span className="subt is-size-6"> a {Moment(event.hour_end).format('HH:mm')}</span>
+                </div>
+            </div>
+            <div className="lugar item columns">
+                <div className="column is-1 container-icon">
+                                                    <span className="icon is-small">
+                                                        <i className="fas fa-map-marker-alt"/>
+                                                    </span>
+                </div>
+                <div className="column is-10 container-subtitle">
+                    <span className="">{event.venue} {event.location.FormattedAddress}</span>
+                </div>
+            </div>
+        </div>
+        <MyMapComponent
+            lat={event.location.Latitude} long={event.location.Longitude}
+            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
+            loadingElement={<div style={{height: `100%`}}/>}
+            containerElement={<div style={{height: `400px`}}/>}
+            mapElement={<div style={{height: `100%`}}/>}
+        />
+    </div>
 }
 
 const MyMapComponent = withGoogleMap((props) =>

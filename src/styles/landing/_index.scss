@@ -194,18 +194,28 @@ section.landing{
       display: flex;
       justify-content: center;
       align-items: center;
-      img{
-        padding-right: 10px;
+      padding: 0% !important;
+      span{
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       }
     }
     .nav-item-active{
       display: flex;
       justify-content: center;
       align-items: center;
-      border-bottom: solid $color-evius;
-      img{
-        padding-right: 10px;
-      }
+      padding: 0% !important;
+      span{
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: solid $color-evius;
+        width: 50%;
+        color: $color-evius !important;
+      } 
   }
     
   }
@@ -213,6 +223,7 @@ section.landing{
     .map-head{
       border: solid 2px #E0E0E0;
       padding: 13px;
+      text-align: left;
       .subtitle{
         padding: 10px;
       }
