@@ -26,7 +26,7 @@ class CheckSpace extends Component {
             if(user) {
                 qrData.msg = 'User found';
                 qrData.user = user;
-                if(user.spaces[space._id]){
+                if(user.spaces && user.spaces[space._id]){
                     this.setState({qrData});
                 }else {
                     const userRef = firestore.collection(`${eventID}_event_attendees`).doc(user._id);
