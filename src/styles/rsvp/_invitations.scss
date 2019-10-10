@@ -25,6 +25,7 @@
 
 .checkin {
   padding: 0.5rem 2.25rem;
+  width: 80%;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
@@ -71,12 +72,9 @@
     width: 100%;
   }
   .checkin-table {
-    width: 100%;
     .column {
-      width: 100%;
       .table-wrapper {
-        overflow-y: hidden;
-        width: 100%;
+        width: 80%;
         .table {
           overflow-x: visible;
           overflow-y: auto;

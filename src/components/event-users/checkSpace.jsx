@@ -18,6 +18,14 @@ class CheckSpace extends Component {
         }
     }
 
+    closeQr = () => {
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null},newCC:'',tabActive:"camera"},()=>{
+            this.props.closeModal()
+        });
+        html.classList.remove('is-clipped');
+    };
+
+    //Camera functions
     handleScan = (data) => {
         if (data) {
             const { eventID, userReq, space } = this.props;
@@ -44,31 +52,32 @@ class CheckSpace extends Component {
                             toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
                         });
                 }
-            }else{
+            }
+            else{
                 qrData.msg = 'User not found';
                 qrData.another = true;
                 qrData.user = null;
                 this.setState({qrData})
             }
         }
-    }
+    };
     handleError = (err) => {
         console.error(err);
-    }
-    closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},newCC:'',tabActive:"camera"},()=>{
-            this.props.closeModal()
-        });
-        html.classList.remove('is-clipped');
-    };
-    readOther = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
 
+    //Gun functions
+    changeCC = (e) => {
+        const {value} = e.target;
+        this.setState({newCC:value})
+    };
+    //Bottom functions
+    readOther = () => {
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null,newCC:""}})
+    };
     editUser = (user) => {
         this.closeQr();
         this.props.openEditModalUser(user);
-    }
+    };
 
     render() {
         const {qrData,facingMode} = this.state;
@@ -110,41 +119,39 @@ class CheckSpace extends Component {
                                             </li>
                                         </ul>
                                     </div>
-                                    <div>
-                                        {this.state.tabActive === 'camera' ?
-                                            <React.Fragment>
-                                                <div className="field">
-                                                    <div className="control has-icons-left">
-                                                        <div className="select">
-                                                            <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
-                                                                <option value="user">Selfie</option>
-                                                                <option value="environment">Rear</option>
-                                                            </select>
-                                                        </div>
-                                                        <div className="icon is-small is-left"><FaCamera/></div>
-                                                    </div>
+                                    <div style={{display:this.state.tabActive==="camera"?"block":"none"}}>
+                                        <div className="field">
+                                            <div className="control has-icons-left">
+                                                <div className="select">
+                                                    <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                        <option value="user">Selfie</option>
+                                                        <option value="environment">Rear</option>
+                                                    </select>
                                                 </div>
-                                                <div className="columns is-mobile is-centered qr">
-                                                    <QrReader
-                                                        delay={500}
-                                                        facingMode={facingMode}
-                                                        onError={this.handleError}
-                                                        onScan={this.handleScan}
-                                                        style={{ width: "60%" }}
-                                                        className={"column is-half is-offset-one-quarter"}
-                                                    />
-                                                </div>
-                                            </React.Fragment>:
-                                            <React.Fragment>
-                                                <div className="field">
-                                                    <div className="control">
-                                                        <label className={`label has-text-grey-light is-capitalized required`}>Código</label>
-                                                        <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
-                                                    </div>
-                                                </div>
-                                                <button className="button is-info" onClick={this.searchCC}>Buscar</button>
-                                            </React.Fragment>
-                                        }
+                                                <div className="icon is-small is-left"><FaCamera/></div>
+                                            </div>
+                                        </div>
+                                        <div className="columns is-mobile is-centered qr">
+                                            {
+                                                this.state.tabActive === "camera" && <QrReader
+                                                    delay={500}
+                                                    facingMode={facingMode}
+                                                    onError={this.handleError}
+                                                    onScan={this.handleScan}
+                                                    style={{ width: "60%" }}
+                                                    className={"column is-half is-offset-one-quarter"}
+                                                />
+                                            }
+                                        </div>
+                                    </div>
+                                    <div style={{display:this.state.tabActive!=="camera"?"block":"none"}}>
+                                        <div className="field">
+                                            <div className="control">
+                                                <label className={`label has-text-grey-light is-capitalized required`}>Código</label>
+                                                <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
+                                            </div>
+                                        </div>
+                                        <button className="button is-info" onClick={e=> this.handleScan(this.state.newCC)}>Buscar</button>
                                     </div>
                                 </React.Fragment>
                         }
