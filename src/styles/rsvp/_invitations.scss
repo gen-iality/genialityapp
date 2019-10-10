@@ -26,7 +26,6 @@
 .checkin {
   padding: 0.5rem 2.25rem;
   display: flex;
-  align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   .checkin-header {
@@ -99,7 +98,7 @@
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
-  
+
   .buttons-row{
     padding: 0;
     .buttons-g{
@@ -116,7 +115,6 @@
   .search{
     display: flex;
     flex-direction: row;
-    margin-left: 15%;
   }
   .table td{
     padding: 0;
@@ -133,7 +131,7 @@
     -ms-flex-order: 2;
     order: 2;
   }
-  
+
   .button{
     padding-left: 0.55em;
     padding-right: 0.55em;
@@ -213,14 +211,6 @@
   border-bottom: 1px solid #00FFBC !important;
   box-shadow: 0 0 0 1px transparent !important;
 }
-
-.menu-g{
-  display: none;
-}
-.menu-p{
-  width: 90%;
-  margin-bottom: 20px;
-}
 .css-1492t68{
   color: #7a7a7a;
   font-size: 1rem;
@@ -229,14 +219,8 @@
 .css-15k3avv{
   border: 2px solid #ccc !important;
   background-color: white !important;
-  min-height: 350px !important; 
+  min-height: 350px !important;
   z-index: 1000 !important;
 }
 @media (min-width: 769px ){
-  .menu-g{
-     display: block;
-  }
-  .menu-p{
-    display: none;
- }
 }

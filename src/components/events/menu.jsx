@@ -61,6 +61,7 @@ class Menu extends Component {
                                 <Fragment>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Programa y salas</NavLink></li>
                                     <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
+                                    <li><NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/tipo-asistentes`}>Tipo de asistentes</NavLink></li>
                                 </Fragment>
                             }
                             {

@@ -14,6 +14,7 @@ import asyncComponent from '../../containers/AsyncComponent';
 import Espacios from "../espacios";
 import Menu from "./menu";
 import Datos from "./datos";
+import PointCheckin from "../event-users/pointCheckin";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -109,6 +110,7 @@ class Event extends Component {
                                             permissions.items.includes(rolPermissions.admin_staff._id) &&
                                             <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>
                                         }
+                                        <Route path={`${match.url}/tipo-asistentes`} render={()=><PointCheckin eventID={this.state.event._id} />}/>
                                         {
                                             permissions.items.includes(rolPermissions.admin_ticket._id) &&
                                             <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>

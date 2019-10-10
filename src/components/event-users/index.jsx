@@ -10,7 +10,6 @@ import {firestore} from "../../helpers/firebase";
 import {BadgeApi, RolAttApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
-import PointCheckin from "../modal/pointCheckin";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
@@ -34,7 +33,6 @@ class ListEventUser extends Component {
             deleteUser: false,
             loading:    true,
             importUser: false,
-            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
@@ -320,11 +318,6 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
-    handlePoints = (flag) => {
-        flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
-        this.setState({modalPoints:flag})
-    };
-
     editQRUser = (user) => {
         this.setState({qrModal:false},()=>{
             this.openEditModalUser(user)
@@ -356,70 +349,64 @@ class ListEventUser extends Component {
         return (
             <React.Fragment>
                 <div className="checkin">
-                    <div className="columns checkin-header">
-                        <div className="column">
-                            <div className="search">
-                                {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                                }
-
+                    <h2 className="title-section">Check In</h2>
+                    <div className="columns">
+                        <div className="search column is-8">
+                            {
+                                total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                            }
+                        </div>
+                        <div className="checkin-tags-wrapper column is-4">
+                            <div className="columns is-mobile is-multiline checkin-tags">
+                                <div className="column is-narrow">
+                                    <div className="tags is-centered">
+                                        <span className="tag is-primary">{checkIn}</span>
+                                        <span className="tag is-white">Ingresados</span>
+                                    </div>
+                                </div>
+                                <div className="column is-narrow">
+                                    <div className="tags is-centered">
+                                        <span className="tag is-light">{total}</span>
+                                        <span className="tag is-white">Total</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="column buttons-row">
-                            <div className="columns is-mobile is-centered buttons-g">
-                                {
-                                    userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered export button-c">
-                                            <button className="button" onClick={this.exportFile}>
+                    </div>
+                    <div className="columns is-mobile buttons-g">
+                        {
+                            userReq.length>0 && (
+                                <div className="column is-narrow has-text-centered export button-c">
+                                    <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
                                                 </span>
-                                                <span className="text-button">Exportar</span>
-                                            </button>
-                                        </div>
-                                    )
-                                }
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button is-inverted" onClick={this.checkModal}>
+                                        <span className="text-button">Exportar</span>
+                                    </button>
+                                </div>
+                            )
+                        }
+                        <div className="column is-narrow has-text-centered button-c">
+                            <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
                                             <i className="fas fa-qrcode"></i>
                                         </span>
-                                        <span className="text-button">Leer Código QR</span>
-                                    </button>
-                                </div>
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button is-primary" onClick={this.addUser}>
+                                <span className="text-button">Leer Código QR</span>
+                            </button>
+                        </div>
+                        {/*<div className="column is-narrow has-text-centered button-c">
+                            <button className="button is-inverted" onClick={this.spaceQModal}>
+                                <span className="icon"><i className="fas fa-qrcode"></i></span>
+                                <span className="text-button">CheckIn Espacio</span>
+                            </button>
+                        </div>*/}
+                        <div className="column is-narrow has-text-centered button-c">
+                            <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
                                             <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
                                     </button>
-                                </div>
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button" onClick={e=>{this.handlePoints(true)}}>
-                                        <span className="text-button">Roles Asistentes</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="menu-p">
-                        <Select isSearchable={false} options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
-                    </div>
-                    <div className="checkin-tags-wrapper menu-g">
-                        <div className="columns is-mobile is-multiline checkin-tags">
-                            <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-primary">{checkIn}</span>
-                                    <span className="tag is-white">Check In</span>
-                                </div>
-                            </div>
-                            <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-light">{total}</span>
-                                    <span className="tag is-white">Total</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {
@@ -539,8 +526,10 @@ class ListEventUser extends Component {
                                             <h1 className="title">Usuario Chequeado</h1>
                                             <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
                                         </div>)}
-                                        {Object.keys(qrData.user.properties).map((obj,key)=>{
-                                            return <p key={key}>{obj}: {qrData.user.properties[obj]}</p>})}
+                                        {extraFields.map((obj,key)=>{
+                                            let val = qrData.user.properties[obj.name];
+                                            if(obj.type === "boolean") val = qrData.user.properties[obj.name] ? "SI" : "NO";
+                                            return <p key={key}>{obj.label}: {val}</p>})}
                                     </div>:
                                     <React.Fragment>
                                         <div className="tabs is-centered tab-qr">
@@ -617,7 +606,6 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
