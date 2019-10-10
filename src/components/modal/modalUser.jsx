@@ -32,8 +32,7 @@ class UserModal extends Component {
     async componentDidMount() {
         const rolesList = await RolAttApi.byEvent(this.props.eventId);
         const self = this;
-        const {states} = this.props;
-        self.setState({ statesList: states, state: states[1].value, rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
+        self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
         let user = {};
         if (this.props.edit) {
             const {value} = this.props;
@@ -42,7 +41,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:value.ticket_id, state:value.state_id, edit:true,
+            this.setState({user, ticket_id:value.ticket_id, edit:true,
                 rol:value.rol_id, checked_in, userId:value._id, prevState: value.state_id});
         }else{
             this.props.extraFields
@@ -96,7 +95,6 @@ class UserModal extends Component {
         else{
             message.class = 'msg_warning';
             message.content = 'USER UPDATED';
-            if(snap.state_id !== this.state.prevState) this.props.statesCounter(snap.state_id,this.state.prevState);
             snap.updated_at = new Date();
 
             //Mejor hacer un map pero no se como
@@ -368,7 +366,7 @@ class UserModal extends Component {
                             {
                                 Object.keys(user).length > 0 &&
                                     <React.Fragment>
-                                        <div className="field">
+                                        <div className="field is-grouped">
                                             <label className="label">Rol</label>
                                             <div className="control control-container">
                                                 <div className="select">
@@ -379,22 +377,6 @@ class UserModal extends Component {
                                                             })
                                                         }
                                                     </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="field is-grouped">
-                                            <div className="control control-container">
-                                                <label className="label">Estado</label>
-                                                <div className="control control-container">
-                                                    <div className="select">
-                                                        <select value={state} onChange={this.selectChange} name={'state'}>
-                                                            {
-                                                                statesList.map((item,key)=>{
-                                                                    return <option key={key} value={item.value}>{item.label}</option>
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
                                                 </div>
                                             </div>
                                             {
