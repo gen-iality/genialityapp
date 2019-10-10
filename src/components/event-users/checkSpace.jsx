@@ -26,20 +26,24 @@ class CheckSpace extends Component {
             if(user) {
                 qrData.msg = 'User found';
                 qrData.user = user;
-                const userRef = firestore.collection(`${eventID}_event_attendees`).doc(user._id);
-                const data = {updated_at: new Date()};
-                data[`spaces.${space._id}`] = true;
-                userRef.update(data)
-                    .then(()=> {
-                        const spaces = user.spaces ? Object.assign(user.spaces,{[space._id]:true}) : {[space._id]:true};
-                        qrData.user = Object.assign(qrData.user,spaces);
-                        this.setState({qrData});
-                        console.log("Document successfully updated!");
-                    })
-                    .catch(error => {
-                        console.error("Error updating document: ", error);
-                        toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-                    });
+                if(user.spaces[space._id]){
+                    this.setState({qrData});
+                }else {
+                    const userRef = firestore.collection(`${eventID}_event_attendees`).doc(user._id);
+                    const data = {updated_at: new Date()};
+                    data[`spaces.${space._id}`] = true;
+                    userRef.update(data)
+                        .then(() => {
+                            const spaces = user.spaces ? Object.assign(user.spaces, {[space._id]: true}) : {[space._id]: true};
+                            qrData.user = Object.assign(qrData.user, {spaces});
+                            this.setState({qrData});
+                            console.log("Document successfully updated!");
+                        })
+                        .catch(error => {
+                            console.error("Error updating document: ", error);
+                            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
+                        });
+                }
             }else{
                 qrData.msg = 'User not found';
                 qrData.another = true;
@@ -57,6 +61,14 @@ class CheckSpace extends Component {
         });
         html.classList.remove('is-clipped');
     };
+    readOther = () => {
+        this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
+    };
+
+    editUser = (user) => {
+        this.closeQr();
+        this.props.openEditModalUser(user);
+    }
 
     render() {
         const {qrData,facingMode} = this.state;
@@ -142,8 +154,8 @@ class CheckSpace extends Component {
                         {
                             qrData.user&&(
                                 <React.Fragment>
-                                    <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
-                                    <button className="button" onClick={this.readQr}>Read Other</button>
+                                    <button className="button is-info" onClick={e=>{this.editUser(qrData.user)}}>Edit User</button>
+                                    <button className="button" onClick={this.readOther}>Read Other</button>
                                 </React.Fragment>
                             )
                         }

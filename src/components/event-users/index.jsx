@@ -213,9 +213,7 @@ class ListEventUser extends Component {
     }
     readQr = () => {
         const {qrData} = this.state;
-        if(qrData.user && !qrData.user.checked_in){
-            this.checkIn(qrData.user)
-        }
+        if(qrData.user && !qrData.user.checked_in) this.checkIn(qrData.user);
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
@@ -607,7 +605,7 @@ class ListEventUser extends Component {
                     </div>
                 </div>
                 {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
-                                                      closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
+                                                      openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
