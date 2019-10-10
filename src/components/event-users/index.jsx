@@ -56,7 +56,6 @@ class ListEventUser extends Component {
         const { event } = this.props;
         const properties = event.user_properties;
         const listTickets = [...event.tickets];
-        const {states} = this.props;
         let {checkIn,changeItem} = this.state;
         this.setState({ extraFields: properties });
         const { usersRef, ticket, stage } = this.state;
@@ -66,7 +65,6 @@ class ListEventUser extends Component {
             snapshot.docChanges().forEach((change)=> {
                 user = change.doc.data();
                 user._id = change.doc.id;
-                user.state = states.find(x => x.value === user.state_id);
                 user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                 user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                 user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
@@ -74,7 +72,6 @@ class ListEventUser extends Component {
                     if(user.checked_in) checkIn += 1;
                     change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                     if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                    this.statesCounter(user.state.value);
                 }
                 if (change.type === 'modified'){
                     if(user.checked_in) checkIn += 1;
@@ -325,7 +322,6 @@ class ListEventUser extends Component {
                             </div>
                     }
                 </td>
-                <td>{item.state.label}</td>
                 {
                     extraFields.slice(0, limit).map((field,key)=>{
                         const value = field.type !== 'boolean' ? item.properties[field.name] :
@@ -575,7 +571,6 @@ class ListEventUser extends Component {
                                                     <tr>
                                                         <th/>
                                                         <th className="is-capitalized">Check</th>
-                                                        <th className="is-capitalized">Estado</th>
                                                         {
                                                             extraFields.map((field,key)=>{
                                                                 return <th key={key} className="is-capitalized">{field.name}</th>
@@ -735,10 +730,4 @@ const parseData = (data) => {
     return info
 };
 
-const mapStateToProps = state => ({
-    states: state.states.items,
-    loading: state.states.loading,
-    error: state.states.error
-});
-
-export default connect(mapStateToProps)(ListEventUser);
+export default ListEventUser;
