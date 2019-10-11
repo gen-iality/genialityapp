@@ -238,7 +238,7 @@ class UserModal extends Component {
                            htmlFor={key}>
                         {name}
                     </label>}
-                    <div className="control">
+                    <div className="control control-container">
                         {input}
                     </div>
                 </div>
@@ -348,7 +348,7 @@ class UserModal extends Component {
                                 checked_in && (
                                     <div className="field">
                                         <label className="label">Checked</label>
-                                        <div className="control columns">
+                                        <div className="control columns control-container">
                                             <div className="column">
                                                 <p><FormattedDate value={checked_in}/> - <FormattedTime value={checked_in}/></p>
                                             </div>
@@ -367,7 +367,7 @@ class UserModal extends Component {
                                         <div className="field is-grouped">
                                             <div className="control">
                                                 <label className="label">Rol</label>
-                                                <div className="control">
+                                                <div className="control control-container">
                                                     <div className="select">
                                                         <select value={rol} onChange={this.selectChange} name={'rol'}>
                                                             {
@@ -381,7 +381,7 @@ class UserModal extends Component {
                                             </div>
                                             {
                                                 !this.state.edit&&
-                                                <div className="control">
+                                                <div className="control control-container">
                                                     <input className="is-checkradio is-primary is-small" id={"confirmCheckIn"}
                                                            type="checkbox" name={"confirmCheckIn"} checked={this.state.confirmCheck}
                                                            onChange={(e)=>{this.setState(prevState=>{
@@ -395,7 +395,7 @@ class UserModal extends Component {
                             {
                                 this.props.tickets.length > 0 &&
                                     <div className="field">
-                                        <div className="control">
+                                        <div className="control control-container">
                                             <label className="label">Tiquete</label>
                                             <div className="select">
                                                 <select value={ticket_id} onChange={this.selectChange} name={'ticket_id'}>

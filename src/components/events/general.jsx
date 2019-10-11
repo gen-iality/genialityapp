@@ -1,4 +1,3 @@
-/*global google*/
 import React, {Component} from 'react';
 import Moment from "moment"
 import MediumEditor from 'medium-editor'
@@ -13,11 +12,9 @@ import Dialog from "../modal/twoAction";
 import {FormattedMessage} from "react-intl";
 import LogOut from "../shared/logOut";
 import axios from "axios/index"
-import Geosuggest from "react-geosuggest";
 import {DateTimePicker} from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
-import {uniqueID} from "../../helpers/utils";
 import FieldEvent from "../modal/fieldEvent";
 Moment.locale('es');
 
@@ -148,48 +145,6 @@ class General extends Component {
         else{
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
         }
-    };
-    //Funciones para manejo del campo de direcciones
-    onSuggestSelect = (suggest) => {
-        if(suggest){
-            const place = suggest.gmaps;
-            const location = place.geometry && place.geometry.location ? {
-                Latitude: place.geometry.location.lat(),
-                Longitude: place.geometry.location.lng()
-            } : {};
-            const componentForm = {
-                street_number: 'short_name',
-                route: 'long_name',
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name'
-            };
-            const mapping = {
-                street_number: 'number',
-                route: 'street',
-                locality: 'city',
-                administrative_area_level_1: 'state'
-            };
-            for (let i = 0; i < place.address_components.length; i++) {
-                const addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    const val = place.address_components[i][componentForm[addressType]];
-                    location[mapping[addressType]] = val;
-                }
-            }
-            location.FormattedAddress = place.formatted_address;
-            location.PlaceId = place.place_id;
-            this.setState({event:{...this.state.event,location}},this.valid)
-        }else{
-            this.setState({event:{...this.state.event,location:{}}},this.valid)
-        }
-    };
-    changeSuggest = () => {
-        const error = {};
-        const {event:{location}} = this.state;
-        if(!location.FormattedAddress && !location.PlaceId){
-            error.location = 'Fill a correct address'
-        }
-        this.setState({error})
     };
     //*********** FIN FUNCIONES DEL FORMULARIO
 
