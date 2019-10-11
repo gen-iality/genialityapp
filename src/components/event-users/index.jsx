@@ -509,7 +509,7 @@ class ListEventUser extends Component {
                            value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
                            extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit}/>
                 }
-                <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
+                {/*<div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
                     <div className="modal-card">
                         <header className="modal-card-head">
@@ -603,9 +603,9 @@ class ListEventUser extends Component {
                             }
                         </footer>
                     </div>
-                </div>
-                <CheckSpace modal={this.state.spaceModal} space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
-                            openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>
+                </div>*/}
+                {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
+                                                      openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
