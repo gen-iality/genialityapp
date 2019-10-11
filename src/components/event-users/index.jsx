@@ -1,10 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
-import QrReader from "react-qr-reader";
 import XLSX from "xlsx";
 import { toast } from 'react-toastify';
-import { FaCamera} from "react-icons/fa";
-import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
 import {firestore} from "../../helpers/firebase";
 import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
@@ -15,6 +12,7 @@ import Loading from "../loaders/loading";
 import 'react-toastify/dist/ReactToastify.css';
 import {connect} from "react-redux";
 import CheckSpace from "./checkSpace";
+import QrModal from "./qrModal";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -39,8 +37,6 @@ class ListEventUser extends Component {
             message:    {class:'', content:''},
             sorted:     [],
             rolesList:     [],
-            facingMode: 'user',
-            qrData:     {},
             clearSearch:false,
             changeItem: false,
             errorData: {},
@@ -48,7 +44,6 @@ class ListEventUser extends Component {
             serverError: false,
             stage: '',
             ticket: '',
-            tabActive: 'camera',
             ticketsOptions: []
         };
     }
@@ -147,6 +142,12 @@ class ListEventUser extends Component {
             return {qrModal:!prevState.qrModal}
         });
     };
+    closeQRModal = () => {
+        html.classList.add('is-clipped');
+        this.setState((prevState) => {
+            return {qrModal:!prevState.qrModal}
+        });
+    };
 
     spaceQModal = () => {
         html.classList.add('is-clipped');
@@ -189,67 +190,6 @@ class ListEventUser extends Component {
                     });
             }
         }
-    };
-
-    handleScan = (data) => {
-        if (data) {
-            let pos = this.state.userReq.map(e=>{return e._id}).indexOf(data);
-            const qrData = {};
-            if(pos>=0) {
-                qrData.msg = 'User found';
-                qrData.user = this.state.userReq[pos];
-                qrData.another = !!qrData.user.checked_in;
-                this.setState({qrData});
-            }else{
-                qrData.msg = 'User not found';
-                qrData.another = true;
-                qrData.user = null;
-                this.setState({qrData})
-            }
-        }
-    }
-    handleError = (err) => {
-        console.error(err);
-    }
-    readQr = () => {
-        const {qrData} = this.state;
-        if(qrData.user && !qrData.user.checked_in) this.checkIn(qrData.user);
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
-    };
-    closeQr = () => {
-        this.setState({qrData:{...this.state.qrData,msg:'',user:null},qrModal:false,newCC:'',tabActive:"camera"});
-        html.classList.remove('is-clipped');
-    };
-    searchCC = () => {
-        const usersRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        let value = this.state.newCC;
-        usersRef.where('_id','==',`${value}`)
-            .get()
-            .then((querySnapshot)=> {
-                const qrData = {};
-                if(querySnapshot.empty){
-                    qrData.msg = 'User not found';
-                    qrData.another = true;
-                    qrData.user = null;
-                    this.setState({qrData})
-                }
-                else{
-                    querySnapshot.forEach((doc)=> {
-                        qrData.msg = 'User found';
-                        qrData.user = doc.data();
-                        qrData.another = !!qrData.user.checked_in;
-                        this.setState({qrData});
-                    });
-                }
-            })
-            .catch(error => {
-                this.setState({found:0})
-                console.log("Error getting documents: ", error);
-            });
-    };
-    changeCC = (e) => {
-        const {value} = e.target;
-        this.setState({newCC:value})
     };
 
     onChangePage = (pageOfItems) => {
@@ -337,14 +277,8 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
-    editQRUser = (user) => {
-        this.setState({qrModal:false},()=>{
-            this.openEditModalUser(user)
-        });
-    };
-
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions} = this.state;
+        const {timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions} = this.state;
         const {event:{event_stages},permissions} = this.props;
         return (
             <React.Fragment>
@@ -509,101 +443,8 @@ class ListEventUser extends Component {
                            value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
                            extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit}/>
                 }
-                {/*<div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
-                    <div className="modal-background"/>
-                    <div className="modal-card">
-                        <header className="modal-card-head">
-                            <p className="modal-card-title">Lector QR</p>
-                            <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
-                        </header>
-                        <section className="modal-card-body">
-                            {
-                                qrData.user ?
-                                    <div>
-                                        {qrData.user.checked_in && (<div>
-                                            <h1 className="title">Usuario Chequeado</h1>
-                                            <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
-                                        </div>)}
-                                        {extraFields.map((obj,key)=>{
-                                            let val = qrData.user.properties[obj.name];
-                                            if(obj.type === "boolean") val = qrData.user.properties[obj.name] ? "SI" : "NO";
-                                            return <p key={key}>{obj.label}: {val}</p>})}
-                                    </div>:
-                                    <React.Fragment>
-                                        <div className="tabs is-centered tab-qr">
-                                            <ul>
-                                                <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
-                                                    onClick={e=>this.setState({tabActive:'camera'})}>
-                                                    <a>
-                                                        <div className="icon is-medium"><IoIosCamera/></div>
-                                                        <span>Cámara</span>
-                                                    </a>
-                                                </li>
-                                                <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
-                                                    onClick={e=>this.setState({tabActive:'qr'})}>
-                                                    <a>
-                                                        <div className="icon is-medium"><IoIosQrScanner/></div>
-                                                        <span>Pistola</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            {this.state.tabActive === 'camera' ?
-                                                <React.Fragment>
-                                                    <div className="field">
-                                                        <div className="control has-icons-left">
-                                                            <div className="select">
-                                                                <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
-                                                                    <option value="user">Selfie</option>
-                                                                    <option value="environment">Rear</option>
-                                                                </select>
-                                                            </div>
-                                                            <div className="icon is-small is-left"><FaCamera/></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="columns is-mobile is-centered qr">
-                                                        <QrReader
-                                                            delay={500}
-                                                            facingMode={facingMode}
-                                                            onError={this.handleError}
-                                                            onScan={this.handleScan}
-                                                            style={{ width: "60%" }}
-                                                            className={"column is-half is-offset-one-quarter"}
-                                                        />
-                                                    </div>
-                                                </React.Fragment>:
-                                                <React.Fragment>
-                                                    <div className="field">
-                                                        <div className="control">
-                                                            <label className={`label has-text-grey-light is-capitalized required`}>Cédula</label>
-                                                            <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
-                                                        </div>
-                                                    </div>
-                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
-                                                </React.Fragment>
-                                            }
-                                        </div>
-                                    </React.Fragment>
-                            }
-                            <p>{qrData.msg}</p>
-                        </section>
-                        <footer className="modal-card-foot">
-                            {
-                                qrData.user&&(
-                                    <React.Fragment>
-                                        {
-                                            !qrData.another &&
-                                            <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
-                                        }
-                                        <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
-                                        <button className="button" onClick={this.readQr}>Read Other</button>
-                                    </React.Fragment>
-                                )
-                            }
-                        </footer>
-                    </div>
-                </div>*/}
+                {this.state.qrModal && <QrModal fields={extraFields} userReq={userReq} checkIn={this.checkIn} eventID={this.props.event._id}
+                                                closeModal={this.closeQRModal} openEditModalUser={this.openEditModalUser}/>}
                 {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
                                                       openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
