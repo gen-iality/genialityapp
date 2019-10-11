@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {uniqueID} from "../../helpers/utils";
-import {typeInputs} from "../../helpers/constants";
 import {Actions, EventsApi} from "../../helpers/request";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
@@ -70,9 +69,7 @@ class Datos extends Component {
     //*********** FIN CAMPOS EVENTO
 
     //Envío de datos
-    async submit(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    submit = async() => {
         const { event } = this.props;
         const self = this;
         const data = {user_properties : [...this.state.fields]};
@@ -162,7 +159,7 @@ class Datos extends Component {
                     {fields.map((field,key)=>{
                         return <tr key={key}>
                             <td>{field.label}</td>
-                            <td>{typeInputs.find(type=>type.value === field.type).label}</td>
+                            <td>{field.type}</td>
                             <td>
                                 <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
                                        type="checkbox" name={`mandatory`} checked={field.mandatory}
