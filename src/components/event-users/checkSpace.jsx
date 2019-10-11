@@ -97,9 +97,9 @@ class CheckSpace extends Component {
 
     render() {
         const {qrData,facingMode,gunMsj} = this.state;
-        const {space,spacesEvent,modal} = this.props;
+        const {space,spacesEvent} = this.props;
         return (
-            <div className={`modal ${modal ? "is-active" : ""}`}>
+            <div className={`modal is-active`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
