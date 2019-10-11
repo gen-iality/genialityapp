@@ -74,7 +74,8 @@ class CheckSpace extends Component {
 
     //Gun functions
     changeCC = (e) => {
-        const {value} = e.target;
+        let {value} = e.target;
+        value = value.toLowerCase();
         const checkForHexRegExp = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
         this.setState({newCC:value},()=>{
             if(checkForHexRegExp.test(value)) {
