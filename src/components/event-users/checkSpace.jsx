@@ -12,7 +12,7 @@ class CheckSpace extends Component {
         super(props);
         this.state = {
             qrData:{},
-            facingMode:"environment",
+            facingMode: 'user',
             tabActive:"camera",
             newCC:""
         };

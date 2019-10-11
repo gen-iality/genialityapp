@@ -84,7 +84,7 @@ class Event extends Component {
                 {
                     this.state.loading || this.props.loading || permissions.loading ? <Loading/>:
                         <section className="columns">
-                            <aside className={`column menu event-aside is-2 is-hidden-mobile ${!showMenu?'is-hidden':""}`}>
+                            <aside className={`column menu event-aside is-2 is-hidden-touch ${!showMenu?'is-hidden':""}`}>
                                 <Menu match={match}/>
                             </aside>
                             <div className="column event-main">
