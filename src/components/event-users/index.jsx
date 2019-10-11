@@ -604,8 +604,8 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
-                                                      openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
+                <CheckSpace modal={this.state.spaceModal} space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
+                            openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
