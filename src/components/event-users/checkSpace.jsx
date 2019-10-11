@@ -112,6 +112,9 @@ class CheckSpace extends Component {
                                         <h1 className="title">Usuario Chequeado</h1>
                                         <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
                                     </div>)}
+                                    <p>ID: {qrData.user._id}</p>
+                                    <p>Nombre: {qrData.user.names}</p>
+                                    <p>Correo: {qrData.user.email}</p>
                                     {spacesEvent.map(space=><p key={space._id}>{space.name}: {qrData.user.spaces[space._id]?"SI":"NO"}</p>)}
                                 </div>:
                                 <React.Fragment>
@@ -148,16 +151,14 @@ class CheckSpace extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="columns is-mobile is-centered qr">
-                                                    {
-                                                        this.state.tabActive === "camera" && <QrReader
-                                                            delay={500}
-                                                            facingMode={facingMode}
-                                                            onError={this.handleError}
-                                                            onScan={this.handleScan}
-                                                            style={{ width: "60%" }}
-                                                            className={"column is-half is-offset-one-quarter"}
-                                                        />
-                                                    }
+                                                    <QrReader
+                                                        delay={500}
+                                                        facingMode={facingMode}
+                                                        onError={this.handleError}
+                                                        onScan={this.handleScan}
+                                                        style={{ width: "60%" }}
+                                                        className={"column is-half is-offset-one-quarter"}
+                                                    />
                                                 </div>
                                             </React.Fragment>:
                                             <div style={{textAlign:"center"}}>

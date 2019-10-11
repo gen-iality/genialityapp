@@ -322,7 +322,7 @@ class UserModal extends Component {
 
     render() {
         const {user,checked_in,ticket_id,rol,rolesList,userId} = this.state;
-        const {modal} = this.props;
+        const {modal, spacesEvent} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
@@ -338,6 +338,10 @@ class UserModal extends Component {
                         <section className="modal-card-body">
                             {
                                 this.renderForm()
+                            }
+                            <h3>Espacios: </h3>
+                            {
+                                spacesEvent.map(space=><p key={space._id}>{space.name}: {(user.spaces && user.spaces[space._id])?"SI":"NO"}</p>)
                             }
                             {
                                 checked_in && (
