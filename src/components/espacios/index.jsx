@@ -1,32 +1,32 @@
 import React, {Component} from "react";
-import {RolAttApi} from "../../helpers/request";
+import {withRouter} from "react-router-dom";
+import {SpacesApi} from "../../helpers/request";
+import Loading from "../loaders/loading";
 import Moment from "moment";
-import Dialog from "./twoAction";
+import Dialog from "../modal/twoAction";
 
-class PointCheckin extends Component {
+class Espacios extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            roles:[],
+            list:[],
             id:'',
             deleteID:'',
             name:'',
             isLoading:false,
+            loading:true,
             deleteModal:false,
         };
-        this.fetchRoles = this.fetchRoles.bind(this);
-        this.saveRole = this.saveRole.bind(this);
-        this.deleteRol = this.deleteRol.bind(this);
     }
 
-    async componentDidMount() {
-        this.fetchRoles()
+    componentDidMount() {
+        this.fetchItem();
     }
 
-    async fetchRoles() {
-        const roles = await RolAttApi.byEvent(this.props.eventID);
-        this.setState({roles})
-    }
+    fetchItem = async() => {
+        const {data} = await SpacesApi.byEvent(this.props.eventID);
+        this.setState({list:data,loading:false})
+    };
 
     onChange = (e) => {
         this.setState({name:e.target.value})
@@ -34,40 +34,35 @@ class PointCheckin extends Component {
 
     newRole = () => {
         this.setState(state => {
-            const list = state.roles.concat({name:'',created_at:new Date(),_id:'new'});
-            return {
-                roles:list,
-                id: 'new',
-            };
+            const list = state.list.concat({name:'',created_at:new Date(),_id:'new'});
+            return {list, id: 'new'};
         });
     };
 
     removeNewRole = () => {
         this.setState(state => {
-            const list = state.roles.filter(item => item._id !== "new");
-            return {
-                roles:list,id:"",name:""
-            };
+            const list = state.list.filter(item => item._id !== "new");
+            return {list,id:"",name:""};
         });
     };
 
-    async saveRole() {
+    saveRole = async() => {
         try{
             if(this.state.id !== 'new') {
-                await RolAttApi.editOne({name: this.state.name}, this.state.id);
+                await SpacesApi.editOne({name: this.state.name}, this.state.id, this.props.eventID);
                 this.setState(state => {
-                    const list = state.roles.map(item => {
+                    const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.name = state.name;
                             return item;
                         } else return item;
                     });
-                    return {roles: list, id: "", name: ""};
+                    return {list, id: "", name: ""};
                 });
             }else{
-                const newRole = await RolAttApi.create({name: this.state.name, event_id:this.props.eventID});
+                const newRole = await SpacesApi.create({name: this.state.name}, this.props.eventID);
                 this.setState(state => {
-                    const list = state.roles.map(item => {
+                    const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.name = newRole.name;
                             item.created_at = newRole.created_at;
@@ -75,7 +70,7 @@ class PointCheckin extends Component {
                             return item;
                         } else return item;
                     });
-                    return {roles: list, id: "", name: ""};
+                    return {list, id: "", name: ""};
                 });
             }
         }catch (e) {
@@ -83,16 +78,16 @@ class PointCheckin extends Component {
         }
     };
 
-    async deleteRol() {
+    deleteRol = async() => {
         this.setState({isLoading:'Cargando....'});
         const self = this;
         try {
-            await RolAttApi.deleteOne(this.state.deleteID);
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Rol borrado'},isLoading:false},()=>{
+            await SpacesApi.deleteOne(this.state.deleteID, this.props.eventID);
+            this.setState({message:{...this.state.message,class:'msg_success',content:'Espacio borrado'},isLoading:false},()=>{
                 setTimeout(()=>{
                     self.setState({deleteModal:false,deleteID:false,message:""});
-                },1200)
-                this.fetchRoles()
+                },1200);
+                this.fetchItem()
             });
         }
         catch (error) {
@@ -118,10 +113,11 @@ class PointCheckin extends Component {
     render() {
         return (
             <React.Fragment>
-                <div style={{width:this.props.visible?'100%':'0%'}} className="overlay">
-                    <p className="close-btn action_pointer" onClick={e=>this.props.close(false)}>&times;</p>
-                    <div className="overlay-content">
-                        <button className="button" onClick={this.newRole}>Nuevo</button>
+                <div className="has-text-right">
+                    <button className="button" onClick={this.newRole}>Nuevo</button>
+                </div>
+                {this.state.loading ? <Loading/> :
+                    <div className="table">
                         <table className="table">
                             <thead>
                             <tr>
@@ -131,7 +127,7 @@ class PointCheckin extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {this.state.roles.map((cert,key)=>{
+                            {this.state.list.map((cert,key)=>{
                                 return <tr key={key}>
                                     <td>
                                         {
@@ -162,11 +158,11 @@ class PointCheckin extends Component {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                }
                 {
                     this.state.deleteModal &&
-                    <Dialog modal={this.state.deleteModal} title={'Borrar Rol'}
-                            content={<p>¿Estas seguro de eliminar este rol de asistente?</p>}
+                    <Dialog modal={this.state.deleteModal} title={'Borrar Espacio'}
+                            content={<p>¿Estas seguro de eliminar este espacio?</p>}
                             first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteRol}}
                             message={this.state.message} isLoading={this.state.isLoading}
                             second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
@@ -176,4 +172,4 @@ class PointCheckin extends Component {
     }
 }
 
-export default PointCheckin
+export default withRouter(Espacios)

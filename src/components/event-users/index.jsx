@@ -1,20 +1,20 @@
 import React, {Component, Fragment} from 'react';
-import {firestore} from "../../helpers/firebase";
+import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QrReader from "react-qr-reader";
+import XLSX from "xlsx";
+import { toast } from 'react-toastify';
 import { FaCamera} from "react-icons/fa";
 import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
-import XLSX from "xlsx";
+import {firestore} from "../../helpers/firebase";
+import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
-import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import Loading from "../loaders/loading";
-import connect from "react-redux/es/connect/connect";
-import ErrorServe from "../modal/serverError";
-import Select from 'react-select';
-import PointCheckin from "../modal/pointCheckin";
+import 'react-toastify/dist/ReactToastify.css';
+import {connect} from "react-redux";
+import CheckSpace from "./checkSpace";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -28,22 +28,23 @@ class ListEventUser extends Component {
             pilaRef:    firestore.collection('pila'),
             total:      0,
             checkIn:    0,
-            estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
             extraFields:[],
+            spacesEvent:[],
             addUser:    false,
             editUser:   false,
             deleteUser: false,
             loading:    true,
             importUser: false,
-            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
+            rolesList:     [],
             facingMode: 'user',
             qrData:     {},
             clearSearch:false,
             changeItem: false,
             errorData: {},
+            badgeEvent: {},
             serverError: false,
             stage: '',
             ticket: '',
@@ -52,124 +53,67 @@ class ListEventUser extends Component {
         };
     }
 
-    componentDidMount() {
-        const { event } = this.props;
-        const properties = event.user_properties;
-        const listTickets = [...event.tickets];
-        let {checkIn,changeItem} = this.state;
-        this.setState({ extraFields: properties });
-        const { usersRef, ticket, stage } = this.state;
-        let newItems= [...this.state.userReq];
-        this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
-            let user,acompanates = 0;
-            snapshot.docChanges().forEach((change)=> {
-                user = change.doc.data();
-                user._id = change.doc.id;
-                user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
-                user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
-                user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
-                if (change.type === 'added'){
-                    if(user.checked_in) checkIn += 1;
-                    change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                    if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                }
-                if (change.type === 'modified'){
-                    if(user.checked_in) checkIn += 1;
-                    newItems.unshift(user);
-                    newItems.splice(change.oldIndex+1, 1);
-                    changeItem = !changeItem;
-                }
-                if (change.type === 'removed'){
-                    if(user.checked_in) checkIn -= 1;
-                    newItems.splice(change.oldIndex, 1);
-                }
-            });
-            this.setState((prevState) => {
-                const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
-                return {
-                    userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
-                    loading: false,total: newItems.length, checkIn, clearSearch: !prevState.clearSearch
-                }
-            });
-        },(error => {
-            console.log(error);
-            this.setState({timeout:true,errorData:{message:error,status:708}});
-        }));
-        /*this.pilaListener = pilaRef.onSnapshot({
-            includeMetadataChanges: true
-        },querySnapshot => {
-            querySnapshot.docChanges().forEach(change => {
-                console.log('from cache ==>> ',querySnapshot.metadata.fromCache, '===>> _hasPendingWrites ',change.doc._hasPendingWrites);
-                const data = change.doc.data();
-                data.created_at = Moment(data.created_at.toDate()).format('YYYY-MM-DD HH:mm');
-                data.updated_at = Moment(data.updated_at.toDate()).format('YYYY-MM-DD HH:mm');
-                if(data.checked_at) data.checked_at= Moment(data.checked_at.toDate()).format('YYYY-MM-DD HH:mm');
-                /!*if (change.type === 'added') {
-                    pilaRef.doc(change.doc.id)
-                        .onSnapshot({
-                            includeMetadataChanges: true
-                        }, (doc) => {
-                            if(!doc._hasPendingWrites){
-                                console.log('this is data: ', data)
-                                Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${event._id}`,{"properties":data.properties,"role_id":data.role_id,"state_id":data.state_id,"checked_in": data.checked_in,"role_id": data.rol_id,    "state_id": data.state_id })
-                                    .then((response)=>{
-                                        console.log(response);
-                                        pilaRef.doc(change.doc.id).delete();
-                                        if(response.status == "CREATED"){
-                                            usersRef.doc(change.doc.id).delete();
-                                        }
-                                    })
-                            }
-                        });
-                }
-                if (change.type === 'modified') {
-                    pilaRef.doc(change.doc.id)
-                        .onSnapshot({
-                            includeMetadataChanges: true
-                        }, (doc) => {
-                            if(!doc._hasPendingWrites){
-                                Actions.put(`/api/eventUsers/${event._id}`,data)
-                                    .then((response) => {
-                                        console.log('desenpilando ==>',change.doc.data());
-                                        pilaRef.doc(change.doc.id).delete();
-                                        console.log(response);
-                                    })
-                            }
-                        });
-                }
-                if (change.type === 'removed') {
-                }*!/
-            });
-        }, err => {
-            console.log(`Encountered error: ${err}`);
-        });*/
+    async componentDidMount() {
+        try{
+            const { event } = this.props;
+            const properties = event.user_properties;
+            const rolesList = await RolAttApi.byEvent(this.props.event._id);
+            const badgeEvent = await BadgeApi.get(this.props.event._id);
+            const {data} = await SpacesApi.byEvent(this.props.event._id);
+            const listTickets = [...event.tickets];
+            let {checkIn,changeItem} = this.state;
+            this.setState({ extraFields: properties, rolesList, badgeEvent, spacesEvent: data });
+            const { usersRef, ticket, stage } = this.state;
+            let newItems= [...this.state.userReq];
+            this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
+                let user,acompanates = 0;
+                snapshot.docChanges().forEach((change)=> {
+                    user = change.doc.data();
+                    user._id = change.doc.id;
+                    user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
+                    user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
+                    user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
+                    switch (change.type) {
+                        case "added":
+                            if(user.checked_in) checkIn += 1;
+                            change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                            if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
+                            break;
+                        case "modified":
+                            if(user.checked_in) checkIn += 1;
+                            newItems.unshift(user);
+                            newItems.splice(change.oldIndex+1, 1);
+                            changeItem = !changeItem;
+                            break;
+                        case "removed":
+                            if(user.checked_in) checkIn -= 1;
+                            newItems.splice(change.oldIndex, 1);
+                            break;
+                        default:
+                            break;
+                    }
+                    user = {};
+                });
+                this.setState((prevState) => {
+                    const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
+                    return {
+                        userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
+                        loading: false,total: newItems.length + acompanates, checkIn, clearSearch: !prevState.clearSearch
+                    }
+                });
+            },(error => {
+                console.log(error);
+                this.setState({timeout:true,errorData:{message:error,status:708}});
+            }));
+        }catch (error) {
+            this.setState({timeout:true,errorData:{message:error,status:710}});
+        }
     }
 
     componentWillUnmount() {
         this.userListener();
         //this.pilaListener()
     }
-
-    statesCounter = (state,old) => {
-        const {states} = this.props;
-        const item = states.find(x => x.value === state);
-        const old_item = states.find(x => x.value === old);
-        if(state && !old){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[item.label]:prevState.estados[item.label]+1}}
-            });
-        }
-        if(old && state){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1,[item.label]:prevState.estados[item.label]+1}}
-            })
-        }
-        if(old && !state){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1}}
-            })
-        }
-    };
 
     exportFile = (e) => {
         e.preventDefault();
@@ -198,10 +142,22 @@ class ListEventUser extends Component {
     };
 
     checkModal = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {qrModal:!prevState.qrModal}
+        });
+    };
+
+    spaceQModal = () => {
+        html.classList.add('is-clipped');
+        this.setState((prevState) => {
+            return {spaceModal:!prevState.spaceModal}
+        });
+    };
+    closeSpaceModal = () => {
+        html.classList.remove('is-clipped');
+        this.setState((prevState) => {
+            return {spaceModal:!prevState.spaceModal}
         });
     };
 
@@ -257,9 +213,7 @@ class ListEventUser extends Component {
     }
     readQr = () => {
         const {qrData} = this.state;
-        if(qrData.user && !qrData.user.checked_in){
-            this.checkIn(qrData.user)
-        }
+        if(qrData.user && !qrData.user.checked_in) this.checkIn(qrData.user);
         this.setState({qrData:{...this.state.qrData,msg:'',user:null}})
     };
     closeQr = () => {
@@ -304,7 +258,7 @@ class ListEventUser extends Component {
 
     renderRows = () => {
         const items = [];
-        const {extraFields} = this.state;
+        const {extraFields, spacesEvent} = this.state;
         const limit = extraFields.length;
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
@@ -329,6 +283,9 @@ class ListEventUser extends Component {
                         return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
                 }
+                {
+                    spacesEvent.map((space,key)=><td key={`space${key}`}>{space.name}: {(item.spaces&&item.spaces[space._id]) ? 'SI' : 'NO'}</td>)
+                }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
             </tr>)
         })
@@ -345,12 +302,11 @@ class ListEventUser extends Component {
         const {event:{tickets}} = this.props;
         if(value === '') {
             let check = 0, acompanates = 0;
-            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+            this.setState({checkIn:0,total:0},()=> {
                 const list = this.state.userReq;
                 list.forEach(user => {
                     if (user.checked_in) check += 1;
                     if(user.properties.acompanates && /^\d+$/.test(user.properties.acompanates))  acompanates += parseInt(user.properties.acompanates,10);
-                    this.statesCounter(user.state.value);
                 });
                 this.setState((state) => {
                     return {users: state.auxArr.slice(0, 50), ticket: '', stage: value, total: list.length+acompanates, checkIn: check}
@@ -365,12 +321,11 @@ class ListEventUser extends Component {
     changeTicket = (e) => {
         const {value} = e.target;
         let check = 0, acompanates = 0;
-        this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+        this.setState({checkIn:0,total:0},()=> {
             const list = value === '' ? this.state.userReq : [...this.state.userReq].filter(user=>user.ticket_id === value);
             list.forEach(user=>{
                 if(user.checked_in) check += 1;
                 if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                this.statesCounter(user.state.value);
             });
             const users = value === '' ? [...this.state.auxArr].slice(0,50) : list;
             this.setState({users,ticket:value,checkIn:check,total:list.length+acompanates});
@@ -382,11 +337,6 @@ class ListEventUser extends Component {
         !data ? this.setState({users:[]}) : this.setState({users:data})
     };
 
-    handlePoints = (flag) => {
-        flag ? html.classList.add('is-clipped') : html.classList.remove('is-clipped')
-        this.setState({modalPoints:flag})
-    };
-
     editQRUser = (user) => {
         this.setState({qrModal:false},()=>{
             this.openEditModalUser(user)
@@ -394,119 +344,74 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
-        const {event:{event_stages}} = this.props;
-        // Dropdown para movil
-        const options = [{ value:'1', label:
-            <div className="checkin-tags-wrapper" >
-              <div className="columns is-mobile is-multiline checkin-tags">
-                <div className="column is-narrow">
-                    <div className="tags is-centered">
-                        <span className="tag is-primary">{checkIn}</span>
-                        <span className="tag is-white">Check In</span>
-                    </div>
-                </div>
-                {
-                    Object.keys(estados).map(item=>{
-                        return <div className="column is-narrow" key={item}>
-                                    <div className="tags is-centered">
-                                        <span className={'tag '+item}>{estados[item]}</span>
-                                        <span className="tag is-white">{item}</span>
-                                    </div>
-                                </div>
-                    })
-                }
-                <div className="column is-narrow">
-                    <div className="tags is-centered">
-                        <span className="tag is-light">{total}</span>
-                        <span className="tag is-white">Total</span>
-                    </div>
-                </div>
-            </div>
-        </div>,disabled: 'yes'}
-          ];
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions} = this.state;
+        const {event:{event_stages},permissions} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin">
-                    <div className="columns checkin-header">
-                        <div className="">
-                            <div className="search">
-                                {
-                                    total>=1 && <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
-                                }
-
+                    <h2 className="title-section">Check In</h2>
+                    <div className="columns">
+                        <div className="search column is-8">
+                            <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                        </div>
+                        <div className="checkin-tags-wrapper column is-4">
+                            <div className="columns is-mobile is-multiline checkin-tags">
+                                <div className="column is-narrow">
+                                    <div className="tags is-centered">
+                                        <span className="tag is-primary">{checkIn}</span>
+                                        <span className="tag is-white">Ingresados</span>
+                                    </div>
+                                </div>
+                                <div className="column is-narrow">
+                                    <div className="tags is-centered">
+                                        <span className="tag is-light">{total}</span>
+                                        <span className="tag is-white">Total</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="buttons-row">
-                            <div className="columns is-mobile is-centered buttons-g container-buttons">
-                                {
-                                    userReq.length>0 && (
-                                        <div className="column is-narrow has-text-centered export button-c is-hidden-mobile">
-                                            <button className="button" onClick={this.exportFile}>
+                    </div>
+                    <div className="columns is-mobile buttons-g">
+                        {
+                            userReq.length>0 && (
+                                <div className="column is-narrow has-text-centered export button-c">
+                                    <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
                                                 </span>
-                                                <span className="text-button">Exportar</span>
-                                            </button>
-                                        </div>
-                                    )
-                                }
+                                        <span className="text-button">Exportar</span>
+                                    </button>
+                                </div>
+                            )
+                        }
+                        {
+                            permissions.data.space ?
+                                <div className="column is-narrow has-text-centered button-c">
+                                    <button className="button is-inverted" onClick={this.spaceQModal}>
+                                        <span className="icon"><i className="fas fa-qrcode"></i></span>
+                                        <span className="text-button">CheckIn Espacio</span>
+                                    </button>
+                                </div>:
                                 <div className="column is-narrow has-text-centered button-c">
                                     <button className="button is-inverted" onClick={this.checkModal}>
-                                        <span className="icon">
-                                            <i className="fas fa-qrcode"></i>
-                                        </span>
+                                                <span className="icon">
+                                                    <i className="fas fa-qrcode"></i>
+                                                </span>
                                         <span className="text-button">Leer Código QR</span>
                                     </button>
                                 </div>
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button is-primary" onClick={this.addUser}>
+                        }
+                        <div className="column is-narrow has-text-centered button-c">
+                            <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
                                             <i className="fas fa-user-plus"></i>
                                         </span>
                                         <span className="text-button">Agregar Usuario</span>
                                     </button>
-                                </div>
-                                <div className="column is-narrow has-text-centered button-c is-hidden-mobile">
-                                    <button className="button" onClick={e=>{this.handlePoints(true)}}>
-                                        <span className="text-button">Roles Asistentes</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="menu-p">
-                        <Select isSearchable={false} options={options} placeholder="Totales"  isOptionDisabled={(option) => option.disabled === 'yes'}/>
-                    </div>
-                    <div className="checkin-tags-wrapper menu-g">
-                        <div className="columns is-mobile is-multiline checkin-tags">
-                            <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-primary">{checkIn}</span>
-                                    <span className="tag is-white">Check In</span>
-                                </div>
-                            </div>
-                            {
-                                Object.keys(estados).map(item=>{
-                                    return <div className="column is-narrow" key={item}>
-                                                <div className="tags is-centered">
-                                                    <span className={'tag '+item}>{estados[item]}</span>
-                                                    <span className="tag is-white">{item}</span>
-                                                </div>
-                                            </div>
-                                })
-                            }
-                            <div className="column is-narrow">
-                                <div className="tags is-centered">
-                                    <span className="tag is-light">{total}</span>
-                                    <span className="tag is-white">Total</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     {
                         (event_stages && event_stages.length > 0) &&
-
                         <div className='filter'>
                             <button className="button icon-filter">
                                 <span className="icon">
@@ -562,37 +467,35 @@ class ListEventUser extends Component {
                                     <h2 className="has-text-centered">Cargando...</h2>
                                 </Fragment>:
                                 <div className="table-wrapper">
-                                    {
-                                        users.length>0&&
-                                        <React.Fragment>
-                                            <div className="table">
-                                                <table className="table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th/>
-                                                        <th className="is-capitalized">Check</th>
-                                                        {
-                                                            extraFields.map((field,key)=>{
-                                                                return <th key={key} className="is-capitalized">{field.name}</th>
-                                                            })
-                                                        }
-                                                        <th>Tiquete</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {
-                                                        this.renderRows()
-                                                    }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <Pagination
-                                                items={users}
-                                                change={this.state.changeItem}
-                                                onChangePage={this.onChangePage}
-                                            />
-                                        </React.Fragment>
-                                    }
+                                    <div className="table">
+                                        <table className="table">
+                                            <thead>
+                                            <tr>
+                                                <th/>
+                                                <th className="is-capitalized">Check</th>
+                                                {
+                                                    extraFields.map((field,key)=>{
+                                                        return <th key={key} className="is-capitalized">{field.name}</th>
+                                                    })
+                                                }
+                                                {
+                                                    spacesEvent.map((space,key)=><th key={key}>{space.name}</th>)
+                                                }
+                                                <th>Tiquete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {
+                                                this.renderRows()
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <Pagination
+                                        items={users}
+                                        change={this.state.changeItem}
+                                        onChangePage={this.onChangePage}
+                                    />
                                 </div>}
                         </div>
                     </div>
@@ -602,9 +505,9 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           states={this.props.states} ticket={ticket} tickets={this.props.event.tickets}
-                           value={this.state.selectedUser} checkIn={this.checkIn} statesCounter={this.statesCounter}
-                           extraFields={this.state.extraFields} edit={this.state.edit}/>
+                           ticket={ticket} tickets={this.props.event.tickets} rolesList={this.state.rolesList}
+                           value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
+                           extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit}/>
                 }
                 <div className={`modal ${this.state.qrModal ? "is-active" : ""}`}>
                     <div className="modal-background"/>
@@ -701,7 +604,8 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
+                {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
+                                                      openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
@@ -718,7 +622,6 @@ const parseData = (data) => {
             if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
             return info[key][obj] = str
         });
-        if(item.state) info[key]['estado'] = item.state.label.toUpperCase();
         if(item.rol) info[key]['rol'] = item.rol.label.toUpperCase();
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
@@ -730,4 +633,8 @@ const parseData = (data) => {
     return info
 };
 
-export default ListEventUser;
+const mapStateToProps = state => ({
+    permissions: state.permissions
+});
+
+export default connect(mapStateToProps)(ListEventUser);

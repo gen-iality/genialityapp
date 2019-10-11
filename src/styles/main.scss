@@ -2,7 +2,7 @@
 $font-path: '~react-widgets/lib/fonts';
 $img-path: '~react-widgets/lib/img';
 $family-sans-serif: "Montserrat", sans-serif;
-$color-evius: #00f0be;
+$color-evius: #1CDCB7;
 $primary: $color-evius;
 $pagination-current-background-color: #00b89c;
 $pagination-current-border-color: #00b89c;
@@ -22,9 +22,13 @@ $breakpoint-tablet: 1024px;
 }
 @import "~medium-editor/dist/css/medium-editor.css";
 @import "~medium-editor/dist/css/themes/mani.css";
-@import "../../node_modules/bulma/bulma";
-@import "../../node_modules/react-widgets/lib/scss/react-widgets";
-@import '../../node_modules/bulma-extensions/bulma-steps/src/sass/index';
+@import "~bulma/bulma";
+@import "~react-widgets/lib/scss/react-widgets";
+@import "~bulma-extensions/bulma-switch/src/sass/index";
+@import "~bulma-extensions/bulma-steps/src/sass/index";
+@import "~bulma-extensions/bulma-tooltip/src/sass/index";
+@import "~bulma-extensions/bulma-checkradio/src/sass/index";
+
 
 @import "./loading";
 @import "./tickets";
@@ -37,6 +41,8 @@ $breakpoint-tablet: 1024px;
 @import "./events/aside";
 @import "./events/event";
 @import "./events/card";
+@import "./events/general";
+@import "./events/datos";
 @import "./users/import";
 @import "./rsvp/send";
 @import "./rsvp/invitations";

@@ -1,6 +1,6 @@
-import {ADD_LOGIN_INFO} from "./actions";
+import {ADD_LOGIN_INFO, SHOW_MENU} from "./actions";
 
-const initialState = {data:{}};
+const initialState = {data:{},menu:true};
 
 export default function userReducer(
     state = initialState,
@@ -11,6 +11,11 @@ export default function userReducer(
             return {
                 ...state,
                 data: action.data
+            };
+        case SHOW_MENU:
+            return {
+                ...state,
+                menu: !state.menu
             };
         default:
             return state;

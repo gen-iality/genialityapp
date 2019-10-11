@@ -1,0 +1,66 @@
+div.general{
+  button.is-text{
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.7em;
+  }
+  .section-gray{
+    background-color: #F1F1F1;
+    padding: 12px;
+  }
+  .toggle-switch{
+    border: solid 3px #8E8E8E;
+    border-radius: 55px;
+    transition: transform cubic-bezier(0, 0, 0.30, 2) .4s;
+    transform-style: preserve-3d;
+    perspective: 800px;
+    input[type="radio"] {
+      display: none;
+    }
+    label {
+      display: inline-block;
+      text-align: center;
+      padding: 0 15px 0 15px;
+      cursor: pointer;
+    }
+    label,#flap{
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+    #flap{
+      position: absolute;
+      top: calc( 0px - 4px);
+      left: 50%;
+      height: calc(100% + 4px * 2);
+      width: 51%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #37BCA0;
+      color: white;
+      border-top-right-radius: 55px;
+      border-bottom-right-radius: 55px;
+      transform-style: preserve-3d;
+      transform-origin: left;
+      transition: transform cubic-bezier(0.4, 0, 0.2, 1) .5s;
+    }
+  }
+
+  .toggle-switch>#choice1:checked~#flap {
+    transform: rotateY(-180deg);
+  }
+
+  .toggle-switch>#choice1:checked~#flap>.content {
+    transform: rotateY(-180deg);
+  }
+
+  .toggle-switch>#choice2:checked~#flap {
+    transform: rotateY(0deg);
+  }
+
+  .toggle>#flap>.content {
+    color: #333;
+    transition: transform 0s linear .25s;
+    transform-style: preserve-3d;
+  }
+}
