@@ -37,7 +37,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:value.ticket_id, edit:true, spaceUser: value.spaces,
+            this.setState({user, ticket_id:value.ticket_id, edit:true, spaceUser: value.spaces?value.spaces:{},
                 rol:value.rol_id, checked_in, userId:value._id});
         }else{
             this.props.extraFields
