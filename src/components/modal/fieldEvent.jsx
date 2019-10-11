@@ -60,6 +60,7 @@ class FieldEvent extends Component {
 
     //Guardar campo en el evento
     saveField = () => {
+        html.classList.remove('is-clipped');
         this.props.saveField(this.state.info);
         this.setState({info:initModal});
     };

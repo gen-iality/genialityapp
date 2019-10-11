@@ -27,7 +27,7 @@ class Menu extends Component {
 
     componentDidUpdate(prevProps) {
         const {match} = this.props;
-        if(this.props.match !== prevProps.match) {
+        if(this.props.match.url !== prevProps.match.url) {
             this.setState({url:match.url});
         }
     }

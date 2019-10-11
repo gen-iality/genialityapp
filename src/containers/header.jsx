@@ -81,9 +81,9 @@ class Header extends Component {
     handleMenu = (location) => {
         const splited = location.pathname.split('/');
         if(splited[1]===""){
-            this.setState({showAdmin:false})
+            this.setState({showAdmin:false,menuOpen:false})
         }else if(splited[1]==="event"){
-            this.setState({showAdmin:true,showEventMenu:false});
+            this.setState({showAdmin:true,showEventMenu:false,menuOpen:false});
             window.scrollTo(0, 0);
         }
     }
@@ -121,7 +121,7 @@ class Header extends Component {
 
     render() {
         const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
-        const { eventMenu, match } = this.props;
+        const { eventMenu, location } = this.props;
         return (
             <React.Fragment>
                 <header>
@@ -157,7 +157,7 @@ class Header extends Component {
                         {(showAdmin&&showEventMenu)&&
                         <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
                             <div className="navbar-start">
-                                <Menu match={match}/>
+                                <Menu match={location.pathname}/>
                             </div>
                         </div>}
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
