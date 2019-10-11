@@ -13,6 +13,7 @@ class UserModal extends Component {
         this.state = {
             rolesList: [],
             message: {},
+            spaceUser: {},
             user: {},
             rol:"",
             prevState: "",
@@ -36,7 +37,7 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:value.ticket_id, edit:true,
+            this.setState({user, ticket_id:value.ticket_id, edit:true, spaceUser: value.spaces,
                 rol:value.rol_id, checked_in, userId:value._id});
         }else{
             this.props.extraFields
@@ -321,7 +322,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,checked_in,ticket_id,rol,rolesList,userId} = this.state;
+        const {user,spaceUser,checked_in,ticket_id,rol,rolesList,userId} = this.state;
         const {modal, spacesEvent} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
@@ -341,7 +342,7 @@ class UserModal extends Component {
                             }
                             <h3>Espacios: </h3>
                             {
-                                spacesEvent.map(space=><p key={space._id}>{space.name}: {(user.spaces && user.spaces[space._id])?"SI":"NO"}</p>)
+                                spacesEvent.map(space=><p key={space._id}>{space.name}: {(spaceUser[space._id])?"SI":"NO"}</p>)
                             }
                             {
                                 checked_in && (
