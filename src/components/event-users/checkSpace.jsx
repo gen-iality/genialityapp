@@ -81,6 +81,8 @@ class CheckSpace extends Component {
                 setTimeout(()=>{
                     this.handleScan(value);
                 },1000)
+            }else{
+                this.setState({gunMsj:"Por favor ingresa un código correcto"})
             }
         })
     };
@@ -94,7 +96,7 @@ class CheckSpace extends Component {
     };
 
     render() {
-        const {qrData,facingMode} = this.state;
+        const {qrData,facingMode,gunMsj} = this.state;
         const {space,spacesEvent} = this.props;
         return (
             <div className={`modal is-active`}>
@@ -167,6 +169,7 @@ class CheckSpace extends Component {
                                                         <label className={`label has-text-grey-light is-capitalized required`}>Código</label>
                                                         <input className="input" name={'searchCC'} ref={this.txtInput} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
                                                     </div>
+                                                    {gunMsj&&<div className="msg"><p className="msg_error">{gunMsj}</p></div>}
                                                 </div>
                                                 <button className="button is-info is-large" onClick={e=> this.handleScan(this.state.newCC)}>Buscar</button>
                                             </div>
