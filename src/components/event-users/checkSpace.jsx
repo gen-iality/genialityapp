@@ -82,7 +82,7 @@ class CheckSpace extends Component {
                     this.handleScan(value);
                 },1000)
             }else{
-                this.setState({gunMsj:"Por favor ingresa un código correcto"})
+                this.setState({gunMsj:"Por favor  escanea un código válido para ejecutar la búsqueda"})
             }
         })
     };
