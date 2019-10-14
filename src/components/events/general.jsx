@@ -301,7 +301,6 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="vertical-line"></div>
                                 <div className="column inner-column">
                                     <div className="field">
                                         <label className="label required has-text-grey-light">Hora Inicio</label>
@@ -331,7 +330,6 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="vertical-line"></div>
                                 <div className="column inner-column">
                                     <div className="field">
                                         <label className="label required has-text-grey-light">Hora Fin</label>
