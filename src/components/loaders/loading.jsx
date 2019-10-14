@@ -1,16 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-class Loading extends Component {
-
-    render() {
-        return (
-            <div className="load-bar">
-                <div className="bar"></div>
-                <div className="bar"></div>
-                <div className="bar"></div>
-            </div>
-        );
-    }
+export default function Loading() {
+    return (
+        <div className="load-bar">
+            <div className="bar"></div>
+            <div className="bar"></div>
+            <div className="bar"></div>
+        </div>
+    );
 }
-
-export default Loading;
