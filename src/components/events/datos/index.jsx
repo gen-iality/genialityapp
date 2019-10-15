@@ -1,10 +1,13 @@
-import React, {Component} from "react";
-import {uniqueID} from "../../helpers/utils";
-import {Actions, EventsApi} from "../../helpers/request";
+import React, {Component, Fragment} from "react";
+import {uniqueID} from "../../../helpers/utils";
+import {Actions, EventsApi} from "../../../helpers/request";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
-import {BaseUrl} from "../../helpers/constants";
-import FieldEvent from "../modal/fieldEvent";
+import {BaseUrl} from "../../../helpers/constants";
+import EventContent from "../content";
+import EvenTable from "../table";
+import EventModal from "../eventModal";
+import DatosModal from "./modal";
 
 class Datos extends Component {
     constructor(props) {
@@ -14,7 +17,8 @@ class Datos extends Component {
             newField: false,
             edit: false,
             fields:[]
-        }
+        };
+        this.html = document.querySelector("html");
     }
 
     async componentDidMount(){
@@ -23,7 +27,6 @@ class Datos extends Component {
         this.setState({fields,loading:false});
     }
 
-    //*********** CAMPOS EVENTO
     //Agregar nuevo campo
     addField = () => {
         this.setState({edit:false,modal:true})
@@ -64,9 +67,9 @@ class Datos extends Component {
         this.setState({fields})
     };
     closeModal = () => {
+        this.html.classList.remove('is-clipped');
         this.setState({inputValue:'',modal:false,info:{},edit:false})
     };
-    //*********** FIN CAMPOS EVENTO
 
     //Envío de datos
     submit = async() => {
@@ -119,63 +122,53 @@ class Datos extends Component {
     }
 
     render() {
-        const { fields, newField} = this.state;
+        const { fields, modal, edit, info} = this.state;
         return (
-            <div className="event-datos">
-                <h2 className="title-section">Recopilación de datos</h2>
-                <p>Configure los datos que desea recolectar de los asistentes del evento</p>
-                <button className="button add is-pulled-right" onClick={this.addField} disabled={newField}>
-                    <span className="icon"><i className="fas fa-plus-circle"/></span>
-                    <span>Agregar dato</span>
-                </button>
-                <table className="table">
-                    <thead>
-                    <tr>
-                        <th>Dato</th>
-                        <th>Tipo de Dato</th>
-                        <th>Obligatorio</th>
-                        <th/>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Email</td>
-                        <td>Correo</td>
-                        <td>
-                            <input className="is-checkradio is-primary" type="checkbox" id={"mandEmail"} checked={true} disabled={true}/>
-                            <label className="checkbox" htmlFor={"mandEmail"}/>
-                        </td>
-                        <td/>
-                    </tr>
-                    <tr>
-                        <td>Texto</td>
-                        <td>Nombres</td>
-                        <td>
-                            <input className="is-checkradio is-primary" type="checkbox" id={"mandName"} checked={true} disabled={true}/>
-                            <label className="checkbox" htmlFor={"mandName"}/>
-                        </td>
-                        <td/>
-                    </tr>
-                    {fields.map((field,key)=>{
-                        return <tr key={key}>
-                            <td>{field.label}</td>
-                            <td>{field.type}</td>
+            <Fragment>
+                <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
+                            addAction={this.addField} addTitle={"Agregar dato"}>
+                    <EvenTable head={["Dato","Tipo de Dato","Obligatorio",""]}>
+                        <tr>
+                            <td>Email</td>
+                            <td>Correo</td>
                             <td>
-                                <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
-                                       type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                       onChange={event => this.changeCheck(field.uuid)}/>
-                                <label htmlFor={`mandatory${field.label}`}></label>
+                                <input className="is-checkradio is-primary" type="checkbox" id={"mandEmail"} checked={true} disabled={true}/>
+                                <label className="checkbox" htmlFor={"mandEmail"}/>
                             </td>
-                            <td>
-                                <button onClick={e=>this.editField(field)}><span className="icon"><i className="fas fa-edit"/></span></button>
-                                <button onClick={e=>this.removeField(key)}><span className="icon"><i className="fas fa-trash-alt"/></span></button>
-                            </td>
+                            <td/>
                         </tr>
-                    })}
-                    </tbody>
-                </table>
-                {this.state.modal&&<FieldEvent edit={this.state.edit} infoModal={this.state.info} modal={this.state.modal} saveField={this.saveField} closeModal={this.closeModal}/>}
-            </div>
+                        <tr>
+                            <td>Texto</td>
+                            <td>Nombres</td>
+                            <td>
+                                <input className="is-checkradio is-primary" type="checkbox" id={"mandName"} checked={true} disabled={true}/>
+                                <label className="checkbox" htmlFor={"mandName"}/>
+                            </td>
+                            <td/>
+                        </tr>
+                        {fields.map((field,key)=>{
+                            return <tr key={key}>
+                                <td>{field.label}</td>
+                                <td>{field.type}</td>
+                                <td>
+                                    <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
+                                           type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                           onChange={event => this.changeCheck(field.uuid)}/>
+                                    <label htmlFor={`mandatory${field.label}`}></label>
+                                </td>
+                                <td>
+                                    <button onClick={e=>this.editField(field)}><span className="icon"><i className="fas fa-edit"/></span></button>
+                                    <button onClick={e=>this.removeField(key)}><span className="icon"><i className="fas fa-trash-alt"/></span></button>
+                                </td>
+                            </tr>
+                        })}
+                    </EvenTable>
+                </EventContent>
+                {modal&&
+                    <EventModal modal={modal} title={edit?'Editar Dato':'Agregar Dato'} closeModal={this.closeModal}>
+                        <DatosModal edit={edit} info={info} action={this.saveField}/>
+                </EventModal>}
+            </Fragment>
         )
     }
 }
