@@ -12,9 +12,9 @@ import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
 import Espacios from "../espacios";
-import Menu from "./menu";
-import PointCheckin from "../event-users/pointCheckin";
+import Menu from "./shared/menu";
 import Datos from "./datos";
+import TipoAsistentes from "./tipoUsers";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -109,7 +109,7 @@ class Event extends Component {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>
                             }
-                            <Route path={`${match.url}/tipo-asistentes`} render={()=><PointCheckin eventID={this.state.event._id} />}/>
+                            <Route path={`${match.url}/tipo-asistentes`} render={()=><TipoAsistentes eventID={this.state.event._id} />}/>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_ticket._id) &&
                                 <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>

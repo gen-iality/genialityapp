@@ -1,7 +1,7 @@
 import React, {Component,Fragment} from "react";
 import {NavLink, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {rolPermissions} from "../../helpers/constants";
+import {rolPermissions} from "../../../helpers/constants";
 
 class Menu extends Component {
     constructor(props){
