@@ -15,7 +15,6 @@ import axios from "axios/index"
 import {DateTimePicker} from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
-import FieldEvent from "../modal/fieldEvent";
 Moment.locale('es');
 
 class General extends Component {
@@ -37,11 +36,7 @@ class General extends Component {
             valid: !this.props.event._id,
             groups: [],
             errorData: {},
-            fieldInfo: {},
-            toggleFields: true,
             serverError: false,
-            fieldModal:false,
-            fieldEdit:false,
             loading: true
         };
         this.editor = {};
@@ -385,7 +380,6 @@ class General extends Component {
                         </div>
                     </div>
                 </div>
-                {this.state.fieldModal&&<FieldEvent infoModal={this.state.fieldInfo} edit={this.state.fieldEdit} modal={this.state.fieldModal} saveField={this.saveField} closeModal={this.closeFieldModal}/>}
                 {timeout&&(<LogOut/>)}
                 {serverError&&(<ErrorServe errorData={errorData}/>)}
                 <Dialog modal={this.state.modal} title={'Borrar Evento'}

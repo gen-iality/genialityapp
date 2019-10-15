@@ -13,15 +13,15 @@ import connect from "react-redux/es/connect/connect";
 import asyncComponent from '../../containers/AsyncComponent';
 import Espacios from "../espacios";
 import Menu from "./menu";
-import Datos from "./datos";
 import PointCheckin from "../event-users/pointCheckin";
+import Datos from "./datos";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
 const Badge = asyncComponent(()=> import("../badge")) ;
 const RSVP = asyncComponent(()=> import("../rsvp")) ;
 const Invitations = asyncComponent(()=> import("../invitations")) ;
-const AdminRol = asyncComponent(()=> import("../roles")) ;
+const AdminRol = asyncComponent(()=> import("./staff")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
 const DashboardEvent = asyncComponent(()=> import("../dashboard")) ;
 const OrdersEvent = asyncComponent(()=> import("../orders")) ;
