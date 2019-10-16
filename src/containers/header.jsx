@@ -9,7 +9,7 @@ import ErrorServe from "../components/modal/serverError";
 import LetterAvatar from "../components/shared/letterAvatar";
 import { connect } from "react-redux";
 import {addLoginInformation,showMenu} from "../redux/user/actions";
-import Menu from "../components/events/menu";
+import Menu from "../components/events/shared/menu";
 
 class Header extends Component {
     constructor(props) {

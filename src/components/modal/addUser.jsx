@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {UsersApi} from "../../helpers/request";
-import {icon} from "../../helpers/constants";
+import EventModal from "../events/shared/eventModal";
 
 class AddUser extends Component {
 
@@ -54,12 +54,6 @@ class AddUser extends Component {
         }
         this.setState({message,create:false});
     }
-
-    /*handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({user:{...this.state.user,[name]:value}}, this.validForm)
-    };*/
 
     renderForm = () => {
         const {extraFields} = this.props;
@@ -121,16 +115,9 @@ class AddUser extends Component {
 
     onChange = (e,type) => {
         const {value,name} = e.target;
-        //console.log(`${name} changed ${value} type ${type}`);
         (type === "boolean") ?
             this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
             : this.setState({user:{...this.state.user,[name]:value}}, this.validForm);
-    };
-
-    selectChange = (e) => {
-        let name = e.target.name;
-        let value = e.target.value;
-        this.setState({[name]:value}, this.validForm);
     };
 
     validForm = () => {
@@ -155,38 +142,22 @@ class AddUser extends Component {
 
     render() {
         return (
-            <div className={`modal modal-add-user ${this.props.modal ? "is-active" : ""}`}>
-                <div className="modal-background"/>
-                <div className="modal-card">
-                    <header className="modal-card-head">
-                        <div className="modal-card-title">
-                            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                        </div>
-                        <button className="delete" aria-label="close" onClick={this.props.handleModal}/>
-                    </header>
-                    <section className="modal-card-body">
-                        {
-                            Object.keys(this.state.user).length > 0 && this.renderForm()
-                        }
-                    </section>
-                    <footer className="modal-card-foot">
-                        {
-                            this.state.create?<div>Creando...</div>:
-                                <div className="modal-buttons">
-                                    <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
-                                    {
-                                        this.state.edit&& <button className="button" onClick={this.printUser}>Imprimir</button>
-                                    }
-                                    <button className="button" onClick={this.closeModal}>Cancel</button>
-                                </div>
-                        }
-                        <div className={"msg"}>
-                            <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
-                        </div>
-                    </footer>
-                </div>
-                <iframe ref="ifrmPrint" style={{opacity:0, display:'none'}} title={'printUser'}/>
-            </div>
+            <EventModal modal={this.props.modal} title={"Agregar invitado"} closeModal={this.props.handleModal}>
+                <section className="modal-card-body">
+                    {
+                        Object.keys(this.state.user).length > 0 && this.renderForm()
+                    }
+                </section>
+                <footer className="modal-card-foot">
+                    {
+                        this.state.create?<div>Creando...</div>:
+                            <button className="button is-primary" onClick={this.handleSubmit} disabled={this.state.valid}>{this.state.edit?'Guardar':'Crear'}</button>
+                    }
+                    <div className={"msg"}>
+                        <p className={`help ${this.state.message.class}`}>{this.state.message.content}</p>
+                    </div>
+                </footer>
+            </EventModal>
         );
     }
 }
