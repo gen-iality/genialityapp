@@ -372,26 +372,4 @@ const handleUsers = (fields,list) => {
         return users;
 };
 
-const columns = [
-    {},
-    {
-        Header: "Estado",
-        id: "state_id",
-        accessor: d => d.state,
-        sortable: false,
-        Filter: ({ filter, onChange }) =>
-            <select
-                onChange={event => onChange(event.target.value)}
-                style={{ width: "100%" }}
-                value={filter ? filter.value : "all"}
-            >
-                <option value="all">TODOS</option>
-                <option value="5b0efc411d18160bce9bc706">DRAFT</option>
-                <option value="5b859ed02039276ce2b996f0">BOOKED</option>
-                <option value="5ba8d200aac5b12a5a8ce748">RESERVED</option>
-                <option value="5ba8d213aac5b12a5a8ce749">INVITED</option>
-            </select>
-    }
-];
-
 export default UsersRsvp;

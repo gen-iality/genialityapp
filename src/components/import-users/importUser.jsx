@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {icon} from "../../helpers/constants";
-import Importacion from "../import-users/importacion";
-import Preview from "../import-users/preview";
-import Result from "../import-users/result";
+import {Link} from "react-router-dom";
+import Importacion from "./importacion";
+import Preview from "./preview";
+import Result from "./result";
 import Async from "async";
 
 class ImportUsers extends Component {
@@ -16,7 +16,6 @@ class ImportUsers extends Component {
     }
 
     handleXls = (list) => {
-        console.log(list);
         if(list.length>=2) {
             this.setState((prevState) => {
                 return {list,step:prevState.step+1}
@@ -79,37 +78,30 @@ class ImportUsers extends Component {
             <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers} extraFields={this.props.extraFields}/>,
             <Result list={this.state.toImport} eventId={this.props.eventId} extraFields={this.props.extraFields} organization={this.props.organization}/>];
         return (
-            <div className={`modal modal-import-user ${this.state.modal ? "is-active" : ""}`}>
-                <div className="modal-background"/>
-                <div className="modal-card">
-                    <header className="modal-card-head">
-                        <div className="modal-card-title">
-                            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
-                        </div>
-                        <button className="delete" aria-label="close" onClick={this.closeModal}/>
-                    </header>
-                    <section className="modal-card-body">
-                        <div className="tabs is-fullwidth">
-                            <ul>
-                                <li className={`${this.state.step === 0 ? "is-active" : ""}`}><a>1. Importación</a></li>
-                                <li className={`${this.state.step === 1 ? "is-active" : ""}`}><a>2. Previsualización</a></li>
-                                <li className={`${this.state.step === 2 ? "is-active" : ""}`}><a>3. Resultado</a></li>
-                            </ul>
-                        </div>
-                        {
-                            layout[this.state.step]
-                        }
-                    </section>
-                    <footer className="modal-card-foot">
-                        {
-                            this.state.step === 2 && (
-                                <div className="modal-buttons">
-                                    <button className="button is-primary" onClick={this.closeModal}>Finalizar</button>
-                                    <button className="button" onClick={(e)=>{this.setState({step:0,list:[]});}}>Importar más</button>
-                                </div> 
-                            )
-                        }
-                    </footer>
+            <div className={`event-datos modal-import-user`}>
+                <Link to={this.props.matchUrl}><h2 className="title-section">Invitados</h2></Link>
+                <h4 className="subtitle-section">Importación de usuarios - Excel</h4>
+                <div className="steps">
+                    <div className={`step-item is-completed`}>
+                        <div className="step-marker">1</div>
+                        <div className="step-details">
+                            <p className="step-title">Importar</p>
+                        </div></div>
+                    <div className={`step-item ${this.state.step >= 1 ? "is-completed" : ""}`}>
+                        <div className="step-marker">2</div>
+                        <div className="step-details">
+                            <p className="step-title">Relacionar</p>
+                        </div></div>
+                    <div className={`step-item ${this.state.step >= 2 ? "is-completed" : ""}`}>
+                        <div className="step-marker">3</div>
+                        <div className="step-details">
+                            <p className="step-title">Resultado</p>
+                        </div></div>
+                </div>
+                <div className="step-content">
+                    {
+                        layout[this.state.step]
+                    }
                 </div>
             </div>
         );

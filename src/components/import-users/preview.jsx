@@ -104,23 +104,19 @@ class Preview extends Component {
         const self = this;
         return (
             <React.Fragment>
+                <div className="is-pulled-left">
+                    <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
+                </div>
                 {
                     this.state.loading ?
                         <div>Parsing excel</div> :
-                        <div className="columns is-mobile is-gapless preview-list">
-                            {
-                                list.map((item, index) => {
-                                    return <div className="column is-4" key={index}>
-                                        <div className="preview-column">
+                        <div className="columns">
+                            <div className="column is-7 preview-list">
+                                {
+                                    list.map((item, index) => {
+                                        return <div className="preview-column" key={index}>
                                             <div className="preview-title">
                                                 <div className="preview-title-left">
-                                                    {/*{
-                                                        (!item.used&&auxArr.length<=0) && (
-                                                            <span className="icon action_pointer tooltip is-small" data-tooltip="Add Field" onClick={(e)=>{self.addField(item,index)}}>
-                                                                <i className="fas fa-plus"/>
-                                                            </span>
-                                                        )
-                                                    }*/}
                                                     {
                                                         (!item.used&&auxArr.length>0) && (
                                                             <span className="icon action_pointer tooltip is-small" data-tooltip="Change Field">
@@ -130,7 +126,7 @@ class Preview extends Component {
                                                     }
                                                     <span className={`${item.used ? "has-text-success" : `${auxArr.length>0 ? "has-text-danger" : "has-text-warning"}`}`}>
                                                         {item.key}
-                                                    </span>   
+                                                    </span>
                                                 </div>
                                                 {
                                                     (!item.used&&auxArr.length>0) && (
@@ -154,7 +150,7 @@ class Preview extends Component {
                                                         </div>
                                                     )
                                                 }
-                                                
+
                                             </div>
                                             <div className="preview-items">
                                                 {item.list.slice(0,2).map((item,j)=>{
@@ -164,37 +160,30 @@ class Preview extends Component {
                                                 })}
                                             </div>
                                         </div>
-                                    </div>
-                                })
-                            }
+                                    })
+                                }
+                            </div>
+                            <div className="column preview-warning">
+                                {auxArr.length>0&&(
+                                    <p className="has-text-grey-light">
+                                <span className="icon is-medium has-text-danger">
+                                    <i className="fas fa-exclamation-circle"></i>
+                                </span>
+                                            <span>
+                                    <span>Los siguientes campos <strong className="has-text-danger">Obligatorios</strong> no se han definido: </span>
+                                    <span>{auxArr.map((item)=>{return <strong key={item.tag}>{item.tag} </strong>})}</span>
+                                </span>
+                                    </p>)}
+                                {auxArr.length<0&&(
+                                    <p className="has-text-grey-light">
+                                    <span className="icon is-medium has-text-warning">
+                                        <i className="fas fa-exclamation-circle"></i>
+                                    </span>
+                                        <span>Tienes algunos campos <strong className="has-text-warning">Opcionales</strong> sin definir.</span>
+                                    </p>)}
+                            </div>
                         </div>
                 }
-                <div className="preview-warning">
-                    {auxArr.length>0&&(
-                        <p className="has-text-grey-light">
-                            <span className="icon is-medium has-text-danger">
-                                <i className="fas fa-exclamation-circle"></i>
-                            </span>
-                            <span>
-                                <span>Los siguientes campos <strong className="has-text-danger">Obligatorios</strong> no se han definido: </span>
-                                <span>{auxArr.map((item)=>{return <strong key={item.tag}>{item.tag} </strong>})}</span> 
-                            </span>
-                        </p>)}
-
-                    {auxArr.length<0&&(
-                    <p className="has-text-grey-light">
-                        <span className="icon is-medium has-text-warning">
-                            <i className="fas fa-exclamation-circle"></i>
-                        </span>
-                        <span>Tienes algunos campos <strong className="has-text-warning">Opcionales</strong> sin definir.</span>
-                    </p>)}
-                </div>
-
-                <div className="preview-button columns">
-                    <div className="column has-text-centered">
-                        <button className="button is-primary" disabled={auxArr.length>0} onClick={(e)=>{this.props.importUsers(list)}}>Importar</button>
-                    </div>
-                </div>
                 {timeout&&(<LogOut/>)}
                 {serverError&&(<ErrorServe errorData={errorData}/>)}
             </React.Fragment>
