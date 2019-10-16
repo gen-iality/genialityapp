@@ -92,8 +92,8 @@ export const EventsApi = {
     },
 };
 export const UsersApi = {
-    getAll: async (id) => {
-        return await Actions.getAll(`/api/events/${id}/eventUsers`)
+    getAll: async (id,query) => {
+        return await Actions.getAll(`/api/events/${id}/eventUsers${query}`)
     },
     getProfile: async (id) => {
         return await Actions.getOne('/api/users/', id)
