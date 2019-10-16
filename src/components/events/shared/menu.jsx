@@ -8,7 +8,7 @@ class Menu extends Component {
         super(props);
         this.state = {
             generalTab:true,
-            guestTab:true,
+            commTab:true,
             checkInTab:true,
             ticketTab:true,
             url:""
@@ -34,7 +34,7 @@ class Menu extends Component {
 
     render(){
         const {permissions} = this.props;
-        const {generalTab,guestTab,checkInTab,ticketTab,url} = this.state;
+        const {generalTab,commTab,checkInTab,ticketTab,url} = this.state;
         return (
             <Fragment>
                 <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
@@ -78,21 +78,24 @@ class Menu extends Component {
                         </ul>
                     )
                 }
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({guestTab:!guestTab})}}>
-                    <span className="item has-text-grey">Invitados</span>
-                    <span className="icon"><i className={`${guestTab?'up':'down'}`}/></span>
+                <p className="menu-label has-text-centered-mobile">
+                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados`}>Invitados</NavLink>
+                </p>
+                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({commTab:!commTab})}}>
+                    <span className="item has-text-grey">Comunicaciones</span>
+                    <span className="icon"><i className={`${commTab?'up':'down'}`}/></span>
                 </p>
                 {
-                    guestTab && (
+                    commTab && (
                         <ul className="menu-list">
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
                                 <Fragment>
                                     <li>
-                                        <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/rsvp`}>Lista de invitados</NavLink>
+                                        <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitaciones`}>Invitaciones</NavLink>
                                     </li>
                                     <li>
-                                        <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitaciones`}>Invitaciones</NavLink>
+                                        <NavLink className={'item is-size-6'} onClick={this.handleClick} activeClassName={'active'} to={`${url}/correos`}>Correos</NavLink>
                                     </li>
                                 </Fragment>
                             }

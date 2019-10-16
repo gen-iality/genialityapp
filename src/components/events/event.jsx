@@ -100,7 +100,7 @@ class Event extends Component {
                                 permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
-                            <Protected path={`${match.url}/rsvp`} component={RSVP} event={this.state.event} url={match.url}/>
+                            <Protected path={`${match.url}/invitados`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
                             {
                                 permissions.data.ids.includes(rolPermissions.history_invitations._id) &&
                                 <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
