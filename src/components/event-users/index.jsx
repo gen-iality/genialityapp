@@ -41,6 +41,7 @@ class ListEventUser extends Component {
             changeItem: false,
             errorData: {},
             badgeEvent: {},
+            qrData: {},
             serverError: false,
             stage: '',
             ticket: '',
