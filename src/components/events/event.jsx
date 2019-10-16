@@ -15,6 +15,7 @@ import Espacios from "../espacios";
 import Menu from "./shared/menu";
 import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
+import ErrorServe from "../modal/serverError";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -80,7 +81,8 @@ class Event extends Component {
         const { match, permissions, showMenu } = this.props;
         const { timeout } = this.state;
         if(this.state.loading || this.props.loading || permissions.loading) return <Loading/>;
-        if(this.props.error || permissions.error || timeout) return <LogOut/>;
+        if(this.props.error || permissions.error) return <ErrorServe errorData={permissions.error}/>;
+        if(timeout) return <LogOut/>;
         return (
             <section className="columns">
                 <aside className={`column menu event-aside is-2 is-hidden-touch ${!showMenu?'is-hidden':""}`}>
