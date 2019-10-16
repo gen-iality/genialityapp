@@ -49,17 +49,12 @@ class SearchComponent extends Component {
                     //buscamos coindicencia por cada una de las propiedades
                     for(let key in item.properties){
                         let propertyValue = item.properties[key];
-                      
                         if(!propertyValue){continue;}
-    
                         propertyValue = String(propertyValue);
                         encontrado = encontrado || (propertyValue.search(new RegExp(value, 'i')) >= 0)
-                        //encontrado = encontrado || (propertyValue.indexOf(value) !=-1)    
+                        //encontrado = encontrado || (propertyValue.indexOf(value) !=-1)
                     }
                     return encontrado;
-
-                    
-
                 });
             }else if(this.props.kind === 'invitation'){
                 arrAux = this.props.data.filter(item =>
@@ -106,19 +101,17 @@ class SearchComponent extends Component {
 
     render() {
         return (
-            <React.Fragment>
-                <div className="field">
-                    <p className="control has-icons-left">
-                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
-                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+            <div className={this.props.classes}>
+                <p className="control has-icons-left">
+                    <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
+                    <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+                </p>
+                {this.state.showMessage && (
+                    <p className="help is-danger">
+                        <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
                     </p>
-                    {this.state.showMessage && (
-                        <p className="help is-danger">
-                            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
-                        </p>
-                    )}
-                </div>
-            </React.Fragment>
+                )}
+            </div>
         );
     }
 }
