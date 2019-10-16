@@ -181,14 +181,14 @@ export const HelperApi = {
     rolesOne: async(event) => {
         return await Actions.get(`api/contributors/events/${event}/me`)
     },
-    saveHelper: async(data) => {
-        return await Actions.post(`api/contributors`,data)
+    saveHelper: async(event, data) => {
+        return await Actions.post(`api/events/${event}/contributors`,data)
     },
-    editHelper: async(id,data) => {
-        return await Actions.put(`api/contributors/${id}`,data)
+    editHelper: async(event, id,data) => {
+        return await Actions.put(`api/events/${event}/contributors/${id}`,data)
     },
-    removeHelper: async(id) => {
-        return await Actions.delete(`api/contributors/`,id)
+    removeHelper: async(id, event) => {
+        return await Actions.delete(`api/events/${event}/contributors`,id)
     }
 };
 export const CertsApi = {
@@ -216,6 +216,24 @@ export const CertsApi = {
                 resolve({type:response.headers['content-type'],blob:response.data});
             })
         })
+    }
+
+};
+export const SpacesApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/spaces`)
+    },
+    getOne: async(event,id) => {
+        return await Actions.get(`api/events/${event}/spaces/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/spaces`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/spaces`, id);
+    },
+    create: async(data,event) => {
+        return await Actions.create(`api/events/${event}/spaces`,data)
     }
 
 };
