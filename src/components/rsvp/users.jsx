@@ -20,6 +20,7 @@ class UsersRsvp extends Component {
             actualEvent:{},
             events: [],
             users: [],
+            usersReq: [],
             selection: [],
             auxArr: [],
             importUser: false,
@@ -38,7 +39,6 @@ class UsersRsvp extends Component {
             dropSend: false,
         };
         this.checkEvent = this.checkEvent.bind(this);
-        this.addToList = this.addToList.bind(this);
         this.toggleAll = this.toggleAll.bind(this);
     }
 
@@ -52,7 +52,7 @@ class UsersRsvp extends Component {
                 <label htmlFor={"checkallUser"}/>
             </div>);
             const users = handleUsers(this.props.event.user_properties,resp.data);
-            this.setState({loading:false,users,resp,columns,pageOfItems:users.slice(0,10)})
+            this.setState({loading:false,users,usersReq:users,resp,columns,pageOfItems:users.slice(0,10)})
         }
         catch (error) {
             if (error.response) {
@@ -125,7 +125,7 @@ class UsersRsvp extends Component {
     async toggleAll() {
         const selectAll = !this.state.selectAll;
         let selection = [...this.state.selection];
-        const currentRecords = this.state.users;
+        const currentRecords = this.state.usersReq;
         if (selectAll) {
             this.setState({loading:true});
             await asyncForEach(currentRecords, async (item) => {
@@ -154,7 +154,7 @@ class UsersRsvp extends Component {
     //Add or remove user to selection state
     toggleSelection = (user) => {
         let selection = [...this.state.selection];
-        let items = [...this.state.items];
+        let items = [...this.state.usersReq];
         let auxArr = [...this.state.auxArr];
         const keyIndex = selection.map((e)=> { return e.id; }).indexOf(user.id);
         if (keyIndex >= 0) {
@@ -204,10 +204,9 @@ class UsersRsvp extends Component {
     };
 
     //Add user to current list at middle column
-    async addToList(user){
-        console.log(user);
+    addToList = async() =>{
         try{
-            const {data} = await UsersApi.getAll(this.props.event._id);
+            const {data} = await UsersApi.getAll(this.props.eventID,"?pageSize=10000");
             const users = handleUsers(data);
             toast.success((<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>));
             this.setState({ users });
@@ -229,7 +228,7 @@ class UsersRsvp extends Component {
 
     //Search records at third column
     searchResult = (data) => {
-        !data ? this.setState({items:this.state.auxArr.slice(0,10)}) : this.setState({items:data})
+        !data ? this.setState({users:this.state.auxArr.slice(0,10)}) : this.setState({users:data})
     };
 
     //Button Ticket Logic
@@ -277,14 +276,14 @@ class UsersRsvp extends Component {
     render() {
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         if(this.state.loading) return <Loading/>;
-        const {users, dropUser, dropSend, pageOfItems, columns} = this.state;
+        const {users, usersReq, dropUser, dropSend, pageOfItems, columns} = this.state;
         return (
             <Fragment>
-                <EventContent title={"Invitados"} description={users.length <= 0 ? "Crear o importar una lista d epersonas que desea invitar a su evento":""}>
+                <EventContent title={"Invitados"} description={usersReq.length <= 0 ? "Crear o importar una lista d epersonas que desea invitar a su evento":""}>
                     {
-                        users.length > 0 ? <div>
+                        usersReq.length > 0 ? <div>
                                 <div className="columns">
-                                    <SearchComponent classes={"column is-7"} data={this.state.users} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                                    <SearchComponent classes={"column is-7"} data={this.state.usersReq} kind={'user'} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                                     <div className="column is-2" />
                                     <div className="column">
                                         <div className={`dropdown is-pulled-right is-right ${dropUser?"is-active":""}`} onClick={this.handleDropUser}>
@@ -337,7 +336,7 @@ class UsersRsvp extends Component {
                                         ))
                                     }
                             </EvenTable>
-                            {users.length>10&& <Pagination items={users} onChangePage={this.onChangePage}/>}
+                                <Pagination items={users} onChangePage={this.onChangePage}/>
                             </div>:
                             <div>
                                 <div onClick={this.modalUser}>Nuevo invitado</div>
