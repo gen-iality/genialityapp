@@ -6,7 +6,7 @@ import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { FaCamera} from "react-icons/fa";
 import { IoIosQrScanner, IoIosCamera } from "react-icons/io";
-import connect from "react-redux/es/connect/connect";
+import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import {BadgeApi, RolAttApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
@@ -28,7 +28,6 @@ class ListEventUser extends Component {
             pilaRef:    firestore.collection('pila'),
             total:      0,
             checkIn:    0,
-            estados:    {DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},
             extraFields:[],
             addUser:    false,
             editUser:   false,
@@ -61,7 +60,6 @@ class ListEventUser extends Component {
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
             const listTickets = [...event.tickets];
-            const {states} = this.props;
             let {checkIn,changeItem} = this.state;
             this.setState({ extraFields: properties, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
@@ -71,7 +69,6 @@ class ListEventUser extends Component {
                 snapshot.docChanges().forEach((change)=> {
                     user = change.doc.data();
                     user._id = change.doc.id;
-                    user.state = states.find(x => x.value === user.state_id);
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                     user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
@@ -79,7 +76,6 @@ class ListEventUser extends Component {
                         if(user.checked_in) checkIn += 1;
                         change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                         if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                        this.statesCounter(user.state.value);
                     }
                     if (change.type === 'modified'){
                         if(user.checked_in) checkIn += 1;
@@ -112,27 +108,6 @@ class ListEventUser extends Component {
         this.userListener();
         //this.pilaListener()
     }
-
-    statesCounter = (state,old) => {
-        const {states} = this.props;
-        const item = states.find(x => x.value === state);
-        const old_item = states.find(x => x.value === old);
-        if(state && !old){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[item.label]:prevState.estados[item.label]+1}}
-            });
-        }
-        if(old && state){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1,[item.label]:prevState.estados[item.label]+1}}
-            })
-        }
-        if(old && !state){
-            this.setState(prevState=>{
-                return {estados:{...this.state.estados,[old_item.label]:prevState.estados[old_item.label]-1}}
-            })
-        }
-    };
 
     exportFile = (e) => {
         e.preventDefault();
@@ -307,7 +282,7 @@ class ListEventUser extends Component {
         const {event:{tickets}} = this.props;
         if(value === '') {
             let check = 0, acompanates = 0;
-            this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+            this.setState({checkIn:0,total:0},()=> {
                 const list = this.state.userReq;
                 list.forEach(user => {
                     if (user.checked_in) check += 1;
@@ -327,7 +302,7 @@ class ListEventUser extends Component {
     changeTicket = (e) => {
         const {value} = e.target;
         let check = 0, acompanates = 0;
-        this.setState({estados:{...this.state.estados,DRAFT:0,BOOKED:0,RESERVED:0,INVITED:0},checkIn:0,total:0},()=> {
+        this.setState({checkIn:0,total:0},()=> {
             const list = value === '' ? this.state.userReq : [...this.state.userReq].filter(user=>user.ticket_id === value);
             list.forEach(user=>{
                 if(user.checked_in) check += 1;
@@ -356,7 +331,7 @@ class ListEventUser extends Component {
     };
 
     render() {
-        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, estados, editUser, stage, ticket, ticketsOptions} = this.state;
+        const {timeout, facingMode, qrData, userReq, users, total, checkIn, extraFields, editUser, stage, ticket, ticketsOptions} = this.state;
         const {event:{event_stages}} = this.props;
         // Dropdown para movil
         const options = [{ value:'1', label:
@@ -368,16 +343,6 @@ class ListEventUser extends Component {
                         <span className="tag is-white">Check In</span>
                     </div>
                 </div>
-                {
-                    Object.keys(estados).map(item=>{
-                        return <div className="column is-narrow" key={item}>
-                                    <div className="tags is-centered">
-                                        <span className={'tag '+item}>{estados[item]}</span>
-                                        <span className="tag is-white">{item}</span>
-                                    </div>
-                                </div>
-                    })
-                }
                 <div className="column is-narrow">
                     <div className="tags is-centered">
                         <span className="tag is-light">{total}</span>
@@ -448,16 +413,6 @@ class ListEventUser extends Component {
                                     <span className="tag is-white">Check In</span>
                                 </div>
                             </div>
-                            {
-                                Object.keys(estados).map(item=>{
-                                    return <div className="column is-narrow" key={item}>
-                                                <div className="tags is-centered">
-                                                    <span className={'tag '+item}>{estados[item]}</span>
-                                                    <span className="tag is-white">{item}</span>
-                                                </div>
-                                            </div>
-                                })
-                            }
                             <div className="column is-narrow">
                                 <div className="tags is-centered">
                                     <span className="tag is-light">{total}</span>
