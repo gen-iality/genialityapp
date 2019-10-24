@@ -1,16 +1,31 @@
 section.landing{
+  .hero-head{
+    background-color: black
+  }
   
   padding: 0;
+  .container-nombre{
+    display: block;
+    margin: 0% auto;
   .nombre{
-    padding: 19px;
+    .event-name{
+      h2, span {
+        color: white;
+      }
+    }
     .bold-text{
       font-weight: bolder !important;
       color: black;
     }
   }
+}
   .columns{
-    display: flex;
-    flex-direction: column;
+    // display: flex;
+    // flex-direction: column;
+  }
+  .banner-head{
+    justify-content: center;
+    align-items: center;
   }
   .columns.content-tabs{
   flex-direction: row;
@@ -18,32 +33,41 @@ section.landing{
   justify-content: center;
   }
   .info {
-    background-color: white;
+    padding: 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .fecha {
-      margin: 1.2rem;
+      // margin: 1.2rem;
       display: flex;
       flex-direction: row;
       .fecha-uno, .fecha-dos {
         span {
           margin: 0 auto;
           &.title {
-            font-weight: 900;
-            text-transform: uppercase;
+            color: white;
+            // font-weight: 900;
+            // text-transform: uppercase;
           }
         }
       }
       .vertical-line {
-        background: #bbbbbb;
+        background: white;
         width: 1px;
       }
+    
     }
     .lugar {
-      flex-direction: column;
-      align-items: center;
+      color: white;
+      .container-icon, .container-subtitle{
+        display: inline-block !important;
+      }
+      span{
+        color: white;
+      }
       .column {
         display: flex;
         align-items: center;
-        justify-content: center;
       }
       .subtitle {
         font-weight: 900;
@@ -73,11 +97,11 @@ section.landing{
     display: flex;
     align-items: center;
     .info {
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 50%;
+      // height: 100%;
+      // position: absolute;
+      // top: 0;
+      // left: 0;
+      // width: 50%;
       .container {
         padding: 2em;
       }
@@ -149,8 +173,66 @@ section.landing{
   }
   .hero-body{
     padding: 0;
+  
+  .description-container{
+    text-align: justify;
+    margin-top: 3%;
+    .title-description{
+      display: block;
+      margin: 0% auto;
+      font-weight: bold;
+    }
+    .description{
+      display: block;
+      margin: 0% auto;
+      text-transform: lowercase;
+    }
   }
-
+  .container-nav-item{
+    background: #F5F5F5;
+    .nav-item{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0% !important;
+      span{
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      }
+    }
+    .nav-item-active{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0% !important;
+      span{
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: solid $color-evius;
+        width: 50%;
+        color: $color-evius !important;
+      } 
+  }
+    
+  }
+  .container-map{
+    .map-head{
+      border: solid 2px #E0E0E0;
+      padding: 13px;
+      text-align: left;
+      .subtitle{
+        padding: 10px;
+      }
+    }
+    .hours{
+      padding-bottom: 0% !important;
+    }
+  }
+}
   @media only screen and (min-width: $breakpoint-mobile) {
     .info{
       margin: 0 !important;
@@ -160,16 +242,16 @@ section.landing{
     }
 
     .columns{
-      flex-direction: column-reverse;
+      // flex-direction: column-reverse;
     }
   }
 
 
   @media only screen and (min-width: $breakpoint-tablet) {
     .info{
-      margin: 0 60px 0 0 !important;
+      // margin: 0 60px 0 0 !important;
       flex: none;
-      width: 33.33333%;
+      // width: 33.33333%;
     }
     .lugar{
       flex-direction: row !important;

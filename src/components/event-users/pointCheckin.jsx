@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {RolAttApi} from "../../helpers/request";
 import Moment from "moment";
-import Dialog from "./twoAction";
+import Dialog from "../modal/twoAction";
 
 class PointCheckin extends Component {
     constructor(props) {
@@ -35,19 +35,14 @@ class PointCheckin extends Component {
     newRole = () => {
         this.setState(state => {
             const list = state.roles.concat({name:'',created_at:new Date(),_id:'new'});
-            return {
-                roles:list,
-                id: 'new',
-            };
+            return {roles:list, id: 'new',};
         });
     };
 
     removeNewRole = () => {
         this.setState(state => {
             const list = state.roles.filter(item => item._id !== "new");
-            return {
-                roles:list,id:"",name:""
-            };
+            return {roles:list,id:"",name:""};
         });
     };
 
@@ -118,50 +113,56 @@ class PointCheckin extends Component {
     render() {
         return (
             <React.Fragment>
-                <div style={{width:this.props.visible?'100%':'0%'}} className="overlay">
-                    <p className="close-btn action_pointer" onClick={e=>this.props.close(false)}>&times;</p>
-                    <div className="overlay-content">
-                        <button className="button" onClick={this.newRole}>Nuevo</button>
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th style={{width:'60%'}}>Nombre</th>
-                                <th style={{width:'30%'}}>Fecha Creación</th>
-                                <th style={{width:'10%'}}/>
+                <h2 className="title-section">Tipo de asistentes</h2>
+                <p>Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc.</p>
+                <div className="overlay-content">
+                    <button className="button add is-pulled-right" onClick={this.newRole}>
+                        <span className="icon"><i className="fas fa-plus-circle"/></span>
+                        <span>Nuevo rol</span>
+                    </button>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th style={{width:'60%'}}>Nombre</th>
+                            <th style={{width:'30%'}}>Fecha Creación</th>
+                            <th style={{width:'10%'}}>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.state.roles.map((cert,key)=>{
+                            return <tr key={key}>
+                                <td>
+                                    {
+                                        this.state.id === cert._id ?
+                                            <input type="text" value={this.state.name} onChange={this.onChange}/>:
+                                            <p>{cert.name}</p>
+                                    }
+                                </td>
+                                <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
+                                <td>
+                                    {
+                                        this.state.id === cert._id ?
+                                            <button>
+                                            <span className="icon has-text-grey"
+                                                  onClick={(e)=>{this.saveRole(cert)}}><i className="fas fa-save"/></span>
+                                            </button>:
+                                            <button>
+                                            <span className="icon has-text-grey"
+                                                  onClick={(e)=>this.setState({id:cert._id,name:cert.name})}><i className="fas fa-edit"/></span>
+                                            </button>
+                                    }
+                                    {
+                                        cert._id === 'new' ?
+                                            <button><span className='icon has-text-grey'
+                                                  onClick={this.removeNewRole}><i className='fas fa-times'/></span></button>:
+                                            <button><span className='icon has-text-grey'
+                                                  onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span></button>
+                                    }
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {this.state.roles.map((cert,key)=>{
-                                return <tr key={key}>
-                                    <td>
-                                        {
-                                            this.state.id === cert._id ?
-                                                <input type="text" value={this.state.name} onChange={this.onChange}/>:
-                                                <p>{cert.name}</p>
-                                        }
-                                    </td>
-                                    <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
-                                    <td style={{textAlign:'left'}}>
-                                        {
-                                            this.state.id === cert._id ?
-                                                <span className="icon has-text-primary action_pointer"
-                                                      onClick={(e)=>{this.saveRole(cert)}}><i className="fas fa-save"/></span>:
-                                                <span className="icon has-text-primary action_pointer"
-                                                      onClick={(e)=>this.setState({id:cert._id,name:cert.name})}><i className="fas fa-edit"/></span>
-                                        }
-                                        {
-                                            cert._id === 'new' ?
-                                                <span className='icon action_pointer'
-                                                      onClick={this.removeNewRole}><i className='fas fa-times'/></span>:
-                                                <span className='icon has-text-danger action_pointer'
-                                                      onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span>
-                                        }
-                                    </td>
-                                </tr>
-                            })}
-                            </tbody>
-                        </table>
-                    </div>
+                        })}
+                        </tbody>
+                    </table>
                 </div>
                 {
                     this.state.deleteModal &&

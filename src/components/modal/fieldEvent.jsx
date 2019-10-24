@@ -60,6 +60,7 @@ class FieldEvent extends Component {
 
     //Guardar campo en el evento
     saveField = () => {
+        html.classList.remove('is-clipped');
         this.props.saveField(this.state.info);
         this.setState({info:initModal});
     };
@@ -71,22 +72,22 @@ class FieldEvent extends Component {
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">{this.props.edit?'Editar Campo':'Agregar Campo'}</p>
+                        <p className="modal-card-title">{this.props.edit?'Editar Dato':'Agregar Dato'}</p>
                         <button className="delete is-large" aria-label="close" onClick={this.closeModal}/>
                     </header>
                     <section className="modal-card-body">
                         <div className="field">
-                            <label className="label required has-text-grey-light">Nombre para mostrar</label>
+                            <label className="label required has-text-grey-light">Dato</label>
                             <div className="control">
                                 <input className="input" name={"label"} type="text"
-                                       placeholder="Nombre del campo" value={info.label}
+                                       placeholder="Ej: Celular" value={info.label}
                                        onChange={this.handleChange}
                                 />
                             </div>
                         </div>
                         <div className="field">
                             <div className="control">
-                                <label className="label required">Tipo</label>
+                                <label className="label required">Tipo de dato</label>
                                 <div className="control">
                                     <div className="select">
                                         <select onChange={this.handleChange} name={'type'} value={info.type}>
@@ -141,7 +142,7 @@ class FieldEvent extends Component {
                         </div>
                     </section>
                     <footer className="modal-card-foot">
-                        <button className="button is-primary" onClick={this.saveField}>{this.props.edit?'Editar Campo':'Agregar Campo'}</button>
+                        <button className="button is-primary" onClick={this.saveField}>{this.props.edit?'Guardar':'Agregar'}</button>
                     </footer>
                 </div>
             </div>
