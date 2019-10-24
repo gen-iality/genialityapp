@@ -10,7 +10,6 @@ import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import {BadgeApi, RolAttApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
-import PointCheckin from "../modal/pointCheckin";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
@@ -618,7 +617,6 @@ class ListEventUser extends Component {
                         </footer>
                     </div>
                 </div>
-                {this.state.modalPoints && <PointCheckin visible={this.state.modalPoints} eventID={this.props.event._id} close={this.handlePoints} />}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );

@@ -34,11 +34,6 @@ a {
   .icon {
     margin-left: 0.25em !important;
   }
-  &.add{
-    background-color: #DBFFF1;
-    border: none;
-    color: #37BCA0;
-  }
   &.is-primary {
     /* box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1); */
     &.is-outlined {
@@ -625,21 +620,13 @@ a {
   tbody {
     tr {
       padding: 10px;
+      &:hover {
+        background: rgba($color: $black, $alpha: 0.05) !important;
+      }
       td {
         border: none !important;
         a {
           color: $grey;
-        }
-        button{
-          cursor: pointer;
-          width: 27px;
-          height: 27px;
-          padding: 0;
-          border: none;
-          background: transparent;
-          &:hover{
-            background-color: rgba(0, 0, 0, 0.08);
-          }
         }
       }
     }

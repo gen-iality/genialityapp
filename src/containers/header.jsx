@@ -9,7 +9,6 @@ import ErrorServe from "../components/modal/serverError";
 import LetterAvatar from "../components/shared/letterAvatar";
 import { connect } from "react-redux";
 import {addLoginInformation,showMenu} from "../redux/user/actions";
-import Menu from "../components/events/menu";
 
 class Header extends Component {
     constructor(props) {
@@ -132,12 +131,6 @@ class Header extends Component {
                             <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </Link>
-                            {showAdmin && <div className="navbar-item" data-target="navbarBasicExample">
-                                <p>
-                                <span className="icon" onClick={this.handleMenuEvent}><i className="fas fa-th"></i></span>
-                                <span>Administrar evento</span>
-                                </p>
-                            </div>}
                             {
                                 !this.state.loader && <React.Fragment>
                                     {
@@ -156,12 +149,6 @@ class Header extends Component {
                                 </React.Fragment>
                             }
                         </div>
-                        {(showAdmin&&showEventMenu)&&
-                        <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
-                            <div className="navbar-start">
-                                <Menu match={location.pathname}/>
-                            </div>
-                        </div>}
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-end">
                                 {

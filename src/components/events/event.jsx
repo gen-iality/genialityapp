@@ -4,10 +4,8 @@ import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
 import {EventsApi} from "../../helpers/request";
-import {rolPermissions} from "../../helpers/constants";
 import ListEventUser from "../event-users";
 import LogOut from "../shared/logOut";
-import {fetchState} from "../../redux/states/actions";
 import {fetchRol} from "../../redux/rols/actions";
 import {fetchPermissions} from "../../redux/permissions/actions";
 import connect from "react-redux/es/connect/connect";
@@ -47,7 +45,6 @@ class Event extends Component {
     }
 
     async componentDidMount() {
-        this.props.dispatch(fetchState());
         this.props.dispatch(fetchRol());
         let eventId = this.props.match.params.event;
         this.props.dispatch(fetchPermissions(eventId));
@@ -233,9 +230,9 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
 );
 
 const mapStateToProps = state => ({
-    loading: state.states.loading,
+    loading: state.rols.loading,
     permissions: state.permissions,
-    error: state.states.error
+    error: state.rols.error
 });
 
 export default connect(mapStateToProps)(Event);
