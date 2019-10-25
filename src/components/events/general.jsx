@@ -267,15 +267,15 @@ class General extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Dirección</label>
+                            <label className="label has-text-grey-light">Dirección</label>
                             <div className="control">
                                 <input className="input" name={"address"} type="text"
-                                       placeholder="¿Cuál es la dirección del evento" value={event.address}
+                                       placeholder="¿Cuál es la dirección del evento?" value={event.address}
                                        onChange={this.handleChange}/>
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Lugar</label>
+                            <label className="label has-text-grey-light">Lugar</label>
                             <div className="control">
                                 <input className="input" name={"venue"} type="text"
                                        placeholder="Nombre del lugar del evento" value={event.venue}
