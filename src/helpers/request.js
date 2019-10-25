@@ -117,6 +117,24 @@ export const UsersApi = {
         return await Actions.delete(`/api/user/events/${id}`, user);
     }
 };
+export const EventFieldsApi = {
+    getAll: async (event) => {
+        return await Actions.getAll(`/api/events/${event}/userproperties`)
+    },
+    getOne: async (event, id) => {
+        return await Actions.getOne(`/api/events/${event}/userproperties`, id)
+    },
+    createOne: async (data, event) => {
+        return await Actions.post(`/api/events/${event}/userproperties`,data)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`/api/events/${event}/userproperties`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`/api/events/${event}/userproperties`, id);
+    }
+
+};
 export const CategoriesApi = {
     getAll: async () => {
         const resp = await Actions.getAll('api/categories');

@@ -96,7 +96,7 @@ class Event extends Component {
                             <Route exact path={`${match.url}/main`} render={()=>
                                 <General event={this.state.event} updateEvent={this.updateEvent}/>}
                             />
-                            <Route path={`${match.url}/datos`} render={()=><Datos event={this.state.event}/>}/>
+                            <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
