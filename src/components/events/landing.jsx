@@ -8,7 +8,6 @@ import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {BaseUrl} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
-import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
@@ -254,10 +253,6 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {
-                                (this.state.event.speaker.length > 0 || this.state.event.sessions.length > 0) &&
-                                   <AdditonalDataEvent eventInfo={this.state.event}/>
-                            }
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div className="columns container-nav-item">

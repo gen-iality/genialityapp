@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {NavLink, withRouter, Switch, Route, Redirect} from "react-router-dom";
-import InfoGeneral from "./additionalDataEvent/InfoGeneral";
-import InfoAsistentes from "./additionalDataEvent/infoAsistentes";
+import InfoGeneral from "./newEvent/InfoGeneral";
+import InfoAsistentes from "./newEvent/infoAsistentes";
 import Moment from "moment";
-import InfoTiquetes from "./additionalDataEvent/infoTiquetes";
+import InfoTiquetes from "./newEvent/infoTiquetes";
 import Pages from "../pages";
 import {Actions, EventsApi} from "../../helpers/request";
 import {toast} from "react-toastify";
