@@ -20,8 +20,6 @@ $breakpoint-tablet: 1024px;
 .box:not(:last-child) {
   margin-bottom: 0 !important;
 }
-@import "~medium-editor/dist/css/medium-editor.css";
-@import "~medium-editor/dist/css/themes/mani.css";
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
@@ -29,6 +27,7 @@ $breakpoint-tablet: 1024px;
 @import "~bulma-extensions/bulma-tooltip/src/sass/index";
 @import "~bulma-extensions/bulma-checkradio/src/sass/index";
 @import "~react-quill/dist/quill.snow.css";
+@import "~react-quill/dist/quill.bubble.css";
 
 
 @import "./loading";

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import Moment from "moment"
-import MediumEditor from 'medium-editor'
+import ReactQuill from "react-quill";
 import ImageInput from "../shared/imageInput";
 import {Actions, CategoriesApi, EventsApi, OrganizationApi, TypesApi} from "../../helpers/request";
-import {BaseUrl} from "../../helpers/constants";
+import {BaseUrl, toolbarEditor} from "../../helpers/constants";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-widgets/lib/scss/react-widgets.scss'
@@ -39,8 +39,6 @@ class General extends Component {
             serverError: false,
             loading: true
         };
-        this.editor = {};
-        this.editorRef = React.createRef();
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
     }
@@ -56,10 +54,7 @@ class General extends Component {
                 return {value:item.id,label:item.name}
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,loading:false},()=>{
-                this.editor = new MediumEditor(this.editorRef.current,{toolbar:{buttons:['bold','italic','underline','anchor']}});
-                if (event.description && event.description.length > 0) this.editor.setContent(event.description);
-            })
+            this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,loading:false})
         }
         catch (error) {
             // Error
@@ -90,6 +85,8 @@ class General extends Component {
             valid = (event.name.length>0 && event.venue.length>0 && event.address.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         this.setState({valid:!valid,error})
     };
+    //Cambio en la descripción
+    chgTxt= content => this.setState({event:{...this.state.event,description:content}});
     //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
@@ -167,7 +164,7 @@ class General extends Component {
             venue: event.venue,
             address: event.address,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: this.editor.getContent(),
+            description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value
@@ -342,7 +339,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <div ref={this.editorRef}></div>
+                                <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt}/>
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,8 @@ import {DateTimePicker} from "react-widgets";
 import EventContent from "../events/shared/content";
 import {Link} from "react-router-dom";
 import {SpacesApi} from "../../helpers/request";
+import ImageInput from "../shared/imageInput";
+import {toolbarEditor} from "../../helpers/constants";
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -45,10 +47,7 @@ class AgendaEdit extends Component {
         });
     };
 
-    chgTxt=(content, delta, source, editor)=>{
-        console.log(editor.getHTML());
-        this.setState({description:content})
-    };
+    chgTxt= content => this.setState({description:content});
 
     render() {
         const {spaces} = this.state;
@@ -148,7 +147,7 @@ class AgendaEdit extends Component {
                         <div className="field">
                             <label className="label">Descripción (opcional)</label>
                             <div className="control">
-                                <ReactQuill value={this.state.description} modules={modules} onChange={this.chgTxt}/>
+                                <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt}/>
                             </div>
                         </div>
                     </div>
@@ -162,7 +161,12 @@ class AgendaEdit extends Component {
                             <div className="field picture">
                                 <label className="label has-text-grey-light">Imagen</label>
                                 <div className="control">
-
+                                    <ImageInput picture={""} imageFile={this.state.imageFile}
+                                                divClass={'drop-img'} content={<img src={""} alt={'Imagen Perfil'}/>}
+                                                classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 400px x 250px)</small></div>}
+                                                changeImg={this.changeImg} errImg={this.state.errImg}
+                                                style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
                                 </div>
                             </div>
                             <div className="field">
@@ -177,7 +181,7 @@ class AgendaEdit extends Component {
                                         }
                                         </select>
                                     </div>
-                                    <p className="help is-pulled-right">Agregar categoría</p>
+                                    <p className="help is-info is-pulled-right">Agregar categoría</p>
                                 </div>
                             </div>
                             <div className="field">
@@ -208,19 +212,5 @@ function parseSelect(data) {
     data.map(i=>list.push({label:i.name,value:i._id}));
     return list
 }
-
-const modules = {
-    toolbar: [
-        [{ 'font': []}],
-        [{ 'header': [0,1, 2, 3] }],
-        [{ 'size': []}],
-        [{ 'align': []}],
-        ['bold', 'italic', 'underline','strike', 'blockquote'],
-        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-        ['link', 'image'],
-        [{'color':[]}, {'background':[]}],
-        ['clean']
-    ],
-};
 
 export default withRouter(AgendaEdit);

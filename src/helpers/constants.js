@@ -85,6 +85,19 @@ export const typeInputs = [
     {value:'file',label:'Archivo'},
     {value:'map',label:'JSON'},
 ];
+export const toolbarEditor = {
+    toolbar: [
+        [{ 'font': []}],
+        [{ 'header': [0,1, 2, 3] }],
+        [{ 'size': []}],
+        [{ 'align': []}],
+        ['bold', 'italic', 'underline','strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+        ['link', 'image'],
+        [{'color':[]}, {'background':[]}],
+        ['clean']
+    ],
+};
 
 export const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
     '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +

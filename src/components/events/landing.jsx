@@ -12,6 +12,7 @@ import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
+import ReactQuill from "react-quill";
 Moment.locale('es');
 momentLocalizer();
 
@@ -67,7 +68,7 @@ class Landing extends Component {
                 <div className="description-container column is-8">
                     <h3 className="title-description is-size-5 column is-10">Descripción</h3>
                     <div className="column is-10 description">
-                        { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
+                        { typeof event.description === 'string'?  (<ReactQuill value={event.description} modules={{toolbar:false}} readOnly={true}/>): 'json'  }
                     </div>
                     <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
                 </div>
