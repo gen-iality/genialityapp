@@ -7,20 +7,26 @@ class DatosModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            info:{name:'',mandatory:false,label:'',description:'',type:'',options:[]}
+            info:{name:'',mandatory:false,label:'',description:'',type:'',options:[]},
+            valid:true
         }
     }
 
     componentDidMount() {
         html.classList.add('is-clipped');
-        if (this.props.edit) this.setState({info:this.props.info});
+        if (this.props.edit) this.setState({info:this.props.info},this.validForm);
     }
 
     handleChange = (e) => {
         let {name, value} = e.target;
-        if(name === 'label'){
-            this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}});
-        }else this.setState({info:{...this.state.info,[name]:value}});
+        if(name === 'label') this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}},this.validForm);
+        else this.setState({info:{...this.state.info,[name]:value}},this.validForm);
+    };
+    validForm = () => {
+        const {name,label,type,options} = this.state.info;
+        let valid = !(name.length > 0 && label.length > 0 && type !== "");
+        if(type === "list") valid = !(!valid && options.length > 0);
+        this.setState({valid})
     };
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e) => {
@@ -33,7 +39,7 @@ class DatosModal extends Component {
         this.setState({ inputValue });
     };
     changeOption = (option) => {
-        this.setState({ info:{...this.state.info,options:option} });
+        this.setState({ info:{...this.state.info,options:option} },this.validForm);
     };
     handleKeyDown = (event) => {
         const { inputValue } = this.state;
@@ -42,7 +48,7 @@ class DatosModal extends Component {
         switch (event.keyCode) {
             case 9:
             case 13:
-                this.setState({inputValue: '',info:{...this.state.info,options:[...this.state.info.options,createOption(value)]}});
+                this.setState({inputValue: '',info:{...this.state.info,options:[...this.state.info.options,createOption(value)]}},this.validForm);
                 event.preventDefault();
                 break;
             default: {}
@@ -51,13 +57,16 @@ class DatosModal extends Component {
     //Guardar campo en el evento
     saveField = () => {
         html.classList.remove('is-clipped');
-        this.props.action(this.state.info);
+        const info = Object.assign({},this.state.info);
+        info.name = toCapitalizeLower(info.name);
+        if(info.type !== "list") delete info.options;
+        this.props.action(info);
         const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
         this.setState({info:initModal});
     };
 
     render() {
-        const { inputValue, info} = this.state;
+        const { inputValue, info, valid} = this.state;
         const { edit } = this.props;
         return (
             <Fragment>
@@ -113,7 +122,7 @@ class DatosModal extends Component {
                         <label htmlFor={`mandatoryModal`}>Obligatorio</label>
                     </div>
                     <div className="field">
-                        <label className="label required has-text-grey-light">Descripción</label>
+                        <label className="label has-text-grey-light">Descripción</label>
                         <textarea className="textarea" placeholder="descripción corta" name={'description'}
                                   value={info.description} onChange={this.handleChange}/>
                     </div>
@@ -121,14 +130,14 @@ class DatosModal extends Component {
                         <label className="label required has-text-grey-light">Etiqueta</label>
                         <div className="control">
                             <input className="input is-small" name={"name"} type="text"
-                                   placeholder="Nombre del campo" value={info.name}
+                                   placeholder="Nombre del campo" value={info.name} disabled={edit}
                                    onChange={this.handleChange}
                             />
                         </div>
                     </div>
                 </section>
                 <footer className="modal-card-foot">
-                    <button className="button is-primary" onClick={this.saveField}>{edit?'Guardar':'Agregar'}</button>
+                    <button className="button is-primary" onClick={this.saveField} disabled={valid}>{edit?'Guardar':'Agregar'}</button>
                 </footer>
             </Fragment>
         )

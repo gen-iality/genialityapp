@@ -82,7 +82,8 @@ export const typeInputs = [
     {value:'list',label:'Lista Opciones'},
     {value:'date',label:'Fecha (DD/MM/YYYY)'},
     {value:'boolean',label:'Si/No'},
-    {value:'file',label:'Archivo'}
+    {value:'file',label:'Archivo'},
+    {value:'map',label:'JSON'},
 ];
 
 export const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
