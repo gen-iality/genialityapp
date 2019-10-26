@@ -16,6 +16,7 @@ import Menu from "./shared/menu";
 import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
+import AgendaRoutes from "../agenda";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -97,6 +98,7 @@ class Event extends Component {
                                 <General event={this.state.event} updateEvent={this.updateEvent}/>}
                             />
                             <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>
                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
