@@ -35,10 +35,12 @@ class TipoAsistentes extends Component {
     };
 
     newRole = () => {
-        this.setState(state => {
-            const list = state.roles.concat({name:'',created_at:new Date(),_id:'new'});
-            return {roles:list, id: 'new',};
-        });
+        if(!this.state.roles.find(({_id})=>_id === "new")) {
+            this.setState(state => {
+                const list = state.roles.concat({name: '', created_at: new Date(), _id: 'new'});
+                return {roles: list, id: 'new',};
+            });
+        }
     };
 
     removeNewRole = () => {
@@ -124,7 +126,7 @@ class TipoAsistentes extends Component {
                                 <td>
                                     {
                                         id === cert._id ?
-                                            <input type="text" value={name} onChange={this.onChange}/>:
+                                            <input type="text" value={name} autoFocus onChange={this.onChange}/>:
                                             <p>{cert.name}</p>
                                     }
                                 </td>
