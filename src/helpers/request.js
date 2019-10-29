@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ApiUrl } from './constants';
 import * as Cookie from 'js-cookie';
+import {handleSelect} from "./utils";
 
 const publicInstance = axios.create({
     url: ApiUrl,
@@ -138,13 +139,13 @@ export const EventFieldsApi = {
 export const CategoriesApi = {
     getAll: async () => {
         const resp = await Actions.getAll('api/categories');
-        return handleCat(resp.data)
+        return handleSelect(resp.data)
     }
 };
 export const TypesApi = {
     getAll: async () => {
         const resp = await Actions.getAll('api/eventTypes');
-        return handleCat(resp.data)
+        return handleSelect(resp.data)
     }
 };
 export const OrganizationApi = {
@@ -237,24 +238,6 @@ export const CertsApi = {
     }
 
 };
-export const SpacesApi = {
-    byEvent: async(event) => {
-        return await Actions.getAll(`api/events/${event}/spaces`)
-    },
-    getOne: async(event,id) => {
-        return await Actions.get(`api/events/${event}/spaces/`,id)
-    },
-    editOne: async (data, id, event) => {
-        return await Actions.edit(`api/events/${event}/spaces`, data, id)
-    },
-    deleteOne: async (id, event) => {
-        return await Actions.delete(`api/events/${event}/spaces`, id);
-    },
-    create: async(data,event) => {
-        return await Actions.create(`api/events/${event}/spaces`,data)
-    }
-
-};
 export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)
@@ -272,12 +255,76 @@ export const RolAttApi = {
         return await Actions.create(`api/rolesattendees`,data)
     }
 };
-const handleCat = (data) => {
-    let list = [];
-    data.map(item=>{
-        return list.push({value:item._id,label:item.name})
-    })
-    return list;
+export const SpacesApi = {
+    byEvent: async(event) => {
+        const {data} = await Actions.getAll(`api/events/${event}/spaces`);
+        return handleSelect(data)
+    },
+    getOne: async(event,id) => {
+        return await Actions.get(`api/events/${event}/spaces/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/spaces`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/spaces`, id);
+    },
+    create: async(data,event) => {
+        return await Actions.create(`api/events/${event}/spaces`,data)
+    }
+};
+export const CategoriesAgendaApi = {
+    byEvent: async(event) => {
+        const {data} = await Actions.getAll(`api/events/${event}/categoryactivities`);
+        return handleSelect(data)
+    },
+    getOne: async(id, event) => {
+        return await Actions.getOne(`api/events/${event}/categoryactivities/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/categoryactivities`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/categoryactivities`, id);
+    },
+    create: async(event, data) => {
+        return await Actions.create(`api/events/${event}/categoryactivities`,data)
+    }
+};
+export const TypesAgendaApi = {
+    byEvent: async(event) => {
+        const {data} = await Actions.getAll(`api/events/${event}/type`);
+        return handleSelect(data)
+    },
+    getOne: async(id, event) => {
+        return await Actions.getOne(`api/events/${event}/type/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/type`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/type`, id);
+    },
+    create: async(event, data) => {
+        return await Actions.create(`api/events/${event}/type`,data)
+    }
+};
+export const AgendaApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/activities`)
+    },
+    getOne: async(id, event) => {
+        return await Actions.getOne(`api/events/${event}/activities/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/activities`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/activities`, id);
+    },
+    create: async(event, data) => {
+        return await Actions.create(`api/events/${event}/activities`,data)
+    }
 };
 // export const SpeakersApi = {
 //     getList: async(eventId) => {
