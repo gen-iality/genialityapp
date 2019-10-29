@@ -292,7 +292,7 @@ class InfoGeneral extends Component {
                                      options={organizers} required={true}/>
                         <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType}
                                      selectOption={this.selectType} options={types} required={true}/>
-                        <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories}
+                        <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories}
                                      selectOption={this.selectCategory} options={categories} required={true}/>
                     </div>
                 </div>

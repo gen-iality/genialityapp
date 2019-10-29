@@ -372,7 +372,7 @@ class General extends Component {
                                 </div>
                                 {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                             </div>
-                            <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
+                            <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
                             <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.selectType} options={types} required={true}/>
                         </div>
                     </div>
