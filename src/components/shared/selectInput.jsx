@@ -48,7 +48,8 @@ class SelectInput extends Component {
                         placeholder={<FormattedMessage id="global.select" defaultMessage="Select..."/>}
                         noOptionsMessage={this.noOptionsMessage}
                         value={selectedOptions}
-                        className={isMulti?"basic-multi-select":"basic-single"}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
                     />
                 </div>
             </div>
