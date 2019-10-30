@@ -1,37 +1,61 @@
 import React, {Component} from 'react';
-import {Redirect, withRouter} from "react-router-dom";
+import {Redirect, withRouter, Link} from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
-import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
 import {DateTimePicker} from "react-widgets";
+import {Creatable} from "react-select";
+import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
 import EventContent from "../events/shared/content";
-import {Link} from "react-router-dom";
-import {SpacesApi} from "../../helpers/request";
+import Loading from "../loaders/loading";
 import ImageInput from "../shared/imageInput";
+import {AgendaApi, CategoriesAgendaApi, SpacesApi, TypesAgendaApi} from "../../helpers/request";
 import {toolbarEditor} from "../../helpers/constants";
+import {fieldsSelect} from "../../helpers/utils";
 
 class AgendaEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            allDay:true,
+            loading:true,
+            isLoading:true,
+            name:"",
             description:"",
+            hour_start:new Date(),
+            hour_end:new Date(),
+            date:Moment().format("DD/MM/YY"),
+            image:"",
+            space_id:"",
+            selectedCategories:[],
+            host_ids:"",
+            selectedType:"",
             days:[],
-            spaces:[]
+            spaces:[],
+            categories:[],
+            types:[],
+            hosts:[],
         }
     }
 
     async componentDidMount() {
-        const { event } = this.props;
+        const { event, location:{state} } = this.props;
         let days = [];
         const init = Moment(event.date_start);
         const end = Moment(event.date_end);
         const diff = end.diff(init, 'days');
         for(let i = 0; i < diff+1; i++){
-            days.push(Moment(init).add(i,'d'))
+            days.push(Moment(init).add(i,'d').format("DD/MM/YY"))
         }
-        const {data} = await SpacesApi.byEvent(this.props.event._id);
-        this.setState({days,spaces:parseSelect(data)});
+        const spaces = await SpacesApi.byEvent(this.props.event._id);
+        const categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
+        const types = await TypesAgendaApi.byEvent(this.props.event._id);
+        if(state.edit){
+            const info = await AgendaApi.getOne(state.edit, event._id);
+            Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
+            const {date,hour_start,hour_end} = handleDate(info);
+            this.setState({date,hour_start,hour_end,
+                selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories,categories)})
+        }
+        this.setState({days,spaces,categories,types,loading:false,isLoading:false});
     }
 
     handleChange = (e) => {
@@ -39,178 +63,220 @@ class AgendaEdit extends Component {
         const {value} = e.target;
         this.setState({[name]:value});
     };
-
-    handleBox = (e) => {
-        const {name} = e.target;
-        this.setState((prevState) => {
-            return {[name]:!prevState[name]}
+    handleDate = (value,name) => {
+        this.setState({[name]:value})
+    };
+    selectType = (value) => {
+      this.setState({selectedType:value})
+    };
+    handleCreate = async(value,name) => {
+        this.setState({isLoading:true});
+        const item = name === "type" ?
+                await TypesAgendaApi.create(this.props.event._id,{name:value}):
+                await CategoriesAgendaApi.create(this.props.event._id,{name:value});
+        const newOption = {label:value,value:item._id,item};
+        this.setState( prevState => ({
+            isLoading: false,
+            [name]: [...prevState[name], newOption]
+        }),()=>{
+            if(name === "type") this.setState({selectedType: newOption});
+            else this.setState(state => ({selectedCategories:[...state.selectedCategories, newOption]}))
         });
+    };
+    selectCategory = (selectedCategories) => {
+        this.setState({ selectedCategories }, this.valid);
+    };
+    changeImg = (files) => {
+        const file = files[0];
+        if(file){
+            this.setState({image:URL.createObjectURL(file)});
+        }else{
+            this.setState({errImg:'Only images files allowed. Please try again :)'});
+        }
     };
 
     chgTxt= content => this.setState({description:content});
 
     render() {
-        const {spaces} = this.state;
+        const {loading,name,date,hour_start,hour_end,image,space_id,selectedType,selectedCategories} = this.state;
+        const {spaces,categories,types,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state) return <Redirect to={matchUrl}/>;
         return (
-            <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Activdad</span>}>
-                <div className="columns">
-                    <div className="column is-8">
-                        <div className="field">
-                            <label className="label">Nombre</label>
-                            <div className="control">
-                                <input className="input" type="description" name={"name"} onChange={this.handleChange} placeholder="Nombre de la actividad"/>
+            <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Actividad</span>}>
+                {loading ? <Loading/> :
+                    <div className="columns">
+                        <div className="column is-8">
+                            <div className="field">
+                                <label className="label">Nombre</label>
+                                <div className="control">
+                                    <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
+                                           placeholder="Nombre de la actividad"/>
+                                </div>
                             </div>
-                        </div>
-                        <div className="field">
-                            <label className="label">Día</label>
-                            <div className="control">
-                                {
-                                    this.state.days.map((day,key)=>{
-                                        return <label key={key} className="radio">
-                                            <input type="radio" name="day" onChange={this.handleChange}/>
-                                            {Moment(day).format('DD/MM/YY')}
-                                        </label>
-                                    })
-                                }
+                            <div className="field">
+                                <label className="label">Día</label>
+                                <div className="control">
+                                    {
+                                        this.state.days.map((day, key) => {
+                                            return <label key={key} className="radio">
+                                                <input type="radio" name="date" checked={day===date} value={day} onChange={this.handleChange}/>
+                                                {day}
+                                            </label>
+                                        })
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        <div className="field">
-                            <input id="switchRoundedOutlinedDefault" type="checkbox"
-                                   name="allDay" className="switch is-rounded is-outlined"
-                                   checked={this.state.allDay} onClick={this.handleBox}/>
-                            <label htmlFor="switchRoundedOutlinedDefault">Todo El Día</label>
-                        </div>
-                        {
-                            !this.state.allDay && (
-                                <div className="columns">
-                                    <div className="column">
-                                        <div className="field">
-                                            <label className="label">Hora Inicio</label>
-                                            <div className="control">
-                                                <DateTimePicker
-                                                    dropUp step={15}
-                                                    date={false}
-                                                    onChange={value => this.changeDate(value,"hour_start")}/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="column">
-                                        <div className="field">
-                                            <label className="label">Hora Fin</label>
+                            <div className="columns">
+                                <div className="column">
+                                    <div className="field">
+                                        <label className="label">Hora Inicio</label>
+                                        <div className="control">
                                             <DateTimePicker
-                                                dropUp step={60}
-                                                date={false}
-                                                onChange={value => this.changeDate(value,"hour_end")}/>
+                                                value={hour_start} dropUp step={15} date={false}
+                                                onChange={value=>this.handleDate(value,"hour_start")}/>
                                         </div>
                                     </div>
                                 </div>
-                            )
-                        }
-                        <label className="label">Conferencista</label>
-                        <div className="field has-addons">
-                            <div className="control">
-                                <div className="select">
-                                    <select>
-                                        <option>Buscar ponente</option>{
-                                        this.state.days.map((day,key)=>{
-                                            return <option key={key}>{Moment(day).format('DD/MM/YY')}</option>
-                                        })
-                                    }
-                                    </select>
+                                <div className="column">
+                                    <div className="field">
+                                        <label className="label">Hora Fin</label>
+                                        <DateTimePicker
+                                            value={hour_end} dropUp step={15} date={false}
+                                            onChange={value=>this.handleDate(value,"hour_end")}/>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="control">
-                                <button className="button"><FaWhmcs/></button>
-                            </div>
-                        </div>
-                        <label className="label">Espacio</label>
-                        <div className="field has-addons">
-                            <div className="control">
-                                <div className="select">
-                                    <select>
-                                        <option>Seleccione un lugar/salón ...</option>{
-                                        spaces.map(space=>{
-                                            return <option key={space.value} value={space.value}>{space.label}</option>
-                                        })
-                                    }
-                                    </select>
+                            <label className="label">Conferencista</label>
+                            <div className="field has-addons">
+                                <div className="control">
+                                    <div className="select">
+                                        <select>
+                                            <option>Buscar ponente</option>
+                                            {
+                                                this.state.days.map((day, key) => {
+                                                    return <option key={key}>{Moment(day).format('DD/MM/YY')}</option>
+                                                })
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="control">
-                                <Link to={matchUrl.replace("agenda","espacios")}>
+                                <div className="control">
                                     <button className="button"><FaWhmcs/></button>
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="field">
-                            <label className="label">Descripción (opcional)</label>
-                            <div className="control">
-                                <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt}/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="column is-4 general">
-                        {/*<ReactQuill value={this.state.description} modules={{toolbar:false}} readOnly={true}/>*/}
-                        <div className="field is-grouped">
-                            <button className="button is-text" onClick={this.modalEvent}>x Eliminar actividad</button>
-                            <button onClick={this.submit} className={`${this.state.loading?'is-loading':''}button is-primary`}>Guardar</button>
-                        </div>
-                        <div className="section-gray">
-                            <div className="field picture">
-                                <label className="label has-text-grey-light">Imagen</label>
-                                <div className="control">
-                                    <ImageInput picture={""} imageFile={this.state.imageFile}
-                                                divClass={'drop-img'} content={<img src={""} alt={'Imagen Perfil'}/>}
-                                                classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 400px x 250px)</small></div>}
-                                                changeImg={this.changeImg} errImg={this.state.errImg}
-                                                style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
                                 </div>
                             </div>
-                            <div className="field">
-                                <label className="label">Categoría</label>
+                            <label className="label">Espacio</label>
+                            <div className="field has-addons">
                                 <div className="control">
                                     <div className="select">
-                                        <select>
-                                            <option>Sin categoría</option>{
-                                            spaces.map(space=>{
-                                                return <option key={space.value} value={space.value}>{space.label}</option>
-                                            })
-                                        }
+                                        <select name={"space_id"} value={space_id} onChange={this.handleChange}>
+                                            <option>Seleccione un lugar/salón ...</option>
+                                            {
+                                                spaces.map(space => {
+                                                    return <option key={space.value}
+                                                                   value={space.value}>{space.label}</option>
+                                                })
+                                            }
                                         </select>
                                     </div>
-                                    <p className="help is-info is-pulled-right">Agregar categoría</p>
+                                </div>
+                                <div className="control">
+                                    <Link to={matchUrl.replace("agenda", "espacios")}>
+                                        <button className="button"><FaWhmcs/></button>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="field">
+                                <label className="label">Descripción (opcional)</label>
+                                <div className="control">
+                                    <ReactQuill value={this.state.description} modules={toolbarEditor}
+                                                onChange={this.chgTxt}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="column is-4 general">
+                            {/*<ReactQuill value={this.state.description} modules={{toolbar:false}} readOnly={true}/>*/}
+                            <div className="field is-grouped">
+                                <button className="button is-text" onClick={this.modalEvent}>x Eliminar actividad
+                                </button>
+                                <button onClick={this.submit}
+                                        className={`${this.state.loading ? 'is-loading' : ''}button is-primary`}>Guardar
+                                </button>
+                            </div>
+                            <div className="section-gray">
+                                <div className="field picture">
+                                    <label className="label has-text-grey-light">Imagen</label>
+                                    <div className="control">
+                                        <ImageInput picture={image} imageFile={this.state.imageFile}
+                                                    divClass={'drop-img'} content={<img src={image} alt={'Imagen Perfil'}/>}
+                                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 400px x 250px)</small></div>}
+                                                    changeImg={this.changeImg} errImg={this.state.errImg}
+                                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                                    </div>
+                                </div>
+                                <label className={`label`}>Categorías</label>
+                                <div className="columns">
+                                    <div className="column is-10">
+                                        <Creatable
+                                            isClearable
+                                            styles={creatableStyles}
+                                            onChange={this.selectCategory}
+                                            onCreateOption={value=>this.handleCreate(value,"categories")}
+                                            isDisabled={isLoading}
+                                            isLoading={isLoading}
+                                            isMulti
+                                            options={categories}
+                                            placeholder={"Sin categoría...."}
+                                            value={selectedCategories}
+                                        />
+                                    </div>
+                                    <div className="column is-2">
+                                        <Link to={`${matchUrl}/categorias`}>
+                                            <button className="button"><FaWhmcs/></button>
+                                        </Link>
+                                    </div>
+                                </div>
                                 <label className="label">Tipo de actividad</label>
-                                <div className="control">
-                                    <div className="select">
-                                        <select>
-                                            <option>Sin actividad</option>{
-                                            spaces.map(space=>{
-                                                return <option key={space.value} value={space.value}>{space.label}</option>
-                                            })
-                                        }
-                                        </select>
+                                <div className="columns">
+                                    <div className="control column is-10">
+                                        <Creatable
+                                            isClearable
+                                            styles={creatableStyles}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                            isDisabled={isLoading}
+                                            isLoading={isLoading}
+                                            onChange={this.selectType}
+                                            onCreateOption={value=>this.handleCreate(value,"types")}
+                                            options={types}
+                                            value={selectedType}/>
                                     </div>
-                                    <p className="help is-info is-pulled-right">Agregar actividad</p>
+                                    <div className="column is-2">
+                                        <Link to={`${matchUrl}/tipos`}>
+                                            <button className="button"><FaWhmcs/></button>
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             </EventContent>
         );
     }
 }
 
-function parseSelect(data) {
-    const list = [];
-    data.map(i=>list.push({label:i.name,value:i._id}));
-    return list
+function handleDate(info) {
+    let date,hour_start,hour_end;
+    hour_start = Moment(info.datetime_start,"YYYY-MM-DD HH:mm").toDate();
+    hour_end = Moment(info.datetime_end,"YYYY-MM-DD HH:mm").toDate();
+    date = Moment(info.datetime_end,"YYYY-MM-DD HH:mm").format("DD/MM/YY");
+    return {date,hour_start,hour_end}
 }
+
+const creatableStyles = {
+    menu:styles=>({ ...styles, maxHeight:"inherit"})
+};
 
 export default withRouter(AgendaEdit);
