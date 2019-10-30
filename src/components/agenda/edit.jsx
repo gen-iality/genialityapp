@@ -3,12 +3,12 @@ import {Redirect, withRouter, Link} from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
 import {DateTimePicker} from "react-widgets";
-import {Creatable} from "react-select";
+import Select, {Creatable} from "react-select";
 import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import ImageInput from "../shared/imageInput";
-import {AgendaApi, CategoriesAgendaApi, SpacesApi, TypesAgendaApi} from "../../helpers/request";
+import {AgendaApi, CategoriesAgendaApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
 import {toolbarEditor} from "../../helpers/constants";
 import {fieldsSelect, handleSelect} from "../../helpers/utils";
 
@@ -26,8 +26,9 @@ class AgendaEdit extends Component {
             image:"",
             capacity:0,
             space_id:"",
+            host_ids:[],
             selectedCategories:[],
-            host_ids:"",
+            selectedHosts:[],
             selectedType:"",
             days:[],
             spaces:[],
@@ -47,7 +48,9 @@ class AgendaEdit extends Component {
             days.push(Moment(init).add(i,'d').format("DD/MM/YY"))
         }
         let spaces = await SpacesApi.byEvent(this.props.event._id);
+        let hosts = await SpeakersApi.byEvent(this.props.event._id);
         spaces = handleSelect(spaces);
+        hosts = handleSelect(hosts);
         const categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         const types = await TypesAgendaApi.byEvent(this.props.event._id);
         if(state.edit){
@@ -58,7 +61,7 @@ class AgendaEdit extends Component {
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories,categories)})
         }
         const isLoading = {types:false,categories:false};
-        this.setState({days,spaces,categories,types,loading:false,isLoading});
+        this.setState({days,spaces,hosts,categories,types,loading:false,isLoading});
     }
 
     handleChange = (e) => {
@@ -72,11 +75,17 @@ class AgendaEdit extends Component {
     selectType = (value) => {
       this.setState({selectedType:value})
     };
+    selectCategory = (selectedCategories) => {
+        this.setState({ selectedCategories });
+    };
+    selectHost = (selectedHosts) => {
+        this.setState({ selectedHosts });
+    };
     handleCreate = async(value,name) => {
         this.setState({isLoading:{...this.isLoading,[name]:true}});
         const item = name === "types" ?
-                await TypesAgendaApi.create(this.props.event._id,{name:value}):
-                await CategoriesAgendaApi.create(this.props.event._id,{name:value});
+            await TypesAgendaApi.create(this.props.event._id,{name:value}):
+            await CategoriesAgendaApi.create(this.props.event._id,{name:value});
         const newOption = {label:value,value:item._id,item};
         this.setState( prevState => ({
             isLoading: {...prevState.isLoading,[name]:false},
@@ -85,9 +94,6 @@ class AgendaEdit extends Component {
             if(name === "types") this.setState({selectedType: newOption});
             else this.setState(state => ({selectedCategories:[...state.selectedCategories, newOption]}))
         });
-    };
-    selectCategory = (selectedCategories) => {
-        this.setState({ selectedCategories }, this.valid);
     };
     changeImg = (files) => {
         const file = files[0];
@@ -101,8 +107,8 @@ class AgendaEdit extends Component {
     chgTxt= content => this.setState({description:content});
 
     render() {
-        const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedType,selectedCategories} = this.state;
-        const {spaces,categories,types,isLoading} = this.state;
+        const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedHosts,selectedType,selectedCategories} = this.state;
+        const {hosts,spaces,categories,types,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state) return <Redirect to={matchUrl}/>;
         return (
@@ -151,21 +157,15 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                             <label className="label">Conferencista</label>
-                            <div className="field has-addons">
-                                <div className="control">
-                                    <div className="select">
-                                        <select>
-                                            <option>Buscar ponente</option>
-                                            {
-                                                this.state.days.map((day, key) => {
-                                                    return <option key={key}>{Moment(day).format('DD/MM/YY')}</option>
-                                                })
-                                            }
-                                        </select>
-                                    </div>
+                            <div className="columns">
+                                <div className="column is-10">
+                                    <Select isClearable isMulti styles={creatableStyles} onChange={this.selectHost}
+                                        options={hosts} value={selectedHosts} />
                                 </div>
-                                <div className="control">
-                                    <button className="button"><FaWhmcs/></button>
+                                <div className="column is-2">
+                                    <Link to={matchUrl.replace("agenda", "speakers")}>
+                                        <button className="button"><FaWhmcs/></button>
+                                    </Link>
                                 </div>
                             </div>
                             <label className="label">Espacio</label>

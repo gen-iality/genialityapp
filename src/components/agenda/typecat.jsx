@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from "react"
+import React, {Component} from "react"
 import {Link, withRouter} from "react-router-dom";
 import {ChromePicker} from "react-color";
 import {FaChevronLeft} from "react-icons/fa";
