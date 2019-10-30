@@ -139,46 +139,6 @@ class Speaker extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="field">
-                                    <label className="label has-text-grey-light">Redes sociales</label>
-                                    <div className="control">
-                                        <div style={{position:"relative"}}>
-                                            <button className="button is-rounded">
-                                                <span className="icon is-small">
-                                                  <i className="fas fa-bold"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div style={{position:"relative"}}>
-                                            <button className="button is-rounded">
-                                                <span className="icon is-small">
-                                                  <i className="fas fa-bold"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div style={{position:"relative"}}>
-                                            <button className="button is-rounded">
-                                                <span className="icon is-small">
-                                                  <i className="fas fa-bold"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div style={{position:"relative"}}>
-                                            <button className="button is-rounded">
-                                                <span className="icon is-small">
-                                                  <i className="fas fa-bold"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div style={{position:"relative"}}>
-                                            <button className="button is-rounded">
-                                                <span className="icon is-small">
-                                                  <i className="fas fa-bold"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
