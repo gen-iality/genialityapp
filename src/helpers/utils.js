@@ -51,6 +51,7 @@ export function handleRequestError(error) {
 export const sweetAlert = {
     showLoading : (title,text) => Swal.fire({title, text, onBeforeOpen: () => {Swal.showLoading()}}),
     hideLoading : () => Swal.close(),
+    twoButton   : (title,type,showCancelButton,confirmButtonText,cb) => Swal.fire({title,type,showCancelButton,confirmButtonText}).then((result)=>cb(result)),
     showSuccess : (title, text) => Swal.fire({title, text, type: "success"}),
     showError   : (error) => Swal.fire({title:error.status, text:error.message, type: "error"}),
 }

@@ -64,10 +64,28 @@ class Speaker extends Component {
         }
     };
 
+    remove = () => {
+        const { eventID, location:{state} } = this.props;
+        if(state.edit){
+            sweetAlert.twoButton(`Está seguro de borrar a ${this.state.name}`, "warning", true, "Borrar", async (result)=>{
+                try{
+                    if(result.value){
+                        sweetAlert.showLoading("Espera (:", "Borrando...");
+                        await SpeakersApi.deleteOne(state.edit, eventID);
+                        this.setState({redirect:true});
+                        sweetAlert.hideLoading();
+                    }
+                }catch (e) {
+                    sweetAlert.showError(handleRequestError(e))
+                }
+            })
+        }else this.setState({redirect:true});
+    }
+
     render() {
         const {matchUrl} = this.props;
-        const {loading,name,profession,description,image} = this.state;
-        if(!this.props.location.state) return <Redirect to={matchUrl}/>;
+        const {redirect,loading,name,profession,description,image} = this.state;
+        if(!this.props.location.state || redirect) return <Redirect to={matchUrl}/>;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Conferencista</span>}>
                 {loading ? <Loading/> :
@@ -97,7 +115,7 @@ class Speaker extends Component {
                         </div>
                         <div className="column is-4 general">
                             <div className="field is-grouped">
-                                <button className="button is-text" onClick={this.modalEvent}>x Eliminar conferencista
+                                <button className="button is-text" onClick={this.remove}>x Eliminar conferencista
                                 </button>
                                 <button onClick={this.submit}
                                         className={`button is-primary`}>Guardar
