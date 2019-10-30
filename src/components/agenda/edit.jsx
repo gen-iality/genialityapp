@@ -17,13 +17,14 @@ class AgendaEdit extends Component {
         super(props);
         this.state = {
             loading:true,
-            isLoading:true,
+            isLoading:{types:true,categories:true},
             name:"",
             description:"",
             hour_start:new Date(),
             hour_end:new Date(),
             date:Moment().format("DD/MM/YY"),
             image:"",
+            capacity:0,
             space_id:"",
             selectedCategories:[],
             host_ids:"",
@@ -56,7 +57,8 @@ class AgendaEdit extends Component {
             this.setState({date,hour_start,hour_end,
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories,categories)})
         }
-        this.setState({days,spaces,categories,types,loading:false,isLoading:false});
+        const isLoading = {types:false,categories:false};
+        this.setState({days,spaces,categories,types,loading:false,isLoading});
     }
 
     handleChange = (e) => {
@@ -71,16 +73,16 @@ class AgendaEdit extends Component {
       this.setState({selectedType:value})
     };
     handleCreate = async(value,name) => {
-        this.setState({isLoading:true});
-        const item = name === "type" ?
+        this.setState({isLoading:{...this.isLoading,[name]:true}});
+        const item = name === "types" ?
                 await TypesAgendaApi.create(this.props.event._id,{name:value}):
                 await CategoriesAgendaApi.create(this.props.event._id,{name:value});
         const newOption = {label:value,value:item._id,item};
         this.setState( prevState => ({
-            isLoading: false,
+            isLoading: {...prevState.isLoading,[name]:false},
             [name]: [...prevState[name], newOption]
         }),()=>{
-            if(name === "type") this.setState({selectedType: newOption});
+            if(name === "types") this.setState({selectedType: newOption});
             else this.setState(state => ({selectedCategories:[...state.selectedCategories, newOption]}))
         });
     };
@@ -99,7 +101,7 @@ class AgendaEdit extends Component {
     chgTxt= content => this.setState({description:content});
 
     render() {
-        const {loading,name,date,hour_start,hour_end,image,space_id,selectedType,selectedCategories} = this.state;
+        const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedType,selectedCategories} = this.state;
         const {spaces,categories,types,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state) return <Redirect to={matchUrl}/>;
@@ -196,7 +198,6 @@ class AgendaEdit extends Component {
                             </div>
                         </div>
                         <div className="column is-4 general">
-                            {/*<ReactQuill value={this.state.description} modules={{toolbar:false}} readOnly={true}/>*/}
                             <div className="field is-grouped">
                                 <button className="button is-text" onClick={this.modalEvent}>x Eliminar actividad
                                 </button>
@@ -216,6 +217,13 @@ class AgendaEdit extends Component {
                                                     style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
                                     </div>
                                 </div>
+                                <div className="field">
+                                    <label className={`label`}>Capacidad</label>
+                                    <div className="control">
+                                        <input className="input" type="number" min={0} name={"capacity"} value={capacity} onChange={this.handleChange}
+                                               placeholder="Cupo total"/>
+                                    </div>
+                                </div>
                                 <label className={`label`}>Categorías</label>
                                 <div className="columns">
                                     <div className="column is-10">
@@ -224,8 +232,8 @@ class AgendaEdit extends Component {
                                             styles={creatableStyles}
                                             onChange={this.selectCategory}
                                             onCreateOption={value=>this.handleCreate(value,"categories")}
-                                            isDisabled={isLoading}
-                                            isLoading={isLoading}
+                                            isDisabled={isLoading.categories}
+                                            isLoading={isLoading.categories}
                                             isMulti
                                             options={categories}
                                             placeholder={"Sin categoría...."}
@@ -246,8 +254,8 @@ class AgendaEdit extends Component {
                                             styles={creatableStyles}
                                             className="basic-multi-select"
                                             classNamePrefix="select"
-                                            isDisabled={isLoading}
-                                            isLoading={isLoading}
+                                            isDisabled={isLoading.types}
+                                            isLoading={isLoading.types}
                                             onChange={this.selectType}
                                             onCreateOption={value=>this.handleCreate(value,"types")}
                                             options={types}
