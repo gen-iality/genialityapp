@@ -1,31 +1,33 @@
 import React, {Component} from "react";
 import {Link, Redirect, withRouter} from "react-router-dom";
+import Dropzone from "react-dropzone";
 import ReactQuill from "react-quill";
-import {FaChevronLeft} from "react-icons/fa";
+import {FaChevronLeft, FaImage} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import ImageInput from "../shared/imageInput";
+import {handleRequestError, loadImage, sweetAlert} from "../../helpers/utils";
 import {toolbarEditor} from "../../helpers/constants";
 import {SpeakersApi} from "../../helpers/request";
-import Dropzone from "react-dropzone";
 
 class Speaker extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading:true,
+            isLoading:false,
             name:"",
             bio:"",
             description:"",
             image:"",
+            imageData:"",
             networks:[]
         }
     }
 
     async componentDidMount() {
-        const { event, location:{state} } = this.props;
+        const { eventID, location:{state} } = this.props;
         if(state.edit){
-            const info = await SpeakersApi.getOne(state.edit, event._id);
+            const info = await SpeakersApi.getOne(state.edit, eventID);
             Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
         }
         this.setState({loading:false});
@@ -38,17 +40,36 @@ class Speaker extends Component {
     };
     handleImage = (files) => {
         const file = files[0];
-        if(file){
-            this.setState({image:URL.createObjectURL(file)});
-        }else{
+        if(file)
+            loadImage(file, image=> this.setState({image}));
+        else{
             this.setState({errImg:'Only images files allowed. Please try again :)'});
         }
     };
     chgTxt= content => this.setState({description:content});
 
+    submit = async() => {
+        try {
+            sweetAlert.showLoading("Espera (:", "Guardando...");
+            const { eventID, location:{state} } = this.props;
+            this.setState({isLoading:true});
+            const {name,bio,description,image} = this.state;
+            const info = {name, image, description, bio};
+            if(state.edit){
+                await SpeakersApi.editOne(info, state.edit, eventID)
+            }else{
+                await SpeakersApi.create(eventID,info)
+            }
+            sweetAlert.hideLoading();
+            sweetAlert.showSuccess("Información guardada")
+        }catch (e) {
+            sweetAlert.showError(handleRequestError(e))
+        }
+    };
+
     render() {
         const {matchUrl} = this.props;
-        const {loading,name,bio,description,image} = this.state;
+        const {loading,name,bio,description,image,isLoading} = this.state;
         if(!this.props.location.state) return <Redirect to={matchUrl}/>;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Conferencista</span>}>
@@ -82,7 +103,7 @@ class Speaker extends Component {
                                 <button className="button is-text" onClick={this.modalEvent}>x Eliminar conferencista
                                 </button>
                                 <button onClick={this.submit}
-                                        className={`${this.state.loading ? 'is-loading' : ''}button is-primary`}>Guardar
+                                        className={`button is-primary`}>Guardar
                                 </button>
                             </div>
                             <div className="section-gray">
@@ -91,7 +112,7 @@ class Speaker extends Component {
                                     <div className="column">
                                         {
                                             image ? <img src={image} alt={`speaker_${name}`} className="author-image"/>:
-                                            <p>IMG</p>
+                                            <FaImage/>
                                         }
                                     </div>
                                     <div className="column is-9">
@@ -105,6 +126,43 @@ class Speaker extends Component {
                                 </div>
                                 <div className="field">
                                     <label className="label has-text-grey-light">Redes sociales</label>
+                                    <div className="control">
+                                        <div style={{position:"relative"}}>
+                                            <button className="button is-rounded">
+                                                <span className="icon is-small">
+                                                  <i className="fas fa-bold"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div style={{position:"relative"}}>
+                                            <button className="button is-rounded">
+                                                <span className="icon is-small">
+                                                  <i className="fas fa-bold"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div style={{position:"relative"}}>
+                                            <button className="button is-rounded">
+                                                <span className="icon is-small">
+                                                  <i className="fas fa-bold"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div style={{position:"relative"}}>
+                                            <button className="button is-rounded">
+                                                <span className="icon is-small">
+                                                  <i className="fas fa-bold"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <div style={{position:"relative"}}>
+                                            <button className="button is-rounded">
+                                                <span className="icon is-small">
+                                                  <i className="fas fa-bold"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
