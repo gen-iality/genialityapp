@@ -16,7 +16,7 @@ class Speaker extends Component {
             loading:true,
             isLoading:false,
             name:"",
-            bio:"",
+            profession:"",
             description:"",
             image:"",
             imageData:"",
@@ -53,13 +53,10 @@ class Speaker extends Component {
             sweetAlert.showLoading("Espera (:", "Guardando...");
             const { eventID, location:{state} } = this.props;
             this.setState({isLoading:true});
-            const {name,bio,description,image} = this.state;
-            const info = {name, image, description, bio};
-            if(state.edit){
-                await SpeakersApi.editOne(info, state.edit, eventID)
-            }else{
-                await SpeakersApi.create(eventID,info)
-            }
+            const {name,profession,description,image} = this.state;
+            const info = {name, image, description, profession};
+            if(state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
+            else await SpeakersApi.create(eventID,info);
             sweetAlert.hideLoading();
             sweetAlert.showSuccess("Información guardada")
         }catch (e) {
@@ -69,7 +66,7 @@ class Speaker extends Component {
 
     render() {
         const {matchUrl} = this.props;
-        const {loading,name,bio,description,image,isLoading} = this.state;
+        const {loading,name,profession,description,image} = this.state;
         if(!this.props.location.state) return <Redirect to={matchUrl}/>;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Conferencista</span>}>
@@ -80,14 +77,14 @@ class Speaker extends Component {
                                 <label className="label">Nombre</label>
                                 <div className="control">
                                     <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
-                                           placeholder="Nombre de la actividad"/>
+                                           placeholder="Nombre conferencista"/>
                                 </div>
                             </div>
                             <div className="field">
-                                <label className="label">Bio</label>
+                                <label className="label">Profesión</label>
                                 <div className="control">
-                                    <input className="input" type="text" name={"bio"} value={bio} onChange={this.handleChange}
-                                           placeholder="Nombre de la actividad"/>
+                                    <input className="input" type="text" name={"profession"} value={profession} onChange={this.handleChange}
+                                           placeholder="Profesión"/>
                                 </div>
                             </div>
                             <div className="field">
