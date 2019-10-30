@@ -257,8 +257,7 @@ export const RolAttApi = {
 };
 export const SpacesApi = {
     byEvent: async(event) => {
-        const {data} = await Actions.getAll(`api/events/${event}/spaces`);
-        return handleSelect(data)
+        return await Actions.getAll(`api/events/${event}/spaces`);
     },
     getOne: async(event,id) => {
         return await Actions.get(`api/events/${event}/spaces/`,id)
