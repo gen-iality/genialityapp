@@ -24,7 +24,7 @@ class Espacios extends Component {
     }
 
     fetchItem = async() => {
-        const {data} = await SpacesApi.byEvent(this.props.eventID);
+        const data = await SpacesApi.byEvent(this.props.eventID);
         this.setState({list:data,loading:false})
     };
 

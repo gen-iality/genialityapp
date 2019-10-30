@@ -10,7 +10,7 @@ import Loading from "../loaders/loading";
 import ImageInput from "../shared/imageInput";
 import {AgendaApi, CategoriesAgendaApi, SpacesApi, TypesAgendaApi} from "../../helpers/request";
 import {toolbarEditor} from "../../helpers/constants";
-import {fieldsSelect} from "../../helpers/utils";
+import {fieldsSelect, handleSelect} from "../../helpers/utils";
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -45,7 +45,8 @@ class AgendaEdit extends Component {
         for(let i = 0; i < diff+1; i++){
             days.push(Moment(init).add(i,'d').format("DD/MM/YY"))
         }
-        const spaces = await SpacesApi.byEvent(this.props.event._id);
+        let spaces = await SpacesApi.byEvent(this.props.event._id);
+        spaces = handleSelect(spaces);
         const categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         const types = await TypesAgendaApi.byEvent(this.props.event._id);
         if(state.edit){
