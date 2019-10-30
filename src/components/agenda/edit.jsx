@@ -17,6 +17,7 @@ class AgendaEdit extends Component {
         super(props);
         this.state = {
             loading:true,
+            redirect:false,
             isLoading:{types:true,categories:true},
             name:"",
             description:"",
@@ -110,8 +111,8 @@ class AgendaEdit extends Component {
             const {name,hour_start,hour_end,date,space_id,capacity,selectedCategories,selectedHosts,selectedType,description,image} = this.state;
             const datetime_start = date+" "+Moment(hour_start).format("HH:mm");
             const datetime_end = date+" "+Moment(hour_end).format("HH:mm");
-            const category_ids = selectedCategories.map(({value})=>value);
-            const host_ids = selectedHosts.map(({value})=>value);
+            const category_ids = selectedCategories.length>0 ? selectedCategories.map(({value})=>value) : [];
+            const host_ids = selectedHosts.length>0 ? selectedHosts.map(({value})=>value) : [];
             const type_id = selectedType.value;
             const info = {name, datetime_start, datetime_end, space_id, image, description, capacity:parseInt(capacity,10), category_ids, host_ids, type_id};
             sweetAlert.showLoading("Espera (:", "Guardando...");
@@ -126,11 +127,29 @@ class AgendaEdit extends Component {
         }
     };
 
+    remove = () => {
+        const { event, location:{state} } = this.props;
+        if(state.edit){
+            sweetAlert.twoButton(`Está seguro de borrar esta actividad`, "warning", true, "Borrar", async (result)=>{
+                try{
+                    if(result.value){
+                        sweetAlert.showLoading("Espera (:", "Borrando...");
+                        await AgendaApi.deleteOne(state.edit, event._id);
+                        this.setState({redirect:true});
+                        sweetAlert.hideLoading();
+                    }
+                }catch (e) {
+                    sweetAlert.showError(handleRequestError(e))
+                }
+            })
+        }else this.setState({redirect:true});
+    };
+
     render() {
         const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedHosts,selectedType,selectedCategories} = this.state;
         const {hosts,spaces,categories,types,isLoading} = this.state;
         const {matchUrl} = this.props;
-        if(!this.props.location.state) return <Redirect to={matchUrl}/>;
+        if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Actividad</span>}>
                 {loading ? <Loading/> :
@@ -219,8 +238,7 @@ class AgendaEdit extends Component {
                         </div>
                         <div className="column is-4 general">
                             <div className="field is-grouped">
-                                <button className="button is-text" onClick={this.modalEvent}>x Eliminar actividad
-                                </button>
+                                <button className="button is-text" onClick={this.remove}>x Eliminar actividad</button>
                                 <button onClick={this.submit}
                                         className="button is-primary">Guardar
                                 </button>
