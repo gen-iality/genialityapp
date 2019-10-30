@@ -10,7 +10,7 @@ import Loading from "../loaders/loading";
 import ImageInput from "../shared/imageInput";
 import {AgendaApi, CategoriesAgendaApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
 import {toolbarEditor} from "../../helpers/constants";
-import {fieldsSelect, handleSelect} from "../../helpers/utils";
+import {fieldsSelect, handleRequestError, handleSelect, loadImage, sweetAlert} from "../../helpers/utils";
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -22,11 +22,10 @@ class AgendaEdit extends Component {
             description:"",
             hour_start:new Date(),
             hour_end:new Date(),
-            date:Moment().format("DD/MM/YY"),
+            date:Moment().format("YYYY-MM-DD"),
             image:"",
             capacity:0,
             space_id:"",
-            host_ids:[],
             selectedCategories:[],
             selectedHosts:[],
             selectedType:"",
@@ -34,7 +33,7 @@ class AgendaEdit extends Component {
             spaces:[],
             categories:[],
             types:[],
-            hosts:[],
+            hosts:[]
         }
     }
 
@@ -45,7 +44,7 @@ class AgendaEdit extends Component {
         const end = Moment(event.date_end);
         const diff = end.diff(init, 'days');
         for(let i = 0; i < diff+1; i++){
-            days.push(Moment(init).add(i,'d').format("DD/MM/YY"))
+            days.push(Moment(init).add(i,'d').format("YYYY-MM-DD"))
         }
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
@@ -57,8 +56,8 @@ class AgendaEdit extends Component {
             const info = await AgendaApi.getOne(state.edit, event._id);
             Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
             const {date,hour_start,hour_end} = handleDate(info);
-            this.setState({date,hour_start,hour_end,
-                selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories,categories)})
+            this.setState({date,hour_start,hour_end, selectedHosts:fieldsSelect(info.host_ids, hosts),
+                selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories_ids,categories)})
         }
         const isLoading = {types:false,categories:false};
         this.setState({days,spaces,hosts,categories,types,loading:false,isLoading});
@@ -97,14 +96,35 @@ class AgendaEdit extends Component {
     };
     changeImg = (files) => {
         const file = files[0];
-        if(file){
-            this.setState({image:URL.createObjectURL(file)});
-        }else{
+        if(file)
+            loadImage(file, image=> this.setState({image}));
+        else{
             this.setState({errImg:'Only images files allowed. Please try again :)'});
         }
     };
 
     chgTxt= content => this.setState({description:content});
+
+    submit = async() => {
+        try {
+            const {name,hour_start,hour_end,date,space_id,capacity,selectedCategories,selectedHosts,selectedType,description,image} = this.state;
+            const datetime_start = date+" "+Moment(hour_start).format("HH:mm");
+            const datetime_end = date+" "+Moment(hour_end).format("HH:mm");
+            const category_ids = selectedCategories.map(({value})=>value);
+            const host_ids = selectedHosts.map(({value})=>value);
+            const type_id = selectedType.value;
+            const info = {name, datetime_start, datetime_end, space_id, image, description, capacity:parseInt(capacity,10), category_ids, host_ids, type_id};
+            sweetAlert.showLoading("Espera (:", "Guardando...");
+            const { event, location:{state} } = this.props;
+            this.setState({isLoading:true});
+            if(state.edit) await AgendaApi.editOne(info, state.edit, event._id);
+            else await AgendaApi.create(event._id,info);
+            sweetAlert.hideLoading();
+            sweetAlert.showSuccess("Información guardada")
+        }catch (e) {
+            sweetAlert.showError(handleRequestError(e))
+        }
+    };
 
     render() {
         const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedHosts,selectedType,selectedCategories} = this.state;
@@ -202,7 +222,7 @@ class AgendaEdit extends Component {
                                 <button className="button is-text" onClick={this.modalEvent}>x Eliminar actividad
                                 </button>
                                 <button onClick={this.submit}
-                                        className={`${this.state.loading ? 'is-loading' : ''}button is-primary`}>Guardar
+                                        className="button is-primary">Guardar
                                 </button>
                             </div>
                             <div className="section-gray">
@@ -280,7 +300,7 @@ function handleDate(info) {
     let date,hour_start,hour_end;
     hour_start = Moment(info.datetime_start,"YYYY-MM-DD HH:mm").toDate();
     hour_end = Moment(info.datetime_end,"YYYY-MM-DD HH:mm").toDate();
-    date = Moment(info.datetime_end,"YYYY-MM-DD HH:mm").format("DD/MM/YY");
+    date = Moment(info.datetime_end,"YYYY-MM-DD HH:mm").format("YYYY-MM-DD");
     return {date,hour_start,hour_end}
 }
 

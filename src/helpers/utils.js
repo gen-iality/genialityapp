@@ -9,7 +9,7 @@ export function uniqueID(){
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
 export function fieldsSelect(options,list){
     if(Array.isArray(options))
-        return options.map(option=> list.find(({value})=> value === option._id));
+        return options.map(option=> list.find(({value})=> value === option));
     else
         return list.find(({value})=> value === options);
 }
