@@ -325,16 +325,22 @@ export const AgendaApi = {
         return await Actions.create(`api/events/${event}/activities`,data)
     }
 };
-// export const SpeakersApi = {
-//     getList: async(eventId) => {
-//         return await Actions.getAll(`api/events/${eventId}/speakers`);
-//     },
-//     createSpeaker: async(data, eventId) => {
-//         console.log('data: ', data);
-//         console.log("here in request", eventId);
-//         return
-//         return await Actions.post('api/speakers', data);
-//     }
-// };
+export const SpeakersApi = {
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/host`).then(({data})=>data);
+    },
+    getOne: async(id, event) => {
+        return await Actions.getOne(`api/events/${event}/host/`,id)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`api/events/${event}/host`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`api/events/${event}/host`, id);
+    },
+    create: async(event, data) => {
+        return await Actions.create(`api/events/${event}/host`,data)
+    }
+};
 
 export default privateInstance;

@@ -17,6 +17,7 @@ import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
+import Speakers from "../speakers";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -127,6 +128,7 @@ class Event extends Component {
                             <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
                             <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/speakers`} render={()=><Speakers eventID={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>

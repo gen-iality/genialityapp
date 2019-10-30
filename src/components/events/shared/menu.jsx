@@ -71,6 +71,7 @@ class Menu extends Component {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
                             }
+                            <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink></li>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
                                 <Fragment>
