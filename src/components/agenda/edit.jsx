@@ -111,10 +111,10 @@ class AgendaEdit extends Component {
             const {name,hour_start,hour_end,date,space_id,capacity,selectedCategories,selectedHosts,selectedType,description,image} = this.state;
             const datetime_start = date+" "+Moment(hour_start).format("HH:mm");
             const datetime_end = date+" "+Moment(hour_end).format("HH:mm");
-            const category_ids = selectedCategories.length>0 ? selectedCategories.map(({value})=>value) : [];
+            const activity_categories_ids = selectedCategories.length>0 ? selectedCategories.map(({value})=>value) : [];
             const host_ids = selectedHosts.length>0 ? selectedHosts.map(({value})=>value) : [];
             const type_id = selectedType.value;
-            const info = {name, datetime_start, datetime_end, space_id, image, description, capacity:parseInt(capacity,10), category_ids, host_ids, type_id};
+            const info = {name, datetime_start, datetime_end, space_id, image, description, capacity:parseInt(capacity,10), activity_categories_ids, host_ids, type_id};
             sweetAlert.showLoading("Espera (:", "Guardando...");
             const { event, location:{state} } = this.props;
             this.setState({isLoading:true});
