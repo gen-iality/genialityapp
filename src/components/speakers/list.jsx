@@ -54,7 +54,7 @@ class SpeakersList extends Component{
                         list.map(speaker => <tr key={speaker._id}>
                                 <td>
                                 <div style={{display:"flex"}}>
-                                    <img src={speaker.image} alt={`speaker_${speaker.name}`} className="author-image"/>
+                                    {speaker.image&&<img src={speaker.image} alt={`speaker_${speaker.name}`} className="author-image"/>}
                                     <p>{speaker.name}</p>
                                 </div>
                                 </td>
