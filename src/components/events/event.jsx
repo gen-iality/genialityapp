@@ -59,7 +59,7 @@ class Event extends Component {
             event.hour_end = Moment(dateTo[1],'HH:mm').toDate();
             event.date_start = Moment(dateFrom[0],'YYYY-MM-DD').toDate();
             event.date_end = Moment(dateTo[0],'YYYY-MM-DD').toDate();
-            event.properties_group = event.properties_group ? event.properties_group : [];
+            event.address = event.address ? event.address : "";
             this.setState({event,loading:false});
         }catch (e) {
             console.log(e.response);

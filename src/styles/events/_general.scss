@@ -11,8 +11,6 @@ div.general{
   .toggle-switch{
     border: solid 3px #8E8E8E;
     border-radius: 55px;
-    transition: transform cubic-bezier(0, 0, 0.30, 2) .4s;
-    transform-style: preserve-3d;
     perspective: 800px;
     input[type="radio"] {
       display: none;

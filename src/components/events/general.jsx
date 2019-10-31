@@ -81,8 +81,8 @@ class General extends Component {
     //Validación
     valid = () => {
         const error = {};
-        const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
-            valid = (event.name.length>0 && event.venue.length>0 && event.address.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
+        const {event, selectedOrganizer, selectedType, selectedCategories} = this.state;
+        const valid = (event.name.length>0 && event.venue.length>0 && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
         this.setState({valid:!valid,error})
     };
     //Cambio en la descripción
@@ -272,7 +272,7 @@ class General extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label has-text-grey-light">Lugar</label>
+                            <label className="label required has-text-grey-light">Lugar</label>
                             <div className="control">
                                 <input className="input" name={"venue"} type="text"
                                        placeholder="Nombre del lugar del evento" value={event.venue}
@@ -283,7 +283,7 @@ class General extends Component {
                             <div className="columns is-mobile">
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Fecha Inicio</label>
+                                        <label className="label has-text-grey-light">Fecha Inicio</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.date_start}
@@ -295,7 +295,7 @@ class General extends Component {
                                 </div>
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Hora Inicio</label>
+                                        <label className="label has-text-grey-light">Hora Inicio</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.hour_start}
@@ -311,7 +311,7 @@ class General extends Component {
                             <div className="columns is-mobile">
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Fecha Fin</label>
+                                        <label className="label has-text-grey-light">Fecha Fin</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.date_end}
@@ -324,7 +324,7 @@ class General extends Component {
                                 </div>
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Hora Fin</label>
+                                        <label className="label has-text-grey-light">Hora Fin</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.hour_end}
@@ -337,7 +337,7 @@ class General extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Descripción</label>
+                            <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">
                                 <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt}/>
                             </div>
@@ -352,9 +352,9 @@ class General extends Component {
                             <div className="field">
                                 <label className="label">Evento</label>
                                 <div className="control toggle-switch has-text-centered">
-                                    <input type="radio" id="choice1" name="visibility" value="PUBLIC" onChange={this.handleChange}/>
+                                    <input type="radio" id="choice1" name="visibility" checked={event.visibility==="PUBLIC"} value="PUBLIC" onChange={this.handleChange}/>
                                     <label htmlFor="choice1">Público</label>
-                                    <input type="radio" id="choice2" name="visibility" value="ORGANIZATION" onChange={this.handleChange}/>
+                                    <input type="radio" id="choice2" name="visibility" checked={event.visibility==="ORGANIZATION"} value="ORGANIZATION" onChange={this.handleChange}/>
                                     <label htmlFor="choice2">Privado</label>
                                     <div id="flap"><span className="content">{event.visibility==="PUBLIC"?"Público":"Privado"}</span></div>
                                 </div>
