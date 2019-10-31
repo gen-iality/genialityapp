@@ -82,8 +82,26 @@ export const typeInputs = [
     {value:'list',label:'Lista Opciones'},
     {value:'date',label:'Fecha (DD/MM/YYYY)'},
     {value:'boolean',label:'Si/No'},
-    {value:'file',label:'Archivo'}
+    {value:'file',label:'Archivo'},
+    {value:'map',label:'JSON'},
 ];
+export const toolbarEditor = {
+    toolbar: [
+        [{ 'font': []}],
+        [{ 'header': [0,1, 2, 3] }],
+        [{ 'size': []}],
+        [{ 'align': []}],
+        ['bold', 'italic', 'underline','strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+        ['link', 'image'],
+        [{'color':[]}, {'background':[]}],
+        ['clean']
+    ],
+};
+
+export const imageBox = "<svg id=\"Layer_1\" style=\"enable-background:new 0 0 64 64;\" version=\"1.1\" viewBox=\"0 0 64 64\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><style type=\"text/css\">\n" +
+    "\t.st0{fill:#134563;}\n" +
+    "</style><g><g id=\"Icon-Image\" transform=\"translate(278.000000, 232.000000)\"><path class=\"st0\" d=\"M-226.2-181.6h-39.5c-2.3,0-4.2-1.9-4.2-4.2v-28.2c0-2.3,1.9-4.2,4.2-4.2h39.5     c2.3,0,4.2,1.9,4.2,4.2v28.2C-222-183.5-223.9-181.6-226.2-181.6L-226.2-181.6z M-265.8-215.5c-0.8,0-1.4,0.6-1.4,1.4v28.2     c0,0.8,0.6,1.4,1.4,1.4h39.5c0.8,0,1.4-0.6,1.4-1.4v-28.2c0-0.8-0.6-1.4-1.4-1.4H-265.8L-265.8-215.5z\" id=\"Fill-12\"/><path class=\"st0\" d=\"M-238.9-201.5c-3.1,0-5.5-2.5-5.5-5.5s2.5-5.5,5.5-5.5s5.5,2.5,5.5,5.5     S-235.9-201.5-238.9-201.5L-238.9-201.5z M-238.9-210c-1.6,0-2.9,1.3-2.9,2.9c0,1.6,1.3,2.9,2.9,2.9c1.6,0,2.9-1.3,2.9-2.9     C-236-208.7-237.3-210-238.9-210L-238.9-210z\" id=\"Fill-13\"/><polyline class=\"st0\" id=\"Fill-14\" points=\"-231.4,-182.1 -254.5,-203.8 -267.7,-191.6 -269.5,-193.5 -254.5,-207.4 -229.6,-184      -231.4,-182.1    \"/><polyline class=\"st0\" id=\"Fill-15\" points=\"-224.2,-189.3 -231.9,-195.5 -238.3,-190.2 -240,-192.3 -231.9,-198.9 -222.6,-191.3      -224.2,-189.3    \"/></g></g></svg>"
 
 export const icon = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"\n' +
     '\t viewBox="0 0 1128 193" style="enable-background:new 0 0 1128 193;" xml:space="preserve">\n' +

@@ -8,11 +8,11 @@ import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import {BaseUrl} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
-import AdditonalDataEvent from "./additionalDataEvent/containers";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
+import ReactQuill from "react-quill";
 Moment.locale('es');
 momentLocalizer();
 
@@ -68,7 +68,7 @@ class Landing extends Component {
                 <div className="description-container column is-8">
                     <h3 className="title-description is-size-5 column is-10">Descripción</h3>
                     <div className="column is-10 description">
-                        { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
+                        { typeof event.description === 'string'?  (<ReactQuill value={event.description} modules={{toolbar:false}} readOnly={true}/>): 'json'  }
                     </div>
                     <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
                 </div>
@@ -254,10 +254,6 @@ class Landing extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {
-                                (this.state.event.speaker.length > 0 || this.state.event.sessions.length > 0) &&
-                                   <AdditonalDataEvent eventInfo={this.state.event}/>
-                            }
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div className="columns container-nav-item">

@@ -1,16 +1,15 @@
-/*global google*/
 import React, {Component} from "react";
 import axios from "axios";
 import Moment from "moment";
-import Geosuggest from "react-geosuggest";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
-import MediumEditor from "medium-editor";
 import {DateTimePicker} from "react-widgets";
 import ImageInput from "../../shared/imageInput";
 import SelectInput from "../../shared/selectInput";
 import {Actions, CategoriesApi, OrganizationApi, TypesApi} from "../../../helpers/request";
 import Loading from "../../loaders/loading";
+import ReactQuill from "react-quill";
+import {toolbarEditor} from "../../../helpers/constants";
 
 class InfoGeneral extends Component {
     constructor(props) {
@@ -25,7 +24,6 @@ class InfoGeneral extends Component {
             selectedOrganizer: {},
             selectedType: {},
         };
-        this.editorRef = React.createRef();
     }
 
     async componentDidMount(){
@@ -38,10 +36,7 @@ class InfoGeneral extends Component {
                 return {value:item.id,label:item.name}
             });
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
-            this.setState({newEvent:true,loading:false,event,categories,organizers,types,selectedCategories,selectedOrganizer,selectedType},()=>{
-                this.editor = new MediumEditor(this.editorRef.current,{toolbar:{buttons:['bold','italic','underline','anchor']}});
-                this.valid()
-            })
+            this.setState({newEvent:true,loading:false,event,categories,organizers,types,selectedCategories,selectedOrganizer,selectedType},this.valid)
         }
         catch (error) {
             // Error
@@ -68,11 +63,10 @@ class InfoGeneral extends Component {
         const error = {};
         const {event, selectedOrganizer, selectedType, selectedCategories} = this.state,
             valid = (event.name.length>0 && event.venue.length>0 && !!selectedOrganizer && !!selectedType && selectedCategories.length>0);
-        if(!event.location.FormattedAddress && !event.location.PlaceId){
-            error.location = 'Fill a correct address'
-        }
         this.setState({valid:!valid,error})
     };
+    //Cambio en la descripción
+    chgTxt= content => this.setState({event:{...this.state.event,description:content}});
     //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
@@ -124,48 +118,6 @@ class InfoGeneral extends Component {
             this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
         }
     };
-    //Funciones para manejo del campo de direcciones
-    onSuggestSelect = (suggest) => {
-        if(suggest){
-            const place = suggest.gmaps;
-            const location = place.geometry && place.geometry.location ? {
-                Latitude: place.geometry.location.lat(),
-                Longitude: place.geometry.location.lng()
-            } : {};
-            const componentForm = {
-                street_number: 'short_name',
-                route: 'long_name',
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name'
-            };
-            const mapping = {
-                street_number: 'number',
-                route: 'street',
-                locality: 'city',
-                administrative_area_level_1: 'state'
-            };
-            for (let i = 0; i < place.address_components.length; i++) {
-                const addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    const val = place.address_components[i][componentForm[addressType]];
-                    location[mapping[addressType]] = val;
-                }
-            }
-            location.FormattedAddress = place.formatted_address;
-            location.PlaceId = place.place_id;
-            this.setState({event:{...this.state.event,location}},this.valid)
-        }else{
-            this.setState({event:{...this.state.event,location:{}}},this.valid)
-        }
-    };
-    changeSuggest = () => {
-        const error = {};
-        const {event:{location}} = this.state;
-        if(!location.FormattedAddress && !location.PlaceId){
-            error.location = 'Fill a correct address'
-        }
-        this.setState({error})
-    };
 
     //Envío de datos
     submit = (e) => {
@@ -185,7 +137,7 @@ class InfoGeneral extends Component {
             venue: event.venue,
             location: event.location,
             visibility: event.visibility?event.visibility:'PUBLIC',
-            description: this.editor.getContent(),
+            description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value
@@ -210,7 +162,15 @@ class InfoGeneral extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Lugar</label>
+                            <label className="label has-text-grey-light">Dirección</label>
+                            <div className="control">
+                                <input className="input" name={"address"} type="text"
+                                       placeholder="¿Cuál es la dirección del evento?" value={event.address}
+                                       onChange={this.handleChange}/>
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="label has-text-grey-light">Lugar</label>
                             <div className="control">
                                 <input className="input" name={"venue"} type="text"
                                        placeholder="Lugar del evento" value={event.venue}
@@ -219,24 +179,10 @@ class InfoGeneral extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Dirección</label>
-                            <div className="control">
-                                <Geosuggest
-                                    placeholder={'Ubicación del evento'}
-                                    onKeyDown={this.changeSuggest}
-                                    onSuggestSelect={this.onSuggestSelect}
-                                    initialValue={event.location.FormattedAddress}
-                                    location={new google.maps.LatLng(event.location.Latitude, event.location.Longitude)}
-                                    radius="20"/>
-                            </div>
-                            {error.location && <p className="help is-danger">{error.location}</p>}
-                        </div>
-                        <div className="field">
                             <div className="columns is-mobile">
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Fecha
-                                            Inicio</label>
+                                        <label className="label has-text-grey-light">Fecha Inicio</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.date_start}
@@ -246,11 +192,9 @@ class InfoGeneral extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="vertical-line"></div>
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Hora
-                                            Inicio</label>
+                                        <label className="label has-text-grey-light">Hora Inicio</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.hour_start}
@@ -266,7 +210,7 @@ class InfoGeneral extends Component {
                             <div className="columns is-mobile">
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Fecha Fin</label>
+                                        <label className="label has-text-grey-light">Fecha Fin</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.date_end}
@@ -277,10 +221,9 @@ class InfoGeneral extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="vertical-line"></div>
                                 <div className="column inner-column">
                                     <div className="field">
-                                        <label className="label required has-text-grey-light">Hora Fin</label>
+                                        <label className="label has-text-grey-light">Hora Fin</label>
                                         <div className="control">
                                             <DateTimePicker
                                                 value={event.hour_end}
@@ -293,9 +236,9 @@ class InfoGeneral extends Component {
                             </div>
                         </div>
                         <div className="field">
-                            <label className="label required has-text-grey-light">Descripción</label>
+                            <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <div ref={this.editorRef}></div>
+                                <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt}/>
                             </div>
                         </div>
                     </div>
@@ -349,7 +292,7 @@ class InfoGeneral extends Component {
                                      options={organizers} required={true}/>
                         <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType}
                                      selectOption={this.selectType} options={types} required={true}/>
-                        <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories}
+                        <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories}
                                      selectOption={this.selectCategory} options={categories} required={true}/>
                     </div>
                 </div>

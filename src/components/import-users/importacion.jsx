@@ -72,40 +72,28 @@ class Importacion extends Component {
         XLSX.writeFile(wb, `${name}${Moment().format('DDMMYY')}.xls`);
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.extraFields.length <= 0) {
-            this.setState({showMsg:true})
-        }
-    }
-
     render() {
         return (
             <React.Fragment>
                 <div className="importacion-txt">
                     <p>Para importar los usuarios de tu evento, debes cargar un archivo excel (.xls) con las columnas organizadas (como se muestra abajo). Para mayor facilidad, <strong>descarga nuestro template</strong> para organizar los datos de tus asistentes.</p>
                 </div>
-
                 <div className="importacion-ejm is-mobile is-gapless">
-                    {
-                        this.state.showMsg && (
-                            <div className="columns is-mobile is-multiline">
-                                <div className="column is-12 is-paddingless">
-                                    <span className="is-uppercase has-text-weight-bold has-text-grey">Campos Requeridos</span>
-                                </div>
-                                <div className="column is-12 is-paddingless">
-                                    <div className="ejm-tabla columns is-mobile is-gapless">
-                                        {this.props.extraFields.map((extra,key)=>{
-                                            return <div className="column" key={key}>
-                                                <span className="has-text-grey-light">{extra.name}</span>
-                                            </div>
-                                        })}
+                    <div className="columns is-mobile is-multiline">
+                        <div className="column is-12 is-paddingless">
+                            <span className="is-uppercase has-text-weight-bold has-text-grey">Campos Requeridos</span>
+                        </div>
+                        <div className="column is-12 is-paddingless">
+                            <div className="ejm-tabla columns is-mobile is-gapless">
+                                {this.props.extraFields.map((extra,key)=>{
+                                    return <div className="column" key={key}>
+                                        <span className="has-text-grey-light">{extra.name}</span>
                                     </div>
-                                </div>
+                                })}
                             </div>
-                        )
-                    }
+                        </div>
+                    </div>
                 </div>
-
                 <div className="importacion-btns has-text-centered">
                     <Dropzone onDrop={this.handleXlsFile} accept=".xls,.xlsx" className="zone">
                         <button className="button is-primary">Importar Excel</button>

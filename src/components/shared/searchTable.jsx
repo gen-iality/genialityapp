@@ -39,33 +39,28 @@ class SearchComponent extends Component {
                     return item.properties.dni.search(new RegExp(value, 'i')) >= 0
                 }
             });
-        }else{
+        }
+        else{
             if (this.props.kind === 'user') {
-
                 arrAux = this.props.data.filter((item)=>{
-
                     if(!item.properties){return false}
-                    var encontrado = false;
+                    let found = false;
                     //buscamos coindicencia por cada una de las propiedades
                     for(let key in item.properties){
                         let propertyValue = item.properties[key];
-                      
-                        if(!propertyValue){continue;}
-    
+                        if(!propertyValue)continue;
                         propertyValue = String(propertyValue);
-                        encontrado = encontrado || (propertyValue.search(new RegExp(value, 'i')) >= 0)
-                        //encontrado = encontrado || (propertyValue.indexOf(value) !=-1)    
+                        found = found || (propertyValue.search(new RegExp(value, 'i')) >= 0)
                     }
-                    return encontrado;
-
-                    
-
+                    return found;
                 });
-            }else if(this.props.kind === 'invitation'){
+            }
+            else if(this.props.kind === 'invitation'){
                 arrAux = this.props.data.filter(item =>
                     item.email.search(new RegExp(value, 'i')) >= 0 ||
                     item.state.search(new RegExp(value, 'i')) >= 0);
-            }else if(this.props.kind === 'helpers'){
+            }
+            else if(this.props.kind === 'helpers'){
                 arrAux = this.props.data.filter(item =>
                     item.user.email.search(new RegExp(value, 'i')) >= 0 ||
                     item.user.displayName.search(new RegExp(value, 'i')) >= 0);
@@ -80,14 +75,8 @@ class SearchComponent extends Component {
 
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
-            if (filtered.length > 0) {
-                console.log("el filtro funciono");
-                this.setState({ showMessage: false, message: "", filtered });
-
-            } else {
-                this.setState({ showMessage: true, message: "not" });
-                console.log("paila no encontrado");
-            }
+            if (filtered.length > 0) this.setState({ showMessage: false, message: "", filtered });
+            else this.setState({ showMessage: true, message: "not" });
             this.props.searchResult(filtered);
         }
         if (value.length <= 2) {
@@ -98,27 +87,24 @@ class SearchComponent extends Component {
                 this.setState({
                     showMessage: true,
                     message: "short"
-                });
-                this.props.searchResult(false);
+                },()=>this.props.searchResult(false));
             }
         }
     }
 
     render() {
         return (
-            <React.Fragment>
-                <div className="field">
-                    <p className="control has-icons-left">
-                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
-                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+            <div className={this.props.classes}>
+                <p className="control has-icons-left">
+                    <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
+                    <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+                </p>
+                {this.state.showMessage && (
+                    <p className="help is-danger">
+                        <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
                     </p>
-                    {this.state.showMessage && (
-                        <p className="help is-danger">
-                            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
-                        </p>
-                    )}
-                </div>
-            </React.Fragment>
+                )}
+            </div>
         );
     }
 }

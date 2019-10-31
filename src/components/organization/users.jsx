@@ -5,7 +5,7 @@ import Loading from "../loaders/loading";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import ErrorServe from "../modal/serverError";
-import ImportUsers from "../modal/importUser";
+import ImportUsers from "../import-users/importUser";
 import UserOrg from "../modal/userOrg";
 import XLSX from "xlsx";
 

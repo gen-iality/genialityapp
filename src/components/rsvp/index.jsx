@@ -1,51 +1,18 @@
-import React, {Component} from 'react';
+import React, {Fragment} from 'react';
+import {Route, Switch, withRouter} from "react-router-dom";
 import UsersRsvp from "./users";
-import SendRsvp from "./send";
+import ImportUsers from "../import-users/importUser";
 
-class RSVP extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            step : 0,
-            selection : []
-        }
-    }
-
-    userTab = (selection) => {
-        this.setState((prevState)=>{
-            return {selection,step:prevState.step+1}
-        })
-    };
-
-    rsvpTab = (rsvp) => {
-        this.setState((prevState) => {
-            return {rsvp, step: prevState.step - 1}
-        })
-    };
-
-    prevTab = () => {
-        this.setState((prevState)=>{
-            return {step:prevState.step-1}
-        })
-    };
-
-    componentWillUnmount() {
-        this.setState({step:0})
-    }
-
-    render() {
-        const layout = [
-            <UsersRsvp event={this.props.event} userTab={this.userTab} selection={this.state.selection}/>,
-            <SendRsvp event={this.props.event} selection={this.state.selection} prevTab={this.prevTab} rsvpTab={this.rsvpTab}/>
-        ];
-        return (
-            <React.Fragment>
-                {
-                    layout[this.state.step]
-                }
-            </React.Fragment>
-        );
-    }
+function ListaInvitados({...props}) {
+    const {eventId, event, match} = props;
+    return (
+        <Fragment>
+            <Switch>
+                <Route exact path={`${match.url}/`} render={()=><UsersRsvp event={event} eventID={eventId} matchUrl={match.url}/>}/>
+                <Route exact path={`${match.url}/importar-excel`} render={()=><ImportUsers extraFields={event.user_properties} eventId={eventId} matchUrl={match.url}/>}/>
+            </Switch>
+        </Fragment>
+    );
 }
 
-export default RSVP;
+export default withRouter(ListaInvitados);

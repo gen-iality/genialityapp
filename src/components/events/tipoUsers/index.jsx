@@ -1,9 +1,11 @@
-import React, {Component} from "react";
-import {RolAttApi} from "../../helpers/request";
+import React, {Component, Fragment} from "react";
 import Moment from "moment";
-import Dialog from "../modal/twoAction";
+import {RolAttApi} from "../../../helpers/request";
+import EventContent from "../shared/content";
+import EvenTable from "../shared/table";
+import Dialog from "../../modal/twoAction";
 
-class PointCheckin extends Component {
+class TipoAsistentes extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,10 +35,12 @@ class PointCheckin extends Component {
     };
 
     newRole = () => {
-        this.setState(state => {
-            const list = state.roles.concat({name:'',created_at:new Date(),_id:'new'});
-            return {roles:list, id: 'new',};
-        });
+        if(!this.state.roles.find(({_id})=>_id === "new")) {
+            this.setState(state => {
+                const list = state.roles.concat({name: '', created_at: new Date(), _id: 'new'});
+                return {roles: list, id: 'new',};
+            });
+        }
     };
 
     removeNewRole = () => {
@@ -111,37 +115,25 @@ class PointCheckin extends Component {
     };
 
     render() {
+        const {roles, id, name, deleteModal, message, isLoading} = this.state;
         return (
-            <React.Fragment>
-                <h2 className="title-section">Tipo de asistentes</h2>
-                <p>Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc.</p>
-                <div className="overlay-content">
-                    <button className="button add is-pulled-right" onClick={this.newRole}>
-                        <span className="icon"><i className="fas fa-plus-circle"/></span>
-                        <span>Nuevo rol</span>
-                    </button>
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th style={{width:'60%'}}>Nombre</th>
-                            <th style={{width:'30%'}}>Fecha Creación</th>
-                            <th style={{width:'10%'}}>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {this.state.roles.map((cert,key)=>{
+            <Fragment>
+                <EventContent title={"Tipo de asistentes"} description={"Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc."}
+                    addAction={this.newRole} addTitle={"Nuevo rol"}>
+                    <EvenTable head={["Nombre","Fecha Creación","Acciones"]}>
+                        {roles.map((cert,key)=>{
                             return <tr key={key}>
                                 <td>
                                     {
-                                        this.state.id === cert._id ?
-                                            <input type="text" value={this.state.name} onChange={this.onChange}/>:
+                                        id === cert._id ?
+                                            <input type="text" value={name} autoFocus onChange={this.onChange}/>:
                                             <p>{cert.name}</p>
                                     }
                                 </td>
                                 <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
                                 <td>
                                     {
-                                        this.state.id === cert._id ?
+                                        id === cert._id ?
                                             <button>
                                             <span className="icon has-text-grey"
                                                   onClick={(e)=>{this.saveRole(cert)}}><i className="fas fa-save"/></span>
@@ -154,27 +146,26 @@ class PointCheckin extends Component {
                                     {
                                         cert._id === 'new' ?
                                             <button><span className='icon has-text-grey'
-                                                  onClick={this.removeNewRole}><i className='fas fa-times'/></span></button>:
+                                                          onClick={this.removeNewRole}><i className='fas fa-times'/></span></button>:
                                             <button><span className='icon has-text-grey'
-                                                  onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span></button>
+                                                          onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span></button>
                                     }
                                 </td>
                             </tr>
                         })}
-                        </tbody>
-                    </table>
-                </div>
+                    </EvenTable>
+                </EventContent>
                 {
-                    this.state.deleteModal &&
-                    <Dialog modal={this.state.deleteModal} title={'Borrar Rol'}
+                    deleteModal &&
+                    <Dialog modal={deleteModal} title={'Borrar Rol'}
                             content={<p>¿Estas seguro de eliminar este rol de asistente?</p>}
                             first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteRol}}
-                            message={this.state.message} isLoading={this.state.isLoading}
+                            message={message} isLoading={isLoading}
                             second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
                 }
-            </React.Fragment>
+            </Fragment>
         )
     }
 }
 
-export default PointCheckin
+export default TipoAsistentes
