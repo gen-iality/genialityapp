@@ -92,8 +92,8 @@ class Agenda extends Component {
                         <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>
                             <p>{agenda.name}</p>
-                            {agenda.activity_categories&&<div className="tags is-small">{agenda.activity_categories.map(cat=><span style={{background:cat.color,color:cat.color?"white":""}} className="tag">{cat.name}</span>)}</div>}
-                            {agenda.type&&<strong>{agenda.type.name}</strong>}
+                            {agenda.activity_categories.map(cat=><span style={{background:cat.color,color:cat.color?"white":""}} className="tag">{cat.name}</span>)}
+                            {agenda.type&&<p><strong>{agenda.type.name}</strong></p>}
                         </td>
                         <td>{agenda.space?agenda.space.name:""}</td>
                         <td>{agenda.hosts.map(({name})=><p>{name}</p>)}</td>
