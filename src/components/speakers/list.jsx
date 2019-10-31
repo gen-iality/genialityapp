@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Link, Redirect} from "react-router-dom";
+import {Link, Redirect, withRouter} from "react-router-dom";
+import {FaChevronLeft} from "react-icons/fa";
 import {SpeakersApi} from "../../helpers/request";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
@@ -48,7 +49,8 @@ class SpeakersList extends Component{
         const {list,loading} = this.state;
         if(loading) return <Loading/>;
         return (
-            <EventContent title={"Conferencistas"} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}>
+            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>Conferencistas</span>}
+                          description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}>
                 <EvenTable>
                     {
                         list.map(speaker => <tr key={speaker._id}>
@@ -75,4 +77,4 @@ class SpeakersList extends Component{
     }
 }
 
-export default SpeakersList
+export default withRouter(SpeakersList)

@@ -111,24 +111,7 @@ class AgendaEdit extends Component {
     submit = async() => {
         if(this.validForm()) {
             try {
-                const {name, hour_start, hour_end, date, space_id, capacity, selectedCategories, selectedHosts, selectedType, description, image} = this.state;
-                const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
-                const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
-                const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({value}) => value) : [];
-                const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({value}) => value) : [];
-                const type_id = selectedType.value;
-                const info = {
-                    name,
-                    datetime_start,
-                    datetime_end,
-                    space_id,
-                    image,
-                    description,
-                    capacity: parseInt(capacity, 10),
-                    activity_categories_ids,
-                    host_ids,
-                    type_id
-                };
+                const info = this.buildInfo();
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const {event, location: {state}} = this.props;
                 this.setState({isLoading: true});
@@ -139,6 +122,27 @@ class AgendaEdit extends Component {
             } catch (e) {
                 sweetAlert.showError(handleRequestError(e))
             }
+        }
+    };
+
+    buildInfo = () => {
+        const {name, hour_start, hour_end, date, space_id, capacity, selectedCategories, selectedHosts, selectedType, description, image} = this.state;
+        const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
+        const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
+        const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({value}) => value) : [];
+        const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({value}) => value) : [];
+        const type_id = selectedType.value;
+        return {
+            name,
+            datetime_start,
+            datetime_end,
+            space_id,
+            image,
+            description,
+            capacity: parseInt(capacity, 10),
+            activity_categories_ids,
+            host_ids,
+            type_id
         }
     };
 
@@ -172,6 +176,10 @@ class AgendaEdit extends Component {
             sweetAlert.twoButton(title,"warning",false,"OK", ()=>{});
             return false
         }else return true;
+    };
+
+    goSection = (path) => {
+        this.props.history.push(path)
     };
 
     render() {
@@ -231,9 +239,7 @@ class AgendaEdit extends Component {
                                         options={hosts} value={selectedHosts} />
                                 </div>
                                 <div className="column is-2">
-                                    <Link to={matchUrl.replace("agenda", "speakers")}>
-                                        <button className="button"><FaWhmcs/></button>
-                                    </Link>
+                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "speakers"))} className="button"><FaWhmcs/></button>
                                 </div>
                             </div>
                             <label className="label required">Espacio</label>
@@ -308,9 +314,7 @@ class AgendaEdit extends Component {
                                         />
                                     </div>
                                     <div className="column is-2">
-                                        <Link to={`${matchUrl}/categorias`}>
-                                            <button className="button"><FaWhmcs/></button>
-                                        </Link>
+                                        <button onClick={()=>this.goSection(`${matchUrl}/categorias`)} className="button"><FaWhmcs/></button>
                                     </div>
                                 </div>
                                 <label className="label">Tipo de actividad</label>

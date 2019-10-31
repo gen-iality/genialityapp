@@ -1,9 +1,12 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
+import {FaChevronLeft} from "react-icons/fa";
 import {SpacesApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import Moment from "moment";
 import Dialog from "../modal/twoAction";
+import EventContent from "../events/shared/content";
+import EvenTable from "../events/shared/table";
 
 class Espacios extends Component {
     constructor(props) {
@@ -113,20 +116,10 @@ class Espacios extends Component {
     render() {
         return (
             <React.Fragment>
-                <div className="has-text-right">
-                    <button className="button" onClick={this.newRole}>Nuevo</button>
-                </div>
-                {this.state.loading ? <Loading/> :
-                    <div className="table">
-                        <table className="table">
-                            <thead>
-                            <tr>
-                                <th style={{width:'60%'}}>Nombre</th>
-                                <th style={{width:'30%'}}>Fecha Creación</th>
-                                <th style={{width:'10%'}}/>
-                            </tr>
-                            </thead>
-                            <tbody>
+                <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>Espacios</span>}
+                              description={"Agregue o edite las personas que son conferencistas"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
+                    {this.state.loading ? <Loading/> :
+                        <EvenTable head={["Nombre",""]}>
                             {this.state.list.map((cert,key)=>{
                                 return <tr key={key}>
                                     <td>
@@ -155,10 +148,9 @@ class Espacios extends Component {
                                     </td>
                                 </tr>
                             })}
-                            </tbody>
-                        </table>
-                    </div>
-                }
+                        </EvenTable>
+                    }
+                </EventContent>
                 {
                     this.state.deleteModal &&
                     <Dialog modal={this.state.deleteModal} title={'Borrar Espacio'}

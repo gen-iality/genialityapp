@@ -25,6 +25,7 @@ class AgendaTypeCat extends Component {
     }
 
     async componentDidMount() {
+        console.log(this.props);
         this.eventID = this.props.event._id;
         const subject = this.props.match.url.split("/").slice(-1)[0];
         this.apiURL = subject === "categorias" ? CategoriesAgendaApi : TypesAgendaApi;
@@ -98,10 +99,9 @@ class AgendaTypeCat extends Component {
     };
 
     render() {
-        const {matchUrl} = this.props;
         const {loading,subject,list,id,name,color,headers} = this.state;
         return (
-            <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>{subject} de Actividad</span>}
+            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>{subject} de Actividad</span>}
                           addAction={this.newItem} addTitle={"Nuevo tipo"}>
                 {loading ? <Loading/> :
                     <EvenTable head={headers}>
