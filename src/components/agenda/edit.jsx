@@ -59,6 +59,8 @@ class AgendaEdit extends Component {
             const {date,hour_start,hour_end} = handleDate(info);
             this.setState({date,hour_start,hour_end, selectedHosts:fieldsSelect(info.host_ids, hosts),
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories_ids,categories)})
+        }else{
+            this.setState({date:days[0]})
         }
         const isLoading = {types:false,categories:false};
         this.setState({days,spaces,hosts,categories,types,loading:false,isLoading});
@@ -107,23 +109,36 @@ class AgendaEdit extends Component {
     chgTxt= content => this.setState({description:content});
 
     submit = async() => {
-        try {
-            const {name,hour_start,hour_end,date,space_id,capacity,selectedCategories,selectedHosts,selectedType,description,image} = this.state;
-            const datetime_start = date+" "+Moment(hour_start).format("HH:mm");
-            const datetime_end = date+" "+Moment(hour_end).format("HH:mm");
-            const activity_categories_ids = selectedCategories.length>0 ? selectedCategories.map(({value})=>value) : [];
-            const host_ids = selectedHosts.length>0 ? selectedHosts.map(({value})=>value) : [];
-            const type_id = selectedType.value;
-            const info = {name, datetime_start, datetime_end, space_id, image, description, capacity:parseInt(capacity,10), activity_categories_ids, host_ids, type_id};
-            sweetAlert.showLoading("Espera (:", "Guardando...");
-            const { event, location:{state} } = this.props;
-            this.setState({isLoading:true});
-            if(state.edit) await AgendaApi.editOne(info, state.edit, event._id);
-            else await AgendaApi.create(event._id,info);
-            sweetAlert.hideLoading();
-            sweetAlert.showSuccess("Información guardada")
-        }catch (e) {
-            sweetAlert.showError(handleRequestError(e))
+        if(this.validForm()) {
+            try {
+                const {name, hour_start, hour_end, date, space_id, capacity, selectedCategories, selectedHosts, selectedType, description, image} = this.state;
+                const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
+                const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
+                const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({value}) => value) : [];
+                const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({value}) => value) : [];
+                const type_id = selectedType.value;
+                const info = {
+                    name,
+                    datetime_start,
+                    datetime_end,
+                    space_id,
+                    image,
+                    description,
+                    capacity: parseInt(capacity, 10),
+                    activity_categories_ids,
+                    host_ids,
+                    type_id
+                };
+                sweetAlert.showLoading("Espera (:", "Guardando...");
+                const {event, location: {state}} = this.props;
+                this.setState({isLoading: true});
+                if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
+                else await AgendaApi.create(event._id, info);
+                sweetAlert.hideLoading();
+                sweetAlert.showSuccess("Información guardada")
+            } catch (e) {
+                sweetAlert.showError(handleRequestError(e))
+            }
         }
     };
 
@@ -145,6 +160,20 @@ class AgendaEdit extends Component {
         }else this.setState({redirect:true});
     };
 
+    validForm = () => {
+        let title="";
+        if(this.state.name.length<=0)
+            title = "El Nombre es requerido";
+        else if(this.state.space_id<=0)
+            title = "Selecciona un Espacio";
+        else if(this.state.selectedCategories.length<=0)
+            title = "Selecciona una Categoría";
+        if(title.length>0){
+            sweetAlert.twoButton(title,"warning",false,"OK", ()=>{});
+            return false
+        }else return true;
+    };
+
     render() {
         const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedHosts,selectedType,selectedCategories} = this.state;
         const {hosts,spaces,categories,types,isLoading} = this.state;
@@ -156,7 +185,7 @@ class AgendaEdit extends Component {
                     <div className="columns">
                         <div className="column is-8">
                             <div className="field">
-                                <label className="label">Nombre</label>
+                                <label className="label required">Nombre</label>
                                 <div className="control">
                                     <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
                                            placeholder="Nombre de la actividad"/>
@@ -207,7 +236,7 @@ class AgendaEdit extends Component {
                                     </Link>
                                 </div>
                             </div>
-                            <label className="label">Espacio</label>
+                            <label className="label required">Espacio</label>
                             <div className="field has-addons">
                                 <div className="control">
                                     <div className="select">
@@ -229,7 +258,7 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                             <div className="field">
-                                <label className="label">Descripción (opcional)</label>
+                                <label className="label">Descripción</label>
                                 <div className="control">
                                     <ReactQuill value={this.state.description} modules={toolbarEditor}
                                                 onChange={this.chgTxt}/>
@@ -262,7 +291,7 @@ class AgendaEdit extends Component {
                                                placeholder="Cupo total"/>
                                     </div>
                                 </div>
-                                <label className={`label`}>Categorías</label>
+                                <label className="label required">Categorías</label>
                                 <div className="columns">
                                     <div className="column is-10">
                                         <Creatable
