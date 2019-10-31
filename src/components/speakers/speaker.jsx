@@ -2,11 +2,11 @@ import React, {Component} from "react";
 import {Link, Redirect, withRouter} from "react-router-dom";
 import Dropzone from "react-dropzone";
 import ReactQuill from "react-quill";
-import {FaChevronLeft, FaImage} from "react-icons/fa";
+import {FaChevronLeft} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import {handleRequestError, loadImage, sweetAlert} from "../../helpers/utils";
-import {toolbarEditor} from "../../helpers/constants";
+import {imageBox, toolbarEditor} from "../../helpers/constants";
 import {SpeakersApi} from "../../helpers/request";
 
 class Speaker extends Component {
@@ -127,7 +127,7 @@ class Speaker extends Component {
                                     <div className="column">
                                         {
                                             image ? <img src={image} alt={`speaker_${name}`} className="author-image"/>:
-                                            <FaImage/>
+                                                <div dangerouslySetInnerHTML={{__html:imageBox}}/>
                                         }
                                     </div>
                                     <div className="column is-9">

@@ -7,10 +7,10 @@ import Select, {Creatable} from "react-select";
 import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import ImageInput from "../shared/imageInput";
 import {AgendaApi, CategoriesAgendaApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
-import {toolbarEditor} from "../../helpers/constants";
+import {imageBox, toolbarEditor} from "../../helpers/constants";
 import {fieldsSelect, handleRequestError, handleSelect, loadImage, sweetAlert} from "../../helpers/utils";
+import Dropzone from "react-dropzone";
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -264,6 +264,13 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                             <div className="field">
+                                <label className="label">Lugar específico</label>
+                                <div className="control">
+                                    <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
+                                           placeholder="Ej: Salón 1, Zona Norte, Área de juegos"/>
+                                </div>
+                            </div>
+                            <div className="field">
                                 <label className="label">Descripción</label>
                                 <div className="control">
                                     <ReactQuill value={this.state.description} modules={toolbarEditor}
@@ -281,13 +288,21 @@ class AgendaEdit extends Component {
                             <div className="section-gray">
                                 <div className="field picture">
                                     <label className="label has-text-grey-light">Imagen</label>
-                                    <div className="control">
-                                        <ImageInput picture={image} imageFile={this.state.imageFile}
-                                                    divClass={'drop-img'} content={<img src={image} alt={'Imagen Perfil'}/>}
-                                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFile?'is-loading':''}`}>Cambiar foto</button>}
-                                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 400px x 250px)</small></div>}
-                                                    changeImg={this.changeImg} errImg={this.state.errImg}
-                                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                                    <div className="columns">
+                                        <div className="column">
+                                            {
+                                                image ? <img src={image} alt={`activity_${name}`}/>:
+                                                    <div dangerouslySetInnerHTML={{__html:imageBox}}/>
+                                            }
+                                        </div>
+                                        <div className="column is-9">
+                                            <div className="has-text-left">
+                                                <p>Dimensiones: 400px x 250px</p>
+                                                <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                                                    <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
+                                                </Dropzone>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="field">
@@ -302,7 +317,7 @@ class AgendaEdit extends Component {
                                     <div className="column is-10">
                                         <Creatable
                                             isClearable
-                                            styles={creatableStyles}
+                                            styles={catStyles}
                                             onChange={this.selectCategory}
                                             onCreateOption={value=>this.handleCreate(value,"categories")}
                                             isDisabled={isLoading.categories}
@@ -357,6 +372,24 @@ function handleDate(info) {
 
 const creatableStyles = {
     menu:styles=>({ ...styles, maxHeight:"inherit"})
+};
+
+const dot = (color = 'transparent') => ({
+    alignItems: 'center',
+    display: 'flex',
+    ':before': {
+        backgroundColor: color,
+        content: '" "',
+        display: 'block',
+        margin: 8,
+        height: 10,
+        width: 10,
+    },
+});
+
+const catStyles = {
+    menu: styles => ({...styles, maxHeight: "inherit"}),
+    multiValue: (styles, {data}) => ({...styles, ...dot(data.item.color)})
 };
 
 export default withRouter(AgendaEdit);
