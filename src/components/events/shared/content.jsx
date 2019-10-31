@@ -1,8 +1,9 @@
 import React from "react";
 
 export default function EventContent({...props}) {
+    const classes = props.classes?`event-datos ${props.classes}`:"event-datos";
     return (
-        <div className={`event-datos ${props.classes}`}>
+        <div className={classes}>
             <h2 className="title-section">{props.title}</h2>
             {props.description&&<p>{props.description}</p>}
             {
