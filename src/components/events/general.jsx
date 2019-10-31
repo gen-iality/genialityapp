@@ -53,7 +53,6 @@ class General extends Component {
             organizers = organizers.map(item=>{
                 return {value:item.id,label:item.name}
             });
-            const {fields,groups} = parseProperties(event);
             const {selectedCategories,selectedOrganizer,selectedType} = handleFields(organizers,types,categories,event);
             this.setState({categories,organizers,types,selectedCategories,selectedOrganizer,selectedType,loading:false})
         }
@@ -141,64 +140,12 @@ class General extends Component {
     };
     //*********** FIN FUNCIONES DEL FORMULARIO
 
-    //*********** CAMPOS EVENTO
-    //Agregar nuevo campo
-    addField = () => {
-        this.setState({fieldModal:true,newField:true})
-    };
-    closeFieldModal = () => {
-        this.setState({fieldModal:false,newField:false,fieldEdit:false})
-    };
-    //Guardar campo en el evento o lista
-    saveField = (field) => {
-        if(this.state.fieldEdit){
-            const fields = [...this.state.fields];
-            const pos = fields.map(f=>f.uuid).indexOf(field.uuid);
-            fields[pos] = field;
-            this.setState({fields,fieldModal:false,fieldEdit:false,newField:false})
-        }else{
-            const info = Object.assign({},field);
-            info.uuid = uniqueID();
-            this.setState({fields:[...this.state.fields,info],fieldModal:false,fieldEdit:false,newField:false})
-        }
-    };
-    //Editar campo en el evento o lista
-    editField = (field) => {
-        this.setState({fieldModal:true,fieldInfo:field,fieldEdit:true})
-    };
-    //Borrar campo en el evento o lista
-    removeField = (index,key) => {
-        const {groups,fields} = this.state;
-        if(key || key === 0){
-            groups[key].fields.splice(index, 1);
-            this.setState({groups});
-        }
-        else {
-            fields.splice(index, 1);
-            this.setState({fields, newField: false})
-        }
-    };
-    //Cambiar mandatory del campo del evento o lista
-    changeFieldCheck = (id) => {
-        console.log(id);
-        const fields = [...this.state.fields];
-        const pos = fields.map(f=>f.uuid).indexOf(id);
-        fields[pos].mandatory = !fields[pos].mandatory;
-        this.setState({fields})
-    };
-    //Mostar campos de evento
-    toggleFields = () => {
-        this.setState((prevState)=>{return {toggleFields:!prevState.toggleFields}})
-    };
-    //*********** FIN CAMPOS EVENTO
-
     //Envío de datos
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-        const { event,groups,fields,path } = this.state;
+        const { event,path } = this.state;
         const self = this;
-        const {properties_group,user_properties} = handleProperties(event,fields,groups);
         //this.setState({loading:true});
         const hour_start = Moment(event.hour_start).format('HH:mm');
         const date_start = Moment(event.date_start).format('YYYY-MM-DD');
@@ -220,9 +167,7 @@ class General extends Component {
             description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
-            event_type_id : this.state.selectedType.value,
-            user_properties : [...this.state.fields, ...user_properties],
-            properties_group
+            event_type_id : this.state.selectedType.value
         };
         try {
             if(event._id){
@@ -303,20 +248,19 @@ class General extends Component {
         if(this.state.loading) return <Loading/>;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            fields, newField, valid, timeout, error , errorData, serverError} = this.state;
+            valid, timeout , errorData, serverError} = this.state;
         return (
             <React.Fragment>
-                <div className="event-general">
-                    <div className="columns">
-                        <div className="column">
-                            <div className="field">
-                                <label className="label required has-text-grey-light">Nombre</label>
-                                <div className="control">
-                                    <input className="input" name={"name"} type="text"
-                                           placeholder="Nombre del evento" value={event.name}
-                                           onChange={this.handleChange}
-                                    />
-                                </div>
+                <div className="columns general">
+                    <div className="column is-8">
+                        <h2 className="title-section">Datos del evento</h2>
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Nombre</label>
+                            <div className="control">
+                                <input className="input" name={"name"} type="text"
+                                       placeholder="Nombre del evento" value={event.name}
+                                       onChange={this.handleChange}
+                                />
                             </div>
                         </div>
                         <div className="field">
@@ -326,14 +270,13 @@ class General extends Component {
                                        placeholder="¿Cuál es la dirección del evento?" value={event.address}
                                        onChange={this.handleChange}/>
                             </div>
-                            <div className="field">
-                                <label className="label required has-text-grey-light">Dirección</label>
-                                <div className="control">
-                                    <input className="input" name={"address"} type="text"
-                                           placeholder="¿Cuál es la dirección del evento" value={event.address}
-                                           onChange={this.handleChange}/>
-                                </div>
-                                {error.location && <p className="help is-danger">{error.location}</p>}
+                        </div>
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Lugar</label>
+                            <div className="control">
+                                <input className="input" name={"venue"} type="text"
+                                       placeholder="Nombre del lugar del evento" value={event.venue}
+                                       onChange={this.handleChange}/>
                             </div>
                         </div>
                         <div className="field">
@@ -416,10 +359,9 @@ class General extends Component {
                                     <div id="flap"><span className="content">{event.visibility==="PUBLIC"?"Público":"Privado"}</span></div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="column">
+                            <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer} options={organizers} required={true}/>
                             <div className="field picture">
-                                <label className="label has-text-grey-light">Foto</label>
+                                <label className="label has-text-grey-light">Imagen</label>
                                 <div className="control">
                                     <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                                 divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'}/>}
@@ -432,88 +374,8 @@ class General extends Component {
                             </div>
                             <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
                             <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.selectType} options={types} required={true}/>
-                            <SelectInput name={'Categorías:'} isMulti={true} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true}/>
                         </div>
                     </div>
-                    <section className="accordions">
-                        <article className={`accordion ${this.state.toggleFields ? 'is-active':''}`}>
-                            <div className="accordion-header">
-                                <div className="level">
-                                    <div className="level-left">
-                                        <div className="level-item">
-                                            <p className="subtitle is-5"><strong>Campos de Evento</strong></p>
-                                        </div>
-                                        <div className="level-item">
-                                            <button className="button" onClick={this.addField} disabled={newField}>Agregar Campo</button>
-                                        </div>
-                                    </div>
-                                    <div className="level-right">
-                                        <div className="level-item">
-                                            <button className="toggle" aria-label="toggle" onClick={this.toggleFields}/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="accordion-body">
-                                <table className="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Tipo de Campo</th>
-                                        <th>Obligatorio</th>
-                                        <th/>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>Correo</td>
-                                        <td>Email</td>
-                                        <td>
-                                            <input className="is-checkradio is-primary" type="checkbox" id={"mandEmail"} checked={true} disabled={true}/>
-                                            <label className="checkbox" htmlFor={"mandEmail"}/>
-                                        </td>
-                                        <td/>
-                                    </tr>
-                                    <tr>
-                                        <td>Nombres</td>
-                                        <td>Texto</td>
-                                        <td>
-                                            <input className="is-checkradio is-primary" type="checkbox" id={"mandName"} checked={true} disabled={true}/>
-                                            <label className="checkbox" htmlFor={"mandName"}/>
-                                        </td>
-                                        <td/>
-                                    </tr>
-                                    {fields.map((field,key)=>{
-                                        return <tr key={key}>
-                                            <td>{field.label}</td>
-                                            <td>{field.type}</td>
-                                            <td>
-                                                <input className="is-checkradio is-primary" type="checkbox" name={`mandatory${field.uuid}`}
-                                                       checked={field.mandatory} onChange={e=>this.changeFieldCheck(field.uuid)}/>
-                                                <label className="checkbox" htmlFor={`mandatory${field.uuid}`}/>
-                                            </td>
-                                            <td>
-                                                <button onClick={e=>this.editField(field)}><span className="icon"><i className="fas fa-edit"/></span></button>
-                                                <button onClick={e=>this.removeField(key)}><span className="icon"><i className="fas fa-trash-alt"/></span></button>
-                                            </td>
-                                        </tr>
-                                    })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </article>
-                    </section>
-                </div>
-                <div className="buttons is-left">
-                    {
-                        this.state.loading? <p>Guardando...</p>
-                            :<button onClick={this.submit} className={`button is-primary`} disabled={valid}>Guardar Evento</button>
-                    }
-                    {
-                        event._id && <button className="button is-outlined is-danger" onClick={this.modalEvent}>
-                            Eliminar evento
-                        </button>
-                    }
                 </div>
                 {timeout&&(<LogOut/>)}
                 {serverError&&(<ErrorServe errorData={errorData}/>)}
@@ -546,109 +408,5 @@ function handleFields(organizers,types,categories,event){
     }else selectedType = undefined;
     return {selectedOrganizer,selectedCategories,selectedType}
 }
-
-//Función para mostrar los campos y grupos por separado
-function parseProperties(event){
-    let groups = [];
-    const {user_properties,properties_group} = event;
-    let fields = user_properties.filter(item => !item.group_id).filter(item=>item.name!=="names"&&item.name!=="email");
-    properties_group.map((group,key) => groups[key] = {group_id:group,fields:user_properties.filter(item => item.group_id === group)});
-    return {fields,groups}
-}
-
-//Función para construir el campo user_properties y properties_group con los nuevos campos|grupos
-function handleProperties(event,fields,groups){
-    let properties_group = [];
-    let user_properties = [];
-    for(let i = 0;i < groups.length; i++){
-        properties_group.push(groups[i].group_id);
-        for(let j = 0;j < groups[i].fields.length; j++){
-            const list = groups[i].fields[j];
-            list.group_id = groups[i].group_id;
-            user_properties.push(list);
-        }
-    }
-    return {properties_group,user_properties}
-}
-
-/**
- * CustomHtml
- * Creates a new instance of CustomHtml extension.
- *
- * Licensed under the MIT license.
- * Copyright (c) 2014 jillix
- *
- * @name CustomHtml
- * @function
- * @param {Object} options An object containing the extension configuration. The
- * following fields should be provided:
- *  - buttonText: the text of the button (default: `</>`)
- *  - htmlToInsert: the HTML code that should be inserted
- */
-function CustomHtml (options) {
-    this.button = document.createElement('button');
-    this.button.className = 'medium-editor-action';
-    this.button.innerText = options.buttonText || "</>";
-    this.button.onclick = this.onClick.bind(this);
-    this.options = options;
-    this.insertHtmlAtCaret = function (html) {
-        var sel, range;
-        if (window.getSelection) {
-            // IE9 and non-IE
-            sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                range = sel.getRangeAt(0);
-                range.deleteContents();
-
-                // Range.createContextualFragment() would be useful here but is
-                // only relatively recently standardized and is not supported in
-                // some browsers (IE9, for one)
-                var el = document.createElement("div");
-                el.innerHTML = html;
-                var frag = document.createDocumentFragment(), node, lastNode;
-                while ( (node = el.firstChild) ) {
-                    lastNode = frag.appendChild(node);
-                }
-                range.insertNode(frag);
-
-                // Preserve the selection
-                if (lastNode) {
-                    range = range.cloneRange();
-                    range.setStartAfter(lastNode);
-                    range.collapse(true);
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            }
-        } else if (document.selection && document.selection.type !== "Control") {
-            document.selection.createRange().pasteHTML(html);
-        }
-    }
-}
-
-/**
- * onClick
- * The click event handler that calls `insertHtmlAtCaret` method.
- *
- * @name onClick
- * @function
- */
-CustomHtml.prototype.onClick = function() {
-    this.insertHtmlAtCaret(this.options.htmlToInsert);
-};
-
-/**
- * getButton
- * This function is called by the Medium Editor and returns the button that is
- * added in the toolbar
- *
- * @name getButton
- * @function
- * @return {HTMLButtonElement} The button that is attached in the Medium Editor
- * toolbar
- */
-CustomHtml.prototype.getButton = function() {
-    return this.button;
-};
 
 export default General;

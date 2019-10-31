@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { Route, NavLink, Redirect, Switch } from "react-router-dom";
+import {Route, Redirect, Switch} from "react-router-dom";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import Loading from "../loaders/loading";
 import {EventsApi} from "../../helpers/request";
+import {rolPermissions} from "../../helpers/constants";
 import ListEventUser from "../event-users";
 import LogOut from "../shared/logOut";
 import {fetchRol} from "../../redux/rols/actions";
@@ -39,22 +40,18 @@ class Event extends Component {
         super(props);
         this.state = {
             loading:true,
-            userTab:true,
+            generalTab:true,
+            guestTab:true,
             ticketTab:true,
-            contentTab:true,
-            certTab:true,
             menuMobile:false
         };
-        this.props.history.listen((location, action) => {
-            this.setState({menuMobile:false})
-        });
     }
 
     async componentDidMount() {
-        this.props.dispatch(fetchRol());
-        let eventId = this.props.match.params.event;
-        this.props.dispatch(fetchPermissions(eventId));
         try {
+            await this.props.dispatch(fetchRol());
+            let eventId = this.props.match.params.event;
+            await this.props.dispatch(fetchPermissions(eventId));
             const event = await EventsApi.getOne(eventId);
             const dateFrom = event.datetime_from.split(' ');
             const dateTo = event.datetime_to.split(' ');
@@ -81,10 +78,6 @@ class Event extends Component {
     updateEvent = (event) => {
         this.setState({event})
     };
-
-    openMenu = (e) => {
-        this.setState((prevState)=>{return {menuMobile:!prevState.menuMobile}})
-    }
 
     render() {
         const { match, permissions, showMenu } = this.props;
@@ -169,6 +162,7 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
 const mapStateToProps = state => ({
     loading: state.rols.loading,
     permissions: state.permissions,
+    showMenu: state.user.menu,
     error: state.rols.error
 });
 
