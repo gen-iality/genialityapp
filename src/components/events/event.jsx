@@ -149,9 +149,7 @@ function NoMatch({ location }) {
 }
 
 const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
-    <Route
-        {...rest}
-        render={props =>
+    <Route {...rest} render={props =>
             (event.user_properties && event.user_properties.length>0)?
             (<Component {...props} event={event} eventId={eventId}/>):
             (<Redirect push to={`${url}/main`}/>)
