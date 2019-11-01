@@ -41,22 +41,25 @@ class TicketsForm extends Component {
                 ticket.price === '0' ? 'Gratis' :
                 new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0 , maximumFractionDigits: 0, currency: ticket.currency}).format(ticket.price);
             //Encuentro el stage relacionado
-            const stage =  this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
+            const stage =  (!this.props.stages)?null:this.props.stages.find(stage=>stage.stage_id === ticket.stage_id);
             //Lista de opciones para el select
-            ticket.options = (stage.status === 'ended' || stage.status === 'notstarted') ? [] :
+            ticket.options = (stage && (stage.status === 'ended' || stage.status === 'notstarted')) ? [] :
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
-        const stage = this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
-        const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-        const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+
+            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+            const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
+            const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+
+
         //Persistencia de tiquetes seleccionados después de login
         let info = localStorage.getItem('info'); //Se trae info
         if(info && evius_token){
             info = JSON.parse(info);
             const values = {};
             info.show.map(item=>values[item.id] = item.quantity);
-            this.setState({total:info.total,summaryList:info.show,selectValues:values})
+            this.setState({total:info.total,summaryList:info.show,selectValues:values,disabled:false})
         }
         this.setState({auth:!!evius_token,haspayments,active:id,tickets,ticketstoshow})
     }
@@ -117,9 +120,9 @@ class TicketsForm extends Component {
         Object.keys(this.state.ticketsadded).map(key=>{
             const info = tickets.find(ticket=>ticket._id === key);
             const amount = this.state.ticketsadded[key];
-            const price = parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
+            const price = info.price === 'Gratis' ? 0 : parseInt(info.price.replace(/[^0-9]/g, ''), 10) * amount;
             total += price;
-            const cost = new Intl.NumberFormat('es-CO', {
+            const cost = price <= 0 ? 'Gratis' : new Intl.NumberFormat('es-CO', {
                 style: 'currency',
                 minimumFractionDigits:0 ,
                 maximumFractionDigits: 0,
@@ -214,7 +217,9 @@ class TicketsForm extends Component {
     };
 
     render() {
-        const {state:{active,ticketstoshow,ticketsadded,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},props:{stages,seatsConfig},selectStage,handleQuantity,onClick,changeStep} = this;        console.log(this.state.disabledSelect);
+        const {state:{active,ticketstoshow,summaryList,loading,selectValues,total,step,disabled,listSeats,disabledSelect},
+            props:{stages,seatsConfig,experience,fees},
+            selectStage,handleQuantity,onClick,changeStep} = this;
         return (
             <div className="columns is-centered">
                 <div className="column">
@@ -230,28 +235,31 @@ class TicketsForm extends Component {
                         <div className='column is-8 tickets-content'>
                             {
                                 step === 0 ?
-                                     <ListadoTiquetes stages={stages} active={active} selectStage={selectStage} ticketstoshow={ticketstoshow} handleQuantity={handleQuantity} selectValues={selectValues} disabledSelect={disabledSelect}/> :
+                                    <ListadoTiquetes stages={stages} experience={experience} active={active}
+                                                     selectStage={selectStage} ticketstoshow={ticketstoshow}
+                                                     handleQuantity={handleQuantity} selectValues={selectValues}
+                                                     disabledSelect={disabledSelect}/> :
                                     <div>
-                                        <div class="card">
-                                            <header class="card-header has-text-left">
-                                                <p class="title-map has-text-primary has-text-weight-bold">
+                                        <div className="card">
+                                            <header className="card-header has-text-left">
+                                                <p className="title-map has-text-primary has-text-weight-bold">
                                                     Mapa del evento
-                                                    <p class="subtitle is-6 has-text-weight-normal">
-                                                        En el mapa del evento seleccione su ubicación para verlo reflejado
+                                                    <p className="subtitle is-6 has-text-weight-normal">
+                                                        En el mapa del evento seleccione su ubicación para verlo
+                                                        reflejado
                                                         en el resumen de compra.
                                                     </p>
                                                 </p>
-                                                
                                             </header>
-                                            <div class="card-content">
-                                                <div class="content is-center">
-                                                    
+                                            <div className="card-content">
+                                                <div className="content is-center">
+
                                                     <SeatsioSeatingChart
                                                         publicKey={seatsConfig["keys"]["public"]}
                                                         event={seatsConfig["keys"]["event"]}
                                                         language={seatsConfig["language"]}
-                                                        maxSelectedObjects={this.state.summaryList.map(i=>parseInt(i.quantity,10)).reduce((a,b) => a + b, 0)}
-                                                        availableCategories={this.state.summaryList.map(ticket=>ticket.name)}
+                                                        maxSelectedObjects={this.state.summaryList.map(i => parseInt(i.quantity, 10)).reduce((a, b) => a + b, 0)}
+                                                        availableCategories={this.state.summaryList.map(ticket => ticket.name)}
                                                         showMinimap={seatsConfig["minimap"]}
                                                         onRenderStarted={createdChart => { this.chart = createdChart }}
                                                         onObjectSelected={object=>{this.handleObject(object,true)}}
@@ -259,7 +267,7 @@ class TicketsForm extends Component {
                                                     />
                                                 </div>
                                             </div>
-                                            </div>  
+                                        </div>
                                     </div>
                             }
                         </div>
@@ -277,12 +285,12 @@ class TicketsForm extends Component {
                                 </header>
                                 <div className="card-content">
                                     {
-                                    summaryList.length<=0 ?
-                                        <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p>:
+                                        summaryList.length <= 0 ?
+                                            <p className="no-tickets">Aún no tienes tiquetes seleccionados :(</p> :
                                             <React.Fragment>
                                                 <div className='is-hidden-mobile'>
                                                     {
-                                                        summaryList.map(item=>{
+                                                        summaryList.map(item => {
                                                             return <div className='box ticket' key={item.id}>
                                                                 <article className='media columns'>
                                                                     <div className='column is-10 column-content'>
@@ -292,12 +300,13 @@ class TicketsForm extends Component {
                                                                                 <small>Cantidad: {item.quantity} - Valor: {item.price}</small>
                                                                             </p>
                                                                             <p>
-                                                                                <small>Sillas: {listSeats.filter(i=>i.parent===item.name).map(i=>i.name)}</small>
+                                                                                <small>Sillas: {listSeats.filter(i => i.parent === item.name).map(i => i.name)}</small>
                                                                             </p>
                                                                         </div>
                                                                     </div>
                                                                     <div className="column is-2 column-delete">
-                                                                        <button className="delete" onClick={event => this.removeTicket(item.id)}/>
+                                                                        <button className="delete"
+                                                                                onClick={event => this.removeTicket(item.id)}/>
                                                                     </div>
                                                                 </article>
                                                             </div>
@@ -311,27 +320,62 @@ class TicketsForm extends Component {
                                                         </p>
                                                     </div>
                                                 </div>
-                                            <div className="field">
-                                                <label className="label">Código Promocional</label>
-                                                <div className="control">
-                                                    <input type="text" className='input' name={'code_discount'} onChange={e=>this.setState({code_discount:e.target.value})}/>
+                                                <div className="field">
+                                                    <label className="label" htmlFor="codpromocional">Código
+                                                        Promocional</label>
+                                                    <div className="control">
+                                                        <input type="text"
+                                                               placeholder="Ingrese aqui su código promocional"
+                                                               id='codpromocional' className='input'
+                                                               name={'code_discount'}
+                                                               onChange={e => this.setState({code_discount: e.target.value})}/>
+                                                    </div>
+                                                    <span>* El descuento será calculado al hacer clic en reservar</span>
                                                 </div>
-                                            </div>
                                             </React.Fragment>
                                     }
-                                    
                                 </div>
-                                 <footer className="card-footer">
-                                        <div className='card-footer-item'>
-                                            <div className='Subtotal'>
-                                                <p>Subtotal {new Intl.NumberFormat('es-CO', { style: 'currency', minimumFractionDigits:0, maximumFractionDigits: 0,currency: "COP"}).format(total)}</p>
-                                            </div>
-                                            <div className='Button-reserva'>
-                                                <button className={`button is-rounded is-primary ${loading?'is-loading':''}`} disabled={Object.keys(ticketsadded).length<=0 || disabled} onClick={onClick}>
-                                                    {step===0?'Reservar':'Comprar'}
-                                                </button>
-                                            </div>
+                                <footer className="card-footer">
+                                    <div className='card-footer-item'>
+                                        {
+                                            summaryList.length > 0 &&
+                                            <React.Fragment>
+                                                <div className='Subtotal'>
+                                                    <p>Subtotal: {
+                                                        total === 0 ? 'Gratis' :
+                                                            new Intl.NumberFormat('es-CO', {
+                                                                style: 'currency',
+                                                                minimumFractionDigits: 0,
+                                                                maximumFractionDigits: 0,
+                                                                currency: "COP"
+                                                            }).format(total)
+                                                    }</p>
+                                                </div>
+                                                {fees &&
+                                                <React.Fragment>
+                                                    <p>Servicio: {fees}</p>
+                                                    <div className='Subtotal'>
+                                                        <p>Total: {
+                                                            total === 0 ? 'Gratis' :
+                                                                new Intl.NumberFormat('es-CO', {
+                                                                    style: 'currency',
+                                                                    minimumFractionDigits: 0,
+                                                                    maximumFractionDigits: 0,
+                                                                    currency: "COP"
+                                                                }).format(total + total * fees)
+                                                        }</p>
+                                                    </div>
+                                                </React.Fragment>}
+                                            </React.Fragment>
+                                        }
+                                        <div className='Button-reserva'>
+                                            <button
+                                                className={`button is-rounded is-primary ${loading ? 'is-loading' : ''}`}
+                                                disabled={summaryList.length <= 0 || disabled} onClick={onClick}>
+                                                {step === 0 ? 'Reservar' : 'Comprar'}
+                                            </button>
                                         </div>
+                                    </div>
                                 </footer>
                             </div>
                         </div>
@@ -343,7 +387,7 @@ class TicketsForm extends Component {
 }
 
 function ListadoTiquetes({...props}) {
-    const {stages,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
+    const {stages,experience,active,selectStage,ticketstoshow,handleQuantity,selectValues,disabledSelect} = props;
     return (
         <React.Fragment>
             <div className='columns content-tabs'>
@@ -352,20 +396,25 @@ function ListadoTiquetes({...props}) {
                         return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
-                            <hr className="separador"/>
-                            <div className='columns is-vcentered date-media'>
-                                <div className='column is-5 date-etapa'>
-                                    <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
-                                    <br/>
-                                    <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
-                                </div>
-                                <div className='column is-2 date-etapa hasta'>a</div>
-                                <div className='column is-5 date-etapa'>
-                                    <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
-                                    <br/>
-                                    <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
-                                </div>
-                            </div>
+                            {
+                                !experience &&
+                                    <React.Fragment>
+                                        <hr className="separador"/>
+                                        <div className='columns is-vcentered date-media'>
+                                            <div className='column is-5 date-etapa'>
+                                                <span className='is-size-5'>{Moment(stage.start_sale_date).format('DD')}</span>
+                                                <br/>
+                                                <span className='is-capitalized'>{Moment(stage.start_sale_date).format('MMMM')}</span>
+                                            </div>
+                                            <div className='column is-2 date-etapa hasta'>a</div>
+                                            <div className='column is-5 date-etapa'>
+                                                <span className='is-size-5'>{Moment(stage.end_sale_date).format('DD')}</span>
+                                                <br/>
+                                                <span className='is-capitalized'>{Moment(stage.end_sale_date).format('MMMM')}</span>
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                            }
                         </div>
                     })
                 }

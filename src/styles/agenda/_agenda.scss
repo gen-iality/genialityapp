@@ -1,0 +1,14 @@
+.agenda-list{
+  .date{
+    cursor: pointer;
+    &:hover{
+      border-bottom: 1px solid lighten($primary, 50%);
+    }
+    &.active{
+      border-bottom: 1px solid $primary;
+      .subtitle strong {
+        color: $primary !important;
+      }
+    }
+  }
+}

@@ -2,21 +2,13 @@ import React, {Component} from 'react';
 import Select from 'react-select';
 import {FormattedMessage} from "react-intl";
 
-const MAX_OPTIONS = 2;
-
 class SelectInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
             maxReached: false,
             options: this.props.options,
-            selectedOptions: []
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.options !== this.props.options) {
-            this.setState({options:nextProps.options,selectedOptions:nextProps.selectedOptions});
+            selectedOptions: this.props.selectedOptions
         }
     }
 
@@ -27,19 +19,19 @@ class SelectInput extends Component {
         }
 
         // set max reached once achieved
-        if (action === "select-option" && selectedOptions.length === MAX_OPTIONS) {
+        if (action === "select-option" && selectedOptions.length === this.props.max_options) {
             this.setState({ maxReached: true });
         }
 
         // business as usual, except we want to revert max flag on remove/clear
-        const maxReached = selectedOptions.length >= MAX_OPTIONS;
+        const maxReached = selectedOptions.length >= this.props.max_options;
         this.setState({ maxReached, selectedOptions });
         this.props.selectOption(selectedOptions);
     };
     noOptionsMessage = ({ inputValue }) => {
         const { maxReached } = this.state;
         return maxReached
-            ? `You can only select ${MAX_OPTIONS} options...`
+            ? `You can only select ${this.props.max_options} options...`
             : `No options matching "${inputValue}"`;
     };
     render() {

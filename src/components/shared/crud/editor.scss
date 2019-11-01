@@ -1,0 +1,92 @@
+div.editorHtml{
+  margin: 50px;
+  position: relative;
+  .sectionLayout{
+    position: relative;
+    max-width: 740px;
+    padding-left: 130px;
+    padding-right: 20px;
+    input {
+      font-family: sans-serif;
+      min-height: 50px;
+      padding: 5px;
+    }
+    input:focus,.medium-editor-element:focus{
+        outline: none;
+    }
+    .contentEditable{border: 1px dashed #aaa;}
+    .graf{
+      margin-top: 29px;
+    }
+    .graf-figure{
+      margin-top: 39px;
+      clear:both;
+      position: relative;
+      outline: 0;
+      z-index: 10;
+    }
+    .graf-ratio{
+      max-width: 380px;
+      max-height: 380px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      margin: 0 auto;
+      display: block;
+      &:focus{
+        border: 2px solid green
+      }
+    }
+    .graf-image{
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .imageCaption{
+      display: block;
+      line-height: 1.4;
+      color: rgba(0,0,0,.68);
+      letter-spacing: 0;
+    }
+    ::placeholder{
+      color: lightgray;
+    }
+  }
+  .inlineTooltip{
+    position: absolute;
+    margin-left: -58px;
+    margin-top: 4px;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+    opacity: 0;
+    button{
+      width: 32px;
+      height: 32px;
+      line-height: 30px;
+      text-decoration: none;
+      padding: 0;
+      text-align: center;
+      border-radius: 100%;
+    }
+    &.is-active{
+      opacity: 1;
+    }
+    &.is-scaled{
+      width: 260px;
+    }
+  }
+  .inlineTooltip-menu{
+    opacity: 0;
+    display: inline-block;
+    padding-left: 22px;
+  }
+  .inlineTooltip.is-scaled .inlineTooltip-menu{
+    opacity: 1;
+  }
+}
+

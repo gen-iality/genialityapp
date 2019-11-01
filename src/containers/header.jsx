@@ -8,108 +8,86 @@ import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
 import LetterAvatar from "../components/shared/letterAvatar";
 import { connect } from "react-redux";
-import { bindActionCreators } from 'redux';
-import {addLoginInformation} from "../redux/user/actions";
+import {addLoginInformation,showMenu} from "../redux/user/actions";
+import Menu from "../components/events/shared/menu";
 
 class Header extends Component {
     constructor(props) {
         super(props);
         this.props.history.listen((location, action) => {
-            console.log("on route change");
             this.handleMenu(location)
         });
         this.state = {
             selection: [],
             organizations: [],
-            filterEvius: 0,
             name: 'user',
             user: false,
             menuOpen: false,
-            filterOpen: false,
             timeout: false,
             modal: false,
             loader: true,
             create: false,
             valid: true,
             serverError: false,
+            showAdmin: false,
+            showEventMenu: false,
             tabEvtType:true,
             tabEvtCat: true,
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         let evius_token = Cookie.get('evius_token');
         if(!evius_token) {
             this.setState({user:false,loader:false});
         }
         else {
-            API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
-                .then((resp) => {
-                    if(resp.status === 200){
-                        const data = resp.data;
-                        const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
-                        const photo = (data.photoUrl) ? data.photoUrl : data.picture;
-                        OrganizationApi.mine()
-                            .then((organizations)=>{
-                                this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations},()=>{
-                                    this.props.addLoginInformation(data);
-                                });
-                            })
-                            .catch(error => {
-                                if (error.response) {
-                                    console.log(error.response);
-                                    const {status,data} = error.response;
-                                    console.log('STATUS',status,status === 401);
-                                    if(status === 401) this.setState({timeout:true,loader:false});
-                                    else this.setState({serverError:true,loader:false,errorData:data})
-                                } else {
-                                    let errorData = error.message;
-                                    console.log('Error', error.message);
-                                    if(error.request) {
-                                        console.log(error.request);
-                                        errorData = error.request
-                                    }
-                                    errorData.status = 708;
-                                    this.setState({serverError:true,loader:false,errorData})
-                                }
-                                console.log(error.config);
-                            });
-                        this.handleMenu(this.props.location)
-                    }else{
-                        this.setState({timeout:true,loader:false});
-                    }
-                })
-                .catch(error => {
-                    if (error.response) {
-                        console.log(error.response);
-                        const {status,data} = error.response;
-                        console.log('STATUS',status,status === 401);
-                        if(status === 401) this.setState({timeout:true,loader:false});
-                        else this.setState({serverError:true,loader:false,errorData:data})
-                    } else {
-                        let errorData = error.message;
-                        console.log('Error', error.message);
-                        if(error.request) {
-                            console.log(error.request);
-                            errorData = error.request
-                        };
-                        errorData.status = 708;
-                        this.setState({serverError:true,loader:false,errorData})
-                    }
-                    console.log(error.config);
-                });
+            try{
+                const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
+                if(resp.status === 200){
+                    const data = resp.data;
+                    const name = (data.name) ? data.name: data.displayName? data.displayName: data.email;
+                    const photo = (data.photoUrl) ? data.photoUrl : data.picture;
+                    const organizations = await OrganizationApi.mine()
+                    this.setState({name,photo,uid:data.uid,id:data._id,user:true,cookie:evius_token,loader:false,organizations},()=>{
+                        this.props.dispatch(addLoginInformation(data));
+                    });
+                    this.handleMenu(this.props.location)
+                }else{
+                    this.setState({timeout:true,loader:false});
+                }
+            }catch (error){
+                if (error.response) {
+                    console.log(error.response);
+                    const {status,data} = error.response;
+                    console.log('STATUS',status,status === 401);
+                    if(status === 401) this.setState({timeout:true,loader:false});
+                    else this.setState({serverError:true,loader:false,errorData:data})
+                } else {
+                    let errorData = {};
+                    console.log('Error', error.message);
+                    if(error.message) {
+                        errorData.message = error.message;
+                    }else if(error.request) {
+                        console.log(error.request);
+                        errorData.message = JSON.stringify(error.request)
+                    };
+                    errorData.status = 708;
+                    this.setState({serverError:true,loader:false,errorData})
+                }
+                console.log(error.config);
+            }
         }
     }
 
     handleMenu = (location) => {
         const splited = location.pathname.split('/');
         if(splited[1]===""){
-            this.setState({filterEvius:1})
+            this.setState({showAdmin:false,menuOpen:false})
         }else if(splited[1]==="event"){
-            this.setState({filterEvius:2,eventUrl:splited[2]})
-        }else this.setState({filterEvius:0});
-        window.scrollTo(0, 0);
-        this.setState({menuOpen:false,filterOpen:false})
+            this.setState({showAdmin:true,showEventMenu:false,menuOpen:false});
+            window.scrollTo(0, 0);
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -137,8 +115,15 @@ class Header extends Component {
         window.location.replace(`${ApiUrl}/events/reports`);
     };
 
+    handleMenuEvent = () => {
+        this.setState({showEventMenu:true},()=>{
+            this.props.dispatch(showMenu())
+        })
+    }
+
     render() {
-        const { timeout, serverError, errorData, photo, name } = this.state;
+        const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
+        const { eventMenu, location } = this.props;
         return (
             <React.Fragment>
                 <header>
@@ -147,27 +132,36 @@ class Header extends Component {
                             <Link className="navbar-item" to={'/'}>
                                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }}/>
                             </Link>
+                            {showAdmin && <div className="navbar-item" data-target="navbarBasicExample">
+                                <p>
+                                <span className="icon" onClick={this.handleMenuEvent}><i className="fas fa-th"></i></span>
+                                <span>Administrar evento</span>
+                                </p>
+                            </div>}
                             {
                                 !this.state.loader && <React.Fragment>
                                     {
-                                        !this.state.user && <div className="navbar-item is-hidden-desktop">
+                                        !this.state.user ? <div className="navbar-item is-hidden-desktop">
                                             <button className="button is-primary has-text-weight-bold" onClick={this.logout}>
                                                 <FormattedMessage id="header.login" defaultMessage="Sign In"/>
                                             </button>
+                                        </div>:
+                                        <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
+                                            {
+                                                (photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
+                                                    : <LetterAvatar name={name}/>
+                                            }
                                         </div>
-                                    }
-                                    {
-                                        this.state.user &&
-                                            <div className={`navbar-burger ${this.state.menuOpen ? "is-active" : ""}`}  data-target="mainMenu" onClick={this.openMenu}>
-                                                {
-                                                    (photo) ? <img src={photo} alt={`avatar_${name}`} className="author-image"/>
-                                                        : <LetterAvatar name={name}/>
-                                                }
-                                            </div>
                                     }
                                 </React.Fragment>
                             }
                         </div>
+                        {(showAdmin&&showEventMenu)&&
+                        <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
+                            <div className="navbar-start">
+                                <Menu match={location.pathname}/>
+                            </div>
+                        </div>}
                         <div id="mainMenu" className={`navbar-menu ${this.state.menuOpen ? "is-active" : ""}`}>
                             <div className="navbar-end">
                                 {
@@ -198,30 +192,16 @@ class Header extends Component {
                                                     <hr className="navbar-divider"/>
                                                     {this.state.uid.match('^(j4ZLBMDuh5UGiX5CKsmChv8UNFf1|JzPjRBtM85ehpKO4ylwiMmeo2jC3)$') && <a className="navbar-item item-sub has-text-grey-light" onClick={this.goReport}>Reportes</a>}
                                                     <hr className="navbar-divider"/>
-                                                    {/*
-                                                    <p className="navbar-item has-text-weight-bold has-text-grey-dark">
-                                                        <FormattedMessage id="header.org" defaultMessage="Org"/>
-                                                    </p>
                                                     {
-                                                        this.state.organizations.map((org,key)=>{
-                                                            return  <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/${org.id}`} key={key}>
-                                                                {org.name}
+                                                        this.state.user &&
+                                                        <div className="navbar-item has-text-weight-bold has-text-grey-light">
+                                                            <Link to={'/create-event'}>
+                                                                <button className="button is-primary has-text-weight-bold">
+                                                                    <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
+                                                                </button>
                                                             </Link>
-                                                        })
+                                                        </div>
                                                     }
-                                                    <Link className="navbar-item item-sub has-text-weight-bold has-text-grey-light" to={`/organization/create`}><FormattedMessage id="header.org_create" defaultMessage="+"/></Link>
-                                                    */}
-                                                    
-                                {
-                                    this.state.user &&
-                                    <div className="navbar-item has-text-weight-bold has-text-grey-light">
-                                        <Link to={'/event/new_event'}>
-                                            <button className="button is-primary has-text-weight-bold">
-                                                <FormattedMessage id="header.create_event" defaultMessage="Create Event"/>
-                                            </button>
-                                        </Link>
-                                    </div>
-                                }
                                                     <hr className="navbar-divider"/>
                                                     <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={this.logout}>
                                                         <FormattedMessage id="header.logout" defaultMessage="Log Out"/>
@@ -246,15 +226,12 @@ class Header extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    addLoginInformation: bindActionCreators(addLoginInformation, dispatch)
-});
-
 const mapStateToProps = state => ({
     categories: state.categories.items,
     types: state.types.items,
     loginInfo: state.user.data,
+    eventMenu: state.user.menu,
     permissions: state.permissions,
     error: state.categories.error});
 
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Header));
+export default connect(mapStateToProps)(withRouter(Header));

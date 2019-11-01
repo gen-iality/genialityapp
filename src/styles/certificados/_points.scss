@@ -1,0 +1,33 @@
+.overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 40;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,240,190, 0.9); /* Black w/opacity */
+  overflow-x: hidden;
+  transition: 0.5s;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Position the content inside the overlay */
+.overlay-content {
+  width: 80%;
+  height: 60%;
+  margin: 10px;
+  padding:5px;
+}
+
+@media screen and (max-height: 450px) {
+  .overlay a {font-size: 20px}
+  .overlay .closebtn {
+    font-size: 40px;
+    top: 15px;
+    right: 35px;
+  }
+}

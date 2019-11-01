@@ -26,7 +26,6 @@ a {
 
 .button {
   background: transparent;
-  border-radius: 15px;
   color: $grey-dark;
   font-weight: 700;
   padding-left: 1.25em;
@@ -34,6 +33,11 @@ a {
   transition: all ease 0.33s;
   .icon {
     margin-left: 0.25em !important;
+  }
+  &.add{
+    background-color: #DBFFF1;
+    border: none;
+    color: #37BCA0;
   }
   &.is-primary {
     /* box-shadow: 0px 0px 8px rgba($color: $black, $alpha: 0.1); */
@@ -46,7 +50,7 @@ a {
   }
   &.is-small {
     border-radius: 10px;
-    
+
   }
   &.is-text {
     &:hover {
@@ -234,7 +238,7 @@ a {
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          line-height: 1;  
+          line-height: 1;
           width: 100%;
           .icon {
             margin-right: 10px;
@@ -249,7 +253,7 @@ a {
         flex-basis: 35%;
         height: 100%;
         margin: 0;
-        padding: 0; 
+        padding: 0;
         width: 35%;
         .actions {
           display: none; //temporal
@@ -282,7 +286,7 @@ a {
       .vertical-line {
         background: $grey-lighter;
         height: 50%;
-        width: 1px; 
+        width: 1px;
       }
     }
   }
@@ -327,7 +331,7 @@ a {
     color: $grey-light !important;
   }
   .inner-column {
-    padding: 0; 
+    padding: 0;
     .field {
       margin: 0;
     }
@@ -343,7 +347,7 @@ a {
   margin-bottom: 1.25rem;
   .label {
     color: $grey-light;
-    font-weight: 900; 
+    font-weight: 900;
     margin: 0;
   }
   .required:after { content:" *"; color: $danger; }
@@ -621,19 +625,20 @@ a {
   tbody {
     tr {
       padding: 10px;
-      &:hover {
-        background: rgba($color: $black, $alpha: 0.05) !important;
-      }
-      &:nth-child(odd) {
-        background: white;
-      }
-      &:nth-child(even) {
-        background: #f9f9f9;
-      }
       td {
-        border: none !important;
         a {
           color: $grey;
+        }
+        button{
+          cursor: pointer;
+          width: 27px;
+          height: 27px;
+          padding: 0;
+          border: none;
+          background: transparent;
+          &:hover{
+            background-color: rgba(0, 0, 0, 0.08);
+          }
         }
       }
     }
@@ -861,70 +866,9 @@ a {
   }
 }
 
-.RichEditor-root {
-  background: #fff;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  padding: 15px;
-}
-
-.RichEditor-editor {
-  border-top: 1px solid #ddd;
-  cursor: text;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-.RichEditor-editor .public-DraftEditorPlaceholder-root,
-.RichEditor-editor .public-DraftEditor-content {
-  margin: 0 -15px -15px;
-  padding: 15px;
-}
-
-.RichEditor-editor .public-DraftEditor-content {
-  min-height: 100px;
-}
-
-.RichEditor-hidePlaceholder .public-DraftEditorPlaceholder-root {
-  display: none;
-}
-
-.RichEditor-editor .RichEditor-blockquote {
-  border-left: 5px solid #eee;
-  color: #666;
-  font-style: italic;
-  margin: 16px 0;
-  padding: 10px 20px;
-}
-
-.RichEditor-editor .public-DraftStyleDefault-pre {
-  background-color: rgba(0, 0, 0, 0.05);
-  font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
-  font-size: 16px;
-  padding: 20px;
-}
-
-.RichEditor-controls {
-  font-size: 14px;
-  margin-bottom: 5px;
-  user-select: none;
-}
-
-.RichEditor-styleButton {
-  color: #999;
-  cursor: pointer;
-  margin-right: 16px;
-  padding: 2px 0;
-  display: inline-block;
-}
-
-.RichEditor-activeButton {
-  color: #5890ff;
-}
-
 @media only screen and (max-width: $breakpoint-mobile) {
 
-  
+
   .navbar {
     .navbar-item {
       &.item-sub {
@@ -1039,7 +983,7 @@ a {
             top: 0.6em;
             left: -2em;
           }
-          
+
         }
       }
     }
@@ -1054,12 +998,12 @@ a {
   margin-left: auto;
   margin-right: auto;
   border-bottom: solid 3px #00EEBB;
-  
+
 }
 @media (max-width:2768px){
   .sin-evento{
     font-size: 2em;
     text-align: center;
-    margin-top: 20vh;  
+    margin-top: 20vh;
   }
 }

@@ -5,7 +5,7 @@ import {
 } from "./actions";
 
 const initialState = {
-    items: [],
+    data: {},
     loading: true,
     error: null
 };
@@ -26,7 +26,7 @@ export default function permissionsReducer(
             return {
                 ...state,
                 loading: false,
-                items: action.payload
+                data: action.payload
             };
 
         case FETCH_PERMISSIONS_FAILURE:
@@ -34,7 +34,7 @@ export default function permissionsReducer(
                 ...state,
                 loading: false,
                 error: action.payload.error,
-                items: []
+                data: {}
             };
 
         default:

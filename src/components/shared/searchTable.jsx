@@ -33,23 +33,38 @@ class SearchComponent extends Component {
 
     filterByAllColums(value) {
         let arrAux;
-        if (this.props.kind === 'user') {
-            const filters = this.props.filter.map(item=>item.name);
-            arrAux = this.props.data.filter( (item) =>{
-                if(item.properties[filters[0]] && item.properties[filters[1]] && item.properties[filters[2]]){
-                    return (item.properties[filters[0]].search(new RegExp(value, 'i')) >= 0 ||
-                        (item.properties[filters[1]] && item.properties[filters[1]].search(new RegExp(value, 'i'))) >= 0 ||
-                        (item.properties[filters[2]] && item.properties[filters[2]].search(new RegExp(value, 'i'))) >= 0);
+        if(this.props.event=== "5d24e15c1c9d4400004b4e0a"){
+            arrAux = this.props.data.filter((item) => {
+                if(item.properties && item.properties.dni){
+                    return item.properties.dni.search(new RegExp(value, 'i')) >= 0
                 }
             });
-        }else if(this.props.kind === 'invitation'){
-            arrAux = this.props.data.filter(item =>
-                item.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.state.search(new RegExp(value, 'i')) >= 0);
-        }else if(this.props.kind === 'helpers'){
-            arrAux = this.props.data.filter(item =>
-                item.user.email.search(new RegExp(value, 'i')) >= 0 ||
-                item.user.displayName.search(new RegExp(value, 'i')) >= 0);
+        }
+        else{
+            if (this.props.kind === 'user') {
+                arrAux = this.props.data.filter((item)=>{
+                    if(!item.properties){return false}
+                    let found = false;
+                    //buscamos coindicencia por cada una de las propiedades
+                    for(let key in item.properties){
+                        let propertyValue = item.properties[key];
+                        if(!propertyValue)continue;
+                        propertyValue = String(propertyValue);
+                        found = found || (propertyValue.search(new RegExp(value, 'i')) >= 0)
+                    }
+                    return found;
+                });
+            }
+            else if(this.props.kind === 'invitation'){
+                arrAux = this.props.data.filter(item =>
+                    item.email.search(new RegExp(value, 'i')) >= 0 ||
+                    item.state.search(new RegExp(value, 'i')) >= 0);
+            }
+            else if(this.props.kind === 'helpers'){
+                arrAux = this.props.data.filter(item =>
+                    item.user.email.search(new RegExp(value, 'i')) >= 0 ||
+                    item.user.displayName.search(new RegExp(value, 'i')) >= 0);
+            }
         }
         return arrAux
     }
@@ -57,13 +72,11 @@ class SearchComponent extends Component {
     handleFilter = (input) => {
         let value = input.target.value;
         this.setState({value});
+
         if (value.length >= 3) {
             let filtered = this.filterByAllColums(value);
-            if (filtered.length > 0) {
-                this.setState({ showMessage: false, message: "", filtered });
-            } else {
-                this.setState({ showMessage: true, message: "not" });
-            }
+            if (filtered.length > 0) this.setState({ showMessage: false, message: "", filtered });
+            else this.setState({ showMessage: true, message: "not" });
             this.props.searchResult(filtered);
         }
         if (value.length <= 2) {
@@ -74,27 +87,24 @@ class SearchComponent extends Component {
                 this.setState({
                     showMessage: true,
                     message: "short"
-                });
-                this.props.searchResult(false);
+                },()=>this.props.searchResult(false));
             }
         }
     }
 
     render() {
         return (
-            <React.Fragment>
-                <div className="field">
-                    <p className="control has-icons-left">
-                        <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
-                        <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+            <div className={this.props.classes}>
+                <p className="control has-icons-left">
+                    <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
+                    <span className="icon is-small is-left"><i className="fas fa-search"/></span>
+                </p>
+                {this.state.showMessage && (
+                    <p className="help is-danger">
+                        <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
                     </p>
-                    {this.state.showMessage && (
-                        <p className="help is-danger">
-                            <FormattedMessage id={`global.search_${this.state.message}`} defaultMessage="Help"/>
-                        </p>
-                    )}
-                </div>
-            </React.Fragment>
+                )}
+            </div>
         );
     }
 }

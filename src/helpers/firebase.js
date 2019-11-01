@@ -14,12 +14,10 @@ app.initializeApp(config);
 
 const firestore = app.firestore();
 firestore.settings({
-timestampsInSnapshots: true
-});
+    cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED
+})
 firestore.enablePersistence()
-    .catch((err)=> {
-        console.log(err);
-    });
+    .catch((err)=> {console.log(err);});
 const auth = app.auth();
 window.firebase = app;
 export {app,auth,firestore};

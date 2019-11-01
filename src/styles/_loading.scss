@@ -9,21 +9,37 @@
   content: "";
   display: inline;
   position: absolute;
+  width: 0;
+  height: 100%;
   left: 50%;
   text-align: center;
-  &:nth-child(1) {
-    background-color: $info;
-    animation: loading 3s linear infinite;
-  }
-  &:nth-child(2) {
-    background-color: $link;
-    animation: loading 3s linear 1s infinite;
-  }
-  &:nth-child(3) {
-    background-color: $primary;
-    animation: loading 3s linear 2s infinite;
-  }
 }
+.bar:nth-child(1) {
+  background-color: $info;
+  -webkit-animation: loading 3s linear infinite;
+  animation: loading 3s linear infinite;
+}
+.bar:nth-child(2) {
+  background-color: $link;
+  -webkit-animation: loading 3s linear 1s infinite;
+  animation: loading 3s linear 1s infinite;
+}
+.bar:nth-child(3) {
+  background-color: $primary;
+  -webkit-animation: loading 3s linear 2s infinite;
+  animation: loading 3s linear 2s infinite;
+}
+@-webkit-keyframes loading {
+  from {left: 50%; width: 0;z-index:100;}
+  33.3333% {left: 0; width: 100%;z-index: 10;}
+  to {left: 0; width: 100%;}
+}
+@keyframes loading {
+  from {left: 50%; width: 0;z-index:100;}
+  33.3333% {left: 0; width: 100%;z-index: 10;}
+  to {left: 0; width: 100%;}
+}
+
 .event-loading{
   text-align: center;
   > div{
@@ -44,17 +60,10 @@
     animation-delay: -0.16s;
   }
 }
-@keyframes loading {
-  from {left: 50%; width: 0;z-index:100;}
-  33.3333% {left: 0; width: 100%;z-index: 10;}
-  to {left: 0; width: 100%;}
-}
-
 @-webkit-keyframes sk-bouncedelay {
   0%, 80%, 100% { -webkit-transform: scale(0) }
   40% { -webkit-transform: scale(1.0) }
 }
-
 @keyframes sk-bouncedelay {
   0%, 80%, 100% {
     -webkit-transform: scale(0);

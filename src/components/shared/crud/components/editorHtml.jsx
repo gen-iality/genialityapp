@@ -1,16 +1,37 @@
 import React, {Component} from 'react';
-import '../crud.css'
+import '../editor.scss'
 
 class EditarHtml extends Component {
     constructor(props){
         super(props);
-        this.state = {}
+        this.state = {
+            html:'',
+            video:'',
+            active:'title',
+            content:[],
+            index:0,
+            graf:0,
+            showTooltipMenu:false,
+            isActive:true,
+            topButton:78
+        };
+        this.editor = [];
     }
-    
-  
+
+    componentDidMount() {
+    }
+
+    submit = () => {
+        this.editor.map(editor=>{
+            console.log(editor.getContent());
+            return editor
+        })
+    };
+
     render() {
-       
-        return(<p>Hola</p>
+        return(<React.Fragment>
+                <button onClick={this.submit}>SUBMIT</button>
+            </React.Fragment>
         )
     }
 
