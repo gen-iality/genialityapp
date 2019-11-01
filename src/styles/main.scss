@@ -29,7 +29,6 @@ $breakpoint-tablet: 1024px;
 @import "~react-quill/dist/quill.snow.css";
 @import "~react-quill/dist/quill.bubble.css";
 
-
 @import "./loading";
 @import "./tickets";
 @import "./msg";
@@ -41,8 +40,6 @@ $breakpoint-tablet: 1024px;
 @import "./events/aside";
 @import "./events/event";
 @import "./events/card";
-@import "./events/general";
-@import "./events/datos";
 @import "./users/import";
 @import "./rsvp/send";
 @import "./rsvp/invitations";

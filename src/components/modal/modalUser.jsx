@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
+import {BadgeApi, RolAttApi} from "../../helpers/request";
 import {icon} from "../../helpers/constants";
 import {Redirect} from "react-router-dom";
 
@@ -11,10 +12,11 @@ class UserModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            statesList: [],
             rolesList: [],
             message: {},
-            spaceUser: {},
             user: {},
+            state: "",
             rol:"",
             prevState: "",
             userId: "mocionsoft",
@@ -27,8 +29,8 @@ class UserModal extends Component {
 
     componentDidMount() {
         const self = this;
-        const {rolesList} = this.props;
-        self.setState({ rolesList, rol: rolesList[0]._id });
+        const {states, rolesList} = this.props;
+        self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
         let user = {};
         if (this.props.edit) {
             const {value} = this.props;
@@ -37,8 +39,8 @@ class UserModal extends Component {
                     return user[obj] = value.properties[obj];
                 });
             let checked_in = (value.checked_in && value.checked_at) ? value.checked_at.toDate() : false;
-            this.setState({user, ticket_id:value.ticket_id, edit:true, spaceUser: value.spaces?value.spaces:{},
-                rol:value.rol_id, checked_in, userId:value._id});
+            this.setState({user, ticket_id:value.ticket_id, edit:true,
+                rol:value.rol_id, checked_in, userId:value._id, prevState: value.state_id});
         }else{
             this.props.extraFields
                 .map((obj) => {
@@ -58,7 +60,8 @@ class UserModal extends Component {
         e.stopPropagation();
         const snap = {
             properties: this.state.user,
-            rol_id: this.state.rol
+            rol_id: this.state.rol,
+            state_id: this.state.state,
         };
         const self = this;
         let message = {};
@@ -281,6 +284,7 @@ class UserModal extends Component {
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         const self = this;
         let message = {};
+        this.props.statesCounter(null,this.props.value.state_id);
         userRef.doc(this.props.value._id).delete().then(function() {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';
@@ -322,8 +326,8 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,spaceUser,checked_in,ticket_id,rol,rolesList,userId} = this.state;
-        const {modal, spacesEvent} = this.props;
+        const {user,checked_in,ticket_id,rol,rolesList,state,statesList,userId} = this.state;
+        const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (
             <React.Fragment>
@@ -339,10 +343,6 @@ class UserModal extends Component {
                         <section className="modal-card-body">
                             {
                                 this.renderForm()
-                            }
-                            <h3>Espacios: </h3>
-                            {
-                                spacesEvent.map(space=><p key={space._id}>{space.name}: {(spaceUser[space._id])?"SI":"NO"}</p>)
                             }
                             {
                                 checked_in && (
@@ -365,18 +365,16 @@ class UserModal extends Component {
                                 Object.keys(user).length > 0 &&
                                     <React.Fragment>
                                         <div className="field is-grouped">
-                                            <div className="control">
-                                                <label className="label">Rol</label>
-                                                <div className="control control-container">
-                                                    <div className="select">
-                                                        <select value={rol} onChange={this.selectChange} name={'rol'}>
-                                                            {
-                                                                rolesList.map((item,key)=>{
-                                                                    return <option key={key} value={item._id}>{item.name}</option>
-                                                                })
-                                                            }
-                                                        </select>
-                                                    </div>
+                                            <label className="label">Rol</label>
+                                            <div className="control control-container">
+                                                <div className="select">
+                                                    <select value={rol} onChange={this.selectChange} name={'rol'}>
+                                                        {
+                                                            rolesList.map((item,key)=>{
+                                                                return <option key={key} value={item._id}>{item.name}</option>
+                                                            })
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
                                             {

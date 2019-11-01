@@ -3,6 +3,32 @@
   padding: 2rem !important;
   min-height: 100vh;
   height: auto;
+  .menu-label{
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1em;
+    text-transform: none;
+    letter-spacing: 0.1px;
+    width: 100%;
+    .icon {
+      margin-left: 0.5em;
+      i {
+        border: solid black; 
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 3px;
+        &.up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+        &.down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+        }
+      }
+    }
+  }
   .item {
     border-radius: 2px;
     font-weight: bold;
@@ -18,8 +44,8 @@
 
 .event-aside {
   height: auto;
-  padding: 1.25rem 0 !important;
-  background: #F5F5F5;
+  margin: 5.5rem 0;
+  padding: 1.25rem 2rem !important;
   .subtitle {
     display: inline-flex;
     align-items: center;
@@ -78,36 +104,48 @@
       }
     }
   }
+  .active {
+    color: $primary !important;
+  }
 }
-.menu-label{
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  font-size: 1em;
-  text-transform: none;
-  letter-spacing: 0.1px;
-  width: 100%;
-  .icon {
-    margin-left: 0.5em;
-    i {
-      border: solid black;
-      border-width: 0 2px 2px 0;
-      display: inline-block;
-      padding: 3px;
-      &.up {
-        transform: rotate(-135deg);
-        -webkit-transform: rotate(-135deg);
+.dropdown-content{
+  font-weight: 700;
+  padding: 1rem;
+  .menu-label{
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1em;
+    letter-spacing: .1px;
+    text-transform: none;
+    width: 100%;
+  }
+  a{
+    color: #7a7a7a;
+    padding-left: 1em;
+    .item{
+      .active{
+        border-left: 2px solid #00f0be;
+        color: #00f0be;
+        padding-left: calc(1em - 2px);
       }
-      &.down {
-        transform: rotate(45deg);
-        -webkit-transform: rotate(45deg);
+    }
+  }
+  ul{
+    .item{
+      color: #b5b5b5;
+      margin: .75rem .75rem .75rem 1rem;
+      padding: 0 0 0 1rem;
+      .active{
+        border-left: 2px solid #00f0be;
+        color: #00f0be;
+        padding-left: calc(1em - 2px);
       }
     }
   }
 }
-
 .icon-menu{
-  margin-right: 1em;
+  margin-left: 40px;
 }
 .is-hidden-mobile{
   box-shadow: none;

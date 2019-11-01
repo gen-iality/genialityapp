@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import XLSX from "xlsx";
+import Select from 'react-select';
 import { toast } from 'react-toastify';
 import {firestore} from "../../helpers/firebase";
 import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
@@ -28,16 +29,19 @@ class ListEventUser extends Component {
             total:      0,
             checkIn:    0,
             extraFields:[],
-            spacesEvent:[],
+            spacesEvents:[],
             addUser:    false,
             editUser:   false,
             deleteUser: false,
             loading:    true,
             importUser: false,
+            modalPoints: false,
             pages:      null,
             message:    {class:'', content:''},
             sorted:     [],
             rolesList:     [],
+            facingMode: 'user',
+            qrData:     {},
             clearSearch:false,
             changeItem: false,
             errorData: {},
@@ -45,6 +49,7 @@ class ListEventUser extends Component {
             serverError: false,
             stage: '',
             ticket: '',
+            tabActive: 'camera',
             ticketsOptions: []
         };
     }
@@ -69,26 +74,21 @@ class ListEventUser extends Component {
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                     user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
-                    switch (change.type) {
-                        case "added":
-                            if(user.checked_in) checkIn += 1;
-                            change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                            if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                            break;
-                        case "modified":
-                            if(user.checked_in) checkIn += 1;
-                            newItems.unshift(user);
-                            newItems.splice(change.oldIndex+1, 1);
-                            changeItem = !changeItem;
-                            break;
-                        case "removed":
-                            if(user.checked_in) checkIn -= 1;
-                            newItems.splice(change.oldIndex, 1);
-                            break;
-                        default:
-                            break;
+                    if (change.type === 'added'){
+                        if(user.checked_in) checkIn += 1;
+                        change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                        if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
                     }
-                    user = {};
+                    if (change.type === 'modified'){
+                        if(user.checked_in) checkIn += 1;
+                        newItems.unshift(user);
+                        newItems.splice(change.oldIndex+1, 1);
+                        changeItem = !changeItem;
+                    }
+                    if (change.type === 'removed'){
+                        if(user.checked_in) checkIn -= 1;
+                        newItems.splice(change.oldIndex, 1);
+                    }
                 });
                 this.setState((prevState) => {
                     const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];

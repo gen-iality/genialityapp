@@ -1,19 +1,27 @@
 
-.name-event{
+ .name-event{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin: 5px 22px;
+  .subtitle{
     display: inline-flex;
-    color: #4462DC;
-    font: Italic 12px/15px Montserrat;
     align-items: center;
     word-break: normal;
+  }
+  .title{
+    display: inline-flex;
+    align-items: center;
+    word-break: normal;
+  }
 }
 .event-main {
   padding: 0;
   .event-wrapper {
     margin: 4rem 0;
     padding: 0;
-    .title-section{
-      font-weight: 700;
-      font-size: 1em;
+    .event-general {
+      padding: 0.5rem 2.25rem;
     }
     .subtitle-section{
       font-weight: 500;
