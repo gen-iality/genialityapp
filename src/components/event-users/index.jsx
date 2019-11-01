@@ -55,10 +55,10 @@ class ListEventUser extends Component {
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
-            const {data} = await SpacesApi.byEvent(this.props.event._id);
+            const spacesEvent = await SpacesApi.byEvent(this.props.event._id);
             const listTickets = event.tickets ? [...event.tickets] : [];
             let {checkIn,changeItem} = this.state;
-            this.setState({ extraFields: properties, rolesList, badgeEvent, spacesEvent: data });
+            this.setState({ extraFields: properties, rolesList, badgeEvent, spacesEvent });
             const { usersRef, ticket, stage } = this.state;
             let newItems= [...this.state.userReq];
             this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
