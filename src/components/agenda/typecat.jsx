@@ -100,9 +100,8 @@ class AgendaTypeCat extends Component {
 
     render() {
         const {loading,subject,list,id,name,color,headers} = this.state;
-        const title = subject === "categorias" ? "Categorías" : "Tipos";
         return (
-            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>{title} de Actividad</span>}
+            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>{subject === "categorias" ? "Categorías" : "Tipos"} de Actividad</span>}
                           addAction={this.newItem} addTitle={"Nuevo tipo"}>
                 {loading ? <Loading/> :
                     <EvenTable head={headers}>
