@@ -38,8 +38,14 @@ class Agenda extends Component {
     filterByDay = (day,agenda) => {
         //First filter activities by day. Use include to see if has the same day
         //Sort the filtered list by hour start, use moment format HHmm to get a number and used it to sort
-        return agenda.filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
-            .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"))
+        const list = agenda.filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
+            .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
+        list.map(item=>{
+            item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
+            item.roles = item.access_restriction_roles.map(({name})=>name);
+            return item
+        })
+        return list
     };
 
     selectDay = (day) => {
@@ -75,6 +81,7 @@ class Agenda extends Component {
                         <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>
                             <p>{agenda.name}</p>
+                            <small className="is-italic">{agenda.restriction} {agenda.roles.map(rol=>rol)}</small>
                             {agenda.type&&<p><strong>{agenda.type.name}</strong></p>}
                         </td>
                         <td>
