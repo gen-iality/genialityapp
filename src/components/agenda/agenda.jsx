@@ -27,13 +27,13 @@ class Agenda extends Component {
         for(let i = 0; i < diff+1; i++){
             days.push(Moment(init).add(i,'d'))
         }
-        this.setState({days},this.fetchAgenda);
+        this.setState({days, day:days[0]},this.fetchAgenda);
     }
 
     fetchAgenda = async() => {
         const {data} = await AgendaApi.byEvent(this.props.event._id);
         const filtered = this.filterByDay(this.state.days[0],data);
-        this.setState({list:data,day:this.state.days[0],filtered})
+        this.setState({list:data,filtered})
     };
 
     filterByDay = (day,agenda) => {
@@ -47,22 +47,6 @@ class Agenda extends Component {
         const filtered = this.filterByDay(day,this.state.list);
         this.setState({filtered,day})
 
-    };
-
-    remove = (info) => {
-        sweetAlert.twoButton(`Está seguro de borrar a ${info.name}`, "warning", true, "Borrar", async (result)=>{
-            try{
-                if(result.value){
-                    sweetAlert.showLoading("Espera (:", "Borrando...");
-                    await AgendaApi.deleteOne(info._id, this.props.eventID);
-                    this.fetchAgenda();
-                    sweetAlert.hideLoading();
-                    sweetAlert.showSuccess("Actividad borrada")
-                }
-            }catch (e) {
-                sweetAlert.showError(handleRequestError(e))
-            }
-        })
     };
 
     redirect = () => this.setState({redirect:true});
@@ -87,24 +71,22 @@ class Agenda extends Component {
 
                     </div>
                 </nav>
-                <EvenTable head={["Hora", "Actividad", "Espacio", "Conferencista", ""]}>
+                <EvenTable head={["Hora", "Actividad", "Categorías", "Espacio", "Conferencista", ""]}>
                     {filtered.map(agenda=><tr key={agenda._id}>
                         <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>
                             <p>{agenda.name}</p>
-                            {agenda.activity_categories.map(cat=><span style={{background:cat.color,color:cat.color?"white":""}} className="tag">{cat.name}</span>)}
                             {agenda.type&&<p><strong>{agenda.type.name}</strong></p>}
+                        </td>
+                        <td>
+                            {agenda.activity_categories.map(cat=><span style={{background:cat.color,color:cat.color?"white":""}} className="tag">{cat.name}</span>)}
                         </td>
                         <td>{agenda.space?agenda.space.name:""}</td>
                         <td>{agenda.hosts.map(({name})=><p>{name}</p>)}</td>
                         <td>
                             <Link to={{pathname:`${this.props.matchUrl}/actividad`,state:{edit:agenda._id}}}>
-                                <button><span className="icon has-text-grey"><i className="fas fa-edit"/></span></button>
+                                <button><span className="icon"><i className="fas fa-2x fa-chevron-right"/></span></button>
                             </Link>
-                            <button>
-                                <span className="icon has-text-grey"
-                                      onClick={(e)=>{this.remove(agenda)}}><i className="far fa-trash-alt"/></span>
-                            </button>
                         </td>
                     </tr>)}
                 </EvenTable>
