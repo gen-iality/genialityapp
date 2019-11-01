@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import XLSX from "xlsx";
-import Select from 'react-select';
 import { toast } from 'react-toastify';
 import {firestore} from "../../helpers/firebase";
 import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
