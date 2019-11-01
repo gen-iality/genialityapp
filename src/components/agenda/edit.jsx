@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Redirect, withRouter, Link} from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
@@ -20,14 +20,15 @@ class AgendaEdit extends Component {
             redirect:false,
             isLoading:{types:true,categories:true},
             name:"",
+            subtitle:"",
             description:"",
             hour_start:new Date(),
             hour_end:new Date(),
-            date:Moment().format("YYYY-MM-DD"),
+            date:"",
             image:"",
             capacity:0,
             space_id:"",
-            access_restriction_type:"",
+            access_restriction_type:"OPEN",
             selectedCategories:[],
             selectedHosts:[],
             selectedType:"",
@@ -184,6 +185,8 @@ class AgendaEdit extends Component {
             title = "Selecciona un Espacio";
         else if(this.state.selectedCategories.length<=0)
             title = "Selecciona una Categoría";
+        else if(this.state.access_restriction_type!=="OPEN" && this.state.selectedRol.length<=0)
+            title = "Seleccione un Rol para mostrar la Agenda";
         if(title.length>0){
             sweetAlert.twoButton(title,"warning",false,"OK", ()=>{});
             return false
@@ -195,7 +198,7 @@ class AgendaEdit extends Component {
     };
 
     render() {
-        const {loading,name,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
+        const {loading,name,subtitle,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
         const {hosts,spaces,categories,types,roles,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
@@ -209,6 +212,13 @@ class AgendaEdit extends Component {
                                 <div className="control">
                                     <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
                                            placeholder="Nombre de la actividad"/>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Subtítulo</label>
+                                <div className="control">
+                                    <input className="input" type="text" name={"subtitle"} value={subtitle} onChange={this.handleChange}
+                                           placeholder="Ej: Salón 1, Zona Norte, Área de juegos"/>
                                 </div>
                             </div>
                             <div className="field">
@@ -293,7 +303,7 @@ class AgendaEdit extends Component {
                             <div className="section-gray">
                                 <div className="field">
                                     <label className="label has-text-grey-light">Imagen</label>
-                                    <p>Dimensiones: 1000px x 728px</p>
+                                    <p>Dimensiones: 1000px x 278px</p>
                                     <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
                                         <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
                                     </Dropzone>
@@ -303,12 +313,14 @@ class AgendaEdit extends Component {
                                     <label className={`label`}>Actividad de agenda</label>
                                     <div className="control">
                                         <label className="radio">
+                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="OPEN"}
+                                                   value={"OPEN"} onChange={this.handleChange}/>Abierta
+                                        </label>
+                                        <label className="radio">
                                             <input type="radio" name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
                                                    value={"SUGGESTED"} onChange={this.handleChange}/>
                                             Sugerida para:
                                         </label>
-                                    </div>
-                                    <div className="control">
                                         <label className="radio">
                                             <input type="radio" name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
                                                    value={"EXCLUSIVE"} onChange={this.handleChange}/>
@@ -316,22 +328,27 @@ class AgendaEdit extends Component {
                                         </label>
                                     </div>
                                 </div>
-                                <label className="label">Seleccionar rol</label>
-                                <div className="columns">
-                                    <div className="column is-10">
-                                        <Select
-                                            isClearable isMulti
-                                            styles={creatableStyles}
-                                            onChange={this.selectRol}
-                                            options={roles}
-                                            placeholder={"Seleccione..."}
-                                            value={selectedRol}
-                                        />
-                                    </div>
-                                    <div className="column is-2">
-                                        <button onClick={()=>this.goSection(matchUrl.replace("agenda", "/tipo-asistentes"))} className="button"><FaWhmcs/></button>
-                                    </div>
-                                </div>
+                                {
+                                    access_restriction_type !== "OPEN" &&
+                                        <Fragment>
+                                            <label className="label required">Seleccionar rol</label>
+                                            <div className="columns">
+                                                <div className="column is-10">
+                                                    <Select
+                                                        isClearable isMulti
+                                                        styles={creatableStyles}
+                                                        onChange={this.selectRol}
+                                                        options={roles}
+                                                        placeholder={"Seleccione..."}
+                                                        value={selectedRol}
+                                                    />
+                                                </div>
+                                                <div className="column is-2">
+                                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "/tipo-asistentes"))} className="button"><FaWhmcs/></button>
+                                                </div>
+                                            </div>
+                                        </Fragment>
+                                }
                                 <div className="field">
                                     <label className={`label`}>Capacidad</label>
                                     <div className="control">
