@@ -34,7 +34,7 @@ class AgendaTypeCat extends Component {
         this.setState({list,loading:false,subject, headers})
     }
 
-    editItem = (type) => this.setState({id:type._id,name:type.name});
+    editItem = (type) => this.setState({id:type._id,name:type.name,color:type.color});
 
     onChange = (e) => {
         this.setState({name:e.target.value})
@@ -62,6 +62,7 @@ class AgendaTypeCat extends Component {
                     const data = state.list.map(object => {
                         if (object.value === state.id) {
                             object.item.name = state.name;
+                            object.label = state.name;
                             object.item.color = state.color;
                             return object;
                         } else return object;
