@@ -8,6 +8,7 @@ import EventModal from "../shared/eventModal";
 import DatosModal from "./modal";
 import Dialog from "../../modal/twoAction";
 import Loading from "../../loaders/loading";
+import {typeInputs} from "../../../helpers/constants";
 
 class Datos extends Component {
     constructor(props) {
@@ -142,7 +143,7 @@ class Datos extends Component {
                             {fields.map((field, key) => {
                                 return <tr key={key}>
                                     <td>{field.label}</td>
-                                    <td>{field.type}</td>
+                                    <td>{typeInputs.find(({value})=> value === field.type).label}</td>
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
                                                type="checkbox" name={`mandatory`} checked={field.mandatory}

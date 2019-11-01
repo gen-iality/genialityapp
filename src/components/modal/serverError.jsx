@@ -30,7 +30,7 @@ class ErrorServe extends Component {
                         <button className="delete" aria-label="close" onClick={this.closeModal}/>
                     </header>
                     <section className="modal-card-body">
-                        <p>{errorData.message}</p>
+                        <p>{typeof errorData.message==="object"?JSON.stringify(errorData.message):errorData.message}</p>
                     </section>
                 </div>
             </div>

@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {connect} from "react-redux";
 import CheckSpace from "./checkSpace";
 import QrModal from "./qrModal";
+import {handleRequestError} from "../../helpers/utils";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -101,7 +102,8 @@ class ListEventUser extends Component {
                 this.setState({timeout:true,errorData:{message:error,status:708}});
             }));
         }catch (error) {
-            this.setState({timeout:true,errorData:{message:error,status:710}});
+            const errorData = handleRequestError(error);
+            this.setState({timeout:true,errorData});
         }
     }
 
