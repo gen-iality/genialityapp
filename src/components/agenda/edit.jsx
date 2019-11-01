@@ -7,8 +7,8 @@ import Select, {Creatable} from "react-select";
 import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import {AgendaApi, CategoriesAgendaApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
-import {imageBox, toolbarEditor} from "../../helpers/constants";
+import {AgendaApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
+import {toolbarEditor} from "../../helpers/constants";
 import {fieldsSelect, handleRequestError, handleSelect, loadImage, sweetAlert} from "../../helpers/utils";
 import Dropzone from "react-dropzone";
 
@@ -27,13 +27,16 @@ class AgendaEdit extends Component {
             image:"",
             capacity:0,
             space_id:"",
+            access_restriction_type:"",
             selectedCategories:[],
             selectedHosts:[],
             selectedType:"",
+            selectedRol:[],
             days:[],
             spaces:[],
             categories:[],
             types:[],
+            roles:[],
             hosts:[]
         }
     }
@@ -49,21 +52,23 @@ class AgendaEdit extends Component {
         }
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
+        let roles = await RolAttApi.byEvent(this.props.event._id);
         spaces = handleSelect(spaces);
         hosts = handleSelect(hosts);
+        roles = handleSelect(roles);
         const categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         const types = await TypesAgendaApi.byEvent(this.props.event._id);
         if(state.edit){
             const info = await AgendaApi.getOne(state.edit, event._id);
             Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
             const {date,hour_start,hour_end} = handleDate(info);
-            this.setState({date,hour_start,hour_end, selectedHosts:fieldsSelect(info.host_ids, hosts),
+            this.setState({date,hour_start,hour_end, selectedHosts:fieldsSelect(info.host_ids, hosts), selectedRol:fieldsSelect(info.access_restriction_rol_ids, roles),
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories_ids,categories)})
         }else{
             this.setState({date:days[0]})
         }
         const isLoading = {types:false,categories:false};
-        this.setState({days,spaces,hosts,categories,types,loading:false,isLoading});
+        this.setState({days,spaces,hosts,categories,types,roles,loading:false,isLoading});
     }
 
     handleChange = (e) => {
@@ -82,6 +87,9 @@ class AgendaEdit extends Component {
     };
     selectHost = (selectedHosts) => {
         this.setState({ selectedHosts });
+    };
+    selectRol = (selectedRol) => {
+        this.setState({ selectedRol });
     };
     handleCreate = async(value,name) => {
         this.setState({isLoading:{...this.isLoading,[name]:true}});
@@ -126,10 +134,12 @@ class AgendaEdit extends Component {
     };
 
     buildInfo = () => {
-        const {name, hour_start, hour_end, date, space_id, capacity, selectedCategories, selectedHosts, selectedType, description, image} = this.state;
+        const {name, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, image} = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({value}) => value) : [];
+        const access_restriction_rol_ids = selectedRol.length > 0 ? selectedRol.map(({value}) => value) : [];
         const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({value}) => value) : [];
         const type_id = selectedType.value;
         return {
@@ -141,6 +151,8 @@ class AgendaEdit extends Component {
             description,
             capacity: parseInt(capacity, 10),
             activity_categories_ids,
+            access_restriction_type,
+            access_restriction_rol_ids,
             host_ids,
             type_id
         }
@@ -183,8 +195,8 @@ class AgendaEdit extends Component {
     };
 
     render() {
-        const {loading,name,date,hour_start,hour_end,image,capacity,space_id,selectedHosts,selectedType,selectedCategories} = this.state;
-        const {hosts,spaces,categories,types,isLoading} = this.state;
+        const {loading,name,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
+        const {hosts,spaces,categories,types,roles,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
         return (
@@ -264,13 +276,6 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                             <div className="field">
-                                <label className="label">Lugar específico</label>
-                                <div className="control">
-                                    <input className="input" type="text" name={"name"} value={name} onChange={this.handleChange}
-                                           placeholder="Ej: Salón 1, Zona Norte, Área de juegos"/>
-                                </div>
-                            </div>
-                            <div className="field">
                                 <label className="label">Descripción</label>
                                 <div className="control">
                                     <ReactQuill value={this.state.description} modules={toolbarEditor}
@@ -286,23 +291,45 @@ class AgendaEdit extends Component {
                                 </button>
                             </div>
                             <div className="section-gray">
-                                <div className="field picture">
+                                <div className="field">
                                     <label className="label has-text-grey-light">Imagen</label>
-                                    <div className="columns">
-                                        <div className="column">
-                                            {
-                                                image ? <img src={image} alt={`activity_${name}`}/>:
-                                                    <div dangerouslySetInnerHTML={{__html:imageBox}}/>
-                                            }
-                                        </div>
-                                        <div className="column is-9">
-                                            <div className="has-text-left">
-                                                <p>Dimensiones: 400px x 250px</p>
-                                                <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                                                    <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
-                                                </Dropzone>
-                                            </div>
-                                        </div>
+                                    <p>Dimensiones: 1000px x 728px</p>
+                                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                                        <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
+                                    </Dropzone>
+                                    {image && <img src={image} alt={`activity_${name}`}/>}
+                                </div>
+                                <div className="field">
+                                    <label className={`label`}>Actividad de agenda</label>
+                                    <div className="control">
+                                        <label className="radio">
+                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
+                                                   value={"SUGGESTED"} onChange={this.handleChange}/>
+                                            Sugerida para:
+                                        </label>
+                                    </div>
+                                    <div className="control">
+                                        <label className="radio">
+                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
+                                                   value={"EXCLUSIVE"} onChange={this.handleChange}/>
+                                            Exclusiva para:
+                                        </label>
+                                    </div>
+                                </div>
+                                <label className="label">Seleccionar rol</label>
+                                <div className="columns">
+                                    <div className="column is-10">
+                                        <Select
+                                            isClearable isMulti
+                                            styles={creatableStyles}
+                                            onChange={this.selectRol}
+                                            options={roles}
+                                            placeholder={"Seleccione..."}
+                                            value={selectedRol}
+                                        />
+                                    </div>
+                                    <div className="column is-2">
+                                        <button onClick={()=>this.goSection(matchUrl.replace("agenda", "/tipo-asistentes"))} className="button"><FaWhmcs/></button>
                                     </div>
                                 </div>
                                 <div className="field">

@@ -4,7 +4,6 @@ import EventContent from "../events/shared/content";
 import {AgendaApi} from "../../helpers/request";
 import Moment from "moment";
 import EvenTable from "../events/shared/table";
-import {handleRequestError, sweetAlert} from "../../helpers/utils";
 
 class Agenda extends Component {
     constructor(props) {
