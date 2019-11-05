@@ -225,13 +225,13 @@ class AgendaEdit extends Component {
                             </div>
                             <div className="field">
                                 <label className="label">Día</label>
-                                <div className="control">
+                                <div className="columns">
                                     {
                                         this.state.days.map((day, key) => {
-                                            return <label key={key} className="radio">
-                                                <input type="radio" name="date" checked={day===date} value={day} onChange={this.handleChange}/>
-                                                {day}
-                                            </label>
+                                            return <div key={key} className="column">
+                                                <input type="radio" name="date" id={`radioDay${key}`} className="is-checkradio" checked={day===date} value={day} onChange={this.handleChange}/>
+                                                <label htmlFor={`radioDay${key}`}>{day}</label>
+                                            </div>
                                         })
                                     }
                                 </div>
@@ -314,20 +314,15 @@ class AgendaEdit extends Component {
                                 <div className="field">
                                     <label className={`label`}>Actividad de agenda</label>
                                     <div className="control">
-                                        <label className="radio">
-                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="OPEN"}
-                                                   value={"OPEN"} onChange={this.handleChange}/>Abierta
-                                        </label>
-                                        <label className="radio">
-                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
-                                                   value={"SUGGESTED"} onChange={this.handleChange}/>
-                                            Sugerida para:
-                                        </label>
-                                        <label className="radio">
-                                            <input type="radio" name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
-                                                   value={"EXCLUSIVE"} onChange={this.handleChange}/>
-                                            Exclusiva para:
-                                        </label>
+                                        <input type="radio" id={"radioOpen"} name="access_restriction_type" checked={access_restriction_type==="OPEN"}
+                                               className="is-checkradio" value={"OPEN"} onChange={this.handleChange}/>
+                                        <label htmlFor={"radioOpen"}>Abierta</label>
+                                        <input type="radio" id={"radioSuggested"} name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
+                                               className="is-checkradio" value={"SUGGESTED"} onChange={this.handleChange}/>
+                                        <label htmlFor={"radioSuggested"}>Sugerida para:</label>
+                                        <input type="radio" id={"radioExclusive"} name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
+                                               className="is-checkradio" value={"EXCLUSIVE"} onChange={this.handleChange}/>
+                                        <label htmlFor={"radioExclusive"}>Exclusiva para:</label>
                                     </div>
                                 </div>
                                 {
