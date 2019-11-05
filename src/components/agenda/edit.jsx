@@ -288,6 +288,45 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                             <div className="field">
+                                <label className={`label`}>Clasificar actividad como:</label>
+                                <div className="control">
+                                    <input type="radio" id={"radioOpen"} name="access_restriction_type" checked={access_restriction_type==="OPEN"}
+                                           className="is-checkradio" value={"OPEN"} onChange={this.handleChange}/>
+                                    <label htmlFor={"radioOpen"}><strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad</label>
+                                </div>
+                                <div className="control">
+                                    <input type="radio" id={"radioSuggested"} name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
+                                           className="is-checkradio" value={"SUGGESTED"} onChange={this.handleChange}/>
+                                    <label htmlFor={"radioSuggested"}><strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)</label>
+                                </div>
+                                <div className="control">
+                                    <input type="radio" id={"radioExclusive"} name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
+                                           className="is-checkradio" value={"EXCLUSIVE"} onChange={this.handleChange}/>
+                                    <label htmlFor={"radioExclusive"}><strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad</label>
+                                </div>
+                            </div>
+                            {
+                                access_restriction_type !== "OPEN" &&
+                                <Fragment>
+                                    <label className="label required">Asginar a :</label>
+                                    <div className="columns">
+                                        <div className="column is-10">
+                                            <Select
+                                                isClearable isMulti
+                                                styles={creatableStyles}
+                                                onChange={this.selectRol}
+                                                options={roles}
+                                                placeholder={"Seleccione al menos un rol..."}
+                                                value={selectedRol}
+                                            />
+                                        </div>
+                                        <div className="column is-2">
+                                            <button onClick={()=>this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))} className="button"><FaWhmcs/></button>
+                                        </div>
+                                    </div>
+                                </Fragment>
+                            }
+                            <div className="field">
                                 <label className="label">Descripción</label>
                                 <div className="control">
                                     <ReactQuill value={this.state.description} modules={toolbarEditor}
@@ -311,41 +350,6 @@ class AgendaEdit extends Component {
                                     </Dropzone>
                                     {image && <img src={image} alt={`activity_${name}`}/>}
                                 </div>
-                                <div className="field">
-                                    <label className={`label`}>Actividad de agenda</label>
-                                    <div className="control">
-                                        <input type="radio" id={"radioOpen"} name="access_restriction_type" checked={access_restriction_type==="OPEN"}
-                                               className="is-checkradio" value={"OPEN"} onChange={this.handleChange}/>
-                                        <label htmlFor={"radioOpen"}>Abierta</label>
-                                        <input type="radio" id={"radioSuggested"} name="access_restriction_type" checked={access_restriction_type==="SUGGESTED"}
-                                               className="is-checkradio" value={"SUGGESTED"} onChange={this.handleChange}/>
-                                        <label htmlFor={"radioSuggested"}>Sugerida para:</label>
-                                        <input type="radio" id={"radioExclusive"} name="access_restriction_type" checked={access_restriction_type==="EXCLUSIVE"}
-                                               className="is-checkradio" value={"EXCLUSIVE"} onChange={this.handleChange}/>
-                                        <label htmlFor={"radioExclusive"}>Exclusiva para:</label>
-                                    </div>
-                                </div>
-                                {
-                                    access_restriction_type !== "OPEN" &&
-                                        <Fragment>
-                                            <label className="label required">Seleccionar rol</label>
-                                            <div className="columns">
-                                                <div className="column is-10">
-                                                    <Select
-                                                        isClearable isMulti
-                                                        styles={creatableStyles}
-                                                        onChange={this.selectRol}
-                                                        options={roles}
-                                                        placeholder={"Seleccione..."}
-                                                        value={selectedRol}
-                                                    />
-                                                </div>
-                                                <div className="column is-2">
-                                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))} className="button"><FaWhmcs/></button>
-                                                </div>
-                                            </div>
-                                        </Fragment>
-                                }
                                 <div className="field">
                                     <label className={`label`}>Capacidad</label>
                                     <div className="control">
