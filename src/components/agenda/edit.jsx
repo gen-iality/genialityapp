@@ -4,7 +4,7 @@ import Moment from "moment";
 import ReactQuill from "react-quill";
 import {DateTimePicker} from "react-widgets";
 import Select, {Creatable} from "react-select";
-import {FaChevronLeft, FaWhmcs} from "react-icons/fa";
+import {FaWhmcs} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import {AgendaApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";

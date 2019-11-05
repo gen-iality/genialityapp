@@ -1,7 +1,6 @@
 import React, {Component} from "react"
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {ChromePicker} from "react-color";
-import {FaChevronLeft} from "react-icons/fa";
 import {CategoriesAgendaApi, TypesAgendaApi} from "../../helpers/request";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";

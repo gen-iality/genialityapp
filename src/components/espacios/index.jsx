@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
-import {FaChevronLeft} from "react-icons/fa";
 import {SpacesApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import Moment from "moment";

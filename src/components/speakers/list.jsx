@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Link, Redirect, withRouter} from "react-router-dom";
-import {FaChevronLeft} from "react-icons/fa";
 import {SpeakersApi} from "../../helpers/request";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
