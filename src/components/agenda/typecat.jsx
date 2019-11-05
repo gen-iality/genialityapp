@@ -34,7 +34,7 @@ class AgendaTypeCat extends Component {
         this.setState({list,loading:false,subject, headers})
     }
 
-    editItem = (type) => this.setState({id:type._id,name:type.name,color:type.color});
+    editItem = (type) => this.setState({id:type._id,name:type.name,color:type.color?type.color:""});
 
     onChange = (e) => {
         this.setState({name:e.target.value})
