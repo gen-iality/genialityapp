@@ -344,7 +344,7 @@ class AgendaEdit extends Component {
                                                     />
                                                 </div>
                                                 <div className="column is-2">
-                                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "/tipo-asistentes"))} className="button"><FaWhmcs/></button>
+                                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))} className="button"><FaWhmcs/></button>
                                                 </div>
                                             </div>
                                         </Fragment>
