@@ -150,25 +150,25 @@ class AgendaTypeCat extends Component {
                                 <td>
                                     {
                                         id === object.value ?
-                                            <button>
+                                            <button data-tooltip="Guardar">
                                             <span className="icon has-text-grey"
                                                   onClick={(e)=>{this.saveItem(object)}}><i className="fas fa-save"/></span>
                                             </button>:
-                                            <button>
+                                            <button data-tooltip="Editar">
                                             <span className="icon has-text-grey"
                                                   onClick={(e)=>this.editItem(object.item)}><i className="fas fa-edit"/></span>
                                             </button>
                                     }
                                     {
                                         object.value === 'new' ?
-                                            <button><span className='icon has-text-grey'
+                                            <button data-tooltip="Eliminar"><span className='icon has-text-grey'
                                                           onClick={this.removeNewItem}><i className='fas fa-times'/></span></button>:
-                                            <button><span className='icon has-text-grey'
+                                            <button data-tooltip="Eliminar"><span className='icon has-text-grey'
                                                           onClick={(e)=>{this.removeItem(object.value)}}><i className='far fa-trash-alt'/></span></button>
                                     }
                                     {
                                         id === object.value &&
-                                        <button>
+                                        <button data-tooltip="Cancelar">
                                             <span className="icon has-text-grey"
                                                   onClick={this.discardChanges}><i className="fas fa-times"/></span>
                                         </button>

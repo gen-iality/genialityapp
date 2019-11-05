@@ -866,6 +866,52 @@ a {
   }
 }
 
+//Tooltip
+[data-tooltip]:not(.is-loading), [data-tooltip]:not(.is-disabled), [data-tooltip]:not([disabled]) {
+  cursor: pointer;
+  overflow: visible;
+  position: relative;
+}
+[data-tooltip]:hover::before,[data-tooltip]:hover::after{
+  opacity: 1;
+  visibility: visible;
+}
+[data-tooltip]::after,[data-tooltip]::before{
+  opacity: 0;
+  visibility: hidden;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-block;
+  font-size: .75rem;
+  hyphens: auto;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1020;
+}
+[data-tooltip]::after{
+  margin: -5px auto auto -5px;
+  content: '';
+  border-style: solid;
+  border-width: 6px;
+  border-color: rgba(74,74,74,0.9) transparent transparent transparent;
+}
+[data-tooltip]::before{
+  background: rgba(74,74,74,0.9);
+  border-radius: 2px;
+  content: attr(data-tooltip);
+  padding: 0.5rem 1rem;
+  text-overflow: ellipsis;
+  white-space: pre;
+  margin-top: -5px;
+  margin-bottom: auto;
+  transform: translate(-50%, -100%);
+}
+
 @media only screen and (max-width: $breakpoint-mobile) {
 
 
