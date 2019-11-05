@@ -4,7 +4,10 @@ export default function EventContent({...props}) {
     const classes = props.classes?`event-datos ${props.classes}`:"event-datos";
     return (
         <div className={classes}>
-            <h2 className="title-section">{props.title}</h2>
+            <div className="header">
+                {props.closeAction && <button className="button is-text" onClick={props.closeAction}><span className="icon"><i className="fas fa-2x fa-chevron-left"/></span></button>}
+                <h2 className="title-section">{props.title}</h2>
+            </div>
             {props.description&&<p>{props.description}</p>}
             {
                 props.addAction &&

@@ -88,6 +88,10 @@ class AgendaTypeCat extends Component {
         }
     };
 
+    discardChanges = () => {
+        this.setState({id:"",name:"",color:""});
+    };
+
     async removeItem(deleteID) {
         this.setState({isLoading:'Cargando....'});
         try {
@@ -99,11 +103,12 @@ class AgendaTypeCat extends Component {
         }
     };
 
+    goBack = () => this.props.history.goBack();
+
     render() {
         const {loading,subject,list,id,name,color,headers} = this.state;
         return (
-            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>{subject === "categorias" ? "Categorías" : "Tipos"} de Actividad</span>}
-                          addAction={this.newItem} addTitle={"Nuevo tipo"}>
+            <EventContent addAction={this.newItem} addTitle={"Nuevo tipo"} closeAction={this.goBack} title={`${subject === "categorias" ? "Categorías" : "Tipos"} de Actividad`}>
                 {loading ? <Loading/> :
                     <EvenTable head={headers}>
                         {list.map(object => {
@@ -161,6 +166,13 @@ class AgendaTypeCat extends Component {
                                                           onClick={this.removeNewItem}><i className='fas fa-times'/></span></button>:
                                             <button><span className='icon has-text-grey'
                                                           onClick={(e)=>{this.removeItem(object.value)}}><i className='far fa-trash-alt'/></span></button>
+                                    }
+                                    {
+                                        id === object.value &&
+                                        <button>
+                                            <span className="icon has-text-grey"
+                                                  onClick={this.discardChanges}><i className="fas fa-times"/></span>
+                                        </button>
                                     }
                                 </td>
                             </tr>

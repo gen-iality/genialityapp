@@ -8,4 +8,10 @@ div.event-datos{
       border: 1px solid black;
     }
   }
+  div.header{
+    display: flex;
+    button{
+      text-decoration: none;
+    }
+  }
 }

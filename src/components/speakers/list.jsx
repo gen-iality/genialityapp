@@ -44,13 +44,14 @@ class SpeakersList extends Component{
         })
     }
 
+    goBack = () => this.props.history.goBack();
+
     render() {
         if(this.state.redirect) return <Redirect to={{pathname:`${this.props.matchUrl}/speaker`,state:{new:true}}}/>;
         const {list,loading} = this.state;
         if(loading) return <Loading/>;
         return (
-            <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>Conferencistas</span>}
-                          description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}>
+            <EventContent title="Conferencistas" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}>
                 <EvenTable>
                     {
                         list.map(speaker => <tr key={speaker._id}>

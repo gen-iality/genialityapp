@@ -197,13 +197,15 @@ class AgendaEdit extends Component {
         this.props.history.push(path)
     };
 
+    goBack = () => this.setState({redirect:true});
+
     render() {
         const {loading,name,subtitle,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
         const {hosts,spaces,categories,types,roles,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
         return (
-            <EventContent title={<span><Link to={matchUrl}><FaChevronLeft/></Link>Actividad</span>}>
+            <EventContent title="Actividad" closeAction={this.goBack}>
                 {loading ? <Loading/> :
                     <div className="columns">
                         <div className="column is-8">

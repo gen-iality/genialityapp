@@ -113,11 +113,12 @@ class Espacios extends Component {
         this.setState({deleteModal:false})
     };
 
+    goBack = () => this.props.history.goBack();
+
     render() {
         return (
             <React.Fragment>
-                <EventContent title={<span><span onClick={()=>this.props.history.goBack()}><FaChevronLeft/></span>Espacios</span>}
-                              description={"Agregue o edite las personas que son conferencistas"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
+                <EventContent title="Espacios" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                     {this.state.loading ? <Loading/> :
                         <EvenTable head={["Nombre",""]}>
                             {this.state.list.map((cert,key)=>{
