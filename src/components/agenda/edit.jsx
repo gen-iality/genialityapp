@@ -137,7 +137,7 @@ class AgendaEdit extends Component {
     };
 
     buildInfo = () => {
-        const {name, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const {name, subtitle, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image} = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -147,6 +147,7 @@ class AgendaEdit extends Component {
         const type_id = selectedType.value;
         return {
             name,
+            subtitle,
             datetime_start,
             datetime_end,
             space_id,
