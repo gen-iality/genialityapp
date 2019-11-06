@@ -52,7 +52,7 @@ class AgendaTypeCat extends Component {
 
     removeNewItem = () => this.setState(state => ({list:state.list.filter(({value}) => value !== "new"),id:"",name:""}));
 
-    async saveItem() {
+    saveItem = async() => {
         try{
             const info = this.state.subject === "categorias" ? {name: this.state.name,color: this.state.color} : {name: this.state.name};
             if(this.state.id !== 'new') {
@@ -91,7 +91,7 @@ class AgendaTypeCat extends Component {
         this.setState({id:"",name:"",color:""});
     };
 
-    async removeItem(deleteID) {
+    removeItem = async(deleteID) => {
         this.setState({isLoading:'Cargando....'});
         try {
             await this.apiURL.deleteOne(deleteID);
