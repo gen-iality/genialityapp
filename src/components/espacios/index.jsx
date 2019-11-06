@@ -3,9 +3,10 @@ import {withRouter} from "react-router-dom";
 import {SpacesApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
 import Moment from "moment";
-import Dialog from "../modal/twoAction";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
+import TableAction from "../events/shared/tableAction";
+import {handleRequestError, sweetAlert} from "../../helpers/utils";
 
 class Espacios extends Component {
     constructor(props) {
@@ -16,8 +17,7 @@ class Espacios extends Component {
             deleteID:'',
             name:'',
             isLoading:false,
-            loading:true,
-            deleteModal:false,
+            loading:true
         };
     }
 
@@ -80,37 +80,23 @@ class Espacios extends Component {
         }
     };
 
-    deleteRol = async() => {
-        this.setState({isLoading:'Cargando....'});
-        const self = this;
-        try {
-            await SpacesApi.deleteOne(this.state.deleteID, this.props.eventID);
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Espacio borrado'},isLoading:false},()=>{
-                setTimeout(()=>{
-                    self.setState({deleteModal:false,deleteID:false,message:""});
-                },1200);
-                this.fetchItem()
-            });
-        }
-        catch (error) {
-            if (error.response) {
-                console.log(error.response);
-                this.setState({message:{...this.state.message,class:'msg_error',content:JSON.stringify(error.response)},isLoading:false})
-            }
-            else if (error.request) {
-                console.log(error.request);
-                this.setState({serverError:true,errorData:{message:error.request,status:708}});
-            }
-            else {
-                console.log('Error', error.message);
-                this.setState({serverError:true,errorData:{message:error.message,status:708}});
-            }
-        }
-    };
+    editItem = (cert) => this.setState({id:cert._id,name:cert.name});
 
-    closeDelete = () => {
-        this.setState({deleteModal:false})
-    };
+    removeItem = (id) => {
+        sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result)=>{
+            try{
+                if(result.value){
+                    sweetAlert.showLoading("Espera (:", "Borrando...");
+                    await SpacesApi.deleteOne(id, this.props.eventID);
+                    this.setState(state => ({id:"",name:""}));
+                    this.fetchItem();
+                    sweetAlert.hideLoading();
+                }
+            }catch (e) {
+                sweetAlert.showError(handleRequestError(e))
+            }
+        });
+    }
 
     goBack = () => this.props.history.goBack();
 
@@ -130,35 +116,13 @@ class Espacios extends Component {
                                         }
                                     </td>
                                     <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
-                                    <td style={{textAlign:'left'}}>
-                                        {
-                                            this.state.id === cert._id ?
-                                                <span className="icon has-text-primary action_pointer"
-                                                      onClick={(e)=>{this.saveRole(cert)}}><i className="fas fa-save"/></span>:
-                                                <span className="icon has-text-primary action_pointer"
-                                                      onClick={(e)=>this.setState({id:cert._id,name:cert.name})}><i className="fas fa-edit"/></span>
-                                        }
-                                        {
-                                            cert._id === 'new' ?
-                                                <span className='icon action_pointer'
-                                                      onClick={this.removeNewRole}><i className='fas fa-times'/></span>:
-                                                <span className='icon has-text-danger action_pointer'
-                                                      onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span>
-                                        }
-                                    </td>
+                                    <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
+                                        removeNew={this.removeNewRole} removeItem={this.removeItem} discardChanges={this.discardChanges}/>
                                 </tr>
                             })}
                         </EvenTable>
                     }
                 </EventContent>
-                {
-                    this.state.deleteModal &&
-                    <Dialog modal={this.state.deleteModal} title={'Borrar Espacio'}
-                            content={<p>¿Estas seguro de eliminar este espacio?</p>}
-                            first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteRol}}
-                            message={this.state.message} isLoading={this.state.isLoading}
-                            second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
-                }
             </React.Fragment>
         )
     }
