@@ -274,8 +274,7 @@ export const SpacesApi = {
 };
 export const CategoriesAgendaApi = {
     byEvent: async(event) => {
-        const {data} = await Actions.getAll(`api/events/${event}/categoryactivities`);
-        return handleSelect(data)
+        return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({data})=>data);
     },
     getOne: async(id, event) => {
         return await Actions.getOne(`api/events/${event}/categoryactivities/`,id)
@@ -292,8 +291,7 @@ export const CategoriesAgendaApi = {
 };
 export const TypesAgendaApi = {
     byEvent: async(event) => {
-        const {data} = await Actions.getAll(`api/events/${event}/type`);
-        return handleSelect(data)
+        return await Actions.getAll(`api/events/${event}/type`).then(({data})=>data);
     },
     getOne: async(id, event) => {
         return await Actions.getOne(`api/events/${event}/type/`,id)

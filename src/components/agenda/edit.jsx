@@ -54,11 +54,13 @@ class AgendaEdit extends Component {
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
         let roles = await RolAttApi.byEvent(this.props.event._id);
+        let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
+        let types = await TypesAgendaApi.byEvent(this.props.event._id);
         spaces = handleSelect(spaces);
         hosts = handleSelect(hosts);
         roles = handleSelect(roles);
-        const categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
-        const types = await TypesAgendaApi.byEvent(this.props.event._id);
+        categories = handleSelect(categories);
+        types = handleSelect(types);
         if(state.edit){
             const info = await AgendaApi.getOne(state.edit, event._id);
             Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
