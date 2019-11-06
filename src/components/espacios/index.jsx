@@ -35,10 +35,12 @@ class Espacios extends Component {
     };
 
     newRole = () => {
-        this.setState(state => {
-            const list = state.list.concat({name:'',created_at:new Date(),_id:'new'});
-            return {list, id: 'new'};
-        });
+        if(!this.state.list.find(({_id})=>_id === "new")) {
+            this.setState(state => {
+                const list = state.list.concat({name: '', created_at: new Date(), _id: 'new'});
+                return {list, id: 'new'};
+            });
+        }
     };
 
     removeNewRole = () => {

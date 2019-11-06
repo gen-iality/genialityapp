@@ -3,31 +3,27 @@ import Moment from "moment";
 import {RolAttApi} from "../../../helpers/request";
 import EventContent from "../shared/content";
 import EvenTable from "../shared/table";
-import Dialog from "../../modal/twoAction";
+import TableAction from "../shared/tableAction";
+import {handleRequestError, sweetAlert} from "../../../helpers/utils";
 
 class TipoAsistentes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            roles:[],
+            list:[],
             id:'',
             deleteID:'',
-            name:'',
-            isLoading:false,
-            deleteModal:false,
+            name:''
         };
-        this.fetchRoles = this.fetchRoles.bind(this);
-        this.saveRole = this.saveRole.bind(this);
-        this.deleteRol = this.deleteRol.bind(this);
     }
 
     async componentDidMount() {
-        this.fetchRoles()
+        this.fetchItems()
     }
 
-    async fetchRoles() {
-        const roles = await RolAttApi.byEvent(this.props.eventID);
-        this.setState({roles})
+    fetchItems = async() => {
+        const list = await RolAttApi.byEvent(this.props.eventID);
+        this.setState({list})
     }
 
     onChange = (e) => {
@@ -35,38 +31,38 @@ class TipoAsistentes extends Component {
     };
 
     newRole = () => {
-        if(!this.state.roles.find(({_id})=>_id === "new")) {
+        if(!this.state.list.find(({_id})=>_id === "new")) {
             this.setState(state => {
-                const list = state.roles.concat({name: '', created_at: new Date(), _id: 'new'});
-                return {roles: list, id: 'new',};
+                const list = state.list.concat({name: '', created_at: new Date(), _id: 'new'});
+                return {list: list, id: 'new',};
             });
         }
     };
 
-    removeNewRole = () => {
+    removeNew = () => {
         this.setState(state => {
-            const list = state.roles.filter(item => item._id !== "new");
-            return {roles:list,id:"",name:""};
+            const list = state.list.filter(item => item._id !== "new");
+            return {list:list,id:"",name:""};
         });
     };
 
-    async saveRole() {
+    saveItem = async()=> {
         try{
             if(this.state.id !== 'new') {
                 await RolAttApi.editOne({name: this.state.name}, this.state.id);
                 this.setState(state => {
-                    const list = state.roles.map(item => {
+                    const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.name = state.name;
                             return item;
                         } else return item;
                     });
-                    return {roles: list, id: "", name: ""};
+                    return {list: list, id: "", name: ""};
                 });
             }else{
                 const newRole = await RolAttApi.create({name: this.state.name, event_id:this.props.eventID});
                 this.setState(state => {
-                    const list = state.roles.map(item => {
+                    const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.name = newRole.name;
                             item.created_at = newRole.created_at;
@@ -74,7 +70,7 @@ class TipoAsistentes extends Component {
                             return item;
                         } else return item;
                     });
-                    return {roles: list, id: "", name: ""};
+                    return {list: list, id: "", name: ""};
                 });
             }
         }catch (e) {
@@ -82,46 +78,32 @@ class TipoAsistentes extends Component {
         }
     };
 
-    async deleteRol() {
-        this.setState({isLoading:'Cargando....'});
-        const self = this;
-        try {
-            await RolAttApi.deleteOne(this.state.deleteID);
-            this.setState({message:{...this.state.message,class:'msg_success',content:'Rol borrado'},isLoading:false},()=>{
-                setTimeout(()=>{
-                    self.setState({deleteModal:false,deleteID:false,message:""});
-                },1200)
-                this.fetchRoles()
-            });
-        }
-        catch (error) {
-            if (error.response) {
-                console.log(error.response);
-                this.setState({message:{...this.state.message,class:'msg_error',content:JSON.stringify(error.response)},isLoading:false})
-            }
-            else if (error.request) {
-                console.log(error.request);
-                this.setState({serverError:true,errorData:{message:error.request,status:708}});
-            }
-            else {
-                console.log('Error', error.message);
-                this.setState({serverError:true,errorData:{message:error.message,status:708}});
-            }
-        }
-    };
+    editItem = (cert) => this.setState({id:cert._id,name:cert.name});
 
-    closeDelete = () => {
-        this.setState({deleteModal:false})
+    removeItem = (deleteID) => {
+        sweetAlert.twoButton(`Está seguro de borrar este tipo de asistente`, "warning", true, "Borrar", async (result)=>{
+            try{
+                if(result.value){
+                    sweetAlert.showLoading("Espera (:", "Borrando...");
+                    await RolAttApi.deleteOne(deleteID);
+                    this.setState(state => ({id:"",name:""}));
+                    this.fetchItems();
+                    sweetAlert.hideLoading();
+                }
+            }catch (e) {
+                sweetAlert.showError(handleRequestError(e))
+            }
+        });
     };
 
     render() {
-        const {roles, id, name, deleteModal, message, isLoading} = this.state;
+        const {list, id, name} = this.state;
         return (
             <Fragment>
                 <EventContent title={"Tipo de asistentes"} description={"Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc."}
                     addAction={this.newRole} addTitle={"Nuevo rol"}>
                     <EvenTable head={["Nombre","Fecha Creación","Acciones"]}>
-                        {roles.map((cert,key)=>{
+                        {list.map((cert,key)=>{
                             return <tr key={key}>
                                 <td>
                                     {
@@ -131,38 +113,12 @@ class TipoAsistentes extends Component {
                                     }
                                 </td>
                                 <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
-                                <td>
-                                    {
-                                        id === cert._id ?
-                                            <button>
-                                            <span className="icon has-text-grey"
-                                                  onClick={(e)=>{this.saveRole(cert)}}><i className="fas fa-save"/></span>
-                                            </button>:
-                                            <button>
-                                            <span className="icon has-text-grey"
-                                                  onClick={(e)=>this.setState({id:cert._id,name:cert.name})}><i className="fas fa-edit"/></span>
-                                            </button>
-                                    }
-                                    {
-                                        cert._id === 'new' ?
-                                            <button><span className='icon has-text-grey'
-                                                          onClick={this.removeNewRole}><i className='fas fa-times'/></span></button>:
-                                            <button><span className='icon has-text-grey'
-                                                          onClick={(e)=>{this.setState({deleteID:cert._id,deleteModal:true})}}><i className='far fa-trash-alt'/></span></button>
-                                    }
-                                </td>
+                                <TableAction id={id} object={cert} saveItem={this.saveItem} editItem={this.editItem}
+                                             removeNew={this.removeNew} removeItem={this.removeItem} discardChanges={this.discardChanges}/>
                             </tr>
                         })}
                     </EvenTable>
                 </EventContent>
-                {
-                    deleteModal &&
-                    <Dialog modal={deleteModal} title={'Borrar Rol'}
-                            content={<p>¿Estas seguro de eliminar este rol de asistente?</p>}
-                            first={{title:'Borrar',class:'is-dark has-text-danger',action:this.deleteRol}}
-                            message={message} isLoading={isLoading}
-                            second={{title:'Cancelar',class:'',action:this.closeDelete}}/>
-                }
             </Fragment>
         )
     }
