@@ -171,9 +171,9 @@ class QrModal extends Component {
                                 <React.Fragment>
                                     {
                                         !qrData.another &&
-                                        <button className="button is-success is-outlined" onClick={e=>{this.checkIn(qrData.user)}}>Check User</button>
+                                        <button className="button is-success" onClick={e=>{this.props.checkIn(qrData.user)}}>Check User</button>
                                     }
-                                    <button className="button is-info" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
+                                    <button className="button" onClick={e=>{this.editQRUser(qrData.user)}}>Edit User</button>
                                     <button className="button" onClick={this.readQr}>Read Other</button>
                                 </React.Fragment>
                             )

@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {connect} from "react-redux";
 import CheckSpace from "./checkSpace";
 import QrModal from "./qrModal";
-import {handleRequestError} from "../../helpers/utils";
+import {handleRequestError, sweetAlert} from "../../helpers/utils";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -90,7 +90,6 @@ class ListEventUser extends Component {
                         newItems.splice(change.oldIndex, 1);
                     }
                 });
-                console.log(newItems);
                 this.setState((prevState) => {
                     const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                     return {
@@ -125,7 +124,6 @@ class ListEventUser extends Component {
     };
 
     addUser = () => {
-        const html = document.querySelector("html");
         html.classList.add('is-clipped');
         this.setState((prevState) => {
             return {editUser:!prevState.editUser,edit:false}
@@ -186,6 +184,7 @@ class ListEventUser extends Component {
                 })
                     .then(()=> {
                         console.log("Document successfully updated!");
+                        toast.success("Usuario Chequeado");
                     })
                     .catch(error => {
                         console.error("Error updating document: ", error);
@@ -199,6 +198,15 @@ class ListEventUser extends Component {
         this.setState({ pageOfItems: pageOfItems });
     };
 
+    showMetaData = (value) => {
+        html.classList.add('is-clipped');
+        let content = "";
+        Object.keys(value).map(key=>content+=`<p><b>${key}:</b> ${value[key]}</p>`);
+        sweetAlert.simple("Información", content, "Cerrar", "#1CDCB7", ()=>{
+            html.classList.remove('is-clipped');
+        })
+    };
+
     renderRows = () => {
         const items = [];
         const {extraFields, spacesEvent} = this.state;
@@ -206,7 +214,7 @@ class ListEventUser extends Component {
         this.state.pageOfItems.map((item,key)=>{
             return items.push(<tr key={key}>
                 <td>
-                    <span className="icon has-text-primary action_pointer"
+                    <span className="icon has-text-grey action_pointer" data-tooltip={"Editar"}
                           onClick={(e)=>{this.openEditModalUser(item)}}><i className="fas fa-edit"/></span>
                 </td>
                 <td>
@@ -220,11 +228,18 @@ class ListEventUser extends Component {
                     }
                 </td>
                 {
-                    extraFields.slice(0, limit).filter(({name})=>name !== "meta_data").map((field,key)=>{
-                        let value = item.properties[field.name];
+                    extraFields.slice(0, limit).map((field,key)=>{
+                        let value;
                         switch (field.type) {
                             case "boolean":
                                 value = item.properties[field.name] ? 'SI' : 'NO';
+                                break;
+                            case "complex":
+                                value = <span className="icon has-text-grey action_pointer" data-tooltip={"Detalle"}
+                                      onClick={()=>this.showMetaData(item.properties[field.name])}><i className="fas fa-eye"/></span>;
+                                break;
+                            default:
+                                value = item.properties[field.name]
                         }
                         return <td key={`${item._id}_${field.name}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
                     })
