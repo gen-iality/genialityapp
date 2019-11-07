@@ -226,7 +226,7 @@ class ListEventUser extends Component {
                             case "boolean":
                                 value = item.properties[field.name] ? 'SI' : 'NO';
                         }
-                        return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
+                        return <td key={`${item._id}_${field.name}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
                     })
                 }
                 {
@@ -414,7 +414,7 @@ class ListEventUser extends Component {
                                             <th className="is-capitalized">Check</th>
                                             {
                                                 extraFields.map((field,key)=>{
-                                                    return <th key={key} className="is-capitalized">{field.name}</th>
+                                                    return <th key={key} className="is-capitalized">{field.label}</th>
                                                 })
                                             }
                                             {
