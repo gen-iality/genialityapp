@@ -90,6 +90,7 @@ class ListEventUser extends Component {
                         newItems.splice(change.oldIndex, 1);
                     }
                 });
+                console.log(newItems);
                 this.setState((prevState) => {
                     const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                     return {
@@ -219,9 +220,12 @@ class ListEventUser extends Component {
                     }
                 </td>
                 {
-                    extraFields.slice(0, limit).map((field,key)=>{
-                        const value = field.type !== 'boolean' ? item.properties[field.name] :
-                            item.properties[field.name] ? 'SI' : 'NO';
+                    extraFields.slice(0, limit).filter(({name})=>name !== "meta_data").map((field,key)=>{
+                        let value = item.properties[field.name];
+                        switch (field.type) {
+                            case "boolean":
+                                value = item.properties[field.name] ? 'SI' : 'NO';
+                        }
                         return <td key={`${item._id}_${field.name}`}>{field.label}: {value}</td>
                     })
                 }
@@ -396,44 +400,42 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     }
-                    <div className="columns checkin-table">
-                        <div className="column">
-                            {this.state.loading ? <Fragment>
-                                    <Loading/>
-                                    <h2 className="has-text-centered">Cargando...</h2>
-                                </Fragment>:
-                                <div className="table-wrapper">
-                                    <div className="table">
-                                        <table className="table">
-                                            <thead>
-                                            <tr>
-                                                <th/>
-                                                <th className="is-capitalized">Check</th>
-                                                {
-                                                    extraFields.map((field,key)=>{
-                                                        return <th key={key} className="is-capitalized">{field.name}</th>
-                                                    })
-                                                }
-                                                {
-                                                    spacesEvent.map((space,key)=><th key={key}>{space.name}</th>)
-                                                }
-                                                <th>Tiquete</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
+                    <div className="checkin-table">
+                        {this.state.loading ? <Fragment>
+                                <Loading/>
+                                <h2 className="has-text-centered">Cargando...</h2>
+                            </Fragment>:
+                            <div className="table-wrapper">
+                                <div className="table">
+                                    <table className="table">
+                                        <thead>
+                                        <tr>
+                                            <th/>
+                                            <th className="is-capitalized">Check</th>
                                             {
-                                                this.renderRows()
+                                                extraFields.map((field,key)=>{
+                                                    return <th key={key} className="is-capitalized">{field.name}</th>
+                                                })
                                             }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <Pagination
-                                        items={users}
-                                        change={this.state.changeItem}
-                                        onChangePage={this.onChangePage}
-                                    />
-                                </div>}
-                        </div>
+                                            {
+                                                spacesEvent.map((space,key)=><th key={key}>{space.name}</th>)
+                                            }
+                                            <th>Tiquete</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {
+                                            this.renderRows()
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <Pagination
+                                    items={users}
+                                    change={this.state.changeItem}
+                                    onChangePage={this.onChangePage}
+                                />
+                            </div>}
                     </div>
                     <div className="checkin-warning">
                         <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
@@ -462,10 +464,12 @@ const parseData = (data) => {
         Object.keys(item.properties).map((obj, i) => {
             let str = item.properties[obj];
             if(typeof str === "number") str = str.toString();
+            if(typeof str === "object") str = JSON.stringify(str);
+            if(typeof str === "boolean") str = str ? "TRUE" : "FALSE";
             if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
             return info[key][obj] = str
         });
-        if(item.rol) info[key]['rol'] = item.rol.label.toUpperCase();
+        if(item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.toUpperCase();
         info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
         info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
         info[key]['Actualizado'] = item.updated_at;

@@ -24,11 +24,6 @@
 }
 
 .checkin {
-  padding: 0.5rem 2.25rem;
-  width: 80%;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
   .checkin-header {
     width: 100%;
   }
@@ -72,13 +67,11 @@
     width: 100%;
   }
   .checkin-table {
-    .column {
-      .table-wrapper {
-        width: 80%;
-        .table {
-          overflow-x: visible;
-          overflow-y: auto;
-        }
+    .table-wrapper {
+      width: 80%;
+      .table {
+        overflow-x: visible;
+        overflow-y: auto;
       }
     }
   }
