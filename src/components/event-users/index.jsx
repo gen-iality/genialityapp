@@ -60,10 +60,10 @@ class ListEventUser extends Component {
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
-            const spacesEvent = await SpacesApi.byEvent(this.props.event._id);
+            //const spacesEvent = await SpacesApi.byEvent(this.props.event._id);
             const listTickets = event.tickets ? [...event.tickets] : [];
             let {checkIn,changeItem} = this.state;
-            this.setState({ extraFields: properties, rolesList, badgeEvent, spacesEvent });
+            this.setState({ extraFields: properties, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
             let newItems= [...this.state.userReq];
             this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
@@ -243,9 +243,6 @@ class ListEventUser extends Component {
                         }
                         return <td key={`${item._id}_${field.name}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
                     })
-                }
-                {
-                    spacesEvent.map((space,key)=><td key={`space${key}`}>{space.name}: {(item.spaces&&item.spaces[space._id]) ? 'SI' : 'NO'}</td>)
                 }
                 <td>{item.tiquete?item.tiquete.title:'SIN TIQUETE'}</td>
             </tr>)
@@ -431,9 +428,6 @@ class ListEventUser extends Component {
                                                 extraFields.map((field,key)=>{
                                                     return <th key={key} className="is-capitalized">{field.label}</th>
                                                 })
-                                            }
-                                            {
-                                                spacesEvent.map((space,key)=><th key={key}>{space.name}</th>)
                                             }
                                             <th>Tiquete</th>
                                         </tr>

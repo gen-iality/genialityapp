@@ -83,7 +83,7 @@ export const typeInputs = [
     {value:'date',label:'Fecha (DD/MM/YYYY)'},
     {value:'boolean',label:'Si/No'},
     {value:'file',label:'Archivo'},
-    {value:'map',label:'JSON'},
+    {value:'complex',label:'JSON'},
 ];
 export const toolbarEditor = {
     toolbar: [
