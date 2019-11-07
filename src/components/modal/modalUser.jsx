@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import QRCode from 'qrcode.react';
-import {BadgeApi, RolAttApi} from "../../helpers/request";
 import {icon} from "../../helpers/constants";
 import {Redirect} from "react-router-dom";
 
@@ -29,7 +28,7 @@ class UserModal extends Component {
 
     componentDidMount() {
         const self = this;
-        const {states, rolesList} = this.props;
+        const { rolesList } = this.props;
         self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
         let user = {};
         if (this.props.edit) {
@@ -252,7 +251,6 @@ class UserModal extends Component {
 
     onChange = (e,type) => {
         const {value,name} = e.target;
-        //console.log(`${name} changed ${value} type ${type}`);
         (type === "boolean") ?
             this.setState(prevState=>{return {user:{...this.state.user,[name]: !prevState.user[name]}}}, this.validForm)
             : this.setState({user:{...this.state.user,[name]:value}}, this.validForm);
@@ -284,7 +282,6 @@ class UserModal extends Component {
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         const self = this;
         let message = {};
-        this.props.statesCounter(null,this.props.value.state_id);
         userRef.doc(this.props.value._id).delete().then(function() {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';
@@ -308,7 +305,6 @@ class UserModal extends Component {
     closeNoBadge = () => {this.setState({noBadge:false});};
 
     unCheck = () => {
-        //console.log(this.props.value);
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`).doc(this.props.value._id);
         userRef.update({checked_in:false,checked_at:app.firestore.FieldValue.delete()})
             .then(() => {
@@ -326,7 +322,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const {user,checked_in,ticket_id,rol,rolesList,state,statesList,userId} = this.state;
+        const {user,checked_in,ticket_id,rol,rolesList,userId} = this.state;
         const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
         return (

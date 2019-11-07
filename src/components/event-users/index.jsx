@@ -23,6 +23,7 @@ class ListEventUser extends Component {
             users:      [],
             userReq:    [],
             pageOfItems:[],
+            listTickets:[],
             usersRef:   firestore.collection(`${props.event._id}_event_attendees`),
             pilaRef:    firestore.collection('pila'),
             total:      0,
@@ -92,7 +93,7 @@ class ListEventUser extends Component {
                 this.setState((prevState) => {
                     const usersToShow = (ticket.length <= 0 || stage.length <= 0) ?  [...newItems].slice(0,50) : [...prevState.users];
                     return {
-                        userReq: newItems, auxArr: newItems, users: usersToShow, changeItem,
+                        userReq: newItems, auxArr: newItems, users: usersToShow, changeItem, listTickets,
                         loading: false,total: newItems.length + acompanates, checkIn, clearSearch: !prevState.clearSearch
                     }
                 });
