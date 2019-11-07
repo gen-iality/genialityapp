@@ -212,7 +212,7 @@ export const HelperApi = {
 };
 export const CertsApi = {
     byEvent: async(event) => {
-        return await Actions.getAll(`api/events/${event}/certificates`)
+        return await Actions.getAll(`api/events/${event}/certificates`).then(({data})=>data);
     },
     getOne: async(id) => {
         return await Actions.get(`api/certificate/`,id)
