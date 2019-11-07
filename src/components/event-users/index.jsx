@@ -288,7 +288,7 @@ class ListEventUser extends Component {
         const {event:{event_stages},permissions} = this.props;
         return (
             <React.Fragment>
-                <div className="checkin">
+                <div className="checkin" style={ { maxWidth: '1000px'} } >
                     <h2 className="title-section">Check In</h2>
                     <div className="columns">
                         <div className="search column is-8">
