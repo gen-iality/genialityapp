@@ -441,7 +441,7 @@ class ListEventUser extends Component {
                 </div>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                           ticket={ticket} tickets={this.props.event.tickets} rolesList={this.state.rolesList}
+                           ticket={ticket} tickets={this.state.listTickets} rolesList={this.state.rolesList}
                            value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
                            extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit}/>
                 }
