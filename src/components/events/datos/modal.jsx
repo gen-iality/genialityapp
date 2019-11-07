@@ -19,7 +19,7 @@ class DatosModal extends Component {
 
     handleChange = (e) => {
         let {name, value} = e.target;
-        if(name === 'label') this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}},this.validForm);
+        if(name === 'label' && !this.props.edit) this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}},this.validForm);
         else this.setState({info:{...this.state.info,[name]:value}},this.validForm);
     };
     validForm = () => {
