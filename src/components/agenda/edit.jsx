@@ -9,7 +9,7 @@ import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import {AgendaApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi} from "../../helpers/request";
 import {toolbarEditor} from "../../helpers/constants";
-import {fieldsSelect, handleRequestError, handleSelect, loadImage, sweetAlert} from "../../helpers/utils";
+import {fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage} from "../../helpers/utils";
 import Dropzone from "react-dropzone";
 
 class AgendaEdit extends Component {
@@ -95,25 +95,36 @@ class AgendaEdit extends Component {
         this.setState({ selectedRol });
     };
     handleCreate = async(value,name) => {
-        this.setState({isLoading:{...this.isLoading,[name]:true}});
-        const item = name === "types" ?
-            await TypesAgendaApi.create(this.props.event._id,{name:value}):
-            await CategoriesAgendaApi.create(this.props.event._id,{name:value});
-        const newOption = {label:value,value:item._id,item};
-        this.setState( prevState => ({
-            isLoading: {...prevState.isLoading,[name]:false},
-            [name]: [...prevState[name], newOption]
-        }),()=>{
-            if(name === "types") this.setState({selectedType: newOption});
-            else this.setState(state => ({selectedCategories:[...state.selectedCategories, newOption]}))
-        });
+        try {
+            this.setState({isLoading: {...this.isLoading, [name]: true}});
+            const item = name === "types" ?
+                await TypesAgendaApi.create(this.props.event._id, {name: value}) :
+                await CategoriesAgendaApi.create(this.props.event._id, {name: value});
+            const newOption = {label: value, value: item._id, item};
+            this.setState(prevState => ({
+                isLoading: {...prevState.isLoading, [name]: false},
+                [name]: [...prevState[name], newOption]
+            }), () => {
+                if (name === "types") this.setState({selectedType: newOption});
+                else this.setState(state => ({selectedCategories: [...state.selectedCategories, newOption]}))
+            });
+        }catch (e) {
+            this.setState(prevState => ({isLoading: {...prevState.isLoading, [name]: false}}));
+            sweetAlert.showError(handleRequestError(e))
+        }
     };
-    changeImg = (files) => {
-        const file = files[0];
-        if(file)
-            loadImage(file, image=> this.setState({image}));
-        else{
-            this.setState({errImg:'Only images files allowed. Please try again :)'});
+    changeImg = async(files) => {
+        try {
+            const file = files[0];
+            if(file) {
+                const image = await uploadImage(file);
+                this.setState({image})
+            }
+            else{
+                this.setState({errImg:'Only images files allowed. Please try again :)'});
+            }
+        }catch (e) {
+            sweetAlert.showError(handleRequestError(e))
         }
     };
 

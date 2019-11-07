@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 import {FaChevronLeft} from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import {handleRequestError, loadImage, sweetAlert} from "../../helpers/utils";
+import {handleRequestError, sweetAlert, uploadImage} from "../../helpers/utils";
 import {imageBox, toolbarEditor} from "../../helpers/constants";
 import {SpeakersApi} from "../../helpers/request";
 
@@ -38,12 +38,18 @@ class Speaker extends Component {
         const {value} = e.target;
         this.setState({[name]:value});
     };
-    handleImage = (files) => {
-        const file = files[0];
-        if(file)
-            loadImage(file, image=> this.setState({image}));
-        else{
-            this.setState({errImg:'Only images files allowed. Please try again :)'});
+    handleImage = async(files) => {
+        try{
+            const file = files[0];
+            if(file){
+                const image = await uploadImage(file);
+                this.setState({image})
+            }
+            else{
+                this.setState({errImg:'Only images files allowed. Please try again :)'});
+            }
+        }catch (e) {
+            sweetAlert.showError(handleRequestError(e))
         }
     };
     chgTxt= content => this.setState({description:content});
@@ -80,7 +86,7 @@ class Speaker extends Component {
                 }
             })
         }else this.setState({redirect:true});
-    }
+    };
 
     render() {
         const {matchUrl} = this.props;

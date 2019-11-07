@@ -1,5 +1,6 @@
 //Función para generar UUID
 import Swal from "sweetalert2";
+import {Actions} from "./request";
 
 export function uniqueID(){
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -30,6 +31,16 @@ export function loadImage(src,cb){
         reader.onload = () => cb(reader.result)
     };
     i.src = src.preview
+}
+
+export function uploadImage(file){
+    return new Promise((resolve, reject) => {
+        let data = new FormData();
+        data.append('file',file);
+        Actions.post("/api/files/upload", data)
+            .then((image) => resolve(image))
+            .catch(e => reject(e));
+    })
 }
 
 export function handleRequestError(error) {
