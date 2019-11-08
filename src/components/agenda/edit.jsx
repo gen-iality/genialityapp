@@ -18,6 +18,7 @@ class AgendaEdit extends Component {
         this.state = {
             loading:true,
             redirect:false,
+            deleteID:false,
             isLoading:{types:true,categories:true},
             name:"",
             subtitle:"",
@@ -65,10 +66,11 @@ class AgendaEdit extends Component {
             const info = await AgendaApi.getOne(state.edit, event._id);
             Object.keys(this.state).map(key=>info[key]?this.setState({[key]:info[key]}):"");
             const {date,hour_start,hour_end} = handleDate(info);
-            this.setState({date,hour_start,hour_end, selectedHosts:fieldsSelect(info.host_ids, hosts), selectedRol:fieldsSelect(info.access_restriction_rol_ids, roles),
+            this.setState({deleteID:state.edit, date,hour_start,hour_end,
+                selectedHosts:fieldsSelect(info.host_ids, hosts), selectedRol:fieldsSelect(info.access_restriction_rol_ids, roles),
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories_ids,categories)})
         }else{
-            this.setState({date:days[0]})
+            this.setState({date:days[0],selectedRol:roles})
         }
         const isLoading = {types:false,categories:false};
         this.setState({days,spaces,hosts,categories,types,roles,loading:false,isLoading});
@@ -138,7 +140,10 @@ class AgendaEdit extends Component {
                 const {event, location: {state}} = this.props;
                 this.setState({isLoading: true});
                 if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
-                else await AgendaApi.create(event._id, info);
+                else {
+                    const agenda = await AgendaApi.create(event._id, info);
+                    this.setState({deleteID:agenda._id})
+                }
                 sweetAlert.hideLoading();
                 sweetAlert.showSuccess("Información guardada")
             } catch (e) {
@@ -153,7 +158,7 @@ class AgendaEdit extends Component {
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({value}) => value) : [];
-        const access_restriction_rol_ids = selectedRol.length > 0 ? selectedRol.map(({value}) => value) : [];
+        const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({value}) => value) : [];
         const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({value}) => value) : [];
         const type_id = selectedType.value;
         return {
@@ -174,13 +179,12 @@ class AgendaEdit extends Component {
     };
 
     remove = () => {
-        const { event, location:{state} } = this.props;
-        if(state.edit){
+        if(this.state.deleteID){
             sweetAlert.twoButton(`Está seguro de borrar esta actividad`, "warning", true, "Borrar", async (result)=>{
                 try{
                     if(result.value){
                         sweetAlert.showLoading("Espera (:", "Borrando...");
-                        await AgendaApi.deleteOne(state.edit, event._id);
+                        await AgendaApi.deleteOne(this.state.deleteID, this.props.event._id);
                         this.setState({redirect:true});
                         sweetAlert.hideLoading();
                     }
