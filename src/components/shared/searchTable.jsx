@@ -65,6 +65,12 @@ class SearchComponent extends Component {
                     item.user.email.search(new RegExp(value, 'i')) >= 0 ||
                     item.user.displayName.search(new RegExp(value, 'i')) >= 0);
             }
+            else if(this.props.kind === 'agenda'){
+                arrAux = this.props.data.filter(item =>
+                    item.name.search(new RegExp(value, 'i')) >= 0 ||
+                    item.space.name.search(new RegExp(value, 'i')) >= 0 ||
+                    item.hosts.find(({name})=>name.search(new RegExp(value, "i")) >= 0));
+            }
         }
         return arrAux
     }
@@ -96,7 +102,7 @@ class SearchComponent extends Component {
         return (
             <div className={this.props.classes}>
                 <p className="control has-icons-left">
-                    <input className="input" type="text" placeholder="Buscar" onChange={this.handleFilter} value={this.state.value}/>
+                    <input className="input" type="text" placeholder={`Buscar ${this.props.placeholder}`} onChange={this.handleFilter} value={this.state.value}/>
                     <span className="icon is-small is-left"><i className="fas fa-search"/></span>
                 </p>
                 {this.state.showMessage && (

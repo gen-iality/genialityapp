@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {Link, Redirect} from "react-router-dom";
-import EventContent from "../events/shared/content";
-import {AgendaApi} from "../../helpers/request";
 import Moment from "moment";
+import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
+import SearchComponent from "../shared/searchTable";
+import {AgendaApi} from "../../helpers/request";
 
 class Agenda extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ class Agenda extends Component {
             days:[],
             day:"",
             filtered:[],
+            toShow:[],
             redirect:false
         }
     }
@@ -32,7 +34,7 @@ class Agenda extends Component {
     fetchAgenda = async() => {
         const {data} = await AgendaApi.byEvent(this.props.event._id);
         const filtered = this.filterByDay(this.state.days[0],data);
-        this.setState({list:data,filtered})
+        this.setState({list:data,filtered,toShow:filtered})
     };
 
     filterByDay = (day,agenda) => {
@@ -50,15 +52,17 @@ class Agenda extends Component {
 
     selectDay = (day) => {
         const filtered = this.filterByDay(day,this.state.list);
-        this.setState({filtered,day})
+        this.setState({filtered,toShow:filtered,day})
 
     };
+
+    searchResult = (data) => this.setState({toShow:!data?[]:data});
 
     redirect = () => this.setState({redirect:true});
 
     render() {
         if(this.state.redirect) return <Redirect to={{pathname:`${this.props.matchUrl}/actividad`,state:{new:true}}}/>;
-        const {days,day,filtered} = this.state;
+        const {days,day,filtered,toShow} = this.state;
         return (
             <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
                 <nav className="level">
@@ -72,12 +76,10 @@ class Agenda extends Component {
                             )
                         }
                     </div>
-                    <div className="level-right">
-
-                    </div>
                 </nav>
+                <SearchComponent data={filtered} placeholder={"por Nombre, Espacio o Conferencista"} kind={'agenda'} classes={"field"} searchResult={this.searchResult}/>
                 <EvenTable head={["Hora", "Actividad", "Categorías", "Espacio", "Conferencista", ""]}>
-                    {filtered.map(agenda=><tr key={agenda._id}>
+                    {toShow.map(agenda=><tr key={agenda._id}>
                         <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>
                             <p>{agenda.name}</p>
