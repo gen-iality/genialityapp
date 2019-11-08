@@ -70,7 +70,7 @@ class AgendaEdit extends Component {
                 selectedHosts:fieldsSelect(info.host_ids, hosts), selectedRol:fieldsSelect(info.access_restriction_rol_ids, roles),
                 selectedType:fieldsSelect(info.type_id,types),selectedCategories:fieldsSelect(info.activity_categories_ids,categories)})
         }else{
-            this.setState({date:days[0],selectedRol:roles})
+            this.setState({date:days[0]})
         }
         const isLoading = {types:false,categories:false};
         this.setState({days,spaces,hosts,categories,types,roles,loading:false,isLoading});
@@ -215,6 +215,11 @@ class AgendaEdit extends Component {
         this.props.history.push(path)
     };
 
+    addRoles = () => {
+        if(this.state.roles.length !== this.state.selectedRol)
+            this.setState(prevState => ({selectedRol:prevState.roles}));
+    };
+
     goBack = () => this.setState({redirect:true});
 
     render() {
@@ -326,7 +331,10 @@ class AgendaEdit extends Component {
                             {
                                 access_restriction_type !== "OPEN" &&
                                 <Fragment>
-                                    <label className="label required">Asginar a :</label>
+                                    <div style={{display:"flex"}}>
+                                        <label className="label required">Asginar a :</label>
+                                        <button className="button is-text is-small" onClick={this.addRoles}>todos los roles</button>
+                                    </div>
                                     <div className="columns">
                                         <div className="column is-10">
                                             <Select
