@@ -49,7 +49,7 @@ class TipoAsistentes extends Component {
     saveItem = async()=> {
         try{
             if(this.state.id !== 'new') {
-                await RolAttApi.editOne({name: this.state.name}, this.state.id);
+                await RolAttApi.editOne({name: this.state.name}, this.state.id, this.props.eventID);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -85,7 +85,7 @@ class TipoAsistentes extends Component {
             try{
                 if(result.value){
                     sweetAlert.showLoading("Espera (:", "Borrando...");
-                    await RolAttApi.deleteOne(deleteID);
+                    await RolAttApi.deleteOne(deleteID, this.props.eventID);
                     this.setState(state => ({id:"",name:""}));
                     this.fetchItems();
                     sweetAlert.hideLoading();

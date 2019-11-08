@@ -242,17 +242,17 @@ export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)
     },
-    getOne: async(id) => {
-        return await Actions.get(`api/rolesattendees/`,id)
+    getOne: async(event, id) => {
+        return await Actions.get(`api/events/${event}/rolesattendees/`,id)
     },
-    editOne: async (data, id) => {
-        return await Actions.edit('/api/rolesattendees', data, id)
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`/api/events/${event}/rolesattendees`, data, id)
     },
-    deleteOne: async (id) => {
-        return await Actions.delete('/api/rolesattendees', id);
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`/api/events/${event}/rolesattendees`, id);
     },
-    create: async(data) => {
-        return await Actions.create(`api/rolesattendees`,data)
+    create: async(data, event) => {
+        return await Actions.create(`api/events/${event}/rolesattendees`,data)
     }
 };
 export const SpacesApi = {
