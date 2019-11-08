@@ -5,6 +5,8 @@ import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import EvenTable from "../events/shared/table";
 import {handleRequestError, sweetAlert} from "../../helpers/utils";
+import Pagination from "../shared/pagination";
+import SearchComponent from "../shared/searchTable";
 
 class SpeakersList extends Component{
     constructor(props){
@@ -12,6 +14,9 @@ class SpeakersList extends Component{
         this.state = {
             loading:true,
             list:[],
+            speakersList:[],
+            pageOfItems:[],
+            changeItem: false,
             redirect:false
         }
     }
@@ -22,7 +27,7 @@ class SpeakersList extends Component{
 
     fetchSpeakers = async() => {
         const data = await SpeakersApi.byEvent(this.props.eventID);
-        this.setState({list:data,loading:false})
+        this.setState({list:data,speakersList:data,loading:false})
     };
 
     redirect = () => this.setState({redirect:true});
@@ -45,15 +50,24 @@ class SpeakersList extends Component{
 
     goBack = () => this.props.history.goBack();
 
+    searchResult = (data) => {
+        !data ? this.setState({list:[]}) : this.setState({list:data})
+    };
+
+    onChangePage = (pageOfItems) => {
+        this.setState({ pageOfItems: pageOfItems });
+    };
+
     render() {
         if(this.state.redirect) return <Redirect to={{pathname:`${this.props.matchUrl}/speaker`,state:{new:true}}}/>;
-        const {list,loading} = this.state;
+        const {list,speakersList,pageOfItems,loading} = this.state;
         if(loading) return <Loading/>;
         return (
-            <EventContent title="Conferencistas" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}>
+            <EventContent title="Conferencistas" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}
+                          actionLeft={<SearchComponent data={speakersList} placeholder={"por Nombre"} kind={'speakers'} classes={"field"} searchResult={this.searchResult}/>}>
                 <EvenTable>
                     {
-                        list.map(speaker => <tr key={speaker._id}>
+                        pageOfItems.map(speaker => <tr key={speaker._id}>
                                 <td>
                                 <div style={{display:"flex"}}>
                                     {speaker.image&&<img src={speaker.image} alt={`speaker_${speaker.name}`} className="author-image"/>}
@@ -72,6 +86,11 @@ class SpeakersList extends Component{
                             </tr>)
                     }
                 </EvenTable>
+                <Pagination
+                    items={list}
+                    change={this.state.changeItem}
+                    onChangePage={this.onChangePage}
+                />
             </EventContent>
         )
     }

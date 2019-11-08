@@ -71,6 +71,8 @@ class SearchComponent extends Component {
                     item.space.name.search(new RegExp(value, 'i')) >= 0 ||
                     item.hosts.find(({name})=>name.search(new RegExp(value, "i")) >= 0));
             }
+            else if(this.props.kind === 'speakers')
+                arrAux = this.props.data.filter(({name}) => name.search(new RegExp(value, 'i')) >= 0);
         }
         return arrAux
     }

@@ -9,17 +9,22 @@ export default function EventContent({...props}) {
                 <h2 className="title-section">{props.title}</h2>
             </div>
             {props.description&&<p>{props.description}</p>}
-            {
-                props.addAction &&
-                <div className="columns is-mobile">
-                    <div className="column is-3 is-offset-9">
-                        <button className="button add" onClick={props.addAction}>
-                            <span className="icon"><i className="fas fa-plus-circle"/></span>
-                            <span>{props.addTitle}</span>
-                        </button>
-                    </div>
+            <nav className="level">
+                <div className="level-left">
+                    {props.actionLeft}
                 </div>
-            }
+                {
+                    props.addAction &&
+                    <div className="level-right">
+                        <div className="level-item">
+                            <button className="button add" onClick={props.addAction}>
+                                <span className="icon"><i className="fas fa-plus-circle"/></span>
+                                <span>{props.addTitle}</span>
+                            </button>
+                        </div>
+                    </div>
+                }
+            </nav>
             {props.children}
         </div>
     )
