@@ -91,12 +91,10 @@ export const toolbarEditor = {
         [{ 'header': [0,1, 2, 3] }],
         [{ 'size': []}],
         [{ 'align': []}],
-        ['bold', 'italic', 'underline','strike', 'blockquote'],
-        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-        ['link', 'image'],
-        [{'color':[]}, {'background':[]}],
-        ['clean']
-    ],
+        ['bold', 'italic', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['link', 'image']
+    ]
 };
 
 export const imageBox = "<svg id=\"Layer_1\" style=\"enable-background:new 0 0 64 64;\" version=\"1.1\" viewBox=\"0 0 64 64\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><style type=\"text/css\">\n" +
