@@ -5,7 +5,7 @@ export default function EventContent({...props}) {
     return (
         <div className={classes}>
             <div className="header">
-                {props.closeAction && <button className="button is-text" onClick={props.closeAction}><span className="icon"><i className="fas fa-2x fa-chevron-left"/></span></button>}
+                {props.closeAction && <button className="button is-text" onClick={props.closeAction}><span className="icon"><i className="fas fa-chevron-left"/></span></button>}
                 <h2 className="title-section">{props.title}</h2>
             </div>
             {props.description&&<p>{props.description}</p>}

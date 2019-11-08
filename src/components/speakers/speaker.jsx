@@ -138,7 +138,7 @@ class Speaker extends Component {
                                     </div>
                                     <div className="column is-9">
                                         <div className="has-text-left">
-                                            <p>Dimensiones: 400px x 250px</p>
+                                            <p>Dimensiones: 1080px x 1080px</p>
                                             <Dropzone onDrop={this.handleImage} accept="image/*" className="zone">
                                                 <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
                                             </Dropzone>
