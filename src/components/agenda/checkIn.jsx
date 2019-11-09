@@ -63,7 +63,6 @@ class CheckAgenda extends Component {
 
     render() {
         const {days,day,filtered,toShow} = this.state;
-        console.log(toShow);
         return (
             <EventContent title={"CheckIn por Actividad"} classes={"agenda-list"}>
                 <nav className="level">
