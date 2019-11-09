@@ -134,7 +134,7 @@ class AdminRol extends Component {
     };
 
     render() {
-        const {timeout, users, pageOfItems, spaces, modal, user, edit, serverError, errorData, found} = this.state;
+        const {timeout, users, pageOfItems, modal, user, edit, serverError, errorData, found} = this.state;
         const {roles, event} = this.props;
         return (
             <Fragment>

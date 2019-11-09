@@ -125,7 +125,7 @@ class StaffModal extends Component {
 
     render() {
         const {formErrors:{name,email}, formValid, emailValid , user, found} = this.state;
-        const {roles,edit, spaces } = this.props;
+        const {roles,edit } = this.props;
         return (
             <Fragment>
                 <section className="modal-card-body">

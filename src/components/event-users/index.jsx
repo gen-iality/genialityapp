@@ -3,7 +3,7 @@ import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
 import XLSX from "xlsx";
 import { toast } from 'react-toastify';
 import {firestore} from "../../helpers/firebase";
-import {BadgeApi, RolAttApi, SpacesApi} from "../../helpers/request";
+import {BadgeApi, RolAttApi} from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
@@ -61,7 +61,6 @@ class ListEventUser extends Component {
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
             const extraFields = fieldNameEmailFirst(properties);
-            //const spacesEvent = await SpacesApi.byEvent(this.props.event._id);
             const listTickets = event.tickets ? [...event.tickets] : [];
             let {checkIn,changeItem} = this.state;
             this.setState({ extraFields, rolesList, badgeEvent });
