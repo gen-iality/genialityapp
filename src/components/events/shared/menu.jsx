@@ -119,6 +119,7 @@ class Menu extends Component {
                                             <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/badge`}>Escarapela</NavLink></li>
                                         }
                                         <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/assistants`}>Check In</NavLink></li>
+                                        <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/checkin-actividad`}>Check In por Actividad</NavLink></li>
                                     </ul>
                                 )
                             }
