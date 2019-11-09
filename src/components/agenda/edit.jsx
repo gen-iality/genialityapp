@@ -211,8 +211,8 @@ class AgendaEdit extends Component {
         }else return true;
     };
 
-    goSection = (path) => {
-        this.props.history.push(path)
+    goSection = (path,state) => {
+        this.props.history.push(path,state)
     };
 
     addRoles = () => {
@@ -286,7 +286,7 @@ class AgendaEdit extends Component {
                                         options={hosts} value={selectedHosts} />
                                 </div>
                                 <div className="column is-2">
-                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "speakers"))} className="button"><FaWhmcs/></button>
+                                    <button onClick={()=>this.goSection(matchUrl.replace("agenda", "speakers"),{child:true})} className="button"><FaWhmcs/></button>
                                 </div>
                             </div>
                             <label className="label required">Espacio</label>

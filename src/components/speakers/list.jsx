@@ -63,7 +63,7 @@ class SpeakersList extends Component{
         const {list,speakersList,pageOfItems,loading} = this.state;
         if(loading) return <Loading/>;
         return (
-            <EventContent title="Conferencistas" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}
+            <EventContent title="Conferencistas" closeAction={this.props.location.state&&this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.redirect} addTitle={"Nuevo conferencista"}
                           actionLeft={<SearchComponent data={speakersList} placeholder={"por Nombre"} kind={'speakers'} classes={"field"} searchResult={this.searchResult}/>}>
                 <EvenTable>
                     {
@@ -71,7 +71,7 @@ class SpeakersList extends Component{
                                 <td>
                                 <div style={{display:"flex"}}>
                                     {speaker.image&&<img src={speaker.image} alt={`speaker_${speaker.name}`} className="author-image"/>}
-                                    <p>{speaker.name}</p>
+                                    <p style={{ margin: "auto 0", paddingLeft: "10px", fontSize: "1.25em"}}>{speaker.name}</p>
                                 </div>
                                 </td>
                                 <td>
