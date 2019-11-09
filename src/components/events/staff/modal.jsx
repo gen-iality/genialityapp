@@ -182,24 +182,6 @@ class StaffModal extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {
-                                user.rol === "5c1a5a45f33bd420173f7a22" &&
-                                <div className="field">
-                                    <label className={`label has-text-grey-light`}>Espacio</label>
-                                    <div className="control">
-                                        <div className="select">
-                                            <select value={user.space} onChange={this.onChange} name={'space'}>
-                                                <option value={''}>Seleccione...</option>
-                                                {
-                                                    spaces.map((item,key)=>{
-                                                        return <option key={key} value={item._id}>{item.name}</option>
-                                                    })
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
                         </Fragment>
                     }
                 </section>

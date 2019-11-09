@@ -78,7 +78,7 @@ class Agenda extends Component {
                     </div>
                 </nav>
                 <SearchComponent data={filtered} placeholder={"por Nombre, Espacio o Conferencista"} kind={'agenda'} classes={"field"} searchResult={this.searchResult}/>
-                <EvenTable head={["Hora", "Actividad", "Categorías", "Espacio", "Conferencista", ""]}>
+                <EvenTable head={["Hora", "Actividad", "Categorías", "Espacio", "Conferencista", ""]} headStyle={[{width:"12%"},{width:"48%"},{width:"10%"},{width:"10%"},{width:"18%"},{width:"2%"}]}>
                     {toShow.map(agenda=><tr key={agenda._id}>
                         <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>

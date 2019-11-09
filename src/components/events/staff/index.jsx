@@ -4,7 +4,7 @@ import Loading from "../../loaders/loading";
 import Pagination from "../../shared/pagination";
 import ErrorServe from "../../modal/serverError";
 import connect from "react-redux/es/connect/connect";
-import { HelperApi, UsersApi, SpacesApi} from "../../../helpers/request";
+import { HelperApi } from "../../../helpers/request";
 import Dialog from "../../modal/twoAction";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
@@ -20,7 +20,6 @@ class AdminRol extends Component {
         this.state = {
             user:       {Nombres:'',email:'',rol:''},
             users:      [],
-            spaces:      [],
             loading:    true,
             found:    0,
             pageOfItems:[],
@@ -34,8 +33,7 @@ class AdminRol extends Component {
     async componentDidMount(){
         try{
             const res = await HelperApi.listHelper(this.props.event._id);
-            const {data} = await SpacesApi.byEvent(this.props.event._id);
-            this.setState({users:res,pageOfItems:res,spaces:data,loading:false})
+            this.setState({users:res,pageOfItems:res,loading:false})
         }
         catch (error) {
             if (error.response) {
@@ -172,7 +170,7 @@ class AdminRol extends Component {
                     modal &&
                         <EventModal modal={modal} title={edit?'Editar staff':'Agregar staff'}
                                     action={this.saveField} actionTitle={edit?'Guardar':'Agregar'} closeModal={this.handleModal}>
-                            <StaffModal roles={roles} user={user} edit={edit} spaces={spaces} found={found} handleModal={this.handleModal}
+                            <StaffModal roles={roles} user={user} edit={edit} found={found} handleModal={this.handleModal}
                                         updateContributors={this.updateContributors} eventID={event._id}/>
                         </EventModal>
                 }
