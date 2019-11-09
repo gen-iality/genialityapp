@@ -43,6 +43,15 @@ export function uploadImage(file){
     })
 }
 
+export function fieldNameEmailFirst(array) {
+    let fields = [...array];
+    const idxName = array.findIndex(({name})=>name==="names");
+    fields.splice(0,0, fields.splice(idxName,1)[0]);
+    const idxEmail = fields.findIndex(({name})=>name==="email");
+    fields.splice(1,0, fields.splice(idxEmail,1)[0]);
+    return fields;
+}
+
 export function handleRequestError(error) {
     const info = {};
     if (error.response) {

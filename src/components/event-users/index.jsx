@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {connect} from "react-redux";
 import CheckSpace from "./checkSpace";
 import QrModal from "./qrModal";
-import {handleRequestError, sweetAlert} from "../../helpers/utils";
+import {fieldNameEmailFirst, handleRequestError, sweetAlert} from "../../helpers/utils";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -60,10 +60,11 @@ class ListEventUser extends Component {
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
+            const extraFields = fieldNameEmailFirst(properties);
             //const spacesEvent = await SpacesApi.byEvent(this.props.event._id);
             const listTickets = event.tickets ? [...event.tickets] : [];
             let {checkIn,changeItem} = this.state;
-            this.setState({ extraFields: properties, rolesList, badgeEvent });
+            this.setState({ extraFields, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
             let newItems= [...this.state.userReq];
             this.userListener = usersRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
