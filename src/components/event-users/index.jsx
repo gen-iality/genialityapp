@@ -289,21 +289,21 @@ class ListEventUser extends Component {
         const {event:{event_stages}} = this.props;
         return (
             <React.Fragment>
-                <div className="checkin" style={ { maxWidth: '1000px'} } >
+                <div className="checkin">
                     <h2 className="title-section">Check In</h2>
-                    <div className="columns">
-                        <div className="search column is-8">
-                            <SearchComponent placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                    <div className="columns is-mobile buttons-g">
+                        <div className="checkin-warning ">
+                            <p className="is-size-7 has-text-centered-mobile is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                         </div>
-                        <div className="checkin-tags-wrapper column is-4">
-                            <div className="columns is-mobile is-multiline checkin-tags">
-                                <div className="column is-narrow">
+                        <div className="columns checkin-tags-wrapper">
+                            <div className="checkin-tags is-5 columns">
+                                <div className="is-2">
                                     <div className="tags is-centered">
                                         <span className="tag is-primary">{checkIn}</span>
                                         <span className="tag is-white">Ingresados</span>
                                     </div>
                                 </div>
-                                <div className="column is-narrow">
+                                <div className="is-2">
                                     <div className="tags is-centered">
                                         <span className="tag is-light">{total}</span>
                                         <span className="tag is-white">Total</span>
@@ -312,20 +312,30 @@ class ListEventUser extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="columns is-mobile buttons-g">
-                        {
-                            userReq.length>0 && (
-                                <div className="column is-narrow has-text-centered export button-c">
-                                    <button className="button" onClick={this.exportFile}>
-                                                <span className="icon">
-                                                    <i className="fas fa-download"/>
-                                                </span>
-                                        <span className="text-button">Exportar</span>
-                                    </button>
-                                </div>
-                            )
-                        }
-                            <div className="column is-narrow has-text-centered button-c">
+                    <div className="columns">
+                        {/* Botones */}
+                        <div className="is-flex-touch columns">
+                            <div className="column is-narrow has-text-centered button-c is-centered">
+                                <button className="button is-primary" onClick={this.addUser}>
+                                    <span className="icon">
+                                        <i className="fas fa-user-plus"></i>
+                                    </span>
+                                    <span className="text-button">Agregar Usuario</span>
+                                </button>
+                            </div>
+                            {
+                                userReq.length>0 && (
+                                    <div className="column is-narrow has-text-centered export button-c is-centered">
+                                        <button className="button" onClick={this.exportFile}>
+                                                    <span className="icon">
+                                                        <i className="fas fa-download"/>
+                                                    </span>
+                                            <span className="text-button">Exportar</span>
+                                        </button>
+                                    </div>
+                                )
+                            }
+                            <div className="column is-narrow has-text-centered button-c is-centered">
                                 <button className="button is-inverted" onClick={this.checkModal}>
                                             <span className="icon">
                                                 <i className="fas fa-qrcode"></i>
@@ -333,15 +343,13 @@ class ListEventUser extends Component {
                                     <span className="text-button">Leer Código QR</span>
                                 </button>
                             </div>
-                        <div className="column is-narrow has-text-centered button-c">
-                            <button className="button is-primary" onClick={this.addUser}>
-                                        <span className="icon">
-                                            <i className="fas fa-user-plus"></i>
-                                        </span>
-                                        <span className="text-button">Agregar Usuario</span>
-                                    </button>
+                        </div>
+                        {/* Buscador */}
+                        <div className="search column is-5 is-full-mobile">
+                            <SearchComponent placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         </div>
                     </div>
+                    
                     {
                         (event_stages && event_stages.length > 0) &&
                         <div className='filter'>
@@ -425,9 +433,6 @@ class ListEventUser extends Component {
                                     onChangePage={this.onChangePage}
                                 />
                             </div>}
-                    </div>
-                    <div className="checkin-warning">
-                        <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                     </div>
                 </div>
                 {(!this.props.loading && editUser) &&

@@ -24,6 +24,7 @@
 }
 
 .checkin {
+  max-width: 1000px;
   .checkin-header {
     width: 100%;
   }
@@ -68,10 +69,14 @@
   }
   .checkin-table {
     .table-wrapper {
-      width: 80%;
+      width: 100%;
       .table {
+        outline: 1px solid $grey-light;
         overflow-x: visible;
         overflow-y: auto;
+        tr:nth-child(even) {
+          background-color: #DFDFDF;
+        }
       }
     }
   }

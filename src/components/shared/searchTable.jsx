@@ -102,8 +102,8 @@ class SearchComponent extends Component {
 
     render() {
         return (
-            <div className={this.props.classes}>
-                <p className="control has-icons-left">
+            <div className={this.props.classes} style={ {width:'100%'} } >
+                <p className="control container-control has-icons-left">
                     <input className="input" type="text" placeholder={`Buscar ${this.props.placeholder}`} onChange={this.handleFilter} value={this.state.value}/>
                     <span className="icon is-small is-left"><i className="fas fa-search"/></span>
                 </p>

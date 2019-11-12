@@ -83,14 +83,14 @@ class ReportList extends Component {
                 </div>
                 <EvenTable head={["Hora", "Actividad", "Registrados", "Cupos libres", "Capacidad", ""]} headStyle={[{width:"12%"},{width:"52%"},{width:"12%"},{width:"12%"},{width:"12%"}]}>
                     {toShow.map(agenda=><tr key={agenda._id}>
-                        <td>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
+                        <td><span className="is-hidden-tablet">Hora: </span>{Moment(agenda.datetime_start,"YYYY-MM-DD HH:mm").format("HH:mm")} - {Moment(agenda.datetime_end,"YYYY-MM-DD HH:mm").format("HH:mm")}</td>
                         <td>
-                            <p>{agenda.name}</p>
+                            <p><span className="is-hidden-tablet">Actividad: </span> {agenda.name}</p>
                             {agenda.type&&<p><strong>{agenda.type.name}</strong></p>}
                         </td>
-                        <td>{agenda.capacity-agenda.remaining_capacity}</td>
-                        <td>{agenda.remaining_capacity}</td>
-                        <td>{agenda.capacity}</td>
+                        <td><span className="is-hidden-tablet">Registrados: </span>{agenda.capacity-agenda.remaining_capacity}</td>
+                        <td><span className="is-hidden-tablet">Cupos libres: </span> {agenda.remaining_capacity}</td>
+                        <td><span className="is-hidden-tablet">Capacidad: </span> {agenda.capacity}</td>
                         <td>
                             <Link to={`${this.props.url}/checkin/${agenda._id}`}>
                                 <button><span className="icon"><i className="fas fa-2x fa-chevron-right"/></span></button>
