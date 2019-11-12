@@ -19,6 +19,7 @@ import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import Speakers from "../speakers";
 import CheckAgenda from "../agenda/checkIn";
+import ReportList from "../agenda/report";
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -102,7 +103,8 @@ class Event extends Component {
                             <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>
                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
-                            <Protected path={`${match.url}/checkin-actividad`} component={CheckAgenda} event={this.state.event} url={match.url}/>
+                            <Protected path={`${match.url}/checkin/:id`} component={CheckAgenda} event={this.state.event} url={match.url}/>
+                            <Protected path={`${match.url}/checkin-actividad`} component={ReportList} event={this.state.event} url={match.url}/>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
@@ -153,7 +155,7 @@ function NoMatch({ location }) {
 const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
     <Route {...rest} render={props =>
             (event.user_properties && event.user_properties.length>0)?
-            (<Component {...props} event={event} eventId={eventId}/>):
+            (<Component {...props} event={event} eventId={eventId} url={url}/>):
             (<Redirect push to={`${url}/main`}/>)
         }
     />

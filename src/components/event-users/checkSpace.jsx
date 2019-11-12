@@ -6,7 +6,6 @@ import QrReader from "react-qr-reader";
 import {firestore} from "../../helpers/firebase";
 import {toast} from "react-toastify";
 
-const html = document.querySelector("html");
 class CheckSpace extends Component {
     constructor(props) {
         super(props);
@@ -29,36 +28,21 @@ class CheckSpace extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null},newCC:'',tabActive:"camera"},()=>{
             this.props.closeModal()
         });
-        html.classList.remove('is-clipped');
     };
 
     //Camera functions
     handleScan = (data) => {
         if (data) {
-            const { eventID, userReq, space } = this.props;
-            const user = userReq.find(item=>item._id === data);
+            const { list } = this.props;
+            const user = list.find(({attendee_id})=>attendee_id === data);
             const qrData = {};
             if(user) {
                 qrData.msg = 'User found';
                 qrData.user = user;
-                if(user.spaces && user.spaces[space._id]){
-                    this.setState({qrData});
-                }else {
-                    const userRef = firestore.collection(`${eventID}_event_attendees`).doc(user._id);
-                    const data = {updated_at: new Date()};
-                    data[`spaces.${space._id}`] = true;
-                    userRef.update(data)
-                        .then(() => {
-                            const spaces = user.spaces ? Object.assign(user.spaces, {[space._id]: true}) : {[space._id]: true};
-                            qrData.user = Object.assign(qrData.user, {spaces});
-                            this.setState({qrData});
-                            console.log("Document successfully updated!");
-                        })
-                        .catch(error => {
-                            console.error("Error updating document: ", error);
-                            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :("/>);
-                        });
-                }
+                qrData.another = !!qrData.user.checked_in;
+                this.setState({qrData},()=>{
+                    this.props.checkIn(data)
+                });
             }
             else{
                 qrData.msg = 'User not found';
@@ -78,12 +62,16 @@ class CheckSpace extends Component {
         value = value.toLowerCase();
         const checkForHexRegExp = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;
         this.setState({newCC:value},()=>{
-            if(checkForHexRegExp.test(value)) {
-                setTimeout(()=>{
-                    this.handleScan(value);
-                },1000)
+            if(value.length>0) {
+                if (checkForHexRegExp.test(value)) {
+                    setTimeout(() => {
+                        this.handleScan(value);
+                    }, 1000)
+                } else {
+                    this.setState({gunMsj: "Por favor  escanea un código válido para ejecutar la búsqueda"})
+                }
             }else{
-                this.setState({gunMsj:"Por favor  escanea un código válido para ejecutar la búsqueda"})
+                this.setState({gunMsj:""})
             }
         })
     };
@@ -91,20 +79,15 @@ class CheckSpace extends Component {
     readOther = () => {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null},newCC:""})
     };
-    editUser = (user) => {
-        this.closeQr();
-        this.props.openEditModalUser(user);
-    };
 
     render() {
         const {qrData,facingMode,gunMsj} = this.state;
-        const {space,spacesEvent} = this.props;
         return (
             <div className={`modal is-active`}>
                 <div className="modal-background"/>
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">Lector QR - Sala: {space.name}</p>
+                        <p className="modal-card-title">Lector QR</p>
                         <button className="delete is-large" aria-label="close" onClick={this.closeQr}/>
                     </header>
                     <section className="modal-card-body">
@@ -115,10 +98,9 @@ class CheckSpace extends Component {
                                         <h1 className="title">Usuario Chequeado</h1>
                                         <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
                                     </div>)}
-                                    <p>ID: {qrData.user._id}</p>
-                                    <p>Nombre: {qrData.user.names}</p>
-                                    <p>Correo: {qrData.user.email}</p>
-                                    {spacesEvent.map(space=><p key={space._id}>{space.name}: {qrData.user.spaces[space._id]?"SI":"NO"}</p>)}
+                                    <p>ID: {qrData.user.attendee_id}</p>
+                                    <p>Nombre: {qrData.user.properties.names}</p>
+                                    <p>Correo: {qrData.user.properties.email}</p>
                                 </div>:
                                 <React.Fragment>
                                     <div className="tabs is-centered tab-qr">
@@ -182,10 +164,7 @@ class CheckSpace extends Component {
                     <footer className="modal-card-foot">
                         {
                             qrData.user&&(
-                                <React.Fragment>
-                                    <button className="button is-info" onClick={e=>{this.editUser(qrData.user)}}>Edit User</button>
-                                    <button className="button" onClick={this.readOther}>Read Other</button>
-                                </React.Fragment>
+                                <button className="button" onClick={this.readOther}>Read Other</button>
                             )
                         }
                     </footer>
