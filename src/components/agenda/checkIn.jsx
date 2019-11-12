@@ -191,7 +191,7 @@ class CheckAgenda extends Component {
     goBack = () => this.props.history.goBack();
 
     render() {
-        const {attendees,toShow,loading,eventFields,total,checkIn,qrModal} = this.state;
+        const {attendees,toShow,loading,eventFields,total,checkIn,qrModal,eventID,agendaID} = this.state;
         if(!this.props.location.state) return this.goBack();
         return (
             <Fragment>
@@ -257,10 +257,13 @@ class CheckAgenda extends Component {
                                     change={this.state.changeItem}
                                     onChangePage={this.onChangePage}
                                 />
+                                <div className="checkin-warning">
+                                    <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                                </div>
                             </Fragment>}
                     </div>
                 </EventContent>
-                {qrModal && <CheckSpace list={attendees} closeModal={this.closeQRModal} checkIn={this.checkIn}/>}
+                {qrModal && <CheckSpace list={attendees} closeModal={this.closeQRModal} eventID={eventID} agendaID={agendaID} checkIn={this.checkIn}/>}
             </Fragment>
         )
     }
