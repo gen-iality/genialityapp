@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import {FormattedDate, FormattedMessage, FormattedTime} from "react-intl";
+import {FormattedDate, FormattedTime} from "react-intl";
 import {IoIosCamera, IoIosQrScanner} from "react-icons/io";
 import {FaCamera} from "react-icons/fa";
 import QrReader from "react-qr-reader";
 import {firestore} from "../../helpers/firebase";
 import {toast} from "react-toastify";
+import {handleRequestError} from "../../helpers/utils";
 
 class CheckSpace extends Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class CheckSpace extends Component {
             if(user) {
                 qrData.msg = 'User found';
                 qrData.user = user;
-                qrData.another = !!qrData.user.checked_in;
+                qrData.another = false;
                 this.setState({qrData},()=>{
                     this.props.checkIn(data)
                 });
@@ -47,8 +48,8 @@ class CheckSpace extends Component {
             else{
                 qrData.msg = 'User not found';
                 qrData.another = true;
-                qrData.user = null;
-                this.setState({qrData})
+                qrData.user = {};
+                this.setState({qrData,newCC:data})
             }
         }
     };
@@ -80,6 +81,33 @@ class CheckSpace extends Component {
         this.setState({qrData:{...this.state.qrData,msg:'',user:null},newCC:""})
     };
 
+    addUser = () => {
+        const {eventID,agendaID} = this.props;
+        const userRef = firestore.collection(`${eventID}_event_attendees`).doc(this.state.newCC);
+        userRef.get().then((doc)=> {
+            const agendaRef = firestore.collection(`event_activity_attendees/${eventID}/activities/${agendaID}/attendees`);
+            agendaRef.add({
+                activity_id: agendaID,
+                attendee_id: doc.id,
+                created_at: new Date(),
+                properties: doc.data().properties,
+                updated_at: new Date(),
+                checked_in: true,
+                checked_at: new Date()
+            })
+                .then(() => {
+                    toast.success("Asistente agregado");
+                    this.setState({qrData:{},})
+                })
+                .catch(error => {
+                    console.error("Error updating document: ", error);
+                    toast.error(handleRequestError(error));
+                });
+        }).catch(error => {
+            toast.error(handleRequestError(error));
+        });
+    };
+
     render() {
         const {qrData,facingMode,gunMsj} = this.state;
         return (
@@ -92,70 +120,75 @@ class CheckSpace extends Component {
                     </header>
                     <section className="modal-card-body">
                         {
-                            qrData.user ?
-                                <div>
-                                    {qrData.user.checked_in && (<div>
-                                        <h1 className="title">Usuario Chequeado</h1>
-                                        <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
-                                    </div>)}
-                                    <p>ID: {qrData.user.attendee_id}</p>
-                                    <p>Nombre: {qrData.user.properties.names}</p>
-                                    <p>Correo: {qrData.user.properties.email}</p>
-                                </div>:
+                            !qrData.another &&
                                 <React.Fragment>
-                                    <div className="tabs is-centered tab-qr">
-                                        <ul>
-                                            <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
-                                                onClick={e=>this.changeType('camera')}>
-                                                <a>
-                                                    <div className="icon is-medium"><IoIosCamera/></div>
-                                                    <span>Cámara</span>
-                                                </a>
-                                            </li>
-                                            <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
-                                                onClick={e=>this.changeType('qr')}>
-                                                <a>
-                                                    <div className="icon is-medium"><IoIosQrScanner/></div>
-                                                    <span>Pistola</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                     {
-                                        this.state.tabActive==="camera" ?
+                                        qrData.user ?
+                                            <div>
+                                                {qrData.user.checked_in && (<div>
+                                                    <h1 className="title">Usuario Chequeado</h1>
+                                                    <h2 className="subtitle">Fecha: <FormattedDate value={qrData.user.checked_at.toDate()}/> - <FormattedTime value={qrData.user.checked_at.toDate()}/></h2>
+                                                </div>)}
+                                                <p>ID: {qrData.user.attendee_id}</p>
+                                                <p>Nombre: {qrData.user.properties.names}</p>
+                                                <p>Correo: {qrData.user.properties.email}</p>
+                                            </div>:
                                             <React.Fragment>
-                                                <div className="field">
-                                                    <div className="control has-icons-left">
-                                                        <div className="select">
-                                                            <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
-                                                                <option value="user">Selfie</option>
-                                                                <option value="environment">Rear</option>
-                                                            </select>
+                                                <div className="tabs is-centered tab-qr">
+                                                    <ul>
+                                                        <li className={`${this.state.tabActive === 'camera' ? 'is-active' : ''}`}
+                                                            onClick={e=>this.changeType('camera')}>
+                                                            <a>
+                                                                <div className="icon is-medium"><IoIosCamera/></div>
+                                                                <span>Cámara</span>
+                                                            </a>
+                                                        </li>
+                                                        <li className={`${this.state.tabActive === 'qr' ? 'is-active' : ''}`}
+                                                            onClick={e=>this.changeType('qr')}>
+                                                            <a>
+                                                                <div className="icon is-medium"><IoIosQrScanner/></div>
+                                                                <span>Pistola</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                {
+                                                    this.state.tabActive==="camera" ?
+                                                        <React.Fragment>
+                                                            <div className="field">
+                                                                <div className="control has-icons-left">
+                                                                    <div className="select">
+                                                                        <select value={facingMode} onChange={e => this.setState({ facingMode: e.target.value })}>
+                                                                            <option value="user">Selfie</option>
+                                                                            <option value="environment">Rear</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="icon is-small is-left"><FaCamera/></div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="columns is-mobile is-centered qr">
+                                                                <QrReader
+                                                                    delay={500}
+                                                                    facingMode={facingMode}
+                                                                    onError={this.handleError}
+                                                                    onScan={this.handleScan}
+                                                                    style={{ width: "60%" }}
+                                                                    className={"column is-half is-offset-one-quarter"}
+                                                                />
+                                                            </div>
+                                                        </React.Fragment>:
+                                                        <div style={{textAlign:"center"}}>
+                                                            <div className="field">
+                                                                <div className="control">
+                                                                    <label className={`label has-text-grey-light is-capitalized required`}>Código</label>
+                                                                    <input className="input" name={'searchCC'} ref={this.txtInput} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
+                                                                </div>
+                                                                {gunMsj&&<div className="msg"><p className="msg_error">{gunMsj}</p></div>}
+                                                            </div>
+                                                            <button className="button is-info is-large" onClick={e=> this.handleScan(this.state.newCC)}>Buscar</button>
                                                         </div>
-                                                        <div className="icon is-small is-left"><FaCamera/></div>
-                                                    </div>
-                                                </div>
-                                                <div className="columns is-mobile is-centered qr">
-                                                    <QrReader
-                                                        delay={500}
-                                                        facingMode={facingMode}
-                                                        onError={this.handleError}
-                                                        onScan={this.handleScan}
-                                                        style={{ width: "60%" }}
-                                                        className={"column is-half is-offset-one-quarter"}
-                                                    />
-                                                </div>
-                                            </React.Fragment>:
-                                            <div style={{textAlign:"center"}}>
-                                                <div className="field">
-                                                    <div className="control">
-                                                        <label className={`label has-text-grey-light is-capitalized required`}>Código</label>
-                                                        <input className="input" name={'searchCC'} ref={this.txtInput} value={this.state.newCC} onChange={this.changeCC} autoFocus={true}/>
-                                                    </div>
-                                                    {gunMsj&&<div className="msg"><p className="msg_error">{gunMsj}</p></div>}
-                                                </div>
-                                                <button className="button is-info is-large" onClick={e=> this.handleScan(this.state.newCC)}>Buscar</button>
-                                            </div>
+                                                }
+                                            </React.Fragment>
                                     }
                                 </React.Fragment>
                         }
@@ -164,7 +197,12 @@ class CheckSpace extends Component {
                     <footer className="modal-card-foot">
                         {
                             qrData.user&&(
-                                <button className="button" onClick={this.readOther}>Read Other</button>
+                                <button className="button" onClick={this.readOther}>Leer QR</button>
+                            )
+                        }
+                        {
+                            qrData.another&&(
+                                <button className="button" onClick={this.addUser}>Agregar asistente</button>
                             )
                         }
                     </footer>
