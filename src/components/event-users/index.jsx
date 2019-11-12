@@ -74,20 +74,24 @@ class ListEventUser extends Component {
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                     user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
-                    if (change.type === 'added'){
-                        if(user.checked_in) checkIn += 1;
-                        change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
-                        if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
-                    }
-                    if (change.type === 'modified'){
-                        if(user.checked_in) checkIn += 1;
-                        newItems.unshift(user);
-                        newItems.splice(change.oldIndex+1, 1);
-                        changeItem = !changeItem;
-                    }
-                    if (change.type === 'removed'){
-                        if(user.checked_in) checkIn -= 1;
-                        newItems.splice(change.oldIndex, 1);
+                    switch (change.type) {
+                        case "added":
+                            if(user.checked_in) checkIn += 1;
+                            change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
+                            if(user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates,10);
+                            break;
+                        case "modified":
+                            if(user.checked_in) checkIn += 1;
+                            newItems.unshift(user);
+                            newItems.splice(change.oldIndex+1, 1);
+                            changeItem = !changeItem;
+                            break;
+                        case "removed":
+                            if(user.checked_in) checkIn -= 1;
+                            newItems.splice(change.oldIndex, 1);
+                            break;
+                        default:
+                            break;
                     }
                 });
                 this.setState((prevState) => {
@@ -304,7 +308,7 @@ class ListEventUser extends Component {
                     <h2 className="title-section">Check In</h2>
                     <div className="columns">
                         <div className="search column is-8">
-                            <SearchComponent  data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                            <SearchComponent placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         </div>
                         <div className="checkin-tags-wrapper column is-4">
                             <div className="columns is-mobile is-multiline checkin-tags">
