@@ -10,8 +10,6 @@ import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import 'react-toastify/dist/ReactToastify.css';
-import {connect} from "react-redux";
-import CheckSpace from "./checkSpace";
 import QrModal from "./qrModal";
 import {fieldNameEmailFirst, handleRequestError, sweetAlert} from "../../helpers/utils";
 
@@ -154,19 +152,6 @@ class ListEventUser extends Component {
         });
     };
 
-    spaceQModal = () => {
-        html.classList.add('is-clipped');
-        this.setState((prevState) => {
-            return {spaceModal:!prevState.spaceModal}
-        });
-    };
-    closeSpaceModal = () => {
-        html.classList.remove('is-clipped');
-        this.setState((prevState) => {
-            return {spaceModal:!prevState.spaceModal}
-        });
-    };
-
     checkIn = (user) => {
         const {userReq,qrData} = this.state;
         const newUser = user;
@@ -301,7 +286,7 @@ class ListEventUser extends Component {
 
     render() {
         const {timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions} = this.state;
-        const {event:{event_stages},permissions} = this.props;
+        const {event:{event_stages}} = this.props;
         return (
             <React.Fragment>
                 <div className="checkin" style={ { maxWidth: '1000px'} } >
@@ -340,23 +325,14 @@ class ListEventUser extends Component {
                                 </div>
                             )
                         }
-                        {
-                            permissions.data.space ?
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button is-inverted" onClick={this.spaceQModal}>
-                                        <span className="icon"><i className="fas fa-qrcode"></i></span>
-                                        <span className="text-button">CheckIn Espacio</span>
-                                    </button>
-                                </div>:
-                                <div className="column is-narrow has-text-centered button-c">
-                                    <button className="button is-inverted" onClick={this.checkModal}>
-                                                <span className="icon">
-                                                    <i className="fas fa-qrcode"></i>
-                                                </span>
-                                        <span className="text-button">Leer Código QR</span>
-                                    </button>
-                                </div>
-                        }
+                            <div className="column is-narrow has-text-centered button-c">
+                                <button className="button is-inverted" onClick={this.checkModal}>
+                                            <span className="icon">
+                                                <i className="fas fa-qrcode"></i>
+                                            </span>
+                                    <span className="text-button">Leer Código QR</span>
+                                </button>
+                            </div>
                         <div className="column is-narrow has-text-centered button-c">
                             <button className="button is-primary" onClick={this.addUser}>
                                         <span className="icon">
@@ -462,8 +438,6 @@ class ListEventUser extends Component {
                 }
                 {this.state.qrModal && <QrModal fields={extraFields} userReq={userReq} checkIn={this.checkIn} eventID={this.props.event._id}
                                                 closeModal={this.closeQRModal} openEditModalUser={this.openEditModalUser}/>}
-                {this.state.spaceModal && <CheckSpace space={permissions.data.space} userReq={userReq} spacesEvent={spacesEvent}
-                                                      openEditModalUser={this.openEditModalUser} closeModal={this.closeSpaceModal} eventID={this.props.event._id}/>}
                 {timeout&&(<ErrorServe errorData={this.state.errorData}/>)}
             </React.Fragment>
         );
@@ -493,8 +467,4 @@ const parseData = (data) => {
     return info
 };
 
-const mapStateToProps = state => ({
-    permissions: state.permissions
-});
-
-export default connect(mapStateToProps)(ListEventUser);
+export default ListEventUser;
