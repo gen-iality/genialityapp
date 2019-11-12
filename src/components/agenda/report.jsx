@@ -92,7 +92,7 @@ class ReportList extends Component {
                         <td>{agenda.remaining_capacity}</td>
                         <td>{agenda.capacity}</td>
                         <td>
-                            <Link to={`${this.props.url}/checkin/${agenda._id}`}>
+                            <Link to={{pathname:`${this.props.url}/checkin/${agenda._id}`,state:{name:agenda.name}}}>
                                 <button><span className="icon"><i className="fas fa-2x fa-chevron-right"/></span></button>
                             </Link>
                         </td>

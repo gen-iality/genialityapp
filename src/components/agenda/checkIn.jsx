@@ -192,9 +192,10 @@ class CheckAgenda extends Component {
 
     render() {
         const {attendees,toShow,loading,eventFields,total,checkIn,qrModal} = this.state;
+        if(!this.props.location.state) return this.goBack();
         return (
             <Fragment>
-                <EventContent title={"CheckIn Actividad"} closeAction={this.goBack} classes={"agenda-list"}>
+                <EventContent title={`CheckIn: ${this.props.location.state.name}`} closeAction={this.goBack} classes={"agenda-list"}>
                     <div className="columns">
                         <div className="search column is-7">
                             <SearchComponent data={attendees} kind={'user'} placeholder={""} classes={"field"} searchResult={this.searchResult}/>
