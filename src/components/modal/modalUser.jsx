@@ -120,7 +120,7 @@ class UserModal extends Component {
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas ? canvas.toDataURL() : '';
         if(resp._id){
-            if(!this.props.value.checked_in) this.props.checkIn(this.props.value);
+            if(!this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
             let oIframe = this.refs.ifrmPrint;
             let badge = resp.BadgeFields;
             let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
@@ -314,7 +314,6 @@ class UserModal extends Component {
         const {user,checked_in,ticket_id,rol,rolesList,userId} = this.state;
         const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
-        console.log(userId);
         return (
             <React.Fragment>
                 <div className={`modal modal-add-user ${modal ? "is-active" : ""}`}>

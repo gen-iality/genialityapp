@@ -155,16 +155,15 @@ class ListEventUser extends Component {
         });
     };
 
-    checkIn = (user) => {
+    checkIn = (id) => {
         const {userReq,qrData} = this.state;
-        const newUser = user;
         const { event } = this.props;
         qrData.another = true;
         const self = this;
-        let pos = userReq.map((e) => { return e._id; }).indexOf(newUser._id);
+        let pos = userReq.map((e) => { return e._id; }).indexOf(id);
         if(pos >= 0){
             //users[pos] = user;
-            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(newUser._id);
+            const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
             if(!userReq[pos].checked_in){
                 self.setState((prevState) => {
                     return {checkIn: prevState.checkIn+1, qrData}
