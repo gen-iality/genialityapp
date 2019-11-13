@@ -57,11 +57,7 @@ class UserModal extends Component {
     handleSubmit = async(e) => {
         e.preventDefault();
         e.stopPropagation();
-        const snap = {
-            properties: this.state.user,
-            rol_id: this.state.rol,
-            state_id: this.state.state,
-        };
+        const snap = {properties: this.state.user, rol_id: this.state.rol};
         const self = this;
         let message = {};
         this.setState({create:true});
@@ -76,9 +72,9 @@ class UserModal extends Component {
                 snap.checked_at = new Date();
             }
             userRef.add(snap)
-                .then(docRef => {
+                .then((docRef) => {
                     console.log("Document written with ID: ", docRef.id);
-                    self.setState({userId:docRef.id});
+                    self.setState({userId:docRef.id,edit:true});
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!"/>);
@@ -114,13 +110,6 @@ class UserModal extends Component {
                     message.class = 'msg_danger';
                     message.content = 'User can`t be updated';
                 });
-        }
-        if(this.state.edit){
-            setTimeout(()=>{
-                self.closeModal();
-            },800);
-        }else{
-            this.setState({edit:true})
         }
         this.setState({message,create:false});
     }
@@ -325,6 +314,7 @@ class UserModal extends Component {
         const {user,checked_in,ticket_id,rol,rolesList,userId} = this.state;
         const {modal} = this.props;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
+        console.log(userId);
         return (
             <React.Fragment>
                 <div className={`modal modal-add-user ${modal ? "is-active" : ""}`}>
