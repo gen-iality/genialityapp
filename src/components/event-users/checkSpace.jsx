@@ -91,8 +91,8 @@ class CheckSpace extends Component {
                 attendee_id: doc.id,
                 created_at: new Date(),
                 properties: doc.data().properties,
-                rol:        doc.data().rol,
-                rol_id:     doc.data().rol_id,
+                rol:        doc.data().rol?doc.data().rol:"",
+                rol_id:     doc.data().rol_id?doc.data().rol_id:"",
                 updated_at: new Date(),
                 checked_in: true,
                 checked_at: new Date()
