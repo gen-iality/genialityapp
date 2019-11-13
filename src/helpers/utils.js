@@ -1,6 +1,7 @@
 //Función para generar UUID
 import Swal from "sweetalert2";
 import {Actions} from "./request";
+import React from "react";
 
 export function uniqueID(){
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -66,6 +67,42 @@ export function handleRequestError(error) {
     }
     console.log(error);
     return info;
+}
+
+export function parseData2Excel(data,fields) {
+    let info = [];
+    data.map((item,key) => {
+        info[key] = {};
+        info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
+        info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
+        fields.map(({name,type,label})=>{
+            let str;
+            switch (type) {
+                case "number":
+                    str = item.properties[name].toString();
+                    break;
+                case "boolean":
+                    str = item.properties[name] ? "TRUE" : "FALSE";
+                    break;
+                case "complex":
+                    str = item.properties[name];
+                    break;
+                default:
+                    str = item.properties[name];
+            }
+            if(typeof str === "string") str = str.toUpperCase();
+            if(type === "complex" && str){
+                Object.keys(str).map(prop=>{return info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop];})
+            }
+            else return info[key][label] = str;
+        });
+        if(item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.toUpperCase();
+        info[key]['Tipo asistente'] = item.rol_name?item.rol_name:'';
+        info[key]['Actualizado'] = item.updated_at;
+        info[key]['Creado'] = item.created_at;
+        return info
+    });
+    return info
 }
 
 export const sweetAlert = {

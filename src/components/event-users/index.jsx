@@ -11,7 +11,7 @@ import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import 'react-toastify/dist/ReactToastify.css';
 import QrModal from "./qrModal";
-import {fieldNameEmailFirst, handleRequestError, sweetAlert} from "../../helpers/utils";
+import {fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert} from "../../helpers/utils";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 
@@ -71,6 +71,7 @@ class ListEventUser extends Component {
                 snapshot.docChanges().forEach((change)=> {
                     user = change.doc.data();
                     user._id = change.doc.id;
+                    user.rol_name = user.rol_name ? user.rol_name : user.rol_id ? rolesList.find(({name,_id})=> _id === user.rol_id ? name : "" ) : "";
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                     user.tiquete = listTickets.find(ticket=>ticket._id === user.ticket_id);
@@ -120,11 +121,11 @@ class ListEventUser extends Component {
         e.preventDefault();
         e.stopPropagation();
         const attendees = [...this.state.userReq].sort((a, b) => b.created_at - a.created_at);
-        const data = parseData(attendees);
+        const data = parseData2Excel(attendees,this.state.extraFields);
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Usuarios");
-        XLSX.writeFile(wb, `usuarios_${this.props.event.name}.xls`);
+        XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
+        XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
     };
 
     addUser = () => {
@@ -432,28 +433,5 @@ class ListEventUser extends Component {
         );
     }
 }
-
-const parseData = (data) => {
-    let info = [];
-    data.map((item,key) => {
-        info[key] = {};
-        Object.keys(item.properties).map((obj, i) => {
-            let str = item.properties[obj];
-            if(typeof str === "number") str = str.toString();
-            if(typeof str === "object") str = JSON.stringify(str);
-            if(typeof str === "boolean") str = str ? "TRUE" : "FALSE";
-            if (str && /[^a-z]/i.test(str)) str = str.toUpperCase();
-            return info[key][obj] = str
-        });
-        if(item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.toUpperCase();
-        info[key]['checkIn'] = item.checked_in?item.checked_in:'FALSE';
-        info[key]['Hora checkIn'] = item.checked_at?item.checked_at.toDate():'';
-        info[key]['Actualizado'] = item.updated_at;
-        info[key]['Creado'] = item.created_at;
-        info[key]['Tiquete'] = item.tiquete?item.tiquete.title.toUpperCase():'SIN TIQUETE';
-        return info
-    });
-    return info
-};
 
 export default ListEventUser;
