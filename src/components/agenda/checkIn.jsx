@@ -48,7 +48,7 @@ class CheckAgenda extends Component {
                 snapshot.docChanges().forEach((change)=> {
                     user = change.doc.data();
                     user._id = change.doc.id;
-                    user.rol_name = user.rol_name ? user.rol_name : user.rol_id ? rolesList.find(({name,_id})=> _id === user.rol_id ? name : "" ) : "";
+                    user.rol_name = user.rol_name ? user.rol_name : user.rol_assistant ? user.rol_assistant : user.rol_id ? rolesList.find(({name,_id})=> _id === user.rol_id ? name : "" ) : "";
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
                     switch (change.type) {
