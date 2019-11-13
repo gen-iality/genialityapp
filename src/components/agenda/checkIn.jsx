@@ -195,57 +195,62 @@ class CheckAgenda extends Component {
         if(!this.props.location.state) return this.goBack();
         return (
             <Fragment>
-                <EventContent title={`CheckIn: ${this.props.location.state.name}`} closeAction={this.goBack} classes={"agenda-list"}>
-                    <div className="columns">
-                        <div className="search column is-7">
-                            <SearchComponent data={attendees} kind={'user'} placeholder={""} classes={"field"} searchResult={this.searchResult}/>
+                <EventContent title={`CheckIn: ${this.props.location.state.name}`} closeAction={this.goBack} classes={"checkin"}>
+                    <div className="columns is-mobile buttons-g">
+                        <div className="checkin-warning ">
+                            <p className="is-size-7 has-text-centered-mobile is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
                         </div>
-                        <div className="column is-5">
-                            <div className="columns is-mobile is-multiline">
-                                <div className="column is-narrow">
+                        <div className="columns checkin-tags-wrapper">
+                            <div className="checkin-tags is-5 columns">
+                                <div className="is-2">
                                     <div className="tags is-centered">
                                         <span className="tag is-primary">{checkIn}</span>
                                         <span className="tag is-white">Ingresados</span>
                                     </div>
                                 </div>
-                                <div className="column is-narrow">
+                                <div className="is-2">
                                     <div className="tags is-centered">
                                         <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Registrados</span>
+                                        <span className="tag is-white">Total</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="columns is-mobile buttons-g">
-                        {
-                            attendees.length>0 && (
-                                <div className="column is-narrow has-text-centered export button-c">
-                                    <button className="button" onClick={this.exportFile}>
+                    <div className="columns">
+                        <div className="is-flex-touch columns">
+                            {
+                                attendees.length>0 && (
+                                    <div className="column is-narrow has-text-centered export button-c is-centered">
+                                        <button className="button" onClick={this.exportFile}>
                                                 <span className="icon">
                                                     <i className="fas fa-download"/>
                                                 </span>
-                                        <span className="text-button">Exportar</span>
-                                    </button>
-                                </div>
-                            )
-                        }
-                        <div className="column is-narrow has-text-centered button-c">
-                            <button className="button is-inverted" onClick={this.checkModal}>
+                                            <span className="text-button">Exportar</span>
+                                        </button>
+                                    </div>
+                                )
+                            }
+                            <div className="column is-narrow has-text-centered button-c is-centered">
+                                <button className="button is-inverted" onClick={this.checkModal}>
                                         <span className="icon">
                                             <i className="fas fa-qrcode"></i>
                                         </span>
-                                <span className="text-button">Leer Código QR</span>
-                            </button>
+                                    <span className="text-button">Leer Código QR</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="search column is-5 is-full-mobile">
+                            <SearchComponent data={attendees} kind={'user'} placeholder={""} classes={"field"} searchResult={this.searchResult}/>
                         </div>
                     </div>
-                    <div style={{maxWidth:"1000px"}}>
+                    <div className="checkin-table">
                         {loading ? <Fragment>
                                 <Loading/>
                                 <h2 className="has-text-centered">Cargando...</h2>
                             </Fragment>:
-                            <Fragment>
-                                <div style={{overflowX:"auto"}}>
+                            <div className="table-wrapper">
+                                <div className="table-container">
                                     <EvenTable head={["CheckIn", ...eventFields.map(({label})=>label)]}>
                                         {
                                             this.renderRows()
@@ -257,10 +262,7 @@ class CheckAgenda extends Component {
                                     change={this.state.changeItem}
                                     onChangePage={this.onChangePage}
                                 />
-                                <div className="checkin-warning">
-                                    <p className="is-size-7 has-text-right has-text-centered-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
-                                </div>
-                            </Fragment>}
+                            </div>}
                     </div>
                 </EventContent>
                 {qrModal && <CheckSpace list={attendees} closeModal={this.closeQRModal} eventID={eventID} agendaID={agendaID} checkIn={this.checkIn}/>}

@@ -41,22 +41,6 @@
           margin: 0;
         }
         .tag {
-          &.DRAFT {
-            background-color: $danger;
-            color: $white;
-          }
-          &.BOOKED {
-            background-color: $warning;
-            color: $white;
-          }
-          &.RESERVED {
-            background-color: $info;
-            color: $white;
-          }
-          &.INVITED {
-            background-color: $success;
-            color: $white;
-          }
           &:not(:last-child) {
             margin-right: 0;
           }
@@ -70,12 +54,14 @@
   .checkin-table {
     .table-wrapper {
       width: 100%;
-      .table {
+      .table-container {
         outline: 1px solid $grey-light;
         overflow-x: visible;
         overflow-y: auto;
-        tr:nth-child(even) {
-          background-color: #DFDFDF;
+        table{
+          tr:nth-child(even) {
+            background-color: #DFDFDF;
+          }
         }
       }
     }

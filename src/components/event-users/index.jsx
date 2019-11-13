@@ -12,6 +12,8 @@ import Loading from "../loaders/loading";
 import 'react-toastify/dist/ReactToastify.css';
 import QrModal from "./qrModal";
 import {fieldNameEmailFirst, handleRequestError, sweetAlert} from "../../helpers/utils";
+import EventContent from "../events/shared/content";
+import EvenTable from "../events/shared/table";
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -289,8 +291,7 @@ class ListEventUser extends Component {
         const {event:{event_stages}} = this.props;
         return (
             <React.Fragment>
-                <div className="checkin">
-                    <h2 className="title-section">Check In</h2>
+                <EventContent classes="checkin" title={"Check In"}>
                     <div className="columns is-mobile buttons-g">
                         <div className="checkin-warning ">
                             <p className="is-size-7 has-text-centered-mobile is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
@@ -313,7 +314,6 @@ class ListEventUser extends Component {
                         </div>
                     </div>
                     <div className="columns">
-                        {/* Botones */}
                         <div className="is-flex-touch columns">
                             <div className="column is-narrow has-text-centered button-c is-centered">
                                 <button className="button is-primary" onClick={this.addUser}>
@@ -344,12 +344,10 @@ class ListEventUser extends Component {
                                 </button>
                             </div>
                         </div>
-                        {/* Buscador */}
                         <div className="search column is-5 is-full-mobile">
                             <SearchComponent placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         </div>
                     </div>
-                    
                     {
                         (event_stages && event_stages.length > 0) &&
                         <div className='filter'>
@@ -406,26 +404,12 @@ class ListEventUser extends Component {
                                 <h2 className="has-text-centered">Cargando...</h2>
                             </Fragment>:
                             <div className="table-wrapper">
-                                <div className="table">
-                                    <table className="table">
-                                        <thead>
-                                        <tr>
-                                            <th/>
-                                            <th className="is-capitalized">Check</th>
-                                            {
-                                                extraFields.map((field,key)=>{
-                                                    return <th key={key} className="is-capitalized">{field.label}</th>
-                                                })
-                                            }
-                                            <th>Tiquete</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                                <div className="table-container">
+                                    <EvenTable head={["","Check", ...extraFields.map(({label})=>label), "Tiquete"]}>
                                         {
                                             this.renderRows()
                                         }
-                                        </tbody>
-                                    </table>
+                                    </EvenTable>
                                 </div>
                                 <Pagination
                                     items={users}
@@ -434,7 +418,7 @@ class ListEventUser extends Component {
                                 />
                             </div>}
                     </div>
-                </div>
+                </EventContent>
                 {(!this.props.loading && editUser) &&
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
                            ticket={ticket} tickets={this.state.listTickets} rolesList={this.state.rolesList}
