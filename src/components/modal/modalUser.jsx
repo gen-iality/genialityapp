@@ -120,7 +120,7 @@ class UserModal extends Component {
         const canvas = document.getElementsByTagName('CANVAS')[0];
         let qr = canvas ? canvas.toDataURL() : '';
         if(resp._id){
-            if(!this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
+            if(this.props.value && !this.props.value.checked_in && this.props.edit) this.props.checkIn(this.state.userId);
             let oIframe = this.refs.ifrmPrint;
             let badge = resp.BadgeFields;
             let oDoc = (oIframe.contentWindow || oIframe.contentDocument);
@@ -271,7 +271,7 @@ class UserModal extends Component {
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         const self = this;
         let message = {};
-        userRef.doc(this.props.value._id).delete().then(function() {
+        userRef.doc(this.state.userId).delete().then(function() {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
