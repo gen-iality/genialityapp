@@ -10,7 +10,7 @@ export default function EventContent({...props}) {
             </div>
             {props.description&&<p>{props.description}</p>}
             {
-                props.actionLeft &&
+                (props.actionLeft || props.addAction) &&
                 <nav className="level">
                     <div className="level-left">
                         {props.actionLeft}
