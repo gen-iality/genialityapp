@@ -25,6 +25,7 @@ class Agenda extends Component {
         const init = Moment(event.date_start);
         const end = Moment(event.date_end);
         const diff = end.diff(init, 'days');
+        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         for(let i = 0; i < diff+1; i++){
             days.push(Moment(init).add(i,'d'))
         }
@@ -33,6 +34,7 @@ class Agenda extends Component {
 
     fetchAgenda = async() => {
         const {data} = await AgendaApi.byEvent(this.props.event._id);
+        //Después de traer la info se filtra por el primer día por defecto
         const filtered = this.filterByDay(this.state.days[0],data);
         this.setState({list:data,filtered,toShow:filtered})
     };
@@ -42,6 +44,7 @@ class Agenda extends Component {
         //Sort the filtered list by hour start, use moment format HHmm to get a number and used it to sort
         const list = agenda.filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
             .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
+        //Se mapea el listado filtrado y se parsean variables para mostrar mejor
         list.map(item=>{
             item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
             item.roles = item.access_restriction_roles.map(({name})=>name);
@@ -50,12 +53,14 @@ class Agenda extends Component {
         return list
     };
 
+    //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
     selectDay = (day) => {
         const filtered = this.filterByDay(day,this.state.list);
         this.setState({filtered,toShow:filtered,day})
 
     };
 
+    //Fn para el resultado de la búsqueda
     searchResult = (data) => this.setState({toShow:!data?[]:data});
 
     redirect = () => this.setState({redirect:true});

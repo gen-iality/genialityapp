@@ -39,30 +39,39 @@ class CheckAgenda extends Component {
             const agendaID = this.props.match.params.id;
             let {checkIn,changeItem} = this.state;
             const properties = event.user_properties;
+            //Se traen roles para usarlos en la lista
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
+            //Parse de campos para mostrar primero el nombre, email y luego el resto
             const eventFields = fieldNameEmailFirst(properties);
             this.setState({ eventFields, rolesList, agendaID, eventID: event._id });
             let newList = [...this.state.attendees];
+            //Query de los asistentes ordenados por fecha de actualización
             this.firestoreRef.orderBy("updated_at","desc").onSnapshot((snapshot)=> {
                 let user;
+                //Se itera sobre los asistentes encontrados para agregarlos al listado
                 snapshot.docChanges().forEach((change)=> {
                     user = change.doc.data();
                     user._id = change.doc.id;
+                    //Estas variables se resetean para evitar error en ejecución
                     user.rol_name = user.rol_name ? user.rol_name : user.rol_assistant ? user.rol_assistant : user.rol_id ? rolesList.find(({name,_id})=> _id === user.rol_id ? name : "" ) : "";
                     user.created_at = (typeof user.created_at === "object")?user.created_at.toDate():'sinfecha';
                     user.updated_at = (user.updated_at.toDate)? user.updated_at.toDate(): new Date();
+                    //FN para manejar los contadores y el orden del listado
                     switch (change.type) {
                         case "added":
+                            //Si el usuario es nuevo, se suma si esta chequeado y se coloca al inicio del arreglo
                             if(user.checked_in) checkIn += 1;
                             change.newIndex === 0 ? newList.unshift(user) : newList.push(user);
                             break;
                         case "modified":
+                            //Si el usuario es modificado, se suma si esta chequeado y se coloca al inicio del arreglo
                             if(user.checked_in) checkIn += 1;
                             newList.unshift(user);
                             newList.splice(change.oldIndex+1, 1);
                             changeItem = !changeItem;
                             break;
                         case "removed":
+                            //Si el usuario es modificado, se resta si esta chequeado y se borra del arreglo
                             if(user.checked_in) checkIn -= 1;
                             newList.splice(change.oldIndex, 1);
                             break;
@@ -84,13 +93,16 @@ class CheckAgenda extends Component {
         }
     }
 
+    //Se deja de escuchar el firestore para disminuir recursos
     componentWillUnmount() {
         this.firestoreRef = "";
     }
 
+    //FN para exportar listado a excel
     exportFile = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        //Se trae el listado total y se ordenan por fecha de creación
         const attendees = [...this.state.attendees].sort((a, b) => b.created_at - a.created_at);
         const data = parseData2Excel(attendees,this.state.eventFields);
         const ws = XLSX.utils.json_to_sheet(data);
@@ -99,6 +111,7 @@ class CheckAgenda extends Component {
         XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name}.xls`);
     };
 
+    //FN Modal, abre y cierra
     checkModal = () => {
         html.classList.add('is-clipped');
         this.setState((prevState) => {
@@ -112,9 +125,12 @@ class CheckAgenda extends Component {
         });
     };
 
+    //FN para checkin
     checkIn = (id) => {
         const {eventID,agendaID,attendees} = this.state;
+        //Se busca en el listado total con el id
         const user = attendees.find(({attendee_id})=>attendee_id === id);
+        //Sino está chequeado se chequea
         if(!user.checked_in){
             const userRef = firestore.collection(`event_activity_attendees/${eventID}/activities/${agendaID}/attendees`).doc(user._id);
             userRef.update({

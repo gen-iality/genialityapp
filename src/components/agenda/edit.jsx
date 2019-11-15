@@ -49,6 +49,7 @@ class AgendaEdit extends Component {
         const init = Moment(event.date_start);
         const end = Moment(event.date_end);
         const diff = end.diff(init, 'days');
+        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
         for(let i = 0; i < diff+1; i++){
             days.push(Moment(init).add(i,'d').format("YYYY-MM-DD"))
         }
@@ -57,6 +58,7 @@ class AgendaEdit extends Component {
         let roles = await RolAttApi.byEvent(this.props.event._id);
         let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         let types = await TypesAgendaApi.byEvent(this.props.event._id);
+        //La información se neceista de tipo [{label,value}] para los select
         spaces = handleSelect(spaces);
         hosts = handleSelect(hosts);
         roles = handleSelect(roles);
@@ -76,14 +78,17 @@ class AgendaEdit extends Component {
         this.setState({days,spaces,hosts,categories,types,roles,loading:false,isLoading});
     }
 
+    //FN general para cambio en input
     handleChange = (e) => {
         const {name} = e.target;
         const {value} = e.target;
         this.setState({[name]:value});
     };
+    //FN para cambio en campo de fecha
     handleDate = (value,name) => {
         this.setState({[name]:value})
     };
+    //Cada select tiene su propia función para evitar errores y asegurar la información correcta
     selectType = (value) => {
       this.setState({selectedType:value})
     };
@@ -96,9 +101,11 @@ class AgendaEdit extends Component {
     selectRol = (selectedRol) => {
         this.setState({ selectedRol });
     };
+    //FN para los select que permiten crear opción
     handleCreate = async(value,name) => {
         try {
             this.setState({isLoading: {...this.isLoading, [name]: true}});
+            //Se revisa a que ruta apuntar
             const item = name === "types" ?
                 await TypesAgendaApi.create(this.props.event._id, {name: value}) :
                 await CategoriesAgendaApi.create(this.props.event._id, {name: value});
@@ -115,6 +122,7 @@ class AgendaEdit extends Component {
             sweetAlert.showError(handleRequestError(e))
         }
     };
+    //FN manejo de imagen input, la carga al sistema y la guarda en base64
     changeImg = async(files) => {
         try {
             const file = files[0];
@@ -130,8 +138,10 @@ class AgendaEdit extends Component {
         }
     };
 
+    //FN para el editor enriquecido
     chgTxt= content => this.setState({description:content});
 
+    //Envío de información
     submit = async() => {
         if(this.validForm()) {
             try {
@@ -152,6 +162,7 @@ class AgendaEdit extends Component {
         }
     };
 
+    //FN para construir la información a enviar al api
     buildInfo = () => {
         const {name, subtitle, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image} = this.state;
@@ -178,6 +189,7 @@ class AgendaEdit extends Component {
         }
     };
 
+    //FN para eliminar la actividad
     remove = () => {
         if(this.state.deleteID){
             sweetAlert.twoButton(`Está seguro de borrar esta actividad`, "warning", true, "Borrar", async (result)=>{
@@ -195,6 +207,7 @@ class AgendaEdit extends Component {
         }else this.setState({redirect:true});
     };
 
+    //Validación de campos
     validForm = () => {
         let title="";
         if(this.state.name.length<=0)
@@ -211,10 +224,12 @@ class AgendaEdit extends Component {
         }else return true;
     };
 
+    //FN para ir a una ruta específica (ruedas en los select)
     goSection = (path,state) => {
         this.props.history.push(path,state)
     };
 
+    //FN agrega todos los roles
     addRoles = () => {
         if(this.state.roles.length !== this.state.selectedRol)
             this.setState(prevState => ({selectedRol:prevState.roles}));
@@ -433,6 +448,7 @@ class AgendaEdit extends Component {
     }
 }
 
+//FN manejo/parseo de fechas
 function handleDate(info) {
     let date,hour_start,hour_end;
     hour_start = Moment(info.datetime_start,"YYYY-MM-DD HH:mm").toDate();
@@ -441,10 +457,12 @@ function handleDate(info) {
     return {date,hour_start,hour_end}
 }
 
+//Estilos de algunos select
 const creatableStyles = {
     menu:styles=>({ ...styles, maxHeight:"inherit"})
 };
 
+//Estilos para el tipo
 const dot = (color = 'transparent') => ({
     alignItems: 'center',
     display: 'flex',
@@ -458,6 +476,7 @@ const dot = (color = 'transparent') => ({
     },
 });
 
+//Estilos de algunos otros select
 const catStyles = {
     menu: styles => ({...styles, maxHeight: "inherit"}),
     multiValue: (styles, {data}) => ({...styles, ...dot(data.item.color)})

@@ -28,17 +28,21 @@ class AgendaTypeCat extends Component {
     async componentDidMount() {
         this.eventID = this.props.event._id;
         const subject = this.props.match.url.split("/").slice(-1)[0];
+        //Se setea la ruta api de acuerdo a la ruta
         this.apiURL = subject === "categorias" ? CategoriesAgendaApi : TypesAgendaApi;
+        //Header de las tablas según ruta
         const headers = subject === "categorias" ? ["Nombre", "Color", ""] : ["Nombre", ""];
         const list = await this.apiURL.byEvent(this.eventID);
         this.setState({list,loading:false,subject, headers})
     }
 
+    //FN para editar fila
     editItem = (type) => this.setState({id:type._id,name:type.name,color:type.color?type.color:""});
 
     onChange = (e) => {
         this.setState({name:e.target.value})
     };
+    //FNs para el cambio de color
     handleClick = () => {
         this.setState({ displayColorPicker: !this.state.displayColorPicker })
     };
@@ -46,6 +50,7 @@ class AgendaTypeCat extends Component {
         this.setState({ color: color.hex });
     };
 
+    //FN para agregar un nuevo item a la lista, si ya hay uno no hace nada
     newItem = () => {
         if(!this.state.list.find(({value})=>value === "new"))
             this.setState(state => ({list: state.list.concat({name: '', _id: 'new'}), id: 'new'}));

@@ -23,9 +23,11 @@ class Badge extends Component {
         const properties = event.user_properties;
         const resp = await BadgeApi.get(event._id);
         let {extraFields,badge,showPrev} = this.state;
+        //Manejo adecuado de campos, no se neceista toda la información
         properties.map(prop=>{
             return extraFields.push({value:prop.name,label:prop.name})
         });
+        //Si hay escarapela se muestra el preview y se setean los datos
         if(resp._id) {
             badge = resp.BadgeFields.filter(i=>i.qr || (!i.qr && i.id_properties));
             showPrev = true;
@@ -33,18 +35,21 @@ class Badge extends Component {
         this.setState({ extraFields,badge,showPrev });
     }
 
+    //FN para agregar campo a la escarapela
     addField = () => {
         const {badge} = this.state;
         badge.push({edit:true,line:true,id_properties:'',size:18});
         this.setState({badge,newField:true})
     };
 
+    //FN para agregar QR a la escarapela
     addQR = () => {
         const {badge} = this.state;
         badge.push({edit:true,line:true,qr:true});
         this.setState({badge,qrExist:true,newField:true,size:'64'})
     };
 
+    //FN manejo en el cambio de las opciones (tamaño)
     handleChange = (e,key) => {
         const {value,name} = e.target;
         const {badge,extraFields} = this.state;
@@ -59,12 +64,14 @@ class Badge extends Component {
         this.setState({badge})
     };
 
+    //FN manejo en el cambio de la posición del campo
     toggleSwitch = (key) => {
         const {badge} = this.state;
         badge[key].line = !badge[key].line;
         this.setState({badge})
     };
 
+    //FNs para guardar, editar y eliminar un campo
     saveField = (key) => {
         const {badge,extraFields} = this.state;
         if(badge[key].id_properties){
@@ -89,19 +96,24 @@ class Badge extends Component {
         this.setState({badge,extraFields})
     };
 
+    //FN para realizar el preview
     renderPrint = () => {
         const badge = [...this.state.badge];
         let items = [];
         let i = 0;
+        //Se itera sobre cada campo
         for(;i<badge.length;){
             let item;
+            //Si el campo es line ocupa una fila completa
             if(badge[i].line){
+                //Si es QR muestro un QR de ejemplo, sino muestro el nombre del campo
                 item = badge[i].qr ?
                     <QRCode value={'alejomg27@gmail.com'} size={64}/>:
                     <div><p style={{fontSize:`${badge[i].size}px`}}>{badge[i].id_properties.label}</p></div>;
                 items.push(item);
                 i++
             }else{
+                //Sino es line, ocupa la mitad de una columna siempre y cuando el campo siguiente tampoco sea line
                 if(badge[i+1]&&!badge[i+1].line){
                     item = <div style={{display:"flex"}}>
                         {
@@ -172,7 +184,9 @@ class Badge extends Component {
         }
     };
 
+    //FN para imprimir el preview
     printPreview = () => {
+        //Para el preview se crea un iframe con el contenido, se usa la misma logica de iteración que renderPrint
         const canvas = document.getElementsByTagName('CANVAS')[0];
         const { badge } = this.state;
         let qr = canvas ? canvas.toDataURL() : '';
@@ -183,8 +197,7 @@ class Badge extends Component {
         }
         // Head
         oDoc.write('<head><title>Escarapela</title>');
-        //oDoc.write('<link href="https://fonts.googleapis.com/css?family=Lato:700|Oswald" rel="stylesheet"></head>');
-        // body
+        // body, se ejcuta la función de imprimir
         oDoc.write('<body onload="window.print()"><div>');
         // Datos
         let i = 0;

@@ -32,6 +32,7 @@ class ReportList extends Component {
 
     fetchAgenda = async() => {
         const {data} = await AgendaApi.byEvent(this.props.event._id);
+        //Como se neceista registrados, cupos y total. Se hace el caclulo para traer el campo faltante
         data.map(item=>{
             item.remaining_capacity = item.remaining_capacity ? item.remaining_capacity : item.capacity;
             return item;
