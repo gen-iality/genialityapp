@@ -117,11 +117,12 @@ class ListEventUser extends Component {
         //this.pilaListener()
     }
 
-    exportFile = (e) => {
+    exportFile = async (e) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log('aqui');
         const attendees = [...this.state.userReq].sort((a, b) => b.created_at - a.created_at);
-        const data = parseData2Excel(attendees,this.state.extraFields);
+        const data = await parseData2Excel(attendees,this.state.extraFields);
         const ws = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Asistentes");

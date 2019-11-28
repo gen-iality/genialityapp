@@ -88,7 +88,7 @@ export function parseData2Excel(data,fields) {
                     str = item.properties[name];
                     break;
                 default:
-                    str = item.properties[name];
+                    str = (name === "id" ? item["_id"] : item.properties[name]);
             }
             if(typeof str === "string") str = str.toUpperCase();
             if(type === "complex" && str){

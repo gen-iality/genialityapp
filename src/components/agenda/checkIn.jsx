@@ -99,16 +99,16 @@ class CheckAgenda extends Component {
     }
 
     //FN para exportar listado a excel
-    exportFile = (e) => {
+    exportFile = async (e) => {
         e.preventDefault();
         e.stopPropagation();
         //Se trae el listado total y se ordenan por fecha de creación
         const attendees = [...this.state.attendees].sort((a, b) => b.created_at - a.created_at);
-        const data = parseData2Excel(attendees,this.state.eventFields);
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
-        XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name}.xls`);
+        const data = await parseData2Excel(attendees,this.state.eventFields);
+        const ws = await XLSX.utils.json_to_sheet(data);
+        const wb = await XLSX.utils.book_new();
+        await XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
+        await XLSX.writeFile(wb, `asistentes_actividad_${this.props.location.state.name}.xls`);
     };
 
     //FN Modal, abre y cierra
