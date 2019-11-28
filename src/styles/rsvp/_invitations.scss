@@ -30,6 +30,7 @@
   }
   .filter{
     width: 100%;
+    margin-bottom: 10px;
   }
   .checkin-tags-wrapper {
     width: 100%;
@@ -101,6 +102,8 @@
   .search{
     display: flex;
     flex-direction: row;
+    margin-left: 58px !important;
+    margin-bottom: 5px;
   }
   .table td{
     padding: 0;
@@ -207,6 +210,13 @@
   background-color: white !important;
   min-height: 350px !important;
   z-index: 1000 !important;
+}
+
+.is-checkradio[type="radio"] + label::before, 
+.is-checkradio[type="radio"] + label:before, 
+.is-checkradio[type="checkbox"] + label::before, 
+.is-checkradio[type="checkbox"] + label:before{
+  border: 0.1rem solid gray !important;
 }
 @media (min-width: 769px ){
 }

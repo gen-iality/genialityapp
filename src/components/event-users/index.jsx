@@ -293,27 +293,25 @@ class ListEventUser extends Component {
         return (
             <React.Fragment>
                 <EventContent classes="checkin" title={"Check In"}>
-                    <div className="columns is-mobile buttons-g">
-                        <div className="checkin-warning ">
-                            <p className="is-size-7 has-text-centered-mobile is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                    <div className="checkin-warning ">
+                        <p className="is-size-7 is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                    </div>
+                 
+                    <div className="columns checkin-tags-wrapper is-flex-touch">
+                        <div className="is-3 column">
+                            <div className="tags" style={{ flexWrap:'nowrap' }}>
+                                <span className="tag is-primary">{checkIn}</span>
+                                <span className="tag is-white">Ingresados</span>
+                            </div>
                         </div>
-                        <div className="columns checkin-tags-wrapper">
-                            <div className="checkin-tags is-5 columns">
-                                <div className="is-2">
-                                    <div className="tags is-centered">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Ingresados</span>
-                                    </div>
-                                </div>
-                                <div className="is-2">
-                                    <div className="tags is-centered">
-                                        <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Total</span>
-                                    </div>
-                                </div>
+                        <div className="is-2 column">
+                            <div className="tags" style={{ flexWrap:'nowrap' }}>
+                                <span className="tag is-light">{total}</span>
+                                <span className="tag is-white">Total</span>
                             </div>
                         </div>
                     </div>
+
                     <div className="columns">
                         <div className="is-flex-touch columns">
                             <div className="column is-narrow has-text-centered button-c is-centered">
@@ -345,8 +343,8 @@ class ListEventUser extends Component {
                                 </button>
                             </div>
                         </div>
-                        <div className="search column is-5 is-full-mobile">
-                            <SearchComponent placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
+                        <div className="search column is-5 is-three-quarters-mobile has-text-left-tablet">
+                            <SearchComponent style={{ marginLeft:'40px'}} placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch}/>
                         </div>
                     </div>
                     {
