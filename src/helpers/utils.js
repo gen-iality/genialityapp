@@ -79,16 +79,16 @@ export function parseData2Excel(data,fields) {
             let str;
             switch (type) {
                 case "number":
-                    str = item.properties[name].toString();
+                    str = item.properties[name] ? item.properties[name].toString() : 'udenfined';
                     break;
                 case "boolean":
                     str = item.properties[name] ? "TRUE" : "FALSE";
                     break;
                 case "complex":
-                    str = item.properties[name];
+                    str = item.properties[name] ? item.properties[name] : 'undefined';
                     break;
                 default:
-                    str = (name === "id" ? item["_id"] : item.properties[name]);
+                    str = (name === "id" ? item["_id"] : item.properties[name] ? item.properties[name] : 'undefined');
             }
             if(typeof str === "string") str = str.toUpperCase();
             if(type === "complex" && str){
