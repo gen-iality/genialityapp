@@ -18,6 +18,8 @@ import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import Speakers from "../speakers";
+import Surveys from "../surveys";
+import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 
@@ -133,6 +135,8 @@ class Event extends Component {
                             <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/speakers`} render={()=><Speakers eventID={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/encuestas`} render={()=><Surveys eventID={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/encuestasasesores`} render={()=><Surveysconsultant eventID={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>

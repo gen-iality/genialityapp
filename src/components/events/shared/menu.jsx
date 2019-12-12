@@ -92,11 +92,18 @@ class Menu extends Component {
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
                                 <Fragment>
+                                                                      
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitaciones`}>Invitaciones</NavLink>
-                                    </li>
+                                    </li>   
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/correos`}>Correos</NavLink>
+                                    </li>
+                                      
+                                    <li>
+                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/encuestas`}>Encuestas</NavLink>
+                                    </li>  <li>
+                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/encuestasasesores`}>Encuestas Asesores</NavLink>
                                     </li>
                                 </Fragment>
                             }
