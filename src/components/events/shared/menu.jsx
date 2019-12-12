@@ -101,7 +101,7 @@ class Menu extends Component {
                                     </li>
                                       
                                     <li>
-                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/encuestas`}>Encuestas</NavLink>
+                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/encuestas`}>Encuestas Clientes</NavLink>
                                     </li>  <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/encuestasasesores`}>Encuestas Asesores</NavLink>
                                     </li>
