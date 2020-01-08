@@ -39,27 +39,27 @@ class Configuration extends Component {
         this.submit = this.submit.bind(this)
 
     }
+    
     async componentDidMount(){
-        const info = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
-        this.setState({info})
+        const information = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
+        this.setState({information})
 
-        console.log(info.data.HomeScreen)
-
-        // for(const info in this.state.info.data){
-        //    this.setState({info:{
-        //         HomeScreen: info.data[0].HomeScreen.title,  
-        //         CalendarScreen: info.data[0].CalendarScreen.title,
-        //         ProfileScreen: info.data[0].ProfileScreen.title,
-        //         EventPlaceScreen: info.data[0].EventPlaceScreen.title,
-        //         SpeakersScreen: info.data[0].SpeakersScreen.title,
-        //         NewsScreen: info.data[0].NewsScreen.title,
-        //         SurveysScreen: info.data[0].SurveysScreen.title,
-        //         DocumentsScreen: info.data[0].DocumentsScreen.title                   
-        //     }
-        //    })
+        // for(const info in this.state.information.data){
+           this.setState({info:{
+                id: information.data[0]._id,
+                HomeScreen: information.data[0].HomeScreen.title,  
+                CalendarScreen: information.data[0].CalendarScreen.title,
+                ProfileScreen: information.data[0].ProfileScreen.title,
+                EventPlaceScreen: information.data[0].EventPlaceScreen.title,
+                SpeakersScreen: information.data[0].SpeakersScreen.title,
+                NewsScreen: information.data[0].NewsScreen.title,
+                SurveysScreen: information.data[0].SurveysScreen.title,
+                DocumentsScreen: information.data[0].DocumentsScreen.title                   
+            }
+           })
         // }
 
-        console.log("datos guardados: "+this.state.info)
+        console.log("datos guardados: "+this.state.info.id)
     }
     
     componentWillMount() {
@@ -69,8 +69,6 @@ class Configuration extends Component {
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-        
-        console.log(this.state.configuration);
 
         const { eventId } = this.state;
         
@@ -78,25 +76,24 @@ class Configuration extends Component {
         // this.state.data.push(this.state.styles);
         this.state.data={styles:this.state.configuration};
         try {
-            if(this.state.configuration){
-                const info = await Actions.put(`api/event/${this.props.eventId}/configuration/${this.props.eventId}`,this.state.configuration);
-                this.props.updateEvent(info);
-                console.log(this.state.data)
+            if(this.state.info.id){
+                const info = await Actions.put(`api/event/${this.props.eventId}/configuration/${this.state.info.id}`,this.state.configuration);
+                console.log(info)
                 this.setState({loading:false});
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
             }
             else{
                 console.log("response else create")
-                // const result = await Actions.post(`/api/event/${this.props.eventId}/configuration`, this.state.configuration);
-                // console.log(this.state.data)
-                // this.setState({loading:false});
-                // if(result._id){
-                //     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
-                //     toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
-                // }else{
-                //     toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk"/>);
-                //     this.setState({msg:'Cant Create',create:false})
-                // }
+                const result = await Actions.post(`/api/event/${this.props.eventId}/configuration`, this.state.configuration);
+                console.log(this.state.data)
+                this.setState({loading:false});
+                if(result._id){
+                    window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
+                    toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!"/>)
+                }else{
+                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk"/>);
+                    this.setState({msg:'Cant Create',create:false})
+                }
             }
         }
         catch(error) {
@@ -111,7 +108,7 @@ class Configuration extends Component {
             } else {
                 let errorData = error.message;
                 console.log('Error', error.message);
-                console.log(this.state.styles)
+                console.log(this.state.info)
                 if(error.request) {
                     console.log(error.request);
                     errorData = error.request
@@ -159,7 +156,7 @@ class Configuration extends Component {
                                     <input type="checkbox" name={item.name} value={ item.key } onChange={(e) => { this.sendInfoToState(e.target.name , {  title: item.title, name: item.name, icon:item.icon, key: item.key }) }}/>
 
                                     <label className="label has-text-grey-light">{item.desc}</label>
-                                    <input className="input is-primary" type="text" onChange={(e) => { this.updateStateTitle(item.name , e.target.value) }}/>
+                                    <input className="input is-primary" placeholder={this.state.info.HomeScreen} type="text" onChange={(e) => { this.updateStateTitle(item.name , e.target.value) }}/>
 
                                 </div>
                             ))
