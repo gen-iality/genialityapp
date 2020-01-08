@@ -20,6 +20,7 @@ import AgendaRoutes from "../agenda";
 import Speakers from "../speakers";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
+//import Styles from '../App/styles';
 
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
@@ -28,11 +29,13 @@ const RSVP = asyncComponent(()=> import("../rsvp")) ;
 const Invitations = asyncComponent(()=> import("../invitations")) ;
 const AdminRol = asyncComponent(()=> import("./staff")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
+const Styles = asyncComponent(()=> import("../App/styles"));
 const DashboardEvent = asyncComponent(()=> import("../dashboard")) ;
 const OrdersEvent = asyncComponent(()=> import("../orders")) ;
 const Pages =  asyncComponent(()=> import('../pages'));
 const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
+const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 
 Moment.locale('es');
 momentLocalizer();
@@ -45,7 +48,9 @@ class Event extends Component {
             generalTab:true,
             guestTab:true,
             ticketTab:true,
-            menuMobile:false
+            styleTab:true,
+            menuMobile:false,
+            ConfigurationApp:true
         };
     }
 
@@ -123,6 +128,17 @@ class Event extends Component {
                                 permissions.data.ids.includes(rolPermissions.admin_ticket._id) &&
                                 <Route path={`${match.url}/ticket`} render={()=><TicketInfo eventId={this.state.event._id}/>}/>
                             }
+
+                            {
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
+                            }
+
+{
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
+                            }
+
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Route path={`${match.url}/pages`} component={Pages}/>
@@ -133,6 +149,8 @@ class Event extends Component {
                             <Route path={`${match.url}/espacios`} render={()=><Espacios eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/reporte-certificados`} render={()=><ReporteCertificados eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/speakers`} render={()=><Speakers eventID={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>
