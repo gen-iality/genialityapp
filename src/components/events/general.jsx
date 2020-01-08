@@ -116,6 +116,8 @@ class General extends Component {
         if(file){
             this.setState({imageFile: file,
                 event:{...this.state.event, picture: null}});
+
+            //envia el archivo de imagen como POST al API    
             const uploaders = files.map(file => {
                 let data = new FormData();
                 data.append('file',file);
@@ -124,6 +126,8 @@ class General extends Component {
                     if(image) path.push(image);
                 });
             });
+
+            //cuando todaslas promesas de envio de imagenes al servidor se completan
             axios.all(uploaders).then((data) => {
                 console.log(path);
                 console.log('SUCCESSFULL DONE');
@@ -131,6 +135,7 @@ class General extends Component {
                         ...self.state.event,
                         picture: path[0]
                     },fileMsg:'Imagen subida con exito',imageFile:null,path});
+                    
                 toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
             });
         }

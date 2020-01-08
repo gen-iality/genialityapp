@@ -12,6 +12,7 @@ class Menu extends Component {
             commTab:true,
             checkInTab:true,
             ticketTab:true,
+            stylesTab:true,
             url:""
         };
     }
@@ -35,7 +36,7 @@ class Menu extends Component {
 
     render(){
         const {permissions} = this.props;
-        const {generalTab,peopleTab,commTab,checkInTab,ticketTab,url} = this.state;
+        const {generalTab,peopleTab,commTab,checkInTab,ticketTab,stylesTab,url} = this.state;
         return (
             <Fragment>
                 <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
@@ -55,6 +56,8 @@ class Menu extends Component {
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink></li> 
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuraciòn de la app</NavLink></li>
                                 </Fragment>
                             }
                         </ul>
@@ -153,6 +156,7 @@ class Menu extends Component {
                         }
                     </Fragment>
                 }
+
                 <p className="menu-label has-text-centered-mobile">
                     <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/dashboard`}>Estadísticas del evento</NavLink>
                 </p>
