@@ -56,6 +56,7 @@ class Styles extends Component {
                 brandDanger:this.state.info.styles.brandDanger,
                 containerBgColor: this.state.info.styles.containerBgColor,
                 brandWarning:this.state.info.styles.brandWarning,
+                toolbarDefaultBg:this.state.info.styles.toolbarDefaultBg,
                 brandDark:this.state.info.styles.brandDark,
                 brandLight:this.state.info.styles.brandLight,
                 event_image:this.state.info.styles.event_image,
@@ -85,10 +86,13 @@ class Styles extends Component {
                     brandWarning:this.state.info.styles.brandWarning,
                     brandDark:this.state.info.styles.brandDark,
                     brandLight:this.state.info.styles.brandLight,
+                    toolbarDefaultBg:this.state.info.styles.toolbarDefaultBg,
                     event_image:this.state.info.styles.event_image,
                     banner_image:this.state.info.styles.banner_image,
                     menu_image:this.state.info.styles.menu_image}
             })
+
+            console.log(this.state.styles)
         }
     }
 
@@ -237,7 +241,6 @@ class Styles extends Component {
             }
             else{
                 const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.data);
-                console.log(this.state.data)
                 this.setState({loading:false});
                 if(result._id){
                     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/styles`);
@@ -282,20 +285,28 @@ class Styles extends Component {
                     <div className="column is-12">
                         <h2 className="title-section">Configuracion de estilos</h2>
                         <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color principal</label>
+                            <label className="label has-text-grey-light">Elige un color para los botones</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandPrimary}/>
                             <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, brandPrimary: save.target.value}})}}/>
                         </div>
 
                         <h2 className="title-section">Configuracion de Fondo de pantalla</h2>
                         <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color principal</label>
+                            <label className="label has-text-grey-light">Elige un color para el fondo de tu app</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.containerBgColor}/>
                             <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, containerBgColor: save.target.value}})}}/>
+                        </div>
+
+
+                        <h2 className="title-section">Configuracion de Menu</h2>
+                        <div className="column inner-column">
+                            <label className="label has-text-grey-light">Elige un color para el menu</label>
+                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.toolbarDefaultBg}/>
+                            <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, toolbarDefaultBg: save.target.value}})}}/>
                         </div>                          
                         
 
-                        <div className="column inner-column">
+                        {/* <div className="column inner-column">
                             <label className="label has-text-grey-light">Elige un color Para la informacion</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandInfo}/>
                             <input type="color" name="menuColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandInfo: save.target.value}})}} />
@@ -311,9 +322,9 @@ class Styles extends Component {
                             <label className="label has-text-grey-light">Elige un color para operaciones erroneas</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandDanger}/>
                             <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandDanger: save.target.value}})}} />    
-                        </div>
+                        </div> */}
 
-                        <div className="column inner-column">
+                        {/* <div className="column inner-column">
                             <label className="label has-text-grey-light">Elige un color para advertencias</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandWarning}/>
                             <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandWarning: save.target.value}})}} />    
@@ -323,17 +334,17 @@ class Styles extends Component {
                             <label className="label has-text-grey-light">Elige un color para tema oscuro</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandDark}/>
                             <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandDark: save.target.value}})}} />    
-                        </div>
+                        </div> */}
 
-                        <div className="column inner-column">
+                        {/* <div className="column inner-column">
                             <label className="label has-text-grey-light">Elige un color para tema claro</label>
                             <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandLight}/>
                             <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandLight: save.target.value}})}} />    
-                        </div>
+                        </div> */}
 
                         {/* Se carga la imagen de registro y login com base a la funcion save configuration */}
                         <div className="column inner-column">
-        <label className="label has-text-grey-light">Elige una imagen para el evento</label>
+        <label className="label has-text-grey-light">Elige una imagen de Login</label>
                              <div className="control">
                                 <ImageInput picture={this.state.path} imageFile={this.state.event_image}
                                     divClass={'drop-img'} content={<img src={this.state.path} alt={'Imagen Perfil'}/>}
@@ -346,7 +357,7 @@ class Styles extends Component {
                         </div>
 
                         <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige una imagen para el menu</label>
+                            <label className="label has-text-grey-light">Elige una imagen para el encabezado del menu</label>
                             <div className="control">
                                 <ImageInput picture={this.state.pathImage} imageFile={this.state.imageFileImage}
                                     divClass={'drop-img'} content={<img src={this.state.pathImage} alt={'Imagen Perfil'}/>}
@@ -359,7 +370,7 @@ class Styles extends Component {
                         </div>
 
                         <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige una imagen para el banner</label>
+                            <label className="label has-text-grey-light">Elige las imagenes de tu banner</label>
                             <div className="control">
                                 <ImageInput picture={this.state.pathBannerImage} imageFile={this.state.imageFileFooter}
                                     divClass={'drop-img'} content={<img src={this.state.pathBannerImage} alt={'Imagen Perfil'}/>}
