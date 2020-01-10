@@ -20,11 +20,12 @@ const itemsDrawer = [
     { name: 'HomeScreen', title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
     { name: 'CalendarScreen', title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
     { name: 'ProfileScreen', title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'EventPlaceScreen', title: 'Event Place', icon: 'map', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'SpeakersScreen', title: 'Speaker', icon: 'megafono', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
+    { name: 'EventPlaceScreen', title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
+    { name: 'SpeakersScreen', title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
     { name: 'NewsScreen', title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'SurveysScreen', title: 'Surveys', icon: 'survey', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'DocumentsScreen', title: 'Documents', icon: 'doc', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
+    { name: 'SurveysScreen', title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
+    { name: 'DocumentsScreen', title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
+    { name: 'WallScreen', title: 'Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
 ]
 
 class Configuration extends Component {
@@ -34,18 +35,21 @@ class Configuration extends Component {
             loading: true,
             configuration: {},
             info: {},
-            information: {}
+            information: {},
+            data:{}
         };
 
         this.submit = this.submit.bind(this)
 
     }
     async componentDidMount() {
+        const info = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
+        this.setState({ info })
 
-        const information = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
-        this.setState({ information })
+        const Home = this.state.info.HomeScreen.title
+        this.setState({Home})
 
-        console.log(information)
+        console.log(this.state.data)
 
         // console.log(info.data[0]._id)
 
@@ -66,16 +70,12 @@ class Configuration extends Component {
         }
 
         // console.log("datos guardados: "+this.state.info.data[0]._id)
+        console.log(this.state.info.HomeScreen.title);
     }
 
-    componentWillMount() {
-
-    }
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
-
-        console.log(this.state.configuration);
 
         const { event } = this.state;
 
@@ -172,15 +172,12 @@ class Configuration extends Component {
 
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
-
                                 </div>
                             ))
-
                         }
                         <button className="button is-primary" onClick={this.submit}>Guardar</button>
-                    </div>
+                    </div>    
                 </div>
-
                 {timeout && (<LogOut />)}
             </React.Fragment>
         );
