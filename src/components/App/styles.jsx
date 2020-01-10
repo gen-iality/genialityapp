@@ -1,23 +1,20 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ImageInput from "../shared/imageInput";
 import axios from "axios/index";
 import { toast } from 'react-toastify';
-import {Actions} from "../../helpers/request";
-import {FormattedMessage} from "react-intl";
+import { Actions } from "../../helpers/request";
+import { FormattedMessage } from "react-intl";
 import { EventsApi } from "../../helpers/request";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoadingEvent from "../loaders/loadevent";
-import Moment from "moment";
 import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
-import {fetchRol} from "../../redux/rols/actions";
-import {fetchPermissions} from "../../redux/permissions/actions";
 import { app } from '../../helpers/firebase';
 import ImageUploader from 'react-images-upload';
 import * as Cookie from "js-cookie";
 import privateInstance from "../../helpers/request";
 import { parseUrl } from "../../helpers/constants";
-import {BaseUrl} from "../../helpers/constants";
+import { BaseUrl } from "../../helpers/constants";
 
 class Styles extends Component {
     constructor(props) {
@@ -34,7 +31,7 @@ class Styles extends Component {
             styles:{},
             pictures:[],
             dates:{},
-            info:{}
+            info:{},
         };
         
         this.saveEventImage = this.saveEventImage.bind(this)
@@ -42,8 +39,9 @@ class Styles extends Component {
         this.saveBannerImage = this.saveBannerImage.bind(this)
         this.saveBackgroundImage = this.saveBackgroundImage.bind(this)
         this.submit = this.submit.bind(this)
+
     }
-    
+
     async componentDidMount(){
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         this.setState({info});
@@ -98,8 +96,6 @@ class Styles extends Component {
                     BackgroundImage:this.state.info.styles.BackgroundImage
                 }
             })
-
-            console.log(this.state.styles)
         }
     }
 
@@ -170,7 +166,6 @@ class Styles extends Component {
                 let data = new FormData();
                 data.append('file',file);
                 return Actions.post(url,data).then((image) => {
-                    console.log(image);
                     if(image) pathBannerImage.push(image);
                 });
             });
@@ -319,132 +314,55 @@ class Styles extends Component {
     }
 
     render() {
-        const {timeout} = this.state;
-    
+        const { timeout } = this.state;
+        const colorDrawer = [
+            { name: 'ColorBtn',  title: 'Elige un color para los botones',  key: 1, value: this.state.dates.brandPrimary, change: (save) => {this.setState({styles: {...this.state.styles, brandPrimary: save.target.value}}) } },
+            { name: 'ColorBackground', title: 'El fondo de tu app', key: 2, value: this.state.dates.containerBgColor, change: (save) => {this.setState({styles: {...this.state.styles, containerBgColor: save.target.value}})} },
+            { name: 'ColorMenu', title: 'Elige un color para el menu', key: 3, value: this.state.dates.toolbarDefaultBg, change: (save) => {this.setState({styles: {...this.state.styles, toolbarDefaultBg: save.target.value}})} },
+        ]
+        const imageDrawer =[
+            { name: 'EventImage', title: 'Elige una imagen de login', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage},
+            { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 5, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage},
+            { name: 'BannerImage', title: 'Elige una imagen para tu banner', key: 6, picture: this.state.pathBannerImage, imageFile: this.state.imageFileFooter, function: this.saveBannerImage},
+            { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 7, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
+        ]
+
         return (
             <React.Fragment>
-                
                 <div className="columns general">
                     <div className="column is-12">
-                        <h2 className="title-section">Configuracion de estilos</h2>
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para los botones</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandPrimary}/>
-                            <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, brandPrimary: save.target.value}})}}/>
-                        </div>
-
-                        <h2 className="title-section">Configuracion de Fondo de pantalla</h2>
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para el fondo de tu app</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.containerBgColor}/>
-                            <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, containerBgColor: save.target.value}})}}/>
-                        </div>
-
-
-                        <h2 className="title-section">Configuracion de Menu</h2>
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para el menu</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.toolbarDefaultBg}/>
-                            <input type="color" name="colorBtn" onChange={(save) => {this.setState({styles: {...this.state.styles, toolbarDefaultBg: save.target.value}})}}/>
-                        </div>                          
-                        
-
-                        {/* <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color Para la informacion</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandInfo}/>
-                            <input type="color" name="menuColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandInfo: save.target.value}})}} />
-                        </div>
-
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para operaciones realizada con exito</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandSuccess}/>
-                            <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandSuccess: save.target.value}})}} />    
-                        </div>
-
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para operaciones erroneas</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandDanger}/>
-                            <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandDanger: save.target.value}})}} />    
-                        </div> */}
-
-                        {/* <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para advertencias</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandWarning}/>
-                            <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandWarning: save.target.value}})}} />    
-                        </div>
-                        
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para tema oscuro</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandDark}/>
-                            <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandDark: save.target.value}})}} />    
-                        </div> */}
-
-                        {/* <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige un color para tema claro</label>
-                            <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={this.state.dates.brandLight}/>
-                            <input type="color" name="iconsColor" onChange={(save) => {this.setState({styles: {...this.state.styles, brandLight: save.target.value}})}} />    
-                        </div> */}
-
-                        {/* Se carga la imagen de registro y login com base a la funcion save configuration */}
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige una imagen de Login</label>
-                             <div className="control">
-                                <ImageInput picture={this.state.path} imageFile={this.state.event_image}
-                                    divClass={'drop-img'} content={<img src={this.state.path} alt={'Imagen Perfil'}/>}
-                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.event_image?'is-loading':''}`}>Cambiar foto</button>}
-                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                    changeImg={this.saveEventImage} errImg={this.state.errImg}
-                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                            </div>
-                            {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                        </div>
-
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige una imagen para el encabezado del menu</label>
-                            <div className="control">
-                                <ImageInput picture={this.state.pathImage} imageFile={this.state.imageFileImage}
-                                    divClass={'drop-img'} content={<img src={this.state.pathImage} alt={'Imagen Perfil'}/>}
-                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFileImage?'is-loading':''}`}>Cambiar foto</button>}
-                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                    changeImg={this.saveMenuImage} errImg={this.state.errImg}
-                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                            </div>
-                            {this.state.fileMsgLogo && (<p className="help is-success">{this.state.fileMsgLogo}</p>)}
-                        </div>
-
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige las imagenes de tu banner</label>
-                            <div className="control">
-                                <ImageInput picture={this.state.pathBannerImage} imageFile={this.state.imageFileFooter}
-                                    divClass={'drop-img'} content={<img src={this.state.pathBannerImage} alt={'Imagen Perfil'}/>}
-                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.imageFileFooter?'is-loading':''}`}>Cambiar foto</button>}
-                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                    changeImg={this.saveBannerImage} errImg={this.state.errImg}
-                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                            </div>
-                            {this.state.fileMsgFooter && (<p className="help is-success">{this.state.fileMsgFooter}</p>)}
-                        </div>
-
-                        <div className="column inner-column">
-                            <label className="label has-text-grey-light">Elige la imagen de fondo</label>
-                            <div className="control">
-                                <ImageInput picture={this.state.pathBackgroundImage} imageFile={this.state.BackgroundImage}
-                                    divClass={'drop-img'} content={<img src={this.state.pathBackgroundImage} alt={'Imagen Perfil'}/>}
-                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.BackgroundImage?'is-loading':''}`}>Cambiar foto</button>}
-                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                    changeImg={this.saveBackgroundImage} errImg={this.state.errImg}
-                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
-                            </div>
-                            {this.state.fileMsgBackground && (<p className="help is-success">{this.state.fileMsgBackground}</p>)}
-                        </div>
-
-                        <button className="button is-primary" onClick={this.submit}>Guardar</button>         
-                    </div>
+                        <h2 className="title-section">Configuracion de Estilos</h2>
+                        {
+                            colorDrawer.map((item, key) => (
+                                <div className="column inner-column" key={key}>
+                                    <label className="label has-text-grey-light">{item.title}</label>
+                                    <input type="color" disabled style={{marginRight:"3%", borderRadius:"100%", width:"23px"}} value={item.value}/>
+                                    <input type="color" name="colorBtn" onChange={item.change}/>
+                                </div>
+                            ))
+                        }
+                        {
+                            imageDrawer.map((item, key) => (
+                                <div className="column inner-column" key={key}>
+                                    <label className="label has-text-grey-light">{item.title}</label>
+                                    <div className="control">
+                                        <ImageInput picture={item.picture} imageFile={item.imageFile}
+                                            divClass={'drop-img'} content={<img src={item.picture} alt={'Imagen Perfil'}/>}
+                                            classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${item.imageFile?'is-loading':''}`}>Cambiar foto</button>}
+                                            contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
+                                            changeImg={item.function} errImg={this.state.errImg}
+                                            style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                                    </div>
+                                    {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                                </div>
+                            ))   
+                        }
+                        <button className="button is-primary" onClick={this.submit}>Guardar</button>
+                    </div>    
                 </div>
-                {timeout&&(<LogOut/>)}
+                {timeout && (<LogOut />)}
             </React.Fragment>
         );
     }
 }
-
 export default Styles
