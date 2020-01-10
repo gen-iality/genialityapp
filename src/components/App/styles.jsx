@@ -40,6 +40,7 @@ class Styles extends Component {
         this.saveEventImage = this.saveEventImage.bind(this)
         this.saveMenuImage = this.saveMenuImage.bind(this)
         this.saveBannerImage = this.saveBannerImage.bind(this)
+        this.saveBackgroundImage = this.saveBackgroundImage.bind(this)
         this.submit = this.submit.bind(this)
     }
     
@@ -77,6 +78,10 @@ class Styles extends Component {
             })
 
             this.setState({
+                pathBackgroundImage:this.state.info.styles.BackgroundImage
+            })
+
+            this.setState({
                 styles:{
                     brandPrimary:this.state.info.styles.brandPrimary,
                     brandSuccess:this.state.info.styles.brandSuccess,
@@ -89,7 +94,9 @@ class Styles extends Component {
                     toolbarDefaultBg:this.state.info.styles.toolbarDefaultBg,
                     event_image:this.state.info.styles.event_image,
                     banner_image:this.state.info.styles.banner_image,
-                    menu_image:this.state.info.styles.menu_image}
+                    menu_image:this.state.info.styles.menu_image,
+                    BackgroundImage:this.state.info.styles.BackgroundImage
+                }
             })
 
             console.log(this.state.styles)
@@ -222,6 +229,42 @@ class Styles extends Component {
         }
     }
 
+    saveBackgroundImage(files){
+        console.log(files);
+        const file = files[0];
+        const url = '/api/files/upload', pathBackgroundImage = [], self = this;
+        if(file){
+            this.setState({imageBackgroundImage: file,
+                event:{...this.state.event, picture: null}});
+
+            //envia el archivo de imagen como POST al API    
+            const uploaders = files.map(file => {
+                let data = new FormData();
+                data.append('file',file);
+                return Actions.post(url,data).then((image) => {
+                    console.log(image);
+                    if(image) pathBackgroundImage.push(image);
+                });
+            });
+
+            //cuando todaslas promesas de envio de imagenes al servidor se completan
+            axios.all(uploaders).then((data) => {
+                console.log(pathBackgroundImage);
+                this.setState({styles: {...this.state.styles, BackgroundImage: pathBackgroundImage[0]}})
+                console.log('SUCCESSFULL DONE');
+                self.setState({event: {
+                        ...self.state.event,
+                        picture: pathBackgroundImage[0]
+                    },fileMsgBackground:'Imagen subida con exito',BackgroundImage:null,pathBackgroundImage});
+                    
+                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!"/>);
+            });
+        }
+        else{
+            this.setState({errImg:'Solo se permiten imágenes. Intentalo de nuevo'});
+        }
+    }
+
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -344,7 +387,7 @@ class Styles extends Component {
 
                         {/* Se carga la imagen de registro y login com base a la funcion save configuration */}
                         <div className="column inner-column">
-        <label className="label has-text-grey-light">Elige una imagen de Login</label>
+                            <label className="label has-text-grey-light">Elige una imagen de Login</label>
                              <div className="control">
                                 <ImageInput picture={this.state.path} imageFile={this.state.event_image}
                                     divClass={'drop-img'} content={<img src={this.state.path} alt={'Imagen Perfil'}/>}
@@ -382,6 +425,19 @@ class Styles extends Component {
                             {this.state.fileMsgFooter && (<p className="help is-success">{this.state.fileMsgFooter}</p>)}
                         </div>
 
+                        <div className="column inner-column">
+                            <label className="label has-text-grey-light">Elige la imagen de fondo</label>
+                            <div className="control">
+                                <ImageInput picture={this.state.pathBackgroundImage} imageFile={this.state.BackgroundImage}
+                                    divClass={'drop-img'} content={<img src={this.state.pathBackgroundImage} alt={'Imagen Perfil'}/>}
+                                    classDrop={'dropzone'} contentDrop={<button onClick={(e)=>{e.preventDefault()}} className={`button is-primary is-inverted is-outlined ${this.state.BackgroundImage?'is-loading':''}`}>Cambiar foto</button>}
+                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br/><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
+                                    changeImg={this.saveBackgroundImage} errImg={this.state.errImg}
+                                    style={{cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10}}/>
+                            </div>
+                            {this.state.fileMsgBackground && (<p className="help is-success">{this.state.fileMsgBackground}</p>)}
+                        </div>
+
                         <button className="button is-primary" onClick={this.submit}>Guardar</button>         
                     </div>
                 </div>
@@ -391,22 +447,4 @@ class Styles extends Component {
     }
 }
 
-function handleFields(organizers,types,events,event){
-    let selectedEvents = [];
-    let selectedType = {};
-    const {category_ids,organizer_id,event_type_id} = event;
-    if(category_ids){
-        events.map(item=>{
-            let pos = category_ids.indexOf(item.value);
-            return (pos>=0)?selectedEvents.push(item):''
-        });
-    }
-    const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
-    const selectedOrganizer = organizers[pos];
-    if(event_type_id){
-        const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
-        selectedType = types[pos];
-    }else selectedType = undefined;
-    return {selectedOrganizer,selectedEvents,selectedType}
-}
 export default Styles
