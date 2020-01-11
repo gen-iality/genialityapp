@@ -33,7 +33,11 @@ class Configuration extends Component {
             checkSurveys: false,
             checkDocuments: false,
             checkWall: false,
-            check: false
+            checkQuiz: false,
+            checkRanking: false,
+            checkVote: false,
+            checkFaq: false,
+            checkGallery: false
         };
         this.submit = this.submit.bind(this)
     }
@@ -135,6 +139,56 @@ class Configuration extends Component {
         } else {
             this.setState({
                 checkWall: false,
+            })
+        }
+
+        if (info.QuizScreen) {
+            this.setState({
+                checkQuiz: true,
+            })
+        } else {
+            this.setState({
+                checkQuiz: false,
+            })
+        }
+
+        if (info.RankingScreen) {
+            this.setState({
+                checkRanking: true,
+            })
+        } else {
+            this.setState({
+                checkRanking: false,
+            })
+        }
+
+        if (info.VoteScreen) {
+            this.setState({
+                checkVote: true,
+            })
+        } else {
+            this.setState({
+                checkVote: false,
+            })
+        }
+
+        if (info.FaqScreen) {
+            this.setState({
+                checkFaq: true,
+            })
+        } else {
+            this.setState({
+                checkFaq: false,
+            })
+        }
+
+        if (info.GalleryScreen) {
+            this.setState({
+                checkGallery: true,
+            })
+        } else {
+            this.setState({
+                checkGallery: false,
             })
         }
 
@@ -253,6 +307,11 @@ class Configuration extends Component {
             { name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
             { name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
             { name: 'WallScreen', checked: this.state.checkWall, title: 'Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'QuizScreen', checked: this.state.checkQuiz, title: 'Quiz', icon: 'doc', key: 8, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'RankingScreen', checked: this.state.checkRanking, title: 'Ranking', icon: 'doc', key: 8, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'FaqScreen', checked: this.state.checkFaq, title: 'Faq', icon: 'doc', key: 8, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'VoteScreen', checked: this.state.checkVote, title: 'Vote', icon: 'doc', key: 8, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'GalleryScreen', checked: this.state.checkGallery, title: 'Gallery', icon: 'doc', key: 8, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>

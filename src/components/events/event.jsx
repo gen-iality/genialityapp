@@ -36,6 +36,7 @@ const Pages =  asyncComponent(()=> import('../pages'));
 const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
+const NotificationsApp = asyncComponent( ()=> import("../App/notifications"));
 
 Moment.locale('es');
 momentLocalizer();
@@ -50,7 +51,8 @@ class Event extends Component {
             ticketTab:true,
             styleTab:true,
             menuMobile:false,
-            ConfigurationApp:true
+            ConfigurationApp:true,
+            NotificationsApp:true,
         };
     }
 
@@ -134,9 +136,14 @@ class Event extends Component {
                                 <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
                             }
 
-{
+                            {
                                 permissions.data.ids.includes(rolPermissions._id) &&
                                 <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
+                            }
+
+{
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             }
 
                             {
@@ -151,6 +158,7 @@ class Event extends Component {
                             <Route path={`${match.url}/speakers`} render={()=><Speakers eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>
