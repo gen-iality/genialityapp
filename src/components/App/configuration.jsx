@@ -122,13 +122,13 @@ class Configuration extends Component {
             })
         }
 
-        if (info.DcoumentsScreen) {
+        if (info.DocumentsScreen) {
             this.setState({
-                checkDcouments: true,
+                checkDocuments: true,
             })
         } else {
             this.setState({
-                checkDcouments: false,
+                checkDocuments: false,
             })
         }
 
