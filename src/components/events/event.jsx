@@ -52,7 +52,7 @@ class Event extends Component {
             styleTab:true,
             menuMobile:false,
             ConfigurationApp:true,
-            NotificationsApp:true,
+            NotificationsApp:true
         };
     }
 
@@ -141,7 +141,7 @@ class Event extends Component {
                                 <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
                             }
 
-{
+                            {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
                                 <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             }

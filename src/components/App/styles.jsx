@@ -284,6 +284,7 @@ class Styles extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             }
             else {
+                console.log(this.state)
                 const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.data);
                 this.setState({ loading: false });
                 if (result._id) {

@@ -49,19 +49,9 @@ class Notifications extends Component {
                     <div className="column is-12">
                         <h2 className="title-section">Notificaciones</h2>
                                 <div className="column inner-column">
-                                    {/* <label className="label has-text-grey-light">Usuarios a enviar la notificacion</label> */}
                                     <div className="column inner-column">
                                         <label className="label has-text-grey-light">Las noificaciones se envian a todos los usuarios del evento de forma automatica</label>
                                     </div>
-                                    {/* <div className="column inner-column">
-                                        <label className="label has-text-grey-light">Enviar a usuarios en especifico</label>
-                                        <div class="select is-primary">
-                                            <select >
-                                                <option>Seleccionar...</option>
-                                                <option>Usuario 1</option>
-                                            </select>
-                                        </div>
-                                    </div> */}
                                 </div>
 
                                 <div className="column inner-column">

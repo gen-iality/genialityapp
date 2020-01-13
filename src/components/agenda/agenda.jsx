@@ -2,9 +2,11 @@ import React, {Component} from "react";
 import {Link, Redirect} from "react-router-dom";
 import Moment from "moment";
 import EventContent from "../events/shared/content";
+import ConfigApp from "./configApp"
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
 import {AgendaApi} from "../../helpers/request";
+
 
 class Agenda extends Component {
     constructor(props) {
@@ -70,6 +72,7 @@ class Agenda extends Component {
         const {days,day,filtered,toShow} = this.state;
         return (
             <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
+            <button to={"/configDate"}>Configuracion de fecha</button>
                 <nav className="level">
                     <div className="level-left">
                         {

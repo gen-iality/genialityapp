@@ -259,16 +259,6 @@ class AgendaEdit extends Component {
                             </div>
 
                             <div className="field">
-                                <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
-                                <div  class="select is-primary">
-                                    <select name="has_date" value={has_date} onChange={this.handleChange}>
-                                        <option value="Si" selected>Si</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div className="field">
                                 <label className="label">Subtítulo</label>
                                 <div className="control">
                                     <input className="input" type="text" name={"subtitle"} value={subtitle} onChange={this.handleChange}
