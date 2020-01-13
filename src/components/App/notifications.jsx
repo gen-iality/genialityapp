@@ -48,17 +48,36 @@ class Notifications extends Component {
                 <div className="columns general">
                     <div className="column is-12">
                         <h2 className="title-section">Notificaciones</h2>
-                                <div className="column inner-column">
-                                    <div className="column inner-column">
-                                        <label className="label has-text-grey-light">Las noificaciones se envian a todos los usuarios del evento de forma automatica</label>
-                                    </div>
-                                </div>
+                        <div className="column inner-column">
+                            <div className="column inner-column">
+                                <label className="label has-text-grey-light">Las noificaciones se envian a todos los usuarios del evento de forma automatica</label>
+                            </div>
+                        </div>
 
-                                <div className="column inner-column">
-                                    <label className="label has-text-grey-light">Informacion</label>
-                                    <textarea name="textNotifications" onChange={(save) => {this.setState({notifications:{...this.state.notifications, textNotifications: save.target.value} }) } } class="textarea" ></textarea>    
-                                </div>
-                        <button className="button is-primary" onClick={this.submit}>Guardar</button>
+                        <div className="column inner-column">
+                            <label className="label has-text-grey-light">Informacion</label>
+                            <textarea name="textNotifications" onChange={(save) => {this.setState({notifications:{...this.state.notifications, textNotifications: save.target.value} }) } } class="textarea" ></textarea>    
+                        </div>
+                        <button className="button is-primary" onClick={this.submit}>Guardar</button>    
+
+                        <div>
+                            <table className="table" style={{marginTop:"3%"}}>
+                                <thead>
+                                    <tr>
+                                        <th>Evento</th>
+                                        <th>Notificacion</th>
+                                        <th>Cantidad de notificaciones enviadas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Test Event</td>
+                                        <td>Notificacion de prueba</td>
+                                        <td>20</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 {timeout && (<LogOut />)}

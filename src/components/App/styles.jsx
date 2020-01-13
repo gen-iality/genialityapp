@@ -330,7 +330,7 @@ class Styles extends Component {
             { name: 'ColorMenu', title: 'Elige un color para el menu', key: 3, value: this.state.dates.toolbarDefaultBg, change: (save) => { this.setState({ styles: { ...this.state.styles, toolbarDefaultBg: save.target.value } }) } },
         ]
         const imageDrawer = [
-            { name: 'EventImage', title: 'Elige una imagen de login', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
+            { name: 'EventImage', title: 'Elige una imagen de logo', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
             { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 5, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage },
             { name: 'BannerImage', title: 'Elige una imagen para tu banner', key: 6, picture: this.state.pathBannerImage, imageFile: this.state.imageFileFooter, function: this.saveBannerImage },
             { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 7, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
