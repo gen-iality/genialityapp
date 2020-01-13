@@ -16,17 +16,6 @@ import privateInstance from "../../helpers/request";
 import { parseUrl } from "../../helpers/constants";
 import { BaseUrl } from "../../helpers/constants";
 
-const itemsDrawer = [
-    { name: 'HomeScreen', title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'CalendarScreen', title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'ProfileScreen', title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'EventPlaceScreen', title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'SpeakersScreen', title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'NewsScreen', title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'SurveysScreen', title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'DocumentsScreen', title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
-    { name: 'WallScreen', title: 'Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
-]
 
 class Configuration extends Component {
     constructor(props) {
@@ -34,43 +23,192 @@ class Configuration extends Component {
         this.state = {
             loading: true,
             configuration: {},
-            info: {},
-            information: {},
-            data:{}
+            dates: {},
+            checkHome: false,
+            checkCalendar: false,
+            checkProfile: false,
+            checkEventPlace: false,
+            checkSpeaker: false,
+            checkNews: false,
+            checkSurveys: false,
+            checkDocuments: false,
+            checkWall: false,
+            checkQuiz: false,
+            checkRanking: false,
+            checkVote: false,
+            checkFaq: false,
+            checkGallery: false
         };
-
         this.submit = this.submit.bind(this)
-
     }
     async componentDidMount() {
         const info = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
         this.setState({ info })
+        console.log(info._id)
+        this.setState({
+            dates: {
+                database: this.state.info
+            }
+        })
 
-        const Home = this.state.info.HomeScreen.title
-        this.setState({Home})
-
-        console.log(this.state.data)
-
-        // console.log(info.data[0]._id)
-
-        for (const info in this.state.info.data) {
+        if (info.HomeScreen) {
             this.setState({
-                information: {
-                    id: info.data[0]._id,
-                    HomeScreen: info.data[0].HomeScreen.title,
-                    CalendarScreen: info.data[0].CalendarScreen.title,
-                    ProfileScreen: info.data[0].ProfileScreen.title,
-                    EventPlaceScreen: info.data[0].EventPlaceScreen.title,
-                    SpeakersScreen: info.data[0].SpeakersScreen.title,
-                    NewsScreen: info.data[0].NewsScreen.title,
-                    SurveysScreen: info.data[0].SurveysScreen.title,
-                    DocumentsScreen: info.data[0].DocumentsScreen.title
-                }
+                checkHome: true,
+            })
+        } else {
+            this.setState({
+                checkHome: false,
             })
         }
 
-        // console.log("datos guardados: "+this.state.info.data[0]._id)
-        console.log(this.state.info.HomeScreen.title);
+        if (info.CalendarScreen) {
+            this.setState({
+                checkCalendar: true,
+            })
+            console.log(this.state.checkCalendar)
+        } else {
+            this.setState({
+                checkCalendar: false,
+            })
+        }
+
+        if (info.ProfileScreen) {
+            this.setState({
+                checkProfile: true,
+            })
+        } else {
+            this.setState({
+                checkProfile: false,
+            })
+        }
+
+        if (info.EventPlaceScreen !== undefined) {
+            this.setState({
+                checkEventPlace: true,
+            })
+        } else {
+            this.setState({
+                checkEventPlace: false,
+            })
+        }
+
+        if (info.SpeakersScreen) {
+            this.setState({
+                checkSpeaker: true,
+            })
+        } else {
+            this.setState({
+                checkSpeaker: false,
+            })
+        }
+
+        if (info.NewsScreen) {
+            this.setState({
+                checkNews: true,
+            })
+        } else {
+            this.setState({
+                checkNews: false,
+            })
+        }
+
+        if (info.SurveysScreen) {
+            this.setState({
+                checkSurveys: true,
+            })
+        } else {
+            this.setState({
+                checkSurveys: false,
+            })
+        }
+
+        if (info.DocumentsScreen) {
+            this.setState({
+                checkDocuments: true,
+            })
+        } else {
+            this.setState({
+                checkDocuments: false,
+            })
+        }
+
+        if (info.WallScreen) {
+            this.setState({
+                checkWall: true,
+            })
+        } else {
+            this.setState({
+                checkWall: false,
+            })
+        }
+
+        if (info.QuizScreen) {
+            this.setState({
+                checkQuiz: true,
+            })
+        } else {
+            this.setState({
+                checkQuiz: false,
+            })
+        }
+
+        if (info.RankingScreen) {
+            this.setState({
+                checkRanking: true,
+            })
+        } else {
+            this.setState({
+                checkRanking: false,
+            })
+        }
+
+        if (info.VoteScreen) {
+            this.setState({
+                checkVote: true,
+            })
+        } else {
+            this.setState({
+                checkVote: false,
+            })
+        }
+
+        if (info.FaqScreen) {
+            this.setState({
+                checkFaq: true,
+            })
+        } else {
+            this.setState({
+                checkFaq: false,
+            })
+        }
+
+        if (info.GalleryScreen) {
+            this.setState({
+                checkGallery: true,
+            })
+        } else {
+            this.setState({
+                checkGallery: false,
+            })
+        }
+
+    }
+    componentWillMount() {
+        let dataUrl = parseUrl(document.URL);
+        if (dataUrl && dataUrl.token) {
+            console.log(dataUrl);
+            if (dataUrl.token) {
+                Cookie.set("evius_token", dataUrl.token);
+                privateInstance.defaults.params = {};
+                privateInstance.defaults.params['evius_token'] = dataUrl.token;
+            }
+            if (dataUrl.refresh_token) {
+                Actions.put('/api/me/storeRefreshToken', { refresh_token: dataUrl.refresh_token })
+                    .then(resp => {
+                        console.log(resp);
+                    })
+            }
+        }
     }
 
     async submit(e) {
@@ -86,17 +224,18 @@ class Configuration extends Component {
 
 
         try {
-            if (this.state.information._id) {
-                console.log("if condition" + this.state.information._id)
+            if (this.state.info._id) {
+                console.log("if condition" + this.state.info._id)
                 // let array = [];
                 // array = Object.keys(this.state.configuration).map(key =>{
                 //     return this.state.configuration[key]
                 // })
-                const info = await Actions.put(`api/event/${this.props.eventId}/configuration/${this.state.information._id}`, this.state.configuration);
+                const info = await Actions.put(`api/event/${this.props.eventId}/configuration/${this.state.info._id}`, this.state.configuration);
 
                 console.log(info)
                 this.setState({ loading: false });
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
             }
             else {
                 console.log("response else create")
@@ -147,7 +286,6 @@ class Configuration extends Component {
             })
             console.log('por primera vez', this.state.configuration)
         }
-
     }
 
     updateStateTitle = (key_object, val) => {
@@ -159,6 +297,22 @@ class Configuration extends Component {
     render() {
         const { timeout } = this.state;
 
+        const itemsDrawer = [
+            { name: 'HomeScreen', checked: this.state.checkHome, title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'ProfileScreen', checked: this.state.checkProfile, title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'NewsScreen', checked: this.state.checkNews, title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'WallScreen', checked: this.state.checkWall, title: 'Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'QuizScreen', checked: this.state.checkQuiz, title: 'Quiz', icon: 'doc', key: 8, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'RankingScreen', checked: this.state.checkRanking, title: 'Ranking', icon: 'doc', key: 8, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'FaqScreen', checked: this.state.checkFaq, title: 'Faq', icon: 'doc', key: 8, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'VoteScreen', checked: this.state.checkVote, title: 'Vote', icon: 'doc', key: 8, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
+            { name: 'GalleryScreen', checked: this.state.checkGallery, title: 'Gallery', icon: 'doc', key: 8, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
+        ]
         return (
             <React.Fragment>
                 <div className="columns general">
@@ -167,16 +321,21 @@ class Configuration extends Component {
                         {
                             itemsDrawer.map((item, key) => (
                                 <div className="column inner-column" key={key}>
-                                    <label className="label has-text-grey-light">{item.title_view}</label>
+                                    <div>
+                                        <label className="title-section">{item.title_view}</label>
+                                        <input type="checkbox" checked={item.checked} name={item.name} value={item.key} />
+                                    </div>
+                                    <br></br><label>Mantener Habilitado?</label>
                                     <input type="checkbox" name={item.name} value={item.key} onChange={(e) => { this.sendInfoToState(e.target.name, { title: item.title, name: item.name, icon: item.icon, key: item.key }) }} />
 
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
                                 </div>
+
                             ))
                         }
                         <button className="button is-primary" onClick={this.submit}>Guardar</button>
-                    </div>    
+                    </div>
                 </div>
                 {timeout && (<LogOut />)}
             </React.Fragment>

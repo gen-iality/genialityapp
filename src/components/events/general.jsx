@@ -168,6 +168,7 @@ class General extends Component {
             picture: path.length > 1 ? path : event.picture,
             venue: event.venue,
             address: event.address,
+            has_date: event.has_date,
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description,
             category_ids: categories,
@@ -268,6 +269,18 @@ class General extends Component {
                                 />
                             </div>
                         </div>
+                        
+                        <div className="field">
+                            <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
+                            <div  class="select is-primary">
+                                <select name="has_date" value={event.has_date} defaultValue={{ label: 'Si', value: 'Si' }} onChange={this.handleChange}>
+                                    <option>Seleccionar...</option>
+                                    <option value="Si">Si</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
                             <div className="control">

@@ -22,6 +22,7 @@ class AgendaEdit extends Component {
             isLoading:{types:true,categories:true},
             name:"",
             subtitle:"",
+            has_date:"",
             description:"",
             hour_start:new Date(),
             hour_end:new Date(),
@@ -160,11 +161,12 @@ class AgendaEdit extends Component {
                 sweetAlert.showError(handleRequestError(e))
             }
         }
+        console.log(this.state.has_date)
     };
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const {name, subtitle, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const {name, subtitle, has_date,hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image} = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -185,7 +187,8 @@ class AgendaEdit extends Component {
             access_restriction_type,
             access_restriction_rol_ids,
             host_ids,
-            type_id
+            type_id,
+            has_date,
         }
     };
 
@@ -238,7 +241,7 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({redirect:true});
 
     render() {
-        const {loading,name,subtitle,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
+        const {loading,name,subtitle,has_date,date,hour_start,hour_end,image,access_restriction_type,capacity,space_id,selectedRol,selectedHosts,selectedType,selectedCategories} = this.state;
         const {hosts,spaces,categories,types,roles,isLoading} = this.state;
         const {matchUrl} = this.props;
         if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
@@ -254,6 +257,7 @@ class AgendaEdit extends Component {
                                            placeholder="Nombre de la actividad"/>
                                 </div>
                             </div>
+
                             <div className="field">
                                 <label className="label">Subtítulo</label>
                                 <div className="control">
