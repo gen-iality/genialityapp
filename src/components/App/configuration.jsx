@@ -294,29 +294,34 @@ class Configuration extends Component {
         this.setState(object)
     }
 
-    enable =(val)=> {
+    enable = (val) => {
         console.log(val)
-        document.getElementById(val).disabled= false
+        var isChecked = document.getElementById(val.idCheck).checked;
+        if (isChecked) {
+            document.getElementById(val.id).disabled = false
+        }else{
+            document.getElementById(val.id).disabled = true
+        }
     }
 
     render() {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput,name: 'HomeScreen', checked: this.state.checkHome, title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'ProfileScreen', checked: this.state.checkProfile, title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'NewsScreen', checked: this.state.checkNews, title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'WallScreen', checked: this.state.checkWall, title: 'Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'QuizScreen', checked: this.state.checkQuiz, title: 'Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'RankingScreen', checked: this.state.checkRanking, title: 'Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'FaqScreen', checked: this.state.checkFaq, title: 'Faq', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'VoteScreen', checked: this.state.checkVote, title: 'Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput,name: 'GalleryScreen', checked: this.state.checkGallery, title: 'Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox',name: 'HomeScreen', checked: this.state.checkHome, title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox2',name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox3',name: 'ProfileScreen', checked: this.state.checkProfile, title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox4',name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox6',name: 'NewsScreen', checked: this.state.checkNews, title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox8',name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox9',name: 'WallScreen', checked: this.state.checkWall, title: 'Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox10',name: 'QuizScreen', checked: this.state.checkQuiz, title: 'Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox11',name: 'RankingScreen', checked: this.state.checkRanking, title: 'Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox12',name: 'FaqScreen', checked: this.state.checkFaq, title: 'Faq', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox13',name: 'VoteScreen', checked: this.state.checkVote, title: 'Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox14',name: 'GalleryScreen', checked: this.state.checkGallery, title: 'Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
@@ -328,11 +333,11 @@ class Configuration extends Component {
                                 <div className="column inner-column" key={key}>
                                     <div>
                                         <label className="title-section">{item.title_view}</label>
-                                        <input type="checkbox" checked={item.checked} name={item.name} value={item.key} />
+                                        <input type="checkbox" className="checkbox" checked={item.checked} name={item.name} value={item.key} />
                                     </div>
                                     <br></br><label>Mantener Habilitado?</label>
-                                    <input type="checkbox" onClick={(e) => { this.enable(item.key, e.target.value) }} name={item.name} value={item.key} onChange={(e) => { this.sendInfoToState(e.target.name, { title: item.title, name: item.name, icon: item.icon, key: item.key }) }} />
-                                   
+                                    <input type="checkbox" id={item.idCheck} onClick={(e) => { this.enable({ id: item.key, idCheck: item.idCheck}) }} name={item.name} value={item.key} onChange={(e) => { this.sendInfoToState(e.target.name, { title: item.title, name: item.name, icon: item.icon, key: item.key }) }} />
+
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" id={item.key} ref={item.reference} disabled type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
                                 </div>
