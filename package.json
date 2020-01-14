@@ -11,7 +11,7 @@
     "bulma-extensions": "^4.1.1",
     "firebase": "^7.6.2",
     "js-cookie": "^2.2.1",
-    "jsdom": "^16.0.0",
+    "jsdom": "^10.0.0",
     "moment": "^2.24.0",
     "moment-with-locales-es6": "^1.0.1",
     "node-sass": "^4.13.0",
