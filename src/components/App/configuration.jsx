@@ -23,6 +23,7 @@ class Configuration extends Component {
         this.state = {
             loading: true,
             configuration: {},
+            app_configuration:{},
             dates: {},
             checkHome: false,
             checkCalendar: false,
@@ -44,16 +45,24 @@ class Configuration extends Component {
         this.enable = this.enable.bind(this)
     }
     async componentDidMount() {
-        const info = await Actions.getAll(`/api/event/${this.props.eventId}/configuration`);
+        const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         this.setState({ info })
-        console.log(info)
         this.setState({
             dates: {
-                database: this.state.info
+                database: this.state.info.app_configuration
             }
         })
 
-        if (info.HomeScreen) {
+        console.log(this.state.dates)
+
+        this.setState({
+            app_configuration:{
+                app_configuration:{
+                    config: this.state.configuration
+                }
+            }
+        })
+        if (this.state.dates.database.HomeScreen) {
             this.setState({
                 checkHome: true,
             })
@@ -63,7 +72,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.CalendarScreen) {
+        if (this.state.dates.database.CalendarScreen) {
             this.setState({
                 checkCalendar: true,
             })
@@ -74,7 +83,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.ProfileScreen) {
+        if (this.state.dates.database.ProfileScreen) {
             this.setState({
                 checkProfile: true,
             })
@@ -84,7 +93,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.EventPlaceScreen !== undefined) {
+        if (this.state.dates.database.EventPlaceScreen !== undefined) {
             this.setState({
                 checkEventPlace: true,
             })
@@ -94,7 +103,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.SpeakersScreen) {
+        if (this.state.dates.database.SpeakersScreen) {
             this.setState({
                 checkSpeaker: true,
             })
@@ -104,7 +113,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.NewsScreen) {
+        if (this.state.dates.database.NewsScreen) {
             this.setState({
                 checkNews: true,
             })
@@ -114,7 +123,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.SurveysScreen) {
+        if (this.state.dates.database.SurveysScreen) {
             this.setState({
                 checkSurveys: true,
             })
@@ -124,7 +133,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.DocumentsScreen) {
+        if (this.state.dates.database.DocumentsScreen) {
             this.setState({
                 checkDocuments: true,
             })
@@ -134,7 +143,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.WallScreen) {
+        if (this.state.dates.database.WallScreen) {
             this.setState({
                 checkWall: true,
             })
@@ -224,12 +233,12 @@ class Configuration extends Component {
         this.state.data = { styles: this.state.configuration };
         try {
             if (this.state.info._id) {
-                console.log("if condition" + this.state.info._id)
+                console.log("if condition" + this.state.configuration)
                 // let array = [];
                 // array = Object.keys(this.state.configuration).map(key =>{
                 //     return this.state.configuration[key]
                 // })
-                const info = await Actions.put(`api/event/${this.props.eventId}/configuration/${this.state.info._id}`, this.state.configuration);
+                const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.app_configuration);
 
                 console.log(info)
                 this.setState({ loading: false });
@@ -238,7 +247,7 @@ class Configuration extends Component {
             }
             else {
                 console.log("response else create")
-                const result = await Actions.post(`/api/event/${this.props.eventId}/configuration`, this.state.configuration);
+                const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
                 console.log(this.state.info)
                 this.setState({ loading: false });
                 if (result._id) {
@@ -253,7 +262,6 @@ class Configuration extends Component {
         catch (error) {
             toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
             if (error.response) {
-                console.log(this.state.data)
                 console.log(error.response);
                 const { status, data } = error.response;
                 console.log('STATUS', status, status === 401);
@@ -281,9 +289,20 @@ class Configuration extends Component {
             console.log('ya existe', this.state.configuration);
         } else {
             await this.setState({
-                configuration: { ...this.state.configuration, [name]: val }
+                configuration: {
+                        ...this.state.configuration, [name]: val  
+                }
+            })
+
+            await this.setState({
+                app_configuration: {
+                    app_configuration:{
+                        ...this.state.configuration, [name]: val  
+                    }
+                }
             })
             console.log('por primera vez', this.state.configuration)
+            console.log('App_configuration',this.state.app_configuration)
         }
     }
 
