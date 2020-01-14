@@ -220,7 +220,6 @@ class Configuration extends Component {
         const self = this;
         // this.state.data.push(this.state.styles);
         this.state.data = { styles: this.state.configuration };
-        
         try {
             if (this.state.info._id) {
                 console.log("if condition" + this.state.info._id)
