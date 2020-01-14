@@ -295,7 +295,6 @@ class Configuration extends Component {
     }
 
     enable = (val) => {
-        console.log(val)
         var isChecked = document.getElementById(val.idCheck).checked;
         if (isChecked) {
             document.getElementById(val.id).disabled = false
