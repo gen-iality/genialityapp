@@ -72,7 +72,6 @@ class Agenda extends Component {
         const {days,day,filtered,toShow} = this.state;
         return (
             <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
-            <button to={"/configDate"}>Configuracion de fecha</button>
                 <nav className="level">
                     <div className="level-left">
                         {

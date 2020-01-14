@@ -53,8 +53,6 @@ class Configuration extends Component {
             }
         })
 
-        console.log(this.state.dates)
-
         this.setState({
             app_configuration:{
                 app_configuration:{
@@ -62,7 +60,7 @@ class Configuration extends Component {
                 }
             }
         })
-        
+
         if (this.state.dates.database.HomeScreen) {
             this.setState({
                 checkHome: true,
@@ -77,7 +75,7 @@ class Configuration extends Component {
             this.setState({
                 checkCalendar: true,
             })
-            console.log(this.state.checkCalendar)
+            
         } else {
             this.setState({
                 checkCalendar: false,

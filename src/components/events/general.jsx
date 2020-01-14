@@ -175,6 +175,8 @@ class General extends Component {
             organizer_id: this.state.selectedOrganizer.value,
             event_type_id : this.state.selectedType.value
         };
+
+        console.log(data)
         try {
             if(event._id){
                 const info = await EventsApi.editOne(data, event._id);
