@@ -38,7 +38,8 @@ const Pages =  asyncComponent(()=> import('../pages'));
 const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
-const SurveysApp = asyncComponent( ()=> import("../App/surveys"));
+const SurveysList = asyncComponent ( ()=> import("../App/surveys") );
+const CreateSuervey = asyncComponent ( ()=>import("../App/CreateSurvey") );
 
 Moment.locale('es');
 momentLocalizer();
@@ -54,7 +55,9 @@ class Event extends Component {
             styleTab:true,
             menuMobile:false,
             ConfigurationApp:true,
-            NotificationsApp:true
+            NotificationsApp:true,
+            SurveysList:true,
+            CreateSuervey: true
         };
     }
 
@@ -145,7 +148,7 @@ class Event extends Component {
 
                             {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
-                                <Route path={`${match.url}/surveysApp`} render={()=><SurveysApp eventId={this.state.event._id}/>}/>
+                                <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
                             }
 
                             {
@@ -162,7 +165,8 @@ class Event extends Component {
                             <Route path={`${match.url}/encuestasasesores`} render={()=><Surveysconsultant eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
-                            <Route path={`${match.url}/surveysApp`} render={()=><SurveysApp eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/Createsurvey`} render={()=><CreateSuervey eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>

@@ -102,7 +102,7 @@ class Configuration extends Component {
             })
         }
 
-        if (this.state.dates.database.SpeakersScreen) {
+        if (this.state.dates.database.SpeakerScreen) {
             this.setState({
                 checkSpeaker: true,
             })
@@ -328,9 +328,9 @@ class Configuration extends Component {
             { reference: this.checkInput, idCheck:'checkbox2',name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'CALENDAR', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox3',name: 'ProfileScreen', checked: this.state.checkProfile, title: 'PROFILE', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox4',name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'EVENT PLACE', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'SPEAKERS', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakerScreen', checked: this.state.checkSpeaker, title: 'SPEAKERS', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox6',name: 'NewsScreen', checked: this.state.checkNews, title: 'NEWS', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'SURVEYS', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveyScreen', checked: this.state.checkSurveys, title: 'SURVEYS', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox8',name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'DOCUMENTS', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox9',name: 'WallScreen', checked: this.state.checkWall, title: 'WALL', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck:'checkbox10',name: 'QuizScreen', checked: this.state.checkQuiz, title: 'QUIZ', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },

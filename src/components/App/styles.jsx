@@ -36,6 +36,7 @@ class Styles extends Component {
         //Se consulta la api para traer los datos ya guardados y enviarlos al state
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+        console.log(info)
         this.setState({
             dates: {
                 brandPrimary: info.styles.brandPrimary,
@@ -49,7 +50,9 @@ class Styles extends Component {
                 brandLight: info.styles.brandLight,
                 event_image: info.styles.event_image,
                 banner_image: info.styles.banner_image,
-                menu_image: info.styles.menu_image
+                menu_image: info.styles.menu_image,
+                textMenu: info.styles.textMenu,
+                activeText: info.styles.activeText
             }
         })
 
@@ -83,7 +86,9 @@ class Styles extends Component {
                 event_image: info.styles.event_image,
                 banner_image: info.styles.banner_image,
                 menu_image: info.styles.menu_image,
-                BackgroundImage: info.styles.BackgroundImage
+                BackgroundImage: info.styles.BackgroundImage,
+                textMenu: info.styles.textMenu,
+                activeText: info.styles.activeText
             }
         })
 
@@ -328,6 +333,9 @@ class Styles extends Component {
             { name: 'ColorBtn', title: 'Elige un color para los botones', key: 1, value: this.state.dates.brandPrimary, change: (save) => { this.setState({ styles: { ...this.state.styles, brandPrimary: save.target.value } }) } },
             { name: 'ColorBackground', title: 'El fondo de tu app', key: 2, value: this.state.dates.containerBgColor, change: (save) => { this.setState({ styles: { ...this.state.styles, containerBgColor: save.target.value } }) } },
             { name: 'ColorMenu', title: 'Elige un color para el menu', key: 3, value: this.state.dates.toolbarDefaultBg, change: (save) => { this.setState({ styles: { ...this.state.styles, toolbarDefaultBg: save.target.value } }) } },
+            { name: 'ColorTextoMenu', title: 'Elige un color para el texto del menu', key: 4, value: this.state.dates.textMenu, change: (save) => { this.setState({ styles: { ...this.state.styles, textMenu: save.target.value } }) } },
+            { name: 'ColorActiveText', title: 'Elige un color para item seleccionado del menu', key: 5, value: this.state.dates.activeText, change: (save) => { this.setState({ styles: { ...this.state.styles, activeText: save.target.value } }) } },
+
         ]
         const imageDrawer = [
             { name: 'EventImage', title: 'Elige una imagen de logo', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },

@@ -172,7 +172,7 @@ class General extends Component {
             picture: path.length > 1 ? path : event.picture,
             venue: event.venue,
             address: event.address,
-            has_date: event.has_date,
+            has_date: event.has_date == "true" ? true : false,
             visibility: event.visibility?event.visibility:'PUBLIC',
             description: event.description,
             category_ids: categories,
@@ -281,8 +281,8 @@ class General extends Component {
                             <div  class="select is-primary">
                                 <select name="has_date" value={event.has_date} defaultValue={{ label: 'Si', value: 'Si' }} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
-                                    <option value="Si">Si</option>
-                                    <option value="No">No</option>
+                                    <option value={true}>Si</option>
+                                    <option value={false}>No</option>
                                 </select>
                             </div>
                         </div>
