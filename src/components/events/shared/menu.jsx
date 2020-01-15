@@ -50,7 +50,7 @@ class Menu extends Component {
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/main`}>Datos del evento</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink> 
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuraciòn de la app</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink>
+                                {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink> */}
                             </li>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
