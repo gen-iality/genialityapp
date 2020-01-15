@@ -107,7 +107,7 @@ class Event extends Component {
                         <Switch>
                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
                             <Route exact path={`${match.url}/main`} render={()=>
-                                <General event={this.state.event} updateEvent={this.updateEvent}/>}
+                                <General event={this.state.event} eventId={this.state.event._id} updateEvent={this.updateEvent}/>}
                             />
                             <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>

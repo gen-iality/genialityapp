@@ -37,13 +37,17 @@ class General extends Component {
             groups: [],
             errorData: {},
             serverError: false,
-            loading: true
+            loading: true,
+            info:{}
         };
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
     }
 
     async componentDidMount(){
+        const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+        this.setState({ info })
+        console.log(this.state.info)
         try{
             const {event} = this.state;
             event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
@@ -173,10 +177,10 @@ class General extends Component {
             description: event.description,
             category_ids: categories,
             organizer_id: this.state.selectedOrganizer.value,
-            event_type_id : this.state.selectedType.value
+            event_type_id : this.state.selectedType.value,
+            app_configuration: this.state.info.app_configuration
         };
 
-        console.log(data)
         try {
             if(event._id){
                 const info = await EventsApi.editOne(data, event._id);
