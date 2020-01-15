@@ -152,7 +152,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.QuizScreen) {
+        if (this.state.dates.database.QuizScreen) {
             this.setState({
                 checkQuiz: true,
             })
@@ -162,7 +162,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.RankingScreen) {
+        if (this.state.dates.database.RankingScreen) {
             this.setState({
                 checkRanking: true,
             })
@@ -172,7 +172,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.VoteScreen) {
+        if (this.state.dates.database.VoteScreen) {
             this.setState({
                 checkVote: true,
             })
@@ -182,7 +182,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.FaqScreen) {
+        if (this.state.dates.database.FaqScreen) {
             this.setState({
                 checkFaq: true,
             })
@@ -192,7 +192,7 @@ class Configuration extends Component {
             })
         }
 
-        if (info.GalleryScreen) {
+        if (this.state.dates.database.GalleryScreen) {
             this.setState({
                 checkGallery: true,
             })
@@ -324,20 +324,20 @@ class Configuration extends Component {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput, idCheck:'checkbox',name: 'HomeScreen', checked: this.state.checkHome, title: 'Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox2',name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'Calendar', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox3',name: 'ProfileScreen', checked: this.state.checkProfile, title: 'Profile', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox4',name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'Event Place', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'Speaker', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox6',name: 'NewsScreen', checked: this.state.checkNews, title: 'News', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'Surveys', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox8',name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'Documents', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox9',name: 'WallScreen', checked: this.state.checkWall, title: 'Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox10',name: 'QuizScreen', checked: this.state.checkQuiz, title: 'Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox11',name: 'RankingScreen', checked: this.state.checkRanking, title: 'Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox12',name: 'FaqScreen', checked: this.state.checkFaq, title: 'Faq', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox13',name: 'VoteScreen', checked: this.state.checkVote, title: 'Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox14',name: 'GalleryScreen', checked: this.state.checkGallery, title: 'Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox',name: 'HomeScreen', checked: this.state.checkHome, title: 'HOME', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox2',name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'CALENDAR', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox3',name: 'ProfileScreen', checked: this.state.checkProfile, title: 'PROFILE', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox4',name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'EVENT PLACE', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakersScreen', checked: this.state.checkSpeaker, title: 'SPEAKERS', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox6',name: 'NewsScreen', checked: this.state.checkNews, title: 'NEWS', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveysScreen', checked: this.state.checkSurveys, title: 'SURVEYS', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox8',name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'DOCUMENTS', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox9',name: 'WallScreen', checked: this.state.checkWall, title: 'WALL', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox10',name: 'QuizScreen', checked: this.state.checkQuiz, title: 'QUIZ', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox11',name: 'RankingScreen', checked: this.state.checkRanking, title: 'RANKING', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox12',name: 'FaqScreen', checked: this.state.checkFaq, title: 'F.A.Q.', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox13',name: 'VoteScreen', checked: this.state.checkVote, title: 'VOTE', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck:'checkbox14',name: 'GalleryScreen', checked: this.state.checkGallery, title: 'GALLERY', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
