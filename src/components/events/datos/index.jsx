@@ -48,7 +48,9 @@ class Datos extends Component {
     //Guardar campo en el evento
     saveField = async(field) => {
         try {
-            if(this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
+            if(this.state.edit) 
+                await EventFieldsApi.editOne(field, field._id, this.eventID);
+                // console.log(field,field._id,this.eventID);
             else await EventFieldsApi.createOne(field, this.eventID);
             await this.fetchFields();
             this.setState({modal:false,edit:false,newField:false})

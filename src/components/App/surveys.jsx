@@ -8,12 +8,12 @@ import * as Cookie from "js-cookie";
 import privateInstance from "../../helpers/request";
 import { parseUrl } from "../../helpers/constants";
 import { BaseUrl } from "../../helpers/constants";
-import {Link, Redirect, withRouter} from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 
 const question = [
-    {question:"Encuesta1"},
-    {question:"Encuesta2"},
-    {question:"Encuesta3"}
+    { question: "Encuesta1" },
+    { question: "Encuesta2" },
+    { question: "Encuesta3" }
 ]
 
 class SurveysCreate extends Component {
@@ -22,32 +22,23 @@ class SurveysCreate extends Component {
         this.state = {
             eventId: this.props.event,
             loading: true,
-            surveys:{},
-            info:{},
-            dates:{}
+            surveys: {},
+            info: {},
+            dates: []
         };
         this.submit = this.submit.bind(this)
     }
-    async componentDidMount(){
+    async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}/surveys`);
-        
+
         this.setState({ info })
         this.setState({
-            dates: {...this.state.info.data}
+            dates: [...this.state.info.data]
         })
-
-        console.log(this.state.dates)
     }
 
-    async submit(){
-        console.log("no entra")
-        for (let i = 0; i < this.state.dates.length; i++) {
-            console.log("En el índice '" + i + "' hay este valor: " + this.state.dates[i]);
-        }
-
-        for (var i=0; i< this.state.dates.length; i++) { 
-           console.log("Hola"+this.state.dates.database[i] + ' - '); 
-        }
+    async submit() {
+        console.log(this.state.surveys)
     }
 
     render() {
@@ -57,31 +48,37 @@ class SurveysCreate extends Component {
             <React.Fragment>
                 <div className="columns general">
                     <div className="column is-12">
-                        <h2 className="title-section" style={{marginBottom:"4%"}}>Listado de Encuestas</h2>
-                        <Link to={{pathname:`Createsurvey`}}>
+                        <h2 className="title-section" style={{ marginBottom: "4%" }}>Listado de Encuestas</h2>
+                        <Link to={{ pathname: `Createsurvey` }}>
                             <button className="button is-primary">Crear Encuesta</button>
                         </Link>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Encuesta</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{this.state.dates.survey}</td>
-                                    <td>
-                                        <Link to={{pathname:`Createsurvey`}}>
-                                            <button><span className="icon has-text-grey"><i className="fas fa-edit"/></span></button>
-                                        </Link>
-                                        <button>
-                                            <span className="icon has-text-grey"onClick={(e)=>{this.remove()}}><i className="far fa-trash-alt"/></span>
-                                        </button>
-                                    </td>
-                                </tr>                                
-                            </tbody>
-                        </table>
-                        <button onClick={this.submit}>iterar</button>
+                        <div>
+                            <table className="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre Encuesta</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                {
+                                    this.state.dates.map((item, key) => (
+                                        <tbody key={key}>
+                                            <tr>
+                                                <td>{item.survey}</td>
+                                                <td>
+                                                    <Link to={{ pathname: `Createsurvey` }}>
+                                                        <button><span className="icon has-text-grey"><i className="fas fa-edit" /></span></button>
+                                                    </Link>
+                                                    <button>
+                                                        <span className="icon has-text-grey" onClick={(e) => { this.remove() }}><i className="far fa-trash-alt" /></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    ))
+                                }
+                            </table>
+                        </div>
                     </div>
                 </div>
                 {timeout && (<LogOut />)}
