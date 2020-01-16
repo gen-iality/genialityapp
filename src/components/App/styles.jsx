@@ -25,7 +25,7 @@ class Styles extends Component {
             styles: {},
             dates: {},
         };
-            //Se establecen las funciones para su posterior uso
+        //Se establecen las funciones para su posterior uso
         this.saveEventImage = this.saveEventImage.bind(this)
         this.saveMenuImage = this.saveMenuImage.bind(this)
         this.saveBannerImage = this.saveBannerImage.bind(this)
@@ -33,11 +33,12 @@ class Styles extends Component {
         this.submit = this.submit.bind(this)
 
     }
-        //Se consulta la api para traer los datos ya guardados y enviarlos al state
+    //Se consulta la api para traer los datos ya guardados y enviarlos al state
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         console.log(info)
-        if(info.styles !== {}){
+
+        if (info.styles !== null) {
             this.setState({
                 dates: {
                     brandPrimary: info.styles.brandPrimary,
@@ -55,8 +56,9 @@ class Styles extends Component {
                     textMenu: info.styles.textMenu,
                     activeText: info.styles.activeText,
                     app_configuration: info.app_configuration
+
                 }
-            })        
+            })
         }
 
         this.setState({
@@ -95,8 +97,9 @@ class Styles extends Component {
                 app_configuration: info.app_configuration
             }
         })
+
     }
-        //Se envia la peitcion a la api para reconocer el token 
+    //Se envia la peitcion a la api para reconocer el token 
     componentWillMount() {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
@@ -114,7 +117,7 @@ class Styles extends Component {
             }
         }
     }
-        //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
+    //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
     saveEventImage(files) {
         console.log(files);
         const file = files[0];
@@ -273,7 +276,7 @@ class Styles extends Component {
             this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
         }
     }
-        //Se realiza una funcion asincrona submit para enviar los datos a la api 
+    //Se realiza una funcion asincrona submit para enviar los datos a la api 
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -285,15 +288,15 @@ class Styles extends Component {
         this.state.data = { styles: this.state.styles };
         try {
             if (eventId) {
-                const info = await Actions.put(`/api.evius.co/api/events/${this.props.eventId}`, this.state.dates);
+                const info = await Actions.put(`/api.evius.co/api/events/${this.props.eventId}`, this.state.data);
                 this.props.updateEvent(info);
                 console.log(this.state.data)
                 this.setState({ loading: false });
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             }
             else {
-                console.log(this.state)
-                const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.dates);
+                console.log(this.state.data)
+                const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.data);
                 this.setState({ loading: false });
                 if (result._id) {
                     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/styles`);

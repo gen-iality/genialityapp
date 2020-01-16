@@ -136,6 +136,20 @@ export const EventFieldsApi = {
     }
 
 };
+
+export const SurveysApi = {
+    getAll: async (event) => {
+        return await Actions.getAll(`/api/events/${event}/surveys`)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`/api/event/${event}/userproperties`, data, id)
+    },
+    deleteOne: async (id, event) => {
+        return await Actions.delete(`/api/event/${event}/userproperties`, id);
+    }
+
+};
+
 export const CategoriesApi = {
     getAll: async () => {
         const resp = await Actions.getAll('api/categories');
