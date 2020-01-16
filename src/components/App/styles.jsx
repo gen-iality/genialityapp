@@ -37,24 +37,27 @@ class Styles extends Component {
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         console.log(info)
-        this.setState({
-            dates: {
-                brandPrimary: info.styles.brandPrimary,
-                brandSuccess: info.styles.brandSuccess,
-                brandInfo: info.styles.brandInfo,
-                brandDanger: info.styles.brandDanger,
-                containerBgColor: info.styles.containerBgColor,
-                brandWarning: info.styles.brandWarning,
-                toolbarDefaultBg: info.styles.toolbarDefaultBg,
-                brandDark: info.styles.brandDark,
-                brandLight: info.styles.brandLight,
-                event_image: info.styles.event_image,
-                banner_image: info.styles.banner_image,
-                menu_image: info.styles.menu_image,
-                textMenu: info.styles.textMenu,
-                activeText: info.styles.activeText
-            }
-        })
+        if(info.styles !== {}){
+            this.setState({
+                dates: {
+                    brandPrimary: info.styles.brandPrimary,
+                    brandSuccess: info.styles.brandSuccess,
+                    brandInfo: info.styles.brandInfo,
+                    brandDanger: info.styles.brandDanger,
+                    containerBgColor: info.styles.containerBgColor,
+                    brandWarning: info.styles.brandWarning,
+                    toolbarDefaultBg: info.styles.toolbarDefaultBg,
+                    brandDark: info.styles.brandDark,
+                    brandLight: info.styles.brandLight,
+                    event_image: info.styles.event_image,
+                    banner_image: info.styles.banner_image,
+                    menu_image: info.styles.menu_image,
+                    textMenu: info.styles.textMenu,
+                    activeText: info.styles.activeText,
+                    app_configuration: info.app_configuration
+                }
+            })        
+        }
 
         this.setState({
             path: info.styles.event_image
@@ -88,10 +91,10 @@ class Styles extends Component {
                 menu_image: info.styles.menu_image,
                 BackgroundImage: info.styles.BackgroundImage,
                 textMenu: info.styles.textMenu,
-                activeText: info.styles.activeText
+                activeText: info.styles.activeText,
+                app_configuration: info.app_configuration
             }
         })
-
     }
         //Se envia la peitcion a la api para reconocer el token 
     componentWillMount() {
@@ -282,7 +285,7 @@ class Styles extends Component {
         this.state.data = { styles: this.state.styles };
         try {
             if (eventId) {
-                const info = await Actions.put(`/api.evius.co/api/events/${this.props.eventId}`, this.state.data);
+                const info = await Actions.put(`/api.evius.co/api/events/${this.props.eventId}`, this.state.dates);
                 this.props.updateEvent(info);
                 console.log(this.state.data)
                 this.setState({ loading: false });
@@ -290,7 +293,7 @@ class Styles extends Component {
             }
             else {
                 console.log(this.state)
-                const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.data);
+                const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.dates);
                 this.setState({ loading: false });
                 if (result._id) {
                     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/styles`);

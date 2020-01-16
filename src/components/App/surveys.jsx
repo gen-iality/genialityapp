@@ -22,8 +22,32 @@ class SurveysCreate extends Component {
         this.state = {
             eventId: this.props.event,
             loading: true,
-            surveys:{}
+            surveys:{},
+            info:{},
+            dates:{}
         };
+        this.submit = this.submit.bind(this)
+    }
+    async componentDidMount(){
+        const info = await Actions.getAll(`/api/events/${this.props.eventId}/surveys`);
+        
+        this.setState({ info })
+        this.setState({
+            dates: {...this.state.info.data}
+        })
+
+        console.log(this.state.dates)
+    }
+
+    async submit(){
+        console.log("no entra")
+        for (let i = 0; i < this.state.dates.length; i++) {
+            console.log("En el índice '" + i + "' hay este valor: " + this.state.dates[i]);
+        }
+
+        for (var i=0; i< this.state.dates.length; i++) { 
+           console.log("Hola"+this.state.dates.database[i] + ' - '); 
+        }
     }
 
     render() {
@@ -41,28 +65,23 @@ class SurveysCreate extends Component {
                             <thead>
                                 <tr>
                                     <th>Encuesta</th>
-                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {
-                                    question.map((item,key)=>(
-                                        <tr key={key}>
-                                            <td>{item.question}</td>
-                                            <td>
-                                                <Link to={{pathname:`Createsurvey`}}>
-                                                    <button><span className="icon has-text-grey"><i className="fas fa-edit"/></span></button>
-                                                </Link>
-                                                <button>
-                                                    <span className="icon has-text-grey"
-                                                        onClick={(e)=>{this.remove()}}><i className="far fa-trash-alt"/></span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }                                
+                                <tr>
+                                    <td>{this.state.dates.survey}</td>
+                                    <td>
+                                        <Link to={{pathname:`Createsurvey`}}>
+                                            <button><span className="icon has-text-grey"><i className="fas fa-edit"/></span></button>
+                                        </Link>
+                                        <button>
+                                            <span className="icon has-text-grey"onClick={(e)=>{this.remove()}}><i className="far fa-trash-alt"/></span>
+                                        </button>
+                                    </td>
+                                </tr>                                
                             </tbody>
                         </table>
+                        <button onClick={this.submit}>iterar</button>
                     </div>
                 </div>
                 {timeout && (<LogOut />)}

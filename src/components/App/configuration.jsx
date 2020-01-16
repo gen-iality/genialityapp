@@ -122,7 +122,7 @@ class Configuration extends Component {
             })
         }
 
-        if (this.state.dates.database.SurveysScreen) {
+        if (this.state.dates.database.SurveyScreen) {
             this.setState({
                 checkSurveys: true,
             })
