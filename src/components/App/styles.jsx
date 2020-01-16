@@ -353,7 +353,7 @@ class Styles extends Component {
                             colorDrawer.map((item, key) => (
                                 <div className="column inner-column" key={key}>
                                     <label className="label has-text-grey-light">{item.title}</label>
-                                    <input type="color" disabled style={{ marginRight: "3%", borderRadius: "100%", width: "2.2%" }} value={item.value} />
+                                    <input type="color" disabled style={{ marginRight: "3%", width: "5%" }} value={item.value} />
                                     <input type="color" name="colorBtn" onChange={item.change} />
                                 </div>
                             ))
