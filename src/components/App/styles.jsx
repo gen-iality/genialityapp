@@ -25,7 +25,7 @@ class Styles extends Component {
             styles: {},
             dates: {},
         };
-            //Se establecen las funciones para su posterior uso
+        //Se establecen las funciones para su posterior uso
         this.saveEventImage = this.saveEventImage.bind(this)
         this.saveMenuImage = this.saveMenuImage.bind(this)
         this.saveBannerImage = this.saveBannerImage.bind(this)
@@ -33,28 +33,33 @@ class Styles extends Component {
         this.submit = this.submit.bind(this)
 
     }
-        //Se consulta la api para traer los datos ya guardados y enviarlos al state
+    //Se consulta la api para traer los datos ya guardados y enviarlos al state
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         console.log(info)
-        this.setState({
-            dates: {
-                brandPrimary: info.styles.brandPrimary,
-                brandSuccess: info.styles.brandSuccess,
-                brandInfo: info.styles.brandInfo,
-                brandDanger: info.styles.brandDanger,
-                containerBgColor: info.styles.containerBgColor,
-                brandWarning: info.styles.brandWarning,
-                toolbarDefaultBg: info.styles.toolbarDefaultBg,
-                brandDark: info.styles.brandDark,
-                brandLight: info.styles.brandLight,
-                event_image: info.styles.event_image,
-                banner_image: info.styles.banner_image,
-                menu_image: info.styles.menu_image,
-                textMenu: info.styles.textMenu,
-                activeText: info.styles.activeText
-            }
-        })
+
+        if (info.styles !== null) {
+            this.setState({
+                dates: {
+                    brandPrimary: info.styles.brandPrimary,
+                    brandSuccess: info.styles.brandSuccess,
+                    brandInfo: info.styles.brandInfo,
+                    brandDanger: info.styles.brandDanger,
+                    containerBgColor: info.styles.containerBgColor,
+                    brandWarning: info.styles.brandWarning,
+                    toolbarDefaultBg: info.styles.toolbarDefaultBg,
+                    brandDark: info.styles.brandDark,
+                    brandLight: info.styles.brandLight,
+                    event_image: info.styles.event_image,
+                    banner_image: info.styles.banner_image,
+                    menu_image: info.styles.menu_image,
+                    textMenu: info.styles.textMenu,
+                    activeText: info.styles.activeText,
+                    app_configuration: info.app_configuration
+
+                }
+            })
+        }
 
         this.setState({
             path: info.styles.event_image
@@ -88,12 +93,13 @@ class Styles extends Component {
                 menu_image: info.styles.menu_image,
                 BackgroundImage: info.styles.BackgroundImage,
                 textMenu: info.styles.textMenu,
-                activeText: info.styles.activeText
+                activeText: info.styles.activeText,
+                app_configuration: info.app_configuration
             }
         })
 
     }
-        //Se envia la peitcion a la api para reconocer el token 
+    //Se envia la peitcion a la api para reconocer el token 
     componentWillMount() {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
@@ -111,7 +117,7 @@ class Styles extends Component {
             }
         }
     }
-        //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
+    //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
     saveEventImage(files) {
         console.log(files);
         const file = files[0];
@@ -270,7 +276,7 @@ class Styles extends Component {
             this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
         }
     }
-        //Se realiza una funcion asincrona submit para enviar los datos a la api 
+    //Se realiza una funcion asincrona submit para enviar los datos a la api 
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -289,7 +295,7 @@ class Styles extends Component {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             }
             else {
-                console.log(this.state)
+                console.log(this.state.data)
                 const result = await Actions.put(`/api/events/${this.props.eventId}`, this.state.data);
                 this.setState({ loading: false });
                 if (result._id) {
@@ -340,7 +346,6 @@ class Styles extends Component {
         const imageDrawer = [
             { name: 'EventImage', title: 'Elige una imagen de logo', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
             { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 5, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage },
-            { name: 'BannerImage', title: 'Elige una imagen para tu banner', key: 6, picture: this.state.pathBannerImage, imageFile: this.state.imageFileFooter, function: this.saveBannerImage },
             { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 7, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
         ]
 
