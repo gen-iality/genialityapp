@@ -346,7 +346,6 @@ class Styles extends Component {
         const imageDrawer = [
             { name: 'EventImage', title: 'Elige una imagen de logo', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
             { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 5, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage },
-            { name: 'BannerImage', title: 'Elige una imagen para tu banner', key: 6, picture: this.state.pathBannerImage, imageFile: this.state.imageFileFooter, function: this.saveBannerImage },
             { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 7, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
         ]
 
@@ -359,7 +358,7 @@ class Styles extends Component {
                             colorDrawer.map((item, key) => (
                                 <div className="column inner-column" key={key}>
                                     <label className="label has-text-grey-light">{item.title}</label>
-                                    <input type="color" disabled style={{ marginRight: "3%", borderRadius: "100%", width: "2.2%" }} value={item.value} />
+                                    <input type="color" disabled style={{ marginRight: "3%", width: "5%" }} value={item.value} />
                                     <input type="color" name="colorBtn" onChange={item.change} />
                                 </div>
                             ))
