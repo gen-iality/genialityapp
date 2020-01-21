@@ -44,7 +44,11 @@ class Importacion extends Component {
                         if (sheetObj[abc[i] + j] &&
                             sheetObj[abc[i] + j].w &&
                             sheetObj[abc[i] + j].w.trim().length >= 0) {
-                            fields[i].list.push(sheetObj[abc[i] + j].w.trim().toUpperCase())
+                            let fieldValue = sheetObj[abc[i] + j].w.trim();
+                            if(["email","password"].indexOf(key) == -1){
+                                fieldValue= fieldValue.toUpperCase();
+                            }
+                            fields[i].list.push(fieldValue)
                         }else{
                             fields[i].list.push(undefined)
                         }

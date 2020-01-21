@@ -51,6 +51,7 @@ class Menu extends Component {
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink> 
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuraciòn de la app</NavLink>
                                 {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink> */}
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
                             </li>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
@@ -59,7 +60,6 @@ class Menu extends Component {
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink></li> 
-                                    {/* <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones para la app</NavLink></li> */}
                                 </Fragment>
                             }
                         </ul>

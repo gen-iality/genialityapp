@@ -6,11 +6,17 @@ import {handleSelect} from "./utils";
 const publicInstance = axios.create({
     url: ApiUrl,
     baseURL: ApiUrl,
+    pushURL: 'https://104.248.125.133:6477/pushNotification'
 });
 const privateInstance = axios.create({
     url: ApiUrl,
     baseURL: ApiUrl,
     withCredentials: true
+});
+
+const privateInstancePush = axios.create({
+    // pushURL: 'https://104.248.125.133:6477/pushNotification',
+    withCredentials: false
 });
 let evius_token = Cookie.get('evius_token');
 if (evius_token){
