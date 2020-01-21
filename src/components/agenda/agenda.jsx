@@ -36,6 +36,7 @@ class Agenda extends Component {
 
     fetchAgenda = async() => {
         const {data} = await AgendaApi.byEvent(this.props.event._id);
+        console.log(data)
         //Después de traer la info se filtra por el primer día por defecto
         const filtered = this.filterByDay(this.state.days[0],data);
         this.setState({list:data,filtered,toShow:filtered})

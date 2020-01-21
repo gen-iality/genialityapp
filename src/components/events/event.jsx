@@ -40,6 +40,7 @@ const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const SurveysList = asyncComponent ( ()=> import("../App/surveys") );
 const CreateSuervey = asyncComponent ( ()=>import("../App/CreateSurvey") );
+const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
 
 Moment.locale('es');
 momentLocalizer();
@@ -146,6 +147,11 @@ class Event extends Component {
                                 <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
                             }
 
+                            {
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/notifications`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
+                            }
+
                             {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
                                 <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
@@ -165,6 +171,7 @@ class Event extends Component {
                             <Route path={`${match.url}/encuestasasesores`} render={()=><Surveysconsultant eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/Createsurvey`} render={()=><CreateSuervey eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />

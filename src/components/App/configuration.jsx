@@ -23,7 +23,7 @@ class Configuration extends Component {
         this.state = {
             loading: true,
             configuration: {},
-            app_configuration:{},
+            app_configuration: {},
             dates: {},
             checkHome: false,
             checkCalendar: false,
@@ -38,7 +38,8 @@ class Configuration extends Component {
             checkRanking: false,
             checkVote: false,
             checkFaq: false,
-            checkGallery: false
+            checkGallery: false,
+            information: {}
         };
         this.submit = this.submit.bind(this)
         this.checkInput = React.createRef()
@@ -46,16 +47,18 @@ class Configuration extends Component {
     }
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        this.setState({ info })
+        this.setState({ information: info.app_configuration })
+        this.setState({info})
+        console.log(info)
         this.setState({
             dates: {
-                database: this.state.info.app_configuration
+                database: this.state.information
             }
         })
 
         this.setState({
-            app_configuration:{
-                app_configuration:{
+            app_configuration: {
+                app_configuration: {
                     config: this.state.configuration
                 }
             }
@@ -63,145 +66,144 @@ class Configuration extends Component {
 
         if (this.state.dates.database.HomeScreen) {
             this.setState({
-                checkHome: true,
+                checkHome: true
             })
         } else {
             this.setState({
-                checkHome: false,
+                checkHome: false
             })
         }
 
         if (this.state.dates.database.CalendarScreen) {
             this.setState({
-                checkCalendar: true,
+                checkCalendar: true
             })
-            
+
         } else {
             this.setState({
-                checkCalendar: false,
+                checkCalendar: false
             })
         }
 
         if (this.state.dates.database.ProfileScreen) {
             this.setState({
-                checkProfile: true,
+                checkProfile: true
             })
         } else {
             this.setState({
-                checkProfile: false,
+                checkProfile: false
             })
         }
 
         if (this.state.dates.database.EventPlaceScreen !== undefined) {
             this.setState({
-                checkEventPlace: true,
+                checkEventPlace: true
             })
         } else {
             this.setState({
-                checkEventPlace: false,
+                checkEventPlace: false
             })
         }
 
         if (this.state.dates.database.SpeakerScreen) {
             this.setState({
-                checkSpeaker: true,
+                checkSpeaker: true
             })
         } else {
             this.setState({
-                checkSpeaker: false,
+                checkSpeaker: false
             })
         }
 
         if (this.state.dates.database.NewsScreen) {
             this.setState({
-                checkNews: true,
+                checkNews: true
             })
         } else {
             this.setState({
-                checkNews: false,
+                checkNews: false
             })
         }
 
         if (this.state.dates.database.SurveyScreen) {
             this.setState({
-                checkSurveys: true,
+                checkSurveys: true
             })
         } else {
             this.setState({
-                checkSurveys: false,
+                checkSurveys: false
             })
         }
 
         if (this.state.dates.database.DocumentsScreen) {
             this.setState({
-                checkDocuments: true,
+                checkDocuments: true
             })
         } else {
             this.setState({
-                checkDocuments: false,
+                checkDocuments: false
             })
         }
 
         if (this.state.dates.database.WallScreen) {
             this.setState({
-                checkWall: true,
+                checkWall: true
             })
         } else {
             this.setState({
-                checkWall: false,
+                checkWall: false
             })
         }
 
         if (this.state.dates.database.QuizScreen) {
             this.setState({
-                checkQuiz: true,
+                checkQuiz: true
             })
         } else {
             this.setState({
-                checkQuiz: false,
+                checkQuiz: false
             })
         }
 
         if (this.state.dates.database.RankingScreen) {
             this.setState({
-                checkRanking: true,
+                checkRanking: true
             })
         } else {
             this.setState({
-                checkRanking: false,
+                checkRanking: false
             })
         }
 
         if (this.state.dates.database.VoteScreen) {
             this.setState({
-                checkVote: true,
+                checkVote: true
             })
         } else {
             this.setState({
-                checkVote: false,
+                checkVote: false
             })
         }
 
         if (this.state.dates.database.FaqScreen) {
             this.setState({
-                checkFaq: true,
+                checkFaq: true
             })
         } else {
             this.setState({
-                checkFaq: false,
+                checkFaq: false
             })
         }
 
         if (this.state.dates.database.GalleryScreen) {
             this.setState({
-                checkGallery: true,
+                checkGallery: true
             })
         } else {
             this.setState({
-                checkGallery: false,
+                checkGallery: false
             })
         }
-
     }
     componentWillMount() {
         let dataUrl = parseUrl(document.URL);
@@ -232,11 +234,7 @@ class Configuration extends Component {
         this.state.data = { styles: this.state.configuration };
         try {
             if (this.state.info._id) {
-                console.log("if condition" + this.state.configuration)
-                // let array = [];
-                // array = Object.keys(this.state.configuration).map(key =>{
-                //     return this.state.configuration[key]
-                // })
+                console.log("entro a if")
                 const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.app_configuration);
 
                 console.log(info)
@@ -245,7 +243,7 @@ class Configuration extends Component {
                 window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
             }
             else {
-                console.log("response else create")
+                console.log("entro a else")
                 const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
                 console.log(this.state.info)
                 this.setState({ loading: false });
@@ -289,19 +287,18 @@ class Configuration extends Component {
         } else {
             await this.setState({
                 configuration: {
-                        ...this.state.configuration, [name]: val  
+                    ...this.state.configuration, [name]: val
                 }
             })
 
             await this.setState({
                 app_configuration: {
-                    app_configuration:{
-                        ...this.state.configuration, [name]: val  
+                    app_configuration: {
+                        ...this.state.configuration, [name]: val
                     }
                 }
             })
             console.log('por primera vez', this.state.configuration)
-            console.log('App_configuration',this.state.app_configuration)
         }
     }
 
@@ -314,9 +311,9 @@ class Configuration extends Component {
     enable = (val) => {
         var isChecked = document.getElementById(val.idCheck).checked;
         if (isChecked) {
-            document.getElementById(val.id).disabled = false
-        }else{
-            document.getElementById(val.id).disabled = true
+            document.getElementById(val.id).disabled = false;
+        } else {
+            document.getElementById(val.id).disabled = true;
         }
     }
 
@@ -324,35 +321,32 @@ class Configuration extends Component {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput, idCheck:'checkbox',name: 'HomeScreen', checked: this.state.checkHome, title: 'HOME', icon: 'home', key: 1, title_view: 'Modulo Home Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox2',name: 'CalendarScreen', checked: this.state.checkCalendar, title: 'CALENDAR', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox3',name: 'ProfileScreen', checked: this.state.checkProfile, title: 'PROFILE', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox4',name: 'EventPlaceScreen', checked: this.state.checkEventPlace, title: 'EVENT PLACE', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox5',name: 'SpeakerScreen', checked: this.state.checkSpeaker, title: 'SPEAKERS', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox6',name: 'NewsScreen', checked: this.state.checkNews, title: 'NEWS', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox7',name: 'SurveyScreen', checked: this.state.checkSurveys, title: 'SURVEYS', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox8',name: 'DocumentsScreen', checked: this.state.checkDocuments, title: 'DOCUMENTS', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox9',name: 'WallScreen', checked: this.state.checkWall, title: 'WALL', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox10',name: 'QuizScreen', checked: this.state.checkQuiz, title: 'QUIZ', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox11',name: 'RankingScreen', checked: this.state.checkRanking, title: 'RANKING', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox12',name: 'FaqScreen', checked: this.state.checkFaq, title: 'F.A.Q.', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox13',name: 'VoteScreen', checked: this.state.checkVote, title: 'VOTE', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible?', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck:'checkbox14',name: 'GalleryScreen', checked: this.state.checkGallery, title: 'GALLERY', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible?', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.information.HomeScreen ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox2', title:'Calendar',name: 'CalendarScreen', checked: this.state.checkCalendar, type:this.state.type,titles: this.state.information.CalendarScreen ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox3', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.information.ProfileScreen ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox4', title:'EventPlace',name: 'EventPlaceScreen', checked: this.state.checkEventPlace,type:this.state.type, titles: this.state.information.EventPlaceScreen ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox5', title:'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker,type:this.state.type, titles: this.state.information.SpeakerScreen ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox6', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.information.NewsScreen ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox7', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.information.SurveyScreen ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox8', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.information.DocumentsScreen ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox9', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.information.WallScreen ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox10', title:'Quiz', name: 'QuizScreen', checked: this.state.checkQuiz,type:this.state.type, titles: this.state.information.QuizScreen ? 'Editar Quiz' : 'Habilitar Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox11', title:'Ranking', name: 'RankingScreen', checked: this.state.checkRanking, type:this.state.type,titles: this.state.information.RankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox12', title:'F.A.Q', name: 'FaqScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FAQScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox13', title:'Vote', name: 'VoteScreen', checked: this.state.checkVote,type:this.state.type, titles: this.state.information.VoteScreen ? 'Editar Vote' : 'Habilitar Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox14', title:'GAllery', name: 'GalleryScreen', checked: this.state.checkGallery, type:this.state.type, titles: this.state.information.GalleryScreen ? 'Editar Gallery' : 'Habilitar Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
                 <div className="columns general">
-                    <div className="column is-12">
+                    <div className="column is-5">
                         <h2 className="title-section">Configuracion de Aplicativo</h2>
                         {
                             itemsDrawer.map((item, key) => (
                                 <div className="column inner-column" key={key}>
-                                    <div>
-                                        <label className="title-section">{item.title_view}</label>
-                                        <input type="checkbox" className="checkbox" checked={item.checked} name={item.name} value={item.key} />
-                                    </div>
-                                    <br></br><label>Mantener Habilitado?</label>
-                                    <input type="checkbox" id={item.idCheck} onClick={(e) => { this.enable({ id: item.key, idCheck: item.idCheck}) }} name={item.name} value={item.key} onChange={(e) => { this.sendInfoToState(e.target.name, { title: item.title, name: item.name, icon: item.icon, key: item.key }) }} />
+
+                                    <br /><label>{item.titles}</label>
+                                    <input type="checkbox" id={item.idCheck} onClick={(e) => { this.enable({ id: item.key, idCheck: item.idCheck }) }} name={item.name} value={item.key} onChange={(e) => { this.sendInfoToState(e.target.name, { title: item.title, name: item.name, icon: item.icon, key: item.key }) }} />
 
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" id={item.key} ref={item.reference} disabled type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
@@ -360,7 +354,7 @@ class Configuration extends Component {
 
                             ))
                         }
-                        <button className="button is-primary" onClick={this.submit}>Guardar</button>
+                        <button id="button" className="button is-primary" onClick={this.submit}>Guardar</button>
                     </div>
                 </div>
                 {timeout && (<LogOut />)}

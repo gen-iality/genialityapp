@@ -27,14 +27,17 @@ class SurveysCreate extends Component {
         };
     }
 
-    async componentDidMount() {
-        this.fetchItems()
-    }
-
-    fetchItems = async () => {
+    async fetchItems() {
         const dates = await SurveysApi.getAll(this.props.eventId);
-        await this.setState({ dates: dates })
-        console.log(this.state.dates)
+        this.setState({ dates })
+    }
+    
+    async componentDidMount() {
+        const dates = await SurveysApi.getAll(this.props.eventId);
+        if(dates !== undefined){
+            this.setState({ dates })
+            console.log(this.state.dates)
+        }
     }
 
     onChange = (e) => {
@@ -107,9 +110,18 @@ class SurveysCreate extends Component {
         });
     };
 
+    renderThis(){
+        if (this.state.dates !== undefined){
+            
+        }
+    }
+
     render() {
         const { timeout } = this.state;
         const { dates, id } = this.state;
+        const datas = [
+            this.state.dates.data
+        ]
         return (
             <React.Fragment>
                 <div className="columns general">
@@ -119,11 +131,10 @@ class SurveysCreate extends Component {
                             <button className="button is-primary">Crear Encuesta</button>
                         </Link>
                         <div>
-                            {dates}
-                            {<EventContent title={"Encuestas"} description={"Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc."}
+                            {/* {<EventContent title={"Encuestas"} description={"Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc."}
                                 addAction={this.newRole} addTitle={"Nuevo rol"}>
                                 <EvenTable head={["Nombre", "Acciones"]}>
-                                    {this.state.dates.map((cert, key) => {
+                                    {this.state.dates.data.map((cert, key) => {
                                         return <tr key={key}>
                                             <td>
                                                 {
@@ -137,8 +148,18 @@ class SurveysCreate extends Component {
                                                 removeNew={this.removeNew} removeItem={this.removeItem} discardChanges={this.discardChanges} />
                                         </tr>
                                     })}
+
                                 </EvenTable>
-                            </EventContent>}
+                            </EventContent>} */}
+
+
+                            {
+                                datas.map((item,key)=>(
+                                    <div key={key}>
+                                        {console.log(item)}       
+                                    </div>
+                                ))
+                            }
                         </div>
                     </div>
                 </div>
