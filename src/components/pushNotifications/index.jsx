@@ -31,7 +31,6 @@ class pushNotification extends Component {
             console.log(this.state.push)
             const result = await Actions.create(`api/event/${this.props.eventId}/sendpush`,this.state.push);
             if (result) {
-                window.location.replace(`${BaseUrl}/event/${this.props.eventId}/notificationsApp`);
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             } else {
                 toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
