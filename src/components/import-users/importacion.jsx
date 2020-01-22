@@ -33,26 +33,36 @@ class Importacion extends Component {
                 inicio = abc.indexOf(inicio);
                 fin = abc.indexOf(fin);
                 let fields = [];
+
+
                 for (let i = inicio; i < fin + 1; i++) {
+
                     if(!sheetObj[abc[i] + 1] || !sheetObj[abc[i] + 1].w){
                         this.setState({errMsg:'Excel sin formato adecuado'});
                         break;
                     }
+
                     let key = sheetObj[abc[i] + 1].w.trim();
                     fields[i] = {key: key, list: [], used: false};
+
+                    //Se itera sobre la segunda columna ya que las primeras indican los headers y revisamos si estan llenas las filas
                     for (let j = 2; j < finN + 1; j++) {
                         if (sheetObj[abc[i] + j] &&
                             sheetObj[abc[i] + j].w &&
                             sheetObj[abc[i] + j].w.trim().length >= 0) {
                             let fieldValue = sheetObj[abc[i] + j].w.trim();
+                            //Se pasan todas las columnas a mayusculas a excepcion de email y contraseña para organizar la base de datos e ingresar email y contraseña en minusculas
                             if(["email","password"].indexOf(key) == -1){
                                 fieldValue= fieldValue.toUpperCase();
                             }
+
                             fields[i].list.push(fieldValue)
                         }else{
                             fields[i].list.push(undefined)
                         }
                     }
+
+                    
                     fields[i].list.slice(0, finN - 1);
                 }
                 self.props.handleXls(fields)
