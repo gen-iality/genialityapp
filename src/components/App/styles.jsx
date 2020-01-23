@@ -337,7 +337,7 @@ class Styles extends Component {
         //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente 
         const colorDrawer = [
             { name: 'ColorBtn', title: 'Elige un color para los botones', key: 1, value: this.state.dates.brandPrimary, change: (save) => { this.setState({ styles: { ...this.state.styles, brandPrimary: save.target.value } }) } },
-            { name: 'ColorBackground', title: 'El fondo de tu app', key: 2, value: this.state.dates.containerBgColor, change: (save) => { this.setState({ styles: { ...this.state.styles, containerBgColor: save.target.value } }) } },
+            { name: 'ColorBackground', title: 'Elige El fondo de tu app', key: 2, value: this.state.dates.containerBgColor, change: (save) => { this.setState({ styles: { ...this.state.styles, containerBgColor: save.target.value } }) } },
             { name: 'ColorMenu', title: 'Elige un color para el menu', key: 3, value: this.state.dates.toolbarDefaultBg, change: (save) => { this.setState({ styles: { ...this.state.styles, toolbarDefaultBg: save.target.value } }) } },
             { name: 'ColorTextoMenu', title: 'Elige un color para el texto del menu', key: 4, value: this.state.dates.textMenu, change: (save) => { this.setState({ styles: { ...this.state.styles, textMenu: save.target.value } }) } },
             { name: 'ColorActiveText', title: 'Elige un color para item seleccionado del menu', key: 5, value: this.state.dates.activeText, change: (save) => { this.setState({ styles: { ...this.state.styles, activeText: save.target.value } }) } },

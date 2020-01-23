@@ -12,7 +12,7 @@ import ImageInput from "../shared/imageInput";
 import { toast } from 'react-toastify';
 import { FormattedMessage } from "react-intl";
 
-class News extends Component {
+class Espacios extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -138,6 +138,7 @@ class News extends Component {
             }
         } catch (e) {
             console.log(e);
+        
         }
     };
 
@@ -232,4 +233,4 @@ class News extends Component {
     }
 }
 
-export default News
+export default withRouter(Espacios)

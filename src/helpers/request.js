@@ -258,6 +258,27 @@ export const CertsApi = {
     }
 
 };
+
+export const NewsFeed = {
+
+    byEvent: async(id) => {
+        return await Actions.getAll(`api/events/${id}/newsfeed`).then(({data})=>data);
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/events/${id}/newsfeed/`,id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit(`api/events/${id}/newsfeed`, data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete(`api/events/${id}/newsfeed`, id);
+    },
+    create: async(data,id) => {
+        return await Actions.create(`api/events/${id}/newsfeed`,data)
+    }
+    
+}
+
 export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)
