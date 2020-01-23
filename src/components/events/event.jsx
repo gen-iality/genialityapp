@@ -41,6 +41,7 @@ const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const SurveysList = asyncComponent ( ()=> import("../App/surveys") );
 const CreateSuervey = asyncComponent ( ()=>import("../App/CreateSurvey") );
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
+const NewsApp = asyncComponent( ()=>import("../news/news"));
 
 Moment.locale('es');
 momentLocalizer();
@@ -58,7 +59,8 @@ class Event extends Component {
             ConfigurationApp:true,
             NotificationsApp:true,
             SurveysList:true,
-            CreateSuervey: true
+            CreateSuervey: true,
+            NewsApp:true
         };
     }
 
@@ -157,10 +159,16 @@ class Event extends Component {
                                 <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
                             }
 
+                            {   
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
+                            }
+
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Route path={`${match.url}/pages`} component={Pages}/>
                             }
+                            
                             <Route path={`${match.url}/dashboard`} render={()=><DashboardEvent eventId={this.state.event._id} />}/>
                             <Route path={`${match.url}/orders`} render={()=><OrdersEvent eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/certificados`} render={()=><ListCertificados event={this.state.event}/>}/>
@@ -174,6 +182,7 @@ class Event extends Component {
                             <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/Createsurvey`} render={()=><CreateSuervey eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>
