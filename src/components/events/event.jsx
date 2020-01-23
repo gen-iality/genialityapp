@@ -159,6 +159,7 @@ class Event extends Component {
                                 <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
                             }
 
+
                             {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
                                 <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
