@@ -138,6 +138,7 @@ class Espacios extends Component {
             }
         } catch (e) {
             console.log(e);
+        
         }
     };
 

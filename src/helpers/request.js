@@ -276,6 +276,7 @@ export const NewsFeed = {
     create: async(data,id) => {
         return await Actions.create(`api/events/${id}/newsfeed`,data)
     }
+    
 }
 
 export const RolAttApi = {
