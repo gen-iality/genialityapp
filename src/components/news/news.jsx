@@ -168,7 +168,7 @@ class Espacios extends Component {
         const { event } = this.state;
         return (
             <React.Fragment>
-                <EventContent title="Espacios" closeAction={this.goBack} description={"Agregue o edite las personas que son conferencistas"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
+                <EventContent title="Noticias" closeAction={this.goBack} description={"Agregue o edite las Noticias que se muestran en la aplicación"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                     <div className="column is-11">
                         {this.state.loading ? <Loading /> :
                             <EvenTable head={["Nombre", "Descripción", "Noticia", "Imagen", "", ""]}>
