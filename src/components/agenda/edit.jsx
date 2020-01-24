@@ -211,6 +211,7 @@ class AgendaEdit extends Component {
     };
 
     //Validación de campos
+    
     validForm = () => {
         let title="";
         if(this.state.name.length<=0)
