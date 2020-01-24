@@ -75,7 +75,7 @@ class pushNotification extends Component {
 
                         <div className="column inner-column">
                             <label className="label">Mensaje</label>
-                            <input className="textarea" type="textarea" onChange={(save) => { this.setState({ push: { ...this.state.push, body: save.target.value, data:'',id: this.props.eventId } }) }} name="title" />
+                            <input className="textarea" type="textarea" onChange={(save) => { this.setState({ push: { ...this.state.push, body: save.target.value, data:'', id: this.props.eventId } }) }} name="title" />
                         </div>
                         <button className="button is-primary" onClick={this.submit}>Enviar</button>
                         {/* <div className="column is-12">
