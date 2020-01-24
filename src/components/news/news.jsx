@@ -12,7 +12,7 @@ import ImageInput from "../shared/imageInput";
 import { toast } from 'react-toastify';
 import { FormattedMessage } from "react-intl";
 
-class Espacios extends Component {
+class News extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,9 +21,10 @@ class Espacios extends Component {
             data: {},
             id: '',
             deleteID: '',
-            name: '',
-            description: '',
-            news: '',
+            title: '',
+            description_complete: '',
+            description_short: '',
+            time: '',
             isLoading: false,
             loading: true
         };
@@ -78,17 +79,18 @@ class Espacios extends Component {
     };
 
     onChange = (e) => {
-        const names = document.getElementById("name").value;
+        const titles = document.getElementById("title").value;
         const desc = document.getElementById("desc").value;
-        const notice = document.getElementById("news").value;
+        const notice = document.getElementById("description_short").value;
+        const time = document.getElementById("time").value;
 
-        this.setState({ name: names, description: desc, news: notice })
+        this.setState({ title: titles, description_complete: desc, description_short: notice, time: time })
     };
 
     newRole = () => {
         if (!this.state.list.find(({ _id }) => _id === "new")) {
             this.setState(state => {
-                const list = state.list.concat({ name: '', description: '', news: '', pricture: '', created_at: new Date(), _id: 'new' });
+                const list = state.list.concat({ title: '', description_complete: '', description_short: '', pricture: '', time: '', created_at: new Date(), _id: 'new' });
                 return { list, id: 'new' };
             });
         }
@@ -97,52 +99,54 @@ class Espacios extends Component {
     removeNewRole = () => {
         this.setState(state => {
             const list = state.list.filter(item => item._id !== "new");
-            return { list, id: "", name: "", description: "", news: "", picture: "" };
+            return { list, id: "", title: "", description_complete: "", description_short: "", picture: "", time: "" };
         });
     };
 
     saveRole = async () => {
         try {
             if (this.state.id !== 'new') {
-                await NewsFeed.editOne({ name: this.state.name, description: this.state.description, news: this.state.news, picture: this.state.path }, this.state.id, this.props.eventId);
+                await NewsFeed.editOne({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, picture: this.state.path, time: this.state.time }, this.state.id, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
-                            item.name = state.name;
-                            item.description = state.description;
-                            item.news = state.news;
-                            item.picture = state.path;
+                            item.title = state.title;
+                            item.description_complete = state.description_complete;
+                            item.description_short = state.description_short;
+                            item.image = state.path;
+                            item.time = state.time;
                             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
                             return item;
                         } else return item;
                     });
-                    return { list, id: "", name: "", description: "", news: "" };
+                    return { list, id: "", title: "", description_complete: "", description_short: "", time: "" };
                 });
             } else {
-                const newRole = await NewsFeed.create({ name: this.state.name, description: this.state.description, news: this.state.news, picture: this.state.path }, this.props.eventId);
+                const newRole = await NewsFeed.create({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, image: this.state.path, time: this.state.time }, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
-                            item.name = newRole.name;
-                            item.description = newRole.description;
-                            item.news = newRole.news;
-                            item.picture = newRole.path;
+                            item.title = newRole.title;
+                            item.description_complete = newRole.description_complete;
+                            item.description_short = newRole.description_short;
+                            item.image = newRole.path;
+                            item.time = newRole.time;
                             item.created_at = newRole.created_at;
                             item._id = newRole._id;
                             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
                             return item;
                         } else return item;
                     });
-                    return { list, id: "", name: "", description: "", news: "" };
+                    return { list, id: "", title: "", description_complete: "", description_short: "", time: "" };
                 });
             }
         } catch (e) {
             console.log(e);
-        
+
         }
     };
 
-    editItem = (cert) => this.setState({ id: cert._id, name: cert.name, description: cert.description, news: cert.news, picture: cert.picture });
+    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, description_complete: cert.description_complete, description_short: cert.description_short, picture: cert.picture, time: cert.time });
 
     removeItem = (id) => {
         sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
@@ -150,7 +154,7 @@ class Espacios extends Component {
                 if (result.value) {
                     sweetAlert.showLoading("Espera (:", "Borrando...");
                     await NewsFeed.deleteOne(id, this.props.eventId);
-                    this.setState(state => ({ id: "", name: "", description: "", news: "", picture: "" }));
+                    this.setState(state => ({ id: "", title: "", description_complete: "", description_short: "", picture: "", time: "" }));
                     this.fetchItem();
                     sweetAlert.hideLoading();
                 }
@@ -168,33 +172,41 @@ class Espacios extends Component {
         const { event } = this.state;
         return (
             <React.Fragment>
-                <EventContent title="Noticias" closeAction={this.goBack} description={"Agregue o edite las Noticias que se muestran en la aplicación"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
-                    <div className="column is-11">
+                <div className="column is-12">
+                    <EventContent title="Noticias" closeAction={this.goBack} description_complete={"Agregue o edite las Noticias que se muestran en la aplicación"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                         {this.state.loading ? <Loading /> :
-                            <EvenTable head={["Nombre", "Descripción", "Noticia", "Imagen", "", ""]}>
+                            <EvenTable head={["Titulo", "Subtitulo", "Noticia", "tiempo", "Imagen", "", ""]}>
                                 {this.state.list.map((cert, key) => {
                                     return <tr key={key}>
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="name" value={this.state.name} onChange={this.onChange} /> :
-                                                    <p>{cert.name}</p>
+                                                    <input type="text" id="title" value={this.state.title} onChange={this.onChange} /> :
+                                                    <p>{cert.title}</p>
                                             }
                                         </td>
 
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="desc" value={this.state.description} onChange={this.onChange} /> :
-                                                    <p>{cert.description}</p>
+                                                    <input type="text" id="desc" value={this.state.description_complete} onChange={this.onChange} /> :
+                                                    <p>{cert.description_complete}</p>
                                             }
 
                                         </td>
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="news" value={this.state.news} onChange={this.onChange} /> :
-                                                    <p>{cert.news}</p>
+                                                    <input type="text" id="description_short" value={this.state.description_short} onChange={this.onChange} /> :
+                                                    <p>{cert.description_short}</p>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            {
+                                                this.state.id === cert._id ?
+                                                    <input type="text" id="time" value={this.state.time} onChange={this.onChange} /> :
+                                                    <p>{cert.time}</p>
                                             }
                                         </td>
 
@@ -226,11 +238,11 @@ class Espacios extends Component {
                                 })}
                             </EvenTable>
                         }
-                    </div>
-                </EventContent>
+                    </EventContent>
+                </div>
             </React.Fragment>
         )
     }
 }
 
-export default withRouter(Espacios)
+export default News
