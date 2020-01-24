@@ -39,6 +39,7 @@ class Configuration extends Component {
             checkVote: false,
             checkFaq: false,
             checkGallery: false,
+            checkWebScreen:false,
             information: {}
         };
         this.submit = this.submit.bind(this)
@@ -185,7 +186,7 @@ class Configuration extends Component {
             })
         }
 
-        if (this.state.dates.database.FaqScreen) {
+        if (this.state.dates.database.FaqsScreen) {
             this.setState({
                 checkFaq: true
             })
@@ -202,6 +203,16 @@ class Configuration extends Component {
         } else {
             this.setState({
                 checkGallery: false
+            })
+        }
+
+        if (this.state.dates.database.WebScreen) {
+            this.setState({
+                checkWebScreen: true
+            })
+        } else {
+            this.setState({
+                checkWebScreen: false
             })
         }
     }
@@ -332,9 +343,10 @@ class Configuration extends Component {
             { reference: this.checkInput, idCheck: 'checkbox9', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.information.WallScreen ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox10', title:'Quiz', name: 'QuizScreen', checked: this.state.checkQuiz,type:this.state.type, titles: this.state.information.QuizScreen ? 'Editar Quiz' : 'Habilitar Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox11', title:'Ranking', name: 'RankingScreen', checked: this.state.checkRanking, type:this.state.type,titles: this.state.information.RankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox12', title:'F.A.Q', name: 'FaqScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FAQScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox12', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FaqsScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox13', title:'Vote', name: 'VoteScreen', checked: this.state.checkVote,type:this.state.type, titles: this.state.information.VoteScreen ? 'Editar Vote' : 'Habilitar Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox14', title:'GAllery', name: 'GalleryScreen', checked: this.state.checkGallery, type:this.state.type, titles: this.state.information.GalleryScreen ? 'Editar Gallery' : 'Habilitar Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox14', title:'Gallery', name: 'GalleryScreen', checked: this.state.checkGallery, type:this.state.type, titles: this.state.information.GalleryScreen ? 'Editar Gallery' : 'Habilitar Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox15', title:'WebScreen', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.information.WebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 15, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>

@@ -217,8 +217,8 @@ class AgendaEdit extends Component {
             title = "El Nombre es requerido";
         else if(this.state.space_id<=0)
             title = "Selecciona un Espacio";
-        else if(this.state.selectedCategories.length<=0)
-            title = "Selecciona una Categoría";
+        // else if(this.state.selectedCategories.length<=0)
+        //     title = "Selecciona una Categoría";
         else if(this.state.access_restriction_type!=="OPEN" && this.state.selectedRol.length<=0)
             title = "Seleccione un Rol para mostrar la Agenda";
         if(title.length>0){
@@ -402,7 +402,7 @@ class AgendaEdit extends Component {
                                                placeholder="Cupo total"/>
                                     </div>
                                 </div>
-                                <label className="label required">Categorías</label>
+                                <label className="label">Categorías</label>
                                 <div className="columns">
                                     <div className="column is-10">
                                         <Creatable
