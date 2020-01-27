@@ -38,10 +38,9 @@ const Pages =  asyncComponent(()=> import('../pages'));
 const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
-const SurveysList = asyncComponent ( ()=> import("../App/surveys") );
-const CreateSuervey = asyncComponent ( ()=>import("../App/CreateSurvey") );
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
 const NewsApp = asyncComponent( ()=>import("../news/news"));
+const SurveysCreate = asyncComponent( ()=>import("../Surveys/survey") )
 
 Moment.locale('es');
 momentLocalizer();
@@ -58,9 +57,9 @@ class Event extends Component {
             menuMobile:false,
             ConfigurationApp:true,
             NotificationsApp:true,
-            SurveysList:true,
             CreateSuervey: true,
-            NewsApp:true
+            NewsApp:true,
+            SurveysCreate:true,
         };
     }
 
@@ -154,11 +153,10 @@ class Event extends Component {
                                 <Route path={`${match.url}/notifications`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             }
 
-                            {   
+                            {
                                 permissions.data.ids.includes(rolPermissions._id) &&
-                                <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
+                                <Route path={`${match.url}/surveys`} render={()=><SurveysCreate eventId={this.state.event._id}/>}/>
                             }
-
 
                             {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
@@ -181,8 +179,7 @@ class Event extends Component {
                             <Route path={`${match.url}/styles`} render={()=><Styles eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/configurationApp`} render={()=><ConfigurationApp eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
-                            <Route path={`${match.url}/surveys`} render={()=><SurveysList eventId={this.state.event._id}/>}/>
-                            <Route path={`${match.url}/Createsurvey`} render={()=><CreateSuervey eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/surveys`} render={()=><SurveysCreate eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>

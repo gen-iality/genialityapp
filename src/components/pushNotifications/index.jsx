@@ -1,27 +1,92 @@
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
-import { Actions } from "../../helpers/request";
+import { Actions, PushFeed } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
-import axios from "axios/index";
-import { BaseUrl } from "../../helpers/constants";
+import Loading from "../loaders/loading";
+import { handleRequestError, sweetAlert } from "../../helpers/utils";
+import EventContent from "../events/shared/content";
+import EvenTable from "../events/shared/table";
+import TableAction from "../events/shared/tableAction";
 
 class pushNotification extends Component {
     constructor(props) {
         super(props);
         this.state = {
             event: this.props.event,
-            isLoaded: true,
             items: {},
             push: {},
-            notifications:{}
+            loading: true,
+            notifications: {},
+            result: []
         }
-        console.log("Formulario Correcto")
         this.submit = this.submit.bind(this)
     }
 
+    fetchItem = async () => {
+        const result = await PushFeed.byEvent(this.props.eventId);
+        this.setState({
+            result,
+            loading: false
+        });
+        console.log(result);
+    };
+
     async componentDidMount() {
+        this.fetchItem();
     }
 
+    saveRole = async () => {
+        try {
+            if (this.state.id !== 'new') {
+                await PushFeed.editOne({ title: this.state.title, body: this.state.body}, this.state.id, this.props.eventId);
+                this.setState(state => {
+                    const list = state.list.map(item => {
+                        if (item._id === state.id) {
+                            item.title = state.title;
+                            item.body = state.body;
+                            toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                            return item;
+                        } else return item;
+                    });
+                    return { list, id: "", title: "", body: "" };
+                });
+            } else {
+                const newRole = await PushFeed.create({ title: this.state.title, body: this.state.body}, this.props.eventId);
+                this.setState(state => {
+                    const list = state.list.map(item => {
+                        if (item._id === state.id) {
+                            item.title = newRole.title;
+                            item.body = newRole.body;
+                            toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                            return item;
+                        } else return item;
+                    });
+                    return { list, id: "", title: "", body: ""};
+                });
+            }
+        } catch (e) {
+            console.log(e);
+
+        }
+    };
+
+    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, body: cert.body});
+
+    removeItem = (id) => {
+        sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
+            try {
+                if (result.value) {
+                    sweetAlert.showLoading("Espera (:", "Borrando...");
+                    await PushFeed.deleteOne(id, this.props.eventId);
+                    this.setState(state => ({ id: "", title: "", body: "" }));
+                    this.fetchItem();
+                    sweetAlert.hideLoading();
+                }
+            } catch (e) {
+                sweetAlert.showError(handleRequestError(e))
+            }
+        });
+    }
 
     async submit(e) {
         e.preventDefault();
@@ -29,7 +94,7 @@ class pushNotification extends Component {
 
         try {
             console.log(this.state.push)
-            const result = await Actions.create(`api/event/${this.props.eventId}/sendpush`,this.state.push);
+            const result = await Actions.create(`api/event/${this.props.eventId}/sendpush`, this.state.push);
             if (result) {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             } else {
@@ -60,13 +125,14 @@ class pushNotification extends Component {
             console.log(error.config);
         }
     }
-    
+
     render() {
+        const { result } = this.state;
         return (
             <React.Fragment>
                 <div className="columns general">
                     <div className="column is-12">
-                        <h2 className="title-section">Push Notifications</h2><br/>
+                        <h2 className="title-section">Push Notifications</h2><br />
                         <label className="label">Las notificaciones se envian a todos los usuarios del evento.</label>
                         <div className="column inner-column">
                             <label className="label">Titulo.</label>
@@ -75,25 +141,34 @@ class pushNotification extends Component {
 
                         <div className="column inner-column">
                             <label className="label">Mensaje</label>
-                            <input className="textarea" type="textarea" onChange={(save) => { this.setState({ push: { ...this.state.push, body: save.target.value, data:'', id: this.props.eventId } }) }} name="title" />
+                            <input className="textarea" type="textarea" onChange={(save) => { this.setState({ push: { ...this.state.push, body: save.target.value, data: '', id: this.props.eventId } }) }} name="title" />
                         </div>
                         <button className="button is-primary" onClick={this.submit}>Enviar</button>
-                        {/* <div className="column is-12">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th><abbr title="Position">Titulo</abbr></th>
-                                        <th>Mensaje</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>38</td>
-                                        <td>23</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> */}
+                        <div className="column is-12">
+                            <EventContent title="Notificaciones" closeAction={this.goBack} description_complete={"Observe o elimine las notificaciones observadas "} addAction={this.newRole} addTitle={"Nuevo espacio"}>
+                                {console.log(this.state.result),
+                                this.state.loading ? <Loading /> :
+                                    <EvenTable head={["Titulo", "Notificacion", "Fecha", ""]}>
+                                        {this.state.result.map((cert, key) => {
+                                            console.log(cert)
+                                            return <tr key={key}>
+                                                <td>
+                                                    <p>{cert.title}</p>
+                                                </td>
+
+                                                <td>
+                                                    <p>{cert.body}</p>
+                                                </td>
+                                                <td>{cert.created_at}</td>
+                                                <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
+                                                    removeNew={this.removeNewRole} removeItem={this.removeItem} discardChanges={this.discardChanges} /> 
+                                            </tr>
+                                        })}
+                                    </EvenTable>
+                                }
+                            </EventContent>
+
+                        </div>
                     </div>
                 </div>
             </React.Fragment>

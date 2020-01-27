@@ -40,6 +40,7 @@ class Configuration extends Component {
             checkFaq: false,
             checkGallery: false,
             checkWebScreen:false,
+            checkRegister:false,
             information: {}
         };
         this.submit = this.submit.bind(this)
@@ -72,6 +73,16 @@ class Configuration extends Component {
         } else {
             this.setState({
                 checkHome: false
+            })
+        }
+
+        if (this.state.dates.database.RegisterScreen) {
+            this.setState({
+                checkRegister: true
+            })
+        } else {
+            this.setState({
+                checkRegister: false
             })
         }
 
@@ -332,21 +343,17 @@ class Configuration extends Component {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput, idCheck: 'checkbox', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.information.HomeScreen ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 1, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox0', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.information.HomeScreen ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 0, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox1', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.information.ProfileScreen ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 1, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox2', title:'Calendar',name: 'CalendarScreen', checked: this.state.checkCalendar, type:this.state.type,titles: this.state.information.CalendarScreen ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox3', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.information.ProfileScreen ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 3, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox3', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.information.NewsScreen ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 3, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox4', title:'EventPlace',name: 'EventPlaceScreen', checked: this.state.checkEventPlace,type:this.state.type, titles: this.state.information.EventPlaceScreen ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
             { reference: this.checkInput, idCheck: 'checkbox5', title:'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker,type:this.state.type, titles: this.state.information.SpeakerScreen ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox6', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.information.NewsScreen ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 6, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox7', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.information.SurveyScreen ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 7, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox8', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.information.DocumentsScreen ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 8, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox9', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.information.WallScreen ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 9, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox10', title:'Quiz', name: 'QuizScreen', checked: this.state.checkQuiz,type:this.state.type, titles: this.state.information.QuizScreen ? 'Editar Quiz' : 'Habilitar Quiz', icon: 'doc', key: 10, title_view: 'Modulo de Quiz Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox11', title:'Ranking', name: 'RankingScreen', checked: this.state.checkRanking, type:this.state.type,titles: this.state.information.RankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 11, title_view: 'Modulo de Ranking Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox12', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FaqsScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 12, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox13', title:'Vote', name: 'VoteScreen', checked: this.state.checkVote,type:this.state.type, titles: this.state.information.VoteScreen ? 'Editar Vote' : 'Habilitar Vote', icon: 'doc', key: 13, title_view: 'Modulo de Votacion Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox14', title:'Gallery', name: 'GalleryScreen', checked: this.state.checkGallery, type:this.state.type, titles: this.state.information.GalleryScreen ? 'Editar Gallery' : 'Habilitar Gallery', icon: 'doc', key: 14, title_view: 'Modulo de Galeria Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, idCheck: 'checkbox15', title:'WebScreen', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.information.WebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 15, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox6', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.information.SurveyScreen ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 6, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox7', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.information.DocumentsScreen ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 7, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox8', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.information.WallScreen ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox9', title:'WebScreen', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.information.WebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 9, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, idCheck: 'checkbox10', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FaqsScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 10, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
@@ -363,7 +370,6 @@ class Configuration extends Component {
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" id={item.key} ref={item.reference} disabled type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
                                 </div>
-
                             ))
                         }
                         <button id="button" className="button is-primary" onClick={this.submit}>Guardar</button>

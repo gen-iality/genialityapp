@@ -279,6 +279,26 @@ export const NewsFeed = {
     
 }
 
+export const PushFeed = {
+
+    byEvent: async(id) => {
+        return await Actions.getAll(`api/events/${id}/sendpush`).then(({data})=>data);
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/events/${id}/sendpush/`,id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit(`api/events/${id}/sendpush`, data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete(`api/events/${id}/sendpush`, id);
+    },
+    create: async(data,id) => {
+        return await Actions.create(`api/events/${id}/sendpush`,data)
+    }
+    
+}
+
 export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)
