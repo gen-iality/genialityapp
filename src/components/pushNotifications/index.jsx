@@ -87,7 +87,6 @@ class pushNotification extends Component {
             }
         });
     }
-
     async submit(e) {
         e.preventDefault();
         e.stopPropagation();
