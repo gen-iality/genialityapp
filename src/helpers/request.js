@@ -299,6 +299,26 @@ export const PushFeed = {
     
 }
 
+export const FaqsApi = {
+
+    byEvent: async(id) => {
+        return await Actions.getAll(`api/events/${id}/faqs`).then(({data})=>data);
+    },
+    getOne: async(id) => {
+        return await Actions.get(`api/events/${id}/faqs/`,id)
+    },
+    editOne: async (data, id) => {
+        return await Actions.edit(`api/events/${id}/faqs`, data, id)
+    },
+    deleteOne: async (id) => {
+        return await Actions.delete(`api/events/${id}/faqs`, id);
+    },
+    create: async(data,id) => {
+        return await Actions.create(`api/events/${id}/faqs`,data)
+    }
+    
+}
+
 export const RolAttApi = {
     byEvent: async(event) => {
         return await Actions.getAll(`api/events/${event}/rolesattendees`)

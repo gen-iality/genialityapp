@@ -40,7 +40,8 @@ const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
 const NewsApp = asyncComponent( ()=>import("../news/news"));
-const SurveysCreate = asyncComponent( ()=>import("../Surveys/survey") )
+const SurveysCreate = asyncComponent( ()=>import("../Surveys/survey") );
+const FAQS = asyncComponent( ()=>import("../Faqs/index"))
 
 Moment.locale('es');
 momentLocalizer();
@@ -60,6 +61,7 @@ class Event extends Component {
             CreateSuervey: true,
             NewsApp:true,
             SurveysCreate:true,
+            FAQS:true
         };
     }
 
@@ -163,6 +165,11 @@ class Event extends Component {
                                 <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
                             }
 
+{   
+                                permissions.data.ids.includes(rolPermissions._id) &&
+                                <Route path={`${match.url}/falqs`} render={()=><FAQS eventId={this.state.event._id}/>}/>
+                            }
+
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Route path={`${match.url}/pages`} component={Pages}/>
@@ -181,6 +188,7 @@ class Event extends Component {
                             <Route path={`${match.url}/notificationsApp`} render={()=><NotificationsApp eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/surveys`} render={()=><SurveysCreate eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
+                            <Route path={`${match.url}/faqs`} render={()=><FAQS eventId={this.state.event._id}/>}/>
                             <Route component={NoMatch} />
                         </Switch>
                     </section>

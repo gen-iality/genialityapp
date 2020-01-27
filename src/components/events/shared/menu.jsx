@@ -53,6 +53,7 @@ class Menu extends Component {
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
                                 {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink> */}
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/news`}>Noticias de la Aplicación</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/faqs`}>Preguntas Frecuentes de la Aplicación</NavLink>
                             </li>
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
