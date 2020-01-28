@@ -250,6 +250,72 @@ class AgendaEdit extends Component {
             <EventContent title="Actividad" closeAction={this.goBack}>
                 {loading ? <Loading/> :
                     <div className="columns">
+                        <div className="column general">
+                            <div className="field is-grouped">
+                                <button className="button is-text" onClick={this.remove}>x Eliminar actividad</button>
+                                <button onClick={this.submit}
+                                        className="button is-primary">Guardar
+                                </button>
+                            </div>
+                            <div className="section-gray">
+                                <div className="field">
+                                    <label className="label has-text-grey-light">Imagen</label>
+                                    <p>Dimensiones: 1000px x 278px</p>
+                                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                                        <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
+                                    </Dropzone>
+                                    {image && <img src={image} alt={`activity_${name}`}/>}
+                                </div>
+                                <div className="field">
+                                    <label className={`label`}>Capacidad</label>
+                                    <div className="control">
+                                        <input className="input" type="number" min={0} name={"capacity"} value={capacity} onChange={this.handleChange}
+                                               placeholder="Cupo total"/>
+                                    </div>
+                                </div>
+                                <label className="label">Categorías</label>
+                                <div className="columns">
+                                    <div className="column is-10">
+                                        <Creatable
+                                            isClearable
+                                            styles={catStyles}
+                                            onChange={this.selectCategory}
+                                            onCreateOption={value=>this.handleCreate(value,"categories")}
+                                            isDisabled={isLoading.categories}
+                                            isLoading={isLoading.categories}
+                                            isMulti
+                                            options={categories}
+                                            placeholder={"Sin categoría...."}
+                                            value={selectedCategories}
+                                        />
+                                    </div>
+                                    <div className="column is-2">
+                                        <button onClick={()=>this.goSection(`${matchUrl}/categorias`)} className="button"><FaWhmcs/></button>
+                                    </div>
+                                </div>
+                                <label className="label">Tipo de actividad</label>
+                                <div className="columns">
+                                    <div className="control column is-10">
+                                        <Creatable
+                                            isClearable
+                                            styles={creatableStyles}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                            isDisabled={isLoading.types}
+                                            isLoading={isLoading.types}
+                                            onChange={this.selectType}
+                                            onCreateOption={value=>this.handleCreate(value,"types")}
+                                            options={types}
+                                            value={selectedType}/>
+                                    </div>
+                                    <div className="column is-2">
+                                        <Link to={`${matchUrl}/tipos`}>
+                                            <button className="button"><FaWhmcs/></button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="column is-8">
                             <div className="field">
                                 <label className="label required">Nombre</label>
@@ -380,72 +446,7 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-4 general">
-                            <div className="field is-grouped">
-                                <button className="button is-text" onClick={this.remove}>x Eliminar actividad</button>
-                                <button onClick={this.submit}
-                                        className="button is-primary">Guardar
-                                </button>
-                            </div>
-                            <div className="section-gray">
-                                <div className="field">
-                                    <label className="label has-text-grey-light">Imagen</label>
-                                    <p>Dimensiones: 1000px x 278px</p>
-                                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                                        <button className="button is-text">{image?"Cambiar imagen":"Subir imagen"}</button>
-                                    </Dropzone>
-                                    {image && <img src={image} alt={`activity_${name}`}/>}
-                                </div>
-                                <div className="field">
-                                    <label className={`label`}>Capacidad</label>
-                                    <div className="control">
-                                        <input className="input" type="number" min={0} name={"capacity"} value={capacity} onChange={this.handleChange}
-                                               placeholder="Cupo total"/>
-                                    </div>
-                                </div>
-                                <label className="label">Categorías</label>
-                                <div className="columns">
-                                    <div className="column is-10">
-                                        <Creatable
-                                            isClearable
-                                            styles={catStyles}
-                                            onChange={this.selectCategory}
-                                            onCreateOption={value=>this.handleCreate(value,"categories")}
-                                            isDisabled={isLoading.categories}
-                                            isLoading={isLoading.categories}
-                                            isMulti
-                                            options={categories}
-                                            placeholder={"Sin categoría...."}
-                                            value={selectedCategories}
-                                        />
-                                    </div>
-                                    <div className="column is-2">
-                                        <button onClick={()=>this.goSection(`${matchUrl}/categorias`)} className="button"><FaWhmcs/></button>
-                                    </div>
-                                </div>
-                                <label className="label">Tipo de actividad</label>
-                                <div className="columns">
-                                    <div className="control column is-10">
-                                        <Creatable
-                                            isClearable
-                                            styles={creatableStyles}
-                                            className="basic-multi-select"
-                                            classNamePrefix="select"
-                                            isDisabled={isLoading.types}
-                                            isLoading={isLoading.types}
-                                            onChange={this.selectType}
-                                            onCreateOption={value=>this.handleCreate(value,"types")}
-                                            options={types}
-                                            value={selectedType}/>
-                                    </div>
-                                    <div className="column is-2">
-                                        <Link to={`${matchUrl}/tipos`}>
-                                            <button className="button"><FaWhmcs/></button>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 }
             </EventContent>
