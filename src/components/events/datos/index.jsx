@@ -148,7 +148,7 @@ class Datos extends Component {
                                     <td>{field.type ? field.type:field.type}</td>
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
-                                               type="checkbox" disabled name={`mandatory`} checked={field.mandatory}
+                                               type="checkbox" name={`mandatory`} checked={field.mandatory}
                                                onChange={event => this.changeCheck(field.uuid)}/>
                                         <label htmlFor={`mandatory${field.label}`}></label>
                                     </td>
