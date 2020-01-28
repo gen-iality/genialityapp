@@ -46,7 +46,7 @@ class General extends Component {
 
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        this.setState({ info })
+        this.setState({ info})
         console.log(this.state.info)
         try {
             const { event } = this.state;
@@ -500,7 +500,7 @@ class General extends Component {
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
                 <div className="control">
                     <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
-                        divClass={'drop-img'} content={<img src={event.banner_image ? event.banner_image:event.picture} alt={'Imagen Perfil'} />}
+                        divClass={'drop-img'} content={<img src={event.banner_image[0] ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
                         classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
                         contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
                         changeImg={this.banner_image} errImg={this.state.errImg}
