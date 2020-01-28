@@ -28,7 +28,6 @@ class pushNotification extends Component {
             result,
             loading: false
         });
-        console.log(result);
     };
 
     async componentDidMount() {
@@ -38,7 +37,7 @@ class pushNotification extends Component {
     saveRole = async () => {
         try {
             if (this.state.id !== 'new') {
-                await PushFeed.editOne({ title: this.state.title, body: this.state.body}, this.state.id, this.props.eventId);
+                await PushFeed.editOne({ title: this.state.title, body: this.state.body }, this.state.id, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -51,7 +50,7 @@ class pushNotification extends Component {
                     return { list, id: "", title: "", body: "" };
                 });
             } else {
-                const newRole = await PushFeed.create({ title: this.state.title, body: this.state.body}, this.props.eventId);
+                const newRole = await PushFeed.create({ title: this.state.title, body: this.state.body }, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -61,7 +60,7 @@ class pushNotification extends Component {
                             return item;
                         } else return item;
                     });
-                    return { list, id: "", title: "", body: ""};
+                    return { list, id: "", title: "", body: "" };
                 });
             }
         } catch (e) {
@@ -70,7 +69,7 @@ class pushNotification extends Component {
         }
     };
 
-    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, body: cert.body});
+    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, body: cert.body });
 
     removeItem = (id) => {
         sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
@@ -146,24 +145,27 @@ class pushNotification extends Component {
                         <div className="column is-12">
                             <EventContent title="Notificaciones" closeAction={this.goBack} description_complete={"Observe o elimine las notificaciones observadas "} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                                 {console.log(this.state.result),
-                                this.state.loading ? <Loading /> :
-                                    <EvenTable head={["Titulo", "Notificacion", "Fecha", ""]}>
-                                        {this.state.result.map((cert, key) => {
-                                            console.log(cert)
-                                            return <tr key={key}>
-                                                <td>
-                                                    <p>{cert.title}</p>
-                                                </td>
+                                    this.state.loading ? <Loading /> :
+                                        <EvenTable head={["Titulo", "Notificacion", "Fecha", ""]}>
+                                            {this.state.result.map((cert, key) => {
+                                                console.log(cert)
+                                                return <tr key={key}>
+                                                    <div class="notification is-primary">
+                                                        Enviados correctamente <p>{cert.success}</p>
+                                                    </div>
+                                                    <td>
+                                                        <p>{cert.title}</p>
+                                                    </td>
 
-                                                <td>
-                                                    <p>{cert.body}</p>
-                                                </td>
-                                                <td>{cert.created_at}</td>
-                                                <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
-                                                    removeNew={this.removeNewRole} removeItem={this.removeItem} discardChanges={this.discardChanges} /> 
-                                            </tr>
-                                        })}
-                                    </EvenTable>
+                                                    <td>
+                                                        <p>{cert.body}</p>
+                                                    </td>
+                                                    <td>{cert.created_at}</td>
+                                                    <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
+                                                        removeNew={this.removeNewRole} removeItem={this.removeItem} discardChanges={this.discardChanges} />
+                                                </tr>
+                                            })}
+                                        </EvenTable>
                                 }
                             </EventContent>
 

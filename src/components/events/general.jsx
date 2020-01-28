@@ -46,7 +46,7 @@ class General extends Component {
 
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        this.setState({ info })
+        this.setState({ info})
         console.log(this.state.info)
         try {
             const { event } = this.state;
@@ -217,6 +217,7 @@ class General extends Component {
             address: event.address,
             has_date: event.has_date == "true" ? true : false,
             allow_register: event.allow_register == "true" ? true : false,
+            allow_detail_calendar: event.allow_detail_calendar = "true" ? true: false,
             homeSelectedScreen: parseInt(event.homeSelectedScreen),
             visibility: event.visibility ? event.visibility : 'PUBLIC',
             description: event.description,
@@ -346,19 +347,31 @@ class General extends Component {
                         </div>
 
                         <div className="field">
+                            <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
+                            <div class="select is-primary">
+                                <select name="allow_detail_calendar" value={event.allow_detail_calendar} defaultValue={{ label: 'Si', value: 'Si' }} onChange={this.handleChange}>
+                                    <option>Seleccionar...</option>
+                                    <option value={true}>Si</option>
+                                    <option value={false}>No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="field">
                             <label className="label">Que modulo desea observar en el inicio</label>
                             <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
-                                    <option value={event.app_configuration.ProfileScreen? event.app_configuration.ProfileScreen.key:''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.CalendarScreen? event.app_configuration.CalendarScreen.key:''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.NewsScreen? event.app_configuration.NewsScreen.key:''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.EventPlaceScreen? event.app_configuration.EventPlaceScreen.key:''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.SpeakerScreen? event.app_configuration.SpeakerScreen.key:''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.SurveyScreen? event.app_configuration.SurveyScreen.key:''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.DocumentsScreen? event.app_configuration.DocumentsScreen.key:''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.WallScreen? event.app_configuration.WallScreen.key:''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.WebScreen? event.app_configuration.WebScreen.key:''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title:'Favor Seleccionar items del menu'}</option>
-                                    <option value={event.app_configuration.FaqsScreen? event.app_configuration.FaqsScreen.key:''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu'}</option>
+                                <option value={''}>Banner de inicio</option>
+                                    <option value={event.app_configuration.ProfileScreen? event.app_configuration.ProfileScreen.key:''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.CalendarScreen? event.app_configuration.CalendarScreen.key:''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.NewsScreen? event.app_configuration.NewsScreen.key:''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.EventPlaceScreen? event.app_configuration.EventPlaceScreen.key:''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.SpeakerScreen? event.app_configuration.SpeakerScreen.key:''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.SurveyScreen? event.app_configuration.SurveyScreen.key:''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.DocumentsScreen? event.app_configuration.DocumentsScreen.key:''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.WallScreen? event.app_configuration.WallScreen.key:''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.WebScreen? event.app_configuration.WebScreen.key:''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration.FaqsScreen? event.app_configuration.FaqsScreen.key:''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                 </select>
                             </div>
                         </div>
@@ -487,7 +500,7 @@ class General extends Component {
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
                 <div className="control">
                     <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
-                        divClass={'drop-img'} content={<img src={event.banner_image ?  event.banner_image:event.picture} alt={'Imagen Perfil'} />}
+                        divClass={'drop-img'} content={<img src={event.banner_image[0] ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
                         classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
                         contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
                         changeImg={this.banner_image} errImg={this.state.errImg}
