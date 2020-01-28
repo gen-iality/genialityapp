@@ -247,6 +247,7 @@ class AgendaEdit extends Component {
         const {matchUrl} = this.props;
         if(!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl}/>;
         return (
+            
             <EventContent title="Actividad" closeAction={this.goBack}>
                 {loading ? <Loading/> :
                     <div className="columns">
