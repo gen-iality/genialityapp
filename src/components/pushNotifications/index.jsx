@@ -28,6 +28,7 @@ class pushNotification extends Component {
             result,
             loading: false
         });
+        console.log(result)
     };
 
     async componentDidMount() {
@@ -145,21 +146,23 @@ class pushNotification extends Component {
                         <button className="button is-primary" onClick={this.submit}>Enviar</button>
                         <div className="column is-12">
                             <EventContent title="Notificaciones" closeAction={this.goBack} description_complete={"Observe o elimine las notificaciones observadas "} addAction={this.newRole} addTitle={"Nuevo espacio"}>
-                                {console.log(this.state.result),
+                                {
                                     this.state.loading ? <Loading /> :
-                                        <EvenTable head={["Titulo", "Notificacion", "Fecha", ""]}>
+                                        <EvenTable head={["Titulo", "Notificacion", "Enviados","Fallidos","Fecha", ""]}>
                                             {this.state.result.map((cert, key) => {
-                                                console.log(cert)
                                                 return <tr key={key}>
-                                                    <div class="notification is-primary">
-                                                        Enviados correctamente <p>{cert.success}</p>
-                                                    </div>
                                                     <td>
                                                         <p>{cert.title}</p>
                                                     </td>
 
                                                     <td>
                                                         <p>{cert.body}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>{cert.success}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p>{cert.fail}</p>
                                                     </td>
                                                     <td>{cert.created_at}</td>
                                                     <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
