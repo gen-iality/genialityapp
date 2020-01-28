@@ -144,7 +144,7 @@ class Datos extends Component {
                             </tr>
                             {fields.map((field, key) => {
                                 return <tr key={key}>
-                                    <td>{field.label}</td>
+                                    {/* <td>{field.label ? field.label:field.label}</td> */}
                                     <td>{typeInputs.find(({value})=> value === field.type).label}</td>
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
