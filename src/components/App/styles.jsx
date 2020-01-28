@@ -30,6 +30,7 @@ class Styles extends Component {
         this.saveMenuImage = this.saveMenuImage.bind(this)
         this.saveBannerImage = this.saveBannerImage.bind(this)
         this.saveBackgroundImage = this.saveBackgroundImage.bind(this)
+        this.saveFooterImage = this.saveFooterImage.bind(this)
         this.submit = this.submit.bind(this)
 
     }
@@ -75,6 +76,10 @@ class Styles extends Component {
 
         this.setState({
             pathBackgroundImage: info.styles.BackgroundImage
+        })
+
+        this.setState({
+            pathFooterImage: info.styles.FooterImage
         })
 
         this.setState({
@@ -276,6 +281,47 @@ class Styles extends Component {
             this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
         }
     }
+
+    saveFooterImage(files) {
+        console.log(files);
+        const file = files[0];
+        const url = '/api/files/upload', pathFooterImage = [], self = this;
+        if (file) {
+            this.setState({
+                imageFooterImage: file,
+                event: { ...this.state.event, picture: null }
+            });
+
+            //envia el archivo de imagen como POST al API    
+            const uploaders = files.map(file => {
+                let data = new FormData();
+                data.append('file', file);
+                return Actions.post(url, data).then((image) => {
+                    console.log(image);
+                    if (image) pathFooterImage.push(image);
+                });
+            });
+
+            //cuando todaslas promesas de envio de imagenes al servidor se completan
+            axios.all(uploaders).then((data) => {
+                console.log(pathFooterImage);
+                this.setState({ styles: { ...this.state.styles, FooterImage: pathFooterImage[0] } })
+                console.log('SUCCESSFULL DONE');
+                self.setState({
+                    event: {
+                        ...self.state.event,
+                        picture: pathFooterImage[0]
+                    }, fileMsgBackground: 'Imagen subida con exito', FooterImage: null, pathFooterImage
+                });
+
+                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!" />);
+            });
+        }
+        else {
+            this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+        }
+    }
+    
     //Se realiza una funcion asincrona submit para enviar los datos a la api 
     async submit(e) {
         e.preventDefault();
@@ -344,9 +390,10 @@ class Styles extends Component {
 
         ]
         const imageDrawer = [
-            { name: 'EventImage', title: 'Elige una imagen de logo', key: 4, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
-            { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 5, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage },
-            { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 7, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
+            { name: 'EventImage', title: 'Elige una imagen de logo', key: 6, picture: this.state.path, imageFile: this.state.event_image, function: this.saveEventImage },
+            { name: 'MenuImage', title: 'Elige una imagen de encabezado de menu', key: 7, picture: this.state.pathImage, imageFile: this.state.imageFileImage, function: this.saveMenuImage },
+            { name: 'BackgroundImage', title: 'Elige una imagen de fondo', key: 8, picture: this.state.pathBackgroundImage, imageFile: this.state.BackgroundImage, function: this.saveBackgroundImage },
+            { name: 'footerImage', title: 'Elige una imagen para el boton de la seccion especial(opcional)', key: 9, picture: this.state.pathFooterImage, imageFile: this.state.FooterImage, function: this.saveFooterImage },
         ]
 
         return (
