@@ -7,7 +7,7 @@ class DatosModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            info:{name:'',mandatory:false,label:'',description:'',type:'',options:[]},
+            info:{name:'',mandatory:false,visible:false,label:'',description:'',type:'',options:[]},
             valid:true
         }
     }
@@ -32,6 +32,12 @@ class DatosModal extends Component {
     changeFieldCheck = (e) => {
         this.setState(prevState => {
             return {info: {...this.state.info, mandatory: !prevState.info.mandatory}}
+        })
+    };
+
+    changeFieldCheckVisible = (e) => {
+        this.setState(prevState => {
+            return {info: {...this.state.info, visible: !prevState.info.visible}}
         })
     };
     //Funciones para lista de opciones del campo
@@ -61,7 +67,7 @@ class DatosModal extends Component {
         info.name = toCapitalizeLower(info.name);
         if(info.type !== "list") delete info.options;
         this.props.action(info);
-        const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
+        const initModal = {name:'',mandatory:false,visible:false,label:'',description:'',type:'',options:[]};
         this.setState({info:initModal});
     };
 
@@ -121,6 +127,14 @@ class DatosModal extends Component {
                                onChange={this.changeFieldCheck}/>
                         <label htmlFor={`mandatoryModal`}>Obligatorio</label>
                     </div>
+
+                    <div className="field">
+                        <input className="is-checkradio is-primary" id={`visibleModal`}
+                               type="checkbox" name={`visible`} checked={info.visible}
+                               onChange={this.changeFieldCheckVisible}/>
+                        <label htmlFor={`visibleModal`}>Visible en aplicativo</label>
+                    </div>    
+
                     <div className="field">
                         <label className="label has-text-grey-light">Descripción</label>
                         <textarea className="textarea" placeholder="descripción corta" name={'description'}

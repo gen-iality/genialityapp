@@ -121,7 +121,7 @@ class Datos extends Component {
                 <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
                             addAction={this.addField} addTitle={"Agregar dato"}>
                     {this.state.loading ? <Loading/> :
-                        <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", ""]}>
+                        <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible",""]}>
                             <tr>
                                 <td>Email</td>
                                 <td>Correo</td>
@@ -144,14 +144,22 @@ class Datos extends Component {
                             </tr>
                             {fields.map((field, key) => {
                                 return <tr key={key}>
-                                    {/* <td>{field.label ? field.label:field.label}</td> */}
-                                    <td>{typeInputs.find(({value})=> value === field.type).label}</td>
+                                    <td>{field.label ? field.label:field.label}</td>
+                                    <td>{field.type ? field.type:field.type}</td>
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
-                                               type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                               type="checkbox" disabled name={`mandatory`} checked={field.mandatory}
                                                onChange={event => this.changeCheck(field.uuid)}/>
                                         <label htmlFor={`mandatory${field.label}`}></label>
                                     </td>
+
+                                    <td>
+                                        <input className="is-checkradio is-primary" id={`visible${field.label}`}
+                                               type="checkbox" disabled name={`visible`} checked={field.visible}
+                                               onChange={event => this.changeCheck(field.uuid)}/>
+                                        <label htmlFor={`visible${field.label}`}></label>
+                                    </td>
+
                                     <td>
                                         <button onClick={e => this.editField(field)}><span className="icon"><i
                                             className="fas fa-edit"/></span></button>
