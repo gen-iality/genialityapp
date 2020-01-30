@@ -193,17 +193,17 @@ class News extends Component {
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input className="input is-small" type="text" id="desc" value={this.state.description_complete} onChange={this.onChange} /> :
-                                                    <p>{cert.description_complete}</p>
+                                                    <input className="input is-small" type="text" id="description_short" value={this.state.description_short} onChange={this.onChange} /> :
+                                                    <p>{cert.description_short}</p>
                                             }
-
                                         </td>
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input className="input is-small" type="text" id="description_short" value={this.state.description_short} onChange={this.onChange} /> :
-                                                    <p>{cert.description_short}</p>
+                                                    <input className="input is-small" type="text" id="desc" value={this.state.description_complete} onChange={this.onChange} /> :
+                                                    <p>{cert.description_complete}</p>
                                             }
+
                                         </td>
                                         <td>
                                             {

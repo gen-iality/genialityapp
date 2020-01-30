@@ -174,7 +174,7 @@ class AgendaEdit extends Component {
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
         const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
-        const host_ids = selectedHosts.length > 0 ? selectedHosts.map(({ value }) => value) : [];
+        const host_ids = selectedHosts.value;
         const type_id = selectedType.value;
         return {
             name,
@@ -221,9 +221,7 @@ class AgendaEdit extends Component {
         else if (this.state.space_id <= 0)
             title = "Selecciona un Espacio";
         else if (this.state.selectedCategories.length <= 0)
-            title = "Selecciona una Categoría";
-        else if (this.state.selectedHosts.length <= 0)
-            title = "Selecciona un Conferencista";
+            title = "Selecciona una Categoría"
         else if (this.state.access_restriction_type !== "OPEN" && this.state.selectedRol.length <= 0)
             title = "Seleccione un Rol para mostrar la Agenda";
         if (title.length > 0) {
