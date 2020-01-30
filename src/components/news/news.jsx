@@ -12,6 +12,7 @@ import ImageInput from "../shared/imageInput";
 import { toast } from 'react-toastify';
 import { FormattedMessage } from "react-intl";
 
+
 class News extends Component {
     constructor(props) {
         super(props);
