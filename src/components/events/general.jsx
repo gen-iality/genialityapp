@@ -38,7 +38,8 @@ class General extends Component {
             errorData: {},
             serverError: false,
             loading: true,
-            info: {}
+            info: {},
+            infoApp:[]
         };
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
@@ -47,7 +48,10 @@ class General extends Component {
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         this.setState({ info})
-        console.log(this.state.info)
+        this.setState({infoApp:[
+            this.state.info.app_configuration
+        ]})
+        console.log(this.state.infoApp)
         try {
             const { event } = this.state;
             event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
@@ -214,6 +218,7 @@ class General extends Component {
             datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             picture: path.length > 1 ? path : event.picture,
             venue: event.venue,
+            analytics: event.analytics,
             address: event.address,
             has_date: event.has_date == "true" ? true : false,
             allow_register: event.allow_register == "true" ? true : false,
@@ -361,7 +366,7 @@ class General extends Component {
                             <label className="label">Que modulo desea observar en el inicio</label>
                             <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
-                                <option value={''}>Banner de inicio</option>
+                                <option value={null}>Banner de inicio</option>
                                     <option value={event.app_configuration.ProfileScreen? event.app_configuration.ProfileScreen.key:''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                     <option value={event.app_configuration.CalendarScreen? event.app_configuration.CalendarScreen.key:''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                     <option value={event.app_configuration.NewsScreen? event.app_configuration.NewsScreen.key:''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
@@ -393,6 +398,16 @@ class General extends Component {
                                     onChange={this.handleChange} />
                             </div>
                         </div>
+
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Id Analiticas</label>
+                            <div className="control">
+                                <input className="input" name={"venue"} type="text"
+                                    placeholder="Id analiticas" value={event.analytics}
+                                    onChange={this.handleChange} />
+                            </div>
+                        </div>
+
                         <div className="field">
                             <div className="columns is-mobile">
                                 <div className="column inner-column">
@@ -499,6 +514,7 @@ class General extends Component {
                     message={this.state.message} isLoading={this.state.isLoading}
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
                 <div className="control">
+                <label className="label">Banner de inicio</label>
                     <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
                         divClass={'drop-img'} content={<img src={event.banner_image[0] ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
                         classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
