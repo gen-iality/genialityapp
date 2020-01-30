@@ -254,6 +254,7 @@ class General extends Component {
                 }
             }
         }
+        
         catch (error) {
             toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
             if (error.response) {
