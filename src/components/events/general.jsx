@@ -17,6 +17,7 @@ import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
 Moment.locale('es');
 
+
 class General extends Component {
     constructor(props) {
         super(props);
