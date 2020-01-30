@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
+import DynamicInput from "react-dynamic-input";
 import { withRouter } from "react-router-dom";
 import { NewsFeed, Actions } from "../../helpers/request";
 import Loading from "../loaders/loading";
@@ -10,71 +11,77 @@ import { handleRequestError, sweetAlert } from "../../helpers/utils";
 import axios from "axios/index";
 import ImageInput from "../shared/imageInput";
 import { toast } from 'react-toastify';
+
 import { FormattedMessage } from "react-intl";
 
-class Survey extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            users: [{ Response: "", correct: "", question: "" }]
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+class Surveys extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      options: [{ response: "", right: "" }],
+      survey: []
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-    addClick() {
-        this.setState(prevState => ({
-            users: [...prevState.users, { Response: "", correct: ""}]
-        }))
-    }
+  addClick() {
+    this.setState(prevState => ({
+      options: [...prevState.options, { response: "", right: "" }]
+    }))
+  }
 
-    createUI() {
-        return this.state.users.map((el, i) => (
-            <div key={i}>
-                <input placeholder="Response" name="Response" value={el.Response || ''} onChange={this.handleChange.bind(this, i)} />
-                <input placeholder="True / false" name="correct" value={el.correct || ''} onChange={this.handleChange.bind(this, i)} />
-                <input type='button' value='remove' onClick={this.removeClick.bind(this, i)} />
-            </div>
-        ))
-    }
+  createUI() {
+    return this.state.options.map((el, i) => (
+      <div key={i}>
+        <input placeholder="Response" defaultValue={{ label: 'Si', value: true }} name="response" value={el.response || ''} onChange={this.handleChange.bind(this, i)} />
+        <select name="right" value={el.right || ''} onChange={this.handleChange.bind(this, i)}>
+          <option value={true}>Correcta</option>
+          <option value={false}>Falsa</option>
+        </select>
+        <input type='button' value='remove' onClick={this.removeClick.bind(this, i)} />
+      </div>
+    ))
+  }
+  questionText() {
+    let questionText = document.getElementById("questionText").value;
+    this.setState({ questionText })
 
-    handleChange(i, e) {
-        const { name, value } = e.target;
-        let users = [...this.state.users];
-        users[i] = { ...users[i], [name]: value };
-        this.setState({ users });
-    }
+    this.setState({
+      survey: {
+        options:{ ...this.state.options},
+        questionText:{...this.state.questionText}
+      }
+    })
+  }
 
-    removeClick(i) {
-        let users = [...this.state.users];
-        users.splice(i, 1);
-        this.setState({ users });
-    }
+  handleChange(i, e) {
+    const { name, value } = e.target;
+    let options = [...this.state.options];
+    options[i] = { ...options[i], [name]: value };
+    this.setState({ options });
+  }
 
-    handleSubmit(event) {
-        console.log('A name was submitted: ');
-        console.log(this.state.users)
-        event.preventDefault();
-    }
+  removeClick(i) {
+    let options = [...this.state.options];
+    options.splice(i, 1);
+    this.setState({ options });
+  }
 
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <div>
-                    {
-                        this.state.users.map((el,i)=>(
-                            <div key={i}>
-                                <input placeholder="question" name="question" value={el.question || ''} onChange={this.handleChange.bind(this, i)} />
-                            </div>
-                            
-                        ))
-                    }
-                    
-                </div>
-                {this.createUI()}
-                <input type='button' value='add more' onClick={this.addClick.bind(this)} />
-                <input type="submit" value="Submit" />
-            </form>
-        );
-    }
+  handleSubmit(event) {
+    console.log(this.state.survey);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <input type="text" id="questionText" placeholder="Preguntas" onChange={this.questionText.bind(this)} />
+        {this.createUI()}
+        <input type='button' value='add more' onClick={this.addClick.bind(this)} />
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
 }
-export default Survey
+
+export default Surveys

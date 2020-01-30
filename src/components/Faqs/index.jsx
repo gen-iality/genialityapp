@@ -156,8 +156,7 @@ class FAQS extends Component {
             }
         });
     }
-
-    chgTxt = content => this.setState({ event: { ...this.state.event, description: content } });
+    chgTxt = content => this.setState({ event: { ...this.state.event, content: content } });
 
     goBack = () => this.props.history.goBack();
 
@@ -182,10 +181,11 @@ class FAQS extends Component {
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <textarea id="desc" value={this.state.content} onChange={this.onChange} /> :
+                                                    // <textarea id="desc" value={this.state.content} onChange={this.onChange} /> :
                                                     // <div className="control">
                                                     //     <ReactQuill id="desc" value={cert.content} modules={toolbarEditor} onChange={this.chgTxt} />
                                                     // </div>:
+                                                    <ReactQuill id="desc" value={cert.content} onChange={this.onChange} />:
                                                     <p>{cert.content}</p>
                                             }
 
