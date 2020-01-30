@@ -23,7 +23,7 @@ class News extends Component {
             deleteID: '',
             title: '',
             description_complete: '',
-            linkYoutube:'',
+            linkYoutube: '',
             description_short: '',
             time: '',
             isLoading: false,
@@ -93,7 +93,7 @@ class News extends Component {
     newRole = () => {
         if (!this.state.list.find(({ _id }) => _id === "new")) {
             this.setState(state => {
-                const list = state.list.concat({ title: '', description_complete: '', description_short: '', linkYoutube:'',pricture: '', time: '', created_at: new Date(), _id: 'new' });
+                const list = state.list.concat({ title: '', description_complete: '', description_short: '', linkYoutube: '', pricture: '', time: '', created_at: new Date(), _id: 'new' });
                 return { list, id: 'new' };
             });
         }
@@ -102,14 +102,14 @@ class News extends Component {
     removeNewRole = () => {
         this.setState(state => {
             const list = state.list.filter(item => item._id !== "new");
-            return { list, id: "", title: "", description_complete: "", description_short: "", linkYoutube:"",picture: "", time: "" };
+            return { list, id: "", title: "", description_complete: "", description_short: "", linkYoutube: "", picture: "", time: "" };
         });
     };
 
     saveRole = async () => {
         try {
             if (this.state.id !== 'new') {
-                await NewsFeed.editOne({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.linkYoutube,picture: this.state.path, time: this.state.time }, this.state.id, this.props.eventId);
+                await NewsFeed.editOne({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.linkYoutube, picture: this.state.path, time: this.state.time }, this.state.id, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -123,17 +123,17 @@ class News extends Component {
                             return item;
                         } else return item;
                     });
-                    return { list, id: "", title: "", description_complete: "", description_short: "", linkYoutube:"",time: "" };
+                    return { list, id: "", title: "", description_complete: "", description_short: "", linkYoutube: "", time: "" };
                 });
             } else {
-                const newRole = await NewsFeed.create({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.state.linkYoutube,image: this.state.path, time: this.state.time }, this.props.eventId);
+                const newRole = await NewsFeed.create({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.state.linkYoutube, image: this.state.path, time: this.state.time }, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.title = newRole.title;
                             item.description_complete = newRole.description_complete;
                             item.description_short = newRole.description_short;
-                            item.linkYoutube = newRole.linkYoutube; 
+                            item.linkYoutube = newRole.linkYoutube;
                             item.image = newRole.path;
                             item.time = newRole.time;
                             item.created_at = newRole.created_at;
@@ -142,7 +142,7 @@ class News extends Component {
                             return item;
                         } else return item;
                     });
-                    return { list, id: "", title: "", description_complete: "", description_short: "",linkYoutube:"", time: "" };
+                    return { list, id: "", title: "", description_complete: "", description_short: "", linkYoutube: "", time: "" };
                 });
             }
         } catch (e) {
@@ -151,7 +151,7 @@ class News extends Component {
         }
     };
 
-    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, description_complete: cert.description_complete, linkYoutube:cert.linkYoutube,description_short: cert.description_short, picture: cert.picture, time: cert.time });
+    editItem = (cert) => this.setState({ id: cert._id, title: cert.title, description_complete: cert.description_complete, linkYoutube: cert.linkYoutube, description_short: cert.description_short, picture: cert.picture, time: cert.time });
 
     removeItem = (id) => {
         sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
@@ -159,7 +159,7 @@ class News extends Component {
                 if (result.value) {
                     sweetAlert.showLoading("Espera (:", "Borrando...");
                     await NewsFeed.deleteOne(id, this.props.eventId);
-                    this.setState(state => ({ id: "", title: "", description_complete: "", description_short: "", linkYoutube:"", picture: "", time: "" }));
+                    this.setState(state => ({ id: "", title: "", description_complete: "", description_short: "", linkYoutube: "", picture: "", time: "" }));
                     this.fetchItem();
                     sweetAlert.hideLoading();
                 }
@@ -176,25 +176,24 @@ class News extends Component {
     render() {
         const { event } = this.state;
         return (
-            <React.Fragment>
-                <div className="column is-12">
+            <React.Fragment className="column is-12">
+                <div className="column is-12 is-desktop">
                     <EventContent title="Noticias" closeAction={this.goBack} description_complete={"Agregue o edite las Noticias que se muestran en la aplicación"} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                         {this.state.loading ? <Loading /> :
-                            <EvenTable head={["Titulo", "Subtitulo", "Noticia", "Link de Youtube","time", "imagen","", ""]}>
+                            <EvenTable head={["Titulo", "Subtitulo", "Noticia", "time", "Link de Youtube","imagen", ""]}>
                                 {this.state.list.map((cert, key) => {
                                     return <tr key={key}>
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="title" value={this.state.title} onChange={this.onChange} /> :
+                                                    <input className="input is-small" type="text" id="title" value={this.state.title} onChange={this.onChange} /> :
                                                     <p>{cert.title}</p>
                                             }
                                         </td>
-
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="desc" value={this.state.description_complete} onChange={this.onChange} /> :
+                                                    <input className="input is-small" type="text" id="desc" value={this.state.description_complete} onChange={this.onChange} /> :
                                                     <p>{cert.description_complete}</p>
                                             }
 
@@ -202,50 +201,39 @@ class News extends Component {
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="description_short" value={this.state.description_short} onChange={this.onChange} /> :
+                                                    <input className="input is-small" type="text" id="description_short" value={this.state.description_short} onChange={this.onChange} /> :
                                                     <p>{cert.description_short}</p>
                                             }
                                         </td>
-
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <input type="text" id="linkYoutube" value={this.state.linkYoutube} onChange={this.onChange} /> :
-                                                    <p>{cert.linkYoutube}</p>
-                                            }
-
-                                        </td>
-
-                                        <td>
-                                            {
-                                                this.state.id === cert._id ?
-                                                    <input type="date" id="time" value={this.state.time} onChange={this.onChange} /> :
+                                                    <input className="input is-small" type="date" id="time" value={this.state.time} onChange={this.onChange} /> :
                                                     <p>{cert.time}</p>
                                             }
                                         </td>
-
-                                        
-
                                         <td>
-                                            <td>
-                                                {
-                                                    this.state.id === cert._id ?
-                                                        <div className="control">
-                                                            <div className="column is-5">
-                                                                <ImageInput picture={this.state.picture} imageFile={this.state.imageFile}
-                                                                    divClass={'drop-img'} content={<img src={this.state.picture} alt={'Imagen Perfil'} />}
-                                                                    classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFile ? 'is-loading' : ''}`}>Cambiar foto</button>}
-                                                                    contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                                                    changeImg={this.changeImg} errImg={this.state.errImg}
-                                                                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: "50%", width: '40%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10 }} />
-                                                                {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
-                                                            </div>
-                                                        </div> :
+                                            {
+                                                this.state.id === cert._id ?
+                                                    <input className="input is-small" type="text" id="linkYoutube" value={this.state.linkYoutube} onChange={this.onChange} /> :
+                                                    <p>{cert.linkYoutube}</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            {
+                                                this.state.id === cert._id ?
+                                                    <div className="column is-5">
+                                                        <ImageInput picture={this.state.picture} imageFile={this.state.imageFile}
+                                                            divClass={'drop-img'} content={<img src={this.state.picture} alt={'Imagen Perfil'} />}
+                                                            classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFile ? 'is-loading' : ''}`}>Cambiar foto</button>}
+                                                            contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
+                                                            changeImg={this.changeImg} errImg={this.state.errImg}
+                                                            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: "50%", width: '40%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10 }} />
+                                                        {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                                                    </div> :
 
-                                                        <p>{cert.picture ? 'Imagen Registrada':'No hay ninguna imagen Guardada'}</p>
-                                                }
-                                            </td>
-
+                                                    <p>{cert.picture ? 'Imagen Registrada' : 'No hay ninguna imagen Guardada'}</p>
+                                            }
                                         </td>
                                         <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
                                         <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
