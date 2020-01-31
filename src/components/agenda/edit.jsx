@@ -170,7 +170,7 @@ class AgendaEdit extends Component {
     //FN para construir la información a enviar al api
     buildInfo = () => {
         const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
+        selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
