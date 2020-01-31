@@ -78,7 +78,7 @@ class TicketsForm extends Component {
     //Función CLICK para los tabs stage
     selectStage = (stage) => {
         const id = stage.stage_id;
-        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id === id); //Filtra tiquetes del stage
+        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id == id); //Filtra tiquetes del stage
         this.setState({active:id,ticketstoshow})
     };
 
