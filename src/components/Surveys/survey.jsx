@@ -28,6 +28,13 @@ class Surveys extends Component {
     this.setState(prevState => ({
       options: [...prevState.options, { response: "", right: "" }]
     }))
+
+    this.setState({
+      data:{
+        ...this.state.options,
+        ...this.state.questionText
+      }
+    })
   }
 
   createUI() {
@@ -44,12 +51,9 @@ class Surveys extends Component {
   }
   questionText() {
     let questionText = document.getElementById("questionText").value;
-    this.setState({ questionText })
-
     this.setState({
-      survey: {
-        options:{ ...this.state.options},
-        questionText:{...this.state.questionText}
+      questionText: {
+        questionText
       }
     })
   }
@@ -68,7 +72,7 @@ class Surveys extends Component {
   }
 
   handleSubmit(event) {
-    console.log(this.state.survey);
+    console.log(this.state.data);
     event.preventDefault();
   }
 
