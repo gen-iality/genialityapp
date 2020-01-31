@@ -48,9 +48,9 @@ class TicketsForm extends Component {
             return ticket
         });
 
-            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status==="active"); //Se encunetra el primer stage que esté activo para mostrarlo
+            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status=="active"); //Se encunetra el primer stage que esté activo para mostrarlo
             const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-            const ticketstoshow = tickets.filter(ticket => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
+            const ticketstoshow = tickets.filter(ticket => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
 
         //Persistencia de tiquetes seleccionados después de login
@@ -78,7 +78,7 @@ class TicketsForm extends Component {
     //Función CLICK para los tabs stage
     selectStage = (stage) => {
         const id = stage.stage_id;
-        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id === id); //Filtra tiquetes del stage
+        const ticketstoshow = this.state.tickets.filter(ticket => ticket.stage_id == id); //Filtra tiquetes del stage
         this.setState({active:id,ticketstoshow})
     };
 
