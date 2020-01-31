@@ -29,6 +29,7 @@ class AgendaEdit extends Component {
             date: "",
             image: "",
             capacity: 0,
+            type_id: "",
             space_id: "",
             access_restriction_type: "OPEN",
             selectedCategories: [],
@@ -170,13 +171,13 @@ class AgendaEdit extends Component {
     //FN para construir la información a enviar al api
     buildInfo = () => {
         const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-        selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
         const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
         const host_ids = selectedHosts;
-        
+
         const type_id = selectedType.value;
         return {
             name,
@@ -223,7 +224,9 @@ class AgendaEdit extends Component {
         else if (this.state.space_id <= 0)
             title = "Selecciona un Espacio";
         else if (this.state.selectedCategories.length <= 0)
-            title = "Selecciona una Categoría"
+            title = "Selecciona una Categoría";
+        else if (this.state.selectedType <= 0)
+            title = "Selecciona un tipo de actividad";
         else if (this.state.access_restriction_type !== "OPEN" && this.state.selectedRol.length <= 0)
             title = "Seleccione un Rol para mostrar la Agenda";
         if (title.length > 0) {
