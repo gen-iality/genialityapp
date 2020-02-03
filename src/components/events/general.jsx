@@ -214,6 +214,7 @@ class General extends Component {
         const categories = this.state.selectedCategories.map(item => {
             return item.value
         });
+        
         const data = {
             name: event.name,
             datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
