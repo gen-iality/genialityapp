@@ -46,6 +46,8 @@ class AgendaEdit extends Component {
     }
 
     async componentDidMount() {
+        console.log(this.state)
+        console.log(this.state.selectedHosts.length > 0  ? 'con campos' : 'sin campos' );
         const { event, location: { state } } = this.props;
         let days = [];
         const init = Moment(event.date_start);
@@ -176,7 +178,8 @@ class AgendaEdit extends Component {
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
         const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
-        const host_ids = selectedHosts;
+        const host_ids = selectedHosts >= 0 ? []: selectedHosts.map(({ value }) => value);
+
         const type_id = selectedType.value;
         return {
             name,
