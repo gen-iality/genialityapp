@@ -100,6 +100,7 @@ class General extends Component {
     selectCategory = (selectedCategories) => {
         this.setState({ selectedCategories }, this.valid);
     };
+
     selectOrganizer = (selectedOrganizer) => {
         if (!selectedOrganizer.value) selectedOrganizer = undefined;
         this.setState({ selectedOrganizer }, this.valid);
@@ -221,9 +222,9 @@ class General extends Component {
             venue: event.venue,
             analytics: event.analytics,
             address: event.address,
-            has_date: event.has_date == "true" ? true : false,
-            allow_register: event.allow_register == "true" ? true : false,
-            allow_detail_calendar: event.allow_detail_calendar == "true" ? true : false,
+            has_date: event.has_date = "true" ? true : false,
+            allow_register: event.allow_register = "true" ? true : false,
+            allow_detail_calendar: event.allow_detail_calendar = "true" ? true : false,
             homeSelectedScreen: event.homeSelectedScreen,
             visibility: event.visibility ? event.visibility : 'PUBLIC',
             description: event.description,
@@ -235,10 +236,13 @@ class General extends Component {
             banner_image_link: this.state.banner_image_link
         };
 
+        console.log(data);
+
         try {
             console.log(data)
             if (event._id) {
                 const info = await EventsApi.editOne(data, event._id);
+                console.log(info)
                 this.props.updateEvent(info);
                 self.setState({ loading: false });
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
@@ -335,7 +339,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
                             <div class="select is-primary">
-                                <select name="has_date" value={event.has_date} defaultValue={{ label: 'Si', value: 'Si' }} onChange={this.handleChange}>
+                                <select name={"has_date"} value={event.has_date} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
@@ -346,7 +350,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required">Desea Tener Registro en la aplicación?</label>
                             <div class="select is-primary">
-                                <select name="allow_register" value={event.allow_register} defaultValue={{ label: 'Si', value: 'Si' }} onChange={this.handleChange}>
+                                <select name={"allow_register"} value={event.allow_register} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
@@ -357,7 +361,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
                             <div class="select is-primary">
-                                <select name="allow_detail_calendar" value={event.allow_detail_calendar} defaultValue={{ label: 'Si', value: true }} onChange={this.handleChange}>
+                                <select name={"allow_detail_calendar"} value={event.allow_detail_calendar} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
