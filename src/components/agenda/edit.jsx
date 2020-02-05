@@ -199,7 +199,7 @@ class AgendaEdit extends Component {
     };
 
     buildInfoLanguage = () => {
-        const { name, subtitle,has_date, locale,hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const { name, subtitle,has_date,hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -223,13 +223,13 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
-            locale
+    
         }
     };
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle, has_date, locale, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const { name, subtitle, has_date,  hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -253,7 +253,8 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
-            locale
+            
+            
         }
     };
 

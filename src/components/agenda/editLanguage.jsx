@@ -45,7 +45,7 @@ class AgendaEdit extends Component {
             types: [],
             roles: [],
             hosts: [],
-            locale:"en"
+            
         }
     }
 
@@ -256,7 +256,7 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({ redirect: true });
 
     render() {
-        const { loading, name, subtitle, has_date, locale, idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
+        const { loading, name, subtitle, has_date,idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
         const { hosts, spaces, categories, types, roles, isLoading } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -399,7 +399,7 @@ class AgendaEdit extends Component {
                         <div className="column is-4 general">
                             <div className="field is-grouped">
                                 <button className="button is-text" onClick={this.remove}>x Eliminar actividad</button>
-                                <button onClick={this.submit2}
+                                <button onClick={this.submit}
                                     className="button is-primary">Guardar
                                 </button>
                             </div>
