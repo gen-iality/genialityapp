@@ -13,6 +13,7 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from "react-dropzone";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import AgendaLanguage from './language'
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -30,7 +31,6 @@ class AgendaEdit extends Component {
             hour_end: new Date(),
             date: "",
             image: "",
-            locale: "en",
             capacity: 0,
             type_id: "",
             space_id: "",
@@ -44,7 +44,8 @@ class AgendaEdit extends Component {
             categories: [],
             types: [],
             roles: [],
-            hosts: []
+            hosts: [],
+            locale:"en"
         }
     }
 
@@ -174,62 +175,9 @@ class AgendaEdit extends Component {
         console.log(this.state.has_date)
     };
 
-
-    submit2 = async () => {
-        if (this.validForm()) {
-            try {
-                const info = this.buildInfoLanguage();
-                console.log(info)
-                
-                sweetAlert.showLoading("Espera (:", "Guardando...");
-                const { event, location: { state } } = this.props;
-                this.setState({ isLoading: true });
-                if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
-                else {
-                    const agenda = await AgendaApi.create(event._id, info);
-                    this.setState({ deleteID: agenda._id })
-                }
-                sweetAlert.hideLoading();
-                sweetAlert.showSuccess("Información guardada")
-            } catch (e) {
-                sweetAlert.showError(handleRequestError(e))
-            }
-        }
-        console.log(this.state.has_date)
-    };
-
-    buildInfoLanguage = () => {
-        const { name, subtitle,has_date, locale,hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
-        const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
-        const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
-        const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
-        const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
-        const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
-
-        const type_id = selectedType.value;
-        return {
-            name,
-            subtitle,
-            datetime_start,
-            datetime_end,
-            space_id,
-            image,
-            description,
-            capacity: parseInt(capacity, 10),
-            activity_categories_ids,
-            access_restriction_type,
-            access_restriction_rol_ids,
-            host_ids,
-            type_id,
-            has_date,
-            locale
-        }
-    };
-
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle, has_date, locale, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const { name, subtitle,has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -252,8 +200,7 @@ class AgendaEdit extends Component {
             access_restriction_rol_ids,
             host_ids,
             type_id,
-            has_date,
-            locale
+            has_date
         }
     };
 
@@ -309,7 +256,7 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({ redirect: true });
 
     render() {
-        const { loading, name, subtitle, has_date, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
+        const { loading, name, subtitle, has_date, locale, idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
         const { hosts, spaces, categories, types, roles, isLoading } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -452,16 +399,10 @@ class AgendaEdit extends Component {
                         <div className="column is-4 general">
                             <div className="field is-grouped">
                                 <button className="button is-text" onClick={this.remove}>x Eliminar actividad</button>
-                                <button onClick={this.submit}
+                                <button onClick={this.submit2}
                                     className="button is-primary">Guardar
                                 </button>
                             </div>
-                            <div className="field is-grouped">
-                                <button onClick={this.submit2}
-                                    className="button is-primary">Duplicar para traducir
-                                </button>
-                            </div>
-
                             <div className="section-gray">
                                 <div className="field">
                                     <label className="label has-text-grey-light">Imagen</label>

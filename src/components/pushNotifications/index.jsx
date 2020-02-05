@@ -93,7 +93,7 @@ class pushNotification extends Component {
 
         try {
             console.log(this.state.push)
-            const result = await Actions.create(`api/event/${this.props.eventId}/sendpush`, this.state.push);
+            const result = await Actions.create(`api/events/${this.props.eventId}/sendpush`, this.state.push);
             if (result) {
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
             } else {

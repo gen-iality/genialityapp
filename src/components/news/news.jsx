@@ -110,7 +110,7 @@ class News extends Component {
     saveRole = async () => {
         try {
             if (this.state.id !== 'new') {
-                await NewsFeed.editOne({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.linkYoutube, picture: this.state.path, time: this.state.time }, this.state.id, this.props.eventId);
+                await NewsFeed.editOne({ title: this.state.title, description_complete: this.state.description_complete, description_short: this.state.description_short, linkYoutube: this.state.linkYoutube, picture: this.state.path, time: this.state.time }, this.state.id, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {

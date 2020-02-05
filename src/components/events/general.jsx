@@ -52,7 +52,7 @@ class General extends Component {
         this.setState({infoApp:[
             this.state.info.app_configuration
         ]})
-        console.log(this.state.infoApp)
+        console.log(this.state.info)
         try {
             const { event } = this.state;
             event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
@@ -234,7 +234,8 @@ class General extends Component {
             event_type_id: this.state.selectedType.value,
             app_configuration: this.state.info.app_configuration,
             banner_image: this.state.banner_image,
-            banner_image_link: this.state.banner_image_link
+            banner_image_link: this.state.banner_image_link,
+            adminContenido: event.adminContenido
         };
 
         console.log(data);
@@ -338,9 +339,19 @@ class General extends Component {
                         </div>
 
                         <div className="field">
+                            <label className="label required has-text-grey-light">Contenido de administrador</label>
+                            <div className="control">
+                                <input className="input" name={"adminContenido"} type="text"
+                                    placeholder="Contenido Administrador" value={event.adminContenido}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="field">
                             <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
                             <div class="select is-primary">
-                                <select name={"has_date"} value={event.has_date} onChange={this.handleChange}>
+                                <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
@@ -351,7 +362,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required">Desea Tener Registro en la aplicación?</label>
                             <div class="select is-primary">
-                                <select name={"allow_register"} value={event.allow_register} onChange={this.handleChange}>
+                                <select name={"allow_register"} value={event.allow_register} defaultValue={event.allow_register} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
@@ -362,7 +373,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
                             <div class="select is-primary">
-                                <select name={"allow_detail_calendar"} value={event.allow_detail_calendar} onChange={this.handleChange}>
+                                <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
@@ -370,9 +381,11 @@ class General extends Component {
                             </div>
                         </div>
 
-                        <div className="field">
+                        {
+                            
+                        }<div className="field">
                             <label className="label">Que modulo desea observar en el inicio</label>
-                            <div class="select is-primary">
+                            {/* <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
                                 <option value={null}>Banner de inicio</option>
                                     <option value={event.app_configuration.ProfileScreen? event.app_configuration.ProfileScreen.name:''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
@@ -386,7 +399,7 @@ class General extends Component {
                                     <option value={event.app_configuration.WebScreen? event.app_configuration.WebScreen.name:''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                     <option value={event.app_configuration.FaqsScreen? event.app_configuration.FaqsScreen.name:''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                 </select>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="field">
@@ -533,7 +546,7 @@ class General extends Component {
                 <div className="control">
                 <label className="label">Banner de inicio</label>
                     <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
-                        divClass={'drop-img'} content={<img src={event.banner_image[0] ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
+                        divClass={'drop-img'} content={<img src={event.banner_image ? event.banner_image : event.picture} alt={'Imagen Perfil'} />}
                         classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
                         contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
                         changeImg={this.banner_image} errImg={this.state.errImg}
