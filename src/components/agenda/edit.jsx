@@ -45,6 +45,7 @@ class AgendaEdit extends Component {
             types: [],
             roles: [],
             hosts: []
+            
         }
     }
 
