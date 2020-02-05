@@ -214,6 +214,7 @@ class General extends Component {
         const categories = this.state.selectedCategories.map(item => {
             return item.value
         });
+        
         const data = {
             name: event.name,
             datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
@@ -384,21 +385,21 @@ class General extends Component {
                             
                         }<div className="field">
                             <label className="label">Que modulo desea observar en el inicio</label>
-                            {/* <div class="select is-primary">
+                            <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
                                 <option value={null}>Banner de inicio</option>
-                                    <option value={event.app_configuration.ProfileScreen? event.app_configuration.ProfileScreen.name:''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.CalendarScreen? event.app_configuration.CalendarScreen.name:''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.NewsScreen? event.app_configuration.NewsScreen.name:''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.EventPlaceScreen? event.app_configuration.EventPlaceScreen.name:''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.SpeakerScreen? event.app_configuration.SpeakerScreen.name:''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.SurveyScreen? event.app_configuration.SurveyScreen.name:''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.DocumentsScreen? event.app_configuration.DocumentsScreen.name:''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.WallScreen? event.app_configuration.WallScreen.name:''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.WebScreen? event.app_configuration.WebScreen.name:''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
-                                    <option value={event.app_configuration.FaqsScreen? event.app_configuration.FaqsScreen.name:''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.ProfileScreen.name:''}>{event.app_configuration ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.CalendarScreen.name:''}>{event.app_configuration ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.NewsScreen.name:''}>{event.app_configuration ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.EventPlaceScreen.name:''}>{event.app_configuration ? event.app_configuration.EventPlaceScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.SpeakerScreen.name:''}>{event.app_configuration ? event.app_configuration.SpeakerScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.SurveyScreen.name:''}>{event.app_configuration ? event.app_configuration.SurveyScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.DocumentsScreen.name:''}>{event.app_configuration ? event.app_configuration.DocumentsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.WallScreen.name:''}>{event.app_configuration ? event.app_configuration.WallScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.WebScreen.name:''}>{event.app_configuration ? event.app_configuration.WebScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
+                                    <option value={event.app_configuration ? event.app_configuration.FaqsScreen.name:''}>{event.app_configuration ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                 </select>
-                            </div> */}
+                            </div>
                         </div>
 
                         <div className="field">
@@ -545,7 +546,7 @@ class General extends Component {
                 <div className="control">
                 <label className="label">Banner de inicio</label>
                     <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
-                        divClass={'drop-img'} content={<img src={event.banner_image ? event.banner_image : event.picture} alt={'Imagen Perfil'} />}
+                        divClass={'drop-img'} content={<img src={event.banner_image ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
                         classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
                         contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
                         changeImg={this.banner_image} errImg={this.state.errImg}
