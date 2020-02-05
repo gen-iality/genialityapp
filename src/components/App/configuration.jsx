@@ -60,10 +60,8 @@ class Configuration extends Component {
         })
 
         this.setState({
-            app_configuration: {
-                app_configuration: {
-                    config: this.state.configuration
-                }
+            configuration:{
+                ...this.state.info.app_configuration
             }
         })
 
@@ -268,25 +266,26 @@ class Configuration extends Component {
         try {
             if (this.state.info._id) {
                 console.log("entro a if")
-                const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.app_configuration);
-
-                console.log(info)
-                this.setState({ loading: false });
-                toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
-                window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
+                console.log(this.state.configuration)
+                // const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.app_configuration);
+                
+                // console.log(info)
+                // this.setState({ loading: false });
+                // toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                // window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
             }
             else {
-                console.log("entro a else")
-                const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
-                console.log(this.state.info)
-                this.setState({ loading: false });
-                if (result._id) {
-                    window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
-                    toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
-                } else {
-                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
-                    this.setState({ msg: 'Cant Create', create: false })
-                }
+                // console.log("entro a else")
+                // const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
+                // console.log(this.state.info)
+                // this.setState({ loading: false });
+                // if (result._id) {
+                //     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
+                //     toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                // } else {
+                //     toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
+                //     this.setState({ msg: 'Cant Create', create: false })
+                // }
             }
         }
         catch (error) {
@@ -319,15 +318,17 @@ class Configuration extends Component {
             console.log('ya existe', this.state.configuration);
         } else {
             await this.setState({
-                configuration: {
+               configuration: {
+                   app_configuration:{
                     ...this.state.configuration, [name]: val
+                   }
                 }
             })
 
             await this.setState({
-                app_configuration: {
-                    app_configuration: {
-                        ...this.state.configuration, [name]: val
+                app_configuration:{
+                    app_configuration:{
+                        ...this.state.configuration
                     }
                 }
             })

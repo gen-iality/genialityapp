@@ -402,6 +402,9 @@ export const AgendaApi = {
     },
     create: async(event, data) => {
         return await Actions.create(`api/events/${event}/activities`,data)
+    },
+    duplicate: async(event, data, id) =>{
+        return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`,data)
     }
 };
 export const SpeakersApi = {
