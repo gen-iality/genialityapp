@@ -266,25 +266,25 @@ class Configuration extends Component {
             if (this.state.info._id) {
                 console.log("entro a if")
                 console.log(this.state.configuration)
-                // const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.app_configuration);
+                const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.configuration);
                 
-                // console.log(info)
-                // this.setState({ loading: false });
-                // toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
-                // window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
+                console.log(info)
+                this.setState({ loading: false });
+                toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
             }
             else {
-                // console.log("entro a else")
-                // const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
-                // console.log(this.state.info)
-                // this.setState({ loading: false });
-                // if (result._id) {
-                //     window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
-                //     toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
-                // } else {
-                //     toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
-                //     this.setState({ msg: 'Cant Create', create: false })
-                // }
+                console.log("entro a else")
+                const result = await Actions.post(`/api/events/${this.props.eventId}`, this.state.app_configuration);
+                console.log(this.state.info)
+                this.setState({ loading: false });
+                if (result._id) {
+                    window.location.replace(`${BaseUrl}/event/${this.props.eventId}/configurationApp`);
+                    toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                } else {
+                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
+                    this.setState({ msg: 'Cant Create', create: false })
+                }
             }
         }
         catch (error) {
@@ -354,18 +354,18 @@ class Configuration extends Component {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput, id: 1,idCheck: 'checkbox0', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.information.HomeScreen ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 0, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 2,idCheck: 'checkbox1', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.information.ProfileScreen ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 1, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 3,idCheck: 'checkbox2', title:'Calendar',name: 'CalendarScreen', checked: this.state.checkCalendar, type:this.state.type,titles: this.state.information.CalendarScreen ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 4,idCheck: 'checkbox3', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.information.NewsScreen ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 3, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 5,idCheck: 'checkbox4', title:'EventPlace',name: 'EventPlaceScreen', checked: this.state.checkEventPlace,type:this.state.type, titles: this.state.information.EventPlaceScreen ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 6,idCheck: 'checkbox5', title:'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker,type:this.state.type, titles: this.state.information.SpeakerScreen ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 7,idCheck: 'checkbox6', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.information.SurveyScreen ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 6, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 8,idCheck: 'checkbox7', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.information.DocumentsScreen ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 7, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 9,idCheck: 'checkbox8', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.information.WallScreen ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 10,idCheck: 'checkbox9', title:'Conteo Regresivo', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.information.WebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 9, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 11,idCheck: 'checkbox10', title:'RankingScreen', name: 'RankingScreen', checked: this.state.checkRankingScreen, type:this.state.type, titles: this.state.information.RankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 10, title_view: 'Modulo Ranking', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 12,idCheck: 'checkbox11', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.information.FaqsScreen ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 11, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 1,idCheck: 'checkbox0', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.checkHome ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 0, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 2,idCheck: 'checkbox1', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.checkProfile ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 1, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 3,idCheck: 'checkbox2', title:'Calendar',name: 'CalendarScreen', checked: this.state.checkCalendar, type:this.state.type,titles: this.state.checkCalendar ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 4,idCheck: 'checkbox3', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.checkNews ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 3, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 5,idCheck: 'checkbox4', title:'EventPlace',name: 'EventPlaceScreen', checked: this.state.checkEventPlace,type:this.state.type, titles: this.state.checkHomeEventPlace ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 6,idCheck: 'checkbox5', title:'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker,type:this.state.type, titles: this.state.checkSpeaker ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 7,idCheck: 'checkbox6', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.checkSurveys ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 6, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 8,idCheck: 'checkbox7', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.checkDocuments ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 7, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 9,idCheck: 'checkbox8', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.checkWall ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 10,idCheck: 'checkbox9', title:'Conteo Regresivo', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.checkWebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 9, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 11,idCheck: 'checkbox10', title:'RankingScreen', name: 'RankingScreen', checked: this.state.checkRankingScreen, type:this.state.type, titles: this.state.checkRankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 10, title_view: 'Modulo Ranking', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 12,idCheck: 'checkbox11', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.checkFaq ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 11, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
