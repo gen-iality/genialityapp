@@ -112,6 +112,7 @@ class Agenda extends Component {
                                     <Link to={{ pathname: `${this.props.matchUrl}/actividad`, state: { edit: agenda._id } }}>
                                         <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
                                     </Link>
+                                    
                                 </td>
                             </tr>)}
                         </EvenTable>
