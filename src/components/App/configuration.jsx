@@ -256,6 +256,7 @@ class Configuration extends Component {
                 checkWebScreen: false,
                 checkRegister: false,
                 checkRankingScreen: false,
+                
             })
         }
     }
