@@ -39,8 +39,8 @@ class Configuration extends Component {
             checkVote: false,
             checkFaq: false,
             checkGallery: false,
-            checkWebScreen:false,
-            checkRegister:false,
+            checkWebScreen: false,
+            checkRegister: false,
             checkRankingScreen: false,
             information: {}
         };
@@ -51,7 +51,7 @@ class Configuration extends Component {
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
         this.setState({ information: info.app_configuration })
-        this.setState({info})
+        this.setState({ info })
         console.log(info)
         this.setState({
             dates: {
@@ -60,178 +60,202 @@ class Configuration extends Component {
         })
 
         this.setState({
-            configuration:{
+            configuration: {
                 ...this.state.info.app_configuration
             }
         })
-        if (this.state.dates.database.HomeScreen) {
-            this.setState({
-                checkHome: true
-            })
+
+        if (this.state.dates.database) {
+            if (this.state.dates.database.HomeScreen) {
+                this.setState({
+                    checkHome: true
+                })
+            } else {
+                this.setState({
+                    checkHome: false
+                })
+            }
+
+            if (this.state.dates.database.RegisterScreen) {
+                this.setState({
+                    checkRegister: true
+                })
+            } else {
+                this.setState({
+                    checkRegister: false
+                })
+            }
+
+            if (this.state.dates.database.CalendarScreen) {
+                this.setState({
+                    checkCalendar: true
+                })
+
+            } else {
+                this.setState({
+                    checkCalendar: false
+                })
+            }
+
+            if (this.state.dates.database.ProfileScreen) {
+                this.setState({
+                    checkProfile: true
+                })
+            } else {
+                this.setState({
+                    checkProfile: false
+                })
+            }
+
+            if (this.state.dates.database.EventPlaceScreen !== undefined) {
+                this.setState({
+                    checkEventPlace: true
+                })
+            } else {
+                this.setState({
+                    checkEventPlace: false
+                })
+            }
+
+            if (this.state.dates.database.SpeakerScreen) {
+                this.setState({
+                    checkSpeaker: true
+                })
+            } else {
+                this.setState({
+                    checkSpeaker: false
+                })
+            }
+
+            if (this.state.dates.database.NewsScreen) {
+                this.setState({
+                    checkNews: true
+                })
+            } else {
+                this.setState({
+                    checkNews: false
+                })
+            }
+
+            if (this.state.dates.database.SurveyScreen) {
+                this.setState({
+                    checkSurveys: true
+                })
+            } else {
+                this.setState({
+                    checkSurveys: false
+                })
+            }
+
+            if (this.state.dates.database.DocumentsScreen) {
+                this.setState({
+                    checkDocuments: true
+                })
+            } else {
+                this.setState({
+                    checkDocuments: false
+                })
+            }
+
+            if (this.state.dates.database.WallScreen) {
+                this.setState({
+                    checkWall: true
+                })
+            } else {
+                this.setState({
+                    checkWall: false
+                })
+            }
+
+            if (this.state.dates.database.QuizScreen) {
+                this.setState({
+                    checkQuiz: true
+                })
+            } else {
+                this.setState({
+                    checkQuiz: false
+                })
+            }
+
+            if (this.state.dates.database.RankingScreen) {
+                this.setState({
+                    checkRanking: true
+                })
+            } else {
+                this.setState({
+                    checkRanking: false
+                })
+            }
+
+            if (this.state.dates.database.VoteScreen) {
+                this.setState({
+                    checkVote: true
+                })
+            } else {
+                this.setState({
+                    checkVote: false
+                })
+            }
+
+            if (this.state.dates.database.FaqsScreen) {
+                this.setState({
+                    checkFaq: true
+                })
+            } else {
+                this.setState({
+                    checkFaq: false
+                })
+            }
+
+            if (this.state.dates.database.GalleryScreen) {
+                this.setState({
+                    checkGallery: true
+                })
+            } else {
+                this.setState({
+                    checkGallery: false
+                })
+            }
+
+            if (this.state.dates.database.RankingScreen) {
+                this.setState({
+                    checkRankingScreen: true
+                })
+            } else {
+                this.setState({
+                    checkRankingScreen: false
+                })
+            }
+
+            if (this.state.dates.database.RankingScreen) {
+                this.setState({
+                    checkRankingScreen: true
+                })
+            } else {
+                this.setState({
+                    checkRankingScreen: false
+                })
+            }
+
         } else {
             this.setState({
-                checkHome: false
-            })
-        }
-
-        if (this.state.dates.database.RegisterScreen) {
-            this.setState({
-                checkRegister: true
-            })
-        } else {
-            this.setState({
-                checkRegister: false
-            })
-        }
-
-        if (this.state.dates.database.CalendarScreen) {
-            this.setState({
-                checkCalendar: true
-            })
-
-        } else {
-            this.setState({
-                checkCalendar: false
-            })
-        }
-
-        if (this.state.dates.database.ProfileScreen) {
-            this.setState({
-                checkProfile: true
-            })
-        } else {
-            this.setState({
-                checkProfile: false
-            })
-        }
-
-        if (this.state.dates.database.EventPlaceScreen !== undefined) {
-            this.setState({
-                checkEventPlace: true
-            })
-        } else {
-            this.setState({
-                checkEventPlace: false
-            })
-        }
-
-        if (this.state.dates.database.SpeakerScreen) {
-            this.setState({
-                checkSpeaker: true
-            })
-        } else {
-            this.setState({
-                checkSpeaker: false
-            })
-        }
-
-        if (this.state.dates.database.NewsScreen) {
-            this.setState({
-                checkNews: true
-            })
-        } else {
-            this.setState({
-                checkNews: false
-            })
-        }
-
-        if (this.state.dates.database.SurveyScreen) {
-            this.setState({
-                checkSurveys: true
-            })
-        } else {
-            this.setState({
-                checkSurveys: false
-            })
-        }
-
-        if (this.state.dates.database.DocumentsScreen) {
-            this.setState({
-                checkDocuments: true
-            })
-        } else {
-            this.setState({
-                checkDocuments: false
-            })
-        }
-
-        if (this.state.dates.database.WallScreen) {
-            this.setState({
-                checkWall: true
-            })
-        } else {
-            this.setState({
-                checkWall: false
-            })
-        }
-
-        if (this.state.dates.database.QuizScreen) {
-            this.setState({
-                checkQuiz: true
-            })
-        } else {
-            this.setState({
-                checkQuiz: false
-            })
-        }
-
-        if (this.state.dates.database.RankingScreen) {
-            this.setState({
-                checkRanking: true
-            })
-        } else {
-            this.setState({
-                checkRanking: false
-            })
-        }
-
-        if (this.state.dates.database.VoteScreen) {
-            this.setState({
-                checkVote: true
-            })
-        } else {
-            this.setState({
-                checkVote: false
-            })
-        }
-
-        if (this.state.dates.database.FaqsScreen) {
-            this.setState({
-                checkFaq: true
-            })
-        } else {
-            this.setState({
-                checkFaq: false
-            })
-        }
-
-        if (this.state.dates.database.GalleryScreen) {
-            this.setState({
-                checkGallery: true
-            })
-        } else {
-            this.setState({
-                checkGallery: false
-            })
-        }
-
-        if (this.state.dates.database.RankingScreen) {
-            this.setState({
-                checkRankingScreen: true
-            })
-        } else {
-            this.setState({
-                checkRankingScreen: false
-            })
-        }
-
-        if (this.state.dates.database.RankingScreen) {
-            this.setState({
-                checkRankingScreen: true
-            })
-        } else {
-            this.setState({
-                checkRankingScreen: false
+                checkHome: false,
+                checkCalendar: false,
+                checkProfile: false,
+                checkEventPlace: false,
+                checkSpeaker: false,
+                checkNews: false,
+                checkSurveys: false,
+                checkDocuments: false,
+                checkWall: false,
+                checkQuiz: false,
+                checkRanking: false,
+                checkVote: false,
+                checkFaq: false,
+                checkGallery: false,
+                checkWebScreen: false,
+                checkRegister: false,
+                checkRankingScreen: false,
             })
         }
     }
@@ -267,7 +291,7 @@ class Configuration extends Component {
                 console.log("entro a if")
                 console.log(this.state.configuration)
                 const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.configuration);
-                
+
                 console.log(info)
                 this.setState({ loading: false });
                 toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
@@ -317,16 +341,16 @@ class Configuration extends Component {
             console.log('ya existe', this.state.configuration);
         } else {
             await this.setState({
-               configuration: {
-                   app_configuration:{
-                    ...this.state.configuration, [name]: val
-                   }
+                configuration: {
+                    app_configuration: {
+                        ...this.state.configuration, [name]: val
+                    }
                 }
             })
 
             await this.setState({
-                app_configuration:{
-                    app_configuration:{
+                app_configuration: {
+                    app_configuration: {
                         ...this.state.configuration
                     }
                 }
@@ -354,18 +378,18 @@ class Configuration extends Component {
         const { timeout } = this.state;
 
         const itemsDrawer = [
-            { reference: this.checkInput, id: 1,idCheck: 'checkbox0', title:'Home', name: 'HomeScreen', checked: this.state.checkHome, type:this.state.type, titles: this.state.checkHome ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 0, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 2,idCheck: 'checkbox1', title:'Profile',name: 'ProfileScreen', checked: this.state.checkProfile,type:this.state.type, titles: this.state.checkProfile ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 1, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 3,idCheck: 'checkbox2', title:'Calendar',name: 'CalendarScreen', checked: this.state.checkCalendar, type:this.state.type,titles: this.state.checkCalendar ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 4,idCheck: 'checkbox3', title:'News', name: 'NewsScreen', checked: this.state.checkNews, type:this.state.type,titles: this.state.checkNews ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 3, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 5,idCheck: 'checkbox4', title:'EventPlace',name: 'EventPlaceScreen', checked: this.state.checkEventPlace,type:this.state.type, titles: this.state.checkHomeEventPlace ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 6,idCheck: 'checkbox5', title:'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker,type:this.state.type, titles: this.state.checkSpeaker ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 7,idCheck: 'checkbox6', title:'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type:this.state.type,titles: this.state.checkSurveys ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 6, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 8,idCheck: 'checkbox7', title:'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type:this.state.type,titles: this.state.checkDocuments ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 7, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 9,idCheck: 'checkbox8', title:'Wall', name: 'WallScreen', checked: this.state.checkWall,type:this.state.type, titles: this.state.checkWall ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 10,idCheck: 'checkbox9', title:'Conteo Regresivo', name: 'WebScreen', checked: this.state.checkWebScreen, type:this.state.type, titles: this.state.checkWebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 9, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 11,idCheck: 'checkbox10', title:'RankingScreen', name: 'RankingScreen', checked: this.state.checkRankingScreen, type:this.state.type, titles: this.state.checkRankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 10, title_view: 'Modulo Ranking', desc: 'Nombre en el aplicativo' },
-            { reference: this.checkInput, id: 12,idCheck: 'checkbox11', title:'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type:this.state.type,titles: this.state.checkFaq ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 11, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 1, idCheck: 'checkbox0', title: 'Home', name: 'HomeScreen', checked: this.state.checkHome, type: this.state.type, titles: this.state.checkHome ? 'Editar Home' : 'Habilitar Home', icon: 'home', key: 0, title_view: 'Modulo Home Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 2, idCheck: 'checkbox1', title: 'Profile', name: 'ProfileScreen', checked: this.state.checkProfile, type: this.state.type, titles: this.state.checkProfile ? 'Editar Perfil' : 'Habilitar Perfil', icon: 'user', key: 1, title_view: 'Modulo Perfil Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 3, idCheck: 'checkbox2', title: 'Calendar', name: 'CalendarScreen', checked: this.state.checkCalendar, type: this.state.type, titles: this.state.checkCalendar ? 'Editar Agenda' : 'Habilitar Agenda', icon: 'calendar', key: 2, title_view: 'Modulo Agenda Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 4, idCheck: 'checkbox3', title: 'News', name: 'NewsScreen', checked: this.state.checkNews, type: this.state.type, titles: this.state.checkNews ? 'Editar Noticias' : 'Habilitar Noticias', icon: 'news', key: 3, title_view: 'Modulo de Noticias Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 5, idCheck: 'checkbox4', title: 'EventPlace', name: 'EventPlaceScreen', checked: this.state.checkEventPlace, type: this.state.type, titles: this.state.checkHomeEventPlace ? 'Editar Lugar de evento' : 'Habilitar lugar de evento', icon: 'location', key: 4, title_view: 'Modulo lugar del evento visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 6, idCheck: 'checkbox5', title: 'Speakers', name: 'SpeakerScreen', checked: this.state.checkSpeaker, type: this.state.type, titles: this.state.checkSpeaker ? 'Editar Conferencistas' : 'Habilitar Conferencistas', icon: 'mic', key: 5, title_view: 'Modulo Conferencistas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 7, idCheck: 'checkbox6', title: 'Survey', name: 'SurveyScreen', checked: this.state.checkSurveys, type: this.state.type, titles: this.state.checkSurveys ? 'Editar Encuestas' : 'Habilitar Encuestas', icon: 'book', key: 6, title_view: 'Modulo de encuestas Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 8, idCheck: 'checkbox7', title: 'Documents', name: 'DocumentsScreen', checked: this.state.checkDocuments, type: this.state.type, titles: this.state.checkDocuments ? 'Editar Document' : 'Habilitar Document', icon: 'folder', key: 7, title_view: 'Modulo de documentos Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 9, idCheck: 'checkbox8', title: 'Wall', name: 'WallScreen', checked: this.state.checkWall, type: this.state.type, titles: this.state.checkWall ? 'Editar Wall' : 'Habilitar Wall', icon: 'doc', key: 8, title_view: 'Modulo de Muro Visible', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 10, idCheck: 'checkbox9', title: 'Conteo Regresivo', name: 'WebScreen', checked: this.state.checkWebScreen, type: this.state.type, titles: this.state.checkWebScreen ? 'Editar Web Screen' : 'Habilitar Web Screen', icon: 'doc', key: 9, title_view: 'Modulo de Web Screen', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 11, idCheck: 'checkbox10', title: 'RankingScreen', name: 'RankingScreen', checked: this.state.checkRankingScreen, type: this.state.type, titles: this.state.checkRankingScreen ? 'Editar Ranking' : 'Habilitar Ranking', icon: 'doc', key: 10, title_view: 'Modulo Ranking', desc: 'Nombre en el aplicativo' },
+            { reference: this.checkInput, id: 12, idCheck: 'checkbox11', title: 'F.A.Q', name: 'FaqsScreen', checked: this.state.checkFaq, type: this.state.type, titles: this.state.checkFaq ? 'Editar FAQ' : 'Habilitar FAQ', icon: 'doc', key: 11, title_view: 'Modulo de F.A.Q Visible', desc: 'Nombre en el aplicativo' },
         ]
         return (
             <React.Fragment>
