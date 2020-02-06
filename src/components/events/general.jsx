@@ -387,7 +387,7 @@ class General extends Component {
                             <label className="label">Que modulo desea observar en el inicio</label>
                             <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
-                                <option value={null}>Banner de inicio</option>
+                                    <option value={null}>Banner de inicio</option>
                                     <option value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                     <option value={event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                     <option value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name:''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
