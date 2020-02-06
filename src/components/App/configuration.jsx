@@ -64,7 +64,6 @@ class Configuration extends Component {
                 ...this.state.info.app_configuration
             }
         })
-
         if (this.state.dates.database.HomeScreen) {
             this.setState({
                 checkHome: true
