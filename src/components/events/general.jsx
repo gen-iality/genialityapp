@@ -381,9 +381,7 @@ class General extends Component {
                             </div>
                         </div>
 
-                        {
-                            
-                        }<div className="field">
+                        {/* <div className="field">
                             <label className="label">Que modulo desea observar en el inicio</label>
                             <div class="select is-primary">
                                 <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>                       
@@ -400,7 +398,7 @@ class General extends Component {
                                     <option value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name:''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title:'Favor Seleccionar items del menu para la aplicación'}</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
@@ -423,7 +421,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">Id Analiticas</label>
                             <div className="control">
-                                <input className="input" name={"venue"} type="text"
+                                <input className="input" name={"analytics"} type="text"
                                     placeholder="Id analiticas" value={event.analytics}
                                     onChange={this.handleChange} />
                             </div>
@@ -432,7 +430,7 @@ class General extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">link de banner externo</label>
                             <div className="control">
-                                <input className="input" name={"venue"} type="text"
+                                <input className="input" name={"banner_image_link"} type="text"
                                     placeholder="Link de banner externo" value={event.banner_image_link}
                                     onChange={this.handleChange} />
                             </div>
