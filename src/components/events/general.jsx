@@ -226,6 +226,7 @@ class General extends Component {
             has_date: event.has_date === "true" ? true : false,
             allow_register: event.allow_register === "true" ? true : false,
             allow_detail_calendar: event.allow_detail_calendar === "true" ? true : false,
+            enable_language: event.enable_language === "true" ? true: false,
             homeSelectedScreen: event.homeSelectedScreen,
             visibility: event.visibility ? event.visibility : 'PUBLIC',
             description: event.description,
@@ -374,6 +375,17 @@ class General extends Component {
                             <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
                             <div class="select is-primary">
                                 <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
+                                    <option>Seleccionar...</option>
+                                    <option value={true}>Si</option>
+                                    <option value={false}>No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="field">
+                            <label className="label required">Desea Habilitar la traducción del lenguaje en el aplicativo</label>
+                            <div class="select is-primary">
+                                <select name={"enable_language"} defaultValue={event.enable_language} value={event.enable_language} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
                                     <option value={false}>No</option>
