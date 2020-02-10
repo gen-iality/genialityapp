@@ -121,7 +121,7 @@ class QrModal extends Component {
                 <div className="modal-background" />
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">Lector QR</p>
+                        <p className="modal-card-title">{typeScanner == 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}</p>
                         <button className="delete is-large" aria-label="close" onClick={this.closeQr} />
                     </header>
                     <section className="modal-card-body">
