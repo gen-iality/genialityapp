@@ -348,7 +348,7 @@ class ListEventUser extends Component {
                             <div className="column is-narrow has-text-centered button-c is-centered">
                                 <div class="select is-primary">
                                     <select name={"type-scanner"} value={this.state.typeScanner} defaultValue={this.state.typeScanner} onChange={this.handleChange}>
-                                        <option value="options">Opciones...</option>
+                                        <option value="options">Escanear...</option>
                                         <option value='scanner-qr'>Escanear QR</option>
                                         <option value='scanner-document'>Escanear Documento</option>
                                     </select>

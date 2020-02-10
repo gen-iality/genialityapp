@@ -50,8 +50,8 @@ class QrModal extends Component {
     };
     searchCC = (Scanner) => {
         const usersRef = firestore.collection(`${this.props.eventID}_event_attendees`);
-        let value = this.state.newCC;
-        
+        let value = String(this.state.newCC).toLowerCase();
+
         // Conditional to show modal (QR or Document scanner)
         if (Scanner == 'qr') {
             usersRef.where('_id', '==', `${value}`)
@@ -186,7 +186,7 @@ class QrModal extends Component {
                                                 <React.Fragment>
                                                     <div className="field">
                                                         <div className="control">
-                                                            <label className={`label has-text-grey-light is-capitalized required`}>Identidad</label>
+                                                            <label className={`label has-text-grey-light is-capitalized required`}>Id Usuario</label>
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
