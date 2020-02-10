@@ -162,19 +162,26 @@ class ListEventUser extends Component {
         const { event } = this.props;
         qrData.another = true;
         const self = this;
+
+        // Busca el usuario con el id que se pasa
         let pos = userReq.map((e) => { return e._id; }).indexOf(id);
         if (pos >= 0) {
             //users[pos] = user;
             const userRef = firestore.collection(`${event._id}_event_attendees`).doc(id);
             if (!userReq[pos].checked_in) {
+
+                // Actualiza el contador de usuarios checkeados
                 self.setState((prevState) => {
-                    return { checkIn: prevState.checkIn + 1, qrData }
+                    return { checkIn: prevState.checkIn + 1, qrData } 
                 });
+
+                // Actualiza el usuario en la base de datos
                 userRef.update({
                     updated_at: new Date(),
                     checked_in: true,
                     checked_at: new Date()
                 })
+                
                     .then(() => {
                         console.log("Document successfully updated!");
                         toast.success("Usuario Chequeado");
@@ -215,7 +222,7 @@ class ListEventUser extends Component {
                         (item.checked_in && item.checked_at) ? <p><FormattedDate value={item.checked_at.toDate()} /> <FormattedTime value={item.checked_at.toDate()} /></p>
                             : <div>
                                 <input className="is-checkradio is-primary is-small" id={"checkinUser" + item._id} disabled={item.checked_in}
-                                    type="checkbox" name={"checkinUser" + item._id} checked={item.checked_in} onChange={(e) => { this.checkIn(item) }} />
+                                    type="checkbox" name={"checkinUser" + item._id} checked={item.checked_in} onChange={(e) => { this.checkIn(item._id) }} />
                                 <label htmlFor={"checkinUser" + item._id} />
                             </div>
                     }
