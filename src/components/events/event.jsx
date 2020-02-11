@@ -18,7 +18,7 @@ import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import Speakers from "../speakers";
-import Surveys from "../surveys";
+import Surveys from "../Surveys";
 import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
@@ -40,8 +40,8 @@ const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
 const NewsApp = asyncComponent( ()=>import("../news/news"));
-const SurveysCreate = asyncComponent( ()=>import("../Surveys/survey") );
-const FAQS = asyncComponent( ()=>import("../Faqs/index"))
+const SurveysCreate = asyncComponent( ()=>import("../news/news"));
+const FAQS = asyncComponent( ()=>import("../news/news"));
 
 Moment.locale('es');
 momentLocalizer();
