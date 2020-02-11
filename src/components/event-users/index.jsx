@@ -354,7 +354,7 @@ class ListEventUser extends Component {
                     </div>
 
                     <div className="columns">
-                        <div className="is-flex-touch columns">
+                        <div className="is-flex-touch columns container-options">
                             <div className="column is-narrow has-text-centered button-c is-centered">
                                 <button className="button is-primary" onClick={this.addUser}>
                                     <span className="icon">
@@ -375,7 +375,7 @@ class ListEventUser extends Component {
                                     </div>
                                 )
                             }
-                            <div className="column is-narrow has-text-centered button-c is-centered">
+                            <div className="column">
                                 <div class="select is-primary">
                                     <select name={"type-scanner"} value={this.state.typeScanner} defaultValue={this.state.typeScanner} onChange={this.handleChange}>
                                         <option value="options">Escanear...</option>
@@ -385,7 +385,7 @@ class ListEventUser extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="search column is-5 is-three-quarters-mobile has-text-left-tablet">
+                        <div className="search column">
                             <SearchComponent style={{ marginLeft: '40px' }} placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch} />
                         </div>
                     </div>

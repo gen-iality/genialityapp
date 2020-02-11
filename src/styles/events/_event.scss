@@ -7,6 +7,7 @@
     word-break: normal;
 }
 .event-main {
+  max-width: 83%;
   padding: 0;
   .event-wrapper {
     margin: 1rem 0;
@@ -185,6 +186,9 @@
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
+  .event-main{
+    max-width: 95%;
+  }
   .event-vertical-line {
     display: none;
   }
