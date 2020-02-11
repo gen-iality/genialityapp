@@ -26,7 +26,16 @@ class SearchComponent extends Component {
         }
         if(nextProps.clear !== this.props.clear){
             if(this.state.value.length>=3){
-                if(filtered.length > 0) this.props.searchResult(filtered);
+
+                // Validate if state is empty
+                if(this.state.value){
+                    // Run function filter by all columns
+                    let filtered = this.filterByAllColums(this.state.value)
+                    this.setState({filtered})
+                    // Call function search result and set filtered variable
+                    if(filtered.length > 0) this.props.searchResult(filtered);
+                } 
+
             }else this.setState({value:''})
         }
     }

@@ -40,6 +40,7 @@ class QrModal extends Component {
         const { qrData } = this.state;
         if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } })
+        this.setState({ newCC: '' })
     };
     closeQr = () => {
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, newCC: '', tabActive: "camera" }, () => {
@@ -190,7 +191,7 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                    <button className="button is-info is-fullwidth" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
                                                 </React.Fragment>
                                             }
                                         </div>
@@ -205,7 +206,7 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                                    <button className="button is-info is-fullwidth" onClick={this.searchCC}>Buscar</button>
                                                 </React.Fragment>
                                             }
                                         </div>
