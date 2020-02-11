@@ -196,6 +196,7 @@ class QrModal extends Component {
                                             }
                                         </div>
                                     </React.Fragment> :
+                                    
                                     <React.Fragment>
                                         <div>
                                             {
