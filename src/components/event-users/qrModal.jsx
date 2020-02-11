@@ -204,11 +204,7 @@ class QrModal extends Component {
                                             }
                                         </div>
                                     </React.Fragment> :
-<<<<<<< HEAD
-
-=======
                                     
->>>>>>> 77214b78d332211f02bfa699dbe8b60a0b647780
                                     <React.Fragment>
                                         <div>
                                             {
