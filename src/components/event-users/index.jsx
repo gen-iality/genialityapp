@@ -55,13 +55,36 @@ class ListEventUser extends Component {
         };
     }
 
+
+    addDefaultLabels = extraFields => {
+      extraFields = extraFields.map(field => {
+        field["label"] = field["label"] ? field["label"] : field["name"];
+        return field;
+      });
+      return extraFields;
+    };
+  
+    orderFieldsByWeight = (extraFields) => {
+      extraFields = extraFields.sort((a, b) =>
+      (a.order_weight && !b.order_weight) ||
+      (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+        ? -1
+        : 1
+    );
+    return extraFields;
+    };     
+
     async componentDidMount() {
         try {
             const { event } = this.props;
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
-            const extraFields = fieldNameEmailFirst(properties);
+            let extraFields = fieldNameEmailFirst(properties);
+            extraFields = this.addDefaultLabels(extraFields);
+            extraFields = this.orderFieldsByWeight(extraFields);
+
+
             const listTickets = event.tickets ? [...event.tickets] : [];
             let { checkIn, changeItem } = this.state;
             this.setState({ extraFields, rolesList, badgeEvent });

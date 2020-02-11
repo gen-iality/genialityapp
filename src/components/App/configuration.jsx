@@ -65,6 +65,7 @@ class Configuration extends Component {
             }
         })
 
+        
         if (this.state.dates.database) {
             if (this.state.dates.database.HomeScreen) {
                 this.setState({
@@ -231,6 +232,7 @@ class Configuration extends Component {
                 checkWebScreen: false,
                 checkRegister: false,
                 checkRankingScreen: false,
+                
             })
         }
     }
