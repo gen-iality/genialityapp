@@ -191,7 +191,7 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                    <button className="button is-info is-fullwidth" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
                                                 </React.Fragment>
                                             }
                                         </div>
@@ -206,7 +206,7 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                                    <button className="button is-info is-fullwidth" onClick={this.searchCC}>Buscar</button>
                                                 </React.Fragment>
                                             }
                                         </div>
