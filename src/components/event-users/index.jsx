@@ -80,7 +80,7 @@ class ListEventUser extends Component {
             const properties = event.user_properties;
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
-            const extraFields = fieldNameEmailFirst(properties);
+            let extraFields = fieldNameEmailFirst(properties);
             extraFields = this.addDefaultLabels(extraFields);
             extraFields = this.orderFieldsByWeight(extraFields);
 
