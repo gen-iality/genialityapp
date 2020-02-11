@@ -81,8 +81,8 @@ class ListEventUser extends Component {
             const rolesList = await RolAttApi.byEvent(this.props.event._id);
             const badgeEvent = await BadgeApi.get(this.props.event._id);
             const extraFields = fieldNameEmailFirst(properties);
-            const extraFields = this.addDefaultLabels(extraFields);
-            const extraFields = this.orderFieldsByWeight(extraFields);
+            extraFields = this.addDefaultLabels(extraFields);
+            extraFields = this.orderFieldsByWeight(extraFields);
 
 
             const listTickets = event.tickets ? [...event.tickets] : [];
