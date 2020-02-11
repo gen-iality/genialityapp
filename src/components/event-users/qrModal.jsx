@@ -114,6 +114,11 @@ class QrModal extends Component {
         this.props.openEditModalUser(user);
     };
 
+    // Limpia el input al escanear un codigo que no esta registrado
+    cleanInputSearch = () => {
+        this.setState({ newCC: '' })
+    }
+
     render() {
         const { qrData, facingMode, tabActive } = this.state;
         const { fields, typeScanner } = this.props;
@@ -191,11 +196,15 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info is-fullwidth" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                    <div className='field is-grouped'>
+                                                        <button className="button is-info is-fullwidth" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                        <button className="button is-fullwidth" onClick={this.cleanInputSearch}>Limpiar</button>
+                                                    </div>
                                                 </React.Fragment>
                                             }
                                         </div>
                                     </React.Fragment> :
+
                                     <React.Fragment>
                                         <div>
                                             {
