@@ -40,6 +40,7 @@ class QrModal extends Component {
         const { qrData } = this.state;
         if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } })
+        this.setState({ newCC: '' })
     };
     closeQr = () => {
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, newCC: '', tabActive: "camera" }, () => {
