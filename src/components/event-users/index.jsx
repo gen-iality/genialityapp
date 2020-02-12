@@ -87,18 +87,32 @@ class ListEventUser extends Component {
 
             const listTickets = event.tickets ? [...event.tickets] : [];
             let { checkIn, changeItem } = this.state;
+
             this.setState({ extraFields, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
+            
+            
             let newItems = [...this.state.userReq];
-            this.userListener = usersRef.orderBy("updated_at", "desc").onSnapshot((snapshot) => {
+
+            /** 
+             * escuchamos los cambios a los datos en la base de datos directamente 
+             * 
+            */
+            this.userListener = usersRef.orderBy("updated_at", "desc").onSnapshot({
+                        // Listen for document metadata changes
+                        //includeMetadataChanges: true
+                    },(snapshot) => {
                 let user, acompanates = 0;
                 snapshot.docChanges().forEach((change) => {
+                    /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
+                    console.log("cambios", change)
                     user = change.doc.data();
                     user._id = change.doc.id;
                     user.rol_name = user.rol_name ? user.rol_name : user.rol_id ? rolesList.find(({ name, _id }) => _id === user.rol_id ? name : "") : "";
                     user.created_at = (typeof user.created_at === "object") ? user.created_at.toDate() : 'sinfecha';
                     user.updated_at = (user.updated_at.toDate) ? user.updated_at.toDate() : new Date();
                     user.tiquete = listTickets.find(ticket => ticket._id === user.ticket_id);
+
                     switch (change.type) {
                         case "added":
                             if (user.checked_in) checkIn += 1;
@@ -274,7 +288,7 @@ class ListEventUser extends Component {
                             default:
                                 value = item.properties[field.name]
                         }
-                        return <td key={`${item._id}_${field.name}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
+                        return <td key={`${item._id}_${field.name}_${key}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
                     })
                 }
                 <td>{item.tiquete ? item.tiquete.title : 'SIN TIQUETE'}</td>

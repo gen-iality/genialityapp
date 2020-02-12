@@ -134,8 +134,8 @@ class Header extends Component {
                             </Link>
                             {showAdmin && <div className="navbar-item" data-target="navbarBasicExample">
                                 <p>
-                                <span className="icon" onClick={this.handleMenuEvent}><i className="fas fa-th"></i></span>
-                                <span>Administrar evento</span>
+                                <span className="icon icon-menu" onClick={this.handleMenuEvent}><i className="fas fa-th"></i></span>
+                                <span className="icon-menu" onClick={this.handleMenuEvent}>Administrar evento</span>
                                 </p>
                             </div>}
                             {
