@@ -18,7 +18,7 @@ import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import Speakers from "../speakers";
-import Surveys from "../Surveys";
+import Surveys from "../surveys";
 import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";

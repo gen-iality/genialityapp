@@ -40,6 +40,7 @@ class QrModal extends Component {
         const { qrData } = this.state;
         if (qrData.user && !qrData.user.checked_in) this.props.checkIn(qrData.user);
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null } })
+        this.setState({ newCC: '' })
     };
     closeQr = () => {
         this.setState({ qrData: { ...this.state.qrData, msg: '', user: null }, qrModal: false, newCC: '', tabActive: "camera" }, () => {
@@ -112,6 +113,11 @@ class QrModal extends Component {
         this.closeQr();
         this.props.openEditModalUser(user);
     };
+
+    // Limpia el input al escanear un codigo que no esta registrado
+    cleanInputSearch = () => {
+        this.setState({ newCC: '' })
+    }
 
     render() {
         const { qrData, facingMode, tabActive } = this.state;
@@ -190,11 +196,15 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                    <div className='field is-grouped'>
+                                                        <button className="button is-info is-fullwidth" onClick={(e) => this.searchCC('qr', e)}>Buscar</button>
+                                                        <button className="button is-fullwidth" onClick={this.cleanInputSearch}>Limpiar</button>
+                                                    </div>
                                                 </React.Fragment>
                                             }
                                         </div>
                                     </React.Fragment> :
+                                    
                                     <React.Fragment>
                                         <div>
                                             {
@@ -205,7 +215,7 @@ class QrModal extends Component {
                                                             <input className="input" name={'searchCC'} value={this.state.newCC} onChange={this.changeCC} autoFocus={true} />
                                                         </div>
                                                     </div>
-                                                    <button className="button is-info" onClick={this.searchCC}>Buscar</button>
+                                                    <button className="button is-info is-fullwidth" onClick={this.searchCC}>Buscar</button>
                                                 </React.Fragment>
                                             }
                                         </div>

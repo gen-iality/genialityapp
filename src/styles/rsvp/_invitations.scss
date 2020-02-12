@@ -24,7 +24,7 @@
 }
 
 .checkin {
-  max-width: 1000px;
+  max-width: 100%;
   .checkin-header {
     width: 100%;
   }
@@ -102,7 +102,6 @@
   .search{
     display: flex;
     flex-direction: row;
-    margin-left: 58px !important;
     margin-bottom: 5px;
   }
   .table td{
@@ -187,7 +186,9 @@
   }
 }
 
-
+.container-options{
+  flex-wrap: wrap;
+}
 .css-vj8t7z{
   border-top-color: transparent !important;
   border-left-color: transparent !important;
