@@ -57,22 +57,22 @@ class ListEventUser extends Component {
 
 
     addDefaultLabels = extraFields => {
-      extraFields = extraFields.map(field => {
-        field["label"] = field["label"] ? field["label"] : field["name"];
-        return field;
-      });
-      return extraFields;
+        extraFields = extraFields.map(field => {
+            field["label"] = field["label"] ? field["label"] : field["name"];
+            return field;
+        });
+        return extraFields;
     };
-  
+
     orderFieldsByWeight = (extraFields) => {
-      extraFields = extraFields.sort((a, b) =>
-      (a.order_weight && !b.order_weight) ||
-      (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
-        ? -1
-        : 1
-    );
-    return extraFields;
-    };     
+        extraFields = extraFields.sort((a, b) =>
+            (a.order_weight && !b.order_weight) ||
+                (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+                ? -1
+                : 1
+        );
+        return extraFields;
+    };
 
     async componentDidMount() {
         try {
@@ -106,9 +106,19 @@ class ListEventUser extends Component {
                             if (user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates, 10);
                             break;
                         case "modified":
-                            if (user.checked_in) checkIn += 1;
+
+                            // Condicional para sumar el contador del check in, si presenta cambios la informacion del usuario
+                            if (user.checked_in && user.checked_in != newItems[change.oldIndex].checked_in) checkIn += 1;
+
+                            // Condicional para restar el contador del check in, si presenta cambios la informacion del usuario
+                            if (!user.checked_in && user.checked_in != newItems[change.oldIndex].checked_in) checkIn -= 1;
+
+                            // Added the information of user at the beginning of newItems array
                             newItems.unshift(user);
+
+                            // Removed the information of user updated of newItems array
                             newItems.splice(change.oldIndex + 1, 1);
+
                             changeItem = !changeItem;
                             break;
                         case "removed":
@@ -195,7 +205,7 @@ class ListEventUser extends Component {
 
                 // Actualiza el contador de usuarios checkeados
                 self.setState((prevState) => {
-                    return { checkIn: prevState.checkIn + 1, qrData } 
+                    return { checkIn: prevState.checkIn + 1, qrData }
                 });
 
                 // Actualiza el usuario en la base de datos
@@ -204,7 +214,7 @@ class ListEventUser extends Component {
                     checked_in: true,
                     checked_at: new Date()
                 })
-                
+
                     .then(() => {
                         console.log("Document successfully updated!");
                         toast.success("Usuario Chequeado");
