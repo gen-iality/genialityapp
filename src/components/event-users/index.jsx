@@ -87,18 +87,32 @@ class ListEventUser extends Component {
 
             const listTickets = event.tickets ? [...event.tickets] : [];
             let { checkIn, changeItem } = this.state;
+
             this.setState({ extraFields, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
+            
+            
             let newItems = [...this.state.userReq];
-            this.userListener = usersRef.orderBy("updated_at", "desc").onSnapshot((snapshot) => {
+
+            /** 
+             * escuchamos los cambios a los datos en la base de datos directamente 
+             * 
+            */
+            this.userListener = usersRef.orderBy("updated_at", "desc").onSnapshot({
+                        // Listen for document metadata changes
+                        //includeMetadataChanges: true
+                    },(snapshot) => {
                 let user, acompanates = 0;
                 snapshot.docChanges().forEach((change) => {
+
+                    console.log("cambios", change)
                     user = change.doc.data();
                     user._id = change.doc.id;
                     user.rol_name = user.rol_name ? user.rol_name : user.rol_id ? rolesList.find(({ name, _id }) => _id === user.rol_id ? name : "") : "";
                     user.created_at = (typeof user.created_at === "object") ? user.created_at.toDate() : 'sinfecha';
                     user.updated_at = (user.updated_at.toDate) ? user.updated_at.toDate() : new Date();
                     user.tiquete = listTickets.find(ticket => ticket._id === user.ticket_id);
+
                     switch (change.type) {
                         case "added":
                             if (user.checked_in) checkIn += 1;
@@ -376,7 +390,7 @@ class ListEventUser extends Component {
                                 )
                             }
                             <div className="column is-narrow has-text-centered button-c is-centered">
-                                <div class="select is-primary">
+                                <div className="select is-primary">
                                     <select name={"type-scanner"} value={this.state.typeScanner} defaultValue={this.state.typeScanner} onChange={this.handleChange}>
                                         <option value="options">Escanear...</option>
                                         <option value='scanner-qr'>Escanear QR</option>
