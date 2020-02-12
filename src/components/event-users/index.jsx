@@ -90,8 +90,8 @@ class ListEventUser extends Component {
 
             this.setState({ extraFields, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
-            
-            
+
+
             let newItems = [...this.state.userReq];
 
             /** 
@@ -99,9 +99,9 @@ class ListEventUser extends Component {
              * 
             */
             this.userListener = usersRef.orderBy("updated_at", "desc").onSnapshot({
-                        // Listen for document metadata changes
-                        //includeMetadataChanges: true
-                    },(snapshot) => {
+                // Listen for document metadata changes
+                //includeMetadataChanges: true
+            }, (snapshot) => {
                 let user, acompanates = 0;
                 snapshot.docChanges().forEach((change) => {
                     /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
@@ -121,11 +121,8 @@ class ListEventUser extends Component {
                             break;
                         case "modified":
 
-                            // Condicional para sumar el contador del check in, si presenta cambios la informacion del usuario
-                            if (user.checked_in && user.checked_in != newItems[change.oldIndex].checked_in) checkIn += 1;
-
-                            // Condicional para restar el contador del check in, si presenta cambios la informacion del usuario
-                            if (!user.checked_in && user.checked_in != newItems[change.oldIndex].checked_in) checkIn -= 1;
+                            // Function counter check in 
+                            checkIn = this.checkInCounter(user, newItems, change.oldIndex, checkIn)
 
                             // Added the information of user at the beginning of newItems array
                             newItems.unshift(user);
@@ -163,6 +160,19 @@ class ListEventUser extends Component {
     componentWillUnmount() {
         this.userListener();
         //this.pilaListener()
+    }
+
+    checkInCounter = (user, newItems, oldIndex, checkIn) => {
+
+        // Condicional para sumar el contador del check in, si presenta cambios la informacion del usuario
+        if (user.checked_in && user.checked_in != newItems[oldIndex].checked_in) return checkIn + 1;
+
+        // Condicional si esta checkeado y se presentan actualizaciones en otros campos
+        if (user.checked_in && user.checked_in == newItems[oldIndex].checked_in || !user.checked_in && user.checked_in == newItems[oldIndex].checked_in) return checkIn;
+
+        // Condicional para restar el contador del check in, si presenta cambios la informacion del usuario
+        if (!user.checked_in && user.checked_in != newItems[oldIndex].checked_in) return checkIn - 1;
+
     }
 
     exportFile = async (e) => {
