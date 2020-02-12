@@ -104,7 +104,7 @@ class ListEventUser extends Component {
                     },(snapshot) => {
                 let user, acompanates = 0;
                 snapshot.docChanges().forEach((change) => {
-
+                    /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
                     console.log("cambios", change)
                     user = change.doc.data();
                     user._id = change.doc.id;
@@ -278,7 +278,7 @@ class ListEventUser extends Component {
                             default:
                                 value = item.properties[field.name]
                         }
-                        return <td key={`${item._id}_${field.name}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
+                        return <td key={`${item._id}_${field.name}_${key}`}><span className="is-hidden-desktop">{field.label}:</span> {value}</td>
                     })
                 }
                 <td>{item.tiquete ? item.tiquete.title : 'SIN TIQUETE'}</td>
