@@ -124,11 +124,11 @@ class ListEventUser extends Component {
                             // Function counter check in 
                             checkIn = this.checkInCounter(user, newItems, change.oldIndex, checkIn)
 
-                            // Added the information of user at the beginning of newItems array
-                            newItems.unshift(user);
-
                             // Removed the information of user updated of newItems array
-                            newItems.splice(change.oldIndex + 1, 1);
+                            newItems.splice(change.oldIndex, 1);
+                            
+                            // Added the information of user of newItems array
+                            newItems.splice(change.newIndex, 0, user);
 
                             changeItem = !changeItem;
                             break;
