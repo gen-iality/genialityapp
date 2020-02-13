@@ -417,7 +417,6 @@ class General extends Component {
                                     </div>
                                 </div>
                                 :
-
                                 '   '
                         }
 

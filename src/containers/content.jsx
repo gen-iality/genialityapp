@@ -17,7 +17,7 @@ const Terms = asyncComponent(()=> import("../components/policies/termsService"))
 const Privacy = asyncComponent(()=> import("../components/policies/privacyPolicy"));
 const Policies = asyncComponent(()=> import("../components/policies/policies"));
 const About = asyncComponent(()=> import("../components/policies/about"));
-const Faqs = asyncComponent(()=> import("../components/faqs"));
+const Faqs = asyncComponent(()=> import("../components/faqs/index"));
 
 
 class ContentContainer extends Component {
