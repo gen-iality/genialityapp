@@ -18,36 +18,48 @@ class Preview extends Component {
     componentDidMount(){
         let llaves = [], headers = [];
         const {list, extraFields} = this.props;
+        console.log("EXTRAFIELDS",extraFields,list)
+
         //Promesa para recorrer las propiedades del evento/organizaciòn para crear el header de las listas
-        const results = extraFields.map(async (item) => { return headers.push({tag:item.name,used:false}) });
+        const results = extraFields.map(async (item) => { return headers.push({...item, tag:item.name,used:false}) });
         Promise.all(results).then((completed) => {
             //Se crea el arreglo de llaves para comparar con el header
             list.map(list => {return llaves.push(list.key)});
+
             this.setState({headers});
-            this.renderHead(llaves, list)
+            this.renderHead(llaves, list,extraFields)
         });
     }
 
     //Funcion para manejar las propiedades
     //Se parsea si las propiedaeds existen(verde) en el excel o no(rojo)
     renderHead = (llaves, list) => {
+        console.log("Llaves excel-----",llaves, this.state.headers)
         const a = llaves;
-        const b = this.state.headers;
+        const b = this.state.headers;//campos de evius
+
         //Se compara los headers con las llaves para realizar la validaciòn de campos
         const comparer = (otherArray) => {
             return ( current ) => {
+
                 return otherArray.filter( other => {
                     if (other === current.tag){
                         current.used = true;
+
                         return true
                     }else{ return false}
-                }).length === 0;
+                }).length === 0 && current.mandatory;
             }
         }
+
         const onlyInB = b.filter(comparer(a));
+
+
         this.setState({auxArr:onlyInB});
+        
         list.map(item=>{return item.used = this.headExist(item.key)});
         let auxList = JSON.parse(JSON.stringify(list)); //create a copy of list
+
         this.setState({list,loading:false,auxList})
     };
 

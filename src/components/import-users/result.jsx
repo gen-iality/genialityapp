@@ -30,6 +30,7 @@ class Result extends Component {
         const toImport = users.filter(user =>!this.isEmptyObject(user));
          Async.eachOfSeries(toImport,(user,key,cb)=>{
              if(!this.isEmptyObject(user)){
+                 console.log("user",user);
                  if(this.props.organization){
                      Actions.post(`/api/organizations/${this.props.eventId}/users`,user)
                          .then((resp)=>{
