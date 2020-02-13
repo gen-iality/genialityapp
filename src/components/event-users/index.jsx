@@ -419,7 +419,7 @@ class ListEventUser extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="search column">
+                        <div className="search column is-5 is-four-fifths-mobile has-text-left-tablet">
                             <SearchComponent style={{ marginLeft: '40px' }} placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch} />
                         </div>
                     </div>
