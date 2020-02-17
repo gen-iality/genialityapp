@@ -54,6 +54,7 @@ class ListEventUser extends Component {
             scanner: 'first',
             localChanges: null,
             quantityUsersSync: 0,
+            lastUpdate: 'test'
         };
     }
 
@@ -113,6 +114,9 @@ class ListEventUser extends Component {
                 snapshot.docChanges().forEach((change) => {
                     /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
                     console.log("cambios", change)
+                    // Condicional, toma el primer registro que es el mas reciente
+                    !snapshot.metadata.fromCache && this.setState({ lastUpdate: new Date() })
+
                     user = change.doc.data();
                     user._id = change.doc.id;
                     user.rol_name = user.rol_name ? user.rol_name : user.rol_id ? rolesList.find(({ name, _id }) => _id === user.rol_id ? name : "") : "";
@@ -125,6 +129,10 @@ class ListEventUser extends Component {
                             if (user.checked_in) checkIn += 1;
                             change.newIndex === 0 ? newItems.unshift(user) : newItems.push(user);
                             if (user.properties.acompanates && user.properties.acompanates.match(/^[0-9]*$/)) acompanates += parseInt(user.properties.acompanates, 10);
+
+                            // Aumenta contador de usuarios sin sincronizar
+                            localChanges == 'Local' && this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }))
+
                             break;
                         case "modified":
 
@@ -145,6 +153,10 @@ class ListEventUser extends Component {
                         case "removed":
                             if (user.checked_in) checkIn -= 1;
                             newItems.splice(change.oldIndex, 1);
+
+                            // Aumenta contador de usuarios sin sincronizar
+                            localChanges == 'Local' && this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }))
+
                             break;
                         default:
                             break;
@@ -253,6 +265,7 @@ class ListEventUser extends Component {
 
                         // Disminuye el contador si la actualizacion en la base de datos se realiza
                         this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }))
+                        this.setState({ lastUpdate: new Date() })
                         console.log("Document successfully updated!");
                         toast.success("Usuario Chequeado");
                     })
@@ -271,6 +284,7 @@ class ListEventUser extends Component {
     // Funcion para disminuir el contador y pasarlo como prop al modalUser
     substractSyncQuantity = () => {
         this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }))
+        this.setState({ lastUpdate: new Date() })
     }
 
     showMetaData = (value) => {
@@ -381,7 +395,7 @@ class ListEventUser extends Component {
     }
 
     render() {
-        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions, localChanges, quantityUsersSync } = this.state;
+        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions, localChanges, quantityUsersSync, lastUpdate } = this.state;
         const { event: { event_stages } } = this.props;
         return (
             <React.Fragment>
@@ -403,13 +417,14 @@ class ListEventUser extends Component {
                                 <span className="tag is-white">Total</span>
                             </div>
                         </div>
+                        <div className="is-3 column">
+                            <p className="is-size-7">Ultima Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} /></p>
+                        </div>
                         {
+                            // localChanges &&
                             quantityUsersSync > 0 && localChanges == 'Local' &&
-                            <div className="is-7 column">
-                                <div className="tags" style={{ flexWrap: 'nowrap' }}>
-                                    <span className="tag is-light">{quantityUsersSync < 0 ? 0 : quantityUsersSync}</span>
-                                    <span className="tag is-white">Usuario sin sincronizar</span>
-                                </div>
+                            <div className="is-4 column">
+                                <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
                             </div>
                         }
                     </div>

@@ -82,6 +82,9 @@ class UserModal extends Component {
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
+                    
+                    //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
+                    substractSyncQuantity();
                 })
                 .catch(error => {
                     console.error("Error adding document: ", error);
@@ -275,6 +278,8 @@ class UserModal extends Component {
     };
 
     deleteUser = () => {
+        const { substractSyncQuantity } = this.props;
+
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         const self = this;
         let message = {};
@@ -283,6 +288,9 @@ class UserModal extends Component {
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!" />);
+            
+            //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
+            substractSyncQuantity();
         })
         setTimeout(() => {
             message.class = message.content = '';
