@@ -51,7 +51,9 @@ class ListEventUser extends Component {
             ticket: '',
             tabActive: 'camera',
             ticketsOptions: [],
-            scanner: 'first'
+            scanner: 'first',
+            localChanges: null,
+            quantityUsersSync: 0,
         };
     }
 
@@ -86,7 +88,7 @@ class ListEventUser extends Component {
 
 
             const listTickets = event.tickets ? [...event.tickets] : [];
-            let { checkIn, changeItem } = this.state;
+            let { checkIn, changeItem, localChanges } = this.state;
 
             this.setState({ extraFields, rolesList, badgeEvent });
             const { usersRef, ticket, stage } = this.state;
@@ -102,6 +104,11 @@ class ListEventUser extends Component {
                 // Listen for document metadata changes
                 //includeMetadataChanges: true
             }, (snapshot) => {
+
+                // Set data localChanges with hasPendingWrites
+                localChanges = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
+                this.setState({ localChanges })
+
                 let user, acompanates = 0;
                 snapshot.docChanges().forEach((change) => {
                     /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
@@ -126,9 +133,12 @@ class ListEventUser extends Component {
 
                             // Removed the information of user updated of newItems array
                             newItems.splice(change.oldIndex, 1);
-                            
+
                             // Added the information of user of newItems array
                             newItems.splice(change.newIndex, 0, user);
+
+                            // Aumenta contador de usuarios sin sincronizar
+                            this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }))
 
                             changeItem = !changeItem;
                             break;
@@ -240,6 +250,9 @@ class ListEventUser extends Component {
                 })
 
                     .then(() => {
+
+                        // Disminuye el contador si la actualizacion en la base de datos se realiza
+                        this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }))
                         console.log("Document successfully updated!");
                         toast.success("Usuario Chequeado");
                     })
@@ -254,6 +267,11 @@ class ListEventUser extends Component {
     onChangePage = (pageOfItems) => {
         this.setState({ pageOfItems: pageOfItems });
     };
+
+    // Funcion para disminuir el contador y pasarlo como prop al modalUser
+    substractSyncQuantity = () => {
+        this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync - 1 }))
+    }
 
     showMetaData = (value) => {
         html.classList.add('is-clipped');
@@ -363,7 +381,7 @@ class ListEventUser extends Component {
     }
 
     render() {
-        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions } = this.state;
+        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions, localChanges, quantityUsersSync } = this.state;
         const { event: { event_stages } } = this.props;
         return (
             <React.Fragment>
@@ -385,6 +403,15 @@ class ListEventUser extends Component {
                                 <span className="tag is-white">Total</span>
                             </div>
                         </div>
+                        {
+                            quantityUsersSync > 0 && localChanges == 'Local' &&
+                            <div className="is-7 column">
+                                <div className="tags" style={{ flexWrap: 'nowrap' }}>
+                                    <span className="tag is-light">{quantityUsersSync < 0 ? 0 : quantityUsersSync}</span>
+                                    <span className="tag is-white">Usuario sin sincronizar</span>
+                                </div>
+                            </div>
+                        }
                     </div>
 
                     <div className="columns">
@@ -498,7 +525,7 @@ class ListEventUser extends Component {
                     <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
                         ticket={ticket} tickets={this.state.listTickets} rolesList={this.state.rolesList}
                         value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
-                        extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit} />
+                        extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit} substractSyncQuantity={this.substractSyncQuantity} />
                 }
                 {this.state.qrModal && <QrModal fields={extraFields} userReq={userReq} typeScanner={this.state.typeScanner} clearOption={this.clearOption} checkIn={this.checkIn} eventID={this.props.event._id}
                     closeModal={this.closeQRModal} openEditModalUser={this.openEditModalUser} />}
