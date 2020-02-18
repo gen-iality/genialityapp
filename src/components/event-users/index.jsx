@@ -302,7 +302,7 @@ class ListEventUser extends Component {
     checkFirebasePersistence = () => {
         let { disabledPersistence } = this.state
 
-        disabledPersistence = window.evius.failedPersistenceEnabling
+        disabledPersistence = window.eviusFailedPersistenceEnabling
         this.setState({disabledPersistence})
     }
 
