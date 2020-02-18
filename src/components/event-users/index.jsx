@@ -54,7 +54,8 @@ class ListEventUser extends Component {
             scanner: 'first',
             localChanges: null,
             quantityUsersSync: 0,
-            lastUpdate: 'test'
+            lastUpdate: new Date(),
+            disabledPersistence: false
         };
     }
 
@@ -78,6 +79,7 @@ class ListEventUser extends Component {
     };
 
     async componentDidMount() {
+        this.checkFirebasePersistence();
         try {
             const { event } = this.props;
             const properties = event.user_properties;
@@ -296,6 +298,14 @@ class ListEventUser extends Component {
         })
     };
 
+    // Function to check the firebase persistence and load page if this return false
+    checkFirebasePersistence = () => {
+        let { disabledPersistence } = this.state
+
+        disabledPersistence = window.evius.failedPersistenceEnabling
+        this.setState({disabledPersistence})
+    }
+
     renderRows = () => {
         const items = [];
         const { extraFields, spacesEvent } = this.state;
@@ -395,157 +405,162 @@ class ListEventUser extends Component {
     }
 
     render() {
-        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions, localChanges, quantityUsersSync, lastUpdate } = this.state;
+        const { timeout, userReq, users, total, checkIn, extraFields, spacesEvent, editUser, stage, ticket, ticketsOptions, localChanges, quantityUsersSync, lastUpdate, disabledPersistence } = this.state;
         const { event: { event_stages } } = this.props;
         return (
-            <React.Fragment>
-                <EventContent classes="checkin" title={"Check In"}>
-                    <div className="checkin-warning ">
-                        <p className="is-size-7 is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
-                    </div>
+            !disabledPersistence ?
+                <React.Fragment>
+                    <EventContent classes="checkin" title={"Check In"}>
+                        <div className="checkin-warning ">
+                            <p className="is-size-7 is-full-mobile">Se muestran los primeros 50 usuarios, para verlos todos porfavor descargar el excel o realizar una búsqueda.</p>
+                        </div>
 
-                    <div className="columns checkin-tags-wrapper is-flex-touch">
-                        <div className="is-3 column">
-                            <div className="tags" style={{ flexWrap: 'nowrap' }}>
-                                <span className="tag is-primary">{checkIn}</span>
-                                <span className="tag is-white">Ingresados</span>
+                        <div className="columns checkin-tags-wrapper is-flex-touch">
+                            <div className="is-3 column">
+                                <div className="tags" style={{ flexWrap: 'nowrap' }}>
+                                    <span className="tag is-primary">{checkIn}</span>
+                                    <span className="tag is-white">Ingresados</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className="is-2 column">
-                            <div className="tags" style={{ flexWrap: 'nowrap' }}>
-                                <span className="tag is-light">{total}</span>
-                                <span className="tag is-white">Total</span>
+                            <div className="is-2 column">
+                                <div className="tags" style={{ flexWrap: 'nowrap' }}>
+                                    <span className="tag is-light">{total}</span>
+                                    <span className="tag is-white">Total</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className="is-3 column">
-                            <p className="is-size-7">Ultima Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} /></p>
-                        </div>
-                        {
-                            // localChanges &&
-                            quantityUsersSync > 0 && localChanges == 'Local' &&
-                            <div className="is-4 column">
-                                <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
-                            </div>
-                        }
-                    </div>
-
-                    <div className="columns">
-                        <div className="is-flex-touch columns container-options">
-                            <div className="column is-narrow has-text-centered button-c is-centered">
-                                <button className="button is-primary" onClick={this.addUser}>
-                                    <span className="icon">
-                                        <i className="fas fa-user-plus"></i>
-                                    </span>
-                                    <span className="text-button">Agregar Usuario</span>
-                                </button>
+                            <div className="is-3 column">
+                                <p className="is-size-7">Ultima Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} /></p>
                             </div>
                             {
-                                userReq.length > 0 && (
-                                    <div className="column is-narrow has-text-centered export button-c is-centered">
-                                        <button className="button" onClick={this.exportFile}>
-                                            <span className="icon">
-                                                <i className="fas fa-download" />
-                                            </span>
-                                            <span className="text-button">Exportar</span>
-                                        </button>
-                                    </div>
-                                )
+                                // localChanges &&
+                                quantityUsersSync > 0 && localChanges == 'Local' &&
+                                <div className="is-4 column">
+                                    <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
+                                </div>
                             }
-                            <div className="column">
-                                <div class="select is-primary">
-                                    <select name={"type-scanner"} value={this.state.typeScanner} defaultValue={this.state.typeScanner} onChange={this.handleChange}>
-                                        <option value="options">Escanear...</option>
-                                        <option value='scanner-qr'>Escanear QR</option>
-                                        <option value='scanner-document'>Escanear Documento</option>
-                                    </select>
+                        </div>
+
+                        <div className="columns">
+                            <div className="is-flex-touch columns container-options">
+                                <div className="column is-narrow has-text-centered button-c is-centered">
+                                    <button className="button is-primary" onClick={this.addUser}>
+                                        <span className="icon">
+                                            <i className="fas fa-user-plus"></i>
+                                        </span>
+                                        <span className="text-button">Agregar Usuario</span>
+                                    </button>
+                                </div>
+                                {
+                                    userReq.length > 0 && (
+                                        <div className="column is-narrow has-text-centered export button-c is-centered">
+                                            <button className="button" onClick={this.exportFile}>
+                                                <span className="icon">
+                                                    <i className="fas fa-download" />
+                                                </span>
+                                                <span className="text-button">Exportar</span>
+                                            </button>
+                                        </div>
+                                    )
+                                }
+                                <div className="column">
+                                    <div className="select is-primary">
+                                        <select name={"type-scanner"} value={this.state.typeScanner} defaultValue={this.state.typeScanner} onChange={this.handleChange}>
+                                            <option value="options">Escanear...</option>
+                                            <option value='scanner-qr'>Escanear QR</option>
+                                            <option value='scanner-document'>Escanear Documento</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
+                            <div className="search column is-5 is-four-fifths-mobile has-text-left-tablet">
+                                <SearchComponent style={{ marginLeft: '40px' }} placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch} />
+                            </div>
                         </div>
-                        <div className="search column is-5 is-four-fifths-mobile has-text-left-tablet">
-                            <SearchComponent style={{ marginLeft: '40px' }} placeholder={""} data={userReq} kind={'user'} event={this.props.event._id} searchResult={this.searchResult} clear={this.state.clearSearch} />
-                        </div>
-                    </div>
-                    {
-                        (event_stages && event_stages.length > 0) &&
-                        <div className='filter'>
-                            <button className="button icon-filter">
-                                <span className="icon">
-                                    <i className="fas fa-filter"></i>
-                                </span>
-                                <span className="text-button">Filtrar</span>
-                            </button>
-                            <div className='filter-menu'>
-                                <p className='filter-help'>Filtra Usuarios por Tiquete</p>
-                                <div className="columns">
-                                    <div className="column field">
-                                        <div className="control">
-                                            <label className="label">Etapa</label>
+                        {
+                            (event_stages && event_stages.length > 0) &&
+                            <div className='filter'>
+                                <button className="button icon-filter">
+                                    <span className="icon">
+                                        <i className="fas fa-filter"></i>
+                                    </span>
+                                    <span className="text-button">Filtrar</span>
+                                </button>
+                                <div className='filter-menu'>
+                                    <p className='filter-help'>Filtra Usuarios por Tiquete</p>
+                                    <div className="columns">
+                                        <div className="column field">
                                             <div className="control">
-                                                <div className="select">
-                                                    <select value={stage} onChange={this.changeStage} name={'stage'}>
-                                                        <option value={''}>Escoge la etapa...</option>
-                                                        {
-                                                            event_stages.map((item, key) => {
-                                                                return <option key={key} value={item.stage_id}>{item.title}</option>
-                                                            })
-                                                        }
-                                                    </select>
+                                                <label className="label">Etapa</label>
+                                                <div className="control">
+                                                    <div className="select">
+                                                        <select value={stage} onChange={this.changeStage} name={'stage'}>
+                                                            <option value={''}>Escoge la etapa...</option>
+                                                            {
+                                                                event_stages.map((item, key) => {
+                                                                    return <option key={key} value={item.stage_id}>{item.title}</option>
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="column field">
+                                            <div className="control">
+                                                <label className="label">Tiquete</label>
+                                                <div className="control">
+                                                    <div className="select">
+                                                        <select value={ticket} onChange={this.changeTicket} name={'stage'}>
+                                                            <option value={''}>Escoge el tiquete...</option>
+                                                            {
+                                                                ticketsOptions.map((item, key) => {
+                                                                    return <option key={key} value={item._id}>{item.title}</option>
+                                                                })
+                                                            }
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="column field">
-                                        <div className="control">
-                                            <label className="label">Tiquete</label>
-                                            <div className="control">
-                                                <div className="select">
-                                                    <select value={ticket} onChange={this.changeTicket} name={'stage'}>
-                                                        <option value={''}>Escoge el tiquete...</option>
-                                                        {
-                                                            ticketsOptions.map((item, key) => {
-                                                                return <option key={key} value={item._id}>{item.title}</option>
-                                                            })
-                                                        }
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
+                        }
+                        <div className="checkin-table">
+                            {this.state.loading ? <Fragment>
+                                <Loading />
+                                <h2 className="has-text-centered">Cargando...</h2>
+                            </Fragment> :
+                                <div className="table-wrapper">
+                                    <div className="table-container">
+                                        <EvenTable head={["", "Check", ...extraFields.map(({ label }) => label), "Tiquete"]}>
+                                            {
+                                                this.renderRows()
+                                            }
+                                        </EvenTable>
+                                    </div>
+                                    <Pagination
+                                        items={users}
+                                        change={this.state.changeItem}
+                                        onChangePage={this.onChangePage}
+                                    />
+                                </div>}
                         </div>
+                    </EventContent>
+                    {(!this.props.loading && editUser) &&
+                        <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
+                            ticket={ticket} tickets={this.state.listTickets} rolesList={this.state.rolesList}
+                            value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
+                            extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit} substractSyncQuantity={this.substractSyncQuantity} />
                     }
-                    <div className="checkin-table">
-                        {this.state.loading ? <Fragment>
-                            <Loading />
-                            <h2 className="has-text-centered">Cargando...</h2>
-                        </Fragment> :
-                            <div className="table-wrapper">
-                                <div className="table-container">
-                                    <EvenTable head={["", "Check", ...extraFields.map(({ label }) => label), "Tiquete"]}>
-                                        {
-                                            this.renderRows()
-                                        }
-                                    </EvenTable>
-                                </div>
-                                <Pagination
-                                    items={users}
-                                    change={this.state.changeItem}
-                                    onChangePage={this.onChangePage}
-                                />
-                            </div>}
-                    </div>
-                </EventContent>
-                {(!this.props.loading && editUser) &&
-                    <UserModal handleModal={this.modalUser} modal={editUser} eventId={this.props.eventId}
-                        ticket={ticket} tickets={this.state.listTickets} rolesList={this.state.rolesList}
-                        value={this.state.selectedUser} checkIn={this.checkIn} badgeEvent={this.state.badgeEvent}
-                        extraFields={this.state.extraFields} spacesEvent={spacesEvent} edit={this.state.edit} substractSyncQuantity={this.substractSyncQuantity} />
-                }
-                {this.state.qrModal && <QrModal fields={extraFields} userReq={userReq} typeScanner={this.state.typeScanner} clearOption={this.clearOption} checkIn={this.checkIn} eventID={this.props.event._id}
-                    closeModal={this.closeQRModal} openEditModalUser={this.openEditModalUser} />}
-                {timeout && (<ErrorServe errorData={this.state.errorData} />)}
-            </React.Fragment>
+                    {this.state.qrModal && <QrModal fields={extraFields} userReq={userReq} typeScanner={this.state.typeScanner} clearOption={this.clearOption} checkIn={this.checkIn} eventID={this.props.event._id}
+                        closeModal={this.closeQRModal} openEditModalUser={this.openEditModalUser} />}
+                    {timeout && (<ErrorServe errorData={this.state.errorData} />)}
+                </React.Fragment>
+                :
+                <div style={{ margin: '5%', textAlign: 'center' }}>
+                    <label>Este navegador con este dispositivo no soporta las capacidades necesarias. Por favor utilizar otro navegador o dispositivo.</label>
+                </div>
         );
     }
 }

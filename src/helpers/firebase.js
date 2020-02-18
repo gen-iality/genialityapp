@@ -16,8 +16,8 @@ const firestore = app.firestore();
 firestore.settings({
     cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED
 })
-firestore.enablePersistence()
-    .catch((err)=> {console.log(err);});
+firestore.enablePersistence().then(() => { window.evius = { failedPersistenceEnabling: false } })
+    .catch((err) => { console.log(err); window.evius = { failedPersistenceEnabling: true } });
 const auth = app.auth();
 window.firebase = app;
-export {app,auth,firestore};
+export { app, auth, firestore };
