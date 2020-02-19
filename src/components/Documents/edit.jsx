@@ -198,7 +198,7 @@ class upload extends Component {
                     </div>
 
                     <div>
-                        <button className="button is-primary" onClick={this.submit}>Guardar</button>
+                        <button className="button is-primary" disabled={this.state.disabled} onClick={this.submit}>Guardar</button>
                     </div>
                 </EventContent>
             </Fragment>
