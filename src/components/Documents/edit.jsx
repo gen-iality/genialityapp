@@ -61,7 +61,7 @@ class upload extends Component {
             console.log(desertRef)
             // //Delete the file
             await desertRef.delete().then(function () {
-                toast.success("Information Deleted")
+                toast.success("Documento Subido")
             }).catch(function (error) {
                 //Si no muestra el error por consola
                 console.log(error)
@@ -127,6 +127,7 @@ class upload extends Component {
             file = downloadURL
         })
         this.setState({ file })
+        toast.success("Documento Subido")
         console.log(await this.state.file)
     }
 
