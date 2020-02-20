@@ -5,6 +5,7 @@ import { DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import { sweetAlert } from "../../helpers/utils";
 import { toast } from 'react-toastify';
+import firebase from 'firebase';
 
 class documents extends Component {
     constructor(props) {
@@ -22,9 +23,21 @@ class documents extends Component {
         console.log(data)
     }
 
-    destroy(id, event) {
+    destroy(name,id,event) {
         let information = DocumentsApi.deleteOne(event, id);
         console.log(information);
+
+        const ref = firebase.storage().ref();
+            var desertRef = ref.child(`documents/${event}/${name}`);
+            console.log(desertRef)
+            // //Delete the file
+            desertRef.delete().then(function () {
+                //El dato se elimina aqui
+            }).catch(function (error) {
+                //Si no muestra el error
+                console.log(error)
+            });
+
         toast.success("Information Deleted")
         setTimeout(function () { 
             window.location.reload()
@@ -55,7 +68,7 @@ class documents extends Component {
                                             </Link>
                                         </td>
                                         <td>
-                                            <button onClick={this.destroy.bind(trivia.publicada, trivia._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            <button onClick={this.destroy.bind(trivia.publicada, trivia.name,trivia._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
                                         </td>
                                     </tr>
                                 ))

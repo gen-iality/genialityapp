@@ -3,7 +3,7 @@ import EventContent from '../events/shared/content';
 import { Redirect, withRouter } from "react-router-dom";
 import firebase from 'firebase';
 import { DocumentsApi } from '../../helpers/request';
-import { firestore } from '../../helpers/firebase'
+import { toast } from 'react-toastify';
 
 class upload extends Component {
 
@@ -61,9 +61,9 @@ class upload extends Component {
             console.log(desertRef)
             // //Delete the file
             await desertRef.delete().then(function () {
-                //El dato se elimina aqui
+                toast.success("Information Deleted")
             }).catch(function (error) {
-                //Si no muestra el error
+                //Si no muestra el error por consola
                 console.log(error)
             });
 
