@@ -2,8 +2,9 @@ import React, { Component, Fragment } from 'react'
 import EventContent from '../events/shared/content';
 import { Redirect, withRouter } from "react-router-dom";
 import firebase from 'firebase';
-import { DocumentsApi } from '../../helpers/request';
+import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
+import Select, { Creatable } from "react-select";
 
 class upload extends Component {
 
@@ -16,11 +17,54 @@ class upload extends Component {
             title: '',
             category: '',
             format: '',
-            fileName:'',
-            document:'',
+            fileName: '',
+            document: '',
             disabled: true,
-            data: []
+            data: [],
+            infoRol: [],
+            users: [],
+            infoUsers: [],
+            setEmails: [],
+            unvisibleUsers:[],
         }
+    }
+    async componentDidMount() {
+        const { data } = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
+        if (this.props.location.state.edit) {
+            this.setState({
+                title: data[0].title,
+                category: data[0].category,
+                file: data[0].file,
+                files: data[0].file,
+                rol: data[0].rol,
+                unvisibleUsers: data[0].users
+            })
+
+            this.setState({
+                document: data[0].name
+            })
+        }
+
+        const infoRol = await RolAttApi.byEvent(this.props.event._id)
+        this.setState({ infoRol })
+
+        const users = await UsersApi.getAll(this.props.event._id, "?pageSize=10000")
+        this.setState({
+            users: [
+                ...users.data
+            ]
+        })
+        
+        this.options()
+    }
+
+    options = () => {
+        var getEmail = this.state.users;
+        var setEmails = [];
+        for (var i = 0; i < getEmail.length; i += 1) {
+            setEmails.push({ value: getEmail[i].email, label: getEmail[i].email })
+        }
+        this.setState({ setEmails });
     }
 
     //Funcion para tomar todos los datos de los inputs y enviarlos al estado
@@ -30,38 +74,24 @@ class upload extends Component {
         this.setState({ [name]: value });
     };
 
+    selectRol = (rol) => {
+        this.setState({ rol })
+        console.log(rol);
+    };
+
     //Funcion para retroceder 
     goBack = () => this.setState({ redirect: true });
-
-    async componentDidMount() {
-        const { data } = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
-        if(this.props.location.state.edit){
-            this.setState({
-                title: data[0].title,
-                category: data[0].category,
-                file: data[0].file,
-                files: data[0].file,
-            })
-
-            this.setState({
-                document: data[0].name
-            })
-        }
-        
-
-        console.log(this.state)
-    }
 
     submit = async () => {
         if (this.props.location.state.edit) {
             console.log("editando")
-            
+
             const ref = firebase.storage().ref();
             var desertRef = ref.child(`documents/${this.props.event._id}/${this.state.document}`);
             console.log(desertRef)
             // //Delete the file
             await desertRef.delete().then(function () {
-                toast.success("Documento Subido")
+                console.log("Documento Actualizado")
             }).catch(function (error) {
                 //Si no muestra el error por consola
                 console.log(error)
@@ -72,11 +102,15 @@ class upload extends Component {
                 format: this.state.format,
                 file: this.state.file,
                 category: this.state.category,
-                name: this.state.fileName
+                name: this.state.fileName,
+                rol: this.state.rol,
+                users: this.state.unvisibleUsers
             }
 
+            console.log(data)
+
             const documento = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit)
-            console.log(documento);
+            console.log(documento)
 
             window.location.href = this.props.matchUrl
         } else {
@@ -86,11 +120,15 @@ class upload extends Component {
                 format: this.state.format,
                 file: this.state.file,
                 category: this.state.category,
-                name: this.state.fileName
+                name: this.state.fileName,
+                rol: this.state.rol,
+                users: this.state.unvisibleUsers
             }
 
+            console.log(data)
+
             await DocumentsApi.create(this.props.event._id, data)
-            console.log("documento creado")
+            console.log("Información creada")
             window.location.href = this.props.matchUrl
         }
     }
@@ -127,7 +165,7 @@ class upload extends Component {
             file = downloadURL
         })
         this.setState({ file })
-        toast.success("Documento Subido")
+        toast.success("Documento Guardado")
         console.log(await this.state.file)
     }
 
@@ -160,9 +198,25 @@ class upload extends Component {
         }
     }
 
+    selectMultiple=(unvisibleUsers)=>{
+        this.setState({ unvisibleUsers });
+        console.log(`Option selected:`, unvisibleUsers);
+    }
+    selectRol = () => {
+        const rol = document.getElementById("rol").value
+        this.setState({ rol });
+        console.log(`Option selected:`, rol);
+    };
+    
+
     render() {
         const { matchUrl } = this.props;
-        const { title, category, file } = this.state;
+        const { title, category, file, infoRol, rol, setEmails } = this.state;
+
+        const options = [
+            { value: setEmails, label: setEmails }
+        ]
+
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
             <Fragment>
@@ -170,18 +224,18 @@ class upload extends Component {
                     <h3>EL boton se habilitara en cuanto cargue un archivo</h3>
 
                     <div className="column is-4">
-                        <label>Nombre del documento</label>
+                        <label className="label">Nombre del documento</label>
                         <input className="input is-primary" value={title} name="title" onChange={this.changeInput} type="text" />
                     </div>
 
                     <div className="column is-4">
-                        <label>Categoria del documento</label>
+                        <label className="label">Categoria del documento</label>
                         <input className="input is-primary" value={category} name="category" onChange={this.changeInput} type="text" />
                     </div>
 
                     <div className="column is-4">
                         <div className="file has-name">
-                            <label className="file-label">
+                            <label className="label" className="file-label">
                                 <input className="file-input" type="file" id="file" name="file" onChange={this.saveImage} />
                                 <span className="file-cta">
                                     <span className="file-icon">
@@ -197,15 +251,40 @@ class upload extends Component {
                             </label>
                         </div>
                     </div>
-
+                    <div className="column">
+                        <label className="label">Visible para roles en especifico</label><br/>
+                        <div className="select is-pimary">
+                            <select id="rol" value={rol} name="rol" onChange={this.selectRol}>
+                                <option>...Seleccionar</option>
+                                <option value="todos">todos</option>
+                                {
+                                    infoRol.map((item, key) => (
+                                        <option value={item.name} key={key}>
+                                            {item.name}
+                                        </option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div className="column">
+                        <label className="label">Ocultar documentos para usuarios </label>
+                        <Select 
+                            id="selectMultiple"
+                            value={this.state.unvisibleUsers}    
+                            isMulti
+                            name="colors"
+                            options={setEmails}
+                            onChange={this.selectMultiple}
+                        />
+                    </div>
                     <div>
-                        <button className="button is-primary" disabled={this.state.disabled} onClick={this.submit}>Guardar</button>
+                        <button className="button is-primary float is-pulled-right" disabled={this.state.disabled} onClick={this.submit}>Guardar</button>
                     </div>
                 </EventContent>
             </Fragment>
         )
     }
-
 }
 
 export default withRouter(upload) 

@@ -54,7 +54,7 @@ class documents extends Component {
                 <div>
                     <h1></h1>
                     <EventContent title={"Documentos"} classes={"documents-list"} addAction={this.redirect} addTitle={"Nuevo documento"}>
-                        <EvenTable head={["Nombre", "Formato","Documento","Categoria", ""]}>
+                        <EvenTable head={["Nombre", "Formato","Documento","Categoria","Rol" ,""]}>
                             {
                                 list.map((trivia, key) => (
                                     <tr key={key}>
@@ -62,6 +62,7 @@ class documents extends Component {
                                         <td>{trivia.format}</td>
                                         <td><a href={trivia.file}>Descargar</a></td>
                                         <td>{trivia.category}</td>
+                                        <td>{trivia.rol}</td>
                                         <td>
                                             <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: trivia._id } }}>
                                                 <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
