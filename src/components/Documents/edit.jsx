@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Select, { Creatable } from "react-select";
+import Files from 'react-files'
 
 class upload extends Component {
 
@@ -22,12 +23,15 @@ class upload extends Component {
             disabled: true,
             data: [],
             infoRol: [],
+            nameFile: "",
             users: [],
             infoUsers: [],
             setEmails: [],
-            unvisibleUsers:[],
+            unvisibleUsers: [],
+            setRol: []
         }
     }
+
     async componentDidMount() {
         const { data } = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
         if (this.props.location.state.edit) {
@@ -47,6 +51,7 @@ class upload extends Component {
 
         const infoRol = await RolAttApi.byEvent(this.props.event._id)
         this.setState({ infoRol })
+        console.log(this.state.infoRol)
 
         const users = await UsersApi.getAll(this.props.event._id, "?pageSize=10000")
         this.setState({
@@ -54,8 +59,27 @@ class upload extends Component {
                 ...users.data
             ]
         })
-        
+        console.log(this.state.setEmails)
         this.options()
+        this.optionsRol()
+    }
+
+    onFilesChange = (files) => {
+        console.log(files)
+    }
+
+    onFilesError = (error) => {
+        console.log('error code ' + error.code + ': ' + error.message)
+    }
+
+    optionsRol = () => {
+        var getRol = this.state.infoRol;
+        var setRol = [];
+        for (var i = 0; i < getRol.length; i += 1) {
+            setRol.push({ value: getRol[i].name, label: getRol[i].name })
+        }
+        this.setState({ setRol })
+        console.log(this.state.setRol)
     }
 
     options = () => {
@@ -133,7 +157,7 @@ class upload extends Component {
         }
     }
 
-    saveImage = async () => {
+    saveDocument = async () => {
         //Se abre la conexion y se trae el documento
         let { uploadTask } = this.state
         const ref = firebase.storage().ref();
@@ -147,7 +171,11 @@ class upload extends Component {
         this.setState({ disabled: false })
 
         //Se crea el nombre con base a la fecha y nombre del archivo
-        const name = (+new Date()) + '-' + files.name;
+        const name = await files.name;
+        this.setState({
+            title: name
+        })
+
         this.setState({ fileName: name })
         uploadTask = ref.child(`documents/${this.props.event._id}/${name}`).put(files)
 
@@ -183,8 +211,13 @@ class upload extends Component {
         }
     }
 
+    uploadManyFiles(event) {
+        let files = document.getElementById("files").files
+        console.log(files)
+    }
+
     WrongUpdateFiles = (error) => {
-        //Si hay algun error se valida si fu cancelada la carga, si no tiene acceso o si hay un error al guardar
+        //Si hay algun error se valida si fue cancelada la carga, si no tiene acceso o si hay un error al guardar
         switch (error.code) {
             case 'storage/unauthorized':
                 break;
@@ -198,24 +231,22 @@ class upload extends Component {
         }
     }
 
-    selectMultiple=(unvisibleUsers)=>{
+    selectMultiple = (unvisibleUsers) => {
         this.setState({ unvisibleUsers });
         console.log(`Option selected:`, unvisibleUsers);
     }
-    selectRol = () => {
-        const rol = document.getElementById("rol").value
+    selectRol = (rol) => {
+        // const rol = document.getElementById("rol").value
+        // this.setState({ rol });
+        // console.log(`Option selected:`, rol);
         this.setState({ rol });
         console.log(`Option selected:`, rol);
     };
-    
+
 
     render() {
         const { matchUrl } = this.props;
-        const { title, category, file, infoRol, rol, setEmails } = this.state;
-
-        const options = [
-            { value: setEmails, label: setEmails }
-        ]
+        const { title, file, infoRol, setRol, rol, setEmails } = this.state;
 
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
@@ -224,19 +255,9 @@ class upload extends Component {
                     <h3>EL boton se habilitara en cuanto cargue un archivo</h3>
 
                     <div className="column is-4">
-                        <label className="label">Nombre del documento</label>
-                        <input className="input is-primary" value={title} name="title" onChange={this.changeInput} type="text" />
-                    </div>
-
-                    <div className="column is-4">
-                        <label className="label">Categoria del documento</label>
-                        <input className="input is-primary" value={category} name="category" onChange={this.changeInput} type="text" />
-                    </div>
-
-                    <div className="column is-4">
                         <div className="file has-name">
                             <label className="label" className="file-label">
-                                <input className="file-input" type="file" id="file" name="file" onChange={this.saveImage} />
+                                <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
                                 <span className="file-cta">
                                     <span className="file-icon">
                                         <i className="fas fa-upload"></i>
@@ -251,27 +272,26 @@ class upload extends Component {
                             </label>
                         </div>
                     </div>
+
+                    <div className="column is-4">
+                        <label className="label">Nombre del documento</label>
+                        <input className="input is-primary" value={title} name="title" onChange={this.changeInput} type="text" />
+                    </div>
+
                     <div className="column">
-                        <label className="label">Visible para roles en especifico</label><br/>
-                        <div className="select is-pimary">
-                            <select id="rol" value={rol} name="rol" onChange={this.selectRol}>
-                                <option>...Seleccionar</option>
-                                <option value="todos">todos</option>
-                                {
-                                    infoRol.map((item, key) => (
-                                        <option value={item.name} key={key}>
-                                            {item.name}
-                                        </option>
-                                    ))
-                                }
-                            </select>
-                        </div>
+                        <label className="label">Visible para roles en especifico</label><br />
+                        <Select id="rol"
+                            value={this.state.rol}
+                            isMulti
+                            name="colors"
+                            options={setRol}
+                            onChange={this.selectRol} />
                     </div>
                     <div className="column">
-                        <label className="label">Ocultar documentos para usuarios </label>
-                        <Select 
+                        <label className="label">Documentos Visibles para usuarios </label>
+                        <Select
                             id="selectMultiple"
-                            value={this.state.unvisibleUsers}    
+                            value={this.state.unvisibleUsers}
                             isMulti
                             name="colors"
                             options={setEmails}
@@ -279,7 +299,7 @@ class upload extends Component {
                         />
                     </div>
                     <div>
-                        <button className="button is-primary float is-pulled-right" disabled={this.state.disabled} onClick={this.submit}>Guardar</button>
+                        <button className="button is-primary float is-pulled-right" onClick={this.submit}>Guardar</button>
                     </div>
                 </EventContent>
             </Fragment>

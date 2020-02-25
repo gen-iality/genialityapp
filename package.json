@@ -24,6 +24,7 @@
     "react-dropzone": "^4.3.0",
     "react-dynamic-input": "^0.1.5",
     "react-event-listener": "^0.6.6",
+    "react-files": "^2.4.8",
     "react-geosuggest": "^2.8.0",
     "react-google-maps": "^9.4.5",
     "react-icons": "^3.7.0",
