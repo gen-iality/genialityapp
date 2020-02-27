@@ -3,7 +3,6 @@ import EventContent from '../events/shared/content';
 import EvenTable from "../events/shared/table";
 import { DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
-import { sweetAlert } from "../../helpers/utils";
 import { toast } from 'react-toastify';
 import firebase from 'firebase';
 
@@ -203,7 +202,6 @@ class documents extends Component {
                                     <button className="button is-primary" disabled={this.state.disabledButton} onClick={this.createFolder}>Crear Carpeta</button>
                                 </div>
                             </div>
-
                         </div>
                         <EvenTable head={["Nombre", ""]}>
                             {
@@ -213,10 +211,20 @@ class documents extends Component {
                                         <td>
                                             {
                                                 documents.type === "folder" ?
+                                                    <p>Carpeta</p> :
+                                                    <a href={documents.file}>Descargar</a>
+                                            }
+                                        </td>
+                                        <td>
+                                            {
+                                                documents.type === "file" ?
+                                                    <Link to={{ pathname: `${this.props.matchUrl}/permission`, state: { edit: documents._id } }}>
+                                                        <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
+                                                    </Link>
+                                                    :
                                                     <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: documents._id } }}>
                                                         <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
-                                                    </Link> :
-                                                    <a href={documents.file}>Descargar</a>
+                                                    </Link>
                                             }
                                         </td>
                                         <td>

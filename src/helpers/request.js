@@ -172,7 +172,7 @@ export const DocumentsApi = {
         return await Actions.getAll(`api/events/${event}/documents?father_id=${id}`)
     },
     getOne: async(event,id) => {
-        return await Actions.get(`api/events/${event}/documents`,id)
+        return await Actions.getOne(`api/events/${event}/documents/`,id)
     },
     editOne: async (event,data, id) => {
         return await Actions.edit(`api/events/${event}/documents`, data, id)

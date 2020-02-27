@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import EventContent from '../events/shared/content';
-import { Redirect, withRouter } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import firebase from 'firebase';
 import EvenTable from "../events/shared/table";
-import { Link } from "react-router-dom";
 import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
-import Select, { Creatable } from "react-select";
-import Files from 'react-files'
+import Select from "react-select";
 
 class upload extends Component {
 
@@ -18,6 +16,7 @@ class upload extends Component {
             file: "",
             uploadTask: '',
             title: '',
+            name:'',
             category: '',
             data: [],
             format: '',
@@ -25,7 +24,6 @@ class upload extends Component {
             document: '',
             disabled: true,
             files: [],
-            file: "",
             data: [],
             infoRol: [],
             nameFile: "",
@@ -100,12 +98,13 @@ class upload extends Component {
     submit = async () => {
 
         const data = {
+            name: this.state.title,
             title: this.state.title,
             format: this.state.format,
             type: "file",
             file: this.state.file,
-            rol: this.state.rol,
-            users: this.state.unvisibleUsers,
+            permissionRol: this.state.rol,
+            permissionUser: this.state.unvisibleUsers,
             father_id: this.props.location.state.edit
         }
 
@@ -243,7 +242,7 @@ class upload extends Component {
 
                     <div className="column is-4">
                         <label className="label">Nombre del Documento</label>
-                        <input className="input is-primary" value={title} name="title" onChange={this.changeInput} type="text" />
+                        <input className="input is-primary" disabled defaultValue={title} name="title" onChange={this.changeInput} type="text" />
                     </div>
 
                     <div className="column">
@@ -278,10 +277,17 @@ class upload extends Component {
                                         <td>{document.title}</td>
                                         <td>{document.format}</td>
                                         <td>
+                                            {
+                                                <Link to={{ pathname: `${this.props.matchUrl}/permission`, state: { edit: document._id } }}>
+                                                    <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
+                                                </Link>
+                                            }
+                                        </td>
+                                        <td>
                                             <a href={document.file}>Descargar</a>
                                         </td>
                                         <td>
-                                            <button onClick={this.destroy.bind(document.publicada, document.title, document._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            <button onClick={this.destroy.bind(document.publicada, document.name, document._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
                                         </td>
                                     </tr>
                                 ))
