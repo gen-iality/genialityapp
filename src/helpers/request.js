@@ -168,6 +168,9 @@ export const DocumentsApi = {
     getAll: async (event) => {
         return await Actions.getAll(`api/events/${event}/documents`)
     },
+    getFiles: async (event,id)=>{
+        return await Actions.getAll(`api/events/${event}/documents?father_id=${id}`)
+    },
     getOne: async(event,id) => {
         return await Actions.get(`api/events/${event}/documents`,id)
     },

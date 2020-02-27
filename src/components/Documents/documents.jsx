@@ -14,7 +14,8 @@ class documents extends Component {
             loading: false,
             redirect: false,
             list: [],
-            file: ""
+            file: "",
+            disabledButton: true
         };
     }
 
@@ -56,13 +57,27 @@ class documents extends Component {
     succesUploadFile = async () => {
         //Si el documento esta o existe se manda a firebase se extrae la url de descarga y se manda al estado
         let { file, uploadTask } = this.state
-        // await uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-        //     file = downloadURL
-        // })
-        // this.setState({ file })
+        await uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+            file = downloadURL
+        })
+        this.setState({ file })
+
+        const data = {
+            name: this.state.fileName,
+            file: this.state.file,
+            type: "file",
+            format: this.state.format
+        }
+
         console.log(uploadTask)
+        console.log(data)
+
+        const savedData = await DocumentsApi.create(this.props.event._id, data)
+        console.log(savedData)
         toast.success("Documento Guardado")
-        console.log(await this.state.file)
+        setTimeout(function () {
+            window.location.reload()
+        }, 2000);
     }
 
     stateUploadFile = (snapshot) => {
@@ -94,25 +109,65 @@ class documents extends Component {
         }
     }
 
-    destroy(name, id, event) {
-        let information = DocumentsApi.deleteOne(event, id);
+    destroy = async (name, id, event) => {
+        console.log(name, id, event)
+        let information = await DocumentsApi.deleteOne(event, id);
         console.log(information);
 
-        const ref = firebase.storage().ref();
-        var desertRef = ref.child(`documents/${event}/${name}`);
+        const ref = firebase.storage().ref(`documents/${event}/`);
+        var desertRef = ref.child(`${name}`);
         console.log(desertRef)
-        // //Delete the file
+        // // //Delete the file
         desertRef.delete().then(function () {
-            //El dato se elimina aqui
+            //     //El dato se elimina aqui
         }).catch(function (error) {
-            //Si no muestra el error
+            //     //Si no muestra el error
             console.log(error)
         });
 
         toast.success("Information Deleted")
         setTimeout(function () {
             window.location.reload()
-        }, 4000);
+        }, 2000);
+    }
+
+    destroyFolder = async (id_folder) => {
+        let information = await DocumentsApi.deleteOne(this.props.event._id, id_folder);
+        console.log(information);
+
+        toast.success("Information Deleted")
+        setTimeout(function () {
+            window.location.reload()
+        }, 2000);
+    }
+
+    createFolder = async () => {
+        let value = document.getElementById("folderName").value
+
+        const data = {
+            type: "folder",
+            name: value
+        }
+        const savedData = await DocumentsApi.create(this.props.event._id, data)
+        console.log(savedData)
+        setTimeout(function () {
+            window.location.reload()
+        }, 2000);
+    }
+
+    enableButton = async () => {
+        let value = document.getElementById("folderName").value
+
+        if (value) {
+            this.setState({
+                disabledButton: false
+            })
+        } else {
+            this.setState({
+                disabledButton: true
+            })
+        }
+
     }
 
     redirect = () => this.setState({ redirect: true });
@@ -123,7 +178,7 @@ class documents extends Component {
         return (
             <Fragment>
                 <div>
-                    <EventContent title={"Documentos"} classes={"documents-list"} addAction={this.redirect} addTitle={"Nuevo documento"}>
+                    <EventContent title={"Documentos"} classes={"documents-list"}>
                         <div className="column is-4">
                             <div className="file has-name">
                                 <label className="label" className="file-label">
@@ -133,7 +188,7 @@ class documents extends Component {
                                             <i className="fas fa-upload"></i>
                                         </span>
                                         <span className="file-label">
-                                            Choose a file…
+                                            Cargar Archivo
                                                 </span>
                                     </span>
                                     <span className="file-name">
@@ -141,21 +196,37 @@ class documents extends Component {
                                     </span>
                                 </label>
                             </div>
+                            <div className="column is-12">
+                                <label className="label">Nombre de la carpeta</label>
+                                <input className="input is-primary" onChange={this.enableButton} type="text" id="folderName" />
+                                <div className="column is-4">
+                                    <button className="button is-primary" disabled={this.state.disabledButton} onClick={this.createFolder}>Crear Carpeta</button>
+                                </div>
+                            </div>
+
                         </div>
-                        <EvenTable head={["Nombre", "Formato", "Documento", ""]}>
+                        <EvenTable head={["Nombre", ""]}>
                             {
-                                list.map((trivia, key) => (
+                                list.map((documents, key) => (
                                     <tr key={key}>
-                                        <td>{trivia.title}</td>
-                                        <td>{trivia.format}</td>
-                                        <td><a href={trivia.file}>Descargar</a></td>
+                                        <td>{documents.name}</td>
                                         <td>
-                                            <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: trivia._id } }}>
-                                                <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
-                                            </Link>
+                                            {
+                                                documents.type === "folder" ?
+                                                    <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: documents._id } }}>
+                                                        <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
+                                                    </Link> :
+                                                    <a href={documents.file}>Descargar</a>
+                                            }
                                         </td>
                                         <td>
-                                            <button onClick={this.destroy.bind(trivia.publicada, trivia.name, trivia._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            {
+                                                documents.type === "folder" ?
+                                                    <button onClick={this.destroyFolder.bind(this.props.event._id, documents._id)}><span className="icon"><i className="fas fa-dumpster" /></span></button>
+                                                    :
+                                                    <button onClick={this.destroy.bind(documents.type, documents.name, documents._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            }
+
                                         </td>
                                     </tr>
                                 ))

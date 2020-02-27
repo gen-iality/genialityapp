@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react'
 import EventContent from '../events/shared/content';
 import { Redirect, withRouter } from "react-router-dom";
 import firebase from 'firebase';
+import EvenTable from "../events/shared/table";
+import { Link } from "react-router-dom";
 import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
 import { toast } from 'react-toastify';
 import Select, { Creatable } from "react-select";
@@ -17,10 +19,13 @@ class upload extends Component {
             uploadTask: '',
             title: '',
             category: '',
+            data: [],
             format: '',
             fileName: '',
             document: '',
             disabled: true,
+            files: [],
+            file: "",
             data: [],
             infoRol: [],
             nameFile: "",
@@ -33,25 +38,12 @@ class upload extends Component {
     }
 
     async componentDidMount() {
-        const { data } = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
-        if (this.props.location.state.edit) {
-            this.setState({
-                title: data[0].title,
-                category: data[0].category,
-                file: data[0].file,
-                files: data[0].file,
-                rol: data[0].rol,
-                unvisibleUsers: data[0].users
-            })
-
-            this.setState({
-                document: data[0].name
-            })
-        }
+        const { data } = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
+        console.log(data)
+        this.setState({ data })
 
         const infoRol = await RolAttApi.byEvent(this.props.event._id)
         this.setState({ infoRol })
-        console.log(this.state.infoRol)
 
         const users = await UsersApi.getAll(this.props.event._id, "?pageSize=10000")
         this.setState({
@@ -59,7 +51,6 @@ class upload extends Component {
                 ...users.data
             ]
         })
-        console.log(this.state.setEmails)
         this.options()
         this.optionsRol()
     }
@@ -107,54 +98,22 @@ class upload extends Component {
     goBack = () => this.setState({ redirect: true });
 
     submit = async () => {
-        if (this.props.location.state.edit) {
-            console.log("editando")
 
-            const ref = firebase.storage().ref();
-            var desertRef = ref.child(`documents/${this.props.event._id}/${this.state.document}`);
-            console.log(desertRef)
-            // //Delete the file
-            await desertRef.delete().then(function () {
-                console.log("Documento Actualizado")
-            }).catch(function (error) {
-                //Si no muestra el error por consola
-                console.log(error)
-            });
-
-            const data = {
-                title: this.state.title,
-                format: this.state.format,
-                file: this.state.file,
-                category: this.state.category,
-                name: this.state.fileName,
-                rol: this.state.rol,
-                users: this.state.unvisibleUsers
-            }
-
-            console.log(data)
-
-            const documento = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit)
-            console.log(documento)
-
-            window.location.href = this.props.matchUrl
-        } else {
-
-            const data = {
-                title: this.state.title,
-                format: this.state.format,
-                file: this.state.file,
-                category: this.state.category,
-                name: this.state.fileName,
-                rol: this.state.rol,
-                users: this.state.unvisibleUsers
-            }
-
-            console.log(data)
-
-            await DocumentsApi.create(this.props.event._id, data)
-            console.log("Información creada")
-            window.location.href = this.props.matchUrl
+        const data = {
+            title: this.state.title,
+            format: this.state.format,
+            type: "file",
+            file: this.state.file,
+            rol: this.state.rol,
+            users: this.state.unvisibleUsers,
+            father_id: this.props.location.state.edit
         }
+
+        console.log(data)
+
+        const savedData = await DocumentsApi.create(this.props.event._id, data)
+        console.log(savedData)
+        window.location.href = this.props.matchUrl
     }
 
     saveDocument = async () => {
@@ -196,7 +155,6 @@ class upload extends Component {
         toast.success("Documento Guardado")
         console.log(await this.state.file)
     }
-
     stateUploadFile = (snapshot) => {
         //Se valida el estado del archivo si esta en pausa y esta subiendo
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -209,11 +167,6 @@ class upload extends Component {
                 console.log('Upload is running');
                 break;
         }
-    }
-
-    uploadManyFiles(event) {
-        let files = document.getElementById("files").files
-        console.log(files)
     }
 
     WrongUpdateFiles = (error) => {
@@ -236,24 +189,39 @@ class upload extends Component {
         console.log(`Option selected:`, unvisibleUsers);
     }
     selectRol = (rol) => {
-        // const rol = document.getElementById("rol").value
-        // this.setState({ rol });
-        // console.log(`Option selected:`, rol);
         this.setState({ rol });
         console.log(`Option selected:`, rol);
     };
 
+    destroy(name, id, event) {
+        let information = DocumentsApi.deleteOne(event, id);
+        console.log(information);
+
+        const ref = firebase.storage().ref(`documents/${event}/`);
+        var desertRef = ref.child(`${name}`);
+        console.log(desertRef)
+        // //Delete the file
+        desertRef.delete().then(function () {
+            //El dato se elimina aqui
+        }).catch(function (error) {
+            //Si no muestra el error
+            console.log(error)
+        });
+
+        toast.success("Information Eliminada")
+        setTimeout(function () {
+            window.location.reload()
+        }, 3000);
+    }
 
     render() {
         const { matchUrl } = this.props;
-        const { title, file, infoRol, setRol, rol, setEmails } = this.state;
+        const { title, file, data, setRol, rol, setEmails } = this.state;
 
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
             <Fragment>
                 <EventContent title="Documentos" closeAction={this.goBack}>
-                    <h3>EL boton se habilitara en cuanto cargue un archivo</h3>
-
                     <div className="column is-4">
                         <div className="file has-name">
                             <label className="label" className="file-label">
@@ -274,7 +242,7 @@ class upload extends Component {
                     </div>
 
                     <div className="column is-4">
-                        <label className="label">Nombre del documento</label>
+                        <label className="label">Nombre del Documento</label>
                         <input className="input is-primary" value={title} name="title" onChange={this.changeInput} type="text" />
                     </div>
 
@@ -300,6 +268,25 @@ class upload extends Component {
                     </div>
                     <div>
                         <button className="button is-primary float is-pulled-right" onClick={this.submit}>Guardar</button>
+                    </div>
+
+                    <div>
+                        <EvenTable head={["Nombre", "Tipo de archivo", ""]}>
+                            {
+                                data.map((document, key) => (
+                                    <tr key={key}>
+                                        <td>{document.title}</td>
+                                        <td>{document.format}</td>
+                                        <td>
+                                            <a href={document.file}>Descargar</a>
+                                        </td>
+                                        <td>
+                                            <button onClick={this.destroy.bind(document.publicada, document.title, document._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </EvenTable>
                     </div>
                 </EventContent>
             </Fragment>
