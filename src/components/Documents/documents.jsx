@@ -38,7 +38,7 @@ class documents extends Component {
         this.setState({ disabled: false })
 
         //Se crea el nombre con base a la fecha y nombre del archivo
-        const name = await files.name;
+        const name = await (+new Date()) + '-' + files.name;
         this.setState({
             title: name
         })
@@ -63,6 +63,7 @@ class documents extends Component {
 
         const data = {
             name: this.state.fileName,
+            title: this.state.fileName,
             file: this.state.file,
             type: "file",
             format: this.state.format
@@ -145,7 +146,7 @@ class documents extends Component {
 
         const data = {
             type: "folder",
-            name: value
+            title: value
         }
         const savedData = await DocumentsApi.create(this.props.event._id, data)
         console.log(savedData)
@@ -207,7 +208,7 @@ class documents extends Component {
                             {
                                 list.map((documents, key) => (
                                     <tr key={key}>
-                                        <td>{documents.name}</td>
+                                        <td>{documents.title}</td>
                                         <td>
                                             {
                                                 documents.type === "folder" ?

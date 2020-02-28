@@ -129,7 +129,7 @@ class upload extends Component {
         this.setState({ disabled: false })
 
         //Se crea el nombre con base a la fecha y nombre del archivo
-        const name = await files.name;
+        const name = await (+new Date()) + '-' + files.name;
         this.setState({
             title: name
         })
@@ -274,7 +274,7 @@ class upload extends Component {
                             {
                                 data.map((document, key) => (
                                     <tr key={key}>
-                                        <td>{document.title}</td>
+                                        <td>{document.title ? document.title : document.name}</td>
                                         <td>{document.format}</td>
                                         <td>
                                             {
