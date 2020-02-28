@@ -37,7 +37,7 @@ class upload extends Component {
 
     async componentDidMount() {
         const { data } = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
-        console.log(data)
+        // console.log(data)
         this.setState({ data })
 
         const infoRol = await RolAttApi.byEvent(this.props.event._id)
@@ -51,14 +51,6 @@ class upload extends Component {
         })
         this.options()
         this.optionsRol()
-    }
-
-    onFilesChange = (files) => {
-        console.log(files)
-    }
-
-    onFilesError = (error) => {
-        console.log('error code ' + error.code + ': ' + error.message)
     }
 
     optionsRol = () => {
@@ -87,11 +79,6 @@ class upload extends Component {
         this.setState({ [name]: value });
     };
 
-    selectRol = (rol) => {
-        this.setState({ rol })
-        console.log(rol);
-    };
-
     //Funcion para retroceder 
     goBack = () => this.setState({ redirect: true });
 
@@ -108,10 +95,10 @@ class upload extends Component {
             father_id: this.props.location.state.edit
         }
 
-        console.log(data)
+        // console.log(data)
 
         const savedData = await DocumentsApi.create(this.props.event._id, data)
-        console.log(savedData)
+        // console.log(savedData)
         window.location.href = this.props.matchUrl
     }
 
@@ -152,12 +139,12 @@ class upload extends Component {
         })
         this.setState({ file })
         toast.success("Documento Guardado")
-        console.log(await this.state.file)
+        // console.log(await this.state.file)
     }
     stateUploadFile = (snapshot) => {
         //Se valida el estado del archivo si esta en pausa y esta subiendo
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
+        // console.log('Upload is ' + progress + '% done');
         switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED:
                 console.log('Upload is paused');
@@ -185,20 +172,20 @@ class upload extends Component {
 
     selectMultiple = (unvisibleUsers) => {
         this.setState({ unvisibleUsers });
-        console.log(`Option selected:`, unvisibleUsers);
+        // console.log(`Option selected:`, unvisibleUsers);
     }
     selectRol = (rol) => {
         this.setState({ rol });
-        console.log(`Option selected:`, rol);
+        // console.log(`Option selected:`, rol);
     };
 
     destroy(name, id, event) {
         let information = DocumentsApi.deleteOne(event, id);
-        console.log(information);
+        // console.log(information);
 
         const ref = firebase.storage().ref(`documents/${event}/`);
         var desertRef = ref.child(`${name}`);
-        console.log(desertRef)
+        // console.log(desertRef)
         // //Delete the file
         desertRef.delete().then(function () {
             //El dato se elimina aqui
@@ -207,7 +194,7 @@ class upload extends Component {
             console.log(error)
         });
 
-        toast.success("Information Eliminada")
+        toast.success("Información Eliminada")
         setTimeout(function () {
             window.location.reload()
         }, 3000);

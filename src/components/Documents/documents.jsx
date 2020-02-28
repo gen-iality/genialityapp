@@ -155,6 +155,20 @@ class documents extends Component {
         }, 2000);
     }
 
+    modal = () => {
+        document.querySelectorAll('.modal-button').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var target = document.querySelector(el.getAttribute('data-target'));
+
+                target.classList.add('is-active');
+
+                target.querySelector('.modal-close').addEventListener('click', function () {
+                    target.classList.remove('is-active');
+                });
+            });
+        });
+    }
+
     enableButton = async () => {
         let value = document.getElementById("folderName").value
 
@@ -179,8 +193,8 @@ class documents extends Component {
             <Fragment>
                 <div>
                     <EventContent title={"Documentos"} classes={"documents-list"}>
-                        <div className="column is-4">
-                            <div className="file has-name">
+                        <div className="column is-12">
+                            <div style={{ display: "inline-block" }} className="file has-name">
                                 <label className="label" className="file-label">
                                     <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
                                     <span className="file-cta">
@@ -196,11 +210,24 @@ class documents extends Component {
                                     </span>
                                 </label>
                             </div>
-                            <div className="column is-12">
-                                <label className="label">Nombre de la carpeta</label>
-                                <input className="input is-primary" onChange={this.enableButton} type="text" id="folderName" />
-                                <div className="column is-4">
-                                    <button className="button is-primary" disabled={this.state.disabledButton} onClick={this.createFolder}>Crear Carpeta</button>
+
+                            <div style={{ display: "inline" }} className="column is-12">
+                                <button className="button is-primary modal-button" onClick={this.modal} data-target="#myModal" aria-haspopup="true">Carpeta Nueva</button>
+
+                                <div className="modal" id="myModal">
+                                    <div className="modal-background"></div>
+                                    <div className="modal-content">
+                                        <div className="box">
+                                            <div className="column is-12">
+                                                <label className="label">Nombre de la carpeta</label>
+                                                <input className="input is-primary" onChange={this.enableButton} type="text" id="folderName" />
+                                                <div className="column is-4">
+                                                    <button className="button is-primary" disabled={this.state.disabledButton} onClick={this.createFolder}>Crear Carpeta</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button className="modal-close is-large" aria-label="close"></button>
                                 </div>
                             </div>
                         </div>
