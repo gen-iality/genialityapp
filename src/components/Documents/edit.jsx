@@ -16,7 +16,7 @@ class upload extends Component {
             file: "",
             uploadTask: '',
             title: '',
-            name:'',
+            name: '',
             category: '',
             data: [],
             format: '',
@@ -31,14 +31,29 @@ class upload extends Component {
             infoUsers: [],
             setEmails: [],
             unvisibleUsers: [],
-            setRol: []
+            setRol: [],
+            nameFolder: "",
+            matchUrl: ""
         }
     }
 
     async componentDidMount() {
-        const { data } = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
-        // console.log(data)
-        this.setState({ data })
+        this.setState({
+            matchUrl: this.props.matchUrl
+        })
+
+        if(this.props.location.state.edit){
+            const {data} = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
+            this.setState({ data })
+        }
+        
+
+        const folderName = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
+        this.setState({
+            nameFolder: folderName.title
+        })
+
+        console.log(this.state.nameFolder)
 
         const infoRol = await RolAttApi.byEvent(this.props.event._id)
         this.setState({ infoRol })
@@ -83,23 +98,34 @@ class upload extends Component {
     goBack = () => this.setState({ redirect: true });
 
     submit = async () => {
+        const { matchUrl } = this.state
+        if (this.state.file) {
+            const data = {
+                name: this.state.title,
+                title: this.state.title,
+                format: this.state.format,
+                type: "file",
+                file: this.state.file,
+                permissionRol: this.state.rol,
+                permissionUser: this.state.unvisibleUsers,
+                father_id: this.props.location.state.edit
+            }
 
-        const data = {
-            name: this.state.title,
-            title: this.state.title,
-            format: this.state.format,
-            type: "file",
-            file: this.state.file,
-            permissionRol: this.state.rol,
-            permissionUser: this.state.unvisibleUsers,
-            father_id: this.props.location.state.edit
+            const savedData = await DocumentsApi.create(this.props.event._id, data)
+            console.log(savedData)
+            toast.success("Información Guardada")
+            setTimeout(function () {
+                window.location.href = matchUrl
+            }, 3000);
+
+
+        } else {
+            this.saveNameFolder()
+            toast.success("Información Guardada")
+            setTimeout(function () {
+                window.location.href = matchUrl
+            }, 3000);
         }
-
-        // console.log(data)
-
-        const savedData = await DocumentsApi.create(this.props.event._id, data)
-        // console.log(savedData)
-        window.location.href = this.props.matchUrl
     }
 
     saveDocument = async () => {
@@ -129,6 +155,14 @@ class upload extends Component {
 
         //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, this.stateUploadFile, this.Wrong, this.succesUploadFile)
+    }
+
+    saveNameFolder = async () => {
+        const data = {
+            title: this.state.nameFolder
+        }
+        const savedData = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit)
+        console.log(savedData)
     }
 
     succesUploadFile = async () => {
@@ -181,7 +215,7 @@ class upload extends Component {
 
     destroy(name, id, event) {
         let information = DocumentsApi.deleteOne(event, id);
-        // console.log(information);
+        console.log(information);
 
         const ref = firebase.storage().ref(`documents/${event}/`);
         var desertRef = ref.child(`${name}`);
@@ -202,78 +236,78 @@ class upload extends Component {
 
     render() {
         const { matchUrl } = this.props;
-        const { title, file, data, setRol, rol, setEmails } = this.state;
+        const { nameFolder, file, data, setRol, setEmails } = this.state;
 
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
             <Fragment>
-                <EventContent title="Documentos" closeAction={this.goBack}>
-                    <div className="column is-4">
-                        <div className="file has-name">
-                            <label className="label" className="file-label">
-                                <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
-                                <span className="file-cta">
-                                    <span className="file-icon">
-                                        <i className="fas fa-upload"></i>
+                <EventContent title="Carpeta" closeAction={this.goBack}>
+                    <div className="column is-12">
+                        <label className="label">Nombre de la carpeta</label>
+                        <div className="column is-7" style={{ display: "inline-block" }}>
+                            <input className="input is-primary" defaultValue={nameFolder} name="nameFolder" onChange={this.changeInput} type="text" />
+                        </div>
+
+                        <div className="column is-5" style={{ float: "right", display: "inline" }}>
+                            <button className="button is-primary float is-pulled-right" onClick={this.submit}>Guardar</button>
+                        </div>
+
+                        <div className="column">
+                            <label className="label">Permisos</label><br />
+                            <h4>Seleccione los roles que tendrán acceso a esta carpeta</h4>
+                            <Select id="rol"
+                                value={this.state.rol}
+                                isMulti
+                                name="colors"
+                                options={setRol}
+                                onChange={this.selectRol} />
+                        </div>
+                        <div className="column">
+                            <h4>Seleccione los usuarios que tendrán acceso a esta carpeta</h4>
+                            <Select
+                                id="selectMultiple"
+                                value={this.state.unvisibleUsers}
+                                isMulti
+                                name="colors"
+                                options={setEmails}
+                                onChange={this.selectMultiple}
+                            />
+                        </div>
+
+                        <div style={{float:"right"}}>
+                            <div className="file has-name">
+                                <label className="label" className="file-label">
+                                    <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
+                                    <span className="file-cta">
+                                        <span className="file-icon">
+                                            <i className="fas fa-upload"></i>
+                                        </span>
+                                        <span className="file-label">
+                                            Subir Archivo
                                     </span>
-                                    <span className="file-label">
-                                        Choose a file…
-                                                </span>
-                                </span>
-                                <span className="file-name">
-                                    {file}
-                                </span>
-                            </label>
+                                    </span>
+                                    <span className="file-name">
+                                        {file}
+                                    </span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    <div className="column is-4">
-                        <label className="label">Nombre del Documento</label>
-                        <input className="input is-primary" disabled defaultValue={title} name="title" onChange={this.changeInput} type="text" />
-                    </div>
-
-                    <div className="column">
-                        <label className="label">Visible para roles en especifico</label><br />
-                        <Select id="rol"
-                            value={this.state.rol}
-                            isMulti
-                            name="colors"
-                            options={setRol}
-                            onChange={this.selectRol} />
-                    </div>
-                    <div className="column">
-                        <label className="label">Documentos Visibles para usuarios </label>
-                        <Select
-                            id="selectMultiple"
-                            value={this.state.unvisibleUsers}
-                            isMulti
-                            name="colors"
-                            options={setEmails}
-                            onChange={this.selectMultiple}
-                        />
-                    </div>
                     <div>
-                        <button className="button is-primary float is-pulled-right" onClick={this.submit}>Guardar</button>
-                    </div>
-
-                    <div>
-                        <EvenTable head={["Nombre", "Tipo de archivo", ""]}>
+                        <EvenTable head={["Nombre", ""]}>
                             {
                                 data.map((document, key) => (
                                     <tr key={key}>
-                                        <td>{document.title ? document.title : document.name}</td>
-                                        <td>{document.format}</td>
                                         <td>
                                             {
                                                 <Link to={{ pathname: `${this.props.matchUrl}/permission`, state: { edit: document._id } }}>
-                                                    <button><span className="icon"><i className="fas fa-2x fa-chevron-right" /></span></button>
+                                                    {document.title ? document.title : document.name}
                                                 </Link>
                                             }
                                         </td>
                                         <td>
-                                            <a href={document.file}>Descargar</a>
-                                        </td>
-                                        <td>
+                                            <a style={{marginLeft:"2%"}} href={document.file}>Descargar</a>
                                             <button onClick={this.destroy.bind(document.publicada, document.name, document._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
                                         </td>
                                     </tr>

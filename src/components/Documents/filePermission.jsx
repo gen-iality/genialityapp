@@ -34,7 +34,7 @@ class filePermission extends Component {
 
     async componentDidMount() {
         const data  = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
-        console.log(data)
+       //console.log(data)
         this.setState({ 
             name: data.name,
             file: data.file,
@@ -67,7 +67,7 @@ class filePermission extends Component {
             setRol.push({ value: getRol[i].name, label: getRol[i].name })
         }
         this.setState({ setRol })
-        console.log(this.state.setRol)
+        //console.log(this.state.setRol)
     }
 
     options = () => {
@@ -104,7 +104,7 @@ class filePermission extends Component {
 
         }
 
-        console.log(data)
+        //console.log(data)
 
         const savedData = await DocumentsApi.editOne(this.props.event._id, data, this.props.location.state.edit)
         console.log(savedData)
@@ -113,12 +113,12 @@ class filePermission extends Component {
 
     selectRol = (permissionRol) => {
         this.setState({ permissionRol });
-        console.log(`Option selected:`, permissionRol);
+        //console.log(`Option selected:`, permissionRol);
     };
 
     selectUser = (permissionUser) => {
         this.setState({ permissionUser });
-        console.log(`Option selected:`, permissionUser);
+        //console.log(`Option selected:`, permissionUser);
     };
 
     render() {
