@@ -9,23 +9,24 @@ class TriviaEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true,
             redirect: false,
-            deleteID: false,
-            isLoading: { types: true, categories: true },
             data: [],
             survey: "",
-            publicada: ""
+            dateStart: "",
+            timeStart:"",
+            dateEnd:"",
+            timeEnd:"",
+            shareholders: [{ name: "" }]
         }
     }
 
     async componentDidMount() {
-        if(this.props.location.state.edit)
-        this.getInformation()
+
     }
 
     getInformation = async () => {
         const info = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit)
+        console.log(info)
         this.setState({ data: [info] })
         this.setState({ survey: info.survey })
         this.setState({ publicada: info.publicada })
@@ -39,79 +40,66 @@ class TriviaEdit extends Component {
         this.setState({ [name]: value });
     };
 
-    select = (select) => {
-        const publicada = select.target.value;
-        this.setState({ publicada })
+    selectDateStart = (select) => {
+        const dateStart = select.target.value;
+        this.setState({ dateStart })
     };
 
-    recolectInfo(){
-        const {survey,publicada} =this.state;
-        return {
-            survey,
-            publicada
-        }
-    }
+    selectDateEnd = (select) => {
+        const dateEnd = select.target.value;
+        this.setState({ dateEnd })
+    };
 
     submit = async () => {
-        const information = this.recolectInfo();
-        console.log(information);
-        const { event, location: { state } } = this.props;
-        if(state.edit){
-            await SurveysApi.editOne(information, state.edit, event._id)
-        }else{
-            await SurveysApi.createOne(event._id,information)
-        }
-        sweetAlert.hideLoading();
-        sweetAlert.showSuccess("Información guardada")
+        console.log("Nombre Encuesta: ",this.state.survey)
+        console.log("Fecha Inicio: ",this.state.dateStart)
+        console.log("Fecha Fin: ",this.state.dateEnd)
+        console.log("Hora Inicio: ",this.state.timeStart)
+        console.log("Hora Fin: ",this.state.timeEnd)
+    }
+    selectTimeStart = (select)=>{
+        const timeStart = select.target.value;
+        this.setState({ timeStart })
+    }
+    selectTimeEnd = (select)=>{
+        const timeEnd = select.target.value;
+        this.setState({ timeEnd })
     }
 
     render() {
         const { matchUrl } = this.props;
-        const { survey,publicada } = this.state;
-        if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
+        const { survey } = this.state;
+        if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
         return (
             <Fragment>
-                <EventContent title="Encuesta" closeAction={this.goBack}>
-                    <div>
-                        <label>Nombre</label>
-                        <input value={survey} className="input" placeholder="Nombre de la encuesta" name={"survey"} onChange={this.changeInput} />
-                    </div>
-
-                    <div className="column is-4">
+                <EventContent title="Trivias" closeAction={this.goBack}>
+                    <div className="columns is-6">
                         <div>
-                            <label>Activo</label>
+                            <label style={{ marginTop: "15%" }} className="label">Nombre de la trivia</label>
+                            <input value={survey} className="input" placeholder="Nombre de la encuesta" name={"survey"} onChange={this.changeInput} />
                         </div>
-                        <div class="select">
-                            <select value={publicada} onChange={this.select}>
-                                <option>...Seleccionar</option>
-                                <option value="si">Si</option>
-                                <option value="no">No</option>
-                            </select>
+                        <div className="column">
+                            <button onClick={this.submit} className="columns is-pulled-right button is-primary">Guardar</button>
                         </div>
                     </div>
-
-                    <div>
-                        <label>respuesta 1</label>
-                        <input type="text"/>
+                    <label style={{ marginTop: "5%" }} className="label">activar la encuesta</label>
+                    <div className="columns is-6">
+                        <div className="control has-icons-left has-icons-right">
+                            <input className="input is-success" onChange={this.selectDateStart} type="date" placeholder="Text input" />
+                            <span className="icon is-small is-left">
+                                <i className="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input style={{ marginLeft: "3%" }} onChange={this.selectTimeStart} className="column is-2 input is-primary" type="time" />
                     </div>
-
-                    <div>
-                        <label>respuesta 2</label>
-                        <input type="text"/>
-                    </div>
-
-                    <div>
-                        <label>respuesta 3</label>
-                        <input type="text"/>
-                    </div>
-
-                    <div>
-                        <label>respuesta 4</label>
-                        <input type="text"/>
-                    </div>
-
-                    <div className="column">
-                        <button onClick={this.submit} className="button is-primary">Guardar</button>
+                    <div style={{ marginTop: "5%" }} className="columns is-6">
+                        <div className="control has-icons-left has-icons-right">
+                            <input className="input is-success" onChange={this.selectDateEnd} type="date" placeholder="Text input" />
+                            <span className="icon is-small is-left">
+                                <i className="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input style={{ marginLeft: "3%" }} onChange={this.selectTimeEnd} className="column is-2 input is-primary" type="time" />
                     </div>
                 </EventContent>
             </Fragment>
