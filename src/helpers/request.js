@@ -147,13 +147,46 @@ export const SurveysApi = {
     getAll: async (event) => {
         return await Actions.getAll(`/api/events/${event}/surveys`)
     },
-    editOne: async (data, id, event) => {
-        return await Actions.edit(`/api/event/${event}/userproperties`, data, id)
+
+    getOne: async (event,id) => {
+        return await Actions.getOne(`/api/events/${event}/surveys/`,id)
     },
-    deleteOne: async (id, event) => {
-        return await Actions.delete(`/api/event/${event}/userproperties`, id);
+    createOne: async(event,data)=>{
+        return await Actions.create(`/api/events/${event}/surveys/`,data)
+    },
+    editOne: async (data, id, event) => {
+        return await Actions.edit(`/api/events/${event}/surveys`, data, id)
+    },
+    deleteOne: async (event, id) => {
+        return await Actions.delete(`/api/events/${event}/surveys`, id);
     }
 
+};
+
+export const DocumentsApi = {
+    
+    getAll: async (event) => {
+        return await Actions.getAll(`api/events/${event}/documents`)
+    },
+    byEvent: async(event) => {
+        return await Actions.getAll(`api/events/${event}/documents`).then(({data})=>data);
+    },
+
+    getFiles: async (event,id)=>{
+        return await Actions.getAll(`api/events/${event}/documents?father_id=${id}`)
+    },
+    getOne: async(event,id) => {
+        return await Actions.getOne(`api/events/${event}/documents/`,id)
+    },
+    editOne: async (event,data, id) => {
+        return await Actions.edit(`api/events/${event}/documents`, data, id)
+    },
+    deleteOne: async (event, id) => {
+        return await Actions.delete(`api/events/${event}/documents`, id);
+    },
+    create: async(event,data) => {
+        return await Actions.create(`api/events/${event}/documents`,data)
+    }
 };
 
 export const CategoriesApi = {

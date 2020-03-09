@@ -57,6 +57,8 @@ class Index extends Component {
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
             user.phoneNumber = user.phoneNumber ? user.phoneNumber : '';
             this.setState({loading:false,user,events,categories,valid:false},this.handleScroll);
+
+            console.log(events)
         }catch (e) {
             console.log(e.response);
             this.setState({timeout:true,loading:false,errorData:{status:e.response.status,message:JSON.stringify(e.response.data)}});

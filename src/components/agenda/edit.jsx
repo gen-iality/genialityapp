@@ -7,12 +7,14 @@ import Select, { Creatable } from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { AgendaApi, EventsApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi } from "../../helpers/request";
+import { AgendaApi, EventsApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi, DocumentsApi } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import documents from '../Documents/documents';
+import { select } from 'async';
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -42,10 +44,12 @@ class AgendaEdit extends Component {
             days: [],
             spaces: [],
             categories: [],
+            documents: [],
             types: [],
             roles: [],
-            hosts: []
-            
+            hosts: [],
+            selected_document: [],
+            nameDocuments: []
         }
     }
 
@@ -61,8 +65,17 @@ class AgendaEdit extends Component {
         for (let i = 0; i < diff + 1; i++) {
             days.push(Moment(init).add(i, 'd').format("YYYY-MM-DD"))
         }
+        let documents = await DocumentsApi.byEvent(this.props.event._id);
+        let nameDocuments = []
+        for (var i = 0; i < documents.length; i += 1) {
+            nameDocuments.push({ name: documents[i].title, value: documents[i].title, label: documents[i].title })
+        }
+        this.setState({ nameDocuments })
+        console.log(nameDocuments)
+
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
+        console.log(hosts)
         let roles = await RolAttApi.byEvent(this.props.event._id);
         let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         let types = await TypesAgendaApi.byEvent(this.props.event._id);
@@ -74,6 +87,8 @@ class AgendaEdit extends Component {
         types = handleSelect(types);
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
+            console.log(info.selected_document)
+            this.setState({selected_document: info.selected_document})
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -112,6 +127,11 @@ class AgendaEdit extends Component {
     selectRol = (selectedRol) => {
         this.setState({ selectedRol });
     };
+
+    selectDocuments = (selected_document) => {
+        console.log(selected_document);
+        this.setState({ selected_document });
+    }
     //FN para los select que permiten crear opción
     handleCreate = async (value, name) => {
         try {
@@ -181,7 +201,7 @@ class AgendaEdit extends Component {
             try {
                 const info = this.buildInfoLanguage();
                 console.log(info)
-                
+
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
                 this.setState({ isLoading: true });
@@ -200,8 +220,8 @@ class AgendaEdit extends Component {
     };
 
     buildInfoLanguage = () => {
-        const { name, subtitle,has_date,hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
+        const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
@@ -224,14 +244,14 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
-    
+            selected_document
         }
     };
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle, has_date,  hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
+        const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
@@ -254,8 +274,7 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
-            
-            
+            selected_document
         }
     };
 
@@ -311,8 +330,8 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({ redirect: true });
 
     render() {
-        const { loading, name, subtitle, has_date, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
-        const { hosts, spaces, categories, types, roles, isLoading } = this.state;
+        const { loading, name, subtitle, nameDocuments, selected_document, has_date, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
+        const { hosts, spaces, categories, types, roles, documents, isLoading } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
@@ -443,6 +462,13 @@ class AgendaEdit extends Component {
                                     </div>
                                 </Fragment>
                             }
+                            <div className="field">
+                                <label className="label">Documentos</label>
+                                <Select isClearable isMulti styles={creatableStyles} onChange={this.selectDocuments}
+                                    options={nameDocuments} value={selected_document} />
+                            </div>
+
+
                             <div className="field">
                                 <label className="label">Descripción</label>
                                 <div className="control">
