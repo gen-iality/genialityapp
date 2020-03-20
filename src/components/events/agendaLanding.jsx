@@ -75,9 +75,11 @@ class Agenda extends Component {
     }
 
     filterBySpace = (space, dates) => {
-        const list = this.state.list.filter(a => a.space.name === space,a => a.datetime_start.includes(this.state.day.format("YYYY-MM-DD")))
-        .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
-        console.log(this.state.days)
+        const listDay = dates.filter(a => a.datetime_start.includes(this.state.day.format("YYYY-MM-DD")))
+            .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
+
+        const list = listDay.filter(a => a.space.name === space);
+        console.log(this.state.day)
         list.map(item => {
             item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
             item.roles = item.access_restriction_roles.map(({ name }) => name);
