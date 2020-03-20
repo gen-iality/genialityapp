@@ -146,11 +146,11 @@ class Agenda extends Component {
                                                 <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
                                                 {agenda.space.name}
                                             </div>
-                                            {agenda.hosts.map(({ name }) =>
-                                                <div>
+                                            {agenda.hosts.map(( speaker,key ) =>
+                                                <div key={key}>
                                                     <br style={{ marginTop: "5%" }} />
                                                     <strong>Conferencista</strong>
-                                                    <p>{name}</p>
+                                                    <p>{speaker.name}</p>
                                                 </div>
                                             )}
                                         </div>
@@ -158,7 +158,7 @@ class Agenda extends Component {
                                     </div>
                                 </div>
                                 <footer className="card-footer">
-                                    {agenda.activity_categories.map(cat => <span style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
+                                    {agenda.activity_categories.map((cat,key) => <span key={key} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
                                 </footer>
                             </div>
                         )
