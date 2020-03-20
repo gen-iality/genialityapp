@@ -25,6 +25,7 @@ class Agenda extends Component {
     }
 
     async componentDidMount() {
+        //Se carga esta funcion para cargar los datos 
         this.fetchAgenda()
 
         const { event } = this.props;
@@ -40,11 +41,13 @@ class Agenda extends Component {
     }
 
     fetchAgenda = async () => {
+        // Se consulta a la api de agenda
         const { data } = await AgendaApi.byEvent(this.props.eventId);
 
+        //se consulta la api de espacios para 
         let space = await SpacesApi.byEvent(this.props.event._id);
 
-        //Después de traer la info se filtra por el primer día por defecto
+        //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
         const filtered = this.filterByDay(this.state.days[0], data);
         this.setState({ list: data, filtered, toShow: filtered, spaces: space })
 
@@ -52,9 +55,12 @@ class Agenda extends Component {
     };
 
     filterByDay = (day, agenda) => {
+        //Se filtra por dia con base a los datos de la agenda y se da formato de YYYY-MM-DD para comparar ambos datos (el dato de la lista de array y el dato de filtro)
         const list = agenda.filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
             .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
-        list.map(item => {
+            
+            //Se mapea la lista para poder retornar los datos ya filtrados
+            list.map(item => {
             item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
             item.roles = item.access_restriction_roles.map(({ name }) => name);
             return item
@@ -69,17 +75,23 @@ class Agenda extends Component {
 
     };
 
+    //Funcion para ejecutar el filtro por espacio y mandar el espacio a filtrar
     selectSpace(space) {
         const filtered = this.filterBySpace(space, this.state.list);
         this.setState({ filtered, toShow: filtered, space })
     }
 
+    //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
     filterBySpace = (space, dates) => {
+        
+        //Se filtra la lista por dia para obtener los datos de la agenda para despues volver a filtrar por espacio
         const listDay = dates.filter(a => a.datetime_start.includes(this.state.day.format("YYYY-MM-DD")))
             .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
 
+        //Se filta la lista anterior para esta vez filtrar por espacio
         const list = listDay.filter(a => a.space.name === space);
-        console.log(this.state.day)
+
+        //Se mapea la lista para poder retornar la lista filtrada por espacio
         list.map(item => {
             item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
             item.roles = item.access_restriction_roles.map(({ name }) => name);
