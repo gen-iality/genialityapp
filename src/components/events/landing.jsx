@@ -1,17 +1,18 @@
 /*global firebase*/
-import React, {Component} from 'react';
-import {Link, withRouter} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link, withRouter } from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import {Actions, EventsApi} from "../../helpers/request";
+import { Actions, EventsApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {BaseUrl} from "../../helpers/constants";
+import { BaseUrl } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
+import AgendaForm from "./agendaLanding"
 import ReactQuill from "react-quill";
 Moment.locale('es');
 momentLocalizer();
@@ -22,12 +23,12 @@ class Landing extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:true,
-            modalTicket:false,
-            modal:false,
-            editorState:'',
-            sections:{},
-            section:'evento'
+            loading: true,
+            modalTicket: false,
+            modal: false,
+            editorState: '',
+            sections: {},
+            section: 'evento'
         }
     }
 
@@ -39,13 +40,13 @@ class Landing extends Component {
 
     async componentDidMount() {
         const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-            searchParams = new URLSearchParams( queryParamsString ),
+            searchParams = new URLSearchParams(queryParamsString),
             status = searchParams.get("status");
         const id = this.props.match.params.event;
         const event = await EventsApi.landingEvent(id);
         const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-        if(status === '5b859ed02039276ce2b996f0'){
-            this.setState({showConfirm:true})
+        if (status === '5b859ed02039276ce2b996f0') {
+            this.setState({ showConfirm: true })
         }
         const dateFrom = event.datetime_from.split(' ');
         const dateTo = event.datetime_to.split(' ');
@@ -57,25 +58,22 @@ class Landing extends Component {
         event.organizer = event.organizer ? event.organizer : event.author;
         event.event_stages = event.event_stages ? event.event_stages : [];
         const sections = {
-            agenda:
-                <div>
-                    <img src="https://firebasestorage.googleapis.com/v0/b/firebase-evius.appspot.com/o/pmi-calendar.png?alt=media&token=4aecfee1-684d-4c55-a9c5-f434cfc0c5fa" alt=""/>
-                </div>,
-            tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal}/>,
+            agenda:<AgendaForm event={event} eventId={event._id}/>,
+            tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal} />,
             certs: <CertificadoLanding event={event} tickets={event.tickets} />,
             evento:
-            <div className="columns">
-                <div className="description-container column is-8">
-                    <h3 className="title-description is-size-5 column is-10">Descripción</h3>
-                    <div className="column is-10 description">
-                        { typeof event.description === 'string'?  (<ReactQuill value={event.description} modules={{toolbar:false}} readOnly={true}/>): 'json'  }
+                <div className="columns">
+                    <div className="description-container column is-8">
+                        <h3 className="title-description is-size-5 column is-10">Descripción</h3>
+                        <div className="column is-10 description">
+                            {typeof event.description === 'string' ? (<ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} />) : 'json'}
+                        </div>
+                        <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
                     </div>
-                    <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
+                    <MapComponent event={event} />
                 </div>
-                <MapComponent event={event}/>
-            </div>
         };
-        this.setState({event,loading:false,sections},()=>{
+        this.setState({ event, loading: false, sections }, () => {
             this.firebaseUI();
             this.handleScroll();
         });
@@ -112,15 +110,15 @@ class Landing extends Component {
     };
     openLogin = () => {
         html.classList.add('is-clipped');
-        this.setState({modal:true,modalTicket:false});
+        this.setState({ modal: true, modalTicket: false });
     }
     closeLogin = (user) => {
         html.classList.remove('is-clipped');
-        this.setState({modal:false});
-        if(user) {
-            const {event,stage,ticket} = this.state;
-            localStorage.setItem('stage',stage);
-            localStorage.setItem('ticket',ticket);
+        this.setState({ modal: false });
+        if (user) {
+            const { event, stage, ticket } = this.state;
+            localStorage.setItem('stage', stage);
+            localStorage.setItem('ticket', ticket);
             window.location.replace(`https://api.evius.co/api/user/loginorcreatefromtoken?evius_token=${user.ra}&refresh_token=${user.refreshToken}&destination=${BaseUrl}/landing/${event._id}`);
         }
     };
@@ -134,16 +132,16 @@ class Landing extends Component {
 
     handleModal = () => {
         html.classList.add('is-clipped');
-        this.setState({modal:false,modalTicket:true})
+        this.setState({ modal: false, modalTicket: true })
     }
 
     closeModal = () => {
         html.classList.remove('is-clipped');
-        this.setState({modal:false,modalTicket:false})
+        this.setState({ modal: false, modalTicket: false })
     };
 
     showSection = (section) => {
-        this.setState({section})
+        this.setState({ section })
         console.log(this.state.section);
 
     }
@@ -155,58 +153,58 @@ class Landing extends Component {
                 {
                     this.state.showConfirm && (
                         <div className="notification is-success">
-                            <button className="delete" onClick={(e)=>{this.setState({showConfirm:false})}}/>
+                            <button className="delete" onClick={(e) => { this.setState({ showConfirm: false }) }} />
                             Tu asistencia ha sido confirmada
                         </div>
                     )
                 }
                 {
-                    this.state.loading?<Loading/> :
+                    this.state.loading ? <Loading /> :
                         <React.Fragment>
                             <div className="hero-head is-black">
                                 <div className="columns is-gapless is-centered">
                                     <div className="column info is-half">
                                         <div className="column is-10 container-nombre">
-                                        <div className="fecha item columns">
-                                            <div className="column fecha-uno ">
-                                                <span className="title is-size-5">Del {Moment(event.date_start).format('DD')}</span>
-                                                <span className="title is-size-5"> al {Moment(event.date_end).format('DD')} <span className="is-size-5">{Moment(event.date_end).format('MMM YY')}</span></span>
-                                                {/* <span className="subt is-size-6 is-italic has-text-white">Desde {Moment(event.hour_start).format('HH:mm')}</span> */}
+                                            <div className="fecha item columns">
+                                                <div className="column fecha-uno ">
+                                                    <span className="title is-size-5">Del {Moment(event.date_start).format('DD')}</span>
+                                                    <span className="title is-size-5"> al {Moment(event.date_end).format('DD')} <span className="is-size-5">{Moment(event.date_end).format('MMM YY')}</span></span>
+                                                    {/* <span className="subt is-size-6 is-italic has-text-white">Desde {Moment(event.hour_start).format('HH:mm')}</span> */}
+                                                </div>
+                                                <div className="column fecha-dos has-text-centered">
+                                                    {/* <span className="subt is-size-6 is-italic has-text-white">a {Moment(event.hour_end).format('HH:mm')}</span> */}
+                                                </div>
                                             </div>
-                                            <div className="column fecha-dos has-text-centered">
-                                                {/* <span className="subt is-size-6 is-italic has-text-white">a {Moment(event.hour_end).format('HH:mm')}</span> */}
+                                            <div className="nombre item columns is-centered">
+                                                <div className="column event-name">
+                                                    <h2 className="is-size-4 bold-text">{event.name}</h2>
+                                                    <span className="is-size-6 has-text-white">Organizado por: <Link className="has-text-white" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name ? event.organizer.name : event.organizer.email}</Link></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="nombre item columns is-centered">
-                                            <div className="column event-name">
-                                                <h2 className="is-size-4 bold-text">{event.name}</h2>
-                                                <span className="is-size-6 has-text-white">Organizado por: <Link className="has-text-white" to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>{event.organizer.name?event.organizer.name:event.organizer.email}</Link></span>
-                                            </div>
-                                        </div>
 
-                                        <div className="lugar item columns">
-                                            <div className="column is-1 container-icon">
+                                            <div className="lugar item columns">
+                                                <div className="column is-1 container-icon">
                                                     <span className="icon is-medium">
-                                                        <i className="fas fa-map-marker-alt fa-2x"/>
+                                                        <i className="fas fa-map-marker-alt fa-2x" />
                                                     </span>
+                                                </div>
+                                                <div className="column is-9 container-subtitle">
+                                                    <span className="subtitle is-size-6">{event.venue} {event.location.FormattedAddress}</span>
+                                                </div>
                                             </div>
-                                            <div className="column is-9 container-subtitle">
-                                                <span className="subtitle is-size-6">{event.venue} {event.location.FormattedAddress}</span>
-                                            </div>
-                                        </div>
-                                        {/* <div className="descripcion-c item columns is-centered">
+                                            {/* <div className="descripcion-c item columns is-centered">
                                             <div className="column is-10">
                                                 { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
                                             </div>
                                         </div> */}
-                                        <div className="ver-mas item columns">
-                                            {/*<div className="column is-5 is-offset-1">
+                                            <div className="ver-mas item columns">
+                                                {/*<div className="column is-5 is-offset-1">
                                                 <div className="aforo">
                                                     <span className="titulo">150/400</span><br/>
                                                     <span className="is-italic has-text-grey">Aforo</span>
                                                 </div>
                                             </div>*/}
-                                            {/*{
+                                                {/*{
                                                 (event.description.length >= 80 && !this.state.showFull) && (
                                                     <div className="column is-5 is-offset-6 button-cont">
                                                         <span className="has-text-weight-semibold has-text-grey">Ver más</span>
@@ -216,17 +214,17 @@ class Landing extends Component {
                                                     </div>
                                                 )
                                             }*/}
-                                        </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="column banner is-two-fifths">
                                         {
                                             (typeof event.picture === 'object') ?
-                                                <div style={{width:'134vh'}}>
-                                                    <Slider images={event.picture}/>
-                                                </div>:
+                                                <div style={{ width: '134vh' }}>
+                                                    <Slider images={event.picture} />
+                                                </div> :
                                                 <figure className="image">
-                                                    <img src={this.state.loading?"https://bulma.io/images/placeholders/1280x960.png":event.picture} alt="Evius.co"/>
+                                                    <img src={this.state.loading ? "https://bulma.io/images/placeholders/1280x960.png" : event.picture} alt="Evius.co" />
                                                 </figure>
                                         }
                                         {
@@ -241,7 +239,7 @@ class Landing extends Component {
                                                                 <div className="button-cont column is-8 is-offset-4">
                                                                     <span className="has-text-weight-semibold has-text-grey">Ver menos</span>
                                                                     <div className="fav-button has-text-weight-bold"
-                                                                         onClick={(e)=>{this.setState({showFull:false})}}>
+                                                                        onClick={(e) => { this.setState({ showFull: false }) }}>
                                                                         <i className="icon fa fa-minus"></i>
                                                                     </div>
                                                                 </div>
@@ -257,36 +255,34 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div className="columns container-nav-item">
-                                    <div className={this.state.section == 'evento' ? 'nav-item-active column' : 'nav-item column'} onClick={e=>{this.showSection('evento')}}>
+                                        <div className={this.state.section == 'evento' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('evento') }}>
                                             <span className="has-text-grey-dark is-size-6">Evento</span>
                                         </div>
-                                        <div className={this.state.section == 'tickets' ? 'nav-item-active column' : 'nav-item column'} onClick={e=>{this.showSection('tickets')}}>
+                                        <div className={this.state.section == 'tickets' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('tickets') }}>
                                             <span className="has-text-grey-dark is-size-6">Boletería</span>
                                         </div>
-                                        <div className={this.state.section == 'certs' ? 'nav-item-active column' : 'nav-item column'} onClick={e=>{this.showSection('certs')}} >
+                                        <div className={this.state.section == 'certs' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('certs') }} >
                                             <span className="has-text-grey-dark is-size-6">Certificados</span>
                                         </div>
-                                        {
-                                            this.state.event._id === "5d2de182d74d5c28047d1f85" &&
-                                            <div className={this.state.section == 'agenda' ? 'nav-item-active column' : 'nav-item column'} onClick={e=>{this.showSection('agenda')}} >
-                                                <span className="has-text-grey-dark is-size-6">Agenda</span>
-                                            </div>
-                                        }
+                                        <div className={this.state.section == 'agenda' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('agenda') }} >
+                                            <span className="has-text-grey-dark is-size-6">Agenda</span>
+                                        </div>
+
                                     </div>
                                     {
                                         sections[section]
                                     }
                                 </div>
                             </div>
-                            <div className={`modal ${modal?'is-active':''}`}>
+                            <div className={`modal ${modal ? 'is-active' : ''}`}>
                                 <div className="modal-background"></div>
-                                <div className="modal-content"><div id="firebaseui-auth-container"/></div>
-                                <button className="modal-close is-large" aria-label="close" onClick={e =>{this.closeLogin()} }/>
+                                <div className="modal-content"><div id="firebaseui-auth-container" /></div>
+                                <button className="modal-close is-large" aria-label="close" onClick={e => { this.closeLogin() }} />
                             </div>
                             <Dialog modal={modalTicket} title={'Atención!!'}
-                                    content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>}
-                                    first={{title:'Iniciar Sesión o Registrarse',class:'is-info',action:this.openLogin}}
-                                    second={{title:'Cancelar',class:'',action:this.closeModal}}/>
+                                content={<p className='has-text-weight-bold'>Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>}
+                                first={{ title: 'Iniciar Sesión o Registrarse', class: 'is-info', action: this.openLogin }}
+                                second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
                         </React.Fragment>
                 }
             </section>
@@ -296,7 +292,7 @@ class Landing extends Component {
 
 //Component del lado del mapa
 const MapComponent = (props) => {
-    const {event} = props;
+    const { event } = props;
     return <div className="column container-map">
         <div className="map-head">
             <h2 className="data-title has-text-left">
@@ -304,9 +300,9 @@ const MapComponent = (props) => {
             </h2>
             <div className="lugar item columns">
                 <div className="column is-1 container-icon hours">
-                                                    <span className="icon is-small">
-                                                        <i className="far fa-clock"/>
-                                                    </span>
+                    <span className="icon is-small">
+                        <i className="far fa-clock" />
+                    </span>
                 </div>
                 <div className="column is-10 container-subtitle hours">
                     <span className="subt is-size-6">Desde {Moment(event.hour_start).format('HH:mm')}</span>
@@ -315,9 +311,9 @@ const MapComponent = (props) => {
             </div>
             <div className="lugar item columns">
                 <div className="column is-1 container-icon">
-                                                    <span className="icon is-small">
-                                                        <i className="fas fa-map-marker-alt"/>
-                                                    </span>
+                    <span className="icon is-small">
+                        <i className="fas fa-map-marker-alt" />
+                    </span>
                 </div>
                 <div className="column is-10 container-subtitle">
                     <span className="">{event.venue} {event.location.FormattedAddress}</span>
@@ -327,9 +323,9 @@ const MapComponent = (props) => {
         <MyMapComponent
             lat={event.location.Latitude} long={event.location.Longitude}
             googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-            loadingElement={<div style={{height: `100%`}}/>}
-            containerElement={<div style={{height: `400px`}}/>}
-            mapElement={<div style={{height: `100%`}}/>}
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ height: `400px` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
         />
     </div>
 }

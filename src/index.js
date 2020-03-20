@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import  './styles/main.scss';
 import App from './App/App';
+
 //import registerServiceWorker from './registerServiceWorker';
 import { unregister as unregisterServiceWorker } from './registerServiceWorker'
 //index.html loading old files because of service worker after build
