@@ -3,7 +3,7 @@ import EventContent from "../events/shared/content";
 import Moment from "moment";
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
-import { AgendaApi, Actions } from "../../helpers/request";
+import { AgendaApi,SpacesApi, Actions } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
@@ -24,7 +24,7 @@ class Agenda extends Component {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.fetchAgenda()
 
         const { event } = this.props;
@@ -41,10 +41,14 @@ class Agenda extends Component {
 
     fetchAgenda = async () => {
         const { data } = await AgendaApi.byEvent(this.props.eventId);
-        console.log(data)
+        
+        let space = await SpacesApi.byEvent(this.props.event._id);
+
         //Después de traer la info se filtra por el primer día por defecto
         const filtered = this.filterByDay(this.state.days[0], data);
-        this.setState({ list: data, filtered, toShow: filtered, spaces: data })
+        this.setState({list: data, filtered, toShow: filtered, spaces: space })
+
+        
     };
 
     filterByDay = (day, agenda) => {
@@ -94,8 +98,8 @@ class Agenda extends Component {
                 <EventContent className="columns is-desktop ">
                     <div style={{float:"left"}}>
                         {
-                            spaces.map((agenda, key) => <div onClick={() => this.selectSpace(agenda.space.name)} key={key}>
-                                <button style={{ marginTop: "3%", marginBottom: "3%" }} className="button is-primary">{agenda.space.name}</button>
+                            spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name)} key={key}>
+                                <button style={{ marginTop: "3%", marginBottom: "3%" }} className="button is-primary">{space.name}</button>
                             </div>
                             )
                         }
