@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
-import { Actions, EventsApi } from "../../helpers/request";
+import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
@@ -12,7 +12,8 @@ import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
-import AgendaForm from "./agendaLanding"
+import AgendaForm from "./agendaLanding";
+import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
 Moment.locale('es');
 momentLocalizer();
@@ -61,6 +62,7 @@ class Landing extends Component {
             agenda:<AgendaForm event={event} eventId={event._id}/>,
             tickets: <TicketsForm stages={event.event_stages} experience={event.is_experience} fees={event.fees} tickets={event.tickets} eventId={event._id} seatsConfig={event.seats_configuration} handleModal={this.handleModal} />,
             certs: <CertificadoLanding event={event} tickets={event.tickets} />,
+            speakers: <SpeakersForm eventId={event._id} />,
             evento:
                 <div className="columns">
                     <div className="description-container column is-8">
@@ -266,6 +268,10 @@ class Landing extends Component {
                                         </div>
                                         <div className={this.state.section == 'agenda' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('agenda') }} >
                                             <span className="has-text-grey-dark is-size-6">Agenda</span>
+                                        </div>
+
+                                        <div className={this.state.section == 'speakers' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('speakers') }} >
+                                            <span className="has-text-grey-dark is-size-6">Conferencistas</span>
                                         </div>
 
                                     </div>

@@ -3,7 +3,7 @@ import EventContent from "../events/shared/content";
 import Moment from "moment";
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
-import { AgendaApi,SpacesApi, Actions } from "../../helpers/request";
+import { AgendaApi, SpacesApi, Actions } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
@@ -41,14 +41,14 @@ class Agenda extends Component {
 
     fetchAgenda = async () => {
         const { data } = await AgendaApi.byEvent(this.props.eventId);
-        
+
         let space = await SpacesApi.byEvent(this.props.event._id);
 
         //Después de traer la info se filtra por el primer día por defecto
         const filtered = this.filterByDay(this.state.days[0], data);
-        this.setState({list: data, filtered, toShow: filtered, spaces: space })
+        this.setState({ list: data, filtered, toShow: filtered, spaces: space })
 
-        
+
     };
 
     filterByDay = (day, agenda) => {
@@ -70,14 +70,14 @@ class Agenda extends Component {
     };
 
     selectSpace(space) {
-        console.log(space)
         const filtered = this.filterBySpace(space, this.state.list);
         this.setState({ filtered, toShow: filtered, space })
     }
 
-    filterBySpace = (space) => {
-        const list = this.state.filtered.filter(a => a.space.name === space)
-        console.log(list)
+    filterBySpace = (space, dates) => {
+        const list = this.state.list.filter(a => a.space.name === space,a => a.datetime_start.includes(this.state.day.format("YYYY-MM-DD")))
+        .sort((a, b) => Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") - Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm"));
+        console.log(this.state.days)
         list.map(item => {
             item.restriction = item.access_restriction_type === "EXCLUSIVE" ? "Exclusiva para: " : item.access_restriction_type === "SUGGESTED" ? "Sugerida para: " : "Abierta";
             item.roles = item.access_restriction_roles.map(({ name }) => name);
@@ -96,9 +96,9 @@ class Agenda extends Component {
         return (
             <div>
                 <EventContent className="columns is-desktop ">
-                    <div style={{float:"left"}}>
+                    <div style={{ float: "left" }}>
                         {
-                            spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name)} key={key}>
+                            spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
                                 <button style={{ marginTop: "3%", marginBottom: "3%" }} className="button is-primary">{space.name}</button>
                             </div>
                             )
