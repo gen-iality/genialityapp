@@ -129,16 +129,16 @@ class Agenda extends Component {
                                 }
                             </div>
                         </nav>
-                        {toShow.map(agenda =>
-                            <div style={{ marginBottom: "5%" }}>
-                                <div class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
+                        {toShow.map((agenda ,key)=>
+                            <div key={key} style={{ marginBottom: "5%" }}>
+                                <div className="card">
+                                    <header className="card-header">
+                                        <p className="card-header-title">
                                             {agenda.name}
                                         </p>
                                     </header>
-                                    <div class="card-content">
-                                        <div class="content">
+                                    <div className="card-content">
+                                        <div className="content">
                                             <div>
                                                 <strong>{agenda.datetime_start} - {agenda.datetime_end}</strong>
                                             </div>
@@ -157,7 +157,7 @@ class Agenda extends Component {
 
                                     </div>
                                 </div>
-                                <footer class="card-footer">
+                                <footer className="card-footer">
                                     {agenda.activity_categories.map(cat => <span style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
                                 </footer>
                             </div>
