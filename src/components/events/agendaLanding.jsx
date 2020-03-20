@@ -100,7 +100,6 @@ class Agenda extends Component {
                             )
                         }
                     </div>
-
                     <div className="column is-offset-5">
                         <nav className="level">
                             <div className="level-left">
