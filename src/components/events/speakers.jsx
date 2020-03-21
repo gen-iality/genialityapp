@@ -26,8 +26,18 @@ class Speakers extends Component {
     }
 
     render() {
+        const {speakers} = this.state
         return (
-            <div></div>
+            <div>
+                {
+                    speakers.map((speaker,key)=>(
+                    <div key={key}>
+                        <p>{speaker.name}</p>
+                    </div>
+                    
+                    ))
+                }
+            </div>
         )
     }
 }
