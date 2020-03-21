@@ -55,9 +55,9 @@ class Agenda extends Component {
         this.setState({ list: data, filtered, toShow: filtered, spaces: space })
     };
 
-    returnList(){
+    returnList() {
         //con la lista previamente cargada en el estado se retorna a la constante toShow Para mostrar la lista completa
-        this.setState({toShow: this.state.listDay, nameSpace:"inicio"})
+        this.setState({ toShow: this.state.listDay, nameSpace: "inicio" })
     }
 
     filterByDay = (day, agenda) => {
@@ -114,9 +114,9 @@ class Agenda extends Component {
         const { days, day, nameSpace, spaces, toShow } = this.state;
         return (
             <div>
-                <div className="columns is-desktop ">        
+                <div className="columns is-desktop ">
                     <div style={{ float: "left" }}>
-                    <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Inicio</button>
+                        <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Inicio</button>
                         {
                             spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
                                 <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger" : "button is-primary"}`}>{space.name}</button>
@@ -150,7 +150,11 @@ class Agenda extends Component {
                                             </div>
                                             <div style={{ marginTop: "3%", marginBottom: "3%" }}>
                                                 <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
-                                                {agenda.space.name}
+                                                <div style={{marginTop:"4%"}}>
+                                                    <strong>Lugar</strong><br/>
+                                                    {agenda.space.name}
+                                                </div>
+
                                             </div>
                                             {agenda.hosts.map((speaker, key) =>
                                                 <div key={key}>
