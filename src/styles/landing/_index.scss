@@ -7,6 +7,7 @@ section.landing{
   .container-nombre{
     display: block;
     margin: 0% auto;
+    font-size: 1.3rem;
   .nombre{
     .event-name{
       h2, span {
@@ -164,15 +165,21 @@ section.landing{
   .description-container{
     text-align: justify;
     margin-top: 3%;
+
     .title-description{
       display: block;
       margin: 0% auto;
       font-weight: bold;
+      font-size: 1.6rem !important;
     }
     .description{
       display: block;
       margin: 0% auto;
       text-transform: lowercase;
+      font-size: 5rem;
+      .ql-editor{
+        font-size: 1.3rem;
+      }
     }
   }
   .container-nav-item{
