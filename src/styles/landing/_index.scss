@@ -177,8 +177,15 @@ section.landing{
       margin: 0% auto;
       text-transform: lowercase;
       font-size: 5rem;
-      .ql-editor{
-        font-size: 1.3rem;
+      .ql-snow{
+        border: none;
+      
+        .ql-editor{
+          font-size: 1.3rem;
+          letter-spacing: 0.2px;
+          line-height: 1.50;
+          padding: 0px;
+        }
       }
     }
   }
