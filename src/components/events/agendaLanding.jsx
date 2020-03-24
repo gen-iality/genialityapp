@@ -115,15 +115,20 @@ class Agenda extends Component {
         return (
             <div className="container-calendar-section">
                 <div className="columns is-desktop ">
-                    <div className="container-calendar-space">
+
+                    {/* Contenedor donde se iteran los espacios del evento */}
+                    <div className="container-calendar-space is-hidden-touch">
                         <div className={`${nameSpace === "inicio" ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
                         {
-                            spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
+                            spaces.map((space, key) => (
+                            <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
                                 <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
                             </div>
-                            )
+                            ))
                         }
                     </div>
+
+                    
 
                     {/* Contenedor donde se iteran los tabs de las fechas */}
                     
@@ -141,7 +146,18 @@ class Agenda extends Component {
                                 }
                         </div>
 
+                         {/* input donde se iteran los espacios del evento */}
                      
+                    <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
+                        <select className="has-background-danger has-text-white" style={{ height:"3rem" }}>
+                            {
+                             spaces.map((space, key) => <option onClick={() => 
+                                this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )
+                            }
+                        </select>
+                    </div>
+
+                                             
                         {/* Contenedor donde se pinta la información de la agenda */}
 
                         {toShow.map((agenda, key) =>
