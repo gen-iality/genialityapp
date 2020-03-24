@@ -128,7 +128,7 @@ class Agenda extends Component {
                         <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
                             {
                                 days.map((date, key) => (
-                                    <li onClick={() => this.selectDay(date)} key={key} className="is-active" className="is-active">
+                                    <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
                                         <a  className={`${date === day ? " select-day" : " unselect-day"}`}>
                                             <span className="level-item date">{date.format("MMM DD")}</span>
                                         </a>

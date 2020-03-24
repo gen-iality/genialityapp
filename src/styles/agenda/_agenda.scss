@@ -25,26 +25,32 @@
   
 }
 
-.select-day{
-  background-color: $evius-secundary !important;
-  color: $color-evius !important;
-  &:focus{
-    color: $color-evius;
-    border: none;
-    background-color: $evius-secundary !important;
-  }  
-}
+// Day tabs
 
-.unselect-day{
-  background-color: $color-evius !important;
-  color: $evius-secundary !important;
-  &:focus{
-    color: $evius-secundary;
-    border: none;
-    background-color: $evius-secundary !important;
-  }  
-}
+/** los important se colocaron por fuerza mayor para poder sobreescribir los estilos
+ de bulma, si se encuentra una mejor solución porfavor optimizarlo**/
 
-.container-day_calendar{
-  margin-bottom: 0 !important;
-}
+  .container-day_calendar{
+    margin-bottom: 0 !important;
+    .select-day{
+      background-color: $evius-secundary !important;
+      color: $color-evius !important;
+      padding: 20px 0px;
+      &:focus{
+        color: $color-evius;
+        border: none;
+        background-color: $evius-secundary !important;
+      }  
+    }
+    
+    .unselect-day{
+      background-color: $color-evius !important;
+      color: $evius-secundary !important;
+      padding: 20px 0px;
+      &:focus{
+        color: $evius-secundary;
+        border: none;
+        background-color: $evius-secundary !important;
+      }  
+    }
+  }
