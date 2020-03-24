@@ -458,4 +458,10 @@ export const SpeakersApi = {
     }
 };
 
+export const ActivityBySpeaker= {
+    byEvent:async(event, idSpeaker)=>{
+        return await Actions.getOne(`api/events/${event}/activitiesbyhost/`,idSpeaker)
+    }
+}
+
 export default privateInstance;

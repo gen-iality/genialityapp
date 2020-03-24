@@ -1,12 +1,6 @@
 import React, { Component } from "react";
-import EventContent from "../events/shared/content";
 import Moment from "moment";
-import EvenTable from "../events/shared/table";
-import SearchComponent from "../shared/searchTable";
-import { AgendaApi, SpacesApi, Actions } from "../../helpers/request";
-import { Link, Redirect } from "react-router-dom";
-import ReactQuill from "react-quill";
-import { toolbarEditor } from "../../helpers/constants";
+import { AgendaApi, SpacesApi } from "../../helpers/request";
 
 class Agenda extends Component {
     constructor(props) {
@@ -116,7 +110,7 @@ class Agenda extends Component {
             <div>
                 <div className="columns is-desktop ">
                     <div style={{ float: "left" }}>
-                        <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Inicio</button>
+                        <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Todos</button>
                         {
                             spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
                                 <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger" : "button is-primary"}`}>{space.name}</button>
