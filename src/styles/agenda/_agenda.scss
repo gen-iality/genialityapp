@@ -18,6 +18,30 @@
 
 //**************** Agenda landing*******************//
 
+.container-calendar-section{
+  margin-top: 5%;
+
+.container-calendar-space{
+  margin-top: 6%;
+  .button {
+    font-size: 1.1rem;
+    border-color: transparent;
+    border-width: 1px;
+    color: $evius-secundary;
+    cursor: pointer;
+    justify-content: center;
+    padding-bottom: calc(1em - 3rem);
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    padding-top: calc(1em - 3rem);
+    text-align: center;
+    white-space: nowrap;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
 .container_agenda-information{
   margin-bottom: 3%;
   .agenda_information{
@@ -92,3 +116,4 @@
       }  
     }
   }
+}

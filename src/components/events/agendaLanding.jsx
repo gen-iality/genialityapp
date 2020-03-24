@@ -113,18 +113,21 @@ class Agenda extends Component {
     render() {
         const { days, day, nameSpace, spaces, toShow } = this.state;
         return (
-            <div>
+            <div className="container-calendar-section">
                 <div className="columns is-desktop ">
-                    <div>
-                        <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Inicio</button>
+                    <div className="container-calendar-space">
+                        <div className={`${nameSpace === "inicio" ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
                         {
                             spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
-                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger" : "button is-primary"}`}>{space.name}</button>
+                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
                             </div>
                             )
                         }
                     </div>
-                    <div className="column is-offset-1">
+
+                    {/* Contenedor donde se iteran los tabs de las fechas */}
+                    
+                    <div className="container-calendar">
                         <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
                             {
                                 days.map((date, key) => (
@@ -134,10 +137,11 @@ class Agenda extends Component {
                                         </a>
                                     </li>
                                     )
-                                )
-                            }
+                                    )
+                                }
                         </div>
 
+                     
                         {/* Contenedor donde se pinta la información de la agenda */}
 
                         {toShow.map((agenda, key) =>
