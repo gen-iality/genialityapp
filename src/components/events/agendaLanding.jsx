@@ -140,36 +140,33 @@ class Agenda extends Component {
                         {toShow.map((agenda, key) =>
                             <div key={key} className="container_agenda-information">
                                 <div className="card agenda_information">
-                                    <header className="card-header">
-                                        <p className="card-header-title">
-                                            {agenda.name}
-                                        </p>
-                                    </header>
-                                    <div className="card-content">
-                                        <div className="content">
-                                            <div>
-                                                <strong>{agenda.datetime_start} - {agenda.datetime_end}</strong>
-                                            </div>
+                                    <div  className="card-header-date card-header-title has-text-left">
+                                        <p>{agenda.datetime_start} - {agenda.datetime_end}</p>
+                                    </div>
+                                    <div className="card-header-title">
+                                        <p>{agenda.name}</p>
+                                    </div>
+                                    <div className="card-content has-text-left">
+                                                                                
                                             <div style={{ marginTop: "3%", marginBottom: "3%" }}>
                                                 <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
                                                 <div style={{marginTop:"4%"}}>
-                                                    <strong>Lugar</strong><br/>
-                                                    {agenda.space.name}
+                                                    <span className="card-header-subtitle">Lugar : </span>
+                                                    <span>{agenda.space.name}</span>
                                                 </div>
 
                                             </div>
                                             {agenda.hosts.map((speaker, key) =>
                                                 <div key={key}>
-                                                    <br style={{ marginTop: "5%" }} />
-                                                    <strong>Conferencista</strong>
+                                                    <p className="card-header-subtitle">Conferencista</p>
                                                     <p>{speaker.name}</p>
                                                 </div>
                                             )}
-                                        </div>
+                                   
 
                                     </div>
                                 </div>
-                                <footer className="card-footer">
+                                <footer className="">
                                     {agenda.activity_categories.map((cat, key) => <span key={key} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
                                 </footer>
                             </div>

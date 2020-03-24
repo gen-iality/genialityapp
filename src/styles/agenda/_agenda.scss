@@ -8,18 +8,41 @@
       border-bottom: 1px solid $primary;
       .subtitle strong {
         color: $primary !important;
+        text-align: start;
       }
     }
   }
 }
 
-// Agenda landing
+
+
+//**************** Agenda landing*******************//
 
 .container_agenda-information{
   .agenda_information{
     background-color: $evius-secundary;
     color: white;
+    padding: 40px;
 
+    .card-header-date{
+      color: $title-agenda;
+      justify-content: start;
+      font-weight: 600;
+      
+    }
+
+    .card-header-title{
+      color: #FDD038;
+      justify-content: start;
+      font-weight: 500;
+    }
+
+    .card-header-subtitle{
+      color: #FDD038;
+      justify-content: start;
+      font-weight: 500;
+      font-size: 1.06rem;
+    }
   }
 
   
@@ -36,6 +59,7 @@
       background-color: $evius-secundary !important;
       color: $color-evius !important;
       padding: 20px 0px;
+      font-weight: bold;
       &:focus{
         color: $color-evius;
         border: none;
@@ -47,6 +71,7 @@
       background-color: $color-evius !important;
       color: $evius-secundary !important;
       padding: 20px 0px;
+      font-weight: bold;
       &:focus{
         color: $evius-secundary;
         border: none;
