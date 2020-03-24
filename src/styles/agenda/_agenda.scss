@@ -12,3 +12,39 @@
     }
   }
 }
+
+// Agenda landing
+
+.container_agenda-information{
+  .agenda_information{
+    background-color: $evius-secundary;
+    color: white;
+
+  }
+
+  
+}
+
+.select-day{
+  background-color: $evius-secundary !important;
+  color: $color-evius !important;
+  &:focus{
+    color: $color-evius;
+    border: none;
+    background-color: $evius-secundary !important;
+  }  
+}
+
+.unselect-day{
+  background-color: $color-evius !important;
+  color: $evius-secundary !important;
+  &:focus{
+    color: $evius-secundary;
+    border: none;
+    background-color: $evius-secundary !important;
+  }  
+}
+
+.container-day_calendar{
+  margin-bottom: 0 !important;
+}

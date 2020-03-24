@@ -29,7 +29,7 @@ class Landing extends Component {
             modal: false,
             editorState: '',
             sections: {},
-            section: 'evento'
+            section: 'agenda'
         }
     }
 
@@ -70,7 +70,7 @@ class Landing extends Component {
                         <div className="column is-10 description">
                             {typeof event.description === 'string' ? (<ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} />) : 'json'}
                         </div>
-                        <h3 className="title-description is-size-5 column is-10">Conferencistas</h3>
+                        {/* <h3 className="title-description is-size-5 column is-10">Conferencistas</h3> */}
                     </div>
                     <MapComponent event={event} />
                 </div>
@@ -257,6 +257,9 @@ class Landing extends Component {
                             <div className="hero-body">
                                 <div className="data container has-text-centered">
                                     <div className="columns container-nav-item">
+                                        <div className={this.state.section == 'agenda' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('agenda') }} >
+                                            <span className="has-text-grey-dark is-size-6">Agenda</span>
+                                        </div>
                                         <div className={this.state.section == 'evento' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('evento') }}>
                                             <span className="has-text-grey-dark is-size-6">Evento</span>
                                         </div>
@@ -265,9 +268,6 @@ class Landing extends Component {
                                         </div>
                                         <div className={this.state.section == 'certs' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('certs') }} >
                                             <span className="has-text-grey-dark is-size-6">Certificados</span>
-                                        </div>
-                                        <div className={this.state.section == 'agenda' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('agenda') }} >
-                                            <span className="has-text-grey-dark is-size-6">Agenda</span>
                                         </div>
 
                                         <div className={this.state.section == 'speakers' ? 'nav-item-active column' : 'nav-item column'} onClick={e => { this.showSection('speakers') }} >

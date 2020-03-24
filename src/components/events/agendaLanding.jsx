@@ -125,19 +125,21 @@ class Agenda extends Component {
                         }
                     </div>
                     <div className="column is-offset-1">
-                        <nav className="level">
-                            <div className="level-left">
-                                {
-                                    days.map((date, key) => <div onClick={() => this.selectDay(date)} key={key}>
-                                        <button className={`level-item date ${date === day ? "button is-danger" : "button is-primary"}`}>{date.format("MMM DD")}</button>
-                                    </div>
+                        <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
+                            {
+                                days.map((date, key) => (
+                                    <li onClick={() => this.selectDay(date)} key={key} className="is-active" className="is-active">
+                                        <a  className={`${date === day ? " select-day" : " unselect-day"}`}>
+                                            <span className="level-item date">{date.format("MMM DD")}</span>
+                                        </a>
+                                    </li>
                                     )
-                                }
-                            </div>
-                        </nav>
+                                )
+                            }
+                        </div>
                         {toShow.map((agenda, key) =>
-                            <div key={key} style={{ marginBottom: "5%" }}>
-                                <div className="card">
+                            <div key={key} className="container_agenda-information">
+                                <div className="card agenda_information">
                                     <header className="card-header">
                                         <p className="card-header-title">
                                             {agenda.name}
