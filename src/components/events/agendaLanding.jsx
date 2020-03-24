@@ -192,7 +192,7 @@ class Agenda extends Component {
 
                     {/* Contenedor donde se iteran los tabs de las fechas */}
                     
-                    <div className="container-calendar">
+                    <div className="container-calendar is-three-fifths">
                         <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
                             {
                                 days.map((date, key) => (
@@ -208,20 +208,20 @@ class Agenda extends Component {
 
                          {/* input donde se iteran los espacios del evento */}
                      
-                    <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
-                        <select className="has-background-danger has-text-white" style={{ height:"3rem" }}>
-                            {
-                             spaces.map((space, key) => <option onClick={() => 
-                                this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )
-                            }
-                        </select>
-                    </div>
+                        <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
+                            <select className="has-background-danger has-text-white" style={{ height:"3rem" }}>
+                                {
+                                spaces.map((space, key) => <option onClick={() => 
+                                    this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )
+                                }
+                            </select>
+                        </div>
 
                                              
                         {/* Contenedor donde se pinta la información de la agenda */}
 
                         {toShow.map((agenda, key) =>
-                            <div key={key} className="container_agenda-information">
+                            <div key={key} className="container_agenda-information is-three-fifths">
                                 <div className="card agenda_information">
 
                                     {/* fechas */}
@@ -247,10 +247,10 @@ class Agenda extends Component {
                                             </div>
                                         </div>
 
+                                        <p className="card-header-subtitle">Conferencista</p>
                                         {
                                             agenda.hosts.map((speaker, key) =>
                                                 <div key={key}>
-                                                    <p className="card-header-subtitle">Conferencista</p>
                                                     <p>{speaker.name}</p>
                                                 </div>
                                             )
@@ -273,8 +273,10 @@ class Agenda extends Component {
                       ))}
                     </div>
                     <div>
+                        <br/>
+                        <br/>
                       <button
-                        className="button"
+                        className="button is-danger is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}
                       >
                         Inscribirme
