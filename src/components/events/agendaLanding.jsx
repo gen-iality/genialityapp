@@ -115,7 +115,7 @@ class Agenda extends Component {
         return (
             <div>
                 <div className="columns is-desktop ">
-                    <div style={{ float: "left" }}>
+                    <div>
                         <button style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === "inicio" ? "button is-danger" : "button is-primary"}`} onClick={this.returnList}>Inicio</button>
                         {
                             spaces.map((space, key) => <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
@@ -137,38 +137,53 @@ class Agenda extends Component {
                                 )
                             }
                         </div>
+
+                        {/* Contenedor donde se pinta la información de la agenda */}
+
                         {toShow.map((agenda, key) =>
                             <div key={key} className="container_agenda-information">
                                 <div className="card agenda_information">
+
+                                    {/* fechas */}
                                     <div  className="card-header-date card-header-title has-text-left">
                                         <p>{agenda.datetime_start} - {agenda.datetime_end}</p>
                                     </div>
+
+                                    {/* titulo del evento */}
                                     <div className="card-header-title">
                                         <p>{agenda.name}</p>
                                     </div>
-                                    <div className="card-content has-text-left">
-                                                                                
-                                            <div style={{ marginTop: "3%", marginBottom: "3%" }}>
-                                                <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
-                                                <div style={{marginTop:"4%"}}>
-                                                    <span className="card-header-subtitle">Lugar : </span>
-                                                    <span>{agenda.space.name}</span>
-                                                </div>
 
+                                    
+                                    <div className="card-content has-text-left container_calendar-description">
+                                        
+                                        {/* Descripción del evento */}
+
+                                        <div className="calendar-description">
+                                            <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
+                                            <div style={{marginTop:"4%"}}>
+                                                <span className="card-header-subtitle">Lugar : </span>
+                                                <span>{agenda.space.name}</span>
                                             </div>
-                                            {agenda.hosts.map((speaker, key) =>
+                                        </div>
+
+                                        {
+                                            agenda.hosts.map((speaker, key) =>
                                                 <div key={key}>
                                                     <p className="card-header-subtitle">Conferencista</p>
                                                     <p>{speaker.name}</p>
                                                 </div>
-                                            )}
-                                   
-
+                                            )
+                                        }
+                                        <div className="calendar-category">
+                                            {/* <br/>
+                                            <p className="card-header-subtitle">Categoria</p> */}
+                                            <br/>
+                                            {agenda.activity_categories.map((cat, key) => <span key={key} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag category_calendar-tag">{cat.name}</span>)}
+                                        </div>
                                     </div>
+                                    
                                 </div>
-                                <footer className="">
-                                    {agenda.activity_categories.map((cat, key) => <span key={key} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
-                                </footer>
                             </div>
                         )
                         }

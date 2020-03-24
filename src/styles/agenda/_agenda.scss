@@ -19,6 +19,7 @@
 //**************** Agenda landing*******************//
 
 .container_agenda-information{
+  margin-bottom: 3%;
   .agenda_information{
     background-color: $evius-secundary;
     color: white;
@@ -37,12 +38,24 @@
       font-weight: 500;
     }
 
-    .card-header-subtitle{
-      color: #FDD038;
-      justify-content: start;
-      font-weight: 500;
-      font-size: 1.06rem;
+    .container_calendar-description{
+     
+      .calendar-description{
+        margin: 3% 0%;
+      }
+      .card-header-subtitle{
+        color: #FDD038;
+        justify-content: start;
+        font-weight: 500;
+        font-size: 1.06rem;
+      }
+
+      .category_calendar-tag{
+        margin-right: 2%;
+        font-size: 0.9rem;
+      }
     }
+
   }
 
   
