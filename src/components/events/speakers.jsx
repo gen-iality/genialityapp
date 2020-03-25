@@ -80,12 +80,13 @@ class Speakers extends Component {
                                             <img src={speaker.image} alt="Placeholder image" />
                                         </figure>
                                     </div>
-                                    <div className="card-content">
-                                        <div className="media">
-                                            <div className="media-content">
-                                                <p className="title is-4">{speaker.name}</p>
-                                                <p className="subtitle is-6">{speaker.profession}</p>
-                                            </div>
+                                    <div className="content-information-speakers"> 
+                                        <div className="information-speakers">                                
+                                            <span className="title is-5">{speaker.name}</span>
+                                            <br/>
+                                            <p className="">{speaker.profession}</p> 
+                                        </div>                               
+                                        <div>
                                             <button className="button is-primary modal-button" onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)} key={key} data-target="#myModal" aria-haspopup="true">Descripcion</button>
                                         </div>
                                     </div>
