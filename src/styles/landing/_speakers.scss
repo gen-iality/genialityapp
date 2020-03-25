@@ -1,0 +1,10 @@
+.container-calendar-speaker{
+    margin-top: 5%;
+
+    .calendar-speakers{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(299px, 1fr));
+        grid-gap: 50px;
+    }
+
+}

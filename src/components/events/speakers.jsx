@@ -69,24 +69,19 @@ class Speakers extends Component {
         const { speakers, infoSpeaker, activityesBySpeaker } = this.state
         return (
             <div>
-                <div className="columns is-desktop">
-                    <div className="column is-offset-6">
+                <div className="columns container-calendar-speaker">
+                    <div className="column calendar-speakers">
                         {/* Mapeo de datos para mostrar los Speakers */}
                         {
                             speakers.map((speaker, key) => (
-                                <div className="card" key={key} style={{ marginBottom: "4%" }}>
+                                <div className="card" key={key}>
                                     <div className="card-image">
-                                        <figure className="image is-4by3">
+                                        <figure className="image is-square">
                                             <img src={speaker.image} alt="Placeholder image" />
                                         </figure>
                                     </div>
                                     <div className="card-content">
                                         <div className="media">
-                                            <div className="media-left">
-                                                <figure className="image is-48x48">
-                                                    <img src={speaker.image} alt="Placeholder image" />
-                                                </figure>
-                                            </div>
                                             <div className="media-content">
                                                 <p className="title is-4">{speaker.name}</p>
                                                 <p className="subtitle is-6">{speaker.profession}</p>

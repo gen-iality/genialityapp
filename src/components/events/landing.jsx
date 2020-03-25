@@ -293,14 +293,14 @@ class Landing extends Component {
                                             <li className="items menu-item"  className={this.state.section == 'evento' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('evento')}}>
                                                 <a className="has-text-grey-dark is-size-6">Evento</a>
                                             </li>
+                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
+                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
+                                            </li>
                                             <li className="items menu-item"  className={this.state.section == 'tickets' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('tickets') }}>
                                                 <a className="has-text-grey-dark is-size-6">Boletería</a>
                                             </li>
                                             <li className="items menu-item"  className={this.state.section == 'certs' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('certs') }}>
                                                 <a className="has-text-grey-dark is-size-6">Certificados</a>
-                                            </li>
-                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
                                             </li>
                                             {/* <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
                                                 <a className="has-text-grey-dark is-size-6">Conferencistas</a>
