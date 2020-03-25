@@ -130,6 +130,7 @@ class Agenda extends Component {
     this.setState({ filtered, toShow: filtered, space });
   }
 
+  //Se realiza funcion para filtrar mediante dropdown
   selectionSpace(){
     let space = document.getElementById("selectedSpace").value
     console.log(space)
