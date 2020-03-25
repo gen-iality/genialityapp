@@ -223,8 +223,8 @@ class Agenda extends Component {
 
                          {/* input donde se iteran los espacios del evento */}
                      
-                        <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
-                            <select id="selectedSpace" onClick={this.selectionSpace} className="has-background-danger has-text-white" style={{ height:"3rem" }}>
+                        <div class="select is-fullwidth is-hidden-desktop has-background-white" style={{ height:"3rem" }}>
+                            <select id="selectedSpace" onClick={this.selectionSpace} className="has-background-white has-text-black" style={{ height:"3rem" }}>
                                 {
                                 spaces.map((space, key) => <option onClick={() => 
                                     this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )
