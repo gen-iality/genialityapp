@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import axios from 'axios';
+import { ApiEviusZoomServer } from "../../helpers/constants"
 import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
@@ -7,14 +9,12 @@ import Select, { Creatable } from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { AgendaApi, EventsApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi, DocumentsApi } from "../../helpers/request";
+import { AgendaApi, Actions, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi, DocumentsApi } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
 import 'react-tabs/style/react-tabs.css';
-import documents from '../Documents/documents';
-import { select } from 'async';
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -51,6 +51,7 @@ class AgendaEdit extends Component {
             selected_document: [],
             nameDocuments: []
         }
+        this.createConference = this.createConference.bind(this)
     }
 
     async componentDidMount() {
@@ -88,7 +89,7 @@ class AgendaEdit extends Component {
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
             console.log(info.selected_document)
-            this.setState({selected_document: info.selected_document})
+            this.setState({ selected_document: info.selected_document })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -274,9 +275,45 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
+            timeConference:"",
             selected_document
         }
     };
+
+    async createConference() {
+        const zoomData = {
+            activity_id: this.props.location.state.edit,
+            activity_name: this.state.name,
+            event_id: this.props.event._id,
+            agenda: this.props.event.description,
+            duration: this.state.timeConference ? parseInt(this.state.timeConference) : 30,
+            record: "none"
+        }
+
+        console.log(zoomData)
+
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            data: zoomData,
+            url: ApiEviusZoomServer,
+        };
+
+        let response = await axios(options);
+
+        console.log(response)
+
+        const information = {
+            start_url: response.data.start_url,
+            join_url: response.data.join_url
+        }
+
+        let saveConference = await AgendaApi.editOne(information, this.props.location.state.edit, this.props.event._id);
+        console.log(saveConference)
+
+    }
 
     //FN para eliminar la actividad
     remove = () => {
@@ -405,7 +442,7 @@ class AgendaEdit extends Component {
                                         <select name={"space_id"} value={space_id} onChange={this.handleChange}>
                                             <option>Seleccione un lugar/salón ...</option>
                                             {
-                                                console.log(this.props),
+                                                // console.log(this.props),
                                                 spaces.map(space => {
                                                     return <option key={space.value}
                                                         value={space.value}>{space.label}</option>
@@ -548,6 +585,17 @@ class AgendaEdit extends Component {
                                     </div>
                                 </div>
                             </div>
+
+                            {
+                                this.props.location.state.edit ?
+                                    <div style={{marginTop:"4%"}}>
+                                        <label className="label">Crear Conferencia</label>
+                                        <input className="input" type="number" placeholder="Tiempo de conferencia" id="time" onChange={e => this.setState({timeConference: e.target.value}) }/>
+                                        <button style={{marginTop:"2%"}} className="button is-primary" onClick={this.createConference}>Conferencia</button>
+                                    </div>
+                                    :
+                                    <div />
+                            }
                         </div>
                     </div>
                 }

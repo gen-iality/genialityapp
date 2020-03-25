@@ -26,10 +26,12 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
+      value:"",
       redirect: false,
       disabled: false
     };
     this.returnList = this.returnList.bind(this);
+    this.selectionSpace = this.selectionSpace.bind(this)
   }
 
   async componentDidMount() {
@@ -128,6 +130,15 @@ class Agenda extends Component {
     this.setState({ filtered, toShow: filtered, space });
   }
 
+  //Se realiza funcion para filtrar mediante dropdown
+  selectionSpace(){
+    let space = document.getElementById("selectedSpace").value
+    console.log(space)
+
+  const filtered = this.filterBySpace(space, this.state.list);
+  this.setState({ filtered, toShow: filtered, space });
+  }
+  
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
   filterBySpace = (space, dates) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
@@ -170,6 +181,10 @@ class Agenda extends Component {
 
     redirect = () => this.setState({ redirect: true });
 
+    async selected() {
+       console.log(this.state.value) 
+    }
+
     render() {
         const { days, day, nameSpace, spaces, toShow } = this.state;
         return (
@@ -209,7 +224,7 @@ class Agenda extends Component {
                          {/* input donde se iteran los espacios del evento */}
                      
                         <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
-                            <select className="has-background-danger has-text-white" style={{ height:"3rem" }}>
+                            <select id="selectedSpace" onClick={this.selectionSpace} className="has-background-danger has-text-white" style={{ height:"3rem" }}>
                                 {
                                 spaces.map((space, key) => <option onClick={() => 
                                     this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )

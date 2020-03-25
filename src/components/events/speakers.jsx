@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { AgendaApi, SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
 
 class Speakers extends Component {
-
     constructor(props) {
         //Se realiza constructor para traer props desde landing.jsx
         super(props);
@@ -16,10 +15,8 @@ class Speakers extends Component {
     async componentDidMount() {
         //Se hace la consulta a la api de speakers
         let speakers = await SpeakersApi.byEvent(this.props.eventId);
-
         //Se envia al estado para acceder desde ahí a los datos
         this.setState({ speakers });
-
         //Se comprueban los datos desde el estado
         // console.log(this.state.speakers)
     }
@@ -27,7 +24,6 @@ class Speakers extends Component {
     async activitySpeakers(id) {
         //Se consulta la api para traer la informacion de actividades por conferencista
         let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(this.props.eventId, id)
-
         //Se manda al estado la consulta
         this.setState({
             activityesBySpeaker: InfoActivityesBySpeaker.data
@@ -37,7 +33,6 @@ class Speakers extends Component {
     modal(id, image, name, profession, description) {
         //Se llama esta funcion para cargar la consulta de actividades por conferencista
         this.activitySpeakers(id)
-
         // Se envian los datos al estado para mostrarlos en el modal, Esto para hacer el modal dinamico
         this.setState({
             infoSpeaker: {
@@ -47,7 +42,6 @@ class Speakers extends Component {
                 descripcion: description
             }
         })
-
         //Se realiza la funcionalidad de la activacion del modal ya que bulma no tiene soporte javascript
         document.querySelectorAll('.modal-button').forEach(function (el) {
             el.addEventListener('click', function () {
