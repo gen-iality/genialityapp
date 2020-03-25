@@ -1,6 +1,5 @@
 section.landing{
   .hero-head{
-    background-color: black
   }
 
   padding: 0;
@@ -177,40 +176,118 @@ section.landing{
       margin: 0% auto;
       text-transform: lowercase;
       font-size: 5rem;
-      .ql-editor{
-        font-size: 1.3rem;
+      .ql-snow{
+        border: none;
+      
+        .ql-editor{
+          font-size: 1.3rem;
+          letter-spacing: 0.2px;
+          line-height: 1.50;
+          padding: 0px;
+        }
       }
     }
   }
   .container-nav-item{
-    background: #F5F5F5;
+    background: transparent;
+    position: sticky;
+    top: 0.4%;
+    z-index: 100;
+    justify-content: center;
     .nav-item{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0% !important;
-      span{
+      font-weight: 600;
+      padding: 10px 20px 13px 10px  !important;
+      a{
       height: 3.5rem;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: center;    
+      
       }
     }
     .nav-item-active{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0% !important;
-      span{
-        height: 3.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      font-weight: 600;
+      padding: 10px 20px 13px 10px  !important;
+      a{
+        height: 3rem;
         border-bottom: solid $color-evius;
         width: 50%;
+        padding-bottom: 13px;
         color: $color-evius !important;
+
       }
   }
+
+
+      // Menú slider
+
+      .component-slider {
+        position: relative;
+        width: 90%;
+        overflow: hidden;
+        text-align: center;
+        white-space: nowrap;
+      }
+      
+      .component-slider .slider-container {
+        margin: 0 25px;
+        overflow: hidden;
+        overflow-x: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      
+      .component-slider .slider-content {
+        display: inline-block;
+        transition: margin-left 0.15s ease-in;
+      }
+      
+      .component-slider .caret {
+        width: 20px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0;
+        margin: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        font-size: 20px;
+        color: $color-evius;
+      }
+      .component-slider .caret-right {
+        right: 0;
+      }
+      
+      .component-slider .caret-left {
+        left: 0;
+      }
+      
+      .menu-bar {
+        width: 100%;
+      }
+      
+      .menu-item {
+        display: inline-block;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+      
+      .menu-item:hover {
+        // background: $blueKing;
+        color: #ffffff;
+      }
+      .container-nav-items{
+        li a{
+            font-weight: bold;
+        }
+        .nav-items{
+            border-bottom: 1px solid;
+        }
+      }
+      
 
   }
   .container-map{
@@ -249,3 +326,4 @@ section.landing{
     }
   }
 }
+

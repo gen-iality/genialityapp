@@ -21,6 +21,9 @@
 .container-calendar-section{
   margin-top: 5%;
 
+  .container-calendar{
+    min-width: 65%;
+  }
 .container-calendar-space{
   margin-top: 6%;
   .button {
@@ -36,6 +39,7 @@
     padding-top: calc(1em - 3rem);
     text-align: center;
     white-space: nowrap;
+    height: 4rem;
     &:focus {
       outline: none;
     }
@@ -97,6 +101,7 @@
       color: $color-evius !important;
       padding: 20px 0px;
       font-weight: bold;
+      font-size: 1.4rem;
       &:focus{
         color: $color-evius;
         border: none;
@@ -109,6 +114,7 @@
       color: $evius-secundary !important;
       padding: 20px 0px;
       font-weight: bold;
+      font-size: 1.4rem;
       &:focus{
         color: $evius-secundary;
         border: none;
