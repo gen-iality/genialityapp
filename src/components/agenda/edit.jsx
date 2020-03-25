@@ -275,6 +275,7 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
+            timeConference:"",
             selected_document
         }
     };
@@ -285,7 +286,7 @@ class AgendaEdit extends Component {
             activity_name: this.state.name,
             event_id: this.props.event._id,
             agenda: this.props.event.description,
-            duration: 30,
+            duration: this.state.timeConference ? parseInt(this.state.timeConference) : 30,
             record: "none"
         }
 
@@ -441,7 +442,7 @@ class AgendaEdit extends Component {
                                         <select name={"space_id"} value={space_id} onChange={this.handleChange}>
                                             <option>Seleccione un lugar/salón ...</option>
                                             {
-                                                console.log(this.props),
+                                                // console.log(this.props),
                                                 spaces.map(space => {
                                                     return <option key={space.value}
                                                         value={space.value}>{space.label}</option>
@@ -587,9 +588,10 @@ class AgendaEdit extends Component {
 
                             {
                                 this.props.location.state.edit ?
-                                    <div>
-                                        <label>Crear Conferencia</label>
-                                        <button className="button is-primary" onClick={this.createConference}>Conferencia</button>
+                                    <div style={{marginTop:"4%"}}>
+                                        <label className="label">Crear Conferencia</label>
+                                        <input className="input" type="number" placeholder="Tiempo de conferencia" id="time" onChange={e => this.setState({timeConference: e.target.value}) }/>
+                                        <button style={{marginTop:"2%"}} className="button is-primary" onClick={this.createConference}>Conferencia</button>
                                     </div>
                                     :
                                     <div />
