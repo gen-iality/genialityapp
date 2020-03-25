@@ -178,11 +178,11 @@ class Agenda extends Component {
 
                     {/* Contenedor donde se iteran los espacios del evento */}
                     <div className="container-calendar-space is-hidden-touch">
-                        <div className={`${nameSpace === "inicio" ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
+                        <div className={`${nameSpace === "inicio" ? "button button-color-agenda button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
                         {
                             spaces.map((space, key) => (
                             <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
-                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
+                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button button-color-agenda button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
                             </div>
                             ))
                         }
@@ -276,7 +276,7 @@ class Agenda extends Component {
                         <br/>
                         <br/>
                       <button
-                        className="button is-danger is-pulled-right is-medium"
+                        className="button button-color-agenda has-text-light is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}
                       >
                         Inscribirme
