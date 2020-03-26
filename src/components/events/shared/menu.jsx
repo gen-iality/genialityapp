@@ -101,8 +101,15 @@ class Menu extends Component {
                     commTab && (
                         <ul className="menu-list">
                             {
-                                permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
+                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id)  || true) &&
                                 <Fragment>
+                                    <li>
+                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/messages`}>messages-Invitaciones</NavLink>
+                                    </li> 
+                                    <li>
+                                        <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitados`}>invitados-Invitaciones</NavLink>
+                                    </li> 
+                                    
                                     {/*
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitaciones`}>Invitaciones</NavLink>

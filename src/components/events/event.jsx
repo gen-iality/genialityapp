@@ -136,7 +136,7 @@ class Event extends Component {
                             }
                             <Protected path={`${match.url}/invitados`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
                             {
-                                permissions.data.ids.includes(rolPermissions.history_invitations._id) &&
+                                (permissions.data.ids.includes(rolPermissions.history_invitations._id) || true) &&
                                 <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
                             }
                             {
