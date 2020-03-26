@@ -79,12 +79,12 @@ class Menu extends Component {
                     peopleTab && (
                         <ul className="menu-list">
                             {
-                                permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
-                                <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
+                                permissions.data.ids.includes(rolPermissions.admin_staff._id) && false &&
+                               <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li> 
                             }
                             <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink></li>
                             {
-                                permissions.data.ids.includes(rolPermissions.admin_invitations._id) &&
+                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) &&
                                 <Fragment>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados`}>Lista de invitados</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/tipo-asistentes`}>Tipo de asistentes</NavLink></li>

@@ -346,9 +346,12 @@ class UsersRsvp extends Component {
               : ""
           }
         >
+
+
           {usersReq.length > 0 ? (
             <div>
-              <div className="column">
+              <div className="columns">
+              <div className="column is-12">
                 <div
                   className={`dropdown is-pulled-right is-right ${
                     dropUser ? "is-active" : ""
@@ -385,6 +388,7 @@ class UsersRsvp extends Component {
                     </div>
                   </div>
                 </div>
+              </div>                
               </div>
 
               <div className="columns">
@@ -489,7 +493,7 @@ class UsersRsvp extends Component {
                       </div>
                     </td>
                     {Object.keys(user.properties).map(prop => (
-                      <td key={prop}>{user.properties[prop]}</td>
+                      <td key={prop}>{((parseInt() || typeof user.properties[prop] == "string"))?user.properties[prop]:JSON.stringify(user.properties[prop])}</td>
                     ))}
                   </tr>
                 ))}
