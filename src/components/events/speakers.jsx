@@ -50,7 +50,7 @@ class Speakers extends Component {
 
                 target.classList.add('is-active');
 
-                target.querySelector('.modal-close').addEventListener('click', function (e) {
+                target.querySelector('.delete').addEventListener('click', function (e) {
                     e.preventDefault();
                     target.classList.remove('is-active');
                     html.classList.remove('is-active');
@@ -81,7 +81,7 @@ class Speakers extends Component {
                                             <p className="">{speaker.profession}</p> 
                                         </div>                               
                                         <div>
-                                            <button className="button is-primary modal-button" onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)} key={key} data-target="#myModal" aria-haspopup="true">Descripcion</button>
+                                            <button style={{ paddingLeft: "1.25em", paddingRight: "1.25em", borderRadius: "3px", display: "inline-block" }} className="button is-primary modal-button" onClick={() => this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)} key={key} data-target="#myModal" aria-haspopup="true">Descripción</button>
                                         </div>
                                     </div>
                                 </div>
@@ -90,55 +90,55 @@ class Speakers extends Component {
                     </div>
                 </div>
                 {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
-                <div className="modal" id="myModal">
+                <div className="modal" id="myModal" style={{ zIndex: 1000 }}>
                     <div className="modal-background"></div>
-
-                    {/* Contenedor para nombre y profesion del conferencista*/}
-                    <div className="modal-content">
-                        <div className="box">
+                        <div className="modal-card"> 
+                        
+                        {/* Contenedor para nombre y profesion del conferencista*/}
+                        <div className="modal-card-head is-block" style={{ paddingTop:"1.5rem", minHeight: "40%"}}>
+                            <p class="modal-card-title has-text-right">
+                                <button className="delete" aria-label="close"></button>
+                            </p>
+                            <br/>
                             <div className="media">
-                                <div className="media-left">
-                                    <figure className="image is-48x48">
-                                        <img src={infoSpeaker.imagen} alt="Placeholder image" />
-                                    </figure>
-                                </div>
-                                <div className="media-content">
-                                    <p className="title is-4">{infoSpeaker.nombre}</p>
-                                    <p className="subtitle is-6">{infoSpeaker.cargo}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <figure className="media-left image is-128x128">
+                                    <img src={infoSpeaker.imagen} alt="Placeholder image" />
+                                </figure> 
 
-                    {/* Contenedor para descripcion (Hice esta cochinada ya que infoSpeaker.description 
-                        viene como etiqueta <p></p> desde base de datos.
-                        no me dejaba juntarla en un solo contenedor.
-                        Se mapea tambien las actividades por Speaker 
-                    */}
-                    <div className="modal-content">
-                        <div className="box" dangerouslySetInnerHTML={{ __html: infoSpeaker.descripcion }} />
-                        {
-                            activityesBySpeaker.map((activities, key) => (
-                                <div key={key} style={{ marginTop: "5%", marginBottom: "5%" }} class="card">
-                                    <header class="card-header">
-                                        <p class="card-header-title">
-                                            {activities.name}
-                                        </p>
-                                    </header>
-                                    <div class="card-content">
-                                        <div>
-                                            <p>{activities.datetime_start}</p>
-                                            <p>{activities.datetime_end}</p>
+                                <div className="media-content ">
+                                    <span className="title is-3">{infoSpeaker.nombre}</span>
+                                    <p className="is-4">{infoSpeaker.cargo}</p>
+                                </div>    
+                            </div>                         
+                        </div>
+
+                        {/* Contenedor para descripcion (Hice esta cochinada ya que infoSpeaker.description 
+                            viene como etiqueta <p></p> desde base de datos.
+                            no me dejaba juntarla en un solo contenedor.
+                            Se mapea tambien las actividades por Speaker 
+                        */}
+                        <div className="modal-card-body">                                                  
+                       
+                            <div className="has-text-left"  dangerouslySetInnerHTML={{ __html: infoSpeaker.descripcion }} />
+                            {
+                                activityesBySpeaker.map((activities, key) => (
+                                    <div key={key}>
+
+                                            <div class="content">
+                                                <br/>
+                                                <br/>
+                                                <p className="title is-5 has-text-left">{activities.name}</p>
+                                                <p className="title is-6 has-text-left">{activities.datetime_start} - {activities.datetime_end}</p>
+                                                <br/>
+                                                <div className="has-text-left"  dangerouslySetInnerHTML={{ __html: activities.description }} />
+                                            </div>
                                         </div>
-                                        <div class="content">
-                                            <div dangerouslySetInnerHTML={{ __html: activities.description }} />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        }
+                                ))
+                            }
+                        </div>
+                        <footer class="modal-card-foot"> </footer>
+                        
                     </div>
-                    <button className="modal-close is-large" aria-label="close"></button>
                 </div>
             </div>
         )

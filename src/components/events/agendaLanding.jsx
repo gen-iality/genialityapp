@@ -189,15 +189,15 @@ class Agenda extends Component {
         const { days, day, nameSpace, spaces, toShow } = this.state;
         return (
             <div className="container-calendar-section">
-                <div className="columns is-desktop ">
+                <div className="columns is-centered">
 
                     {/* Contenedor donde se iteran los espacios del evento */}
                     <div className="container-calendar-space is-hidden-touch">
-                        <div className={`${nameSpace === "inicio" ? "button button-color-agenda button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
+                        <div className={`${nameSpace === "inicio" ? "button button-color-agenda has-text-white button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
                         {
                             spaces.map((space, key) => (
                             <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
-                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button button-color-agenda button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
+                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button has-text-white button-color-agenda button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
                             </div>
                             ))
                         }
