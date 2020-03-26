@@ -26,12 +26,12 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
-      value:"",
+      value: "",
       redirect: false,
       disabled: false
     };
     this.returnList = this.returnList.bind(this);
-    this.selectionSpace = this.selectionSpace.bind(this)
+    this.selectionSpace = this.selectionSpace.bind(this);
   }
 
   async componentDidMount() {
@@ -131,14 +131,14 @@ class Agenda extends Component {
   }
 
   //Se realiza funcion para filtrar mediante dropdown
-  selectionSpace(){
-    let space = document.getElementById("selectedSpace").value
-    console.log(space)
+  selectionSpace() {
+    let space = document.getElementById("selectedSpace").value;
+    console.log(space);
 
-  const filtered = this.filterBySpace(space, this.state.list);
-  this.setState({ filtered, toShow: filtered, space });
+    const filtered = this.filterBySpace(space, this.state.list);
+    this.setState({ filtered, toShow: filtered, space });
   }
-  
+
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
   filterBySpace = (space, dates) => {
     //Se filta la lista anterior para esta vez filtrar por espacio
@@ -176,102 +176,152 @@ class Agenda extends Component {
       });
   };
 
-    //Fn para el resultado de la búsqueda
-    searchResult = (data) => this.setState({ toShow: !data ? [] : data });
+  //Fn para el resultado de la búsqueda
+  searchResult = data => this.setState({ toShow: !data ? [] : data });
 
-    redirect = () => this.setState({ redirect: true });
+  redirect = () => this.setState({ redirect: true });
 
-    async selected() {
-       console.log(this.state.value) 
-    }
+  async selected() {
+    console.log(this.state.value);
+  }
 
-    render() {
-        const { days, day, nameSpace, spaces, toShow } = this.state;
-        return (
-            <div className="container-calendar-section">
-                <div className="columns is-desktop ">
+  render() {
+    const { showIframe } = this.props;
+    const { days, day, nameSpace, spaces, toShow } = this.state;
+    return (
+      <div className="container-calendar-section">
+        <div className="columns is-desktop ">
+          {/* Contenedor donde se iteran los espacios del evento */}
+          <div className="container-calendar-space is-hidden-touch">
+            <div
+              className={`${
+                nameSpace === "inicio"
+                  ? "button is-danger button is-fullwidth"
+                  : "button is-fullwidth"
+              }`}
+              onClick={this.returnList}
+            >
+              Todos
+            </div>
+            {spaces.map((space, key) => (
+              <div
+                onClick={() =>
+                  this.selectSpace(
+                    space.name,
+                    space.datetime_start,
+                    space.datetime_start
+                  )
+                }
+                key={key}
+              >
+                <button
+                  disabled={false}
+                  style={{ marginTop: "3%", marginBottom: "3%" }}
+                  className={`${
+                    nameSpace === space.name
+                      ? "button is-danger button is-fullwidth"
+                      : "button is-fullwidth"
+                  }`}
+                >
+                  {space.name}
+                </button>
+              </div>
+            ))}
+          </div>
 
-                    {/* Contenedor donde se iteran los espacios del evento */}
-                    <div className="container-calendar-space is-hidden-touch">
-                        <div className={`${nameSpace === "inicio" ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`} onClick={this.returnList}>Todos</div>
-                        {
-                            spaces.map((space, key) => (
-                            <div onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>
-                                <button disabled={false} style={{ marginTop: "3%", marginBottom: "3%" }} className={`${nameSpace === space.name ? "button is-danger button is-fullwidth" : "button is-fullwidth"}`}>{space.name}</button>
-                            </div>
-                            ))
-                        }
+          {/* Contenedor donde se iteran los tabs de las fechas */}
+
+          <div className="container-calendar is-three-fifths">
+            <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
+              {days.map((date, key) => (
+                <li
+                  onClick={() => this.selectDay(date)}
+                  key={key}
+                  className="is-active tab-day_calendar"
+                >
+                  <a
+                    className={`${
+                      date === day ? " select-day" : " unselect-day"
+                    }`}
+                  >
+                    <span className="level-item date">
+                      {date.format("MMM DD")}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </div>
+
+            {/* input donde se iteran los espacios del evento */}
+
+            <div
+              class="select is-fullwidth is-hidden-desktop has-background-danger"
+              style={{ height: "3rem" }}
+            >
+              <select
+                id="selectedSpace"
+                onClick={this.selectionSpace}
+                className="has-background-danger has-text-white"
+                style={{ height: "3rem" }}
+              >
+                {spaces.map((space, key) => (
+                  <option
+                    onClick={() =>
+                      this.selectSpace(
+                        space.name,
+                        space.datetime_start,
+                        space.datetime_start
+                      )
+                    }
+                    key={key}
+                  >
+                    {space.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Contenedor donde se pinta la información de la agenda */}
+
+            {toShow.map((agenda, key) => (
+              <div
+                key={key}
+                className="container_agenda-information is-three-fifths"
+              >
+                <div className="card agenda_information">
+                  {/* fechas */}
+                  <div className="card-header-date card-header-title has-text-left">
+                    <p>
+                      {agenda.datetime_start} - {agenda.datetime_end}
+                    </p>
+                  </div>
+
+                  {/* titulo del evento */}
+                  <div className="card-header-title">
+                    <p>{agenda.name}</p>
+                  </div>
+
+                  <div className="card-content has-text-left container_calendar-description">
+                    {/* Descripción del evento */}
+
+                    <div className="calendar-description">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: agenda.description }}
+                      ></div>
+                      <div style={{ marginTop: "4%" }}>
+                        <span className="card-header-subtitle">Lugar : </span>
+                        <span>{agenda.space.name}</span>
+                      </div>
                     </div>
 
-                    
-
-                    {/* Contenedor donde se iteran los tabs de las fechas */}
-                    
-                    <div className="container-calendar is-three-fifths">
-                        <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
-                            {
-                                days.map((date, key) => (
-                                    <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
-                                        <a  className={`${date === day ? " select-day" : " unselect-day"}`}>
-                                            <span className="level-item date">{date.format("MMM DD")}</span>
-                                        </a>
-                                    </li>
-                                    )
-                                    )
-                                }
-                        </div>
-
-                         {/* input donde se iteran los espacios del evento */}
-                     
-                        <div class="select is-fullwidth is-hidden-desktop has-background-danger" style={{ height:"3rem" }}>
-                            <select id="selectedSpace" onClick={this.selectionSpace} className="has-background-danger has-text-white" style={{ height:"3rem" }}>
-                                {
-                                spaces.map((space, key) => <option onClick={() => 
-                                    this.selectSpace(space.name, space.datetime_start, space.datetime_start)} key={key}>{space.name}</option> )
-                                }
-                            </select>
-                        </div>
-
-                                             
-                        {/* Contenedor donde se pinta la información de la agenda */}
-
-                        {toShow.map((agenda, key) =>
-                            <div key={key} className="container_agenda-information is-three-fifths">
-                                <div className="card agenda_information">
-
-                                    {/* fechas */}
-                                    <div  className="card-header-date card-header-title has-text-left">
-                                        <p>{agenda.datetime_start} - {agenda.datetime_end}</p>
-                                    </div>
-
-                                    {/* titulo del evento */}
-                                    <div className="card-header-title">
-                                        <p>{agenda.name}</p>
-                                    </div>
-
-                                    
-                                    <div className="card-content has-text-left container_calendar-description">
-                                        
-                                        {/* Descripción del evento */}
-
-                                        <div className="calendar-description">
-                                            <div dangerouslySetInnerHTML={{ __html: agenda.description }}></div>
-                                            <div style={{marginTop:"4%"}}>
-                                                <span className="card-header-subtitle">Lugar : </span>
-                                                <span>{agenda.space.name}</span>
-                                            </div>
-                                        </div>
-
-                                        <p className="card-header-subtitle">Conferencista</p>
-                                        {
-                                            agenda.hosts.map((speaker, key) =>
-                                                <div key={key}>
-                                                    <p>{speaker.name}</p>
-                                                </div>
-                                            )
-                                        }
-                                        <div className="calendar-category">
-                                            {/* <br/>
+                    <p className="card-header-subtitle">Conferencista</p>
+                    {agenda.hosts.map((speaker, key) => (
+                      <div key={key}>
+                        <p>{speaker.name}</p>
+                      </div>
+                    ))}
+                    <div className="calendar-category">
+                      {/* <br/>
                                             <p className="card-header-subtitle">Categoria</p> */}
                       <br />
                       {agenda.activity_categories.map((cat, key) => (
@@ -287,20 +337,26 @@ class Agenda extends Component {
                         </span>
                       ))}
                     </div>
-                    <div>
-                        <br/>
-                        <br/>
+                    {/* <div>
                       <button
                         className="button is-danger is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}
                       >
                         Inscribirme
                       </button>
+                    </div> */}
+                    <div>
+                      <button
+                        className="button is-danger is-pulled-right is-medium"
+                        onClick={() => showIframe(true, agenda.meeting_id)}
+                      >
+                        Ingresar a Conferencia
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
+            ))}
           </div>
         </div>
       </div>

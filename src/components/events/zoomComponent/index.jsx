@@ -5,22 +5,31 @@ export default class ZoomComponent extends Component {
     super(props);
     this.state = {
       id_conference: "284693751",
-      url_conference: `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`
+      url_conference: `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`,
+      meeting_id: null
     };
   }
-  componentDidUpdate(prevProps) {}
+  componentDidMount() {
+    let { meetingId } = this.props;
+    this.setState({ meeting_id: meetingId });
+  }
+
+  componentDidUpdate(prevProps) {
+    const { meetingId } = this.props;
+    if (prevProps.meetingId !== meetingId) {
+      this.setState({ meeting_id: meetingId });
+    }
+  }
 
   render() {
-    const { hideConference } = this.props;
-    let { url_conference, id_conference } = this.state;
+    const { hideIframe } = this.props;
+    let { url_conference, meeting_id } = this.state;
     return (
-      <div>
-        <h1>Iframe zoom</h1>
-        <button onClick={hideConference}>
-          <iframe src={url_conference}>
-            <p>Your browser does not support iframes.</p>
-          </iframe>
-        </button>
+      <div className="content-zoom">
+        <button onClick={() => hideIframe(false)}>-</button>
+        <iframe src={url_conference + meeting_id} className="iframe-zoom">
+          <p>Your browser does not support iframes.</p>
+        </iframe>
       </div>
     );
   }
