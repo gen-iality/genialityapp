@@ -54,7 +54,11 @@ class Menu extends Component {
                                 {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink> */}
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/news`}>Noticias de la Aplicación</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/faqs`}>Preguntas Frecuentes de la Aplicación</NavLink>
+<<<<<<< HEAD
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/documents`}>Documentos de la Aplicación</NavLink>
+=======
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/conference`}>Conferencias</NavLink>
+>>>>>>> agenda
                                 
                             </li>
                             {

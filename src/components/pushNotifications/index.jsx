@@ -17,13 +17,20 @@ class pushNotification extends Component {
             push: {},
             loading: true,
             notifications: {},
-            result: []
+            result: [],
+            app_configuration: [],
+            route: ""
         }
         this.submit = this.submit.bind(this)
     }
 
     fetchItem = async () => {
+        const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+        this.setState({ app_configuration: [info.app_configuration] })
+        console.log(this.state.app_configuration)
+
         const result = await PushFeed.byEvent(this.props.eventId);
+        result.reverse();
         this.setState({
             result,
             loading: false
@@ -38,12 +45,13 @@ class pushNotification extends Component {
     saveRole = async () => {
         try {
             if (this.state.id !== 'new') {
-                await PushFeed.editOne({ title: this.state.title, body: this.state.body }, this.state.id, this.props.eventId);
+                await PushFeed.editOne({ route: this.state.route, title: this.state.title, body: this.state.body }, this.state.id, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.title = state.title;
                             item.body = state.body;
+                            item.route = state.route;
                             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
                             return item;
                         } else return item;
@@ -51,12 +59,13 @@ class pushNotification extends Component {
                     return { list, id: "", title: "", body: "" };
                 });
             } else {
-                const newRole = await PushFeed.create({ title: this.state.title, body: this.state.body }, this.props.eventId);
+                const newRole = await PushFeed.create({ route: this.state.route, title: this.state.title, body: this.state.body }, this.props.eventId);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
                             item.title = newRole.title;
                             item.body = newRole.body;
+                            item.route = state.route;
                             toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
                             return item;
                         } else return item;
@@ -78,7 +87,7 @@ class pushNotification extends Component {
                 if (result.value) {
                     sweetAlert.showLoading("Espera (:", "Borrando...");
                     await PushFeed.deleteOne(id, this.props.eventId);
-                    this.setState(state => ({ id: "", title: "", body: "" }));
+                    this.setState(state => ({ id: "", title: "", body: "", route: "" }));
                     this.fetchItem();
                     sweetAlert.hideLoading();
                 }
@@ -126,7 +135,7 @@ class pushNotification extends Component {
     }
 
     render() {
-        const { result } = this.state;
+        const { result, app_configuration } = this.state;
         return (
             <React.Fragment>
                 <div className="columns general">
@@ -142,13 +151,41 @@ class pushNotification extends Component {
                             <label className="label">Mensaje</label>
                             <input className="textarea" type="textarea" onChange={(save) => { this.setState({ push: { ...this.state.push, body: save.target.value, data: '', id: this.props.eventId } }) }} name="title" />
                         </div>
-                        <button className="button is-primary" onClick={this.submit}>Enviar</button>
+
+                        <div style={{marginBottom:"5%"}} className="column inner-column select is-primary">
+                            <label className="label">Envio de push a seccion en especifico</label>
+                            {
+                                app_configuration.map((item, key) => {
+                                    return <div key={key}>
+                                        <select id="SelecRoute" onChange={(save) => { this.setState({ push: { ...this.state.push, route: save.target.value } }) }}>
+                                            <option>Seleccionar...</option>
+                                            <option value={item.WebScreen.name ? item.WebScreen.name : ""}>{item.WebScreen.title ? item.WebScreen.title : "Seleccione..."}</option>
+                                            <option value={item.RankingScreen.name ? item.RankingScreen.name : ""}>{item.RankingScreen.title ? item.RankingScreen.title : "Seleccione..."}</option>
+                                            <option value={item.FaqsScreen.name ? item.FaqsScreen.name : ""}>{item.FaqsScreen.title ? item.FaqsScreen.title : "Seleccione..."}</option>
+                                            <option value={item.WallScreen.name ? item.WallScreen.name : ""}>{item.WallScreen.title ? item.WallScreen.title : "Seleccione..."}</option>
+                                            <option value={item.DocumentsScreen.name ? item.DocumentsScreen.name : ""}>{item.DocumentsScreen.title ? item.DocumentsScreen.title : "Seleccione..."}</option>
+                                            <option value={item.SurveyScreen.name ? item.SurveyScreen.name : ""}>{item.SurveyScreen.title ? item.SurveyScreen.title : "Seleccione..."}</option>
+                                            <option value={item.SpeakerScreen.name ? item.SpeakerScreen.name : ""}>{item.SpeakerScreen.title ? item.SpeakerScreen.title : "Seleccione..."}</option>
+                                            <option value={item.EventPlaceScreen.name ? item.EventPlaceScreen.name : ""}>{item.EventPlaceScreen.title ? item.EventPlaceScreen.title : "Seleccione..."}</option>
+                                            <option value={item.HomeScreen.name ? item.HomeScreen.name : ""}>{item.HomeScreen.title ? item.HomeScreen.title : "Seleccione..."}</option>
+                                            <option value={item.ProfileScreen.name ? item.ProfileScreen.name : ""}>{item.ProfileScreen.title ? item.ProfileScreen.title : "Seleccione..."}</option>
+                                            <option value={item.CalendarScreen.name ? item.CalendarScreen.name : ""}>{item.CalendarScreen.title ? item.CalendarScreen.title : "Seleccione..."}</option>
+                                            <option value={item.NewsScreen.name ? item.NewsScreen.name : ""}>{item.NewsScreen.title ? item.NewsScreen.title : "Seleccione..."}</option>
+                                        </select>
+                                    </div>
+                                })
+                            }
+                        </div>
+                        <div>
+                            <button className="button is-primary" onClick={this.submit}>Enviar</button>
+                        </div>
+
                         <div className="column is-12">
                             <EventContent title="Notificaciones" closeAction={this.goBack} description_complete={"Observe o elimine las notificaciones observadas "} addAction={this.newRole} addTitle={"Nuevo espacio"}>
                                 {
                                     this.state.loading ? <Loading /> :
-                                        <EvenTable head={["Titulo", "Notificacion", "Enviados","Fallidos","Fecha", ""]}>
-                                            {this.state.result.map((cert, key) => {
+                                        <EvenTable head={["Titulo", "Notificacion", "Enviados", "Fallidos", "Fecha", ""]}>
+                                            {result.map((cert, key) => {
                                                 return <tr key={key}>
                                                     <td>
                                                         <p>{cert.title}</p>
@@ -164,8 +201,6 @@ class pushNotification extends Component {
                                                         <p>{cert.fail}</p>
                                                     </td>
                                                     <td>{cert.created_at}</td>
-                                                    <TableAction id={this.state.id} object={cert} saveItem={this.saveRole} editItem={this.editItem}
-                                                        removeNew={this.removeNewRole} removeItem={this.removeItem} discardChanges={this.discardChanges} />
                                                 </tr>
                                             })}
                                         </EvenTable>

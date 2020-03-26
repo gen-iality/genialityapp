@@ -8,7 +8,122 @@
       border-bottom: 1px solid $primary;
       .subtitle strong {
         color: $primary !important;
+        text-align: start;
       }
+    }
+  }
+}
+
+
+
+//**************** Agenda landing*******************//
+
+.container-calendar-section{
+  margin-top: 5%;
+
+  .button-color-agenda{
+    background-color: $color-prueba;
+  }
+
+  .container-calendar{
+    min-width: 65%;
+  }
+.container-calendar-space{
+  margin-top: 6%;
+  .button {
+    font-size: 1.1rem;
+    border-color: transparent;
+    border-width: 1px;
+    color: $evius-secundary;
+    cursor: pointer;
+    justify-content: center;
+    padding-bottom: calc(1em - 3rem);
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    padding-top: calc(1em - 3rem);
+    text-align: center;
+    white-space: nowrap;
+    height: 4rem;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.container_agenda-information{
+  margin-bottom: 3%;
+  .agenda_information{
+    background-color: $evius-secundary;
+    color: white;
+    padding: 40px;
+
+    .card-header-date{
+      color: $title-agenda;
+      justify-content: start;
+      font-weight: 600;
+      
+    }
+
+    .card-header-title{
+      color: white;
+      justify-content: start;
+      font-weight: 600;
+    }
+
+    .container_calendar-description{
+     
+      .calendar-description{
+        margin: 3% 0%;
+      }
+      .card-header-subtitle{
+        color: white;
+        justify-content: start;
+        font-weight: 600;
+        font-size: 1.06rem;
+      }
+
+      .category_calendar-tag{
+        margin-right: 2%;
+        font-size: 0.9rem;
+      }
+    }
+
+  }
+
+  
+}
+
+// Day tabs
+
+/** los important se colocaron por fuerza mayor para poder sobreescribir los estilos
+ de bulma, si se encuentra una mejor solución porfavor optimizarlo**/
+
+  .container-day_calendar{
+    margin-bottom: 0 !important;
+    .select-day{
+      background-color: $evius-secundary !important;
+      color: $color-prueba !important;
+      padding: 20px 0px;
+      font-weight: bold;
+      font-size: 1.4rem;
+      &:focus{
+        color: $color-prueba;
+        border: none;
+        background-color: $evius-secundary !important;
+      }  
+    }
+    
+    .unselect-day{
+      background-color: $color-prueba !important;
+      color: $evius-secundary !important;
+      padding: 20px 0px;
+      font-weight: bold;
+      font-size: 1.4rem;
+      &:focus{
+        color: $evius-secundary;
+        border: none;
+        background-color: $evius-secundary !important;
+      }  
     }
   }
 }

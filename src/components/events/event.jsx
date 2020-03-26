@@ -24,6 +24,7 @@ import Surveys from "../surveys";
 import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
+import ConferenceRoute from "../zoom/index"
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -44,7 +45,7 @@ const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index"
 const NewsApp = asyncComponent( ()=>import("../news/news"));
 const SurveysCreate = asyncComponent( ()=>import("../news/news"));
 const FAQS = asyncComponent( ()=>import("../news/news"));
-const Trivia = asyncComponent( ()=>import("../trivia/trivia") )
+const Trivia = asyncComponent( ()=>import("../trivia/trivia") );
 
 Moment.locale('es');
 momentLocalizer();
@@ -65,7 +66,7 @@ class Event extends Component {
             NewsApp:true,
             SurveysCreate:true,
             FAQS:true,
-            Trivia: true
+            Trivia: true,
         };
     }
 
@@ -124,6 +125,7 @@ class Event extends Component {
                             <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>
                             <Route path={`${match.url}/trivia`} render={()=><TriviaRoutes event={this.state.event}/>}/>
                             <Route path={`${match.url}/documents`} render={()=><DocumentsRoutes event={this.state.event}/>}/>    
+                            <Route path={`${match.url}/conference`} render={()=><ConferenceRoute event={this.state.event}/>}/>    
 
                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             <Protected path={`${match.url}/checkin/:id`} component={CheckAgenda} event={this.state.event} url={match.url}/>
