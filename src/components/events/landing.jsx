@@ -35,7 +35,7 @@ const insideStyles = {
     left: "50%",
     transform: "translate(-50%,-50%)",
     width: "100%",
-    height: 450
+    minHeight: 300
   };
 
 class Landing extends Component {
@@ -184,7 +184,7 @@ class Landing extends Component {
                             <div className="hero-head">
                               
                                 <Parallax bgImage={event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png"} strength={500} blur={{ min: -3, max: 100 }}>
-                                    <div style={{ height: 450 }}>
+                                    <div style={{ minHeight: 300 }}>
                                         <div style={insideStyles}>
                                             <div className="columns is-gapless is-centered">
                                                 <div className="column info is-half">
