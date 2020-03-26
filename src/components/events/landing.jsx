@@ -1,8 +1,8 @@
 /*global firebase*/
 import React, { Component } from "react";
-import ComponentSlider from "@kapost/react-component-slider";
 import { Link, withRouter } from "react-router-dom";
-import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import GoogleMapReact from "google-map-react";
+import ComponentSlider from "@kapost/react-component-slider";
 import { Parallax, Background } from "react-parallax";
 import { FaChevronRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
@@ -10,8 +10,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
-
-import { BaseUrl } from "../../helpers/constants";
+import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
@@ -27,6 +26,7 @@ Moment.locale("es");
 momentLocalizer();
 
 const html = document.querySelector("html");
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const renderLeftArrow = () => <FaChevronLeft />;
 const renderRightArrow = () => <FaChevronRight />;
@@ -38,7 +38,7 @@ const insideStyles = {
   left: "50%",
   transform: "translate(-50%,-50%)",
   width: "100%",
-  height: 450
+  minHeight: 300
 };
 
 class Landing extends Component {
@@ -216,7 +216,6 @@ class Landing extends Component {
       showIframeZoom,
       meeting_id
     } = this.state;
-    console.log(this.state);
     return (
       <section className="section landing">
         {this.state.showConfirm && (
@@ -251,7 +250,7 @@ class Landing extends Component {
                 strength={500}
                 blur={{ min: -3, max: 100 }}
               >
-                <div style={{ height: 450 }}>
+                <div style={{ minHeight: 300 }}>
                   <div style={insideStyles}>
                     <div className="columns is-gapless is-centered">
                       <div className="column info is-half">
@@ -553,25 +552,25 @@ const MapComponent = props => {
           </div>
         </div>
       </div>
-      <MyMapComponent
-        lat={event.location.Latitude}
-        long={event.location.Longitude}
-        googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div style={{ height: `400px` }} />}
-        mapElement={<div style={{ height: `100%` }} />}
-      />
+
+      <div style={{ height: "400px", width: "100%" }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
+          defaultCenter={{
+            lat: event.location.Latitude,
+            lng: event.location.Longitude
+          }}
+          defaultZoom={11}
+        >
+          <AnyReactComponent
+            lat={event.location.Latitude}
+            lng={event.location.Longitude}
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
     </div>
   );
 };
-
-const MyMapComponent = withGoogleMap(props => (
-  <GoogleMap
-    defaultZoom={12}
-    defaultCenter={{ lat: props.lat, lng: props.long }}
-  >
-    <Marker position={{ lat: props.lat, lng: props.long }} />
-  </GoogleMap>
-));
 
 export default withRouter(Landing);

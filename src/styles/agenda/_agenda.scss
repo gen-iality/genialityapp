@@ -25,11 +25,16 @@
 .container-calendar-section{
   margin-top: 5%;
 
+  .button-color-agenda{
+    background-color: $color-prueba;
+  }
+
   .container-calendar{
-    min-width: 65%;
+    min-width: 70%;
   }
 .container-calendar-space{
   margin-top: 6%;
+  min-width: 35%;
   .button {
     font-size: 1.1rem;
     border-color: transparent;
@@ -65,9 +70,9 @@
     }
 
     .card-header-title{
-      color: #FDD038;
+      color: white;
       justify-content: start;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .container_calendar-description{
@@ -76,9 +81,9 @@
         margin: 3% 0%;
       }
       .card-header-subtitle{
-        color: #FDD038;
+        color: white;
         justify-content: start;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 1.06rem;
       }
 
@@ -102,25 +107,25 @@
     margin-bottom: 0 !important;
     .select-day{
       background-color: $evius-secundary !important;
-      color: $color-evius !important;
+      color: white!important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 1.4rem;
       &:focus{
-        color: $color-evius;
+        color: white;
         border: none;
         background-color: $evius-secundary !important;
       }  
     }
     
     .unselect-day{
-      background-color: $color-evius !important;
-      color: $evius-secundary !important;
+      background-color: $color-prueba !important;
+      color: white !important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 1.4rem;
       &:focus{
-        color: $evius-secundary;
+        color: white;
         border: none;
         background-color: $evius-secundary !important;
       }  

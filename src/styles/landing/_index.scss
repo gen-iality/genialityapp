@@ -194,6 +194,10 @@ section.landing{
     top: 0.4%;
     z-index: 100;
     justify-content: center;
+      @media (max-width: 1020px) {
+        position: relative;
+        z-index: 1;
+       }
     .nav-item{
       font-weight: 600;
       padding: 10px 20px 13px 10px  !important;

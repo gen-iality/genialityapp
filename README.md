@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### How to...?
 - clone repo
-- npm install
+- yarn install
 
 ### Available Scripts
 

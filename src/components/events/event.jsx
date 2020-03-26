@@ -131,7 +131,7 @@ class Event extends Component {
                             <Protected path={`${match.url}/checkin/:id`} component={CheckAgenda} event={this.state.event} url={match.url}/>
                             <Protected path={`${match.url}/checkin-actividad`} component={ReportList} event={this.state.event} url={match.url}/>
                             {
-                                permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
+                                //permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
                             <Protected path={`${match.url}/invitados`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>

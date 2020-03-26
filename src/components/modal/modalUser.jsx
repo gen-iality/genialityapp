@@ -143,10 +143,12 @@ class UserModal extends Component {
             oDoc.write('<body onload="window.print()"><div>');
             // Datos
             let i = 0;
+            console.log(badge);
             for (; i < badge.length;) {
                 if (badge[i].line) {
                     if (badge[i].qr) oDoc.write(`<div><img src=${qr}></div>`);
-                    else oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${user[badge[i].id_properties.value] ? user[badge[i].id_properties.value] : user[badge[i].id_properties.label] ? user[badge[i].id_properties.label] : ''}</p>`);
+                    //se pone esta condición por un bug cuando se va a imprimir no se porque quedo en blanco
+                    else if (badge[i].id_properties) oDoc.write(`<p style="font-family: Lato, sans-serif;font-size: ${badge[i].size}px;text-transform: uppercase">${user[badge[i].id_properties.value] ? user[badge[i].id_properties.value] : user[badge[i].id_properties.label] ? user[badge[i].id_properties.label] : ''}</p>`);
                     i++
                 } else {
                     if (badge[i + 1] && !badge[i + 1].line) {

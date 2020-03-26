@@ -190,13 +190,13 @@ class Agenda extends Component {
     const { days, day, nameSpace, spaces, toShow } = this.state;
     return (
       <div className="container-calendar-section">
-        <div className="columns is-desktop ">
+        <div className="columns is-centered">
           {/* Contenedor donde se iteran los espacios del evento */}
           <div className="container-calendar-space is-hidden-touch">
             <div
               className={`${
                 nameSpace === "inicio"
-                  ? "button is-danger button is-fullwidth"
+                  ? "button button-color-agenda has-text-white button is-fullwidth"
                   : "button is-fullwidth"
               }`}
               onClick={this.returnList}
@@ -219,7 +219,7 @@ class Agenda extends Component {
                   style={{ marginTop: "3%", marginBottom: "3%" }}
                   className={`${
                     nameSpace === space.name
-                      ? "button is-danger button is-fullwidth"
+                      ? "button has-text-white button-color-agenda button is-fullwidth"
                       : "button is-fullwidth"
                   }`}
                 >
@@ -255,13 +255,13 @@ class Agenda extends Component {
             {/* input donde se iteran los espacios del evento */}
 
             <div
-              class="select is-fullwidth is-hidden-desktop has-background-danger"
+              class="select is-fullwidth is-hidden-desktop has-background-white"
               style={{ height: "3rem" }}
             >
               <select
                 id="selectedSpace"
                 onClick={this.selectionSpace}
-                className="has-background-danger has-text-white"
+                className="has-background-white has-text-black"
                 style={{ height: "3rem" }}
               >
                 {spaces.map((space, key) => (
@@ -337,15 +337,16 @@ class Agenda extends Component {
                         </span>
                       ))}
                     </div>
-                    {/* <div>
-                      <button
-                        className="button is-danger is-pulled-right is-medium"
+                    <div>
+                      <br />
+                      <br />
+                      {/* <button
+                        className="button button-color-agenda has-text-light is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}
                       >
                         Inscribirme
-                      </button>
-                    </div> */}
-                    <div>
+                      </button> */}
+
                       <button
                         className="button is-danger is-pulled-right is-medium"
                         onClick={() => showIframe(true, agenda.meeting_id)}
