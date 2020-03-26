@@ -26,10 +26,11 @@
   }
 
   .container-calendar{
-    min-width: 65%;
+    min-width: 75%;
   }
 .container-calendar-space{
   margin-top: 6%;
+  min-width: 30%;
   .button {
     font-size: 1.1rem;
     border-color: transparent;
@@ -102,12 +103,12 @@
     margin-bottom: 0 !important;
     .select-day{
       background-color: $evius-secundary !important;
-      color: $color-prueba !important;
+      color: white!important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 1.4rem;
       &:focus{
-        color: $color-prueba;
+        color: white;
         border: none;
         background-color: $evius-secundary !important;
       }  
@@ -115,12 +116,12 @@
     
     .unselect-day{
       background-color: $color-prueba !important;
-      color: $evius-secundary !important;
+      color: white !important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 1.4rem;
       &:focus{
-        color: $evius-secundary;
+        color: white;
         border: none;
         background-color: $evius-secundary !important;
       }  
