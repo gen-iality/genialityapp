@@ -52,7 +52,8 @@ class Landing extends Component {
       sections: {},
       section: "agenda",
       showIframeZoom: false,
-      meeting_id: null
+      meeting_id: null,
+      color: "",
     };
   }
 
@@ -81,6 +82,10 @@ class Landing extends Component {
     event.sessions = sessions;
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
+
+    // manda el color de fondo al state para depues renderizarlo
+    this.setState({ color: "#3871F1"});
+    console.log("s",event)
     const sections = {
       agenda: (
         <AgendaForm
@@ -214,10 +219,10 @@ class Landing extends Component {
       section,
       sections,
       showIframeZoom,
-      meeting_id
+      meeting_id,
     } = this.state;
     return (
-      <section className="section landing">
+      <section className="section landing" style={{ backgroundColor: this.state.color}}>
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
@@ -379,8 +384,8 @@ class Landing extends Component {
               </Parallax>
               :
             </div>
-            <div className="hero-body">
-              <div className="data container has-text-centered">
+            <div className="hero-body is-centered">
+              <div className="data  container-hero-landing has-text-centered box">
                 <div className="columns container-nav-item is-centered">
                   <ComponentSlider
                     renderLeftArrow={renderLeftArrow}

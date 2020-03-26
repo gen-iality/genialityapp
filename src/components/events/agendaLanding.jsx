@@ -255,7 +255,7 @@ class Agenda extends Component {
             {/* input donde se iteran los espacios del evento */}
 
             <div
-              class="select is-fullwidth is-hidden-desktop has-background-white"
+              className="select is-fullwidth is-hidden-desktop has-background-white"
               style={{ height: "3rem" }}
             >
               <select
@@ -348,7 +348,7 @@ class Agenda extends Component {
                       </button> */}
 
                       <button
-                        className="button is-danger is-pulled-right is-medium"
+                        className="button is-danger is-pulled-right"
                         onClick={() => showIframe(true, agenda.meeting_id)}
                       >
                         Ingresar a Conferencia
