@@ -31,7 +31,9 @@
 
   .container-calendar{
     min-width: 65%;
-    max-width: 65%;
+    @media (min-width: 1020px) {
+      max-width: 65%;
+     }
    
   }
 .container-calendar-space{
