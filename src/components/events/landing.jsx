@@ -1,12 +1,12 @@
 /*global firebase*/
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import GoogleMapReact from 'google-map-react';
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import {Actions, EventsApi} from "../../helpers/request";
 import Loading from "../loaders/loading";
-import {BaseUrl} from "../../helpers/constants";
+import {BaseUrl, EVIUS_GOOGLE_MAPS_KEY} from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
@@ -17,6 +17,7 @@ Moment.locale('es');
 momentLocalizer();
 
 const html = document.querySelector("html");
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 class Landing extends Component {
     constructor(props) {
@@ -324,23 +325,23 @@ const MapComponent = (props) => {
                 </div>
             </div>
         </div>
-        <MyMapComponent
-            lat={event.location.Latitude} long={event.location.Longitude}
-            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-            loadingElement={<div style={{height: `100%`}}/>}
-            containerElement={<div style={{height: `400px`}}/>}
-            mapElement={<div style={{height: `100%`}}/>}
-        />
+
+      <div style={{ height: '400px', width: '100%' }}>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY}}
+          defaultCenter={{lat:event.location.Latitude,lng:event.location.Longitude}}
+          defaultZoom={11}
+        >
+          <AnyReactComponent
+            lat={event.location.Latitude}
+            lng={event.location.Longitude}
+            text="My Marker"
+          />
+        </GoogleMapReact>
+      </div>
     </div>
 }
 
-const MyMapComponent = withGoogleMap((props) =>
-    <GoogleMap
-        defaultZoom={12}
-        defaultCenter={{ lat: props.lat, lng: props.long }}
-    >
-        <Marker position={{ lat: props.lat, lng: props.long }} />
-    </GoogleMap>
-)
+
 
 export default withRouter(Landing);

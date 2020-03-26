@@ -4,6 +4,7 @@ export const ApiUrl  = process.env.REACT_APP_API_URL;
 //export const ApiUrl  = 'https://dev.mocionsoft.com/evius/eviusapilaravel/public';
 export const AuthUrl = process.env.REACT_APP_AUTH_URL;
 export const BaseUrl = process.env.REACT_APP_BASE_URL;
+export const EVIUS_GOOGLE_MAPS_KEY = process.env.EVIUS_GOOGLE_MAPS_KEY || "AIzaSyCmcIJ4xnytwh5ToGhN1Pl56RiualarBqk";
 
 export const parseUrl = (url) => {
     try {
