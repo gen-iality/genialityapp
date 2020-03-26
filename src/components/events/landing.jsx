@@ -1,27 +1,16 @@
 /*global firebase*/
-<<<<<<< HEAD
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import GoogleMapReact from 'google-map-react';
-=======
-import React, { Component } from 'react';
 import ComponentSlider from "@kapost/react-component-slider";
-import { Link, withRouter } from 'react-router-dom';
-import { withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 import { Parallax, Background } from 'react-parallax';
 import { FaChevronRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
->>>>>>> agenda
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
-<<<<<<< HEAD
 import {BaseUrl, EVIUS_GOOGLE_MAPS_KEY} from "../../helpers/constants";
-=======
-
-import { BaseUrl } from "../../helpers/constants";
->>>>>>> agenda
 import Slider from "../shared/sliderImage";
 import app from "firebase/app";
 import Dialog from "../modal/twoAction";
@@ -385,7 +374,6 @@ const MapComponent = (props) => {
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
 
       <div style={{ height: '400px', width: '100%' }}>
         <GoogleMapReact
@@ -400,15 +388,6 @@ const MapComponent = (props) => {
           />
         </GoogleMapReact>
       </div>
-=======
-        <MyMapComponent
-            lat={event.location.Latitude} long={event.location.Longitude}
-            googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: `400px` }} />}
-            mapElement={<div style={{ height: `100%` }} />}
-        />
->>>>>>> agenda
     </div>
 }
 
