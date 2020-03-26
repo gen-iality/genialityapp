@@ -349,9 +349,12 @@ class Agenda extends Component {
 
                       <button
                         className="button is-danger is-pulled-right is-medium"
+                        disabled={agenda.meeting_id ? false : true}
                         onClick={() => showIframe(true, agenda.meeting_id)}
                       >
-                        Ingresar a Conferencia
+                        {agenda.meeting_id
+                          ? "Ir a Conferencia en Vivo"
+                          : "Sin Conferencia Virtual"}
                       </button>
                     </div>
                   </div>
