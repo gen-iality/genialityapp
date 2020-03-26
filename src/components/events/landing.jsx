@@ -455,13 +455,43 @@ class Landing extends Component {
                         Certificados
                       </a>
                     </li>
+                    <li
+                      className="items menu-item"
+                      className={
+                        this.state.section == "documents"
+                          ? "items menu-item nav-item-active"
+                          : "items menu-item nav-item"
+                      }
+                      onClick={e => {
+                        this.showSection("");
+                      }}
+                    >
+                      <a className="has-text-grey-dark is-size-6">
+                        Documentos
+                      </a>
+                    </li>
+                    <li
+                      className="items menu-item"
+                      className={
+                        this.state.section == "wall"
+                          ? "items menu-item nav-item-active"
+                          : "items menu-item nav-item"
+                      }
+                      onClick={e => {
+                        this.showSection("");
+                      }}
+                    >
+                      <a className="has-text-grey-dark is-size-6">
+                        Muro
+                      </a>
+                    </li>
                     {/* <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
                                                 <a className="has-text-grey-dark is-size-6">Conferencistas</a>
                                             </li>
-                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
+                                            <li className="items menu-item"  className={this.state.section == 'wall' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('') }}>
+                                                <a className="has-text-grey-dark is-size-6">Muro</a>
                                             </li>
-                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
+                                            {/*<li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
                                                 <a className="has-text-grey-dark is-size-6">Conferencistas</a>
                                             </li>
                                             <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
