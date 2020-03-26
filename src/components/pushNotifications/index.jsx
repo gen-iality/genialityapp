@@ -157,6 +157,7 @@ class pushNotification extends Component {
                             {
                                 app_configuration.map((item, key) => {
                                     return <div key={key}>
+                                         {item && (
                                         <select id="SelecRoute" onChange={(save) => { this.setState({ push: { ...this.state.push, route: save.target.value } }) }}>
                                             <option>Seleccionar...</option>
                                             <option value={item.WebScreen.name ? item.WebScreen.name : ""}>{item.WebScreen.title ? item.WebScreen.title : "Seleccione..."}</option>
@@ -171,7 +172,9 @@ class pushNotification extends Component {
                                             <option value={item.ProfileScreen.name ? item.ProfileScreen.name : ""}>{item.ProfileScreen.title ? item.ProfileScreen.title : "Seleccione..."}</option>
                                             <option value={item.CalendarScreen.name ? item.CalendarScreen.name : ""}>{item.CalendarScreen.title ? item.CalendarScreen.title : "Seleccione..."}</option>
                                             <option value={item.NewsScreen.name ? item.NewsScreen.name : ""}>{item.NewsScreen.title ? item.NewsScreen.title : "Seleccione..."}</option>
+                                            
                                         </select>
+                                        )}
                                     </div>
                                 })
                             }
