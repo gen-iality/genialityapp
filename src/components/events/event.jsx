@@ -17,11 +17,14 @@ import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
+import TriviaRoutes from "../trivia"
+import DocumentsRoutes from "../Documents";
 import Speakers from "../speakers";
 import Surveys from "../surveys";
 import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
+import ConferenceRoute from "../zoom/index"
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -42,6 +45,7 @@ const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index"
 const NewsApp = asyncComponent( ()=>import("../news/news"));
 const SurveysCreate = asyncComponent( ()=>import("../news/news"));
 const FAQS = asyncComponent( ()=>import("../news/news"));
+const Trivia = asyncComponent( ()=>import("../trivia/trivia") );
 
 Moment.locale('es');
 momentLocalizer();
@@ -61,7 +65,8 @@ class Event extends Component {
             CreateSuervey: true,
             NewsApp:true,
             SurveysCreate:true,
-            FAQS:true
+            FAQS:true,
+            Trivia: true,
         };
     }
 
@@ -118,11 +123,15 @@ class Event extends Component {
                             />
                             <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>
+                            <Route path={`${match.url}/trivia`} render={()=><TriviaRoutes event={this.state.event}/>}/>
+                            <Route path={`${match.url}/documents`} render={()=><DocumentsRoutes event={this.state.event}/>}/>    
+                            <Route path={`${match.url}/conference`} render={()=><ConferenceRoute event={this.state.event}/>}/>    
+
                             <Protected path={`${match.url}/assistants`} component={ListEventUser} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             <Protected path={`${match.url}/checkin/:id`} component={CheckAgenda} event={this.state.event} url={match.url}/>
                             <Protected path={`${match.url}/checkin-actividad`} component={ReportList} event={this.state.event} url={match.url}/>
                             {
-                                permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
+                                //permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
                             <Protected path={`${match.url}/invitados`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
@@ -165,7 +174,7 @@ class Event extends Component {
                                 <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
                             }
 
-{   
+                            {   
                                 permissions.data.ids.includes(rolPermissions._id) &&
                                 <Route path={`${match.url}/falqs`} render={()=><FAQS eventId={this.state.event._id}/>}/>
                             }
@@ -189,6 +198,7 @@ class Event extends Component {
                             <Route path={`${match.url}/surveys`} render={()=><SurveysCreate eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/news`} render={()=><NewsApp eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/faqs`} render={()=><FAQS eventId={this.state.event._id}/>}/>
+                            {/* <Route path={`${match.url}/trivia`} render={()=><Trivia eventId={this.state.event._id}/>}/> */}
                             <Route component={NoMatch} />
                         </Switch>
                     </section>

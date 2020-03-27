@@ -3,6 +3,10 @@ $font-path: '~react-widgets/lib/fonts';
 $img-path: '~react-widgets/lib/img';
 $family-sans-serif: "Montserrat", sans-serif;
 $color-evius: #1CDCB7;
+$evius-secundary: #009FD9;
+// $evius-secundary: #0e1c35;
+$color-prueba:#7FB744;
+$title-agenda: #fb0b74;
 $primary: $color-evius;
 $pagination-current-background-color: #00b89c;
 $pagination-current-border-color: #00b89c;
@@ -17,6 +21,8 @@ $tabs-link-active-color: #000000;
 $tabs-link-padding: 0.5em 3em;
 $breakpoint-mobile: 768px;
 $breakpoint-tablet: 1024px;
+
+
 .box:not(:last-child) {
   margin-bottom: 0 !important;
 }
@@ -36,6 +42,7 @@ $breakpoint-tablet: 1024px;
 @import "./home/index";
 @import "./home/header";
 @import "./landing/index";
+@import "./landing/speakers";
 @import "./events/aside";
 @import "./events/event";
 @import "./events/card";

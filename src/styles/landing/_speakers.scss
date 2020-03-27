@@ -1,0 +1,17 @@
+.container-calendar-speaker{
+    margin-top: 5% !important;
+
+    .calendar-speakers{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+        grid-gap: 100px;
+    }
+
+    .content-information-speakers{
+        padding: 15px;
+        .information-speakers{
+            min-height: 5rem; 
+        }
+    }
+
+}
