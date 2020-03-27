@@ -28,7 +28,7 @@ class Agenda extends Component {
       toShow: [],
       value: "",
       redirect: false,
-      disabled: false
+      disabled: false,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -99,8 +99,8 @@ class Agenda extends Component {
       .filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
       .sort(
         (a, b) =>
-          Moment(a.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm") -
-          Moment(b.datetime_start, "YYYY-MM-DD HH:mm").format("HHmm")
+          Moment(a.datetime_start, "h:mm:ss a").format('ll')-
+          Moment(b.datetime_start, "h:mm:ss a").format('ll')
       );
     this.setState({ listDay: list });
 
@@ -137,6 +137,7 @@ class Agenda extends Component {
 
     const filtered = this.filterBySpace(space, this.state.list);
     this.setState({ filtered, toShow: filtered, space });
+    console.log("date" ,this.state.days)
   }
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
@@ -190,9 +191,41 @@ class Agenda extends Component {
     const { days, day, nameSpace, spaces, toShow } = this.state;
     return (
       <div className="container-calendar-section">
+         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda</h1>
+         <br/>
+         <br/>
+         {/* input donde se iteran los espacios del evento */}
+         <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
+            <div
+              className="select has-margin-bottom-60 has-margin-top-3  "
+              style={{ height: "3rem", display: "tableCaption" }}
+            >
+              <select
+                id="selectedSpace"
+                onClick={this.selectionSpace}
+                className="has-background-white has-text-black  is-pulled-left"
+                style={{ height: "3rem" }}
+              >
+                <option onClick={this.returnList}>Todo</option>
+                {spaces.map((space, key) => (
+                  <option
+                    onClick={() =>
+                      this.selectSpace(
+                        space.name,
+                        space.datetime_start,
+                        space.datetime_start
+                      )
+                    }
+                    key={key}
+                  >
+                    {space.name}
+                  </option>
+                ))}
+              </select>
+            </div>
         <div className="columns is-centered">
           {/* Contenedor donde se iteran los espacios del evento */}
-          <div className="container-calendar-space is-hidden-touch">
+          {/* <div className="container-calendar-space is-hidden-touch">
             <div
               className={`${
                 nameSpace === "inicio"
@@ -227,12 +260,12 @@ class Agenda extends Component {
                 </button>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {/* Contenedor donde se iteran los tabs de las fechas */}
 
           <div className="container-calendar is-three-fifths">
-            <div className="container-day_calendar tabs is-centered is-fullwidth is-boxed is-medium">
+            <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
               {days.map((date, key) => (
                 <li
                   onClick={() => this.selectDay(date)}
@@ -251,35 +284,8 @@ class Agenda extends Component {
                 </li>
               ))}
             </div>
+           
 
-            {/* input donde se iteran los espacios del evento */}
-
-            <div
-              className="select is-fullwidth is-hidden-desktop has-background-white"
-              style={{ height: "3rem" }}
-            >
-              <select
-                id="selectedSpace"
-                onClick={this.selectionSpace}
-                className="has-background-white has-text-black"
-                style={{ height: "3rem" }}
-              >
-                {spaces.map((space, key) => (
-                  <option
-                    onClick={() =>
-                      this.selectSpace(
-                        space.name,
-                        space.datetime_start,
-                        space.datetime_start
-                      )
-                    }
-                    key={key}
-                  >
-                    {space.name}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             {/* Contenedor donde se pinta la información de la agenda */}
 
@@ -289,29 +295,56 @@ class Agenda extends Component {
                 className="container_agenda-information is-three-fifths"
               >
                 <div className="card agenda_information">
-                  {/* fechas */}
-                  <div className="card-header-date card-header-title has-text-left">
-                    <p>
+                <header class="card-header columns">
+
+                  <div className="is-block column is-11">
+                    <p className="card-header-title ">
                       {agenda.datetime_start} - {agenda.datetime_end}
                     </p>
+                    <p class="card-header-title has-text-left">
+                    {agenda.name}
+                    </p>
+                    <p class="has-text-left is-size-5-desktop has-margin-left-10"> Lugar: {agenda.space.name}</p>
+                  <button
+                        className="button is-success is-medium is-outlined is-pulled-right has-margin-top-20"
+                        disabled={agenda.meeting_id ? false : true}
+                        onClick={() => showIframe(true, agenda.meeting_id)}
+                      >
+                        {agenda.meeting_id
+                          ? "Ir a Conferencia en Vivo"
+                          : "Sin Conferencia Virtual"}
+                      </button>
                   </div>
 
-                  {/* titulo del evento */}
-                  <div className="card-header-title">
-                    <p>{agenda.name}</p>
-                  </div>
+                  <a  class="card-header-icon has-text-white" aria-label="more options">
+                    <span class="icon is-size-3">
+                      <i class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
+                    </span>
+                  </a>
+                </header>
 
                   <div className="card-content has-text-left container_calendar-description">
+                    {/* fechas */}
+                    {/* <div className="card-content card-header-date  has-text-left">
+                      <p className="card-header-title">
+                        {agenda.datetime_start} - {agenda.datetime_end}
+                      </p>
+                    </div> */}
+
+                    {/* titulo del evento */}
+                    {/* <div className="card-header-title">
+                      <p>{agenda.name}</p>
+                    </div> */}
                     {/* Descripción del evento */}
 
                     <div className="calendar-description">
-                      <div
+                      <div className="is-size-5-desktop"
                         dangerouslySetInnerHTML={{ __html: agenda.description }}
                       ></div>
-                      <div style={{ marginTop: "4%" }}>
+                      {/* <div style={{ marginTop: "4%" }}>
                         <span className="card-header-subtitle">Lugar : </span>
                         <span>{agenda.space.name}</span>
-                      </div>
+                      </div> */}
                     </div>
 
                     <p className="card-header-subtitle">Conferencista</p>
@@ -347,15 +380,7 @@ class Agenda extends Component {
                         Inscribirme
                       </button> */}
 
-                      <button
-                        className="button is-danger is-pulled-right"
-                        disabled={agenda.meeting_id ? false : true}
-                        onClick={() => showIframe(true, agenda.meeting_id)}
-                      >
-                        {agenda.meeting_id
-                          ? "Ir a Conferencia en Vivo"
-                          : "Sin Conferencia Virtual"}
-                      </button>
+                      
                     </div>
                   </div>
                 </div>

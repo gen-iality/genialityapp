@@ -84,7 +84,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "#3871F1"});
+    this.setState({ color: "rgb(60, 108, 157)"});
     console.log("s",event)
     const sections = {
       agenda: (
@@ -385,7 +385,7 @@ class Landing extends Component {
               :
             </div>
             <div className="hero-body is-centered">
-              <div className="data  container-hero-landing has-text-centered box">
+              <div className="data  container-hero-landing has-text-centered ">
                 <div className="columns container-nav-item is-centered">
                   <ComponentSlider
                     renderLeftArrow={renderLeftArrow}
