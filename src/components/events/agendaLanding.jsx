@@ -100,8 +100,8 @@ class Agenda extends Component {
       .filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
       .sort(
         (a, b) =>
-          Moment(a.datetime_start, "h:mm:ss a").format('ll')-
-          Moment(b.datetime_start, "h:mm:ss a").format('ll')
+          Moment(a.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')-
+          Moment(b.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')
       );
     this.setState({ listDay: list });
 
@@ -300,7 +300,7 @@ class Agenda extends Component {
 
                   <div className="is-block column is-11">
                     <p className="card-header-title ">
-                      {agenda.datetime_start} - {agenda.datetime_end}
+                      { Moment(agenda.datetime_start).format('LT')} - {Moment(agenda.datetime_end).format('LT')}
                     </p>
                     <p class="card-header-title has-text-left">
                     {agenda.name}
