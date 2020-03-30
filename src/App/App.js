@@ -6,6 +6,7 @@ import { parseUrl } from "../helpers/constants";
 import privateInstance, {Actions} from "../helpers/request";
 import store from "../redux/store";
 import MainRouter from "../containers/router";
+import 'bulma-spacing/css/bulma-spacing.min.css'
 
 
 class App extends Component {

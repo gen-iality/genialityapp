@@ -19,6 +19,7 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
+import ReactPlayer from 'react-player';
 
 import ZoomComponent from "./zoomComponent";
 
@@ -84,7 +85,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "#3871F1"});
+    this.setState({ color: "rgb(60, 108, 157)"});
     console.log("s",event)
     const sections = {
       agenda: (
@@ -113,6 +114,11 @@ class Landing extends Component {
             <h3 className="title-description is-size-5 column is-10">
               Descripción
             </h3>
+
+            <div className="column is-10 description">
+            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+              </div>
+
             <div className="column is-10 description">
               {typeof event.description === "string" ? (
                 <ReactQuill
@@ -385,7 +391,7 @@ class Landing extends Component {
               :
             </div>
             <div className="hero-body is-centered">
-              <div className="data  container-hero-landing has-text-centered box">
+              <div className="data  container-hero-landing has-text-centered ">
                 <div className="columns container-nav-item is-centered">
                   <ComponentSlider
                     renderLeftArrow={renderLeftArrow}
