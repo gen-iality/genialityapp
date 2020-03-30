@@ -29,7 +29,7 @@ class Agenda extends Component {
       value: "",
       redirect: false,
       disabled: false,
-      generalTab:false,
+      generalTab:true,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -295,71 +295,65 @@ class Agenda extends Component {
                 key={key}
                 className="container_agenda-information is-three-fifths"
               >
-                <div className="card agenda_information">
-                <header class="card-header columns">
+                <div className="card agenda_information ">
+                <header class="card-header columns has-padding-left-7">
 
-                  <div className="is-block column is-11">
+                  <div className="is-block is-11 column is-paddingless">
+
+                     {/* Hora del evento */}  
                     <p className="card-header-title ">
                       { Moment(agenda.datetime_start).format('LT')} - {Moment(agenda.datetime_end).format('LT')}
                     </p>
-                    <p class="card-header-title has-text-left">
-                    {agenda.name}
-                    </p>
-                    <p class="has-text-left is-size-5-desktop has-margin-left-10"> Lugar: {agenda.space.name}</p>
-                  <button
-                        className="button is-success is-medium is-outlined is-pulled-right has-margin-top-20"
-                        disabled={agenda.meeting_id ? false : true}
-                        onClick={() => showIframe(true, agenda.meeting_id)}
-                      >
-                        {agenda.meeting_id
-                          ? "Ir a Conferencia en Vivo"
-                          : "Sin Conferencia Virtual"}
-                      </button>
-                  </div>
 
-                  <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
+                    {/* Nombre del evento */}
+                    <span class="card-header-title has-text-left">
+                    {agenda.name}
+                    </span>
+                  </div>
+                
+
+                  <a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
+                    <i class="fas fa-play-circle is-size-5"></i>
+                    <span class="is-size-6">Video</span>
+                  </a>
+
+                    {/* icono que abre y cierra el card */}
+                  {/* <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
                     <span class="icon is-size-3">
                       <i key={key} class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
-                  </a>
+                  </a> */}
+
                 </header>
                 {
                     generalTab && (
 
                   <div key={key} className="card-content has-text-left container_calendar-description">
-                    {/* fechas */}
-                    {/* <div className="card-content card-header-date  has-text-left">
-                      <p className="card-header-title">
-                        {agenda.datetime_start} - {agenda.datetime_end}
-                      </p>
-                    </div> */}
+                                    
 
-                    {/* titulo del evento */}
-                    {/* <div className="card-header-title">
-                      <p>{agenda.name}</p>
-                    </div> */}
+  
                     {/* Descripción del evento */}
 
-                    <div className="calendar-description">
-                      <div className="is-size-5-desktop"
-                        dangerouslySetInnerHTML={{ __html: agenda.description }}
-                      ></div>
-                      {/* <div style={{ marginTop: "4%" }}>
-                        <span className="card-header-subtitle">Lugar : </span>
-                        <span>{agenda.space.name}</span>
-                      </div> */}
-                    </div>
+                    <div className="is-size-5-desktop has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: agenda.description }}/>
+                      
+                     {/* Lugar del evento */}
+                     <p class="has-text-left is-size-6-desktop"> 
+                      Lugar: {agenda.space.name}
+                    </p>
+                      
+                      {/* Conferencistas del evento */}
+                    <p className="has-text-left is-size-6-desktop">
+                      Conferencista: &nbsp;
+                      {agenda.hosts.map((speaker, key) => (
+                        <span key={key}>
+                          {speaker.name}, &nbsp;
+                        </span>
+                      ))}
+                    </p>
 
-                    <p className="card-header-subtitle">Conferencista</p>
-                    {agenda.hosts.map((speaker, key) => (
-                      <div key={key}>
-                        <p>{speaker.name}</p>
-                      </div>
-                    ))}
-                    <div className="calendar-category">
-                      {/* <br/>
-                                            <p className="card-header-subtitle">Categoria</p> */}
-                      <br />
+                    <div className="calendar-category has-margin-top-7">
+                     
+                     {/* Tags de categorias */}
                       {agenda.activity_categories.map((cat, key) => (
                         <span
                           key={key}
@@ -373,9 +367,24 @@ class Agenda extends Component {
                         </span>
                       ))}
                     </div>
-                    <div>
-                      <br />
-                      <br />
+
+
+                    <div class="card-footer is-12 is-flex" style={{ borderTop: "none", justifyContent: "space-between", alignItems:"flex-end"}}>
+
+                      <a className="has-text-white is-size-5 is-vcentered">Ver más...</a>
+               
+                      
+                      {/* Boton de para acceder a la conferencia */}
+                      <button
+                        className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                        disabled={agenda.meeting_id ? false : true}
+                        onClick={() => showIframe(true, agenda.meeting_id)}
+                      >
+                        {agenda.meeting_id
+                          ? "Conferencia en Vivo"
+                          : "Sin Conferencia Virtual"}
+                      </button>
+                      
                       {/* <button
                         className="button button-color-agenda has-text-light is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}

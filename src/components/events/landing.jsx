@@ -318,18 +318,21 @@ class Landing extends Component {
                           </div>
 
 
-                          {/* <div className="lugar item columns">
+                          {/* Lugar del evento */}
+
+                          <div className="lugar item columns">
                             <div className="column is-1 container-icon">
-                              <span className="icon is-medium">
+                              <span className="icon is-size-5">
                                 <i className="fas fa-map-marker-alt fa-2x" />
                               </span>
                             </div>
                             <div className="column is-9 container-subtitle">
-                              <span className="subtitle is-size-6">
+                              <span className=" is-size-5">
                                 {event.venue} {event.location.FormattedAddress}
                               </span>
                             </div>
-                          </div> */}
+                          </div>
+
                           {/* <div className="descripcion-c item columns is-centered">
                               <div className="column is-10">
                                   { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
