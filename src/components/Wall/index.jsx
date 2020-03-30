@@ -22,7 +22,6 @@ class Wall extends Component {
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
         this.previewImage = this.previewImage.bind(this)
-        this.comments = this.comments.bind(this)
     }
 
     //Se monta el componente getPost antes
