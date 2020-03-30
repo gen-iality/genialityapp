@@ -17,7 +17,7 @@ class Wall extends Component {
             fileName: "",
             dataPost: [],
             dataComment: [],
-            idPostComment:[]
+            idPostComment: []
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
@@ -129,6 +129,15 @@ class Wall extends Component {
         console.log(this.state.dataComment)
     }
 
+    // deletePost(postId) {
+    //     var jobskill_query = db.collection('job_skills').where('job_id', '==', post.job_id);
+    //     jobskill_query.get().then(function (querySnapshot) {
+    //         querySnapshot.forEach(function (doc) {
+    //             doc.ref.delete();
+    //         });
+    //     });
+    // }
+
     render() {
         const { dataPost, dataComment, texto, image } = this.state
         return (
@@ -188,11 +197,12 @@ class Wall extends Component {
                                     </div>
                                 </div>
 
-                                <div className="card-footer">
+                                {/* <div className="card-footer">
                                     <div className="column is-6">
                                         <label className="label">Responder</label>
                                         <input className="input" id="comment" />
                                         <button onClick={e => { this.saveComment(post.id) }} className={`button is-primary`}>Siguiente</button>
+                                        <button onClick={e => { this.deletePost(post.id) }} className={`button is-primary`}>Eliminar</button>
                                     </div>
 
                                     <div className="column is-5">
@@ -228,7 +238,7 @@ class Wall extends Component {
                                             <button className="modal-close is-large" aria-label="close"></button>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     ))}
