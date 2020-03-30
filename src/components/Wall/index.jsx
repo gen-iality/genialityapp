@@ -25,11 +25,12 @@ class Wall extends Component {
         this.comments = this.comments.bind(this)
     }
 
+    //Se monta el componente getPost antes
     componentDidMount = async () => {
         this.getPost()
-        this.getComments()
     }
 
+    // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
     async getComments(postId) {
         document.querySelectorAll('.modal-button').forEach(function (el) {
             el.addEventListener('click', function () {
@@ -66,6 +67,7 @@ class Wall extends Component {
         });
     }
 
+    //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
     async getPost() {
         const dataPost = [];
 
@@ -91,20 +93,24 @@ class Wall extends Component {
         });
     }
 
+    //Funcion para guardar el post, Se recoge la informacion y se envia a ./helpers, se valida si trae imagen o no
     async savePost() {
         const image = document.getElementById("image").files[0]
         if (!image) {
             const text = document.getElementById("postText").value
+            //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
         } else {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
             console.log("Datos de imagen obtenidos")
             const text = document.getElementById("postText").value
+            //savePostImage se realiza para publicar el post con imagen
             saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
         }
     }
 
+    //Se salva el comentario, el proceso se encuentra en ./helpers.js 
     async saveComment(idPost) {
         let email = this.props.event.author.email
         let eventId = this.props.event._id
@@ -112,34 +118,18 @@ class Wall extends Component {
         saveFirebase.saveComment(email, eventId, comments, idPost)
     }
 
+    //Funcion para limpiar el files e image los cuales muestran el preview de la imagen
     cancelUpload() {
         this.setState({ files: [], image: [] })
     }
 
+    //Funcion para observar la imagen antes de publicarla
     previewImage(event) {
         console.log(URL.createObjectURL(event.target.files[0]))
 
         this.setState({
             image: URL.createObjectURL(event.target.files[0])
         })
-    }
-
-    modal = () => {
-        document.querySelectorAll('.modal-button').forEach(function (el) {
-            el.addEventListener('click', function () {
-                var target = document.querySelector(el.getAttribute('data-target'));
-
-                target.classList.add('is-active');
-
-                target.querySelector('.modal-close').addEventListener('click', function () {
-                    target.classList.remove('is-active');
-                });
-            });
-        });
-    }
-
-    comments() {
-        console.log(this.state.dataComment)
     }
 
     //Funcion para eliminar post
@@ -154,7 +144,6 @@ class Wall extends Component {
                 <div className="columns is-mobile">
                     <div className="column is-12">
                         {/* Se valida si hay imagen para mostrar o no */}
-                        {/* <button onClick={this.comments}>Comemnts</button> */}
                         <input type="file" id="image" onChange={this.previewImage} />
                         <div>
                             {
