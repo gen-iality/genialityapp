@@ -30,11 +30,15 @@
   }
 
   .container-calendar{
-    min-width: 70%;
+    min-width: 65%;
+    @media (min-width: 1020px) {
+      max-width: 65%;
+     }
+   
   }
 .container-calendar-space{
   margin-top: 6%;
-  min-width: 35%;
+  min-width: 30%;
   .button {
     font-size: 1.1rem;
     border-color: transparent;

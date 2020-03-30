@@ -1,8 +1,8 @@
 section.landing{
   .hero-head{
   }
-
   padding: 0;
+  padding-bottom: 30px;
   .container-nombre{
     display: block;
     margin: 0% auto;
@@ -160,6 +160,8 @@ section.landing{
   }
   .hero-body{
     padding: 0;
+    // display: flex;
+    // justify-content: center;
 
   .description-container{
     text-align: justify;
@@ -187,6 +189,9 @@ section.landing{
         }
       }
     }
+  }
+  .container-hero-landing{
+    margin: 0% 4%;
   }
   .container-nav-item{
     background: transparent;
