@@ -29,6 +29,7 @@ class Agenda extends Component {
       value: "",
       redirect: false,
       disabled: false,
+      generalTab:false,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -99,8 +100,8 @@ class Agenda extends Component {
       .filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
       .sort(
         (a, b) =>
-          Moment(a.datetime_start, "h:mm:ss a").format('ll')-
-          Moment(b.datetime_start, "h:mm:ss a").format('ll')
+          Moment(a.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')-
+          Moment(b.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')
       );
     this.setState({ listDay: list });
 
@@ -188,7 +189,7 @@ class Agenda extends Component {
 
   render() {
     const { showIframe } = this.props;
-    const { days, day, nameSpace, spaces, toShow } = this.state;
+    const { days, day, nameSpace, spaces, toShow, generalTab } = this.state;
     return (
       <div className="container-calendar-section">
          <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda</h1>
@@ -197,7 +198,7 @@ class Agenda extends Component {
          {/* input donde se iteran los espacios del evento */}
          <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
             <div
-              className="select has-margin-bottom-60 has-margin-top-3  "
+              className="select has-margin-bottom-60 has-margin-top-3"
               style={{ height: "3rem", display: "tableCaption" }}
             >
               <select
@@ -299,7 +300,7 @@ class Agenda extends Component {
 
                   <div className="is-block column is-11">
                     <p className="card-header-title ">
-                      {agenda.datetime_start} - {agenda.datetime_end}
+                      { Moment(agenda.datetime_start).format('LT')} - {Moment(agenda.datetime_end).format('LT')}
                     </p>
                     <p class="card-header-title has-text-left">
                     {agenda.name}
@@ -316,14 +317,16 @@ class Agenda extends Component {
                       </button>
                   </div>
 
-                  <a  class="card-header-icon has-text-white" aria-label="more options">
+                  <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
                     <span class="icon is-size-3">
-                      <i class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
+                      <i key={key} class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a>
                 </header>
+                {
+                    generalTab && (
 
-                  <div className="card-content has-text-left container_calendar-description">
+                  <div key={key} className="card-content has-text-left container_calendar-description">
                     {/* fechas */}
                     {/* <div className="card-content card-header-date  has-text-left">
                       <p className="card-header-title">
@@ -383,7 +386,8 @@ class Agenda extends Component {
                       
                     </div>
                   </div>
-                </div>
+                    )}
+               </div>
               </div>
             ))}
           </div>
