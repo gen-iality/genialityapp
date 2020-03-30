@@ -19,6 +19,7 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
+import WallForm from "../Wall/index"
 
 import ZoomComponent from "./zoomComponent";
 
@@ -107,6 +108,7 @@ class Landing extends Component {
       ),
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
+      wall: <WallForm event={event} eventId={event.id}/>,
       evento: (
         <div className="columns">
           <div className="description-container column is-8">
@@ -483,7 +485,7 @@ class Landing extends Component {
                           : "items menu-item nav-item"
                       }
                       onClick={e => {
-                        this.showSection("");
+                        this.showSection("wall");
                       }}
                     >
                       <a className="has-text-grey-dark is-size-6">

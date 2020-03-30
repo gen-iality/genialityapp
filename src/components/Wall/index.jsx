@@ -30,13 +30,26 @@ class Wall extends Component {
         this.getComments()
     }
 
-    async getComments() {
+    async getComments(postId) {
+        document.querySelectorAll('.modal-button').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var target = document.querySelector(el.getAttribute('data-target'));
+
+                target.classList.add('is-active');
+
+                target.querySelector('.modal-close').addEventListener('click', function () {
+                    target.classList.remove('is-active');
+                });
+            });
+        });
+
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
+                this.setState({ dataComment:[] })
                 return;
             }
             snapshot.forEach(doc => {
@@ -129,14 +142,10 @@ class Wall extends Component {
         console.log(this.state.dataComment)
     }
 
-    // deletePost(postId) {
-    //     var jobskill_query = db.collection('job_skills').where('job_id', '==', post.job_id);
-    //     jobskill_query.get().then(function (querySnapshot) {
-    //         querySnapshot.forEach(function (doc) {
-    //             doc.ref.delete();
-    //         });
-    //     });
-    // }
+    //Funcion para eliminar post
+    async deletePost(postId) {
+        saveFirebase.deletePost(postId, this.props.event._id)
+    }
 
     render() {
         const { dataPost, dataComment, texto, image } = this.state
@@ -144,7 +153,8 @@ class Wall extends Component {
             <div>
                 <div className="columns is-mobile">
                     <div className="column is-12">
-                        {/* <button onClick={this.comments}>Comentarios</button> */}
+                        {/* Se valida si hay imagen para mostrar o no */}
+                        {/* <button onClick={this.comments}>Comemnts</button> */}
                         <input type="file" id="image" onChange={this.previewImage} />
                         <div>
                             {
@@ -158,17 +168,24 @@ class Wall extends Component {
                                     <p></p>
                             }
                         </div>
+                        {/* Aqui se termina la muestra de la informacion */}
+
+                        {/* se crea input para agregar un comentario al post */}
                         <div>
                             <label className="label">Comentario</label>
                             <input className="input" id="postText" type="text" />
                         </div>
+                        {/* se finaliza input de comentario */}
 
                         <div>
                             <button onClick={this.savePost}>Guardar</button>
                         </div>
+
+                        {/* se guarda la informacion */}
                     </div>
                 </div>
 
+                {/* se mapean los datos que provienen de firebase del post            */}
                 <div className="columns is-6">
                     {dataPost.map((post, key) => (
                         <div className="card column is-three-quarters-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-quarter-fullhd" key={key}>
@@ -184,6 +201,7 @@ class Wall extends Component {
                                 </figure>
                                 <TimeStamp date={post.datePost.seconds} />
                             </div>
+                            {/* Se muestra en card los post registrados */}
                             <div className="card-content">
                                 <div className="media">
                                     <div className="media-left">
@@ -197,16 +215,17 @@ class Wall extends Component {
                                     </div>
                                 </div>
 
-                                {/* <div className="card-footer">
+                                <div className="card-footer">
                                     <div className="column is-6">
                                         <label className="label">Responder</label>
                                         <input className="input" id="comment" />
-                                        <button onClick={e => { this.saveComment(post.id) }} className={`button is-primary`}>Siguiente</button>
-                                        <button onClick={e => { this.deletePost(post.id) }} className={`button is-primary`}>Eliminar</button>
+                                        <button onClick={e => { this.saveComment(post.id) }} className={`button is-primary`}>Enviar</button>
+                                        <button onClick={e => { this.deletePost(post.id) }} className={`button is-danger`}>Eliminar</button>
                                     </div>
 
+                                    {/* se mapean los comentarios los cuales estan pendientes por validacion        */}
                                     <div className="column is-5">
-                                        <button className="button is-primary modal-button" onClick={this.modal} data-target="#myModal" aria-haspopup="true">Comentarios</button>
+                                        <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
 
                                         <div className="modal" id="myModal">
                                             <div className="modal-background"></div>
@@ -215,16 +234,17 @@ class Wall extends Component {
                                                     <div className="column is-12">
                                                         {
                                                             dataComment.map((commentier, key) => (
-                                                                <div class="card" key={key} style={{ marginBottom: "4%" }}>
-                                                                    <header class="card-header">
-                                                                        <p class="card-header-title">
+                                                                <div className="card" key={key} style={{ marginBottom: "4%" }}>
+
+                                                                    <header className="card-header">
+                                                                        <p className="card-header-title">
                                                                             {
                                                                                 <p>{commentier.author}</p>
                                                                             }
                                                                         </p>
                                                                     </header>
-                                                                    <div class="card-content">
-                                                                        <div class="content">
+                                                                    <div className="card-content">
+                                                                        <div className="content">
                                                                             <br />
                                                                             <p>{commentier.comment}</p>
                                                                         </div>
@@ -238,10 +258,11 @@ class Wall extends Component {
                                             <button className="modal-close is-large" aria-label="close"></button>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                     ))}
+                    {/* Se termina de mapear los datos de post */}
                 </div>
             </div>
         )
