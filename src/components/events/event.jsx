@@ -42,6 +42,7 @@ const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
+const Wall = asyncComponent( ()=>import("../Wall/index") )
 const NewsApp = asyncComponent( ()=>import("../news/news"));
 const SurveysCreate = asyncComponent( ()=>import("../news/news"));
 const FAQS = asyncComponent( ()=>import("../news/news"));
@@ -118,9 +119,8 @@ class Event extends Component {
                     <section className="section event-wrapper">
                         <Switch>
                             <Route exact path={`${match.url}/`} render={()=><Redirect to={`${match.url}/main`} />}/>
-                            <Route exact path={`${match.url}/main`} render={()=>
-                                <General event={this.state.event} eventId={this.state.event._id} updateEvent={this.updateEvent}/>}
-                            />
+                            <Route exact path={`${match.url}/main`} render={()=><General event={this.state.event} eventId={this.state.event._id} updateEvent={this.updateEvent}/>}/>
+                            <Route exact path={`${match.url}/wall`} render={()=><Wall event={this.state.event} eventId={this.state.event._id}/>}/>
                             <Route path={`${match.url}/datos`} render={()=><Datos eventID={this.state.event._id}/>}/>
                             <Route path={`${match.url}/agenda`} render={()=><AgendaRoutes event={this.state.event}/>}/>
                             <Route path={`${match.url}/trivia`} render={()=><TriviaRoutes event={this.state.event}/>}/>
