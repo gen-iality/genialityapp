@@ -8,7 +8,11 @@ class IFrame extends Component {
 
     render() {
         return (
+<<<<<<< HEAD
             <iframe title={'Tiquets'} src={this.props.iframeUrl} width={'100%'} style={{height:"70vh"}} height={'600px'}/>
+=======
+            <iframe title={'Tiquets'} src={this.props.iframeUrl} width={'100%'} style={{height:"70vh"}} height={'1000'}/>
+>>>>>>> master
         );
     }
 }
