@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Moment from "moment";
+import {NavLink, withRouter,Route, Switch} from "react-router-dom";
 import * as Cookie from "js-cookie";
-import EvenTable from "../events/shared/table";
+import EvenTable from "./shared/table";
 import SearchComponent from "../shared/searchTable";
 import API, {
   AgendaApi,
@@ -14,7 +15,7 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from 'react-player';
 
-class Agenda extends Component {
+class AgendaListadoActividades extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -193,7 +194,7 @@ class Agenda extends Component {
     const { days, day, nameSpace, spaces, toShow, generalTab } = this.state;
     return (
       <div className="container-calendar-section">
-         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda</h1>
+         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda Listado Actividades</h1>
          <br/>
          <br/>
          {/* input donde se iteran los espacios del evento */}
@@ -371,4 +372,4 @@ class Agenda extends Component {
   }
 }
 
-export default Agenda;
+export default withRouter(AgendaListadoActividades)

@@ -160,6 +160,7 @@ section.landing{
   }
   .hero-body{
     padding: 0;
+    margin-top: -21px;
     // display: flex;
     // justify-content: center;
 
@@ -182,16 +183,24 @@ section.landing{
         border: none;
       
         .ql-editor{
-          font-size: 1.3rem;
+          font-size: 1.2rem;
           letter-spacing: 0.2px;
           line-height: 1.50;
           padding: 0px;
+          color: white !important;
+          h2{
+            text-align: left !important;
+            font-weight: bold;
+          }
+          span, a{
+            color: white !important;
+          }
         }
       }
     }
   }
   .container-hero-landing{
-    margin: 0% 4%;
+    margin: -70px 4% auto; 
   }
   .container-nav-item{
     background: transparent;

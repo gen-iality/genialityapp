@@ -114,14 +114,15 @@ class Landing extends Component {
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event.id}/>,
       evento: (
-        <div className="columns">
+        <div className="columns has-text-white is-centered has-margin-top-30 ">
+          
           <div className="description-container column is-8">
-            <h3 className="title-description is-size-5 column is-10">
-              Descripción
-            </h3>
+            <span className="title is-size-1 has-text-white column is-12 has-text-left has-margin-left-60 ">
+              Detalles del evento
+            </span>
 
-            <div className="column is-10 description">
-            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+            <div className="column is-10 description is-centered">
+            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
               </div>
 
             <div className="column is-10 description">
@@ -326,18 +327,21 @@ class Landing extends Component {
                           </div>
 
 
-                          {/* <div className="lugar item columns">
+                          {/* Lugar del evento */}
+
+                          <div className="lugar item columns">
                             <div className="column is-1 container-icon">
-                              <span className="icon is-medium">
+                              <span className="icon is-size-5">
                                 <i className="fas fa-map-marker-alt fa-2x" />
                               </span>
                             </div>
                             <div className="column is-9 container-subtitle">
-                              <span className="subtitle is-size-6">
+                              <span className=" is-size-5">
                                 {event.venue} {event.location.FormattedAddress}
                               </span>
                             </div>
-                          </div> */}
+                          </div>
+
                           {/* <div className="descripcion-c item columns is-centered">
                               <div className="column is-10">
                                   { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
@@ -419,7 +423,8 @@ class Landing extends Component {
 
             {/* Menú secciones del landing */}
             <div className="hero-body is-centered">
-              <div className="data  container-hero-landing has-text-centered ">
+              <div  style={{ backgroundColor:"rgba(255,255,255,0.95)", height: "5rem"}} ></div>
+              <div className="data container-hero-landing has-text-centered ">
                 <div className="columns container-nav-item is-centered">
                   <ComponentSlider
                     renderLeftArrow={renderLeftArrow}
@@ -571,12 +576,12 @@ class Landing extends Component {
 const MapComponent = props => {
   const { event } = props;
   return (
-    <div className="column container-map">
+    <div className="column container-map has-margin-top-100">
       <div className="map-head">
         <h2 className="data-title has-text-left">
-          <span className="has-text-grey-dark is-size-5 subtitle">
+          <span className="is-size-5">
             {" "}
-            Encuentra la ubicación
+            <b>Encuentra la ubicación</b>
           </span>
         </h2>
         <div className="lugar item columns">
