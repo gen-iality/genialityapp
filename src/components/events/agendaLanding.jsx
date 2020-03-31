@@ -12,7 +12,7 @@ import API, {
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 
 class Agenda extends Component {
   constructor(props) {
@@ -28,9 +28,10 @@ class Agenda extends Component {
       filtered: [],
       toShow: [],
       value: "",
+      currentActivity: null,
       redirect: false,
       disabled: false,
-      generalTab:true,
+      generalTab: true
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -101,8 +102,8 @@ class Agenda extends Component {
       .filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
       .sort(
         (a, b) =>
-          Moment(a.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')-
-          Moment(b.datetime_start, "h:mm:ss a").format('dddd, MMMM DD YYYY')
+          Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
+          Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
       );
     this.setState({ listDay: list });
 
@@ -139,7 +140,7 @@ class Agenda extends Component {
 
     const filtered = this.filterBySpace(space, this.state.list);
     this.setState({ filtered, toShow: filtered, space });
-    console.log("date" ,this.state.days)
+    console.log("date", this.state.days);
   }
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
@@ -188,16 +189,174 @@ class Agenda extends Component {
     console.log(this.state.value);
   }
 
+  gotoActivity(activity) {
+    this.setState({ currentActivity: activity });
+  }
+  gotoActivityList() {
+    this.setState({ currentActivity: null });
+  }
+
   render() {
     const { showIframe } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab } = this.state;
+    const {
+      days,
+      day,
+      nameSpace,
+      spaces,
+      toShow,
+      generalTab,
+      currentActivity
+    } = this.state;
     return (
-      <div className="container-calendar-section">
-         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda</h1>
-         <br/>
-         <br/>
-         {/* input donde se iteran los espacios del evento */}
-         <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
+      <div>
+        {currentActivity && (
+          <div className="container-calendar-section">
+            <h3
+              style={{ paddingBottom: 30 }}
+              className="title is-1 has-text-white"
+            >
+              {currentActivity.name}
+            </h3>
+
+            <a
+              className="has-text-white"
+              onClick={e => {
+                this.gotoActivityList();
+              }}
+            >
+              <h3 className="has-text-white"> Regresar a la agenda</h3>
+            </a>
+
+            <div className="container_agenda-information is-three-fifths">
+              <div className="card agenda_information ">
+                <header className="card-header columns has-padding-left-7">
+                  <div className="is-block is-11 column is-paddingless">
+                    {/* Hora del evento */}
+                    <p className="card-header-title ">
+                      {Moment(currentActivity.datetime_start).format("h:mm a")}{" "}
+                      - {Moment(currentActivity.datetime_end).format("h:mm a")}
+                    </p>
+
+                    {/* Nombre del evento */}
+                    <span className="card-header-title has-text-left"></span>
+                    {<ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls /> }
+                  </div>
+
+                  <a
+                    className="icon is-flex has-text-white has-margin-top-30"
+                    style={{ flexDirection: "column" }}
+                  >
+                    <i className="fas fa-play-circle is-size-5"></i>
+                    <span className="is-size-6">Video</span>
+                  </a>
+
+                  {/* icono que abre y cierra el card */}
+                  {/* <a  className="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
+                    <span className="icon is-size-3">
+                      <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
+                    </span>
+                  </a> */}
+                </header>
+                {generalTab && (
+                  <div className="card-content has-text-left container_calendar-description">
+                    {/* Descripción del evento */}
+
+                    <div
+                      className="is-size-5-desktop has-margin-bottom-10"
+                      dangerouslySetInnerHTML={{
+                        __html: currentActivity.description
+                      }}
+                    />
+
+                    {/* Lugar del evento */}
+                    <p className="has-text-left is-size-6-desktop">
+                      <b>Lugar:</b> {currentActivity.space.name}
+                    </p>
+
+                    {/* Conferencistas del evento */}
+                    <p className="has-text-left is-size-6-desktop">
+                      <b>Conferencista:</b> &nbsp;
+                      {currentActivity.hosts.map((speaker, key) => (
+                        <span key={key}>{speaker.name}, &nbsp;</span>
+                      ))}
+                    </p>
+
+                    <div className="calendar-category has-margin-top-7">
+                      {/* Tags de categorias */}
+                      {currentActivity.activity_categories.map((cat, key) => (
+                        <span
+                          key={key}
+                          style={{
+                            background: cat.color,
+                            color: cat.color ? "white" : ""
+                          }}
+                          className="tag category_calendar-tag"
+                        >
+                          {cat.name}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div
+                      className="card-footer is-12 is-flex"
+                      style={{
+                        borderTop: "none",
+                        justifyContent: "space-between",
+                        alignItems: "flex-end"
+                      }}
+                    >
+                      {/* Boton de para acceder a la conferencia */}
+                      <button
+                        className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                        disabled={currentActivity.meeting_id ? false : true}
+                        onClick={() =>
+                          showIframe(true, currentActivity.meeting_id)
+                        }
+                      >
+                        {currentActivity.meeting_id
+                          ? "Conferencia en Vivo"
+                          : "Sin Conferencia Virtual"}
+                      </button>
+
+                      {/* <button
+                        className="button button-color-agenda has-text-light is-pulled-right is-medium"
+                        onClick={() => this.registerInActivity(agenda._id)}
+                      >
+                        Inscribirme
+                      </button> */}
+
+                      <a
+                        className="has-text-white"
+                        onClick={e => {
+                          this.gotoActivityList();
+                        }}
+                      >
+                        <h3 className="has-text-white">
+                          {" "}
+                          Regresar a la agenda
+                        </h3>
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* FINALIZA EL DETALLE DE LA AGENDA */}
+
+        {!currentActivity && (
+          <div className="container-calendar-section">
+            <h1
+              style={{ paddingBottom: 30, fontSize: "4rem" }}
+              className="title is-1 has-text-white"
+            >
+              Agenda
+            </h1>
+            <br />
+            <br />
+            {/* input donde se iteran los espacios del evento */}
+            <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
             <div
               className="select has-margin-bottom-60 has-margin-top-3"
               style={{ height: "3rem", display: "tableCaption" }}
@@ -225,147 +384,155 @@ class Agenda extends Component {
                 ))}
               </select>
             </div>
-        <div className="columns is-centered">
-     
-          {/* Contenedor donde se iteran los tabs de las fechas */}
+            <div className="columns is-centered">
+              {/* Contenedor donde se iteran los tabs de las fechas */}
 
-          <div className="container-calendar is-three-fifths">
-            <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
-              {days.map((date, key) => (
-                <li
-                  onClick={() => this.selectDay(date)}
-                  key={key}
-                  className="is-active tab-day_calendar"
-                >
-                  <a
-                    className={`${
-                      date === day ? " select-day" : " unselect-day"
-                    }`}
+              <div className="container-calendar is-three-fifths">
+                <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
+                  {days.map((date, key) => (
+                    <li
+                      onClick={() => this.selectDay(date)}
+                      key={key}
+                      className="is-active tab-day_calendar"
+                    >
+                      <a
+                        className={`${
+                          date === day ? " select-day" : " unselect-day"
+                        }`}
+                      >
+                        <span className="level-item date">
+                          {date.format("MMM DD")}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </div>
+
+                {/* Contenedor donde se pinta la información de la agenda */}
+
+                {toShow.map((agenda, key) => (
+                  <div
+                    key={key}
+                    className="container_agenda-information is-three-fifths"
+                    onClick={e => {
+                      this.gotoActivity(agenda);
+                    }}
                   >
-                    <span className="level-item date">
-                      {date.format("MMM DD")}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </div>
-           
+                    <div className="card agenda_information ">
+                      <header className="card-header columns has-padding-left-7">
+                        <div className="is-block is-11 column is-paddingless">
+                          {/* Hora del evento */}
+                          <p className="card-header-title ">
+                            {Moment(agenda.datetime_start).format("h:mm a")} -{" "}
+                            {Moment(agenda.datetime_end).format("h:mm a")}
+                          </p>
 
+                          {/* Nombre del evento */}
+                          <span className="card-header-title has-text-left">
+                            {agenda.name}
+                          </span>
+                          {/* <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing /> */}
+                        </div>
 
-            {/* Contenedor donde se pinta la información de la agenda */}
+                        <a
+                          className="icon is-flex has-text-white has-margin-top-30"
+                          style={{ flexDirection: "column" }}
+                        >
+                          <i className="fas fa-play-circle is-size-5"></i>
+                          <span className="is-size-6">Video</span>
+                        </a>
 
-            {toShow.map((agenda, key) => (
-              <div
-                key={key}
-                className="container_agenda-information is-three-fifths"
-              >
-                <div className="card agenda_information ">
-                <header class="card-header columns has-padding-left-7">
-
-                  <div className="is-block is-11 column is-paddingless">
-
-                     {/* Hora del evento */}  
-                    <p className="card-header-title ">
-                      { Moment(agenda.datetime_start).format('h:mm a')} - {Moment(agenda.datetime_end).format('h:mm a')}
-                    </p>
-
-                    {/* Nombre del evento */}
-                    <span class="card-header-title has-text-left">
-                    {agenda.name}
-                    </span>
-                  {/* <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing /> */}
-                  </div>
-            
-    
-                  <a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
-                    <i class="fas fa-play-circle is-size-5"></i>
-                    <span class="is-size-6">Video</span>
-                  </a>
-
-                    {/* icono que abre y cierra el card */}
-                  {/* <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
-                    <span class="icon is-size-3">
-                      <i key={key} class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
+                        {/* icono que abre y cierra el card */}
+                        {/* <a  className="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
+                    <span className="icon is-size-3">
+                      <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a> */}
-
-                </header>
-                {
-                    generalTab && (
-
-                  <div key={key} className="card-content has-text-left container_calendar-description">
-                                    
-
-  
-                    {/* Descripción del evento */}
-
-                    <div className="is-size-5-desktop has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: agenda.description }}/>
-                      
-                     {/* Lugar del evento */}
-                     <p class="has-text-left is-size-6-desktop"> 
-                     <b>Lugar:</b> {agenda.space.name}
-                    </p>
-                      
-                      {/* Conferencistas del evento */}
-                    <p className="has-text-left is-size-6-desktop">
-                      <b>Conferencista:</b> &nbsp;
-                      {agenda.hosts.map((speaker, key) => (
-                        <span key={key}>
-                          {speaker.name}, &nbsp;
-                        </span>
-                      ))}
-                    </p>
-
-                    <div className="calendar-category has-margin-top-7">
-                     
-                     {/* Tags de categorias */}
-                      {agenda.activity_categories.map((cat, key) => (
-                        <span
+                      </header>
+                      {generalTab && (
+                        <div
                           key={key}
-                          style={{
-                            background: cat.color,
-                            color: cat.color ? "white" : ""
-                          }}
-                          className="tag category_calendar-tag"
+                          className="card-content has-text-left container_calendar-description"
                         >
-                          {cat.name}
-                        </span>
-                      ))}
-                    </div>
+                          {/* Descripción del evento */}
 
+                          <div
+                            className="is-size-5-desktop has-margin-bottom-10"
+                            dangerouslySetInnerHTML={{
+                              __html: agenda.description
+                            }}
+                          />
 
-                    <div class="card-footer is-12 is-flex" style={{ borderTop: "none", justifyContent: "space-between", alignItems:"flex-end"}}>
+                          {/* Lugar del evento */}
+                          <p className="has-text-left is-size-6-desktop">
+                            <b>Lugar:</b> {agenda.space.name}
+                          </p>
 
-                      <a className="has-text-white is-size-5 is-vcentered">Ver más...</a>
-               
-                      
-                      {/* Boton de para acceder a la conferencia */}
-                      <button
-                        className="button is-success is-outlined is-pulled-right has-margin-top-20"
-                        disabled={agenda.meeting_id ? false : true}
-                        onClick={() => showIframe(true, agenda.meeting_id)}
-                      >
-                        {agenda.meeting_id
-                          ? "Conferencia en Vivo"
-                          : "Sin Conferencia Virtual"}
-                      </button>
-                      
-                      {/* <button
+                          {/* Conferencistas del evento */}
+                          <p className="has-text-left is-size-6-desktop">
+                            <b>Conferencista:</b> &nbsp;
+                            {agenda.hosts.map((speaker, key) => (
+                              <span key={key}>{speaker.name}, &nbsp;</span>
+                            ))}
+                          </p>
+
+                          <div className="calendar-category has-margin-top-7">
+                            {/* Tags de categorias */}
+                            {agenda.activity_categories.map((cat, key) => (
+                              <span
+                                key={key}
+                                style={{
+                                  background: cat.color,
+                                  color: cat.color ? "white" : ""
+                                }}
+                                className="tag category_calendar-tag"
+                              >
+                                {cat.name}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div
+                            className="card-footer is-12 is-flex"
+                            style={{
+                              borderTop: "none",
+                              justifyContent: "space-between",
+                              alignItems: "flex-end"
+                            }}
+                          >
+                            <a className="has-text-white is-size-5 is-vcentered">
+                              Ver más...
+                            </a>
+
+                            {/* Boton de para acceder a la conferencia */}
+                            <button
+                              className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                              disabled={agenda.meeting_id ? false : true}
+                              onClick={() =>
+                                showIframe(true, agenda.meeting_id)
+                              }
+                            >
+                              {agenda.meeting_id
+                                ? "Conferencia en Vivo"
+                                : "Sin Conferencia Virtual"}
+                            </button>
+
+                            {/* <button
                         className="button button-color-agenda has-text-light is-pulled-right is-medium"
                         onClick={() => this.registerInActivity(agenda._id)}
                       >
                         Inscribirme
                       </button> */}
-
-                      
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                    )}
-               </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }

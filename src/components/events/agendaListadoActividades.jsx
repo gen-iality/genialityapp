@@ -15,7 +15,7 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from 'react-player';
 
-class AgendaActividadDetalle extends Component {
+class AgendaListadoActividades extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -194,7 +194,7 @@ class AgendaActividadDetalle extends Component {
     const { days, day, nameSpace, spaces, toShow, generalTab } = this.state;
     return (
       <div className="container-calendar-section">
-         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">ActividadDetalle</h1>
+         <h1 style={{ paddingBottom: 30, fontSize:"4rem"}} className="title is-1 has-text-white">Agenda Listado Actividades</h1>
          <br/>
          <br/>
          {/* input donde se iteran los espacios del evento */}
@@ -372,4 +372,4 @@ class AgendaActividadDetalle extends Component {
   }
 }
 
-export default withRouter(AgendaActividadDetalle)
+export default withRouter(AgendaListadoActividades)
