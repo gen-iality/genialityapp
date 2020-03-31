@@ -45,7 +45,7 @@ class Wall extends Component {
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment','desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
@@ -70,7 +70,7 @@ class Wall extends Component {
     async getPost() {
         const dataPost = [];
 
-        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts')
+        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost','desc')
         let query = adminPostRef.get().then(snapshot => {
             if (snapshot.empty) {
                 toast.error('No hay ningun post');
