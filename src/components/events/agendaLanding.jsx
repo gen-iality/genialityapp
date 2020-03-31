@@ -12,6 +12,7 @@ import API, {
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
+import ReactPlayer from 'react-player';
 
 class Agenda extends Component {
   constructor(props) {
@@ -310,8 +311,9 @@ class Agenda extends Component {
                     {agenda.name}
                     </span>
                   </div>
-                
-
+                  <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+            
+    
                   <a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
                     <i class="fas fa-play-circle is-size-5"></i>
                     <span class="is-size-6">Video</span>

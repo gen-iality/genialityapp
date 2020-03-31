@@ -157,21 +157,24 @@ class pushNotification extends Component {
                             {
                                 app_configuration.map((item, key) => {
                                     return <div key={key}>
+                                         {item && (
                                         <select id="SelecRoute" onChange={(save) => { this.setState({ push: { ...this.state.push, route: save.target.value } }) }}>
                                             <option>Seleccionar...</option>
-                                            <option value={item.WebScreen.name ? item.WebScreen.name : ""}>{item.WebScreen.title ? item.WebScreen.title : "Seleccione..."}</option>
-                                            <option value={item.RankingScreen.name ? item.RankingScreen.name : ""}>{item.RankingScreen.title ? item.RankingScreen.title : "Seleccione..."}</option>
-                                            <option value={item.FaqsScreen.name ? item.FaqsScreen.name : ""}>{item.FaqsScreen.title ? item.FaqsScreen.title : "Seleccione..."}</option>
-                                            <option value={item.WallScreen.name ? item.WallScreen.name : ""}>{item.WallScreen.title ? item.WallScreen.title : "Seleccione..."}</option>
-                                            <option value={item.DocumentsScreen.name ? item.DocumentsScreen.name : ""}>{item.DocumentsScreen.title ? item.DocumentsScreen.title : "Seleccione..."}</option>
-                                            <option value={item.SurveyScreen.name ? item.SurveyScreen.name : ""}>{item.SurveyScreen.title ? item.SurveyScreen.title : "Seleccione..."}</option>
-                                            <option value={item.SpeakerScreen.name ? item.SpeakerScreen.name : ""}>{item.SpeakerScreen.title ? item.SpeakerScreen.title : "Seleccione..."}</option>
-                                            <option value={item.EventPlaceScreen.name ? item.EventPlaceScreen.name : ""}>{item.EventPlaceScreen.title ? item.EventPlaceScreen.title : "Seleccione..."}</option>
-                                            <option value={item.HomeScreen.name ? item.HomeScreen.name : ""}>{item.HomeScreen.title ? item.HomeScreen.title : "Seleccione..."}</option>
-                                            <option value={item.ProfileScreen.name ? item.ProfileScreen.name : ""}>{item.ProfileScreen.title ? item.ProfileScreen.title : "Seleccione..."}</option>
-                                            <option value={item.CalendarScreen.name ? item.CalendarScreen.name : ""}>{item.CalendarScreen.title ? item.CalendarScreen.title : "Seleccione..."}</option>
-                                            <option value={item.NewsScreen.name ? item.NewsScreen.name : ""}>{item.NewsScreen.title ? item.NewsScreen.title : "Seleccione..."}</option>
+                                            {item.WebScreen && (<option value={item.WebScreen.name ? item.WebScreen.name : ""}>{item.WebScreen.title ? item.WebScreen.title : "Seleccione..."}</option>)}
+                                            {item.WebScreen && (<option value={item.RankingScreen.name ? item.RankingScreen.name : ""}>{item.RankingScreen.title ? item.RankingScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.FaqsScreen.name ? item.FaqsScreen.name : ""}>{item.FaqsScreen.title ? item.FaqsScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.WallScreen.name ? item.WallScreen.name : ""}>{item.WallScreen.title ? item.WallScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.DocumentsScreen.name ? item.DocumentsScreen.name : ""}>{item.DocumentsScreen.title ? item.DocumentsScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.SurveyScreen.name ? item.SurveyScreen.name : ""}>{item.SurveyScreen.title ? item.SurveyScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.SpeakerScreen.name ? item.SpeakerScreen.name : ""}>{item.SpeakerScreen.title ? item.SpeakerScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.EventPlaceScreen.name ? item.EventPlaceScreen.name : ""}>{item.EventPlaceScreen.title ? item.EventPlaceScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.HomeScreen.name ? item.HomeScreen.name : ""}>{item.HomeScreen.title ? item.HomeScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.ProfileScreen.name ? item.ProfileScreen.name : ""}>{item.ProfileScreen.title ? item.ProfileScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.CalendarScreen.name ? item.CalendarScreen.name : ""}>{item.CalendarScreen.title ? item.CalendarScreen.title : "Seleccione..."}</option>)}
+                                             {item.WebScreen && (<option value={item.NewsScreen.name ? item.NewsScreen.name : ""}>{item.NewsScreen.title ? item.NewsScreen.title : "Seleccione..."}</option>)}
+                                            
                                         </select>
+                                        )}
                                     </div>
                                 })
                             }

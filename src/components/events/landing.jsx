@@ -19,6 +19,8 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
+import ReactPlayer from 'react-player';
+import WallForm from "../Wall/index"
 
 import ZoomComponent from "./zoomComponent";
 
@@ -110,12 +112,18 @@ class Landing extends Component {
       ),
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
+      wall: <WallForm event={event} eventId={event.id}/>,
       evento: (
         <div className="columns">
           <div className="description-container column is-8">
             <h3 className="title-description is-size-5 column is-10">
               Descripción
             </h3>
+
+            <div className="column is-10 description">
+            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+              </div>
+
             <div className="column is-10 description">
               {typeof event.description === "string" ? (
                 <ReactQuill
@@ -512,7 +520,7 @@ class Landing extends Component {
                           : "items menu-item nav-item"
                       }
                       onClick={e => {
-                        this.showSection("");
+                        this.showSection("wall");
                       }}
                     >
                       <a className="has-text-grey-dark is-size-6">
