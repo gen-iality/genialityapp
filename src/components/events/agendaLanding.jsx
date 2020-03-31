@@ -310,8 +310,8 @@ class Agenda extends Component {
                     <span class="card-header-title has-text-left">
                     {agenda.name}
                     </span>
-                  </div>
                   <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+                  </div>
             
     
                   <a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
