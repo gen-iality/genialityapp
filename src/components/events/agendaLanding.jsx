@@ -242,13 +242,7 @@ class Agenda extends Component {
                     {<ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls /> }
                   </div>
 
-                  <a
-                    className="icon is-flex has-text-white has-margin-top-30"
-                    style={{ flexDirection: "column" }}
-                  >
-                    <i className="fas fa-play-circle is-size-5"></i>
-                    <span className="is-size-6">Video</span>
-                  </a>
+
 
                   {/* icono que abre y cierra el card */}
                   {/* <a  className="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
@@ -256,31 +250,19 @@ class Agenda extends Component {
                       <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a> */}
+
+
+                  
                 </header>
+
+
                 {generalTab && (
                   <div className="card-content has-text-left container_calendar-description">
-                    {/* Descripción del evento */}
-
-                    <div
-                      className="is-size-5-desktop has-margin-bottom-10"
-                      dangerouslySetInnerHTML={{
-                        __html: currentActivity.description
-                      }}
-                    />
 
                     {/* Lugar del evento */}
                     <p className="has-text-left is-size-6-desktop">
                       <b>Lugar:</b> {currentActivity.space.name}
                     </p>
-
-                    {/* Conferencistas del evento */}
-                    <p className="has-text-left is-size-6-desktop">
-                      <b>Conferencista:</b> &nbsp;
-                      {currentActivity.hosts.map((speaker, key) => (
-                        <span key={key}>{speaker.name}, &nbsp;</span>
-                      ))}
-                    </p>
-
                     <div className="calendar-category has-margin-top-7">
                       {/* Tags de categorias */}
                       {currentActivity.activity_categories.map((cat, key) => (
@@ -297,14 +279,6 @@ class Agenda extends Component {
                       ))}
                     </div>
 
-                    <div
-                      className="card-footer is-12 is-flex"
-                      style={{
-                        borderTop: "none",
-                        justifyContent: "space-between",
-                        alignItems: "flex-end"
-                      }}
-                    >
                       {/* Boton de para acceder a la conferencia */}
                       <button
                         className="button is-success is-outlined is-pulled-right has-margin-top-20"
@@ -317,6 +291,41 @@ class Agenda extends Component {
                           ? "Conferencia en Vivo"
                           : "Sin Conferencia Virtual"}
                       </button>
+
+                    <hr></hr>
+                          <br/>
+                          <br/>
+                    {/* Descripción del evento */}
+
+                    <div
+                      className="is-size-5-desktop has-margin-bottom-10"
+                      dangerouslySetInnerHTML={{
+                        __html: currentActivity.description
+                      }}
+                    />
+
+
+
+                    {/* Conferencistas del evento */}
+                    <p className="has-text-left is-size-6-desktop">
+                      <b>Conferencista:</b> &nbsp;
+                      {currentActivity.hosts.map((speaker, key) => (
+                        <span key={key}>{speaker.name}, &nbsp;</span>
+                      ))}
+                    </p>
+
+
+
+
+                    <div
+                      className="card-footer is-12 is-flex"
+                      style={{
+                        borderTop: "none",
+                        justifyContent: "space-between",
+                        alignItems: "flex-end"
+                      }}
+                    >
+
 
                       {/* <button
                         className="button button-color-agenda has-text-light is-pulled-right is-medium"
@@ -456,12 +465,12 @@ class Agenda extends Component {
                         >
                           {/* Descripción del evento */}
 
-                          <div
+                          {agenda.subtitle && <div
                             className="is-size-5-desktop has-margin-bottom-10"
                             dangerouslySetInnerHTML={{
-                              __html: agenda.description
+                              __html: agenda.subtitle
                             }}
-                          />
+                          /> }
 
                           {/* Lugar del evento */}
                           <p className="has-text-left is-size-6-desktop">
