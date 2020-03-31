@@ -303,7 +303,7 @@ class Agenda extends Component {
 
                      {/* Hora del evento */}  
                     <p className="card-header-title ">
-                      { Moment(agenda.datetime_start).format('LT')} - {Moment(agenda.datetime_end).format('LT')}
+                      { Moment(agenda.datetime_start).format('h:mm a')} - {Moment(agenda.datetime_end).format('h:mm a')}
                     </p>
 
                     {/* Nombre del evento */}
@@ -340,12 +340,12 @@ class Agenda extends Component {
                       
                      {/* Lugar del evento */}
                      <p class="has-text-left is-size-6-desktop"> 
-                      Lugar: {agenda.space.name}
+                     <b>Lugar:</b> {agenda.space.name}
                     </p>
                       
                       {/* Conferencistas del evento */}
                     <p className="has-text-left is-size-6-desktop">
-                      Conferencista: &nbsp;
+                      <b>Conferencista:</b> &nbsp;
                       {agenda.hosts.map((speaker, key) => (
                         <span key={key}>
                           {speaker.name}, &nbsp;
