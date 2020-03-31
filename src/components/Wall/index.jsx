@@ -178,7 +178,7 @@ class Wall extends Component {
                         {/* se finaliza input de comentario */}
 
                         <div className="has-margin-top-5">
-                            <button className="button is-primary has-margin-top-30" onClick={this.savePost}>Guardar</button>
+                            <button className="button is-primary has-margin-top-30" onClick={this.savePost}>Enviar</button>
                         </div>
 
                         {/* se guarda la informacion */}
