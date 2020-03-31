@@ -20,6 +20,7 @@ import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
 import ReactPlayer from 'react-player';
+import WallForm from "../Wall/index"
 
 import ZoomComponent from "./zoomComponent";
 
@@ -29,17 +30,20 @@ momentLocalizer();
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
+//Iconos de flechas para el scroll de los item del menu
 const renderLeftArrow = () => <FaChevronLeft />;
 const renderRightArrow = () => <FaChevronRight />;
+
+// Estilos del parallax
 const insideStyles = {
-  backgroundColor: "rgba(0, 0, 0, 0.2)",
+  backgroundColor: "rgba(0, 0, 0, 0.3)",
   padding: 20,
   position: "absolute",
-  top: "50%",
+  top: "40vh",
   left: "50%",
-  transform: "translate(-50%,-50%)",
+  transform: "translate(-50%,-43vh)",
   width: "100%",
-  minHeight: 300
+  minHeight: "60vh"
 };
 
 class Landing extends Component {
@@ -108,6 +112,7 @@ class Landing extends Component {
       ),
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
+      wall: <WallForm event={event} eventId={event.id}/>,
       evento: (
         <div className="columns">
           <div className="description-container column is-8">
@@ -245,6 +250,7 @@ class Landing extends Component {
         ) : (
           <React.Fragment>
             <div className="hero-head">
+
               {/* Condicion para mostrar el componente de zoom */}
               {showIframeZoom && (
                 <ZoomComponent
@@ -252,6 +258,10 @@ class Landing extends Component {
                   meetingId={meeting_id}
                 />
               )}
+
+
+              {/* Componente banner */}
+
               <Parallax
                 bgImage={
                   event.picture
@@ -259,13 +269,23 @@ class Landing extends Component {
                     : "https://bulma.io/images/placeholders/1280x960.png"
                 }
                 strength={500}
-                blur={{ min: -3, max: 100 }}
+                // bgImageSizes={ "cover" }
+                // blur={{ min: -3, max: 100 }}
               >
-                <div style={{ minHeight: 300 }}>
+
+                {/* Contenedor general de información del banner */}
+                {/* Es obligatorio declararle un alto al contenedor para que el banner se muestre */}
+                <div style={{ minHeight: "60vh" }}>
                   <div style={insideStyles}>
-                    <div className="columns is-gapless is-centered">
+                    <div style={{ minHeight: "60vh" }} className="columns is-gapless is-centered">
+
+
+                      {/* Descripción del evento */}
                       <div className="column info is-half">
                         <div className="column is-10 container-nombre">
+
+
+                          {/* fecha del evento */}
                           <div className="fecha item columns">
                             <div className="column fecha-uno ">
                               <span className="title is-size-5">
@@ -284,12 +304,14 @@ class Landing extends Component {
                               {/* <span className="subt is-size-6 is-italic has-text-white">a {Moment(event.hour_end).format('HH:mm')}</span> */}
                             </div>
                           </div>
+
+                          {/* Contenedor de Nombre del evento y quien lo organiza */}
                           <div className="nombre item columns is-centered">
                             <div className="column event-name">
-                              <h2 className="is-size-4 bold-text">
+                              <h2 className="is-size-1 bold-text">
                                 {event.name}
                               </h2>
-                              <span className="is-size-6 has-text-white">
+                              <span className="is-size-4 has-text-white">
                                 Organizado por:{" "}
                                 <Link
                                   className="has-text-white"
@@ -303,7 +325,8 @@ class Landing extends Component {
                             </div>
                           </div>
 
-                          <div className="lugar item columns">
+
+                          {/* <div className="lugar item columns">
                             <div className="column is-1 container-icon">
                               <span className="icon is-medium">
                                 <i className="fas fa-map-marker-alt fa-2x" />
@@ -314,32 +337,35 @@ class Landing extends Component {
                                 {event.venue} {event.location.FormattedAddress}
                               </span>
                             </div>
-                          </div>
+                          </div> */}
                           {/* <div className="descripcion-c item columns is-centered">
-                                                        <div className="column is-10">
-                                                            { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
-                                                        </div>
-                                                    </div> */}
+                              <div className="column is-10">
+                                  { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
+                              </div>
+                          </div> */}
                           <div className="ver-mas item columns">
                             {/*<div className="column is-5 is-offset-1">
-                                                            <div className="aforo">
-                                                                <span className="titulo">150/400</span><br/>
-                                                                <span className="is-italic has-text-grey">Aforo</span>
-                                                            </div>
-                                                        </div>*/}
+                                <div className="aforo">
+                                    <span className="titulo">150/400</span><br/>
+                                    <span className="is-italic has-text-grey">Aforo</span>
+                                </div>
+                            </div>*/}
                             {/*{
-                                                            (event.description.length >= 80 && !this.state.showFull) && (
-                                                                <div className="column is-5 is-offset-6 button-cont">
-                                                                    <span className="has-text-weight-semibold has-text-grey">Ver más</span>
-                                                                    <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
-                                                                        <i className="icon fa fa-plus"></i>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        }*/}
+                                (event.description.length >= 80 && !this.state.showFull) && (
+                                    <div className="column is-5 is-offset-6 button-cont">
+                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
+                                        <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
+                                            <i className="icon fa fa-plus"></i>
+                                        </div>
+                                    </div>
+                                )
+                            }*/}
                           </div>
                         </div>
                       </div>
+
+
+                      {/* Contenedor de la imagen del evento */}
                       <div className="column banner is-two-fifths">
                         {typeof event.picture === "object" ? (
                           <div style={{ width: "134vh" }}>
@@ -390,6 +416,8 @@ class Landing extends Component {
               </Parallax>
               :
             </div>
+
+            {/* Menú secciones del landing */}
             <div className="hero-body is-centered">
               <div className="data  container-hero-landing has-text-centered ">
                 <div className="columns container-nav-item is-centered">
@@ -489,29 +517,16 @@ class Landing extends Component {
                           : "items menu-item nav-item"
                       }
                       onClick={e => {
-                        this.showSection("");
+                        this.showSection("wall");
                       }}
                     >
                       <a className="has-text-grey-dark is-size-6">
                         Muro
                       </a>
                     </li>
-                    {/* <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
-                                            </li>
-                                            <li className="items menu-item"  className={this.state.section == 'wall' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('') }}>
-                                                <a className="has-text-grey-dark is-size-6">Muro</a>
-                                            </li>
-                                            {/*<li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
-                                            </li>
-                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
-                                            </li>
-                                            <li className="items menu-item"  className={this.state.section == 'speakers' ? 'items menu-item nav-item-active' : 'items menu-item nav-item'} onClick={e => { this.showSection('speakers') }}>
-                                                <a className="has-text-grey-dark is-size-6">Conferencistas</a>
-                                            </li> */}
+  
                   </ComponentSlider>
+
                 </div>
                 {sections[section]}
               </div>

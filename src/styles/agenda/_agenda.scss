@@ -86,7 +86,8 @@
       color: white;
       justify-content: start;
       font-weight: bolder;
-      font: normal normal normal 28px/35px anton ,sans-serif;
+      font: normal normal 500 25px/35px $family-sans-serif;
+      text-align: initial;
     }
 
     .container_calendar-description{
