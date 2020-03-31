@@ -143,7 +143,19 @@ class Wall extends Component {
                 <div className="columns">
                     <div className="column is-12">
                         {/* Se valida si hay imagen para mostrar o no */}
-                        <input type="file" id="image" onChange={this.previewImage} />
+                        <div class="file">
+                        <label class="file-label"> 
+                        <input class="file-input" type="file" id="image" onChange={this.previewImage} />
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                                Choose a file…
+                            </span>
+                            </span>
+                        </label>
+                        </div>
                         <div>
                             {
                                 image ?
@@ -160,13 +172,13 @@ class Wall extends Component {
 
                         {/* se crea input para agregar un comentario al post */}
                         <div>
-                            <label className="label">Comentario</label>
+                            <label className="label has-text-white is-size-4">Comentario</label>
                             <input className="input" id="postText" type="text" />
                         </div>
                         {/* se finaliza input de comentario */}
 
-                        <div>
-                            <button onClick={this.savePost}>Guardar</button>
+                        <div className="has-margin-top-5">
+                            <button className="button is-primary has-margin-top-30" onClick={this.savePost}>Enviar</button>
                         </div>
 
                         {/* se guarda la informacion */}
@@ -218,42 +230,40 @@ class Wall extends Component {
                                             </span>
                                         </a>
                                     </div>
-                                    
 
+                                </nav>
                                     {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
-                                    <div className="column is-12">
-                                        <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
-
-                                        <div className="modal" id="myModal">
-                                            <div className="modal-background"></div>
-                                            <div className="modal-content">
-                                                <div className="box">
-                                                    <div className="column is-12">
-                                                        {
-                                                            dataComment.map((commentier, key) => (
-                                                                <div className="card" key={key} style={{ marginBottom: "4%" }}>
-
-                                                                    <header className="card-header">
-                                                                        <p className="card-header-title">
-                                                                            {
-                                                                                <p>{commentier.author}</p>
-                                                                            }
-                                                                        </p>
-                                                                    </header>
-                                                                    <div className="card-content">
-                                                                        <div className="content">
-                                                                            <br />
-                                                                            <p>{commentier.comment}</p>
-                                                                        </div>
+                                <nav className="level is-mobile">
+                                    
+                                <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
+                                 <div className="modal" id="myModal">
+                                        <div className="modal-background"></div>
+                                        <div className="modal-content">
+                                            <div className="box">
+                                                <div className="column is-12">
+                                                    {
+                                                        dataComment.map((commentier, key) => (
+                                                            <div className="card" key={key} style={{ marginBottom: "4%" }}>
+                                                             <header className="card-header">
+                                                                    <p className="card-header-title">
+                                                                        {
+                                                                            <p>{commentier.author}</p>
+                                                                        }
+                                                                    </p>
+                                                                </header>
+                                                                <div className="card-content">
+                                                                    <div className="content">
+                                                                        <br />
+                                                                        <p>{commentier.comment}</p>
                                                                     </div>
                                                                 </div>
-                                                            ))
-                                                        }
-                                                    </div>
+                                                            </div>
+                                                        ))
+                                                    }
                                                 </div>
                                             </div>
-                                            <button className="modal-close is-large" aria-label="close"></button>
                                         </div>
+                                        <button className="modal-close is-large" aria-label="close"></button>
                                     </div>
                                 </nav>
                             </div>
