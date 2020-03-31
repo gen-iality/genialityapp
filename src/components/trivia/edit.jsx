@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Redirect, withRouter, Link } from "react-router-dom";
 import EventContent from "../events/shared/content";
-import { SurveysApi } from "../../helpers/request";
+import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { sweetAlert } from "../../helpers/utils";
+import EvenTable from "../events/shared/table";
 import 'react-tabs/style/react-tabs.css';
 
 class TriviaEdit extends Component {
@@ -11,25 +12,32 @@ class TriviaEdit extends Component {
         this.state = {
             redirect: false,
             data: [],
+            dataAgenda: [],
+            activity_id: "",
             survey: "",
             dateStart: "",
-            timeStart:"",
-            dateEnd:"",
-            timeEnd:"",
+            timeStart: "",
+            dateEnd: "",
+            timeEnd: "",
             shareholders: [{ name: "" }]
         }
     }
 
     async componentDidMount() {
-
+        this.getInformation()
     }
 
     getInformation = async () => {
-        const info = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit)
+        const info = await SurveysApi.getAll(this.props.event._id)
+        const dataAgenda = await AgendaApi.byEvent(this.props.event._id)
         console.log(info)
-        this.setState({ data: [info] })
-        this.setState({ survey: info.survey })
-        this.setState({ publicada: info.publicada })
+        this.setState({
+            dataAgenda: dataAgenda.data,
+            data: info.data,
+            survey: info.survey,
+            publicada: info.publicada
+        })
+
     }
 
     goBack = () => this.setState({ redirect: true });
@@ -51,24 +59,32 @@ class TriviaEdit extends Component {
     };
 
     submit = async () => {
-        console.log("Nombre Encuesta: ",this.state.survey)
-        console.log("Fecha Inicio: ",this.state.dateStart)
-        console.log("Fecha Fin: ",this.state.dateEnd)
-        console.log("Hora Inicio: ",this.state.timeStart)
-        console.log("Hora Fin: ",this.state.timeEnd)
+        const data = {
+            survey: this.state.survey,
+            date_start: this.state.dateStart,
+            date_end: this.state.dateEnd,
+            time_start: this.state.timeStart,
+            time_end: this.state.timeEnd,
+            activity_id: this.state.activity_id
+        }
+
+        console.log(data)
+
+        const dataTrivia = await SurveysApi.createOne(this.props.event._id, data)
+        console.log(dataTrivia)
     }
-    selectTimeStart = (select)=>{
+    selectTimeStart = (select) => {
         const timeStart = select.target.value;
         this.setState({ timeStart })
     }
-    selectTimeEnd = (select)=>{
+    selectTimeEnd = (select) => {
         const timeEnd = select.target.value;
         this.setState({ timeEnd })
     }
 
     render() {
         const { matchUrl } = this.props;
-        const { survey } = this.state;
+        const { survey, dataAgenda, data } = this.state;
         if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
         return (
             <Fragment>
@@ -101,6 +117,39 @@ class TriviaEdit extends Component {
                         </div>
                         <input style={{ marginLeft: "3%" }} onChange={this.selectTimeEnd} className="column is-2 input is-primary" type="time" />
                     </div>
+                    <br />
+                    <div className="select">
+                        <label className="Seleccione una actividad a referenciar"></label>
+                        <select onChange={e => { this.setState({ activity_id: e.target.value }) }} >
+                            <option>...Selecciona una opcion</option>
+                            {
+                                dataAgenda.map((activity, key) => (
+                                    <option key={key} value={activity._id}>{activity.name}</option>
+                                ))
+                            }
+
+                        </select>
+                    </div>
+                    <EvenTable style={{ marginTop: "5%" }} head={["Titulo de encuesta", "Fecha de inicio", "Fecha de cierre", ""]}>
+                        {
+                            data.map((trivia, key) => (
+                                <tr key={key}>
+                                    <td>
+                                        {trivia.survey}
+                                    </td>
+                                    <td>
+                                        {trivia.date_start}
+                                    </td>
+                                    <td>
+                                        {trivia.date_end}
+                                    </td>
+                                    <td>
+                                        {/* <button onClick={this.destroy.bind(trivia.survey, trivia._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button> */}
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </EvenTable>
                 </EventContent>
             </Fragment>
         )
