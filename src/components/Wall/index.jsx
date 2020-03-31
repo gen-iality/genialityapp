@@ -140,7 +140,7 @@ class Wall extends Component {
         const { dataPost, dataComment, texto, image } = this.state
         return (
             <div>
-                <div className="columns is-mobile">
+                <div className="columns">
                     <div className="column is-12">
                         {/* Se valida si hay imagen para mostrar o no */}
                         <input type="file" id="image" onChange={this.previewImage} />
@@ -174,45 +174,54 @@ class Wall extends Component {
                 </div>
 
                 {/* se mapean los datos que provienen de firebase del post            */}
-                <div className="columns is-6">
+                <div className="">
                     {dataPost.map((post, key) => (
-                        <div className="card column is-three-quarters-mobile is-two-thirds-tablet is-half-desktop is-one-third-widescreen is-one-quarter-fullhd" key={key}>
-                            <div className="card-image">
-                                <figure className="image is-4by3">
-                                    {
-                                        post.urlImage ?
-                                            <img src={post.urlImage[0]} alt="Placeholder image" />
-                                            :
-                                            <div />
-                                    }
+                        <div className="box column" key={key}>
+                            <article class="media">
+                                <div class="media-left">
+                                    <figure className="image is-square">
+                                        {
+                                            post.urlImage ?
+                                                <img src={post.urlImage[0]} alt="Placeholder image" />
+                                                :
+                                                <div />
+                                        }
 
-                                </figure>
-                                <TimeStamp date={post.datePost.seconds} />
-                            </div>
+                                    <TimeStamp date={post.datePost.seconds} />
+                                    </figure>
+                                </div>
                             {/* Se muestra en card los post registrados */}
-                            <div className="card-content">
-                                <div className="media">
-                                    <div className="media-left">
-                                        <figure className="image is-48x48">
-                                            <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image" />
-                                        </figure>
-                                    </div>
-                                    <div className="media-content">
-                                        <p className="title is-4">{post.author}</p>
-                                        <p className="subtitle is-6">{post.post}</p>
-                                    </div>
+                            <div className="media-content">
+                                <div className="content">
+                          
+                                    <p>
+                                        <strong>{post.author}</strong>
+                                    <br/>
+                                    {post.post}
+                                    </p>
+                        
                                 </div>
 
-                                <div className="card-footer">
-                                    <div className="column is-6">
-                                        <label className="label">Responder</label>
-                                        <input className="input" id="comment" />
-                                        <button onClick={e => { this.saveComment(post.id) }} className={`button is-primary`}>Enviar</button>
-                                        <button onClick={e => { this.deletePost(post.id) }} className={`button is-danger`}>Eliminar</button>
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
+                                        <label className="label">Responder
+                                            <input className="input" id="comment" />
+                                        </label>
+                                        <a class="level-item has-text-black" aria-label="reply" onClick={e => { this.saveComment(post.id) }} >
+                                            <span class="icon is-small ">
+                                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                            </span>
+                                        </a>
+                                        <a class="level-item has-text-black" aria-label="reply" onClick={e => { this.deletePost(post.id) }}>
+                                            <span class="icon is-small">
+                                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                                            </span>
+                                        </a>
                                     </div>
+                                    
 
-                                    {/* se mapean los comentarios los cuales estan pendientes por validacion        */}
-                                    <div className="column is-5">
+                                    {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
+                                    <div className="column is-12">
                                         <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
 
                                         <div className="modal" id="myModal">
@@ -246,8 +255,9 @@ class Wall extends Component {
                                             <button className="modal-close is-large" aria-label="close"></button>
                                         </div>
                                     </div>
-                                </div>
+                                </nav>
                             </div>
+                            </article>
                         </div>
                     ))}
                     {/* Se termina de mapear los datos de post */}
