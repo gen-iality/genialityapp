@@ -19,7 +19,7 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import ReactQuill from "react-quill";
-import WallForm from "../Wall/index"
+import WallForm from "../wall/index"
 
 import ZoomComponent from "./zoomComponent";
 

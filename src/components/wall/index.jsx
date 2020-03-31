@@ -17,7 +17,8 @@ class Wall extends Component {
             fileName: "",
             dataPost: [],
             dataComment: [],
-            idPostComment: []
+            idPostComment: [],
+            comments:""
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
@@ -45,7 +46,7 @@ class Wall extends Component {
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment','desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
@@ -70,7 +71,7 @@ class Wall extends Component {
     async getPost() {
         const dataPost = [];
 
-        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts')
+        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost','desc')
         let query = adminPostRef.get().then(snapshot => {
             if (snapshot.empty) {
                 toast.error('No hay ningun post');
@@ -113,8 +114,8 @@ class Wall extends Component {
     async saveComment(idPost) {
         let email = this.props.event.author.email
         let eventId = this.props.event._id
-        let comments = document.getElementById("comment").value
-        saveFirebase.saveComment(email, eventId, comments, idPost)
+        let comments = this.state.comments
+        saveFirebase.saveComment(email, comments, eventId, idPost)
     }
 
     //Funcion para limpiar el files e image los cuales muestran el preview de la imagen
@@ -143,7 +144,6 @@ class Wall extends Component {
                 <div className="columns is-mobile">
                     <div className="column is-12">
                         {/* Se valida si hay imagen para mostrar o no */}
-                        <input type="file" id="image" onChange={this.previewImage} />
                         <div>
                             {
                                 image ?
@@ -166,7 +166,8 @@ class Wall extends Component {
                         {/* se finaliza input de comentario */}
 
                         <div>
-                            <button onClick={this.savePost}>Guardar</button>
+                            <button onClick={this.savePost}>Enviar</button>
+                            <input type="file" id="image" onChange={this.previewImage} />
                         </div>
 
                         {/* se guarda la informacion */}
@@ -206,7 +207,7 @@ class Wall extends Component {
                                 <div className="card-footer">
                                     <div className="column is-6">
                                         <label className="label">Responder</label>
-                                        <input className="input" id="comment" />
+                                        <input className="input" onChange={e=> this.setState({comments: e.target.value})}/>
                                         <button onClick={e => { this.saveComment(post.id) }} className={`button is-primary`}>Enviar</button>
                                         <button onClick={e => { this.deletePost(post.id) }} className={`button is-danger`}>Eliminar</button>
                                     </div>

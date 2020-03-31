@@ -42,7 +42,7 @@ const ListCertificados = asyncComponent( ()=> import("../certificados"));
 const ReporteCertificados = asyncComponent( ()=> import("../certificados/reporte"));
 const ConfigurationApp = asyncComponent( ()=> import("../App/configuration"));
 const NotificationsApp = asyncComponent( ()=>import("../pushNotifications/index") );
-const Wall = asyncComponent( ()=>import("../Wall/index") )
+const Wall = asyncComponent( ()=>import("../wall/index") )
 const NewsApp = asyncComponent( ()=>import("../news/news"));
 const SurveysCreate = asyncComponent( ()=>import("../news/news"));
 const FAQS = asyncComponent( ()=>import("../news/news"));
