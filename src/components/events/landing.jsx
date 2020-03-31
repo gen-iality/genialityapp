@@ -116,12 +116,12 @@ class Landing extends Component {
       evento: (
         <div className="columns">
           <div className="description-container column is-8">
-            <h3 className="title-description is-size-5 column is-10">
+            <h2 className="title-description is-size-5 column is-10">
               Descripción
-            </h3>
+            </h2>
 
             <div className="column is-10 description">
-            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing />
+            <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
               </div>
 
             <div className="column is-10 description">
