@@ -229,8 +229,8 @@ class Agenda extends Component {
             {/* input donde se iteran los espacios del evento */}
             <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
             <div
-              className="select has-margin-bottom-60 has-margin-top-3"
-              style={{ height: "3rem", display: "tableCaption" }}
+              className="select is-fullwidth is-hidden-desktop has-background-white"
+              style={{ height: "3rem" }}
             >
               <select
                 id="selectedSpace"
