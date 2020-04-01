@@ -101,7 +101,7 @@ class Landing extends Component {
           handleModal={this.handleModal}
         />
       ),
-      survey: <SurveyForm />,
+      survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
       evento: (
