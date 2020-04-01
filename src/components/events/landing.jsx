@@ -18,6 +18,7 @@ import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
+import SurveyForm from "./surveys";
 import ReactQuill from "react-quill";
 import ReactPlayer from 'react-player';
 import WallForm from "../Wall/index"
@@ -110,6 +111,7 @@ class Landing extends Component {
           handleModal={this.handleModal}
         />
       ),
+      survey: <SurveyForm />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event.id}/>,
@@ -510,9 +512,7 @@ class Landing extends Component {
                         this.showSection("");
                       }}
                     >
-                      <a className="has-text-grey-dark is-size-6">
-                        Documentos
-                      </a>
+                      <a className="has-text-grey-dark is-size-6">Documentos</a>
                     </li>
                     <li
                       className="items menu-item"
@@ -525,9 +525,20 @@ class Landing extends Component {
                         this.showSection("wall");
                       }}
                     >
-                      <a className="has-text-grey-dark is-size-6">
-                        Muro
-                      </a>
+                      <a className="has-text-grey-dark is-size-6">Muro</a>
+                    </li>
+                    <li
+                      className="items menu-item"
+                      className={
+                        this.state.section == "survey"
+                          ? "items menu-item nav-item-active"
+                          : "items menu-item nav-item"
+                      }
+                      onClick={e => {
+                        this.showSection("survey");
+                      }}
+                    >
+                      <a className="has-text-grey-dark is-size-6">Encuestas</a>
                     </li>
   
                   </ComponentSlider>
