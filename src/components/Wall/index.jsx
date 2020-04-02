@@ -353,7 +353,12 @@ class Wall extends Component {
                             
                             >
                                 <List.Item.Meta 
-                                avatar={<Avatar src={item.avatar} />}
+                                avatar={
+                                    item.avatar ?
+                                    <Avatar src={item.avatar} />: 
+                                    <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+                                    
+                                }
                                 title={<span href={item.href}>{item.author}</span>}
                                 description={ 
                                 <span><TimeStamp date={item.datePost.seconds} /></span>
