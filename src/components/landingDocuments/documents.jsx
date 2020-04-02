@@ -24,6 +24,7 @@ class documentsDetail extends Component {
 
         documents = await getFiles(this.props.eventId);
 
+        //Se itera para poder pasar un array al componente List de ant
         for (const document in documents) {
             console.log(documents[document]);
             data.push(documents[document])
