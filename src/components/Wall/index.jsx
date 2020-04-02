@@ -36,7 +36,12 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
   );
 
   const IconText = ({ icon, text, onSubmit }) => (
-    <Button htmlType="submit"  type="link" onClick={onSubmit} >
+    <Button 
+        htmlType="submit"  
+        type="link" 
+        onClick={onSubmit} 
+    >
+
       {React.createElement(icon, { style: { marginRight: 8 } })}
       {text}
     </Button>
@@ -54,6 +59,7 @@ class Wall extends Component {
             dataPost: [],
             dataComment: [],
             idPostComment: [],
+            currentCommet: null,
             submitting: false,
             value: '',
 
@@ -80,17 +86,19 @@ class Wall extends Component {
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
     async getComments(postId) {
-        document.querySelectorAll('.modal-button').forEach(function (el) {
-            el.addEventListener('click', function () {
-                var target = document.querySelector(el.getAttribute('data-target'));
+        // document.querySelectorAll('.modal-button').forEach(function (el) {
+        //     el.addEventListener('click', function () {
+        //         var target = document.querySelector(el.getAttribute('data-target'));
 
-                target.classList.add('is-active');
+        //         target.classList.add('is-active');
 
-                target.querySelector('.modal-close').addEventListener('click', function () {
-                    target.classList.remove('is-active');
-                });
-            });
-        });
+        //         target.querySelector('.modal-close').addEventListener('click', function () {
+        //             target.classList.remove('is-active');
+        //         });
+        //     });
+        // });
+
+        this.setState({ currentCommet: postId });
 
         const dataComment = [];
 
@@ -114,6 +122,10 @@ class Wall extends Component {
             console.log('Error getting documents', err);
         });
     }
+
+    gotoCommentList() {
+        this.setState({ currentCommet: null });
+      }
 
     //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
     async getPost() {
@@ -189,27 +201,88 @@ class Wall extends Component {
     }
 
     render() {
-        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar } = this.state
+        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet } = this.state
         return (
-            <div>    
-    
-                <div className="columns">
-                    <div className="column is-12">
-                        {/* Se valida si hay imagen para mostrar o no */}
-                        <div class="file">
-                        <label class="file-label"> 
-                        <input class="file-input" type="file" id="image" onChange={this.previewImage} />
-                        <span class="file-cta">
-                            <span class="file-icon">
-                                <i class="fas fa-upload"></i>
-                            </span>
-                            <span class="file-label">
-                                Choose a file…
-                            </span>
-                            </span>
-                        </label>
-                        </div>
-                        <div>
+            <div>
+                {/*Inicia el detalle de los comentarios */}   
+
+                {currentCommet && (
+                    <div className="container-calendar-section">               
+        
+                        <a
+                        className="has-text-white"
+                        onClick={e => {
+                            this.gotoCommentList();
+                        }}
+                        >
+                            <h3 className="has-text-white"> Regresar a los comentarios</h3>
+                        </a>
+
+                        <div className="box">
+                            <div className="column is-12">
+                                {
+                                    dataComment.map((commentier, key) => (
+                                        <div className="card" key={key} style={{ marginBottom: "4%" }}>
+                                         <header className="card-header">
+                                                <p className="card-header-title">
+                                                    {
+                                                        <p>{commentier.author}</p>
+                                                    }
+                                                </p>
+                                            </header>
+                                            <div className="card-content">
+                                                <div className="content">
+                                                    <br />
+                                                    <p>{commentier.comment}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+
+                            <a
+                                className="has-text-white"
+                                onClick={e => {
+                                this.gotoCommentList();
+                                }}
+                                >
+                                <h3 className="has-text-white">
+                                    {" "}
+                                    Regresar a los comentarios
+                                </h3>
+                            </a>
+                      </div>
+                    </div>
+                )}
+
+                {/*finaliza el detalle de los comentarios */}
+
+
+
+                 {/*Inicia la lista de los comentarios */}   
+                {!currentCommet && (
+                    <div>
+                        <div className="columns">
+                        
+                            <div className="column is-12">
+
+                            {/* Se valida si hay imagen para mostrar o no */}
+                                <div class="file">
+                                    <label class="file-label"> 
+                                        <input class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                        <span class="file-cta">
+                                            <span class="file-icon">
+                                                <i class="fas fa-upload"></i>
+                                            </span>
+                                            <span class="file-label">
+                                                Choose a file…
+                                            </span>
+                                        </span>
+                                    </label>
+                                </div>
+                            <div>
+
                             {
                                 image ?
                                     <div className="column is-6 card-image">
@@ -221,9 +294,10 @@ class Wall extends Component {
                                     <p></p>
                             }
                         </div>
-                        
+                            
 
                         {/* Se importa el componente de textArea para agregar un comentario al post */}
+
                         <Comment
                         style={{ width: "52%", display: "block", margin: "0 auto"}}
                         content={
@@ -235,59 +309,80 @@ class Wall extends Component {
                             />
                         }
                         />
+
                     </div>
+                    </div>
+
+                    {/* Se mapean los datos que provienen de firebase del post */}
+                    <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left"  }}>
+
+                        <List
+                            itemLayout="vertical"
+                            size="large"
+                            style={{ texteAling: "left" }}
+                            pagination={{
+                            onChange: page => {
+                                console.log(page);
+                            },
+                            pageSize: 3,
+                            }}
+
+                            // Aqui se llama al array del state 
+                            dataSource={dataPost}
+                            
+                            // Aqui se mapea al array del state 
+                            renderItem={item => (
+
+                            <List.Item
+                                key={item.id}
+
+                                // Se importa el boton de like y el de redireccionamiento al detalle del post
+                                actions={[
+                                <IconText 
+                                    icon={LikeOutlined} 
+                                    text="156" 
+                                    key="list-vertical-like-o" 
+                                />,
+                                <IconText 
+                                    icon={MessageOutlined} 
+                                    text="2" 
+                                    key="list-vertical-message" 
+                                    onSubmit={e => { this.getComments(item.id) }}
+                                />
+                                ]}
+                            
+                            >
+                                <List.Item.Meta 
+                                avatar={<Avatar src={item.avatar} />}
+                                title={<span href={item.href}>{item.author}</span>}
+                                description={ 
+                                <span><TimeStamp date={item.datePost.seconds} /></span>
+                                }
+                                />
+                                {
+                                    item.urlImage ?
+                                    <img
+                                        width={272}
+                                        style={{ display: "block", margin: "0 auto" }}
+                                        alt="logo"
+                                        src={item.urlImage}
+                                    />: null
+                                }
+                                <br/>
+                                {item.post}
+                            </List.Item>
+                            )}
+                        />
+                
+                    </Card>
+                
                 </div>
-
-                {/* Se mapean los datos que provienen de firebase del post */}
-                <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left"  }}>
-
-                    <List
-                        itemLayout="vertical"
-                        size="large"
-                        style={{ texteAling: "left" }}
-                        pagination={{
-                        onChange: page => {
-                            console.log(page);
-                        },
-                        pageSize: 3,
-                        }}
-                        dataSource={dataPost}                        
-                        renderItem={item => (
-
-                        <List.Item
-                            key={item.id}
-                            actions={[
-                            <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o"  onSubmit={e => { this.getComments(item.id) }} data-target="#myModal" aria-haspopup="true" />,
-                            <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                            ]}
-                          
-                        >
-                            <List.Item.Meta 
-                            avatar={<Avatar src={item.avatar} />}
-                            title={<span href={item.href}>{item.author}</span>}
-                            description={ 
-                            <span><TimeStamp date={item.datePost.seconds} /></span>
-                            }
-                            />
-                             {
-                                item.urlImage ?
-                                <img
-                                    width={272}
-                                    style={{ display: "block", margin: "0 auto" }}
-                                    alt="logo"
-                                    src={item.urlImage}
-                                />: null
-                             }
-                            <br/>
-                            {item.post}
-                        </List.Item>
-                        )}
-                    />
-                </Card>
+                )}
+                {/*Finaliza la lista de los comentarios */}   
 
 
                 {/* se mapean los datos que provienen de firebase del post */}
-                <div className="">
+                {/* <div className="">
                     {dataPost.map((post, key) => (
                         <div className="column" key={key}>
 
@@ -305,7 +400,7 @@ class Wall extends Component {
                                     </figure>
                                 </div>
                             {/* Se muestra en card los post registrados */}
-                            <div className="media-content">
+                            {/* <div className="media-content">
                                 <div className="content">
                           
                                     <p>
@@ -314,9 +409,9 @@ class Wall extends Component {
                                     {post.post}
                                     </p>
                         
-                                </div>
+                                </div>  */}
 
-                                <nav class="level is-mobile">
+                                {/* <nav class="level is-mobile">
                                     <div class="level-left">
                                         <label className="label">Responder
                                             <input className="input" id="comment" />
@@ -331,11 +426,11 @@ class Wall extends Component {
                                             <i class="fas fa-trash-alt" aria-hidden="true"></i>
                                             </span>
                                         </a>
-                                    </div>
+                                    </div> */}
 
-                                </nav>
+                                {/* </nav> */}
                                     {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
-                                <nav className="level is-mobile">
+                                {/* <nav className="level is-mobile">
                                     
                                 <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
                                  <div className="modal" id="myModal">
@@ -373,7 +468,7 @@ class Wall extends Component {
                         </div>
                     ))}
     
-                </div>
+                </div> */}
             </div>
         )
     }
