@@ -19,7 +19,9 @@ class documentsDetail extends Component {
 
         documents = await getFiles(this.props.eventId);
         console.log(documents)
-        await this.setState({ documents, loading: false });
+        if(documents != false){
+            await this.setState({ documents, loading: false });
+        }
     }
 
     render() {

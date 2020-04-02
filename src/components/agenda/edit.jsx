@@ -15,6 +15,7 @@ import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage
 import Dropzone from "react-dropzone";
 
 import 'react-tabs/style/react-tabs.css';
+import { toast } from 'react-toastify';
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -44,6 +45,8 @@ class AgendaEdit extends Component {
             days: [],
             spaces: [],
             categories: [],
+            start_url: "",
+            join_url: "",
             documents: [],
             types: [],
             roles: [],
@@ -89,7 +92,7 @@ class AgendaEdit extends Component {
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
             console.log(info.selected_document)
-            this.setState({ selected_document: info.selected_document })
+            this.setState({ selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -275,7 +278,7 @@ class AgendaEdit extends Component {
             host_ids,
             type_id,
             has_date,
-            timeConference:"",
+            timeConference: "",
             selected_document
         }
     };
@@ -287,7 +290,7 @@ class AgendaEdit extends Component {
             event_id: this.props.event._id,
             agenda: this.props.event.description,
             duration: this.state.timeConference ? parseInt(this.state.timeConference) : 30,
-            record: "none"
+            record: this.state.record ? this.state.record : "none"
         }
 
         console.log(zoomData)
@@ -305,14 +308,7 @@ class AgendaEdit extends Component {
 
         console.log(response)
 
-        const information = {
-            start_url: response.data.start_url,
-            join_url: response.data.join_url
-        }
-
-        let saveConference = await AgendaApi.editOne(information, this.props.location.state.edit, this.props.event._id);
-        console.log(saveConference)
-
+        toast.success("Conferencia Creada")
     }
 
     //FN para eliminar la actividad
@@ -368,7 +364,7 @@ class AgendaEdit extends Component {
 
     render() {
         const { loading, name, subtitle, nameDocuments, selected_document, has_date, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
-        const { hosts, spaces, categories, types, roles, documents, isLoading } = this.state;
+        const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
@@ -513,6 +509,30 @@ class AgendaEdit extends Component {
                                         onChange={this.chgTxt} />
                                 </div>
                             </div>
+
+                            <div>
+                                <p>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Usuarios</th>
+                                                <th>Conferencistas</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    <a href={start_url} >Acceso para usuarios</a>
+                                                </th>
+
+                                                <th>
+                                                    <a href={join_url} >Acceso para conferencistas</a>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </p>
+                            </div>
                         </div>
                         <div className="column is-4 general">
                             <div className="field is-grouped">
@@ -588,10 +608,18 @@ class AgendaEdit extends Component {
 
                             {
                                 this.props.location.state.edit ?
-                                    <div style={{marginTop:"4%"}}>
+                                    <div style={{ marginTop: "4%" }}>
                                         <label className="label">Crear Conferencia</label>
-                                        <input className="input" type="number" placeholder="Tiempo de conferencia" id="time" onChange={e => this.setState({timeConference: e.target.value}) }/>
-                                        <button style={{marginTop:"2%"}} className="button is-primary" onClick={this.createConference}>Conferencia</button>
+                                        <input className="input" type="number" placeholder="Tiempo de conferencia" id="time" onChange={e => this.setState({ timeConference: e.target.value })} />
+                                        <div className="select">
+                                            <select onClick={e => this.setState({ record: e.target.value })}>
+                                                <option value="none">...Seleccionar</option>
+                                                <option value="none">No grabar</option>
+                                                <option value="cloud">Grabar</option>
+                                            </select>
+                                        </div>
+
+                                        <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Conferencia</button>
                                     </div>
                                     :
                                     <div />
