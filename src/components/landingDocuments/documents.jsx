@@ -74,7 +74,6 @@ class documentsDetail extends Component {
                     <div className="modal-background"></div>
                     <div class="modal-content modal-card">
                         <header class="modal-card-head">
-                            <p class="modal-card-title">Modal title</p>
                             <button className="modal-close is-large" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
