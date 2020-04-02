@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
+import * as Cookie from "js-cookie";
+
 import SearchComponent from "../../shared/searchTable";
+
 import API, { AgendaApi } from "../../../helpers/request";
+import { firestore } from "../../../helpers/firebase";
 
 import * as Survey from "survey-react";
 import "survey-react/survey.css";
@@ -86,7 +90,7 @@ let json = {
               columns: [
                 {
                   cellType: "rating",
-                  " name": "level",
+                  name: "level",
                   title: "Level",
                   minRateDescription: "most",
                   maxRateDescription: "least"
@@ -128,7 +132,7 @@ let json = {
               columns: [
                 {
                   cellType: "rating",
-                  " name": "level",
+                  name: "level",
                   title: "Level",
 
                   rateValues: [
@@ -530,13 +534,37 @@ class SurveyComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      surveyData: {}
+      surveyData: {},
+      uid: null
     };
   }
 
   componentDidMount() {
     this.loadData();
   }
+
+  // Funcion para consultar la informacion del actual usuario
+  getCurrentUser = async () => {
+    let evius_token = Cookie.get("evius_token");
+
+    if (!evius_token) {
+      this.setState({ user: false });
+    } else {
+      try {
+        const resp = await API.get(
+          `/auth/currentUser?evius_token=${Cookie.get("evius_token")}`
+        );
+        if (resp.status === 200) {
+          const data = resp.data;
+          // Solo se desea obtener el id del usuario
+          this.setState({ uid: data._id });
+        }
+      } catch (error) {
+        const { status } = error.response;
+        console.log("STATUS", status, status === 401);
+      }
+    }
+  };
 
   // Funcion para cargar datos de la encuesta seleccionada
   loadData = () => {
@@ -546,14 +574,57 @@ class SurveyComponent extends Component {
     let survey = array.filter(survey => survey._id == idSurvey);
     surveyData = survey[0];
 
-    this.setState({ surveyData });
+    this.setState({ surveyData, idSurvey });
   };
 
   // Funcion para enviar la informacion de las respuestas
   sendDataToServer = survey => {
-    const { showListSurvey } = this.props;
+    const { showListSurvey, eventId } = this.props;
+    let { surveyData, uid } = this.state;
 
-    console.log("enviando datos:", survey.data);
+    firestore
+      .collection("surveys")
+      .doc(surveyData._id)
+      .set({
+        eventId: eventId,
+        name: surveyData.title,
+        category: "none"
+      });
+
+    let questions = survey
+      .getAllQuestions()
+      .filter(surveyInfo => surveyInfo.id);
+
+    questions.forEach(question => {
+      if (question.value)
+        if (uid) {
+          firestore
+            .collection("surveys")
+            .doc(surveyData._id)
+            .collection("answers")
+            .doc(question.id)
+            .collection("responses")
+            .doc(uid)
+            .set({
+              response: question.value,
+              created: new Date(),
+              id_user: uid
+            });
+        } else {
+          firestore
+            .collection("surveys")
+            .doc(surveyData._id)
+            .collection("answers")
+            .doc(question.id)
+            .collection("responses")
+            .add({
+              response: question.value,
+              created: new Date(),
+              id_user: "guest"
+            });
+        }
+    });
+
     showListSurvey();
   };
 

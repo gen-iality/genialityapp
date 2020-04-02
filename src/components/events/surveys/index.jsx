@@ -65,12 +65,14 @@ class SurveyForm extends Component {
 
   render() {
     let { idSurvey, surveysData } = this.state;
+    const { event } = this.props;
 
     if (idSurvey)
       return (
         <SurveyComponent
           idSurvey={idSurvey}
           showListSurvey={this.toggleSurvey}
+          eventId={event._id}
         />
       );
 
