@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { getFiles } from "./services";
 import EvenTable from "../events/shared/table";
+import { ApiGoogleDocuments } from "../../helpers/constants";
 
 class documentsDetail extends Component {
     constructor(props) {
@@ -15,16 +16,18 @@ class documentsDetail extends Component {
 
     async componentDidMount() {
         let { documents } = this.state;
-
-        console.log(this.props)
+        
+        //console.log(this.props)
 
         documents = await getFiles(this.props.eventId);
-        console.log(documents)
+        //console.log(documents)
         if (documents != false) {
-            console.log(documents)
+            // console.log(documents)
             await this.setState({ documents, loading: false });
         }
     }
+
+    //Funcion para observar el documento, se abre la modal y muestra el iframe
     viewDocument(route) {
         document.querySelectorAll('.modal-button').forEach(function (el) {
             el.addEventListener('click', function () {
@@ -38,9 +41,14 @@ class documentsDetail extends Component {
             });
         });
 
-        let list = "http://docs.google.com/gview?embedded=true&url="
+        //Se trae la api de google
+        let list = ApiGoogleDocuments
+        //Se codifica en encodeURIComponent y se le pasa la ruta del archivo que le llega
         const preview = list + encodeURIComponent(route)
-        console.log(preview)
+        //Se observa en consola para comprobar funcionalidad
+        // console.log(preview)
+
+        //Se envia al estado
         this.setState({ previewImage: preview })
     }
 
@@ -48,6 +56,7 @@ class documentsDetail extends Component {
         const { documents, previewImage } = this.state
         return (
             <div>
+                {/* Se muestra en una tabla los datos existentes y para poder observar el documento se realiza un boton */}
                 <EvenTable head={["Carpeta", ""]}>
                     {documents.map(document =>
                         <tr key={document._id}>
@@ -59,8 +68,10 @@ class documentsDetail extends Component {
                             </td>
                         </tr>)}
                 </EvenTable>
+
+                {/* Se crea el modal para visualizar el documento */}
                 <div id="myModal" class="modal modal-full-screen modal-fx-fadeInScale">
-                <div className="modal-background"></div>
+                    <div className="modal-background"></div>
                     <div class="modal-content modal-card">
                         <header class="modal-card-head">
                             <p class="modal-card-title">Modal title</p>
