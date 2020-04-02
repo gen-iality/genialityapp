@@ -372,7 +372,7 @@ class Wall extends Component {
                             </article>
                         </div>
                     ))}
-                    {/* Se termina de mapear los datos de post */}
+    
                 </div>
             </div>
         )
