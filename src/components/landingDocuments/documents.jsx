@@ -29,18 +29,6 @@ class documentsDetail extends Component {
 
     //Funcion para observar el documento, se abre la modal y muestra el iframe
     viewDocument(route) {
-        document.querySelectorAll('.modal-button').forEach(function (el) {
-            el.addEventListener('click', function () {
-                var target = document.querySelector(el.getAttribute('data-target'));
-
-                target.classList.add('is-active');
-
-                target.querySelector('.modal-close').addEventListener('click', function () {
-                    target.classList.remove('is-active');
-                });
-            });
-        });
-
         //Se trae la api de google
         let list = ApiGoogleDocuments
         //Se codifica en encodeURIComponent y se le pasa la ruta del archivo que le llega
@@ -64,24 +52,10 @@ class documentsDetail extends Component {
                                 {document.title}
                             </td>
                             <td>
-                                <button className="button is-primary modal-button" onClick={e => { this.viewDocument(document.file) }} data-target="#myModal" aria-haspopup="true"><span className="icon"><i class="far fa-eye" /></span></button>
+                                <a className="button is-primary modal-button" href={ApiGoogleDocuments + encodeURIComponent(document.file)} target="_blank"><span className="icon"><i class="far fa-eye" /></span></a>
                             </td>
                         </tr>)}
                 </EvenTable>
-
-                {/* Se crea el modal para visualizar el documento */}
-                <div id="myModal" class="modal modal-full-screen modal-fx-fadeInScale">
-                    <div className="modal-background"></div>
-                    <div class="modal-content modal-card">
-                        <header class="modal-card-head">
-                            <button className="modal-close is-large" aria-label="close"></button>
-                        </header>
-                        <section class="modal-card-body">
-                            <iframe src={previewImage} frameborder="0"></iframe>
-                        </section>
-                    </div>
-                </div>
-
             </div>
 
         )
