@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { getFiles } from "./services";
-import EvenTable from "../events/shared/table";
 import { ApiGoogleDocuments } from "../../helpers/constants";
+import 'antd/dist/antd.css';
+import { List } from 'antd';
 
 class documentsDetail extends Component {
     constructor(props) {
@@ -10,21 +11,25 @@ class documentsDetail extends Component {
             documents: [],
             loading: false,
             category_id: null,
-            previewImage: ""
+            previewImage: "",
+            data: []
         };
     }
 
     async componentDidMount() {
         let { documents } = this.state;
-        
+
         //console.log(this.props)
+        let data = []
 
         documents = await getFiles(this.props.eventId);
-        //console.log(documents)
-        if (documents != false) {
-            // console.log(documents)
-            await this.setState({ documents, loading: false });
+
+        for (const document in documents) {
+            console.log(documents[document]);
+            data.push(documents[document])
         }
+        console.log(data)
+        this.setState({ data })
     }
 
     //Funcion para observar el documento, se abre la modal y muestra el iframe
@@ -41,21 +46,15 @@ class documentsDetail extends Component {
     }
 
     render() {
-        const { documents, previewImage } = this.state
+        const { data } = this.state;
         return (
-            <div>
-                {/* Se muestra en una tabla los datos existentes y para poder observar el documento se realiza un boton */}
-                <EvenTable head={["Carpeta", ""]}>
-                    {documents.map(document =>
-                        <tr key={document._id}>
-                            <td>
-                                {document.title}
-                            </td>
-                            <td>
-                                <a className="button is-primary modal-button" href={ApiGoogleDocuments + encodeURIComponent(document.file)} target="_blank"><span className="icon"><i class="far fa-eye" /></span></a>
-                            </td>
-                        </tr>)}
-                </EvenTable>
+            <div className="column is-10">
+                <List itemLayout="horizontal" style={{ background: "#ffffff" }} dataSource={data} renderItem={item => (
+                    <List.Item actions={[<a href={item.file} key="list-loadmore-edit">Descargar</a>]}>
+                        <List.Item.Meta title={<a href={ApiGoogleDocuments + encodeURIComponent(item.file)} target="_blank">{item.title}</a>}/>
+                    </List.Item>
+                )}
+                />
             </div>
 
         )
