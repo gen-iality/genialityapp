@@ -5,6 +5,42 @@ import firebase from 'firebase';
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import { saveFirebase } from "./helpers"
+import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip } from 'antd';
+import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, StarOutlined, EllipsisOutlined  } from '@ant-design/icons';
+import moment from 'moment';
+
+const { TextArea } = Input;
+
+const Editor = ({ onChange, onSubmit, submitting, value }) => (
+    <div>
+      <Form.Item>
+        <TextArea 
+        placeholder="¿Qué está pasando?" 
+        rows={4} 
+        onChange={onChange} 
+        value={value} 
+        id="postText" 
+        />
+      </Form.Item>
+
+      <Form.Item>
+        <Button 
+        htmlType="submit" 
+        loading={submitting} 
+        onClick={onSubmit} 
+        type="primary">
+          Enviar comentario
+        </Button>
+      </Form.Item>
+    </div>
+  );
+
+  const IconText = ({ icon, text, onSubmit }) => (
+    <Button htmlType="submit"  type="link" onClick={onSubmit} >
+      {React.createElement(icon, { style: { marginRight: 8 } })}
+      {text}
+    </Button>
+  );
 
 class Wall extends Component {
     constructor(props) {
@@ -17,12 +53,25 @@ class Wall extends Component {
             fileName: "",
             dataPost: [],
             dataComment: [],
-            idPostComment: []
+            idPostComment: [],
+            submitting: false,
+            value: '',
+
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
         this.previewImage = this.previewImage.bind(this)
     }
+
+
+    
+      handleChange = e => {
+        this.setState({
+          value: e.target.value,
+        });
+      };
+
+
 
     //Se monta el componente getPost antes
     componentDidMount = async () => {
@@ -99,6 +148,9 @@ class Wall extends Component {
             const text = document.getElementById("postText").value
             //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            this.setState({
+                submitting: true,
+              });
         } else {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
@@ -137,9 +189,10 @@ class Wall extends Component {
     }
 
     render() {
-        const { dataPost, dataComment, texto, image } = this.state
+        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar } = this.state
         return (
-            <div>
+            <div>    
+    
                 <div className="columns">
                     <div className="column is-12">
                         {/* Se valida si hay imagen para mostrar o no */}
@@ -168,27 +221,76 @@ class Wall extends Component {
                                     <p></p>
                             }
                         </div>
-                        {/* Aqui se termina la muestra de la informacion */}
+                        
 
-                        {/* se crea input para agregar un comentario al post */}
-                        <div>
-                            <label className="label has-text-white is-size-4">Comentario</label>
-                            <input className="input" id="postText" type="text" />
-                        </div>
-                        {/* se finaliza input de comentario */}
-
-                        <div className="has-margin-top-5">
-                            <button className="button is-primary has-margin-top-30" onClick={this.savePost}>Enviar</button>
-                        </div>
-
-                        {/* se guarda la informacion */}
+                        {/* Se importa el componente de textArea para agregar un comentario al post */}
+                        <Comment
+                        style={{ width: "52%", display: "block", margin: "0 auto"}}
+                        content={
+                            <Editor
+                            onChange={this.handleChange}
+                            onSubmit={this.savePost}
+                            submitting={submitting}
+                            value={value}
+                            />
+                        }
+                        />
                     </div>
                 </div>
 
-                {/* se mapean los datos que provienen de firebase del post            */}
+                {/* Se mapean los datos que provienen de firebase del post */}
+                <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left"  }}>
+
+                    <List
+                        itemLayout="vertical"
+                        size="large"
+                        style={{ texteAling: "left" }}
+                        pagination={{
+                        onChange: page => {
+                            console.log(page);
+                        },
+                        pageSize: 3,
+                        }}
+                        dataSource={dataPost}                        
+                        renderItem={item => (
+
+                        <List.Item
+                            key={item.id}
+                            actions={[
+                            <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o"  onSubmit={e => { this.getComments(item.id) }} data-target="#myModal" aria-haspopup="true" />,
+                            <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                            ]}
+                          
+                        >
+                            <List.Item.Meta 
+                            avatar={<Avatar src={item.avatar} />}
+                            title={<span href={item.href}>{item.author}</span>}
+                            description={ 
+                            <span><TimeStamp date={item.datePost.seconds} /></span>
+                            }
+                            />
+                             {
+                                item.urlImage ?
+                                <img
+                                    width={272}
+                                    style={{ display: "block", margin: "0 auto" }}
+                                    alt="logo"
+                                    src={item.urlImage}
+                                />: null
+                             }
+                            <br/>
+                            {item.post}
+                        </List.Item>
+                        )}
+                    />
+                </Card>
+
+
+                {/* se mapean los datos que provienen de firebase del post */}
                 <div className="">
                     {dataPost.map((post, key) => (
-                        <div className="box column" key={key}>
+                        <div className="column" key={key}>
+
                             <article class="media">
                                 <div class="media-left">
                                     <figure className="image is-square">
