@@ -5,8 +5,8 @@ import firebase from 'firebase';
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import { saveFirebase } from "./helpers"
-import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, StarOutlined, EllipsisOutlined  } from '@ant-design/icons';
+import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
+import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -29,10 +29,34 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
         loading={submitting} 
         onClick={onSubmit} 
         type="primary">
-          Enviar comentario
+          Publicar
         </Button>
       </Form.Item>
     </div>
+  );
+
+
+  const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) => (
+    <Row>
+      <Form.Item>
+        <TextArea 
+        placeholder="¿Qué piensas acerca de esto?" 
+        rows={1} 
+        onChange={onChange} 
+        valueCommit={valueCommit} 
+        id="comment" 
+        />
+      </Form.Item>
+
+      <Form.Item>
+      <Button 
+        htmlType="submit"  
+        type="link" 
+        onClick={onSubmit}
+        icon={<SendOutlined />}  
+        />
+      </Form.Item>
+    </Row>
   );
 
   const IconText = ({ icon, text, onSubmit }) => (
@@ -46,6 +70,7 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
       {text}
     </Button>
   );
+  
 
 class Wall extends Component {
     constructor(props) {
@@ -63,6 +88,7 @@ class Wall extends Component {
             currentCommet: null,
             submitting: false,
             value: '',
+            valueCommit:'',
 
         }
         this.savePost = this.savePost.bind(this)
@@ -78,6 +104,12 @@ class Wall extends Component {
         });
       };
 
+      handleChangeCommit = e => {
+        this.setState({
+          valueCommit: e.target.valueCommit,
+        });
+      };
+
 
 
     //Se monta el componente getPost antes
@@ -87,18 +119,7 @@ class Wall extends Component {
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
     async getComments(postId) {
-        // document.querySelectorAll('.modal-button').forEach(function (el) {
-        //     el.addEventListener('click', function () {
-        //         var target = document.querySelector(el.getAttribute('data-target'));
-
-        //         target.classList.add('is-active');
-
-        //         target.querySelector('.modal-close').addEventListener('click', function () {
-        //             target.classList.remove('is-active');
-        //         });
-        //     });
-        // });
-
+ 
         this.setState({ currentCommet: postId });
 
         const dataComment = [];
@@ -204,14 +225,16 @@ class Wall extends Component {
         this.getPost()
     }
 
+ 
+
     render() {
-        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet } = this.state
+        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
-            <div>
+            <div className="has-margin-top-70 has-margin-bottom-70">
                 {/*Inicia el detalle de los comentarios */}   
 
                 {currentCommet && (
-                    <div className="container-calendar-section">               
+                    <div className="">               
         
                         <a
                         className="has-text-white"
@@ -220,43 +243,55 @@ class Wall extends Component {
                         }}
                         >
                             <h3 className="has-text-white"> Regresar a los comentarios</h3>
+                            <br/>
                         </a>
 
-                        <div className="box">
-                            <div className="column is-12">
-                                {
-                                    dataComment.map((commentier, key) => (
-                                        <div className="card" key={key} style={{ marginBottom: "4%" }}>
-                                         <header className="card-header">
-                                                <p className="card-header-title">
-                                                    {
-                                                        <p>{commentier.author}</p>
-                                                    }
-                                                </p>
-                                            </header>
-                                            <div className="card-content">
-                                                <div className="content">
-                                                    <br />
-                                                    <p>{commentier.comment}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
+                        {/* Se mapea la información de los comentario */}
+                        <Row 
+                            style={{display: "flex",
+                                    justifyContent: "center"}}
+                            >
+                            <Col xs={24} sm={20} md={20} lg={20} xl={12} >
+                                <Card style={{display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px"  }}>
+                                    <List
+                                        itemLayout="vertical"
+                                        size="large"
+                                        style={{ texteAling: "left" }}
+                                        pagination={{
+                                        onChange: page => {
+                                            console.log(page);
+                                        },
+                                        pageSize: 3,
+                                        }}
 
-                            <a
-                                className="has-text-white"
-                                onClick={e => {
-                                this.gotoCommentList();
-                                }}
-                                >
-                                <h3 className="has-text-white">
-                                    {" "}
-                                    Regresar a los comentarios
-                                </h3>
-                            </a>
-                      </div>
+                                        // Aqui se llama al array del state 
+                                        dataSource={dataComment}
+                                    
+                                        
+                                        // Aqui se mapea al array del state 
+                                        renderItem={item => (
+
+                                        <List.Item
+                                            key={item.id}
+                                        
+                                        
+                                        >
+                                            <List.Item.Meta
+                                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                                title={<span>{item.author}</span>}
+                                                description={<p>1 Apr 2020, 3:38pm</p>}
+                                            />
+                                        
+                                        {item.comment}
+                                        </List.Item>
+                                        )}
+                                    />
+                        
+                                </Card>
+                        
+
+                            </Col>
+                        </Row>
                     </div>
                 )}
 
@@ -266,221 +301,160 @@ class Wall extends Component {
 
                  {/*Inicia la lista de los comentarios */}   
                 {!currentCommet && (
-                    <div>
-                        <div className="columns">
-                        
-                            <div className="column is-12">
+                    <div >
+                        <div>
 
                             {/* Se valida si hay imagen para mostrar o no */}
-                                <div class="file">
-                                    <label class="file-label"> 
-                                        <input class="file-input" type="file" id="image" onChange={this.previewImage} />
-                                        <span class="file-cta">
-                                            <span class="file-icon">
-                                                <i class="fas fa-upload"></i>
-                                            </span>
-                                            <span class="file-label">
-                                                Choose a file…
-                                            </span>
-                                        </span>
-                                    </label>
-                                </div>
-                            <div>
 
-                            {
-                                image ?
-                                    <div className="column is-6 card-image">
-                                        <figure className="image is-4by3">
-                                            <img src={image} alt="Placeholder image" />
-                                            <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
-                                        </figure>
-                                    </div> :
-                                    <p></p>
-                            }
-                        </div>
+                            <Row style={{display: "flex",
+                                    justifyContent: "center"}}
+                                    >
+                                <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                    <div class="file">
+                                        <label class="file-label"> 
+                                            <input class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                            <span class="file-cta">
+                                                <span class="file-icon">
+                                                    <i class="fas fa-upload"></i>
+                                                </span>
+                                                <span class="file-label">
+                                                    Choose a file…
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                    {
+                                        image ?
+                                            <div className="column is-6 card-image">
+                                                <figure className="image is-4by3">
+                                                    <img src={image} alt="Placeholder image" />
+                                                    <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
+                                                </figure>
+                                            </div> :
+                                            <p></p>
+                                    }
+                                    </div>
+                                </Col>
+                            </Row>
                             
 
-                        {/* Se importa el componente de textArea para agregar un comentario al post */}
+                            {/* Se importa el componente de textArea para agregar un comentario al post */}
+                            <Row 
+                            style={{display: "flex",
+                                    justifyContent: "center"}}
+                            >
+                                <Col xs={24} sm={20} md={20} lg={20} xl={12} >
+                                    <Comment
+                                    
+                                    content={
+                                        <Editor
+                                        onChange={this.handleChange}
+                                        onSubmit={this.savePost}
+                                        submitting={submitting}
+                                        value={value}
+                                        />
+                                    }
+                                    />
+                                </Col>
+                            </Row>
 
-                        <Comment
-                        style={{ width: "52%", display: "block", margin: "0 auto"}}
-                        content={
-                            <Editor
-                            onChange={this.handleChange}
-                            onSubmit={this.savePost}
-                            submitting={submitting}
-                            value={value}
-                            />
-                        }
-                        />
-
-                    </div>
-                    </div>
+                   
+                        </div>
 
                     {/* Se mapean los datos que provienen de firebase del post */}
-                    <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left"  }}>
+                    <Row 
+                    style={{display: "flex",
+                        justifyContent: "center"}}
+                        >
+                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                            <Card style={{display: "block", margin: "0 auto", textAlign: "left"  }}>
 
-                        <List
-                            itemLayout="vertical"
-                            size="large"
-                            style={{ texteAling: "left" }}
-                            pagination={{
-                            onChange: page => {
-                                console.log(page);
-                            },
-                            pageSize: 3,
-                            }}
+                                <List
+                                    itemLayout="vertical"
+                                    size="large"
+                                    style={{ texteAling: "left" }}
+                                    pagination={{
+                                    onChange: page => {
+                                        console.log(page);
+                                    },
+                                    pageSize: 3,
+                                    }}
 
-                            // Aqui se llama al array del state 
-                            dataSource={dataPost}
-                            
-                            // Aqui se mapea al array del state 
-                            renderItem={item => (
-
-                            <List.Item
-                                key={item.id}
-
-                                // Se importa el boton de like y el de redireccionamiento al detalle del post
-                                actions={[
-                                <IconText 
-                                    icon={LikeOutlined} 
-                                    text="156" 
-                                    key="list-vertical-like-o" 
-                                />,
-                                <IconText 
-                                    icon={MessageOutlined} 
-                                    text="2" 
-                                    key="list-vertical-message" 
-                                    onSubmit={e => { this.getComments(item.id) }}
-                                />
-                                ]}
-                            
-                            >
-                                <List.Item.Meta 
-                                avatar={
-                                    item.avatar ?
-                                    <Avatar src={item.avatar} />: 
-                                    <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+                                    // Aqui se llama al array del state 
+                                    dataSource={dataPost}
                                     
-                                }
-                                title={<span href={item.href}>{item.author}</span>}
-                                description={ 
-                                <span><TimeStamp date={item.datePost.seconds} /></span>
-                                }
+                                    // Aqui se mapea al array del state 
+                                    renderItem={item => (
+
+
+                                    <List.Item
+                                        key={item.id}
+
+                                        // Se importa el boton de like y el de redireccionamiento al detalle del post
+                                        actions={[
+                                            <EditorComment
+                                            onChange={this.handleChangeCommit}
+                                            onSubmit={e => { this.saveComment(item.id)}}
+                                            submitting={submitting}
+                                            valueCommit={valueCommit}
+                                            />,
+                                        <IconText 
+                                            icon={LikeOutlined} 
+                                            text="156" 
+                                            key="list-vertical-like-o" 
+                                        />,
+                                        <IconText 
+                                            icon={MessageOutlined} 
+                                            text="2" 
+                                            key="list-vertical-message" 
+                                            onSubmit={e => { this.getComments(item.id)}}
+                                        />
+                                        ]}
+                                    
+                                    >
+                                        <List.Item.Meta 
+                                        avatar={
+                                            item.avatar ?
+                                            <Avatar src={item.avatar} />: 
+                                            <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+                                            
+                                        }
+                                        title={<span href={item.href}>{item.author}</span>}
+                                        description={ 
+                                        <span><TimeStamp date={item.datePost.seconds} /></span>
+                                        }
+                                        />
+                                        <br/>
+                                        {item.post}
+                                        <br/>
+                                        <br/>
+                                        {
+                                            item.urlImage ?
+                                            <img
+                                                width={272}
+                                                style={{ display: "block", margin: "0 auto" }}
+                                                alt="logo"
+                                                src={item.urlImage}
+                                            />: null
+                                        }
+                                        <br/>
+                                    </List.Item>
+                                    )}
                                 />
-                                {
-                                    item.urlImage ?
-                                    <img
-                                        width={272}
-                                        style={{ display: "block", margin: "0 auto" }}
-                                        alt="logo"
-                                        src={item.urlImage}
-                                    />: null
-                                }
-                                <br/>
-                                {item.post}
-                            </List.Item>
-                            )}
-                        />
-                
-                    </Card>
+                        
+                            </Card>
+                        </Col>
+                    </Row>
                 
                 </div>
                 )}
                 {/*Finaliza la lista de los comentarios */}   
-
-
-                {/* se mapean los datos que provienen de firebase del post */}
-                {/* <div className="">
-                    {dataPost.map((post, key) => (
-                        <div className="column" key={key}>
-
-                            <article class="media">
-                                <div class="media-left">
-                                    <figure className="image is-square">
-                                        {
-                                            post.urlImage ?
-                                                <img src={post.urlImage[0]} alt="Placeholder image" />
-                                                :
-                                                <div />
-                                        }
-
-                                    <TimeStamp date={post.datePost.seconds} />
-                                    </figure>
-                                </div>
-                            {/* Se muestra en card los post registrados */}
-                            {/* <div className="media-content">
-                                <div className="content">
-                          
-                                    <p>
-                                        <strong>{post.author}</strong>
-                                    <br/>
-                                    {post.post}
-                                    </p>
-                        
-                                </div>  */}
-
-                                {/* <nav class="level is-mobile">
-                                    <div class="level-left">
-                                        <label className="label">Responder
-                                            <input className="input" id="comment" />
-                                        </label>
-                                        <a class="level-item has-text-black" aria-label="reply" onClick={e => { this.saveComment(post.id) }} >
-                                            <span class="icon is-small ">
-                                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                                            </span>
-                                        </a>
-                                        <a class="level-item has-text-black" aria-label="reply" onClick={e => { this.deletePost(post.id) }}>
-                                            <span class="icon is-small">
-                                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
-                                            </span>
-                                        </a>
-                                    </div> */}
-
-                                {/* </nav> */}
-                                    {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
-                                {/* <nav className="level is-mobile">
-                                    
-                                <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
-                                 <div className="modal" id="myModal">
-                                        <div className="modal-background"></div>
-                                        <div className="modal-content">
-                                            <div className="box">
-                                                <div className="column is-12">
-                                                    {
-                                                        dataComment.map((commentier, key) => (
-                                                            <div className="card" key={key} style={{ marginBottom: "4%" }}>
-                                                             <header className="card-header">
-                                                                    <p className="card-header-title">
-                                                                        {
-                                                                            <p>{commentier.author}</p>
-                                                                        }
-                                                                    </p>
-                                                                </header>
-                                                                <div className="card-content">
-                                                                    <div className="content">
-                                                                        <br />
-                                                                        <p>{commentier.comment}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button className="modal-close is-large" aria-label="close"></button>
-                                    </div>
-                                </nav>
-                            </div>
-                            </article>
-                        </div>
-                    ))}
-    
-                </div> */}
             </div>
         )
     }
 }
 
 export default Wall
+
