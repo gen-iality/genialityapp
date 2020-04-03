@@ -32,9 +32,9 @@ export default props => {
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {
-                <ReactPlayer
+                currentActivity.meeting_video && <ReactPlayer
                   style={{ maxWidth: "100%" }}
-                  url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+                  url={currentActivity.meeting_video}
                   controls
                 />
               }
