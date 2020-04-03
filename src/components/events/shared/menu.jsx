@@ -86,9 +86,11 @@ class Menu extends Component {
                                 (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true)&&
                                 <Fragment>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados`}>Todos los invitados sin confirmar</NavLink></li>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitar`}>Invitar nuevas personas</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitar`}>Invitar nuevas personas </NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitar_old`}>Invitar nuevas personas OLD</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/mensajesainvitados`}>Enviar información a invitados sin confirmar</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitaciones`}>Invitaciones pasadas</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitaciones_old`}>Invitaciones pasadas OLD</NavLink></li>
                                 </Fragment>
                             }
                         </ul>
