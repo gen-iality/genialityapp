@@ -5,7 +5,23 @@ import Moment from "moment";
 import Swal from "sweetalert2";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi, RolAttApi} from "../../helpers/request";
-import {Button, Card, Col,  Form, Icon, Input, Row, Alert} from "antd";
+import {Button, Card, Col,  Form, Input, Row, Alert } from 'antd';
+import {  LikeOutlined, DownloadOutlined } from '@ant-design/icons';
+
+
+// Estructura de boton para descargar certificados
+
+const IconText = ({ icon, text, onSubmit }) => (
+    <Button 
+        htmlType="submit"  
+        type="primary"
+        onClick={onSubmit} 
+    >
+
+      {React.createElement(icon, { style: { marginRight: 8 } })}
+      {text}
+    </Button>
+);
 
 class CertificadoLanding extends Component {
     constructor(props) {
@@ -136,20 +152,21 @@ class CertificadoLanding extends Component {
     render() {
         const {dataUser} = this.state;
         return (
-            <section>
-                <div className="has-margin-top-70 has-margin-bottom-70">
+            <section className="has-margin-top-70 has-margin-bottom-70">
+                <div>
 
-                        <h1
-                        style={{ paddingBottom: 70, fontSize: "4rem" }}
-                        className="title is-1 has-text-white"
-                        >
-                        Certificados
-                        </h1>
-                        
-                        <p className="title is-5 has-text-white" style={{ fontWeight:"normal" }} >
-                            Busca aquí tu certificado.
-                        </p>
+                    <h1
+                    style={{ paddingBottom: 70, fontSize: "4rem" }}
+                    className="title is-1 has-text-white"
+                    >
+                    Certificados
+                    </h1>
+                    
+                    <p className="title is-5 has-text-white" style={{ fontWeight:"normal" }} >
+                        Busca aquí tu certificado.
+                    </p>
 
+                    {/* Contenedor de input para buscar el usuario que requiere certificado */}
                     <Col 
                     xs={22}
                     sm={22}
@@ -157,19 +174,21 @@ class CertificadoLanding extends Component {
                     lg={10} 
                     xl={10}
                     style={{ margin: "0 auto" }}>
-                    <Form.Item 
-                        rules={[{ required: true }]} 
-                        onSubmit={this.searchCert}>                        
-                        
-                            <Input  
-                            type="text"
-                            size="large" 
-                            onChange={this.onChange} 
-                            placeholder="Ingresa tu correo o documento de identidad"/>
 
-                    </Form.Item>
+                        <Form.Item 
+                            rules={[{ required: true }]} 
+                            onSubmit={this.searchCert}>                        
+                            
+                                <Input  
+                                type="text"
+                                size="large" 
+                                onChange={this.onChange} 
+                                placeholder="Ingresa tu correo o documento de identidad"/>
+
+                        </Form.Item>
                     </Col>
                     
+                    {/* boton que envia el id del usuario */}
                     <Form.Item>
                         <Button 
                         type="primary" 
@@ -182,6 +201,9 @@ class CertificadoLanding extends Component {
                     </Form.Item>
 
                 </div>
+                <br/>
+
+                {/* Conenedor donde se muestran los certificados */}
                 <Col 
                     xs={22}
                     sm={22}
@@ -190,15 +212,36 @@ class CertificadoLanding extends Component {
                     xl={8}
                     style={{ margin: "0 auto" }}
                 >
+                    {/* Alert de error cuando el usuario no tiene certificados */}
                     {this.state.message && <p><Alert message={this.state.message} type="error" showIcon /></p>}
                     
-                    {dataUser.length > 0 && <div className="box">
-                        <h3>Usuario encontrado</h3>
-                        {
-                            dataUser.filter(user=>user.checked_in).map(user=>(
-                                <button className="button is-primary" onClick={e=>this.generateCert(user)}>Descargar Certifcado - {user.ticket}</button>
-                            ))
-                        }
+                    {/* Mapea los certificados si se encuentran en el array */}
+                    {dataUser.length > 0 && 
+                    <div>
+                        <Card>
+                            {/* Alert informativo de certificados disponibles */}
+                            <Alert message="Certificados disponibles" type="success" />
+
+                            {/* Se filtran y mapean los certificados */}
+                            {
+                                dataUser.filter(user=>user.checked_in).map(user=>(
+                                    <div>
+                                        <br/>
+                                        {/* Nombre de evento */}
+                                        <p>{user.ticket}</p>
+                                        
+                                        {/* Importacion del boton para descargar certificado */}
+                                        <IconText 
+                                                text="Descargar Certificado" 
+                                                icon={DownloadOutlined} 
+                                                onSubmit={e=>this.generateCert(user)}
+                                            />
+                                        <br/>
+                                    </div>
+                                
+                                ))
+                            }
+                        </Card>
                     </div>}
                 </Col>
             </section>

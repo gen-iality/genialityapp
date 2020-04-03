@@ -8,7 +8,7 @@ import TimeStamp from "react-timestamp";
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
 import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
+import { MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
