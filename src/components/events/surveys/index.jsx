@@ -5,6 +5,8 @@ import { SurveysApi } from "../../../helpers/request";
 
 import SurveyComponent from "./surveyComponent";
 
+import { List, Button } from "antd";
+
 const styles = {
   listItems: {
     padding: "5px",
@@ -20,19 +22,25 @@ const styles = {
 function ListSurveys(props) {
   let { jsonData } = props;
 
-  return jsonData.map(survey => (
-    <div
-      key={survey._id}
-      className="columns"
-      style={styles.listItems}
-      onClick={() => props.showSurvey(survey._id)}
-    >
-      <div className="column is-1">Icono</div>
-      <div className="column" style={styles.textItems}>
-        {survey.survey}
-      </div>
-    </div>
-  ));
+  return (
+    <List
+      style={{ background: "#ffffff" }}
+      bordered
+      dataSource={jsonData}
+      renderItem={survey => (
+        <List.Item
+          key={survey._id}
+          actions={[
+            <Button onClick={() => props.showSurvey(survey._id)}>
+              Ir a Encuesta
+            </Button>
+          ]}
+        >
+          {survey.survey}
+        </List.Item>
+      )}
+    />
+  );
 }
 
 class SurveyForm extends Component {
