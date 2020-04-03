@@ -304,6 +304,13 @@ class Wall extends Component {
                  {/*Inicia la lista de los comentarios */}   
                 {!currentCommet && (
                     <div >
+
+                        <h1
+                        style={{ paddingBottom: 70, fontSize: "4rem" }}
+                        className="title is-1 has-text-white"
+                        >
+                        Muro
+                        </h1>
                         <div>
 
                             {/* Se valida si hay imagen para mostrar o no */}
