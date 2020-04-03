@@ -1,8 +1,25 @@
 import React, { Component } from "react";
+
+//custom
 import { getFiles } from "./services";
 import { ApiGoogleDocuments } from "../../helpers/constants";
-import 'antd/dist/antd.css';
-import { List } from 'antd';
+import { List, Col, Row, Card, Button } from 'antd';
+import {  LikeOutlined, DownloadOutlined } from '@ant-design/icons';
+
+// Estructura de boton para descargar documentos
+
+const IconText = ({ icon, text, onSubmit }) => (
+    <Button 
+        htmlType="submit"  
+        type="link"
+        href={onSubmit}
+        target="_blank" 
+    >
+
+      {React.createElement(icon, { style: { marginRight: 8 } })}
+      {text}
+    </Button>
+);
 
 class documentsDetail extends Component {
     constructor(props) {
@@ -48,16 +65,60 @@ class documentsDetail extends Component {
 
     render() {
         const { data } = this.state;
-        return (
-            <div className="column is-10">
-                <List itemLayout="horizontal" style={{ background: "#ffffff" }} dataSource={data} renderItem={item => (
-                    <List.Item actions={[<a href={item.file} key="list-loadmore-edit">Descargar</a>]}>
-                        <List.Item.Meta title={<a href={ApiGoogleDocuments + encodeURIComponent(item.file)} target="_blank">{item.title}</a>}/>
-                    </List.Item>
-                )}
-                />
-            </div>
 
+        return (
+            <>
+            <div className="has-margin-top-70 has-margin-bottom-70">
+                <h1
+                style={{ paddingBottom: 70, fontSize: "4rem" }}
+                className="title is-1 has-text-white"
+                >
+                Documentos
+                </h1>
+                <Col 
+                xs={24}
+                sm={22}
+                md={18} 
+                lg={18} 
+                xl={18}
+                style={{ margin: "0 auto" }}
+                >
+                    <Card style={{  textAlign: "left" }}>
+                        <List itemLayout="horizontal"
+                        //Se traen los datos del state 
+                        dataSource={data}
+                        
+                        //se mapean los datos del array data
+                        renderItem={item => (
+                            <List.Item
+                            
+                            //boton de descarga
+                            actions={[
+                                <IconText 
+                                    text="Descargar" 
+                                    icon={DownloadOutlined} 
+                                    onSubmit={item.file}
+                                    />
+                                ]}
+                                >
+                                <List.Item.Meta 
+                                title={
+                                    <a 
+                                    href={ApiGoogleDocuments + encodeURIComponent(item.file)} 
+                                    target="_blank"
+                                    style={{ wordBreak: "break-word" }}
+                                    >
+                                        {item.title}
+                                    </a>
+                                    }
+                                    />
+                            </List.Item>
+                        )}
+                        />
+                    </Card>
+                </Col>
+            </div>
+        </>
         )
     }
 }

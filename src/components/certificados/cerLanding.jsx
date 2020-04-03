@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import Moment from "moment";
 
 //custom
+import Moment from "moment";
 import Swal from "sweetalert2";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi, RolAttApi} from "../../helpers/request";
