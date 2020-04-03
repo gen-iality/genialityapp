@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import FileBase64 from 'react-file-base64';
 import { toast } from "react-toastify";
 import firebase from 'firebase';
-import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
+
+//custom
+import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
 
 class Wall extends Component {
@@ -14,6 +16,7 @@ class Wall extends Component {
             files: [],
             urlPost: "",
             comment: "",
+            comments:"",
             fileName: "",
             dataPost: [],
             dataComment: [],
@@ -99,6 +102,7 @@ class Wall extends Component {
             const text = document.getElementById("postText").value
             //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            this.getPost()
         } else {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
@@ -106,6 +110,7 @@ class Wall extends Component {
             const text = document.getElementById("postText").value
             //savePostImage se realiza para publicar el post con imagen
             saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
+            this.getPost()
         }
     }
 
@@ -113,8 +118,8 @@ class Wall extends Component {
     async saveComment(idPost) {
         let email = this.props.event.author.email
         let eventId = this.props.event._id
-        let comments = document.getElementById("comment").value
-        saveFirebase.saveComment(email, eventId, comments, idPost)
+        let comments = this.state.comments
+        saveFirebase.saveComment(email, comments, eventId, idPost)
     }
 
     //Funcion para limpiar el files e image los cuales muestran el preview de la imagen
@@ -134,6 +139,7 @@ class Wall extends Component {
     //Funcion para eliminar post
     async deletePost(postId) {
         saveFirebase.deletePost(postId, this.props.event._id)
+        this.getPost()
     }
 
     render() {
@@ -213,7 +219,6 @@ class Wall extends Component {
                                     </p>
                         
                                 </div>
-
                                 <nav class="level is-mobile">
                                     <div class="level-left">
                                         <label className="label">Responder

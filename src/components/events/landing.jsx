@@ -22,6 +22,7 @@ import SurveyForm from "./surveys";
 import ReactQuill from "react-quill";
 import ReactPlayer from 'react-player';
 import WallForm from "../Wall/index"
+import DocumentsForm from "../landingDocuments/documents"
 
 import ZoomComponent from "./zoomComponent";
 
@@ -114,7 +115,8 @@ class Landing extends Component {
       survey: <SurveyForm />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
-      wall: <WallForm event={event} eventId={event.id}/>,
+      wall: <WallForm event={event} eventId={event._id}/>,
+      documents: <DocumentsForm event={event} eventId={event._id}/>,
       evento: (
         <div className="columns has-text-white is-centered has-margin-top-30 ">
           
@@ -509,7 +511,7 @@ class Landing extends Component {
                           : "items menu-item nav-item"
                       }
                       onClick={e => {
-                        this.showSection("");
+                        this.showSection("documents");
                       }}
                     >
                       <a className="has-text-grey-dark is-size-6">Documentos</a>
