@@ -634,7 +634,9 @@ class SurveyComponent extends Component {
 
     return (
       <div>
-        <button onClick={() => showListSurvey()}></button>
+        <a className="has-text-white" onClick={() => showListSurvey()}>
+          <h3 className="has-text-white"> Regresar a las encuestas</h3>
+        </a>
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );
