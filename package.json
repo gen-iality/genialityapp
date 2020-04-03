@@ -3,9 +3,11 @@
   "version": "1.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.0.5",
     "@kapost/react-component-slider": "^1.0.5",
     "@seatsio/seatsio-react": "^6.0.0",
     "@zoomus/websdk": "^1.7.2",
+    "antd": "^4.1.0",
     "async": "^2.6.1",
     "axios": "^0.18.1",
     "bulma": "^0.7.2",

@@ -50,7 +50,7 @@ export async function initializeVariablesAndFirebase() {
     storage = await firebaseInicializado.storage();
 }
 
-export function getFiles(EventID, folder_id) {
+export function getFiles(EventID) {
     return new Promise(async (resolve, reject) => {
         let response = "";
         await axios

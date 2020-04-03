@@ -43,6 +43,9 @@ $breakpoint-tablet: 1024px;
 @import "~react-quill/dist/quill.snow.css";
 @import "~react-quill/dist/quill.bubble.css";
 
+// ant desing
+@import '~antd/dist/antd.css';
+
 @import "./loading";
 @import "./tickets";
 @import "./msg";

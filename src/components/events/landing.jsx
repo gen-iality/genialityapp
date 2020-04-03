@@ -1,4 +1,4 @@
-/*global firebase*/
+//external
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
@@ -8,22 +8,24 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
+import firebase from "firebase";
+import app from "firebase/app";
+import ReactQuill from "react-quill";
+import ReactPlayer from 'react-player';
+
+//custom
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
-import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
-import ReactQuill from "react-quill";
-import ReactPlayer from 'react-player';
-import WallForm from "../Wall/index"
 import DocumentsForm from "../landingDocuments/documents"
-
+import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 
 Moment.locale("es");
