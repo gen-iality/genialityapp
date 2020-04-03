@@ -1,8 +1,11 @@
 import React, {Component} from "react";
 import Moment from "moment";
+
+//custom
 import Swal from "sweetalert2";
 import {firestore} from "../../helpers/firebase";
 import {CertsApi, RolAttApi} from "../../helpers/request";
+import {Button, Card, Col,  Form, Icon, Input, Row, Alert} from "antd";
 
 class CertificadoLanding extends Component {
     constructor(props) {
@@ -134,25 +137,70 @@ class CertificadoLanding extends Component {
         const {dataUser} = this.state;
         return (
             <section>
-                <div className="field has-addons">
-                    <div className="control is-expanded">
-                        <form onSubmit={this.searchCert}>
-                        <input className="input is-fullwidth" type="text" onChange={this.onChange} autoFocus={true} placeholder="Escribe tu Documento de Identidad O Correo Electrónico para buscar tu certificado"/>
-                        </form>
-                    </div>
-                    <div className="control">
-                        <button className="button is-primary" onClick={this.searchCert} disabled={this.state.disabled}>Buscar</button>
-                    </div>
+                <div className="has-margin-top-70 has-margin-bottom-70">
+
+                        <h1
+                        style={{ paddingBottom: 70, fontSize: "4rem" }}
+                        className="title is-1 has-text-white"
+                        >
+                        Certificados
+                        </h1>
+                        
+                        <p className="title is-5 has-text-white" style={{ fontWeight:"normal" }} >
+                            Busca aquí tu certificado.
+                        </p>
+
+                    <Col 
+                    xs={22}
+                    sm={22}
+                    md={10} 
+                    lg={10} 
+                    xl={10}
+                    style={{ margin: "0 auto" }}>
+                    <Form.Item 
+                        rules={[{ required: true }]} 
+                        onSubmit={this.searchCert}>                        
+                        
+                            <Input  
+                            type="text"
+                            size="large" 
+                            onChange={this.onChange} 
+                            placeholder="Ingresa tu correo o documento de identidad"/>
+
+                    </Form.Item>
+                    </Col>
+                    
+                    <Form.Item>
+                        <Button 
+                        type="primary" 
+                        htmlType="submit" 
+                        onClick={this.searchCert} 
+                        disabled={this.state.disabled} 
+                        >
+                            Buscar Certificado
+                        </Button>
+                    </Form.Item>
+
                 </div>
-                {this.state.message && <p>{this.state.message}</p>}
-                {dataUser.length > 0 && <div className="box">
-                    <h3>Usuario encontrado</h3>
-                    {
-                        dataUser.filter(user=>user.checked_in).map(user=>(
-                            <button className="button is-primary" onClick={e=>this.generateCert(user)}>Descargar Certifcado - {user.ticket}</button>
-                        ))
-                    }
-                </div>}
+                <Col 
+                    xs={22}
+                    sm={22}
+                    md={8} 
+                    lg={8} 
+                    xl={8}
+                    style={{ margin: "0 auto" }}
+                >
+                    {this.state.message && <p><Alert message={this.state.message} type="error" showIcon /></p>}
+                    
+                    {dataUser.length > 0 && <div className="box">
+                        <h3>Usuario encontrado</h3>
+                        {
+                            dataUser.filter(user=>user.checked_in).map(user=>(
+                                <button className="button is-primary" onClick={e=>this.generateCert(user)}>Descargar Certifcado - {user.ticket}</button>
+                            ))
+                        }
+                    </div>}
+                </Col>
             </section>
         )
     }

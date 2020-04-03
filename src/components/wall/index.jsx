@@ -42,11 +42,12 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <Row>
       <Form.Item>
         <TextArea 
-        placeholder="¿Qué piensas acerca de esto?" 
+        placeholder="¿Qué piensas sobre esto?" 
         rows={1} 
         onChange={onChange} 
         valueCommit={valueCommit} 
-        id="comment" 
+        id="comment"
+        autoSize 
         />
       </Form.Item>
 
