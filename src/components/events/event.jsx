@@ -18,7 +18,7 @@ import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import TriviaRoutes from "../trivia"
-import DocumentsRoutes from "../Documents";
+import DocumentsRoutes from "../documents";
 import Speakers from "../speakers";
 import Surveys from "../surveys";
 import Surveysconsultant from "../surveysconsultant";
@@ -30,8 +30,16 @@ import ConferenceRoute from "../zoom/index"
 //Code Splitting
 const General = asyncComponent(()=> import("./general"));
 const Badge = asyncComponent(()=> import("../badge")) ;
+
+//invitations
+const InvitedUsers = asyncComponent(()=> import("../invitations/invitedUsers"));
 const RSVP = asyncComponent(()=> import("../rsvp")) ;
-const Invitations = asyncComponent(()=> import("../invitations")) ;
+const RSVP_old = asyncComponent(()=> import("../rsvp_old")) ;
+const Invitations = asyncComponent(()=> import("../invitations"));
+const Invitations_old = asyncComponent(()=> import("../invitations_old"));
+const MessageInvitedUsers = asyncComponent(()=> import("../invitations/messageInvitedUsers")) ;
+
+
 const AdminRol = asyncComponent(()=> import("./staff")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
 const Styles = asyncComponent(()=> import("../App/styles"));
@@ -134,11 +142,14 @@ class Event extends Component {
                                 //permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
-                            <Protected path={`${match.url}/invitados`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
-                            {
-                                permissions.data.ids.includes(rolPermissions.history_invitations._id) &&
-                                <Route path={`${match.url}/messages`} render={() => <Invitations event={this.state.event}/>}/>
-                            }
+
+                            <Route path={`${match.url}/invitados`}  render={() => <InvitedUsers  event={this.state.event}/>}/>
+                            <Protected path={`${match.url}/invitar`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
+                            <Protected path={`${match.url}/invitar_old`} component={RSVP_old} eventId={this.state.event._id} event={this.state.event}/>    
+                            <Route path={`${match.url}/mensajesainvitados`} render={() => <MessageInvitedUsers event={this.state.event}/>}/>
+                            <Route path={`${match.url}/invitaciones`} render={() => <Invitations event={this.state.event}/>}/>
+                            <Route path={`${match.url}/invitaciones_old`} render={() => <Invitations_old event={this.state.event}/>}/>
+
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
                                 <Route path={`${match.url}/staff`} render={()=><AdminRol event={this.state.event} />}/>

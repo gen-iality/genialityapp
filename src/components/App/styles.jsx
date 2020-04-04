@@ -37,26 +37,26 @@ class Styles extends Component {
     //Se consulta la api para traer los datos ya guardados y enviarlos al state
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        console.log(info)
-
-        if (info.styles !== null) {
+        info.styles = (info.styles)?info.styles:{};
+        if (info.styles)
+        if (info.styles) {
             this.setState({
                 dates: {
-                    brandPrimary: info.styles.brandPrimary,
-                    brandSuccess: info.styles.brandSuccess,
-                    brandInfo: info.styles.brandInfo,
-                    brandDanger: info.styles.brandDanger,
-                    containerBgColor: info.styles.containerBgColor,
-                    brandWarning: info.styles.brandWarning,
-                    toolbarDefaultBg: info.styles.toolbarDefaultBg,
-                    brandDark: info.styles.brandDark,
-                    brandLight: info.styles.brandLight,
-                    event_image: info.styles.event_image,
-                    banner_image: info.styles.banner_image,
-                    menu_image: info.styles.menu_image,
-                    textMenu: info.styles.textMenu,
-                    activeText: info.styles.activeText,
-                    app_configuration: info.app_configuration
+                    brandPrimary: info.styles.brandPrimary || "#FFF",
+                    brandSuccess: info.styles.brandSuccess|| "#FFF",
+                    brandInfo: info.styles.brandInfo|| "#FFF",
+                    brandDanger: info.styles.brandDanger|| "#FFF",
+                    containerBgColor: info.styles.containerBgColor|| "#FFF",
+                    brandWarning: info.styles.brandWarning|| "#FFF",
+                    toolbarDefaultBg: info.styles.toolbarDefaultBg|| "#FFF",
+                    brandDark: info.styles.brandDark|| "#FFF",
+                    brandLight: info.styles.brandLight|| "#FFF",
+                    event_image: info.styles.event_image|| "#FFF",
+                    banner_image: info.styles.banner_image|| "#FFF",
+                    menu_image: info.styles.menu_image|| "#FFF",
+                    textMenu: info.styles.textMenu|| "#FFF",
+                    activeText: info.styles.activeText|| "#FFF",
+                    app_configuration: info.app_configuration|| "#FFF"
 
                 }
             })

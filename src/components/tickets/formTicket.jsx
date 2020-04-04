@@ -47,8 +47,13 @@ class TicketsForm extends Component {
                 Array.from(Array(parseInt(ticket.max_per_person,10))).map((e,i)=>i+1);
             return ticket
         });
+            
+            //Se encunetra el primer stage que esté activo para mostrarlo
+            let stage  = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status=="active"); 
+            //por si ninguna etapa se encuetra activa
+                stage  = (!stage && this.props.stages && this.props.stages[0])?this.props.stages[0]:null;
+             
 
-            const stage = (!this.props.stages)?null:this.props.stages.find(stage=>stage.status=="active"); //Se encunetra el primer stage que esté activo para mostrarlo
             const id = stage ? stage.stage_id : ''; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
             const ticketstoshow = tickets.filter(ticket => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
 
@@ -392,8 +397,8 @@ function ListadoTiquetes({...props}) {
         <React.Fragment>
             <div className='columns content-tabs'>
                 {
-                    stages.map(stage=>{
-                        return <div className={`column box has-text-weight-bold tab stage ${active===stage.stage_id?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
+                    stages.map((stage,indice)=>{
+                        return <div className={`column box has-text-weight-bold tab stage ${(active===stage.stage_id)?'is-active':''} ${"ended"===stage.status?'is-disabled':''}`}
                                     key={stage.stage_id} onClick={event => selectStage(stage)}>
                             <p>{stage.title}</p>
                             {
