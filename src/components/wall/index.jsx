@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React, { Component, useRef, useState } from "react";
 import FileBase64 from 'react-file-base64';
 import { toast } from "react-toastify";
 import firebase from 'firebase';
 import TimeStamp from "react-timestamp";
+import { CameraFeed } from './cameraFeed';
 
 //custom
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
-import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
+import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload } from 'antd';
 import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -15,64 +16,64 @@ const { TextArea } = Input;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <div>
-      <Form.Item>
-        <TextArea 
-        placeholder="¿Qué está pasando?" 
-        rows={4} 
-        onChange={onChange} 
-        value={value} 
-        id="postText" 
-        />
-      </Form.Item>
+        <Form.Item>
+            <TextArea
+                placeholder="¿Qué está pasando?"
+                rows={4}
+                onChange={onChange}
+                value={value}
+                id="postText"
+            />
+        </Form.Item>
 
-      <Form.Item>
-        <Button 
-        htmlType="submit" 
-        loading={submitting} 
-        onClick={onSubmit} 
-        type="primary">
-          Publicar
+        <Form.Item>
+            <Button
+                htmlType="submit"
+                loading={submitting}
+                onClick={onSubmit}
+                type="primary">
+                Publicar
         </Button>
-      </Form.Item>
+        </Form.Item>
     </div>
-  );
+);
 
 
-  const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) => (
+const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) => (
     <Row>
-      <Form.Item>
-        <TextArea 
-        placeholder="¿Qué piensas acerca de esto?" 
-        rows={1} 
-        onChange={onChange} 
-        valueCommit={valueCommit} 
-        id="comment" 
-        />
-      </Form.Item>
+        <Form.Item>
+            <TextArea
+                placeholder="¿Qué piensas acerca de esto?"
+                rows={1}
+                onChange={onChange}
+                valueCommit={valueCommit}
+                id="comment"
+            />
+        </Form.Item>
 
-      <Form.Item>
-      <Button 
-        htmlType="submit"  
-        type="link" 
-        onClick={onSubmit}
-        icon={<SendOutlined />}  
-        />
-      </Form.Item>
+        <Form.Item>
+            <Button
+                htmlType="submit"
+                type="link"
+                onClick={onSubmit}
+                icon={<SendOutlined />}
+            />
+        </Form.Item>
     </Row>
-  );
+);
 
-  const IconText = ({ icon, text, onSubmit }) => (
-    <Button 
-        htmlType="submit"  
-        type="link" 
-        onClick={onSubmit} 
+const IconText = ({ icon, text, onSubmit }) => (
+    <Button
+        htmlType="submit"
+        type="link"
+        onClick={onSubmit}
     >
 
-      {React.createElement(icon, { style: { marginRight: 8 } })}
-      {text}
+        {React.createElement(icon, { style: { marginRight: 8 } })}
+        {text}
     </Button>
-  );
-  
+);
+
 
 class Wall extends Component {
     constructor(props) {
@@ -82,7 +83,7 @@ class Wall extends Component {
             files: [],
             urlPost: "",
             comment: "",
-            comments:"",
+            comments: "",
             fileName: "",
             dataPost: [],
             dataComment: [],
@@ -90,7 +91,8 @@ class Wall extends Component {
             currentCommet: null,
             submitting: false,
             value: '',
-            valueCommit:'',
+            valueCommit: '',
+
 
         }
         this.savePost = this.savePost.bind(this)
@@ -99,18 +101,18 @@ class Wall extends Component {
     }
 
 
-    
-      handleChange = e => {
-        this.setState({
-          value: e.target.value,
-        });
-      };
 
-      handleChangeCommit = e => {
+    handleChange = e => {
         this.setState({
-          valueCommit: e.target.valueCommit,
+            value: e.target.value,
         });
-      };
+    };
+
+    handleChangeCommit = e => {
+        this.setState({
+            valueCommit: e.target.valueCommit,
+        });
+    };
 
 
 
@@ -121,16 +123,16 @@ class Wall extends Component {
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
     async getComments(postId) {
- 
+
         this.setState({ currentCommet: postId });
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment','desc')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment', 'desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
-                this.setState({ dataComment:[] })
+                this.setState({ dataComment: [] })
                 return;
             }
             snapshot.forEach(doc => {
@@ -149,13 +151,13 @@ class Wall extends Component {
 
     gotoCommentList() {
         this.setState({ currentCommet: null });
-      }
+    }
 
     //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
     async getPost() {
         const dataPost = [];
 
-        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost','desc')
+        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost', 'desc')
         let query = adminPostRef.get().then(snapshot => {
             if (snapshot.empty) {
                 toast.error('No hay ningun post');
@@ -180,15 +182,16 @@ class Wall extends Component {
     //Funcion para guardar el post, Se recoge la informacion y se envia a ./helpers, se valida si trae imagen o no
     async savePost() {
         const image = document.getElementById("image").files[0]
-        if (!image) {
+        const selfieImage = document.getElementById("getImage").src
+        
+        if (selfieImage.length > 100) {
+            const imageUrl =[]
+            imageUrl.push(selfieImage);
             const text = document.getElementById("postText").value
-            //savepost se realiza para publicar el post sin imagen
-            saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            saveFirebase.savePostSelfie(imageUrl, text, this.props.event.author.email, this.props.event._id)
             this.getPost()
-            this.setState({
-                submitting: true,
-              });
-        } else {
+        
+        } else if (image) {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
             console.log("Datos de imagen obtenidos")
@@ -196,6 +199,15 @@ class Wall extends Component {
             //savePostImage se realiza para publicar el post con imagen
             saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
             this.getPost()
+        
+        } else {
+            const text = document.getElementById("postText").value
+            //savepost se realiza para publicar el post sin imagen
+            saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            this.getPost()
+            // this.setState({
+            //     submitting: true,
+            // });
         }
     }
 
@@ -227,70 +239,77 @@ class Wall extends Component {
         this.getPost()
     }
 
- 
+    uploadImage() {
+        const formData = new FormData();
+        formData.append('file', formData);
+    };
 
     render() {
         const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
             <div className="has-margin-top-70 has-margin-bottom-70">
-                {/*Inicia el detalle de los comentarios */}   
+                <div className="App">
+                    <CameraFeed sendFile={this.uploadImage} />
+                </div>
 
+                {/*Inicia el detalle de los comentarios */}
                 {currentCommet && (
-                    <div className="">               
-        
+                    <div className="">
                         <a
-                        className="has-text-white"
-                        onClick={e => {
-                            this.gotoCommentList();
-                        }}
+                            className="has-text-white"
+                            onClick={e => {
+                                this.gotoCommentList();
+                            }}
                         >
                             <h3 className="has-text-white"> Regresar a los comentarios</h3>
-                            <br/>
+                            <br />
                         </a>
 
                         {/* Se mapea la información de los comentario */}
-                        <Row 
-                            style={{display: "flex",
-                                    justifyContent: "center"}}
-                            >
+                        <Row
+                            style={{
+                                display: "flex",
+                                justifyContent: "center"
+                            }}
+                        >
                             <Col xs={24} sm={20} md={20} lg={20} xl={12} >
-                                <Card style={{display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px"  }}>
+                                <Card style={{ display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px" }}>
                                     <List
                                         itemLayout="vertical"
                                         size="large"
                                         style={{ texteAling: "left" }}
                                         pagination={{
-                                        onChange: page => {
-                                            console.log(page);
-                                        },
-                                        pageSize: 3,
+                                            onChange: page => {
+                                                console.log(page);
+                                            },
+                                            pageSize: 3,
                                         }}
 
                                         // Aqui se llama al array del state 
                                         dataSource={dataComment}
-                                    
-                                        
+
+
                                         // Aqui se mapea al array del state 
                                         renderItem={item => (
 
-                                        <List.Item
-                                            key={item.id}
-                                        
-                                        
-                                        >
-                                            <List.Item.Meta
-                                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                                title={<span>{item.author}</span>}
-                                                description={<p>1 Apr 2020, 3:38pm</p>}
-                                            />
-                                        
-                                        {item.comment}
-                                        </List.Item>
+                                            <List.Item
+                                                key={item.id}
+
+
+                                            >
+                                                <List.Item.Meta
+                                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                                    title={<span>{item.author}</span>}
+                                                    description={<p>1 Apr 2020, 3:38pm</p>}
+                                                />
+
+                                                {item.comment}
+                                            </List.Item>
                                         )}
                                     />
-                        
+
                                 </Card>
-                        
+
 
                             </Col>
                         </Row>
@@ -301,19 +320,21 @@ class Wall extends Component {
 
 
 
-                 {/*Inicia la lista de los comentarios */}   
+                {/*Inicia la lista de los comentarios */}
                 {!currentCommet && (
                     <div >
                         <div>
 
                             {/* Se valida si hay imagen para mostrar o no */}
 
-                            <Row style={{display: "flex",
-                                    justifyContent: "center"}}
-                                    >
+                            <Row style={{
+                                display: "flex",
+                                justifyContent: "center"
+                            }}
+                            >
                                 <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                                     <div class="file">
-                                        <label class="file-label"> 
+                                        <label class="file-label">
                                             <input class="file-input" type="file" id="image" onChange={this.previewImage} />
                                             <span class="file-cta">
                                                 <span class="file-icon">
@@ -327,132 +348,136 @@ class Wall extends Component {
                                     </div>
 
                                     <div>
-                                    {
-                                        image ?
-                                            <div className="column is-6 card-image">
-                                                <figure className="image is-4by3">
-                                                    <img src={image} alt="Placeholder image" />
-                                                    <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
-                                                </figure>
-                                            </div> :
-                                            <p></p>
-                                    }
+                                        {
+                                            image ?
+                                                <div className="column is-6 card-image">
+                                                    <figure className="image is-4by3">
+                                                        <img src={image} alt="Placeholder image" />
+                                                        <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
+                                                    </figure>
+                                                </div> :
+                                                <p></p>
+                                        }
                                     </div>
                                 </Col>
                             </Row>
-                            
+
 
                             {/* Se importa el componente de textArea para agregar un comentario al post */}
-                            <Row 
-                            style={{display: "flex",
-                                    justifyContent: "center"}}
+                            <Row
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center"
+                                }}
                             >
                                 <Col xs={24} sm={20} md={20} lg={20} xl={12} >
                                     <Comment
-                                    
-                                    content={
-                                        <Editor
-                                        onChange={this.handleChange}
-                                        onSubmit={this.savePost}
-                                        submitting={submitting}
-                                        value={value}
-                                        />
-                                    }
+
+                                        content={
+                                            <Editor
+                                                onChange={this.handleChange}
+                                                onSubmit={this.savePost}
+                                                submitting={submitting}
+                                                value={value}
+                                            />
+                                        }
                                     />
                                 </Col>
                             </Row>
 
-                   
+
                         </div>
 
-                    {/* Se mapean los datos que provienen de firebase del post */}
-                    <Row 
-                    style={{display: "flex",
-                        justifyContent: "center"}}
+                        {/* Se mapean los datos que provienen de firebase del post */}
+                        <Row
+                            style={{
+                                display: "flex",
+                                justifyContent: "center"
+                            }}
                         >
-                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                            <Card style={{display: "block", margin: "0 auto", textAlign: "left"  }}>
+                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                <Card style={{ display: "block", margin: "0 auto", textAlign: "left" }}>
 
-                                <List
-                                    itemLayout="vertical"
-                                    size="large"
-                                    style={{ texteAling: "left" }}
-                                    pagination={{
-                                    onChange: page => {
-                                        console.log(page);
-                                    },
-                                    pageSize: 3,
-                                    }}
+                                    <List
+                                        itemLayout="vertical"
+                                        size="large"
+                                        style={{ texteAling: "left" }}
+                                        pagination={{
+                                            onChange: page => {
+                                                console.log(page);
+                                            },
+                                            pageSize: 3,
+                                        }}
 
-                                    // Aqui se llama al array del state 
-                                    dataSource={dataPost}
-                                    
-                                    // Aqui se mapea al array del state 
-                                    renderItem={item => (
+                                        // Aqui se llama al array del state 
+                                        dataSource={dataPost}
+
+                                        // Aqui se mapea al array del state 
+                                        renderItem={item => (
 
 
-                                    <List.Item
-                                        key={item.id}
+                                            <List.Item
+                                                key={item.id}
 
-                                        // Se importa el boton de like y el de redireccionamiento al detalle del post
-                                        actions={[
-                                            <EditorComment
-                                            onChange={this.handleChangeCommit}
-                                            onSubmit={e => { this.saveComment(item.id)}}
-                                            submitting={submitting}
-                                            valueCommit={valueCommit}
-                                            />,
-                                        <IconText 
-                                            icon={LikeOutlined} 
-                                            text="156" 
-                                            key="list-vertical-like-o" 
-                                        />,
-                                        <IconText 
-                                            icon={MessageOutlined} 
-                                            text="2" 
-                                            key="list-vertical-message" 
-                                            onSubmit={e => { this.getComments(item.id)}}
-                                        />
-                                        ]}
-                                    
-                                    >
-                                        <List.Item.Meta 
-                                        avatar={
-                                            item.avatar ?
-                                            <Avatar src={item.avatar} />: 
-                                            <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
-                                            
-                                        }
-                                        title={<span href={item.href}>{item.author}</span>}
-                                        description={ 
-                                        <span><TimeStamp date={item.datePost.seconds} /></span>
-                                        }
-                                        />
-                                        <br/>
-                                        {item.post}
-                                        <br/>
-                                        <br/>
-                                        {
-                                            item.urlImage ?
-                                            <img
-                                                width={272}
-                                                style={{ display: "block", margin: "0 auto" }}
-                                                alt="logo"
-                                                src={item.urlImage}
-                                            />: null
-                                        }
-                                        <br/>
-                                    </List.Item>
-                                    )}
-                                />
-                        
-                            </Card>
-                        </Col>
-                    </Row>
-                
-                </div>
+                                                // Se importa el boton de like y el de redireccionamiento al detalle del post
+                                                actions={[
+                                                    <EditorComment
+                                                        onChange={this.handleChangeCommit}
+                                                        onSubmit={e => { this.saveComment(item.id) }}
+                                                        submitting={submitting}
+                                                        valueCommit={valueCommit}
+                                                    />,
+                                                    <IconText
+                                                        icon={LikeOutlined}
+                                                        text="156"
+                                                        key="list-vertical-like-o"
+                                                    />,
+                                                    <IconText
+                                                        icon={MessageOutlined}
+                                                        text="2"
+                                                        key="list-vertical-message"
+                                                        onSubmit={e => { this.getComments(item.id) }}
+                                                    />
+                                                ]}
+
+                                            >
+                                                <List.Item.Meta
+                                                    avatar={
+                                                        item.avatar ?
+                                                            <Avatar src={item.avatar} /> :
+                                                            <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+
+                                                    }
+                                                    title={<span href={item.href}>{item.author}</span>}
+                                                    description={
+                                                        <span><TimeStamp date={item.datePost.seconds} /></span>
+                                                    }
+                                                />
+                                                <br />
+                                                {item.post}
+                                                <br />
+                                                <br />
+                                                {
+                                                    item.urlImage ?
+                                                        <img
+                                                            width={272}
+                                                            style={{ display: "block", margin: "0 auto" }}
+                                                            alt="logo"
+                                                            src={item.urlImage}
+                                                        /> : null
+                                                }
+                                                <br />
+                                            </List.Item>
+                                        )}
+                                    />
+
+                                </Card>
+                            </Col>
+                        </Row>
+
+                    </div>
                 )}
-                {/*Finaliza la lista de los comentarios */}   
+                {/*Finaliza la lista de los comentarios */}
             </div>
         )
     }
