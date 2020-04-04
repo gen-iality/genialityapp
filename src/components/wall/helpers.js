@@ -58,6 +58,18 @@ export const saveFirebase = {
         let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
+    async savePostSelfie(imageUrlBase64, text, author, eventId) {
+        let data = {
+            urlImage: await imageUrlBase64,
+            post: text,
+            author: author,
+            datePost: new Date()
+        };
+
+        console.log(data)
+        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
+        toast.success("Datos Guardados")
+    },
     async deletePost(postId, eventId) {
         firestore.collection('adminPost').doc(`${eventId}`).collection('posts').doc(`${postId}`).delete();
 
