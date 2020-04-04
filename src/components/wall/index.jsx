@@ -8,7 +8,7 @@ import TimeStamp from "react-timestamp";
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
 import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
+import { MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -42,11 +42,12 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <Row>
       <Form.Item>
         <TextArea 
-        placeholder="¿Qué piensas acerca de esto?" 
+        placeholder="¿Qué piensas sobre esto?" 
         rows={1} 
         onChange={onChange} 
         valueCommit={valueCommit} 
-        id="comment" 
+        id="comment"
+        autoSize 
         />
       </Form.Item>
 
@@ -304,6 +305,13 @@ class Wall extends Component {
                  {/*Inicia la lista de los comentarios */}   
                 {!currentCommet && (
                     <div >
+
+                        <h1
+                        style={{ paddingBottom: 70, fontSize: "4rem" }}
+                        className="title is-1 has-text-white"
+                        >
+                        Muro
+                        </h1>
                         <div>
 
                             {/* Se valida si hay imagen para mostrar o no */}
