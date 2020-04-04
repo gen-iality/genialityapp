@@ -57,6 +57,7 @@
     "react-toastify": "^4.4.0",
     "react-widgets": "^4.4.6",
     "react-widgets-moment": "^4.0.19",
+    "react-window": "^1.8.5",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
@@ -71,7 +72,7 @@
     "eject": "react-scripts eject",
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
-    "preinstall": "node -e 'if(!/yarn\\.js$/.test(process.env.npm_execpath))throw new Error(\"Use yarn\")'"    
+    "preinstall": "node -e 'if(!/yarn\\.js$/.test(process.env.npm_execpath))throw new Error(\"Use yarn\")'"
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
