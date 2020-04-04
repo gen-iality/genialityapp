@@ -8,13 +8,8 @@ import { CameraFeed } from './cameraFeed';
 //custom
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
-<<<<<<< HEAD
 import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
-import { MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
-=======
-import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined } from '@ant-design/icons';
->>>>>>> wall
+import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined }  from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -46,27 +41,6 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 
 const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) => (
     <Row>
-<<<<<<< HEAD
-      <Form.Item>
-        <TextArea 
-        placeholder="¿Qué piensas sobre esto?" 
-        rows={1} 
-        onChange={onChange} 
-        valueCommit={valueCommit} 
-        id="comment"
-        autoSize 
-        />
-      </Form.Item>
-
-      <Form.Item>
-      <Button 
-        htmlType="submit"  
-        type="link" 
-        onClick={onSubmit}
-        icon={<SendOutlined />}  
-        />
-      </Form.Item>
-=======
         <Form.Item>
             <TextArea
                 placeholder="¿Qué piensas acerca de esto?"
@@ -85,7 +59,6 @@ const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) =>
                 icon={<SendOutlined />}
             />
         </Form.Item>
->>>>>>> wall
     </Row>
 );
 
