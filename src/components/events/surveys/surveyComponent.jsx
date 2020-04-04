@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import Moment from "moment";
+import { toast } from "react-toastify";
 import * as Cookie from "js-cookie";
 
 import SearchComponent from "../../shared/searchTable";
+import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 import API, { AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
+import { SurveyAnswers } from "./services";
 
 import * as Survey from "survey-react";
 import "survey-react/survey.css";
@@ -595,34 +598,52 @@ class SurveyComponent extends Component {
       .getAllQuestions()
       .filter(surveyInfo => surveyInfo.id);
 
-    questions.forEach(question => {
-      if (question.value)
-        if (uid) {
-          firestore
-            .collection("surveys")
-            .doc(surveyData._id)
-            .collection("answers")
-            .doc(question.id)
-            .collection("responses")
-            .doc(uid)
-            .set({
-              response: question.value,
-              created: new Date(),
-              id_user: uid
-            });
-        } else {
-          firestore
-            .collection("surveys")
-            .doc(surveyData._id)
-            .collection("answers")
-            .doc(question.id)
-            .collection("responses")
-            .add({
-              response: question.value,
-              created: new Date(),
-              id_user: "guest"
-            });
-        }
+    const executeService = (SurveyData, questions, uid) => {
+      let sendAnswers = 0;
+      let responseMessage = null;
+      let responseError = null;
+
+      return new Promise((resolve, reject) => {
+        questions.forEach(async question => {
+          if (question.value)
+            if (uid) {
+              await SurveyAnswers.registerWithUID(surveyData._id, question.id, {
+                responseData: question.value,
+                date: new Date(),
+                uid
+              })
+                .then(result => {
+                  sendAnswers++;
+                  responseMessage = !responseMessage && result;
+                })
+                .catch(err => (responseError = err));
+            } else {
+              await SurveyAnswers.registerLikeGuest(
+                surveyData._id,
+                question.id,
+                {
+                  responseData: question.value,
+                  date: new Date(),
+                  uid: "guest"
+                }
+              )
+                .then(result => {
+                  sendAnswers++;
+                  responseMessage = !responseMessage && result;
+                })
+                .catch(err => (responseError = err));
+            }
+          if (responseMessage && sendAnswers == questions.length) {
+            await resolve(responseMessage);
+          } else if (responseError) {
+            await reject(responseError);
+          }
+        });
+      });
+    };
+
+    executeService(surveyData, questions, uid).then(result => {
+      toast.success(result);
     });
 
     showListSurvey();
@@ -634,7 +655,9 @@ class SurveyComponent extends Component {
 
     return (
       <div>
-        <button onClick={() => showListSurvey()}></button>
+        <a className="has-text-white" onClick={() => showListSurvey()}>
+          <h3 className="has-text-white"> Regresar a las encuestas</h3>
+        </a>
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );
