@@ -1,4 +1,4 @@
-/*global firebase*/
+//external
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
@@ -8,21 +8,24 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
+import firebase from "firebase";
+import app from "firebase/app";
+import ReactQuill from "react-quill";
+import ReactPlayer from 'react-player';
+
+//custom
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
-import app from "firebase/app";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
-import ReactQuill from "react-quill";
+import SurveyForm from "./surveys";
 import DocumentsForm from "../landingDocuments/documents"
-import ReactPlayer from 'react-player';
 import WallForm from "../wall/index";
-
 import ZoomComponent from "./zoomComponent";
 
 Moment.locale("es");
@@ -111,6 +114,7 @@ class Landing extends Component {
           handleModal={this.handleModal}
         />
       ),
+      survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} />,
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event._id}/>,
@@ -119,9 +123,7 @@ class Landing extends Component {
         <div className="columns has-text-white is-centered has-margin-top-30 ">
           
           <div className="description-container column is-8">
-            <span className="title is-size-1 has-text-white column is-12 has-text-left has-margin-left-60 ">
-              Detalles del evento
-            </span>
+
 
             <div className="column is-10 description is-centered">
             <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
@@ -512,9 +514,7 @@ class Landing extends Component {
                         this.showSection("documents");
                       }}
                     >
-                      <a className="has-text-grey-dark is-size-6">
-                        Documentos
-                      </a>
+                      <a className="has-text-grey-dark is-size-6">Documentos</a>
                     </li>
                     <li
                       className="items menu-item"
@@ -527,9 +527,20 @@ class Landing extends Component {
                         this.showSection("wall");
                       }}
                     >
-                      <a className="has-text-grey-dark is-size-6">
-                        Muro
-                      </a>
+                      <a className="has-text-grey-dark is-size-6">Muro</a>
+                    </li>
+                    <li
+                      className="items menu-item"
+                      className={
+                        this.state.section == "survey"
+                          ? "items menu-item nav-item-active"
+                          : "items menu-item nav-item"
+                      }
+                      onClick={e => {
+                        this.showSection("survey");
+                      }}
+                    >
+                      <a className="has-text-grey-dark is-size-6">Encuestas</a>
                     </li>
   
                   </ComponentSlider>

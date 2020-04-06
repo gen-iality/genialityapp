@@ -103,6 +103,7 @@ export const EventsApi = {
 };
 export const UsersApi = {
   getAll: async (id, query) => {
+    query = (query)?query:"";
     return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
   },
   getProfile: async id => {

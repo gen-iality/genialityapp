@@ -18,7 +18,7 @@ import TipoAsistentes from "./tipoUsers";
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import TriviaRoutes from "../trivia"
-import DocumentsRoutes from "../Documents";
+import DocumentsRoutes from "../documents";
 import Speakers from "../speakers";
 import Surveys from "../surveys";
 import Surveysconsultant from "../surveysconsultant";
@@ -32,11 +32,10 @@ const General = asyncComponent(()=> import("./general"));
 const Badge = asyncComponent(()=> import("../badge")) ;
 
 //invitations
-const InvitedUsers = asyncComponent(()=> import("../invitations/invitedUsers"));
-const RSVP = asyncComponent(()=> import("../rsvp")) ;
-const Invitations = asyncComponent(()=> import("../invitations"));
-const MessageInvitedUsers = asyncComponent(()=> import("../invitations/messageInvitedUsers")) ;
+const InvitedUsers = asyncComponent(()=> import("../invitations"));
 
+//Messages
+const Messages     = asyncComponent(()=> import("../messages"));
 
 const AdminRol = asyncComponent(()=> import("./staff")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
@@ -140,11 +139,10 @@ class Event extends Component {
                                 //permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
-
-                            <Route path={`${match.url}/invitados`}  render={() => <InvitedUsers  event={this.state.event}/>}/>
-                            <Protected path={`${match.url}/invitar`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>   
-                            <Route path={`${match.url}/mensajesainvitados`} render={() => <MessageInvitedUsers event={this.state.event}/>}/>
-                            <Route path={`${match.url}/invitaciones`} render={() => <Invitations event={this.state.event}/>}/>
+                            {/** AÚN NO TIENEN PERMISOS */}
+                            <Route path={`${match.url}/invitados`}  render={() => <InvitedUsers  eventId={this.state.event._id} event={this.state.event}/>}/>
+                            <Route path={`${match.url}/messages`}   render={() => <Messages event={this.state.event}/>}/>
+                                  
 
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
