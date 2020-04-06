@@ -6,46 +6,46 @@ import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import { saveFirebase } from "./helpers"
 import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, StarOutlined, EllipsisOutlined  } from '@ant-design/icons';
+import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, StarOutlined, EllipsisOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <div>
-      <Form.Item>
-        <TextArea 
-        placeholder="¿Qué está pasando?" 
-        rows={4} 
-        onChange={onChange} 
-        value={value} 
-        id="postText" 
-        />
-      </Form.Item>
+        <Form.Item>
+            <TextArea
+                placeholder="¿Qué está pasando?"
+                rows={4}
+                onChange={onChange}
+                value={value}
+                id="postText"
+            />
+        </Form.Item>
 
-      <Form.Item>
-        <Button 
-        htmlType="submit" 
-        loading={submitting} 
-        onClick={onSubmit} 
-        type="primary">
-          Enviar comentario
+        <Form.Item>
+            <Button
+                htmlType="submit"
+                loading={submitting}
+                onClick={onSubmit}
+                type="primary">
+                Enviar comentario
         </Button>
-      </Form.Item>
+        </Form.Item>
     </div>
-  );
+);
 
-  const IconText = ({ icon, text, onSubmit }) => (
-    <Button 
-        htmlType="submit"  
-        type="link" 
-        onClick={onSubmit} 
+const IconText = ({ icon, text, onSubmit }) => (
+    <Button
+        htmlType="submit"
+        type="link"
+        onClick={onSubmit}
     >
 
-      {React.createElement(icon, { style: { marginRight: 8 } })}
-      {text}
+        {React.createElement(icon, { style: { marginRight: 8 } })}
+        {text}
     </Button>
-  );
+);
 
 class Wall extends Component {
     constructor(props) {
@@ -55,28 +55,29 @@ class Wall extends Component {
             files: [],
             urlPost: "",
             comment: "",
-            comments:"",
+            comments: "",
             fileName: "",
             dataPost: [],
+            dataPostFilter: [],
             dataComment: [],
             idPostComment: [],
             currentCommet: null,
             submitting: false,
-            value: '',
-
+            value: ''
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
         this.previewImage = this.previewImage.bind(this)
+        this.loadMore = this.loadMore.bind(this)
     }
 
 
-    
-      handleChange = e => {
+
+    handleChange = e => {
         this.setState({
-          value: e.target.value,
+            value: e.target.value,
         });
-      };
+    };
 
 
 
@@ -103,13 +104,14 @@ class Wall extends Component {
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment','desc')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment', 'desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
-                this.setState({ dataComment:[] })
+                this.setState({ dataComment: [] })
                 return;
             }
+
             snapshot.forEach(doc => {
                 dataComment.push({
                     id: doc.id,
@@ -126,13 +128,14 @@ class Wall extends Component {
 
     gotoCommentList() {
         this.setState({ currentCommet: null });
-      }
+    }
 
     //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
     async getPost() {
         const dataPost = [];
+        const dataPostFilter = [];
 
-        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost','desc')
+        let adminPostRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts').orderBy('datePost', 'desc')
         let query = adminPostRef.get().then(snapshot => {
             if (snapshot.empty) {
                 toast.error('No hay ningun post');
@@ -147,7 +150,19 @@ class Wall extends Component {
                     datePost: doc.data().datePost
                 })
 
-                this.setState({ dataPost })
+                dataPostFilter.push({
+                    id: doc.id,
+                    author: doc.data().author,
+                    urlImage: doc.data().urlImage,
+                    post: doc.data().post,
+                    datePost: doc.data().datePost
+                })
+
+                if (dataPost.length > 6) {
+                    dataPost.length = 6
+                }
+
+                this.setState({ dataPost, dataPostFilter })
             });
         }).catch(err => {
             console.log('Error getting documents', err);
@@ -164,7 +179,7 @@ class Wall extends Component {
             this.getPost()
             this.setState({
                 submitting: true,
-              });
+            });
         } else {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
@@ -204,20 +219,47 @@ class Wall extends Component {
         this.getPost()
     }
 
+    async loadMore() {
+        let dataPost = this.state.dataPostFilter
+        let count = 2
+        let counter = 6
+        console.log(dataPost.length)
+
+        if (dataPost.length > 6) {
+            dataPost.length = counter + count;
+        }
+
+        console.log(dataPost);
+        this.setState({ dataPost })
+        console.log(dataPost.length);
+    }
     render() {
-        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet } = this.state
+        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet, } = this.state
+        const loadMore =
+            dataPost ? (
+                <div
+                    style={{
+                        textAlign: 'center',
+                        marginTop: 12,
+                        height: 32,
+                        lineHeight: '32px',
+                    }}
+                >
+                    <Button id="clickme" onClick={this.loadMore}>loading more</Button>
+                </div>
+            ) : null;
         return (
             <div>
-                {/*Inicia el detalle de los comentarios */}   
+                {/*Inicia el detalle de los comentarios */}
 
                 {currentCommet && (
-                    <div className="container-calendar-section">               
-        
+                    <div className="container-calendar-section">
+
                         <a
-                        className="has-text-white"
-                        onClick={e => {
-                            this.gotoCommentList();
-                        }}
+                            className="has-text-white"
+                            onClick={e => {
+                                this.gotoCommentList();
+                            }}
                         >
                             <h3 className="has-text-white"> Regresar a los comentarios</h3>
                         </a>
@@ -227,7 +269,7 @@ class Wall extends Component {
                                 {
                                     dataComment.map((commentier, key) => (
                                         <div className="card" key={key} style={{ marginBottom: "4%" }}>
-                                         <header className="card-header">
+                                            <header className="card-header">
                                                 <p className="card-header-title">
                                                     {
                                                         <p>{commentier.author}</p>
@@ -248,15 +290,15 @@ class Wall extends Component {
                             <a
                                 className="has-text-white"
                                 onClick={e => {
-                                this.gotoCommentList();
+                                    this.gotoCommentList();
                                 }}
-                                >
+                            >
                                 <h3 className="has-text-white">
                                     {" "}
                                     Regresar a los comentarios
                                 </h3>
                             </a>
-                      </div>
+                        </div>
                     </div>
                 )}
 
@@ -264,16 +306,16 @@ class Wall extends Component {
 
 
 
-                 {/*Inicia la lista de los comentarios */}   
+                {/*Inicia la lista de los comentarios */}
                 {!currentCommet && (
                     <div>
                         <div className="columns">
-                        
+
                             <div className="column is-12">
 
-                            {/* Se valida si hay imagen para mostrar o no */}
+                                {/* Se valida si hay imagen para mostrar o no */}
                                 <div class="file">
-                                    <label class="file-label"> 
+                                    <label class="file-label">
                                         <input class="file-input" type="file" id="image" onChange={this.previewImage} />
                                         <span class="file-cta">
                                             <span class="file-icon">
@@ -285,109 +327,104 @@ class Wall extends Component {
                                         </span>
                                     </label>
                                 </div>
-                            <div>
+                                <div>
 
-                            {
-                                image ?
-                                    <div className="column is-6 card-image">
-                                        <figure className="image is-4by3">
-                                            <img src={image} alt="Placeholder image" />
-                                            <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
-                                        </figure>
-                                    </div> :
-                                    <p></p>
-                            }
+                                    {
+                                        image ?
+                                            <div className="column is-6 card-image">
+                                                <figure className="image is-4by3">
+                                                    <img src={image} alt="Placeholder image" />
+                                                    <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
+                                                </figure>
+                                            </div> :
+                                            <p></p>
+                                    }
+                                </div>
+
+
+                                {/* Se importa el componente de textArea para agregar un comentario al post */}
+
+                                <Comment
+                                    style={{ width: "52%", display: "block", margin: "0 auto" }}
+                                    content={
+                                        <Editor
+                                            onChange={this.handleChange}
+                                            onSubmit={this.savePost}
+                                            submitting={submitting}
+                                            value={value}
+                                        />
+                                    }
+                                />
+
+                            </div>
                         </div>
-                            
 
-                        {/* Se importa el componente de textArea para agregar un comentario al post */}
+                        {/* Se mapean los datos que provienen de firebase del post */}
+                        <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left" }}>
 
-                        <Comment
-                        style={{ width: "52%", display: "block", margin: "0 auto"}}
-                        content={
-                            <Editor
-                            onChange={this.handleChange}
-                            onSubmit={this.savePost}
-                            submitting={submitting}
-                            value={value}
+                            <List
+                                itemLayout="vertical"
+                                size="large"
+                                style={{ texteAling: "left" }}
+                                loadMore={loadMore}
+
+                                // Aqui se llama al array del state 
+                                dataSource={dataPost}
+
+                                // Aqui se mapea al array del state 
+                                renderItem={item => (
+
+                                    <List.Item
+                                        key={item.id}
+
+                                        // Se importa el boton de like y el de redireccionamiento al detalle del post
+                                        actions={[
+                                            <IconText
+                                                icon={LikeOutlined}
+                                                text="156"
+                                                key="list-vertical-like-o"
+                                            />,
+                                            <IconText
+                                                icon={MessageOutlined}
+                                                text="2"
+                                                key="list-vertical-message"
+                                                onSubmit={e => { this.getComments(item.id) }}
+                                            />
+                                        ]}
+
+                                    >
+                                        <List.Item.Meta
+                                            avatar={
+                                                item.avatar ?
+                                                    <Avatar src={item.avatar} /> :
+                                                    <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+
+                                            }
+                                            title={<span href={item.href}>{item.author}</span>}
+                                            description={
+                                                <span><TimeStamp date={item.datePost.seconds} /></span>
+                                            }
+                                        />
+                                        {
+                                            item.urlImage ?
+                                                <img
+                                                    width={272}
+                                                    style={{ display: "block", margin: "0 auto" }}
+                                                    alt="logo"
+                                                    src={item.urlImage}
+                                                /> : null
+                                        }
+                                        <br />
+                                        {item.post}
+                                    </List.Item>
+                                )}
                             />
-                        }
-                        />
+
+                        </Card>
 
                     </div>
-                    </div>
-
-                    {/* Se mapean los datos que provienen de firebase del post */}
-                    <Card style={{ width: "50%", display: "block", margin: "0 auto", textAlign: "left"  }}>
-
-                        <List
-                            itemLayout="vertical"
-                            size="large"
-                            style={{ texteAling: "left" }}
-                            pagination={{
-                            onChange: page => {
-                                console.log(page);
-                            },
-                            pageSize: 3,
-                            }}
-
-                            // Aqui se llama al array del state 
-                            dataSource={dataPost}
-                            
-                            // Aqui se mapea al array del state 
-                            renderItem={item => (
-
-                            <List.Item
-                                key={item.id}
-
-                                // Se importa el boton de like y el de redireccionamiento al detalle del post
-                                actions={[
-                                <IconText 
-                                    icon={LikeOutlined} 
-                                    text="156" 
-                                    key="list-vertical-like-o" 
-                                />,
-                                <IconText 
-                                    icon={MessageOutlined} 
-                                    text="2" 
-                                    key="list-vertical-message" 
-                                    onSubmit={e => { this.getComments(item.id) }}
-                                />
-                                ]}
-                            
-                            >
-                                <List.Item.Meta 
-                                avatar={
-                                    item.avatar ?
-                                    <Avatar src={item.avatar} />: 
-                                    <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
-                                    
-                                }
-                                title={<span href={item.href}>{item.author}</span>}
-                                description={ 
-                                <span><TimeStamp date={item.datePost.seconds} /></span>
-                                }
-                                />
-                                {
-                                    item.urlImage ?
-                                    <img
-                                        width={272}
-                                        style={{ display: "block", margin: "0 auto" }}
-                                        alt="logo"
-                                        src={item.urlImage}
-                                    />: null
-                                }
-                                <br/>
-                                {item.post}
-                            </List.Item>
-                            )}
-                        />
-                
-                    </Card>
-                
-                </div>
                 )}
-                {/*Finaliza la lista de los comentarios */}   
+                {/*Finaliza la lista de los comentarios */}
 
 
                 {/* se mapean los datos que provienen de firebase del post */}
@@ -409,7 +446,7 @@ class Wall extends Component {
                                     </figure>
                                 </div>
                             {/* Se muestra en card los post registrados */}
-                            {/* <div className="media-content">
+                {/* <div className="media-content">
                                 <div className="content">
                           
                                     <p>
@@ -420,7 +457,7 @@ class Wall extends Component {
                         
                                 </div>  */}
 
-                                {/* <nav class="level is-mobile">
+                {/* <nav class="level is-mobile">
                                     <div class="level-left">
                                         <label className="label">Responder
                                             <input className="input" id="comment" />
@@ -437,9 +474,9 @@ class Wall extends Component {
                                         </a>
                                     </div> */}
 
-                                {/* </nav> */}
-                                    {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
-                                {/* <nav className="level is-mobile">
+                {/* </nav> */}
+                {/* se mapean los comentarios los cuales estan pendientes por validacion*/}
+                {/* <nav className="level is-mobile">
                                     
                                 <button className="button is-primary modal-button" onClick={e => { this.getComments(post.id) }} data-target="#myModal" aria-haspopup="true">Comentarios</button>
                                  <div className="modal" id="myModal">
