@@ -154,13 +154,6 @@ class CertificadoLanding extends Component {
         return (
             <section className="has-margin-top-70 has-margin-bottom-70">
                 <div>
-
-                    <h1
-                    style={{ paddingBottom: 70, fontSize: "4rem" }}
-                    className="title is-1 has-text-white"
-                    >
-                    Certificados
-                    </h1>
                     
                     <p className="title is-5 has-text-white" style={{ fontWeight:"normal" }} >
                         Busca aquí tu certificado.

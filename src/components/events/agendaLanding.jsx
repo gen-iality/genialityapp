@@ -217,14 +217,7 @@ class Agenda extends Component {
 
         {!currentActivity && (
           <div className="container-calendar-section">
-            <h1
-              style={{ paddingBottom: 30, fontSize: "4rem" }}
-              className="title is-1 has-text-white"
-            >
-              Agenda
-            </h1>
-            <br />
-            <br />
+
             {/* input donde se iteran los espacios del evento */}
             <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
             <div

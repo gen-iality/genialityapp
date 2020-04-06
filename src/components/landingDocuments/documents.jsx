@@ -69,12 +69,7 @@ class documentsDetail extends Component {
         return (
             <>
             <div className="has-margin-top-70 has-margin-bottom-70">
-                <h1
-                style={{ paddingBottom: 70, fontSize: "4rem" }}
-                className="title is-1 has-text-white"
-                >
-                Documentos
-                </h1>
+                
                 <Col 
                 xs={24}
                 sm={22}
