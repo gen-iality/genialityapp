@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { saveFirebase } from './helpers'
 
+//custom
+import { Button } from 'antd';
+import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
+
 export class CameraFeed extends Component {
     constructor(props) {
         super(props);
@@ -62,18 +66,51 @@ export class CameraFeed extends Component {
         const { image, hidden } = this.state
         return (
             <div className="c-camera-feed">
-                <div className="c-camera-feed__viewer">
-                    <video ref={ref => (this.videoPlayer = ref)} width="680" heigh="360" />
+
+                {/* camara */}
+
+                {/* Desde que en el array no haya información la camara se muetra 
+                de lo contrario se mostrara la imagen capturada. */}
+                {image.length === 0 &&
+                <div>
+                    <div className="c-camera-feed__viewer">
+                        <video 
+                        ref={ref => (this.videoPlayer = ref)} 
+                        width="680" 
+                        heigh="360" 
+                        />
+                    </div>
+
+                    <Button 
+                    type="primary"
+                    size="large"
+                    style={{ display:"block", margin: "20px auto" }} 
+                    onClick={this.takePhoto}
+                    >
+                        <CameraOutlined style={{ fontSize:"2rem" }} />
+                    </Button>
+
                 </div>
-                <button className="button is-info" style={{ marginBottom: "4%" }} onClick={this.takePhoto}>Tomar Foto</button>
+                }
+                            
+                {/* Imagen capturada  */}
                 <div className="c-camera-feed__stage">
-                    <canvas width="680" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
+                    <canvas width="470" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
                     <img id="getImage" hidden src={image} />
                     <div>
-                        <button className="button is-danger" onClick={e => { this.setState({ hidden: true, image: "" }) }}>Cancelar</button>
+                    {image.length > 0 &&
+                            <Button 
+                            danger
+                            style={{ display:"block", margin: "20px auto" }} 
+                            onClick={e => { this.setState({ hidden: true, image: "" }) }}
+                            >
+                                <DeleteOutlined />
+                                Eliminar
+                            </Button>
+                    }
                     </div>
                 </div>
-
+    
             </div>
         );
     }
