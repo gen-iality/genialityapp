@@ -40,26 +40,33 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 
 
 const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) => (
-    <Row>
         <Form.Item>
-            <TextArea
-                placeholder="¿Qué piensas acerca de esto?"
-                rows={1}
-                onChange={onChange}
-                valueCommit={valueCommit}
-                id="comment"
-            />
+            <Row
+            style={{ 
+                display: "flex",
+                justifyContent: "center"
+            }} 
+            >
+                <Col span={21}>
+                    <TextArea
+                        placeholder="Escribe un comentario..."
+                        onChange={onChange}
+                        valueCommit={valueCommit}
+                        autoSize 
+                        id="comment"
+                    />
+                </Col>
+                <Button
+                    htmlType="submit"
+                    type="link"
+                    onClick={onSubmit}
+                    style={{ color: "gray"}}
+                    icon={<SendOutlined />}
+                />
+            </Row>
         </Form.Item>
 
-        <Form.Item>
-            <Button
-                htmlType="submit"
-                type="link"
-                onClick={onSubmit}
-                icon={<SendOutlined />}
-            />
-        </Form.Item>
-    </Row>
+       
 );
 
 const IconText = ({ icon, text, onSubmit }) => (
@@ -67,9 +74,10 @@ const IconText = ({ icon, text, onSubmit }) => (
         htmlType="submit"
         type="link"
         onClick={onSubmit}
+        style={{ color: "gray" }}
     >
 
-        {React.createElement(icon, { style: { marginRight: 8 } })}
+        {React.createElement(icon, { style: { marginRight: 8, fontSize:"20px" } })}
         {text}
     </Button>
 );
@@ -295,7 +303,7 @@ class Wall extends Component {
 
                                             <List.Item
                                                 key={item.id}
-
+                                               
 
                                             >
                                                 <List.Item.Meta
@@ -331,63 +339,66 @@ class Wall extends Component {
                         >
                         Muro
                         </h1>
-                        <div>
 
-                            {/* Se valida si hay imagen para mostrar o no */}
-
-                            <Row style={{
+                        <Row
+                            style={{
                                 display: "flex",
-                                justifyContent: "center"
+                                justifyContent: "center",
+                                marginBottom: "20px"
                             }}
-                            >
-                                <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                    <div class="file">
-                                        <label class="file-label">
-                                            <input class="file-input" type="file" id="image" onChange={this.previewImage} />
-                                            <span class="file-cta">
-                                                <span class="file-icon">
-                                                    <i class="fas fa-upload"></i>
-                                                </span>
-                                                <span class="file-label">
-                                                    Subir Archivo
-                                                </span>
-                                            </span>
-                                        </label>
-                                        {
-                                            hidden === true ? 
-                                            <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} } className="button is-info">Tomar Foto</button>
-                                            :
-                                            <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} } className="button is-info">Cerrar Camara</button>
-                                        }
+                        >
+                            
+                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+
+                                <Card size="small" title="Crear publicación" extra={<div></div>}>
+
+                                    {/* Se valida si hay imagen para mostrar o no */}
+
+                                    <Row style={{
                                         
-                                    </div>
+                                    }}
+                                    >
+                                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                            <div class="file">
+                                                <label class="file-label">
+                                                    <input class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                                    <span class="file-cta">
+                                                        <span class="file-icon">
+                                                            <i class="fas fa-upload"></i>
+                                                        </span>
+                                                        <span class="file-label">
+                                                            Subir Archivo
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                                {
+                                                    hidden === true ? 
+                                                    <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} } className="button is-info">Tomar Foto</button>
+                                                    :
+                                                    <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} } className="button is-info">Cerrar Camara</button>
+                                                }
+                                                
+                                            </div>
 
-                                    <div>
-                                        {
-                                            image ?
-                                                <div className="column is-6 card-image">
-                                                    <figure className="image is-4by3">
-                                                        <img src={image} alt="Placeholder image" />
-                                                        <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
-                                                    </figure>
-                                                </div> :
-                                                <p></p>
-                                        }
-                                    </div>
-                                </Col>
-                            </Row>
+                                            <div>
+                                                {
+                                                    image ?
+                                                        <div className="column is-6 card-image">
+                                                            <figure className="image is-4by3">
+                                                                <img src={image} alt="Placeholder image" />
+                                                                <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
+                                                            </figure>
+                                                        </div> :
+                                                        <p></p>
+                                                }
+                                            </div>
+                                        </Col>
+                                    </Row>
 
 
-                            {/* Se importa el componente de textArea para agregar un comentario al post */}
-                            <Row
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center"
-                                }}
-                            >
-                                <Col xs={24} sm={20} md={20} lg={20} xl={12} >
+                                    {/* Se importa el componente de textArea para agregar un comentario al post */}
+                                  
                                     <Comment
-
                                         content={
                                             <Editor
                                                 onChange={this.handleChange}
@@ -397,11 +408,9 @@ class Wall extends Component {
                                             />
                                         }
                                     />
-                                </Col>
-                            </Row>
-
-
-                        </div>
+                                </Card>
+                            </Col>
+                        </Row>
 
                         {/* Se mapean los datos que provienen de firebase del post */}
                         <Row
@@ -410,13 +419,13 @@ class Wall extends Component {
                                 justifyContent: "center"
                             }}
                         >
-                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                <Card style={{ display: "block", margin: "0 auto", textAlign: "left" }}>
+                            <Col xs={24} sm={20} md={20} lg={20} xl={12} style={{ display: "block", margin: "0 auto", textAlign: "left" }}>
+                               
 
                                     <List
                                         itemLayout="vertical"
-                                        size="large"
-                                        style={{ texteAling: "left" }}
+                                        size="small"
+                                        style={{ texteAling: "left", marginBottom: "20px" }}
                                         pagination={{
                                             onChange: page => {
                                                 console.log(page);
@@ -430,18 +439,14 @@ class Wall extends Component {
                                         // Aqui se mapea al array del state 
                                         renderItem={item => (
 
-
+                                            <Card
+                                            style={{ marginBottom: "20px" }}
+                                            >
                                             <List.Item
                                                 key={item.id}
-
+                                                 style={{ padding: "0px" }}
                                                 // Se importa el boton de like y el de redireccionamiento al detalle del post
                                                 actions={[
-                                                    <EditorComment
-                                                        onChange={this.handleChangeCommit}
-                                                        onSubmit={e => { this.saveComment(item.id) }}
-                                                        submitting={submitting}
-                                                        valueCommit={valueCommit}
-                                                    />,
                                                     <IconText
                                                         icon={LikeOutlined}
                                                         text="156"
@@ -456,6 +461,7 @@ class Wall extends Component {
                                                 ]}
 
                                             >
+                                               
                                                 <List.Item.Meta
                                                     avatar={
                                                         item.avatar ?
@@ -463,11 +469,12 @@ class Wall extends Component {
                                                             <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
 
                                                     }
-                                                    title={<span href={item.href}>{item.author}</span>}
+                                                    title={<span>{item.author}</span>}
                                                     description={
-                                                        <span><TimeStamp date={item.datePost.seconds} /></span>
+                                                        <span style={{ fontSize: "12px" }}><TimeStamp date={item.datePost.seconds} /></span>
                                                     }
                                                 />
+                                                
                                                 <br />
                                                 {item.post}
                                                 <br />
@@ -475,18 +482,27 @@ class Wall extends Component {
                                                 {
                                                     item.urlImage ?
                                                         <img
-                                                            width={272}
-                                                            style={{ display: "block", margin: "0 auto" }}
+                                                            width={"100%"}
+                                                            style={{ display: "block", 
+                                                            margin: "0 auto",
+                                                                 }}
                                                             alt="logo"
                                                             src={item.urlImage}
                                                         /> : null
                                                 }
                                                 <br />
+                                                <EditorComment
+                                                        onChange={this.handleChangeCommit}
+                                                        onSubmit={e => { this.saveComment(item.id) }}
+                                                        submitting={submitting}
+                                                        valueCommit={valueCommit}
+                                                    />
                                             </List.Item>
+                                            </Card>
                                         )}
                                     />
 
-                                </Card>
+                               
                             </Col>
                         </Row>
 
