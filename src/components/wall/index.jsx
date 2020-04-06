@@ -8,7 +8,7 @@ import { CameraFeed } from './cameraFeed';
 //custom
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
-import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col  } from 'antd';
+import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal  } from 'antd';
 import { 
     CloudUploadOutlined,
     MessageOutlined, 
@@ -106,7 +106,9 @@ class Wall extends Component {
             submitting: false,
             value: '',
             valueCommit: '',
-            hidden: true
+            hidden: true,
+            modal1Visible: false,
+            modal2Visible: false,
 
 
         }
@@ -259,13 +261,21 @@ class Wall extends Component {
         formData.append('file', formData);
     };
 
+
+    // Funciones para abrir y cerrar modal
+
+    setModal1Visible(modal1Visible) {
+        this.setState({ modal1Visible });
+      }
+    
+      setModal2Visible(modal2Visible) {
+        this.setState({ modal2Visible });
+      }
+
     render() {
         const { dataPost, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
             <div className="has-margin-top-70 has-margin-bottom-70 container-wall">
-                <div hidden={hidden} className="App">
-                    <CameraFeed sendFile={this.uploadImage} />
-                </div>
 
                 {/*Inicia el detalle de los comentarios */}
                 {currentCommet && (
@@ -363,17 +373,33 @@ class Wall extends Component {
                                     <Row >
                                         <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                                             <Row>
+                                                {/* Boton para subir foto desde la galeria del dispositivo */}
                                                 <Button type="primary">
                                                     <input class="file-input" type="file" id="image" onChange={this.previewImage} />
                                                     <span>Subir Foto</span>
                                                     <CloudUploadOutlined />
                                                 </Button>
-                                                {
-                                                    hidden === true ? 
-                                                    <Button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} }><CameraOutlined /></Button>
-                                                    :
-                                                    <Button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} }>Cerrar Camara</Button>
-                                                }
+
+                                                 {/* Boton para abrir la camara */}
+                                                <Button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true}, this.setModal2Visible(true))} }><CameraOutlined /></Button>
+
+                                                {/* Modal para camara  */}                                                                           
+                                          
+                                                <div hidden={hidden} className="App">
+                                                    <Modal
+                                                    title="Camara"
+                                                    centered
+                                                    visible={this.state.modal2Visible}
+                                                    onOk={ e => {this.setState({hidden: false}, this.setModal2Visible(false))}}
+                                                    onCancel={ e => {this.setState({hidden: false}, this.setModal2Visible(false))}}
+                                                    >
+                                                        <CameraFeed sendFile={this.uploadImage} />
+                                                        
+                                                    </Modal>
+                                                
+                                                </div>
+                                        
+                                                   
                                                 
                                             </Row>
 
