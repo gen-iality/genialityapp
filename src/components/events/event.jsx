@@ -25,8 +25,6 @@ import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 import ConferenceRoute from "../zoom/index"
-import Messages    from "../messages";
-
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -35,13 +33,9 @@ const Badge = asyncComponent(()=> import("../badge")) ;
 
 //invitations
 const InvitedUsers = asyncComponent(()=> import("../invitations"));
-//const Messages     = asyncComponent(()=> import("../messages"));
 
-//OLD
-const RSVP_old = asyncComponent(()=> import("../rsvp_old")) ;
-const Invitations_old = asyncComponent(()=> import("../invitations_old"));
-//ENDOLD
-
+//Messages
+const Messages     = asyncComponent(()=> import("../messages"));
 
 const AdminRol = asyncComponent(()=> import("./staff")) ;
 const TicketInfo = asyncComponent(()=> import("../tickets")) ;
