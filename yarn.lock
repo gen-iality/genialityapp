@@ -13727,7 +13727,7 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-survey-react@^1.5.17:
+survey-react@^1.5.18:
   version "1.5.18"
   resolved "https://registry.yarnpkg.com/survey-react/-/survey-react-1.5.18.tgz#72fed87d03859d13434bd9aa82a987f09191d8e2"
   integrity sha512-4oOL8o+6Wfh8iNknseZ8R++mmHO+ee2xpq1KscBngVuoqwx99czZluMoKNyJDPWhm9YcYUd0oTwn9UM8B7areg==
