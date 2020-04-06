@@ -7,18 +7,6 @@ import SurveyComponent from "./surveyComponent";
 
 import { List, Button } from "antd";
 
-const styles = {
-  listItems: {
-    padding: "5px",
-    marginTop: "15px",
-    marginBottom: "15px",
-    border: "2px solid gray"
-  },
-  textItems: {
-    textAlign: "left"
-  }
-};
-
 function ListSurveys(props) {
   let { jsonData } = props;
 
