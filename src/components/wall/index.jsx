@@ -293,12 +293,12 @@ class Wall extends Component {
                                         itemLayout="vertical"
                                         size="large"
                                         style={{ texteAling: "left" }}
-                                        pagination={{
-                                            onChange: page => {
-                                                console.log(page);
-                                            },
-                                            pageSize: 3,
-                                        }}
+                                        // pagination={{
+                                        //     onChange: page => {
+                                        //         console.log(page);
+                                        //     },
+                                        //     pageSize: 3,
+                                        // }}
 
                                         // Aqui se llama al array del state 
                                         dataSource={dataComment}
@@ -423,12 +423,12 @@ class Wall extends Component {
                                         itemLayout="vertical"
                                         size="small"
                                         style={{ texteAling: "left", marginBottom: "20px" }}
-                                        pagination={{
-                                            onChange: page => {
-                                                console.log(page);
-                                            },
-                                            pageSize: 3,
-                                        }}
+                                        // pagination={{
+                                        //     onChange: page => {
+                                        //         console.log(page);
+                                        //     },
+                                        //     pageSize: 3,
+                                        // }}
 
                                         // Aqui se llama al array del state 
                                         dataSource={dataPost}
@@ -446,7 +446,7 @@ class Wall extends Component {
                                                 actions={[
                                                     <IconText
                                                         icon={LikeOutlined}
-                                                        text="156"
+                                                        text="0"
                                                         key="list-vertical-like-o"
                                                     />,
                                                     <IconText
