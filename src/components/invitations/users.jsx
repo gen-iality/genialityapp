@@ -12,6 +12,7 @@ import Loading from "../loaders/loading";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import Pagination from "../shared/pagination";
+import { sweetAlert } from "../../helpers/utils";
 
 class UsersRsvp extends Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class UsersRsvp extends Component {
   async componentDidMount() {
     try {
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
-      console.log("RESP",resp);
+      console.log("RESP", resp);
       const columns = this.props.event.user_properties.map(
         field => field.label
       );
@@ -326,13 +327,20 @@ class UsersRsvp extends Component {
       return { dropSend: !prevState.dropSend };
     });
 
-    irACreacionComunicacion = () =>  {
-      //Actualizar el estado del padre
+  irACreacionComunicacion = () => {
+    //Actualizar el estado del padre
+    if (this.state.selection[0] === undefined) {
+      sweetAlert.showLoading("Selecciona un correo")
+    } else {
       this.props.setGuestSelected(this.state.selection)
       this.props.history.push(`${this.props.matchUrl}/createmessage`)
-      //enviar a la otra página
+      //enviar a la otra página  
+      
     }
     
+    console.log(this.state.selection)
+  }
+
 
   render() {
     if (this.state.redirect)
@@ -348,11 +356,6 @@ class UsersRsvp extends Component {
     } = this.state;
     return (
       <Fragment>
-
-
-<button onClick={()=>this.irACreacionComunicacion()}> Crear comunicación  </button>
-
-                   
         <EventContent
           title={"Invitados"}
           description={
@@ -361,49 +364,49 @@ class UsersRsvp extends Component {
               : ""
           }
         >
-
+          <button className="button" style={{ float: "left", marginTop: "2%" }} onClick={() => this.irACreacionComunicacion()}> Enviar comunicación / Correo </button>
 
           {usersReq.length > 0 ? (
             <div>
               <div className="columns">
-              <div className="column is-12">
-                <div
-                  className={`dropdown is-pulled-right is-right ${
-                    dropUser ? "is-active" : ""
-                  }`}
-                  onClick={this.handleDropUser}
-                >
-                  <div className="dropdown-trigger">
-                    <button
-                      className="button"
-                      aria-haspopup
-                      aria-controls={"dropdown-menu1"}
-                    >
-                      <span>Agregar usuarios</span>
-                      <span className="icon">
-                        <i className="fas fa-angle-down" />
-                      </span>
-                    </button>
-                  </div>
+                <div className="column is-12">
                   <div
-                    className="dropdown-menu"
-                    id="dropdown-menu1"
-                    role="menu"
+                    className={`dropdown is-pulled-right is-right ${
+                      dropUser ? "is-active" : ""
+                      }`}
+                    onClick={this.handleDropUser}
                   >
-                    <div className="dropdown-content">
-                      <div className="dropdown-item" onClick={this.modalUser}>
-                        <p>Nuevo usuario</p>
-                      </div>
-                      <Link
-                        className="dropdown-item"
-                        to={`${this.props.matchUrl}/importar-excel`}
+                    <div className="dropdown-trigger">
+                      <button
+                        className="button"
+                        aria-haspopup
+                        aria-controls={"dropdown-menu1"}
                       >
-                        Importar usuarios de Excel
+                        <span>Agregar usuarios</span>
+                        <span className="icon">
+                          <i className="fas fa-angle-down" />
+                        </span>
+                      </button>
+                    </div>
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu1"
+                      role="menu"
+                    >
+                      <div className="dropdown-content">
+                        <div className="dropdown-item" onClick={this.modalUser}>
+                          <p>Nuevo usuario</p>
+                        </div>
+                        <Link
+                          className="dropdown-item"
+                          to={`${this.props.matchUrl}/importar-excel`}
+                        >
+                          Importar usuarios de Excel
                       </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>                
               </div>
 
               <div className="columns">
@@ -419,7 +422,7 @@ class UsersRsvp extends Component {
                   <div
                     className={`dropdown is-pulled-right is-right ${
                       dropUser ? "is-active" : ""
-                    }`}
+                      }`}
                     onClick={this.handleDropUser}
                   >
                     <div className="dropdown-trigger">
@@ -454,10 +457,10 @@ class UsersRsvp extends Component {
                   </div>
                 </div>
               </div>
-              <p>
+              {/* <p>
                 Seleccionados: <strong> {this.state.auxArr.length}</strong>
-              </p>
-              {this.state.auxArr.length > 0 && (
+              </p> */}
+              {/* {this.state.auxArr.length > 0 && (
                 <div
                   className={`dropdown ${dropSend ? "is-active" : ""}`}
                   onClick={this.handleDropSend}
@@ -488,7 +491,7 @@ class UsersRsvp extends Component {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
               <EvenTable head={columns}>
                 {pageOfItems.map(user => (
                   <tr key={user.id}>
@@ -508,7 +511,7 @@ class UsersRsvp extends Component {
                       </div>
                     </td>
                     {Object.keys(user.properties).map(prop => (
-                      <td key={prop}>{((parseInt() || typeof user.properties[prop] == "string"))?user.properties[prop]:JSON.stringify(user.properties[prop])}</td>
+                      <td key={prop}>{((parseInt() || typeof user.properties[prop] == "string")) ? user.properties[prop] : JSON.stringify(user.properties[prop])}</td>
                     ))}
                   </tr>
                 ))}
@@ -516,13 +519,13 @@ class UsersRsvp extends Component {
               <Pagination items={users} onChangePage={this.onChangePage} />
             </div>
           ) : (
-            <div>
-              <div onClick={this.modalUser}>Nuevo invitado</div>
-              <Link to={`${this.props.matchUrl}/importar-excel`}>
-                Importar usuarios de Excel
+              <div>
+                <div onClick={this.modalUser}>Nuevo invitado</div>
+                <Link to={`${this.props.matchUrl}/importar-excel`}>
+                  Importar usuarios de Excel
               </Link>
-            </div>
-          )}
+              </div>
+            )}
         </EventContent>
 
         {this.state.addUser && (

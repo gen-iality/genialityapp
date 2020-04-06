@@ -40,7 +40,7 @@ function Tabla(props) {
 function ListaInvitados({ ...props }) {
 
 
-  
+
   const { eventId, event, match } = props;
 
   const [guestSelected, setGuestSelected] = useState([]);
@@ -48,24 +48,24 @@ function ListaInvitados({ ...props }) {
   return (
     <Fragment>
       {/* <Tabla {...props} /> */}
-      <h1 style={{color:"red"}}> ***TODO Esta sección falta hacerla. los usuarios invitados deben quedar en su propio modelo de personas invitadas. 
-                    Cuando confirmen inscribiendose si es un evento gratis, 
-                    o pagando si es un evento pago pasan a asistentes(eventUsers)
-                </h1>
-  Guest:{guestSelected && <div>{guestSelected.length}</div>}
+      {/* <h1 style={{ color: "red" }}> ***TODO Esta sección falta hacerla. los usuarios invitados deben quedar en su propio modelo de personas invitadas.
+      Cuando confirmen inscribiendose si es un evento gratis,
+      o pagando si es un evento pago pasan a asistentes(eventUsers)
+      </h1> */}
+
       <Switch>
         <Route
           exact
           path={`${match.url}/`}
           render={() => (
-            <InvitedUsers event={event} eventID={eventId} matchUrl={match.url}  setGuestSelected={setGuestSelected} />
+            <InvitedUsers event={event} eventID={eventId} matchUrl={match.url} setGuestSelected={setGuestSelected} />
           )}
         />
         <Route
           exact
           path={`${match.url}/createmessage`}
           render={() => (
-            <CreateMessage event={event} eventID={eventId} matchUrl={match.url}  selection={guestSelected} />
+            <CreateMessage event={event} eventID={eventId} matchUrl={match.url} selection={guestSelected} />
           )}
         />
 

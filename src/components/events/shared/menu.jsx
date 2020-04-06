@@ -1,89 +1,96 @@
-import React, {Component,Fragment} from "react";
-import {NavLink, withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import {rolPermissions} from "../../../helpers/constants";
+import React, { Component, Fragment } from "react";
+import { NavLink, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { rolPermissions } from "../../../helpers/constants";
 
 class Menu extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            generalTab:true,
-            peopleTab:true,
-            commTab:true,
-            checkInTab:true,
-            ticketTab:true,
-            stylesTab:true,
-            guestTab:true,
-            url:""
+            contentTab: true,
+            generalTab: true,
+            peopleTab: true,
+            commTab: true,
+            checkInTab: true,
+            ticketTab: true,
+            stylesTab: true,
+            guestTab: true,
+            url: ""
         };
     }
 
     handleClick = (e) => {
-        if(!navigator.onLine) e.preventDefault();
+        if (!navigator.onLine) e.preventDefault();
     };
 
     componentDidMount() {
-        const {pathname} = this.props.location;
+        const { pathname } = this.props.location;
         const splitted = pathname.split('/');
-        this.setState({url:"/"+ splitted[1] + "/" + splitted[2]})
+        this.setState({ url: "/" + splitted[1] + "/" + splitted[2] })
     }
 
     componentDidUpdate(prevProps) {
-        const {match} = this.props;
-        if(this.props.match.url !== prevProps.match.url) {
-            this.setState({url:match.url});
+        const { match } = this.props;
+        if (this.props.match.url !== prevProps.match.url) {
+            this.setState({ url: match.url });
         }
     }
 
-    render(){
-        const {permissions} = this.props;
-        const {generalTab,peopleTab,commTab,checkInTab,ticketTab,guestTab,stylesTab,url} = this.state;
+    render() {
+        const { permissions } = this.props;
+        const { contentTab, generalTab, peopleTab, commTab, checkInTab, ticketTab, guestTab, stylesTab, url } = this.state;
         return (
             <Fragment>
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ contentTab: !contentTab }) }}>
+                    <span className="item has-text-grey">Contenido</span>
+                    <span className="icon"><i className={`${contentTab ? 'up' : 'down'}`} /></span>
+                </p>
+                {
+                    contentTab && (
+                        <ul className="menu-list">
+                            <li>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuración</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/trivia`}>Encuestas</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/news`}>Noticias</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/faqs`}>Preguntas Frecuentes</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/documents`}>Documentos</NavLink>
+                            </li>
+                        </ul>
+                    )
+                }
+
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ generalTab: !generalTab }) }}>
                     <span className="item has-text-grey">Configuración General</span>
-                    <span className="icon"><i className={`${generalTab?'up':'down'}`}/></span>
+                    <span className="icon"><i className={`${generalTab ? 'up' : 'down'}`} /></span>
                 </p>
                 {
                     generalTab && (
                         <ul className="menu-list">
                             <li>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/main`}>Datos del evento</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink> 
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuraciòn de la app</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
-                                {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/surveys`}>Encuestas</NavLink> */}
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/news`}>Noticias de la Aplicación</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/faqs`}>Preguntas Frecuentes de la Aplicación</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/documents`}>Documentos de la Aplicación</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/conference`}>Conferencias</NavLink>
-                                
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/agenda`}>Programación</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink>
                             </li>
-                            {
-                                permissions.data.ids.includes(rolPermissions.admin_staff._id) &&
-                                <Fragment>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/agenda`}>Programación</NavLink></li>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink></li>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink></li>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink></li>
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink></li> 
-                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/trivia`}>Trivias de la Aplicación</NavLink></li>
-                                </Fragment>
-                            }
                         </ul>
                     )
                 }
 
 
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({guestTab:!guestTab})}}>
-                    <span className="item has-text-grey" style={{color:"red"}}>Invitados</span>
-                    <span className="icon"><i className={`${guestTab?'up':'down'}`}/></span>
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ guestTab: !guestTab }) }}>
+                    <span className="item has-text-grey" style={{ color: "red" }}>Invitados</span>
+                    <span className="icon"><i className={`${guestTab ? 'up' : 'down'}`} /></span>
                 </p>
                 {
                     guestTab && (
                         <ul className="menu-list">
                             {
-                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true)&&
+                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) &&
                                 <Fragment>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados`}>Todos los invitados sin confirmar</NavLink></li>
                                     <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados/importar-excel`}>Invitar nuevas personas </NavLink></li>
@@ -96,16 +103,16 @@ class Menu extends Component {
                 }
 
 
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({peopleTab:!peopleTab})}}>
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ peopleTab: !peopleTab }) }}>
                     <span className="item has-text-grey">Personas</span>
-                    <span className="icon"><i className={`${peopleTab?'up':'down'}`}/></span>
+                    <span className="icon"><i className={`${peopleTab ? 'up' : 'down'}`} /></span>
                 </p>
                 {
                     peopleTab && (
                         <ul className="menu-list">
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) && false &&
-                               <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li> 
+                                <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
                             }
 
                             {
@@ -117,19 +124,19 @@ class Menu extends Component {
                         </ul>
                     )
                 }
-                <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({commTab:!commTab})}}>
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ commTab: !commTab }) }}>
                     <span className="item has-text-grey">Comunicaciones</span>
-                    <span className="icon"><i className={`${commTab?'up':'down'}`}/></span>
+                    <span className="icon"><i className={`${commTab ? 'up' : 'down'}`} /></span>
                 </p>
                 {
                     commTab && (
                         <ul className="menu-list">
                             {
-                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id)  || true) &&
+                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) &&
                                 <Fragment>
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/messages`}>Mensajes Enviados / sInvitaciones</NavLink>
-                                    </li> 
+                                    </li>
                                     s
                                     {/*
                                     <li>
@@ -152,32 +159,32 @@ class Menu extends Component {
                 }
                 {
                     permissions.data.ids.includes(rolPermissions.checkin._id) &&
-                        <Fragment>
-                            <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({checkInTab:!checkInTab})}}>
-                                <span className="item has-text-grey">Check In</span>
-                                <span className="icon"><i className={`${checkInTab?'up':'down'}`}/></span>
-                            </p>
-                            {
-                                checkInTab && (
-                                    <ul className="menu-list">
-                                        <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/datos`}>Datos de asistentes</NavLink></li>
-                                        {
-                                            permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
-                                            <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/badge`}>Escarapela</NavLink></li>
-                                        }
-                                        <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/assistants`}>Check In</NavLink></li>
-                                        <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/checkin-actividad`}>Check In por Actividad</NavLink></li>
-                                    </ul>
-                                )
-                            }
-                        </Fragment>
+                    <Fragment>
+                        <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ checkInTab: !checkInTab }) }}>
+                            <span className="item has-text-grey">Check In</span>
+                            <span className="icon"><i className={`${checkInTab ? 'up' : 'down'}`} /></span>
+                        </p>
+                        {
+                            checkInTab && (
+                                <ul className="menu-list">
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/datos`}>Datos de asistentes</NavLink></li>
+                                    {
+                                        permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
+                                        <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/badge`}>Escarapela</NavLink></li>
+                                    }
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/assistants`}>Check In</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/checkin-actividad`}>Check In por Actividad</NavLink></li>
+                                </ul>
+                            )
+                        }
+                    </Fragment>
                 }
                 {
                     permissions.data.ids.includes(rolPermissions.admin_ticket._id) &&
                     <Fragment>
-                        <p className="menu-label has-text-centered-mobile" onClick={(e)=>{this.setState({ticketTab:!ticketTab})}}>
+                        <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ ticketTab: !ticketTab }) }}>
                             <span className="item has-text-grey">Entradas</span>
-                            <span className="icon"><i className={`${ticketTab?'up':'down'}`}/></span>
+                            <span className="icon"><i className={`${ticketTab ? 'up' : 'down'}`} /></span>
                         </p>
                         {
                             ticketTab && (
