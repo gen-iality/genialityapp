@@ -8,8 +8,14 @@ import { CameraFeed } from './cameraFeed';
 //custom
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
-import { Comment, Avatar, Form, Button, List, Input, Card, Tooltip, Row, Col, Upload  } from 'antd';
-import { UserOutlined, EditOutlined, CommentOutlined, MessageOutlined, LikeOutlined, UploadOutlined, SendOutlined }  from '@ant-design/icons';
+import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col  } from 'antd';
+import { 
+    CloudUploadOutlined,
+    MessageOutlined, 
+    CameraOutlined, 
+    LikeOutlined, 
+    SendOutlined 
+} from '@ant-design/icons';
 import moment from 'moment';
 
 const { TextArea } = Input;
@@ -256,7 +262,7 @@ class Wall extends Component {
     render() {
         const { dataPost, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
-            <div className="has-margin-top-70 has-margin-bottom-70">
+            <div className="has-margin-top-70 has-margin-bottom-70 container-wall">
                 <div hidden={hidden} className="App">
                     <CameraFeed sendFile={this.uploadImage} />
                 </div>
@@ -354,31 +360,22 @@ class Wall extends Component {
 
                                     {/* Se valida si hay imagen para mostrar o no */}
 
-                                    <Row style={{
-                                        
-                                    }}
-                                    >
+                                    <Row >
                                         <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                            <div class="file">
-                                                <label class="file-label">
+                                            <Row>
+                                                <Button type="primary">
                                                     <input class="file-input" type="file" id="image" onChange={this.previewImage} />
-                                                    <span class="file-cta">
-                                                        <span class="file-icon">
-                                                            <i class="fas fa-upload"></i>
-                                                        </span>
-                                                        <span class="file-label">
-                                                            Subir Archivo
-                                                        </span>
-                                                    </span>
-                                                </label>
+                                                    <span>Subir Foto</span>
+                                                    <CloudUploadOutlined />
+                                                </Button>
                                                 {
                                                     hidden === true ? 
-                                                    <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} } className="button is-info">Tomar Foto</button>
+                                                    <Button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} }><CameraOutlined /></Button>
                                                     :
-                                                    <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} } className="button is-info">Cerrar Camara</button>
+                                                    <Button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} }>Cerrar Camara</Button>
                                                 }
                                                 
-                                            </div>
+                                            </Row>
 
                                             <div>
                                                 {
