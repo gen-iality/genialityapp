@@ -91,6 +91,13 @@ class SendRsvp extends Component {
         })
     };
 
+/*PLANTILLAS  en lenguaje MJML
+https://mjml.io/try-it-live/templates/austin
+https://mjml.io/try-it-live/templates/sphero-droids
+https://mjml.io/try-it-live/templates/ticketshop
+
+*/
+
     render() {
         const { timeout, disabled } = this.state;
         if(this.state.redirect) return (<Redirect to={{pathname: this.state.url_redirect}} />);
@@ -98,6 +105,8 @@ class SendRsvp extends Component {
             <div className="columns event-rsvp">
                 <div className="column is-8">
                     <div className="columns is-multiline is-centered">
+
+                        {/* email subject */}
                         <div className="column is-10">
                             <div className="box rsvp-subject">
                                 <div className="field">
@@ -111,6 +120,7 @@ class SendRsvp extends Component {
                                 </div>
                             </div>
                         </div>
+                        {/* -- endof email subject */}
                         
                         <div className="column is-10">
                             <div className="rsvp-title has-text-centered">
@@ -240,6 +250,7 @@ class SendRsvp extends Component {
                         <div className="columns is-centered-is-multiline">
                             <div className="column">
                                 <p className="rsvp-send-title">Seleccionados <span>{this.props.selection.length}</span></p>
+                                <p>{this.props.selection.map(el=>{return el.properties.email+", "})}</p>
                             </div>
                         </div>
 

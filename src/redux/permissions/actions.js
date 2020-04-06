@@ -12,8 +12,11 @@ export function fetchPermissions(event) {
         dispatch(fetchPermissionsBegin());
         Actions.get(`api/contributors/events/${event}/me`)
             .then((data)=> {
-                const roles = data.role ? data.role.permission_ids : ["5c19242ff33bd46c102ec975"];
-                dispatch(fetchPermissionsSuccess({ids:roles,space:data.space}));
+                let roles = data.role ? data.role.permission_ids : ["5c19242ff33bd46c102ec975"];
+                roles = ["5c19242ff33bd46c102ec975"];
+                //space:data.space
+                //space:data.space
+                dispatch(fetchPermissionsSuccess({ids:roles,space:[]}));
             })
             .catch((e)=>{
                 dispatch(fetchPermissionsFailure(e))

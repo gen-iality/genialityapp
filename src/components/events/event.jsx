@@ -25,6 +25,8 @@ import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 import ConferenceRoute from "../zoom/index"
+import Messages    from "../messages";
+
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -32,12 +34,13 @@ const General = asyncComponent(()=> import("./general"));
 const Badge = asyncComponent(()=> import("../badge")) ;
 
 //invitations
-const InvitedUsers = asyncComponent(()=> import("../invitations/invitedUsers"));
-const RSVP = asyncComponent(()=> import("../rsvp")) ;
+const InvitedUsers = asyncComponent(()=> import("../invitations"));
+//const Messages     = asyncComponent(()=> import("../messages"));
+
+//OLD
 const RSVP_old = asyncComponent(()=> import("../rsvp_old")) ;
-const Invitations = asyncComponent(()=> import("../invitations"));
 const Invitations_old = asyncComponent(()=> import("../invitations_old"));
-const MessageInvitedUsers = asyncComponent(()=> import("../invitations/messageInvitedUsers")) ;
+//ENDOLD
 
 
 const AdminRol = asyncComponent(()=> import("./staff")) ;
@@ -142,13 +145,27 @@ class Event extends Component {
                                 //permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                 <Protected path={`${match.url}/badge`} component={Badge} eventId={this.state.event._id} event={this.state.event} url={match.url}/>
                             }
+                            {/** REMAKE */}
+                            <Route path={`${match.url}/invitados`}  render={() => <InvitedUsers  eventId={this.state.event._id} event={this.state.event}/>}/>
+                            <Route path={`${match.url}/messages`}   render={() => <Messages event={this.state.event}/>}/>
 
-                            <Route path={`${match.url}/invitados`}  render={() => <InvitedUsers  event={this.state.event}/>}/>
-                            <Protected path={`${match.url}/invitar`} component={RSVP} eventId={this.state.event._id} event={this.state.event}/>
-                            <Protected path={`${match.url}/invitar_old`} component={RSVP_old} eventId={this.state.event._id} event={this.state.event}/>    
-                            <Route path={`${match.url}/mensajesainvitados`} render={() => <MessageInvitedUsers event={this.state.event}/>}/>
-                            <Route path={`${match.url}/invitaciones`} render={() => <Invitations event={this.state.event}/>}/>
-                            <Route path={`${match.url}/invitaciones_old`} render={() => <Invitations_old event={this.state.event}/>}/>
+                           {/**
+                            * 
+                                <Fragment>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitados`}>Todos los invitados sin confirmar</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitar`}>Invitar nuevas personas </NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitar_old`}>Invitar nuevas personas OLD</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/mensajesainvitados`}>Enviar información a invitados sin confirmar</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitaciones`}>Invitaciones pasadas</NavLink></li>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/invitaciones_old`}>Invitaciones pasadas OLD</NavLink></li>
+                                </Fragment>
+                            */}    
+                                
+                                
+                                
+                                {/** REMAKE  PROCESS */}
+                                <Protected path={`${match.url}/invitar_old`} component={RSVP_old} eventId={this.state.event._id} event={this.state.event}/> 
+                                <Route path={`${match.url}/invitaciones_old`} render={() => <Invitations_old event={this.state.event}/>}/>
 
                             {
                                 permissions.data.ids.includes(rolPermissions.admin_staff._id) &&

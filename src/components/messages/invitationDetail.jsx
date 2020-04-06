@@ -23,22 +23,22 @@ class InvitationDetail extends Component {
         ];
         return (
             <React.Fragment>
-                <nav className="breadcrumb" aria-label="breadcrumbs">
+                <nav className="tabs" aria-label="breadcrumbs">
                     <ul>
                         <li onClick={this.close}>
                             <a>
-                                <span className="icon is-small">
-                                    <i className="far fa-arrow-alt-circle-left"/>
+                                <span className="icon is-medium">
+                                    <i className="far fa-arrow-left fas fa-lg"/>
                                 </span>
                             </a>
                         </li>
                         <li className={`${this.state.step === 0 ? "is-active" : ""}`}
                             onClick={(e)=>{this.setState({step:0})}}>
-                            <a>Users</a>
+                            <a>Reporte Envios</a>
                         </li>
                         <li className={`${this.state.step === 1 ? "is-active" : ""}`}
                             onClick={(e)=>{this.setState({step:1})}}>
-                            <a>Email</a>
+                            <a>Mensaje Enviado</a>
                         </li>
                     </ul>
                 </nav>

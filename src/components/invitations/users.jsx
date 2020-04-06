@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect, Link, withRouter } from "react-router-dom";
 import { EventsApi, UsersApi } from "../../helpers/request";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
@@ -45,6 +45,7 @@ class UsersRsvp extends Component {
   async componentDidMount() {
     try {
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
+      console.log("RESP",resp);
       const columns = this.props.event.user_properties.map(
         field => field.label
       );
@@ -277,6 +278,7 @@ class UsersRsvp extends Component {
       return { ticket: !prevState.ticket };
     });
   };
+
   sendTicket = () => {
     const { event } = this.props;
     const { selection } = this.state;
@@ -324,6 +326,14 @@ class UsersRsvp extends Component {
       return { dropSend: !prevState.dropSend };
     });
 
+    irACreacionComunicacion = () =>  {
+      //Actualizar el estado del padre
+      this.props.setGuestSelected(this.state.selection)
+      this.props.history.push(`${this.props.matchUrl}/createmessage`)
+      //enviar a la otra página
+    }
+    
+
   render() {
     if (this.state.redirect)
       return <Redirect to={{ pathname: this.state.url_redirect }} />;
@@ -338,6 +348,11 @@ class UsersRsvp extends Component {
     } = this.state;
     return (
       <Fragment>
+
+
+<button onClick={()=>this.irACreacionComunicacion()}> Crear comunicación  </button>
+
+                   
         <EventContent
           title={"Invitados"}
           description={
@@ -546,4 +561,4 @@ const handleUsers = (fields, list) => {
   return users;
 };
 
-export default UsersRsvp;
+export default withRouter(UsersRsvp);

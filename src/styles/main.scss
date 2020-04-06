@@ -45,7 +45,6 @@ $breakpoint-tablet: 1024px;
 
 // ant desing
 @import '~antd/dist/antd.css';
-
 @import "./loading";
 @import "./tickets";
 @import "./msg";
@@ -61,8 +60,8 @@ $breakpoint-tablet: 1024px;
 @import "./events/general";
 @import "./events/datos";
 @import "./users/import";
-@import "./rsvp/send";
-@import "./rsvp/invitations";
+@import "./invitations/send";
+@import "./invitations/invitations";
 @import "./organization/profile";
 @import "./certificados/editor";
 @import "./certificados/points";

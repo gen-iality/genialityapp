@@ -9,7 +9,7 @@ class ConfirmRsvp extends Component {
 
     submit = () => {
         const { eventId, list, rsvp} = this.props;
-        const url = '/api/rsvp/sendeventrsvp/'+eventId;
+        const url = '/api/invitations/sendeventrsvp/'+eventId;
         let users = [];
         list.map(item=>{
             users.push(item.id)
