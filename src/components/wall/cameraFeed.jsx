@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { saveFirebase } from './helpers'
 
 export class CameraFeed extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            image:"",
-            hidden:true
+        this.state = {
+            image: "",
+            hidden: true
         }
     }
     /**
@@ -55,21 +55,25 @@ export class CameraFeed extends Component {
         context.drawImage(this.videoPlayer, 0, 0, 680, 360);
         this.canvas.toBlob(sendFile);
         let image = this.canvas.toDataURL()
-        this.setState({image, hidden:false})
+        this.setState({ image, hidden: false })
     };
 
     render() {
-        const {image, hidden} = this.state
+        const { image, hidden } = this.state
         return (
             <div className="c-camera-feed">
                 <div className="c-camera-feed__viewer">
                     <video ref={ref => (this.videoPlayer = ref)} width="680" heigh="360" />
                 </div>
-                <button onClick={this.takePhoto}>Take photo!</button>
+                <button className="button is-info" style={{ marginBottom: "4%" }} onClick={this.takePhoto}>Tomar Foto</button>
                 <div className="c-camera-feed__stage">
                     <canvas width="680" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
-                    <img id="getImage" hidden src={image}/>
+                    <img id="getImage" hidden src={image} />
+                    <div>
+                        <button className="button is-danger" onClick={e => { this.setState({ hidden: true, image: "" }) }}>Cancelar</button>
+                    </div>
                 </div>
+
             </div>
         );
     }

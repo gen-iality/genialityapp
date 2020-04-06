@@ -32,7 +32,7 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
                 loading={submitting}
                 onClick={onSubmit}
                 type="primary">
-                Publicar
+                Enviar
         </Button>
         </Form.Item>
     </div>
@@ -92,6 +92,7 @@ class Wall extends Component {
             submitting: false,
             value: '',
             valueCommit: '',
+            hidden: true
 
 
         }
@@ -245,10 +246,10 @@ class Wall extends Component {
     };
 
     render() {
-        const { dataPost, dataComment, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
+        const { dataPost, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
             <div className="has-margin-top-70 has-margin-bottom-70">
-                <div className="App">
+                <div hidden={hidden} className="App">
                     <CameraFeed sendFile={this.uploadImage} />
                 </div>
 
@@ -341,10 +342,17 @@ class Wall extends Component {
                                                     <i class="fas fa-upload"></i>
                                                 </span>
                                                 <span class="file-label">
-                                                    Choose a file…
+                                                    Subir Archivo
                                                 </span>
                                             </span>
                                         </label>
+                                        {
+                                            hidden === true ? 
+                                            <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: false})} } className="button is-info">Tomar Foto</button>
+                                            :
+                                            <button style={{marginLeft:"3%"}} onClick={ e =>{this.setState({hidden: true})} } className="button is-info">Cerrar Camara</button>
+                                        }
+                                        
                                     </div>
 
                                     <div>
