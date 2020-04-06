@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Trivia from "./trivia";
 import TriviaEdit from "./edit";
-import FormQuestions from "./questions";
 
 function TriviaRoutes({ ...props }) {
   const { event, match } = props;
@@ -18,11 +17,6 @@ function TriviaRoutes({ ...props }) {
           exact
           path={`${match.url}/editar`}
           render={() => <TriviaEdit event={event} matchUrl={match.url} />}
-        />
-        <Route
-          exact
-          path={`${match.url}/editar/:id/preguntas`}
-          render={() => <FormQuestions event={event} matchUrl={match.url} />}
         />
       </Switch>
     </Fragment>
