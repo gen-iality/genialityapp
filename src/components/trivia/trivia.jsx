@@ -85,7 +85,7 @@ class trivia extends Component {
                         </div>
                         <div className="column">
                             <button onClick={this.submit} className="columns is-pulled-right button is-primary">Guardar</button>
-                        </div>Encuesta 3
+                        </div>
                     </div>
                     <label style={{ marginTop: "5%" }} className="label">activar la encuesta</label>
                     <div className="select" style={{ marginBottom: "5%" }}>
