@@ -1,91 +1,65 @@
 import React, { Component, Fragment } from 'react';
-import { Redirect, withRouter, Link } from "react-router-dom";
-import EventContent from "../events/shared/content";
+import EventContent from '../events/shared/content';
 import { SurveysApi, AgendaApi } from "../../helpers/request";
-import { sweetAlert } from "../../helpers/utils";
-import EvenTable from "../events/shared/table";
-import 'react-tabs/style/react-tabs.css';
+import { withRouter } from "react-router-dom";
+import { toast } from 'react-toastify';
 
-class TriviaEdit extends Component {
+class triviaEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             redirect: false,
-            data: [],
-            dataAgenda: [],
-            activity_id: "",
             survey: "",
-            dateStart: "",
-            timeStart: "",
-            dateEnd: "",
-            timeEnd: "",
-            shareholders: [{ name: "" }]
-        }
+            publish: "",
+            activity_id: "",
+            dataAgenda: [],
+        };
+        this.submit = this.submit.bind(this)
     }
 
-    async componentDidMount() {
-        this.getInformation()
-    }
-
-    getInformation = async () => {
-        const info = await SurveysApi.getAll(this.props.event._id)
-        const dataAgenda = await AgendaApi.byEvent(this.props.event._id)
-        console.log(info)
-        this.setState({
-            dataAgenda: dataAgenda.data,
-            data: info.data,
-            survey: info.survey,
-            publicada: info.publicada
-        })
-
-    }
-
-    goBack = () => this.setState({ redirect: true });
-
+    //Funcion para poder cambiar el value del input o select
     changeInput = (e) => {
         const { name } = e.target;
         const { value } = e.target;
         this.setState({ [name]: value });
     };
 
-    selectDateStart = (select) => {
-        const dateStart = select.target.value;
-        this.setState({ dateStart })
-    };
+    async componentDidMount() {
+        //Se consultan las api para traer en primera los datos de la encuesta para actualizar y en segunda los datos la agenda
+        const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit)
+        const dataAgenda = await AgendaApi.byEvent(this.props.event._id)
 
-    selectDateEnd = (select) => {
-        const dateEnd = select.target.value;
-        this.setState({ dateEnd })
-    };
+        //Se envan al estado para poderlos utilizar en el markup
+        this.setState({
+            _id: Update._id,
+            survey: Update.survey,
+            publish: Update.publish,
+            activity_id: Update.activity_id,
+            dataAgenda: dataAgenda.data
+        })
 
-    submit = async () => {
+    }
+
+    //Funcion para guardar los datos a actualizar
+    async submit() {
+        //Se recogen los datos a actualizar 
         const data = {
+            id: this.state._id,
             survey: this.state.survey,
-            date_start: this.state.dateStart,
-            date_end: this.state.dateEnd,
-            time_start: this.state.timeStart,
-            time_end: this.state.timeEnd,
+            publish: this.state.publish,
             activity_id: this.state.activity_id
         }
 
-        console.log(data)
-
-        const dataTrivia = await SurveysApi.createOne(this.props.event._id, data)
-        console.log(dataTrivia)
-    }
-    selectTimeStart = (select) => {
-        const timeStart = select.target.value;
-        this.setState({ timeStart })
-    }
-    selectTimeEnd = (select) => {
-        const timeEnd = select.target.value;
-        this.setState({ timeEnd })
+        // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+        await SurveysApi.editOne(data, data.id, this.props.event._id)
+        // Se da la información de datos actualizados y se redirige a la vista principal
+        toast.success("datos actualizados")
+        window.location.replace(this.props.matchUrl);
     }
 
     render() {
-        const { matchUrl } = this.props;
-        const { survey, dataAgenda, data } = this.state;
-        if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
+        const { survey, publish, activity_id, dataAgenda } = this.state;
         return (
             <Fragment>
                 <EventContent title="Trivias" closeAction={this.goBack}>
@@ -99,29 +73,19 @@ class TriviaEdit extends Component {
                         </div>
                     </div>
                     <label style={{ marginTop: "5%" }} className="label">activar la encuesta</label>
-                    <div className="columns is-6">
-                        <div className="control has-icons-left has-icons-right">
-                            <input className="input is-success" onChange={this.selectDateStart} type="date" placeholder="Text input" />
-                            <span className="icon is-small is-left">
-                                <i className="fas fa-calendar-alt"></i>
-                            </span>
-                        </div>
-                        <input style={{ marginLeft: "3%" }} onChange={this.selectTimeStart} className="column is-2 input is-primary" type="time" />
+                    <div className="select" style={{ marginBottom: "5%" }}>
+                        <select name="publish" value={publish} onChange={this.changeInput} onClick={e => { this.setState({ publish: e.target.value }) }}>
+                            <option>...Seleccionar</option>
+                            <option value={true}>Si</option>
+                            <option value={false}>No</option>
+                        </select>
                     </div>
-                    <div style={{ marginTop: "5%" }} className="columns is-6">
-                        <div className="control has-icons-left has-icons-right">
-                            <input className="input is-success" onChange={this.selectDateEnd} type="date" placeholder="Text input" />
-                            <span className="icon is-small is-left">
-                                <i className="fas fa-calendar-alt"></i>
-                            </span>
-                        </div>
-                        <input style={{ marginLeft: "3%" }} onChange={this.selectTimeEnd} className="column is-2 input is-primary" type="time" />
-                    </div>
+
                     <br />
                     <div className="select">
                         <label className="Seleccione una actividad a referenciar"></label>
-                        <select onChange={e => { this.setState({ activity_id: e.target.value }) }} >
-                            <option>...Selecciona una opcion</option>
+                        <select name="activity_id" value={activity_id} onChange={this.changeInput} >
+                            <option>...Selecciona</option>
                             {
                                 dataAgenda.map((activity, key) => (
                                     <option key={key} value={activity._id}>{activity.name}</option>
@@ -130,30 +94,10 @@ class TriviaEdit extends Component {
 
                         </select>
                     </div>
-                    <EvenTable style={{ marginTop: "5%" }} head={["Titulo de encuesta", "Fecha de inicio", "Fecha de cierre", ""]}>
-                        {
-                            data.map((trivia, key) => (
-                                <tr key={key}>
-                                    <td>
-                                        {trivia.survey}
-                                    </td>
-                                    <td>
-                                        {trivia.date_start}
-                                    </td>
-                                    <td>
-                                        {trivia.date_end}
-                                    </td>
-                                    <td>
-                                        {/* <button onClick={this.destroy.bind(trivia.survey, trivia._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button> */}
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </EvenTable>
                 </EventContent>
             </Fragment>
         )
     }
 }
 
-export default withRouter(TriviaEdit);
+export default withRouter(triviaEdit)
