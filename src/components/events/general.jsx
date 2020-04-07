@@ -238,7 +238,8 @@ class General extends Component {
             app_configuration: this.state.info.app_configuration,
             banner_image: this.state.banner_image,
             banner_image_link: this.state.banner_image_link,
-            adminContenido: event.adminContenido
+            adminContenido: event.adminContenido,
+            type_event: event.type_event
         };
 
         console.log(data);
@@ -353,7 +354,7 @@ class General extends Component {
 
                         <div className="field">
                             <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
-                            <div className="select is-primary">
+                            <div class="select is-primary">
                                 <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
@@ -364,7 +365,7 @@ class General extends Component {
 
                         <div className="field">
                             <label className="label required">Desea Tener Registro en la aplicación?</label>
-                            <div className="select is-primary">
+                            <div class="select is-primary">
                                 <select name={"allow_register"} value={event.allow_register} defaultValue={event.allow_register} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
@@ -375,7 +376,7 @@ class General extends Component {
 
                         <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
-                            <div className="select is-primary">
+                            <div class="select is-primary">
                                 <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
@@ -386,7 +387,7 @@ class General extends Component {
 
                         <div className="field">
                             <label className="label required">Desea Habilitar la traducción del lenguaje en el aplicativo</label>
-                            <div className="select is-primary">
+                            <div class="select is-primary">
                                 <select name={"enable_language"} defaultValue={event.enable_language} value={event.enable_language} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
                                     <option value={true}>Si</option>
@@ -400,7 +401,7 @@ class General extends Component {
                                 ?
                                 <div className="field">
                                     <label className="label">Que modulo desea observar en el inicio</label>
-                                    <div className="select is-primary">
+                                    <div class="select is-primary">
                                         <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>
                                             <option value={null}>Banner de inicio</option>
                                             <option value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
@@ -419,6 +420,17 @@ class General extends Component {
                                 :
                                 '   '
                         }
+                        <div>
+                            <label className="label">Tipo de evento</label>
+                            <div className="select is-primary">
+                                <select value={event.type_event} name="type_event" onChange={this.handleChange}>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="physicalEvent">Evento Fisico</option>
+                                    <option value="onlineEvent">Evento Virtual</option>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
