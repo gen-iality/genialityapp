@@ -14,15 +14,31 @@ const CreateAntField = (AntComponent) => ({
   type,
   ...props
 }) => {
+  //   Buscar dentro del arreglo del formulario que campos han sido tocados
   const touched = form.touched[field.name];
+
+  //   Conteo de veces que se hace el Submit
   const submitted = submitCount > 0;
+
+  //   Busca en el arreglo de errores del formulario, si hay errores
   const hasError = form.errors[field.name];
+
+  //   Evalua si tiene errores y se ha hecho el Submit
   const submittedError = hasError && submitted;
+
+  //   Evalua si se tiene errores y si se tocaron los campos
   const touchedError = hasError && touched;
+
+  //   Funcion manejadora para los inputs
   const onInputChange = ({ target: { value } }) =>
     form.setFieldValue(field.name, value);
+
+  //   Funcion manejadora para cualquier otro tipo de campo
   const onChange = (value) => form.setFieldValue(field.name, value);
+
+  //   Esto no se para que sea
   const onBlur = () => form.setFieldTouched(field.name, true);
+
   return (
     <div className="field-container">
       <FormItem
