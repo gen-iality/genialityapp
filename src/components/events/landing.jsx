@@ -589,7 +589,7 @@ class Landing extends Component {
 const MapComponent = props => {
   const { event } = props;
   return (
-    <div className="column container-map has-margin-top-100">
+    <div className="column container-map has-margin-top-50">
       <div>
         {
           console.log(event),

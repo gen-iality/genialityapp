@@ -393,14 +393,7 @@ class Wall extends Component {
 
                 {/*Inicia la lista de los comentarios */}
                 {!currentCommet && (
-                    <div >
-
-                        <h1
-                        style={{ paddingBottom: 70, fontSize: "4rem" }}
-                        className="title is-1 has-text-white"
-                        >
-                        Muro
-                        </h1>
+                    <div className="has-margin-top-70">
 
                         <Row
                             style={{
