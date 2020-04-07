@@ -3,6 +3,8 @@ import React, { Component, Fragment } from "react";
 import EventContent from "../events/shared/content";
 
 import { SurveysApi, Actions } from "../../helpers/request";
+import { AntSelect, AntInput } from "./antField";
+import DisplayForm from "./displayForm";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button, Input, Select, Row, Col } from "antd";
@@ -37,7 +39,7 @@ class FormQuestions extends Component {
 
   sendData = (values) => {
     this.setState({ isSubmitting: true });
-    console.log("enviando datoooooos:", values);
+    console.log("-------------SE ESTAN ENVIANDO LOS DATOS:", values);
   };
 
   render() {
@@ -52,50 +54,11 @@ class FormQuestions extends Component {
                 questionName: "",
                 questionTitle: "",
                 page: "",
-                questionType: "",
+                selectOptions: [{ value: "multiple", text: "Multiple" }],
               }}
-              validate={this.validationField}
               onSubmit={this.sendData}
-            >
-              <Form>
-                <Field label="Nombre" component={Input} name="questionName" />
-                <ErrorMessage name="questionName" component="div" />
-
-                <Field label="Titulo" component={Input} name="questionTitle" />
-                <ErrorMessage name="questionTitle" component="div" />
-
-                <Field
-                  label="Pagina"
-                  component={Input}
-                  type="number"
-                  name="page"
-                />
-                <ErrorMessage name="page" component="div" />
-
-                <Field
-                  label="Tipo de Pregunta"
-                  component={Select}
-                  name="questionType"
-                >
-                  <Option key="multiple" value="multiple">
-                    Multiple
-                  </Option>
-                  <Option key="only" value="only">
-                    Unica
-                  </Option>
-                </Field>
-
-                <ErrorMessage name="questionType" component="div" />
-
-                <Row>
-                  <Col span={6} offset={9}>
-                    <Button type="submit" disabled={isSubmitting}>
-                      Enviar
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Formik>
+              render={DisplayForm}
+            ></Formik>
           </div>
         </EventContent>
       </Fragment>
