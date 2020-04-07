@@ -235,79 +235,9 @@ section.landing{
 
       }
   }
+  
+}
 
-
-      // Menú slider
-
-      .component-slider {
-        position: relative;
-        width: 90%;
-        overflow: hidden;
-        text-align: center;
-        white-space: nowrap;
-      }
-      
-      .component-slider .slider-container {
-        margin: 0 25px;
-        overflow: hidden;
-        overflow-x: scroll;
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-      
-      .component-slider .slider-content {
-        display: inline-block;
-        transition: margin-left 0.15s ease-in;
-      }
-      
-      .component-slider .caret {
-        width: 20px;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 0;
-        margin: 0;
-        background: none;
-        border: none;
-        cursor: pointer;
-        text-align: center;
-        font-size: 20px;
-        color: $color-evius;
-      }
-      .component-slider .caret-right {
-        right: 0;
-      }
-      
-      .component-slider .caret-left {
-        left: 0;
-      }
-      
-      .menu-bar {
-        width: 100%;
-      }
-      
-      .menu-item {
-        display: inline-block;
-        cursor: pointer;
-        text-transform: uppercase;
-      }
-      
-      .menu-item:hover {
-        // background: $blueKing;
-        color: #ffffff;
-      }
-      .container-nav-items{
-        li a{
-            font-weight: bold;
-        }
-        .nav-items{
-            border-bottom: 1px solid;
-        }
-      }
-      
-
-  }
   .container-map{
     .map-head{
       border: solid 2px #E0E0E0;
@@ -322,6 +252,7 @@ section.landing{
     }
   }
 }
+
   @media only screen and (min-width: $breakpoint-mobile) {
     .info{
       margin: 0 !important;
@@ -329,6 +260,7 @@ section.landing{
     .section{
       padding: 3rem 1.5rem;
     }
+   
   }
 
 
@@ -342,10 +274,42 @@ section.landing{
     .columns{
       flex-direction: row;
     }
+    
+  }
+}
+
+
+// Medias para ocultar y mostrar el menu de la landing
+
+.hiddenMenu_Landing{
+
+  @media only screen and (max-width: $breakpoint-mobile) { 
+      display: none;
+  }
+
+  @media only screen and (max-width: $breakpoint-tablet) {
+  
+      display: none;
+  }
+
+}
+
+.hiddenMenuMobile_Landing{
+
+  position: fixed;
+  top: 20%;
+  left: 0%;
+  z-index: 1;
+  @media screen and (min-width: "1030px") {
+
+    display: none;
+  
   }
 }
 
 .ant-comment-avatar{
   margin-right: 0px !important
 }
+
+
 

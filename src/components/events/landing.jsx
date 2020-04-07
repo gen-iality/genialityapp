@@ -83,7 +83,8 @@ class Landing extends Component {
       meeting_id: null,
       color: "",
       collapsed: false,
-      visible: false, placement: 'left' 
+      visible: false, 
+      placement: 'left' 
     };
   }
 
@@ -479,9 +480,13 @@ class Landing extends Component {
               <Layout className="site-layout" >
 
                {/*Aqui empieza el menu para dispositivos >  */}
+                <div  className="hiddenMenu_Landing" >
 
-
-                <Sider className="hiddenMenu_Landing" trigger={null} collapsible collapsed={this.state.collapsed}>
+                <Sider                
+                trigger={null} 
+                collapsible 
+                collapsed={this.state.collapsed}
+                >
                 {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
                   <Menu
                     mode="inline"
@@ -592,33 +597,44 @@ class Landing extends Component {
                   
                   {/* </Affix> */}
                 </Sider>
-
+                </div>
                 {/*Aqui termina el menu para dispositivos >  */}
 
                 <Layout className="site-layout">
 
                   <Content  className="site-layout-background" >
 
-                    {/* Boton que abre el menu para dispositivos >  */}
+                    {/* Boton que abre el menu para dispositivos > tablet  */}
+                    <div className="hiddenMenu_Landing">
+                      <Button 
+                      onClick={ this.toggle}
+                      >
+                        
+                        {React.createElement
+                        (this.state.collapsed ?
+                          RightOutlined : LeftOutlined , 
+                          {
+                            className: 'trigger',
+                            onClick: this.toggle,
+                          }
+                        )}
 
-                    <Button onClick={ this.toggle}>
-                      
-                      {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined , {
-                        className: 'trigger',
-                        onClick: this.toggle,
-                      })}
-                    </Button>
+                      </Button>
+                    </div>
 
                
          
 
-                    {/*Aqui empieza el menu para dispositivos < a */}
+                    {/*Aqui empieza el menu para dispositivos < tablet*/}
 
+                    <div  className="hiddenMenuMobile_Landing">
+                      <Button 
+                      onClick={this.showDrawer}
+                      >
 
-                    <Button style={{  position: "fixed", top: "20%", left: "0%" }}onClick={this.showDrawer}>
-                      <MenuOutlined />
-                    </Button>
-
+                        <MenuOutlined />
+                      </Button>
+                    </div>
 
                     <Drawer
                       title="Menú"
