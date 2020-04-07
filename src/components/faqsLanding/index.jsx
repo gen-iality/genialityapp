@@ -1,7 +1,8 @@
 import React, { Component } from "react"
 import { FaqsApi } from "../../helpers/request"
-import { Space, Card } from 'antd'
+import { Collapse } from 'antd'
 
+const { Panel } = Collapse
 
 class Faqs extends Component {
 
@@ -25,15 +26,16 @@ class Faqs extends Component {
     render() {
         const { faqsData } = this.state
         return (
-            <Space direction="vertical">
+            <Collapse defaultActiveKey={['0']}>
                 {
                     faqsData.map((faqs, key) => (
-                        <Card title={faqs.title} key={key} style={{ width: 600 }}>
-                            <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
-                        </Card>
+                        <Panel key={key} header={faqs.title} >
+                            <div dangerouslySetInnerHTML={{ __html: faqs.content}}/>
+                        </Panel>
                     ))
                 }
-            </Space>
+
+            </Collapse>
         )
     }
 }

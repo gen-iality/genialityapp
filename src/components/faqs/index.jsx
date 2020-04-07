@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { FaqsApi, Actions } from "../../helpers/request";
+import { toolbarEditor } from "../../helpers/constants";
+import ReactQuill from "react-quill";
 import Loading from "../loaders/loading";
 import Moment from "moment";
 import EventContent from "../events/shared/content";
@@ -41,7 +43,7 @@ class Faqs extends Component {
         const titles = document.getElementById("title").value;
         const desc = document.getElementById("desc").value;
 
-        this.setState({ title: titles, content: desc})
+        this.setState({ title: titles, content: desc })
     };
 
     newFaqs = () => {
@@ -56,7 +58,7 @@ class Faqs extends Component {
     removeFaqs = () => {
         this.setState(state => {
             const list = state.list.filter(item => item._id !== "new");
-            return { list, id: "", title: "", content: ""};
+            return { list, id: "", title: "", content: "" };
         });
     };
 
@@ -97,7 +99,7 @@ class Faqs extends Component {
         }
     };
 
-    editFaqs = (cert) => this.setState({ id: cert._id, title: cert.title, content: cert.content});
+    editFaqs = (cert) => this.setState({ id: cert._id, title: cert.title, content: cert.content });
 
     removeFaqs = (id) => {
         sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
@@ -114,6 +116,8 @@ class Faqs extends Component {
             }
         });
     }
+
+    chgTxt = contents => this.setState({ content: contents });
 
     render() {
         const { event } = this.state;
@@ -136,12 +140,12 @@ class Faqs extends Component {
                                         <td>
                                             {
                                                 this.state.id === cert._id ?
-                                                    <textarea id="desc" value={this.state.content} onChange={this.onChange} /> :
-                                                    <p>{cert.content}</p>
+                                                    <ReactQuill value={this.state.content} modules={toolbarEditor} onChange={this.chgTxt} /> :
+                                                    <div dangerouslySetInnerHTML={{ __html: cert.content}}/>
                                             }
 
                                         </td>
-                                        
+
                                         <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
                                         <TableAction id={this.state.id} object={cert} saveItem={this.saveFaqs} editItem={this.editFaqs}
                                             removeNew={this.removeFaqs} removeItem={this.removeFaqs} discardChanges={this.discardChanges} />
