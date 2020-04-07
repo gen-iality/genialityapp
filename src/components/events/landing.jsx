@@ -25,6 +25,7 @@ import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../landingDocuments/documents"
+import FaqsForm from "../faqsLanding"
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 
@@ -119,6 +120,7 @@ class Landing extends Component {
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
+      faqs: <FaqsForm event={event} eventId={event._id}/>,
       evento: (
         <div className="columns has-text-white is-centered has-margin-top-30 ">
 
@@ -541,6 +543,19 @@ class Landing extends Component {
                         }}
                       >
                         <a className="has-text-grey-dark is-size-6">Encuestas</a>
+                      </li>
+                      <li
+                        className="items menu-item"
+                        className={
+                          this.state.section == "faqs"
+                            ? "items menu-item nav-item-active"
+                            : "items menu-item nav-item"
+                        }
+                        onClick={e => {
+                          this.showSection("faqs");
+                        }}
+                      >
+                        <a className="has-text-grey-dark is-size-6">Preguntas Frecuentes</a>
                       </li>
 
                     </ComponentSlider>
