@@ -89,8 +89,10 @@ class triviaEdit extends Component {
         ...listQuestions,
         <FormQuestions
           key={uid}
+          questionId={uid}
           eventId={this.props.event._id}
           surveyId={_id}
+          removeQuestion={this.removeQuestion}
         />,
       ],
     });

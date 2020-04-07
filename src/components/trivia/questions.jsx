@@ -39,7 +39,7 @@ class FormQuestions extends Component {
   };
 
   sendData = async (values) => {
-    const { eventId, surveyId } = this.props;
+    const { eventId, surveyId, questionId, removeQuestion } = this.props;
     this.setState({ isSubmitting: true });
 
     console.log("SENDING DATA:", values);
@@ -54,11 +54,9 @@ class FormQuestions extends Component {
     }) => rest;
 
     // Ejecuta el servicio
-    let result = await SurveysApi.createQuestion(
-      eventId,
-      surveyId,
-      exclude(values)
-    );
+    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
+      removeQuestion(questionId);
+    });
   };
 
   render() {
