@@ -41,14 +41,24 @@ class FormQuestions extends Component {
   sendData = async (values) => {
     const { eventId, surveyId } = this.props;
     this.setState({ isSubmitting: true });
-    console.log("-------------SE ESTAN ENVIANDO LOS DATOS:", values);
-    const exclude = ({ selectOptions, ...rest }) => rest;
+
+    console.log("SENDING DATA:", values);
+
+    // Funcion que excluye las propiedades de un objeto
+    // para no enviarlas a la base de datos
+    const exclude = ({
+      selectOptions,
+      quantityOptions,
+      questionOptions,
+      ...rest
+    }) => rest;
+
+    // Ejecuta el servicio
     let result = await SurveysApi.createQuestion(
       eventId,
       surveyId,
       exclude(values)
     );
-    console.log(result);
   };
 
   render() {
@@ -60,8 +70,8 @@ class FormQuestions extends Component {
           <div>
             <Formik
               initialValues={{
-                questionName: "",
-                questionTitle: "",
+                name: "",
+                title: "",
                 page: "",
                 selectOptions: showSelectOptions,
                 quantityOptions: [1, 2, 3, 4],

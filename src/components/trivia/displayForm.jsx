@@ -10,27 +10,77 @@ import { Button, Input, Select, Row, Col } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
+// Componente que renderiza una cantidad de veces
+// dependiendo de la cantidad de opciones escogidas
+
+class RenderQuantityField extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      quantity: 0,
+    };
+  }
+
+  // Funcion para cargar los datos
+  loadData = async (prevProps) => {
+    const { quantity } = this.props;
+    if (!prevProps || quantity !== prevProps.quantity)
+      await this.setState({ quantity });
+  };
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.loadData(prevProps);
+  }
+
+  render() {
+    let { quantity } = this.state;
+    let listOptions = [];
+
+    if (quantity > 0)
+      for (let i = 0; i < quantity; i++) {
+        let label = `Opción ${i + 1}`;
+        let name = `opcion_${i + 1}`;
+
+        listOptions.push(
+          <Field
+            key={name}
+            label={label}
+            component={AntInput}
+            hasFeedback
+            type="text"
+            name={`choices[${i}]`}
+          />
+        );
+      }
+
+    return listOptions;
+  }
+}
+
+// Campos del formulario a mostrar
 export default ({ handleSubmit, values, submitCount }) => (
   <Form onSubmit={handleSubmit}>
     <Field
       label="Nombre"
-      defaultValue={values.questionName}
+      defaultValue={values.name}
       component={AntInput}
       hasFeedback
       type="text"
-      name="questionName"
+      name="name"
     />
-    <ErrorMessage name="questionName" component="div" />
 
     <Field
       label="Titulo"
-      defaultValue={values.questionTitle}
+      defaultValue={values.title}
       component={AntInput}
       hasFeedback
       type="text"
-      name="questionTitle"
+      name="title"
     />
-    <ErrorMessage name="questionTitle" component="div" />
 
     <Field
       label="Pagina"
@@ -40,14 +90,13 @@ export default ({ handleSubmit, values, submitCount }) => (
       type="number"
       name="page"
     />
-    <ErrorMessage name="page" component="div" />
 
     <Field
       label="Tipo de Pregunta"
-      defaultValue={values.questionType}
+      defaultValue={values.type}
       component={AntSelect}
       hasFeedback
-      name="questionType"
+      name="type"
       selectOptions={values.selectOptions}
     />
 
@@ -60,7 +109,10 @@ export default ({ handleSubmit, values, submitCount }) => (
       selectOptions={values.quantityOptions}
     />
 
-    <ErrorMessage name="questionType" component="div" />
+    {/* Componente para renderizar la cantidad de opciones escogidas */}
+    {values.questionOptions > 0 && (
+      <RenderQuantityField quantity={values.questionOptions} />
+    )}
 
     <Row>
       <Col span={6} offset={9}>
