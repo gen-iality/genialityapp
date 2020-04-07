@@ -35,6 +35,25 @@ $breakpoint-tablet: 1024px;
   width: 45%;
 }
 
+.ant-layout {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: auto;
+  flex: auto;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-height: 0;
+  // background: url("../back.png");
+}
+
+.ant-layout-sider{
+  position: relative;
+  min-width: 0;
+  background: transparent !important;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
