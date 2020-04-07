@@ -168,9 +168,18 @@ class triviaEdit extends Component {
           </Row>
           {this.state.listQuestions.map((formQuestion) => (
             <div key={formQuestion.key}>
-              <button onClick={() => this.removeQuestion(formQuestion.key)}>
-                Eliminar
-              </button>
+              <Row>
+                <Col>
+                  <Button
+                    span={6}
+                    offset={6}
+                    onClick={() => this.removeQuestion(formQuestion.key)}
+                  >
+                    Eliminar
+                  </Button>
+                </Col>
+              </Row>
+
               {formQuestion}
             </div>
           ))}
