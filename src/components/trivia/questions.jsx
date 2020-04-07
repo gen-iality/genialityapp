@@ -3,24 +3,30 @@ import React, { Component, Fragment } from "react";
 import EventContent from "../events/shared/content";
 
 import { SurveysApi, Actions } from "../../helpers/request";
+import { AntSelect, AntInput } from "./antField";
+import DisplayForm from "./displayForm";
+import showSelectOptions from "./constants";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Button, Input, Select, Row, Col } from "antd";
 
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
+
+const { Option } = Select;
 
 class FormQuestions extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isSubmitting: false,
-      quantityQuestions: 0
+      quantityQuestions: 0,
     };
   }
 
   componentDidMount() {}
 
-  validationField = values => {
+  validationField = (values) => {
     console.log("realizando validaciones:", values);
 
     const errors = {};
@@ -32,38 +38,45 @@ class FormQuestions extends Component {
     return errors;
   };
 
-  sendData = values => {
+  sendData = async (values) => {
+    const { eventId, surveyId, questionId, removeQuestion } = this.props;
     this.setState({ isSubmitting: true });
-    console.log("enviando datoooooos:", values);
+
+    console.log("SENDING DATA:", values);
+
+    // Funcion que excluye las propiedades de un objeto
+    // para no enviarlas a la base de datos
+    const exclude = ({
+      selectOptions,
+      quantityOptions,
+      questionOptions,
+      ...rest
+    }) => rest;
+
+    // Ejecuta el servicio
+    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
+      removeQuestion(questionId);
+    });
   };
 
   render() {
     const { isSubmitting } = this.state;
-    console.log(this.state);
+
     return (
       <Fragment>
         <EventContent>
           <div>
             <Formik
-              initialValues={{ questionEmail: "", questionType: "" }}
-              validate={this.validationField}
+              initialValues={{
+                name: "",
+                title: "",
+                page: "",
+                selectOptions: showSelectOptions,
+                quantityOptions: [1, 2, 3, 4],
+              }}
               onSubmit={this.sendData}
-            >
-              <Form>
-                <Field type="text" name="questionEmail" />
-                <ErrorMessage name="questionEmail" component="div" />
-
-                <Field as="select" name="questionType">
-                  <option value="multiple">Seleccion Multiple</option>
-                  <option value="only">Seleccion Unica</option>
-                </Field>
-                <ErrorMessage name="questionType" component="div" />
-
-                <button type="submit" disabled={isSubmitting}>
-                  Enviar
-                </button>
-              </Form>
-            </Formik>
+              render={DisplayForm}
+            ></Formik>
           </div>
         </EventContent>
       </Fragment>
