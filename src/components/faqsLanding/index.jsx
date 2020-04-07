@@ -28,7 +28,7 @@ class Faqs extends Component {
             <Space direction="vertical">
                 {
                     faqsData.map((faqs, key) => (
-                        <Card title={faqs.title} key={key} style={{ width: 300 }}>
+                        <Card title={faqs.title} key={key} style={{ width: 600 }}>
                             <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
                         </Card>
                     ))
