@@ -1,8 +1,8 @@
 section.landing{
+  background-image: url("../back.png");
   .hero-head{
   }
   padding: 0;
-  padding-bottom: 30px;
   .container-nombre{
     display: block;
     margin: 0% auto;
@@ -282,6 +282,11 @@ section.landing{
 // Medias para ocultar y mostrar el menu de la landing
 
 .hiddenMenu_Landing{
+
+  
+  .containerMenu_Landing{
+    height: 100%;
+  }
 
   @media only screen and (max-width: $breakpoint-mobile) { 
       display: none;

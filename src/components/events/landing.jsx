@@ -53,9 +53,6 @@ momentLocalizer();
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-//Iconos de flechas para el scroll de los item del menu
-const renderLeftArrow = () => <FaChevronLeft />;
-const renderRightArrow = () => <FaChevronRight />;
 
 // Estilos del parallax
 const insideStyles = {
@@ -141,7 +138,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "rgb(60, 108, 157)"});
+    this.setState({ color: "#4CD1AE"});
     console.log("s",event)
     const sections = {
       agenda: (
@@ -482,7 +479,8 @@ class Landing extends Component {
                {/*Aqui empieza el menu para dispositivos >  */}
                 <div  className="hiddenMenu_Landing" >
 
-                <Sider                
+                <Sider
+                className="containerMenu_Landing"                
                 trigger={null} 
                 collapsible 
                 collapsed={this.state.collapsed}
