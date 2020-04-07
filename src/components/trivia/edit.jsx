@@ -82,10 +82,17 @@ class triviaEdit extends Component {
 
   // Funcion para agregar preguntas
   addNewQuestion = () => {
-    let { listQuestions } = this.state;
+    let { listQuestions, _id } = this.state;
     let uid = this.generateUUID();
     this.setState({
-      listQuestions: [...listQuestions, <FormQuestions key={uid} />],
+      listQuestions: [
+        ...listQuestions,
+        <FormQuestions
+          key={uid}
+          eventId={this.props.event._id}
+          surveyId={_id}
+        />,
+      ],
     });
   };
 

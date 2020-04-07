@@ -5,6 +5,7 @@ import EventContent from "../events/shared/content";
 import { SurveysApi, Actions } from "../../helpers/request";
 import { AntSelect, AntInput } from "./antField";
 import DisplayForm from "./displayForm";
+import showSelectOptions from "./constants";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button, Input, Select, Row, Col } from "antd";
@@ -37,9 +38,17 @@ class FormQuestions extends Component {
     return errors;
   };
 
-  sendData = (values) => {
+  sendData = async (values) => {
+    const { eventId, surveyId } = this.props;
     this.setState({ isSubmitting: true });
     console.log("-------------SE ESTAN ENVIANDO LOS DATOS:", values);
+    const exclude = ({ selectOptions, ...rest }) => rest;
+    let result = await SurveysApi.createQuestion(
+      eventId,
+      surveyId,
+      exclude(values)
+    );
+    console.log(result);
   };
 
   render() {
@@ -54,7 +63,7 @@ class FormQuestions extends Component {
                 questionName: "",
                 questionTitle: "",
                 page: "",
-                selectOptions: [{ value: "multiple", text: "Multiple" }],
+                selectOptions: showSelectOptions,
               }}
               onSubmit={this.sendData}
               render={DisplayForm}
