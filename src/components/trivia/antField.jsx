@@ -41,6 +41,7 @@ const CreateAntField = (AntComponent) => ({
 
   return (
     <div className="field-container">
+      {/* Help, hasFeedback y validateStatus son propiedades de validacion de ant design */}
       <FormItem
         label={label}
         hasFeedback={
@@ -55,10 +56,15 @@ const CreateAntField = (AntComponent) => ({
           onBlur={onBlur}
           onChange={type ? onInputChange : onChange}
         >
+          {/* Se mapea las opciones solo si el componente recibido tiene selectOptions */}
           {selectOptions &&
-            selectOptions.map((item) => (
-              <Option key={item.value}>{item.text}</Option>
-            ))}
+            selectOptions.map((item) =>
+              typeof item == "number" ? (
+                <Option key={item}>{item}</Option>
+              ) : (
+                <Option key={item.value}>{item.text}</Option>
+              )
+            )}
         </AntComponent>
       </FormItem>
     </div>

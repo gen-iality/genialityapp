@@ -51,6 +51,15 @@ export default ({ handleSubmit, values, submitCount }) => (
       selectOptions={values.selectOptions}
     />
 
+    <Field
+      label="Opciones"
+      defaultValue={values.questionOptions}
+      component={AntSelect}
+      hasFeedback
+      name="questionOptions"
+      selectOptions={values.quantityOptions}
+    />
+
     <ErrorMessage name="questionType" component="div" />
 
     <Row>

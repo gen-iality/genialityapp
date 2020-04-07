@@ -64,6 +64,7 @@ class FormQuestions extends Component {
                 questionTitle: "",
                 page: "",
                 selectOptions: showSelectOptions,
+                quantityOptions: [1, 2, 3, 4],
               }}
               onSubmit={this.sendData}
               render={DisplayForm}
