@@ -1,48 +1,163 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
+import { FaqsApi, Actions } from "../../helpers/request";
+import { toolbarEditor } from "../../helpers/constants";
+import ReactQuill from "react-quill";
+import Loading from "../loaders/loading";
+import Moment from "moment";
+import EventContent from "../events/shared/content";
+import EvenTable from "../events/shared/table";
+import TableAction from "../events/shared/tableAction";
+import { handleRequestError, sweetAlert } from "../../helpers/utils";
+import axios from "axios/index";
+import ImageInput from "../shared/imageInput";
+import { toast } from 'react-toastify';
+import { FormattedMessage } from "react-intl";
 
 class Faqs extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            event: this.props.event,
+            list: [],
+            data: {},
+            id: '',
+            deleteID: '',
+            title: '',
+            content: '',
+            isLoading: false,
+            loading: true
+        };
     }
 
+    componentDidMount() {
+        this.getFaqs();
+    }
+
+    getFaqs = async () => {
+        const data = await FaqsApi.byEvent(this.props.eventId);
+        this.setState({ list: data, loading: false })
+        console.log(data)
+    };
+
+    onChange = (e) => {
+        const titles = document.getElementById("title").value;
+        const desc = document.getElementById("desc").value;
+
+        this.setState({ title: titles, content: desc })
+    };
+
+    newFaqs = () => {
+        if (!this.state.list.find(({ _id }) => _id === "new")) {
+            this.setState(state => {
+                const list = state.list.concat({ title: '', content: '', _id: 'new' });
+                return { list, id: 'new' };
+            });
+        }
+    };
+
+    removeFaqs = () => {
+        this.setState(state => {
+            const list = state.list.filter(item => item._id !== "new");
+            return { list, id: "", title: "", content: "" };
+        });
+    };
+
+    saveFaqs = async () => {
+        try {
+            if (this.state.id !== 'new') {
+                await FaqsApi.editOne({ title: this.state.title, content: this.state.content }, this.state.id, this.props.eventId);
+                this.setState(state => {
+                    const list = state.list.map(item => {
+                        if (item._id === state.id) {
+                            item.title = state.title;
+                            item.content = state.content;
+                            toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                            return item;
+                        } else return item;
+                    });
+                    return { list, id: "", title: "", content: "" };
+                });
+            } else {
+                const newFaqs = await FaqsApi.create({ title: this.state.title, content: this.state.content }, this.props.eventId);
+                this.setState(state => {
+                    const list = state.list.map(item => {
+                        if (item._id === state.id) {
+                            item.title = newFaqs.title;
+                            item.content = newFaqs.content;
+                            item.created_at = newFaqs.created_at;
+                            item._id = newFaqs._id;
+                            toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+                            return item;
+                        } else return item;
+                    });
+                    return { list, id: "", title: "", content: "" };
+                });
+            }
+        } catch (e) {
+            console.log(e);
+
+        }
+    };
+
+    editFaqs = (cert) => this.setState({ id: cert._id, title: cert.title, content: cert.content });
+
+    removeFaqs = (id) => {
+        sweetAlert.twoButton(`Está seguro de borrar este espacio`, "warning", true, "Borrar", async (result) => {
+            try {
+                if (result.value) {
+                    sweetAlert.showLoading("Espera (:", "Borrando...");
+                    await FaqsApi.deleteOne(id, this.props.eventId);
+                    this.setState(state => ({ id: "", title: "", content: "" }));
+                    this.getFaqs();
+                    sweetAlert.hideLoading();
+                }
+            } catch (e) {
+                sweetAlert.showError(handleRequestError(e))
+            }
+        });
+    }
+
+    chgTxt = contents => this.setState({ content: contents });
+
     render() {
+        const { event } = this.state;
         return (
-            <div className="columns is-mobile">
-                <div className="column is-half is-offset-one-quarter">
-                    <h1 className="title is-spaced">PREGUNTAS FRECUENTES SOBRE PAGOS ELECTRÓNICOS</h1>
-                    <p>En este documento, usted encontrará una sección de preguntas y respuestas que le ayudará a sus usuarios a aclarar sus dudas sobre los pagos electrónicos procesados a través de PlacetoPay.  Recuerde que debe incluirlas en su sitio web. </p>
-                    <h2 className="subtitle has-text-weight-semibold">1. ¿Qué es PlacetoPay?</h2>
-                    <p><span className="has-text-weight-semibold">PlacetoPay</span> es la plataforma de pagos electrónicos que usa <span className="has-text-weight-semibold">MOCION S.A.S.</span> para procesar en línea las transacciones generadas en la tienda virtual con las formas de pago habilitadas para tal fin.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">2. ¿Cómo puedo pagar?</h2>
-                    <p>En la tienda virtual de <span className="has-text-weight-semibold">MOCION S.A.S.</span>usted podrá realizar su pago con los medios habilitados para tal fin. Usted, de acuerdo a las opciones de pago escogidas por el comercio, podrá pagar a través de PSE (débitos desde cuentas de ahorros y corrientes en Colombia), tarjetas de crédito Visa, MasterCard y American Express.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">3. ¿Es seguro ingresar mis datos bancarios en este sitio web?</h2>
-                    <p>Para proteger tus datos <span className="has-text-weight-semibold">MOCION S.A.S.</span>delega en <span className="has-text-weight-semibold">PlacetoPay</span> la captura de la información sensible. Nuestra plataforma de pagos cumple con los más altos estándares exigidos por la norma internacional PCI DSS de seguridad en transacciones con tarjeta de crédito. Además tiene certificado de seguridad SSL expedido por GeoTrust una compañía Verisign, el cual garantiza comunicaciones seguras mediante la encriptación de todos los datos hacia y desde el sitio; de esta manera te podrás sentir seguro a la hora de ingresar la información de su tarjeta.
-                        Durante el proceso de pago, en el navegador se muestra el nombre de la organización autenticada, la autoridad que lo certifica y la barra de dirección cambia a color verde. Estas características son visibles de inmediato y dan garantía y confianza para completar la transacción en <span className="has-text-weight-semibold">PlacetoPay</span>.</p>
-                    <p><span className="has-text-weight-semibold">PlacetoPay</span> también cuenta con el monitoreo constante de McAfee Secure y la firma de mensajes electrónicos con Certicámara.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">4. ¿Puedo realizar el pago cualquier día y a cualquier hora?</h2>
-                    <p>Sí, en <span className="has-text-weight-semibold">MOCION S.A.S.</span>podrás realizar tus compras en línea los 7 días de la semana, las 24 horas del día a sólo un clic de distancia.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">5. ¿Puedo cambiar la forma de pago?</h2>
-                    <p>Si aún no has finalizado tu pago, podrás volver al paso inicial y elegir la forma de pago que prefieras. Una vez finalizada la compra no es posible cambiar la forma de pago.</p>
-                    <p className="has-text-weight-semibold is-italic">ESTABLECIMIENTO DE COMERCIO: el punto anterior aplica a la forma de pago, pero deberán mencionar las políticas de devolución que tenga la tienda para dar cumplimiento al artículo 51 de la Ley del Estatuto del Consumidor.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">6. ¿Pagar electrónicamente tiene algún valor para mí como comprador?</h2>
-                    <p>No, los pagos electrónicos realizados a través de <span className="has-text-weight-semibold">PlacetoPay</span> no generan costos adicionales para el comprador.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">7. ¿Qué debo hacer si mi transacción no concluyó?</h2>
-                    <p>En primera instancia, revisar si llegó un email de confirmación de la transacción a la cuenta de correo electrónico inscrita en el momento de realizar el pago, en caso de no haberlo recibido, deberás contactar a <span className="has-text-weight-semibold">CATALINA RODRIGUEZ</span> para confirmar el estado de la transacción.</p>
-                    <br/>
-                    <h2 className="subtitle has-text-weight-semibold">8. ¿Qué debo hacer si no recibí el comprobante de pago?</h2>
-                    <p>Por cada transacción aprobada a través de <span className="has-text-weight-semibold">PlacetoPay</span>, recibirás un comprobante del pago con la referencia de compra en la dirección de correo electrónico que indicaste al momento de pagar.</p>
-                    <p>Si no lo recibes, podrás contactar a <span className="has-text-weight-semibold">CATALINA RODRIGUEZ</span> o a la línea <a href={'tel:5451988'} className="has-text-weight-semibold">545 19 88</a> o al correo electrónico <a href={'mailto:pagos@mocionsoft.com'} className="has-text-weight-semibold">pagos@mocionsoft.com</a>, para solicitar el reenvío del comprobante a la misma dirección de correo electrónico registrada al momento de pagar.</p>
+            <React.Fragment>
+                <div className="column is-12">
+                    <EventContent title="Preguntas Frecuentes" description_complete={"Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación"} addAction={this.newFaqs} addTitle={"Nuevo espacio"}>
+                        {this.state.loading ? <Loading /> :
+                            <EvenTable head={["Titulo", "Contenido", ""]}>
+                                {this.state.list.map((cert, key) => {
+                                    return <tr key={key}>
+                                        <td>
+                                            {
+                                                this.state.id === cert._id ?
+                                                    <input type="text" id="title" value={this.state.title} onChange={this.onChange} /> :
+                                                    <p>{cert.title}</p>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            {
+                                                this.state.id === cert._id ?
+                                                    <ReactQuill value={this.state.content} modules={toolbarEditor} onChange={this.chgTxt} /> :
+                                                    <div dangerouslySetInnerHTML={{ __html: cert.content}}/>
+                                            }
+
+                                        </td>
+
+                                        <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
+                                        <TableAction id={this.state.id} object={cert} saveItem={this.saveFaqs} editItem={this.editFaqs}
+                                            removeNew={this.removeFaqs} removeItem={this.removeFaqs} discardChanges={this.discardChanges} />
+                                    </tr>
+                                })}
+                            </EvenTable>
+                        }
+                    </EventContent>
                 </div>
-            </div>
-        );
+            </React.Fragment>
+        )
     }
 }
 
-export default Faqs;
+export default Faqs
