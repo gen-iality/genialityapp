@@ -170,14 +170,13 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered has-margin-top-30 ">
           <div className="description-container column is-8">
+          <Card className=" event-description" bordered={true}>
 
-
-            <div className="column is-10 description is-centered">
+            <div className="column is-centered">
               <ReactPlayer style={{ maxWidth: "100%" }} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
             </div>
 
-            <div className="column is-10 description">
-          <Card>
+            <div>
               {typeof event.description === "string" ? (
                 <ReactQuill
                   value={event.description}
@@ -187,8 +186,8 @@ class Landing extends Component {
               ) : (
                   "json"
                 )}
-        </Card>
             </div>
+          </Card>
           </div>
           <MapComponent event={event} />
         </div>
@@ -847,7 +846,7 @@ class Landing extends Component {
 const MapComponent = props => {
   const { event } = props;
   return (
-    <div className="column container-map has-margin-top-50">
+    <div className="column container-map">
       <div>
         {
           console.log(event),
