@@ -6,17 +6,17 @@ export default props => {
   const { currentActivity, gotoActivityList, showIframe } = props;
   return (
     <div className="container-calendar-section">
-      <h3 style={{ paddingBottom: 30 }} className="title is-1 has-text-white">
+      <h3 style={{ paddingBottom: 30 }} className="title is-4">
         {currentActivity.name}
       </h3>
 
       <a
-        className="has-text-white"
+        className=""
         onClick={e => {
           gotoActivityList();
         }}
       >
-        <h3 className="has-text-white"> Regresar a la agenda</h3>
+        <h3 className=""> Regresar a la agenda</h3>
       </a>
 
       <div className="container_agenda-information is-three-fifths">
@@ -109,12 +109,12 @@ export default props => {
           </button> */}
 
               <a
-                className="has-text-white"
+                className=""
                 onClick={e => {
                   gotoActivityList();
                 }}
               >
-                <h3 className="has-text-white"> Regresar a la agenda</h3>
+                <h3 className=""> Regresar a la agenda</h3>
               </a>
             </div>
           </div>
