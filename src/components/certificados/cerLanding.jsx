@@ -164,8 +164,8 @@ class CertificadoLanding extends Component {
                 >
 
                     <Card>
-                        <p className="title is-5" style={{ fontWeight:"normal" }} >
-                            Busca aquí tu certificado.
+                        <p className="" style={{ fontWeight:"normal" }} >
+                           <h1> Busca aquí tu certificado.</h1>
                         </p>
 
 
