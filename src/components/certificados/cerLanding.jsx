@@ -152,7 +152,7 @@ class CertificadoLanding extends Component {
     render() {
         const {dataUser} = this.state;
         return (
-            <section className="has-margin-top-70 has-margin-bottom-70">
+            <>
 
                 <Col 
                 xs={24}
@@ -248,7 +248,7 @@ class CertificadoLanding extends Component {
                         </Card>
                     </div>}
                 </Col>
-            </section>
+            </>
         )
     }
 }

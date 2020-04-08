@@ -170,32 +170,32 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered has-margin-top-30 ">
           <div className="description-container column is-8">
-          <Card className="event-description" bordered={true}>
+            <Card className="event-description" bordered={true}>
 
-            <div className="column is-centered">
-              <ReactPlayer 
-              style={{ 
-                maxWidth: "100%", 
-                display:"block", 
-                margin: "0 auto" 
-                }} 
-                url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' 
-                controls 
-                />
-            </div>
+              <div className="column is-centered">
+                <ReactPlayer 
+                style={{ 
+                  maxWidth: "100%", 
+                  display:"block", 
+                  margin: "0 auto" 
+                  }} 
+                  url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' 
+                  controls 
+                  />
+              </div>
 
-            <div>
-              {typeof event.description === "string" ? (
-                <ReactQuill
-                  value={event.description}
-                  modules={{ toolbar: false }}
-                  readOnly={true}
-                />
-              ) : (
-                  "json"
-                )}
-            </div>
-          </Card>
+              <div>
+                {typeof event.description === "string" ? (
+                  <ReactQuill
+                    value={event.description}
+                    modules={{ toolbar: false }}
+                    readOnly={true}
+                  />
+                ) : (
+                    "json"
+                  )}
+              </div>
+            </Card>
           </div>
           <MapComponent event={event} />
         </div>
@@ -792,7 +792,7 @@ class Landing extends Component {
                 
                     {/* Contenedor donde se mapea la información de cada seccion */}
 
-                    <div style={{ margin: '24px 6px 0', overflow: 'initial', textAlign: 'center'  }}>
+                    <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center'  }}>
 
                       {sections[section]}
 
