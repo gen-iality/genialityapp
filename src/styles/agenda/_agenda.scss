@@ -65,8 +65,6 @@
 .container_agenda-information{
   margin-bottom: 3%;
   .agenda_information{
-    background-color:  rgba(0, 0, 0, 0.2);
-    color: white;
     padding: 20px;
     border: none;
     border-radius: 10px;
@@ -83,7 +81,6 @@
     }
 
     .card-header-title{
-      color: white;
       justify-content: start;
       font-weight: bolder;
       font: normal normal 500 25px/35px $family-sans-serif;
