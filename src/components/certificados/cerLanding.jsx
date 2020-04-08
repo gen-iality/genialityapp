@@ -155,7 +155,7 @@ class CertificadoLanding extends Component {
             <section className="has-margin-top-70 has-margin-bottom-70">
                 <div>
                     
-                    <p className="title is-5 has-text-white" style={{ fontWeight:"normal" }} >
+                    <p className="title is-5" style={{ fontWeight:"normal" }} >
                         Busca aquí tu certificado.
                     </p>
 
