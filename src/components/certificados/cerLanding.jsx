@@ -153,47 +153,58 @@ class CertificadoLanding extends Component {
         const {dataUser} = this.state;
         return (
             <section className="has-margin-top-70 has-margin-bottom-70">
-                <div>
+
+                <Col 
+                xs={24}
+                sm={22}
+                md={18} 
+                lg={18} 
+                xl={18}
+                style={{ margin: "0 auto" }}
+                >
+
+                    <Card>
+                        <p className="title is-5" style={{ fontWeight:"normal" }} >
+                            Busca aquí tu certificado.
+                        </p>
+
+
+                        {/* Contenedor de input para buscar el usuario que requiere certificado */}
+                        <Col 
+                        xs={22}
+                        sm={22}
+                        md={10} 
+                        lg={10} 
+                        xl={10}
+                        style={{ margin: "0 auto" }}>
+                            <Form.Item 
+                                rules={[{ required: true }]} 
+                                onSubmit={this.searchCert}>                        
+                                
+                                    <Input  
+                                    type="text"
+                                    size="large" 
+                                    onChange={this.onChange} 
+                                    placeholder="Ingresa tu correo o documento de identidad"/>
+                            </Form.Item>
+                        </Col>
+
                     
-                    <p className="title is-5" style={{ fontWeight:"normal" }} >
-                        Busca aquí tu certificado.
-                    </p>
-
-                    {/* Contenedor de input para buscar el usuario que requiere certificado */}
-                    <Col 
-                    xs={22}
-                    sm={22}
-                    md={10} 
-                    lg={10} 
-                    xl={10}
-                    style={{ margin: "0 auto" }}>
-
-                        <Form.Item 
-                            rules={[{ required: true }]} 
-                            onSubmit={this.searchCert}>                        
-                            
-                                <Input  
-                                type="text"
-                                size="large" 
-                                onChange={this.onChange} 
-                                placeholder="Ingresa tu correo o documento de identidad"/>
-
+                        {/* boton que envia el id del usuario */}
+                        <Form.Item>
+                            <Button 
+                            type="primary" 
+                            htmlType="submit" 
+                            onClick={this.searchCert} 
+                            disabled={this.state.disabled} 
+                            >
+                                Buscar Certificado
+                            </Button>
                         </Form.Item>
-                    </Col>
+                    </Card>
                     
-                    {/* boton que envia el id del usuario */}
-                    <Form.Item>
-                        <Button 
-                        type="primary" 
-                        htmlType="submit" 
-                        onClick={this.searchCert} 
-                        disabled={this.state.disabled} 
-                        >
-                            Buscar Certificado
-                        </Button>
-                    </Form.Item>
+                </Col>
 
-                </div>
                 <br/>
 
                 {/* Conenedor donde se muestran los certificados */}
