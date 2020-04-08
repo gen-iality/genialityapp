@@ -93,7 +93,6 @@
         margin: 3% 0%;
       }
       .card-header-subtitle{
-        color: white;
         justify-content: start;
         font-weight: 600;
         font-size: 1.06rem;
@@ -134,8 +133,8 @@
     }
     
     .unselect-day{
-      background-color: rgba(0, 0, 0, 0.2) !important;
-      color: white !important;
+      background-color:white !important;
+      color: rgb(75, 69, 69) !important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 2rem;

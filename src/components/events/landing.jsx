@@ -28,7 +28,7 @@ import DocumentsForm from "../landingDocuments/documents"
 import FaqsForm from "../faqsLanding"
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
-import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col } from 'antd';
+import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card } from 'antd';
 import { AudioOutlined, 
         ReadOutlined,
         FolderOutlined,
@@ -39,7 +39,8 @@ import { AudioOutlined,
         FileDoneOutlined,
         MenuOutlined,
         RightOutlined,
-        LeftOutlined
+        LeftOutlined,
+        FileUnknownOutlined
       } from '@ant-design/icons';
 
 
@@ -139,7 +140,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "#4CD1AE"});
+    this.setState({ color: "#E6F7FE"});
     console.log("s",event)
     const sections = {
       agenda: (
@@ -167,8 +168,7 @@ class Landing extends Component {
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id}/>,
       evento: (
-        <div className="columns has-text-white is-centered has-margin-top-30 ">
-
+        <div className="columns is-centered has-margin-top-30 ">
           <div className="description-container column is-8">
 
 
@@ -177,6 +177,7 @@ class Landing extends Component {
             </div>
 
             <div className="column is-10 description">
+          <Card>
               {typeof event.description === "string" ? (
                 <ReactQuill
                   value={event.description}
@@ -186,8 +187,8 @@ class Landing extends Component {
               ) : (
                   "json"
                 )}
+        </Card>
             </div>
-            {/* <h3 className="title-description is-size-5 column is-10">Conferencistas</h3> */}
           </div>
           <MapComponent event={event} />
         </div>
@@ -469,7 +470,6 @@ class Landing extends Component {
                     </div>
                   </div>
                 </Parallax>
-              :
             </div>
 
               {/* Menú secciones del landing */}
@@ -488,6 +488,7 @@ class Landing extends Component {
                 trigger={null} 
                 collapsible 
                 collapsed={this.state.collapsed}
+                width={250}
                 >
                 {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
                   <Menu
@@ -587,7 +588,7 @@ class Landing extends Component {
                         this.showSection("survey");
                       }}
                       >
-                        <QuestionCircleOutlined />
+                        <FileUnknownOutlined />
                         <span>
                           Encuestas
                         </span>
@@ -758,7 +759,7 @@ class Landing extends Component {
                           this.showSection("survey");
                         }}
                         >
-                          <QuestionCircleOutlined />
+                          <FileUnknownOutlined />
                           <span>
                             Encuestas
                           </span>
@@ -860,6 +861,7 @@ const MapComponent = props => {
             </div>
             :
             <div>
+              <Card>
               <div className="map-head">
                 <h2 className="data-title has-text-left">
                   <span className="is-size-5">
@@ -873,13 +875,13 @@ const MapComponent = props => {
                       <i className="far fa-clock" />
                     </span>
                   </div>
-                  <div className="column is-10 container-subtitle hours">
-                    <span className="subt is-size-6">
+                  <div className="column is-10 container-subtitle has-text-left hours">
+                    <span className="subt is-size-6 has-text-left">
                       Desde {Moment(event.hour_start).format("HH:mm")}
                     </span>
-                    <span className="subt is-size-6">
+                    <span className="subt is-size-6 has-text-left">
                       {" "}
-              a {Moment(event.hour_end).format("HH:mm")}
+                      a {Moment(event.hour_end).format("HH:mm")}
                     </span>
                   </div>
                 </div>
@@ -889,14 +891,14 @@ const MapComponent = props => {
                       <i className="fas fa-map-marker-alt" />
                     </span>
                   </div>
-                  <div className="column is-10 container-subtitle">
-                    <span className="">
+                  <div className="column is-10 container-subtitle has-text-left">
+                    <span className="has-text-left">
                       {event.venue} {event.location.FormattedAddress}
                     </span>
                   </div>
                 </div>
               </div>
-
+              </Card>
               <div style={{ height: "400px", width: "100%" }}>
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
