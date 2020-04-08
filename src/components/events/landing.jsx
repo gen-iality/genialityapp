@@ -28,6 +28,26 @@ import DocumentsForm from "../landingDocuments/documents"
 import FaqsForm from "../faqsLanding"
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
+import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col } from 'antd';
+import { AudioOutlined, 
+        ReadOutlined,
+        FolderOutlined,
+        QuestionCircleOutlined,
+        CalendarOutlined,
+        TeamOutlined, 
+        CreditCardOutlined, 
+        FileDoneOutlined,
+        MenuOutlined,
+        RightOutlined,
+        LeftOutlined,
+        QuestionOutlined,
+      } from '@ant-design/icons';
+
+
+const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
+
+
 
 Moment.locale("es");
 momentLocalizer();
@@ -35,9 +55,6 @@ momentLocalizer();
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-//Iconos de flechas para el scroll de los item del menu
-const renderLeftArrow = () => <FaChevronLeft />;
-const renderRightArrow = () => <FaChevronRight />;
 
 // Estilos del parallax
 const insideStyles = {
@@ -64,14 +81,43 @@ class Landing extends Component {
       showIframeZoom: false,
       meeting_id: null,
       color: "",
+      collapsed: false,
+      visible: false, 
+      placement: 'left' 
     };
   }
+
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    });
+  };
 
   /*componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) {
             window.scrollTo(0, 0)
         }
     }*/
+
+
+    showDrawer = () => {
+      this.setState({
+        visible: true,
+      });
+    };
+  
+    onClose = () => {
+      this.setState({
+        visible: false,
+      });
+    };
+  
+    onChange = e => {
+      this.setState({
+        placement: e.target.value,
+      });
+    };
+
 
   async componentDidMount() {
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
@@ -94,8 +140,8 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "rgb(60, 108, 157)" });
-    console.log("s", event)
+    this.setState({ color: "#4CD1AE"});
+    console.log("s",event)
     const sections = {
       agenda: (
         <AgendaForm
@@ -428,142 +474,324 @@ class Landing extends Component {
             </div>
 
               {/* Menú secciones del landing */}
-              <div className="hero-body is-centered">
-                <div style={{ backgroundColor: "rgba(255,255,255,0.95)", height: "5rem" }} ></div>
-                <div className="data container-hero-landing has-text-centered ">
-                  <div className="columns container-nav-item is-centered">
-                    <ComponentSlider
-                      renderLeftArrow={renderLeftArrow}
-                      renderRightArrow={renderRightArrow}
+
+            {/* Menú secciones del landing */}  
+
+            <Content>
+              
+              <Layout className="site-layout" >
+
+               {/*Aqui empieza el menu para dispositivos >  */}
+                <div  className="hiddenMenu_Landing" >
+
+                <Sider
+                className="containerMenu_Landing"                
+                trigger={null} 
+                collapsible 
+                collapsed={this.state.collapsed}
+                >
+                {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
+                  <Menu
+                    mode="inline"
+                    // theme="dark"
+                    defaultSelectedKeys={['1']}
+                    // defaultOpenKeys={['sub1']}
+                    style={{ height: '100%', padding: '50px 0'}}
+                  >
+                      <Menu.Item 
+                      key="agenda"  
+                      onClick={e => {
+                        this.showSection("agenda");
+                      }}
+                      >
+                        <ReadOutlined />
+                        <span>
+                          Agenda
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="2"
+                      onClick={e => {
+                        this.showSection("evento");
+                      }}
+                      >
+                        <CalendarOutlined />
+                        <span>
+                          Evento
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="3"
+                      onClick={e => {
+                        this.showSection("speakers");
+                      }}
+                      >
+                         <AudioOutlined />
+                        <span>
+                          Conferencistas
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="4"
+                      onClick={e => {
+                        this.showSection("tickets");
+                      }}
+                      >
+                          <CreditCardOutlined />
+                        <span>
+                          Boletería
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="5"
+                      onClick={e => {
+                        this.showSection("certs");
+                      }}
+                      >
+                        <FileDoneOutlined />
+                        <span>
+                          Certificados
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="6"
+                      onClick={e => {
+                        this.showSection("documents");
+                      }}
+                      >
+                        <FolderOutlined />
+                        <span>
+                          Documentos
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="7"
+                      onClick={e => {
+                        this.showSection("wall");
+                      }}
+                      >
+                        <TeamOutlined />
+                        <span>
+                          Muro
+                        </span>
+                      </Menu.Item>
+
+                      <Menu.Item 
+                      key="8"
+                      onClick={e => {
+                        this.showSection("survey");
+                      }}
+                      >
+                        <QuestionCircleOutlined />
+                        <span>
+                          Encuestas
+                        </span>
+                      </Menu.Item>
+                      <Menu.Item 
+                      key="9"
+                      onClick={e => {
+                        this.showSection("faqs");
+                      }}
+                      >
+                        <QuestionOutlined />
+                        <span>
+                          Preguntas Frecuentes
+                        </span>
+                      </Menu.Item>
+
+                      
+                  </Menu>
+
+                  
+                  {/* </Affix> */}
+                </Sider>
+                </div>
+                {/*Aqui termina el menu para dispositivos >  */}
+
+                <Layout className="site-layout">
+
+                  <Content  className="site-layout-background" >
+
+                    {/* Boton que abre el menu para dispositivos > tablet  */}
+                    <div className="hiddenMenu_Landing">
+                      <Button 
+                      onClick={ this.toggle}
+                      >
+                        
+                        {React.createElement
+                        (this.state.collapsed ?
+                          RightOutlined : LeftOutlined , 
+                          {
+                            className: 'trigger',
+                            onClick: this.toggle,
+                          }
+                        )}
+
+                      </Button>
+                    </div>
+
+               
+         
+
+                    {/*Aqui empieza el menu para dispositivos < tablet*/}
+
+                    <div  className="hiddenMenuMobile_Landing">
+                      <Button 
+                      onClick={this.showDrawer}
+                      >
+
+                        <MenuOutlined />
+                      </Button>
+                    </div>
+
+                    <Drawer
+                      title="Menú"
+                      placement={this.state.placement}
+                      closable={false}
+                      onClose={this.onClose}
+                      visible={this.state.visible}
+                      maskClosable={true}
+                      closable={true}
+                      bodyStyle={{ padding:"0px" }}
                     >
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "agenda"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                      <Menu
+                      mode="inline"
+                      defaultSelectedKeys={['1']}
+                      style={{ height: '100%', }}
+                      >
+
+
+                        <Menu.Item 
+                        key="agenda"  
                         onClick={e => {
                           this.showSection("agenda");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Agenda</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "evento"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <ReadOutlined />
+                          <span>
+                            Agenda
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="2"
                         onClick={e => {
                           this.showSection("evento");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Evento</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "speakers"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <CalendarOutlined />
+                          <span>
+                            Evento
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="3"
                         onClick={e => {
                           this.showSection("speakers");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">
-                          Conferencistas
-                      </a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "tickets"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <AudioOutlined />
+                          <span>
+                            Conferencistas
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="4"
                         onClick={e => {
                           this.showSection("tickets");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Boletería</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "certs"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                            <CreditCardOutlined />
+                          <span>
+                            Boletería
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="5"
                         onClick={e => {
                           this.showSection("certs");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">
-                          Certificados
-                      </a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "documents"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <FileDoneOutlined />
+                          <span>
+                            Certificados
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="6"
                         onClick={e => {
                           this.showSection("documents");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Documentos</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "wall"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <FolderOutlined />
+                          <span>
+                            Documentos
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="7"
                         onClick={e => {
                           this.showSection("wall");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Muro</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "survey"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
+                        >
+                          <TeamOutlined />
+                          <span>
+                            Muro
+                          </span>
+                        </Menu.Item>
+
+                        <Menu.Item 
+                        key="8"
                         onClick={e => {
                           this.showSection("survey");
                         }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Encuestas</a>
-                      </li>
-                      <li
-                        className="items menu-item"
-                        className={
-                          this.state.section == "faqs"
-                            ? "items menu-item nav-item-active"
-                            : "items menu-item nav-item"
-                        }
-                        onClick={e => {
-                          this.showSection("faqs");
-                        }}
-                      >
-                        <a className="has-text-grey-dark is-size-6">Preguntas Frecuentes</a>
-                      </li>
+                        >
+                          <QuestionCircleOutlined />
+                          <span>
+                            Encuestas
+                          </span>
+                        </Menu.Item>
 
-                    </ComponentSlider>
+                        
+                      </Menu>
 
-                  </div>
-                  {sections[section]}
-                </div>
-              </div>
+                    </Drawer>
+
+                
+                    {/* Contenedor donde se mapea la información de cada seccion */}
+
+                    <div style={{ margin: '24px 6px 0', overflow: 'initial', textAlign: 'center'  }}>
+
+                      {sections[section]}
+
+                    </div>
+
+                  </Content>
+
+                </Layout>
+
+              </Layout>
+
+            </Content>
+
+            {/* Final del menú  */}
+
+
+              
+              
+              
+              
               <div className={`modal ${modal ? "is-active" : ""}`}>
                 <div className="modal-background"></div>
                 <div className="modal-content">
@@ -604,7 +832,7 @@ class Landing extends Component {
 const MapComponent = props => {
   const { event } = props;
   return (
-    <div className="column container-map has-margin-top-100">
+    <div className="column container-map has-margin-top-50">
       <div>
         {
           console.log(event),
