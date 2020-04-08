@@ -7,7 +7,8 @@ import API, {
   AgendaApi,
   SpacesApi,
   Actions,
-  Activity
+  Activity,
+  SurveysApi
 } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
@@ -31,12 +32,15 @@ class Agenda extends Component {
       toShow: [],
       value: "",
       currentActivity: null,
+      survey: [],
+      visible: false,
       redirect: false,
       disabled: false,
       generalTab: true
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
+    this.survey = this.survey.bind(this)
   }
 
   async componentDidMount() {
@@ -115,8 +119,8 @@ class Agenda extends Component {
         item.access_restriction_type === "EXCLUSIVE"
           ? "Exclusiva para: "
           : item.access_restriction_type === "SUGGESTED"
-          ? "Sugerida para: "
-          : "Abierta";
+            ? "Sugerida para: "
+            : "Abierta";
       item.roles = item.access_restriction_roles.map(({ name }) => name);
       return item;
     });
@@ -158,8 +162,8 @@ class Agenda extends Component {
         item.access_restriction_type === "EXCLUSIVE"
           ? "Exclusiva para: "
           : item.access_restriction_type === "SUGGESTED"
-          ? "Sugerida para: "
-          : "Abierta";
+            ? "Sugerida para: "
+            : "Abierta";
       item.roles = item.access_restriction_roles.map(({ name }) => name);
       return item;
     });
@@ -193,11 +197,42 @@ class Agenda extends Component {
 
   gotoActivity(activity) {
     this.setState({ currentActivity: activity });
+
+    //Se trae la funcion survey para pasarle el objeto activity y asi retornar los datos que consulta la funcion survey
+    this.survey(activity)
   }
-  
+
   gotoActivityList = () => {
     this.setState({ currentActivity: null });
   }
+
+  //Funcion survey para traer las encuestas de a actividad
+  async survey(activity) {
+    //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
+    const survey = await SurveysApi.getByActivity(this.props.event._id, activity._id)
+    this.setState({ survey: survey })
+    console.log(survey)
+  }
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
 
   render() {
     const { showIframe } = this.props;
@@ -208,16 +243,19 @@ class Agenda extends Component {
       spaces,
       toShow,
       generalTab,
-      currentActivity
+      currentActivity,
+      survey
     } = this.state;
     return (
       <div>
-        {currentActivity && <AgendaActividadDetalle currentActivity={currentActivity} gotoActivityList={this.gotoActivityList}  showIframe={showIframe} />}
+        {currentActivity && <AgendaActividadDetalle visible={this.state.visible} handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} matchUrl={this.props.matchUrl} survey={survey} currentActivity={currentActivity} gotoActivityList={this.gotoActivityList} showIframe={showIframe} />}
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
-
         {!currentActivity && (
           <div className="container-calendar-section">
-
+            {
+              console.log("props", this.props),
+              console.log("state", this.state)
+            }
             {/* input donde se iteran los espacios del evento */}
             <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
             <div
@@ -261,7 +299,7 @@ class Agenda extends Component {
                       <a
                         className={`${
                           date === day ? " select-day" : " unselect-day"
-                        }`}
+                          }`}
                       >
                         <span className="level-item date">
                           {date.format("MMM DD")}
@@ -324,7 +362,7 @@ class Agenda extends Component {
                             dangerouslySetInnerHTML={{
                               __html: agenda.subtitle
                             }}
-                          /> }
+                          />}
 
                           {/* Lugar del evento */}
                           <p className="has-text-left is-size-6-desktop">

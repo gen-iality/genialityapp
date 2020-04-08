@@ -120,8 +120,6 @@ class Wall extends Component {
         this.loadMore = this.loadMore.bind(this)
     }
 
-
-
     handleChange = e => {
         this.setState({
             value: e.target.value,
@@ -279,10 +277,7 @@ class Wall extends Component {
         
         let counts = []
         let dataPostArray = []
-        
-        if(this.state.dataPostFilter.length < 4){
-            dataPostArray.push(this.state.dataPostFilter)
-        }
+        dataPostArray.push(this.state.dataPostFilter)
         
 
         button.addEventListener('click', () => {
@@ -300,7 +295,7 @@ class Wall extends Component {
         this.setState({
             dataPostFilter: dataPostArray[0]
         })
-        console.log(dataPostArray)
+        console.log(this.state.dataPostFilter)
     }
 
     uploadImage() {

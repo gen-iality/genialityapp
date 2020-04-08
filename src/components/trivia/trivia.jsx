@@ -58,7 +58,7 @@ class trivia extends Component {
         //Se realiza la peticion post para guardar la informacion de la data enviando tambien el id del evento
         const dataTrivia = await SurveysApi.createOne(this.props.event._id, data)
         console.log(dataTrivia)
-        
+
         //Se obtiene la lista para evitar recargar la pagina, de esta manera se actualiza la lista
         this.getInformation()
     }
@@ -97,17 +97,19 @@ class trivia extends Component {
                     </div>
 
                     <br />
-                    <div className="select">
-                        <label className="Seleccione una actividad a referenciar"></label>
-                        <select onChange={e => { this.setState({ activity_id: e.target.value }) }} >
-                            <option>...Selecciona</option>
-                            {
-                                dataAgenda.map((activity, key) => (
-                                    <option key={key} value={activity._id}>{activity.name}</option>
-                                ))
-                            }
+                    <div>
+                        <label className="label">Seleccione una actividad a referenciar</label>
+                        <div className="select">
+                            <select onChange={e => { this.setState({ activity_id: e.target.value }) }} >
+                                <option>...Selecciona</option>
+                                {
+                                    dataAgenda.map((activity, key) => (
+                                        <option key={key} value={activity._id}>{activity.name}</option>
+                                    ))
+                                }
 
-                        </select>
+                            </select>
+                        </div>
                     </div>
                     <EvenTable style={{ marginTop: "5%" }} head={["Titulo de encuesta", "Publicada", ""]}>
                         {
