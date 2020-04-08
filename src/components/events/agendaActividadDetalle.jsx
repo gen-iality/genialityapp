@@ -2,25 +2,25 @@ import React from "react";
 import Moment from "moment";
 import ReactPlayer from "react-player";
 
+//custom
+import { PageHeader } from 'antd';
+
+
 export default props => {
   const { currentActivity, gotoActivityList, showIframe } = props;
   return (
-    <div className="container-calendar-section">
-      <h3 style={{ paddingBottom: 30 }} className="title is-4">
-        {currentActivity.name}
-      </h3>
+    <div className="columns container-calendar-section is-centered">
 
-      <a
-        className=""
-        onClick={e => {
-          gotoActivityList();
-        }}
-      >
-        <h3 className=""> Regresar a la agenda</h3>
-      </a>
 
-      <div className="container_agenda-information is-three-fifths">
+      <div className=" container_agenda-information container-calendar is-three-fifths">
         <div className="card agenda_information ">
+        <PageHeader
+          className="site-page-header"
+          onBack={e => {
+            gotoActivityList();
+          }}
+          title={currentActivity.name}
+        />
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}

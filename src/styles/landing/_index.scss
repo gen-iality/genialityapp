@@ -158,7 +158,6 @@ section.landing{
       }
     }
   }
-  
   .hero-body{
     padding: 0;
     margin-top: -21px;
@@ -169,7 +168,12 @@ section.landing{
     text-align: justify;
     margin-top: 3%;
 
-    
+    .event-description{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
     .title-description{
       display: block;
       margin: 0% auto;
@@ -321,9 +325,4 @@ section.landing{
 }
 
 
-.event-description{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
+
