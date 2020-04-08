@@ -285,10 +285,10 @@ class Agenda extends Component {
                       <header className="card-header columns has-padding-left-7">
                         <div className="is-block is-11 column is-paddingless">
                           {/* Hora del evento */}
-                          <p className="card-header-title ">
+                          <span className="card-header-title ">
                             {Moment(agenda.datetime_start).format("h:mm a")} -{" "}
                             {Moment(agenda.datetime_end).format("h:mm a")}
-                          </p>
+                          </span>
 
                           {/* Nombre del evento */}
                           <span className="card-header-title has-text-left">

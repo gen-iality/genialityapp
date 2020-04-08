@@ -368,7 +368,7 @@ class Landing extends Component {
                             {/* Contenedor de Nombre del evento y quien lo organiza */}
                             <div className="nombre item columns is-centered">
                               <div className="column event-name">
-                                <h2 className="is-size-1 bold-text">
+                                <h2 className="is-size-3 bold-text">
                                   {event.name}
                                 </h2>
                                 <span className="is-size-4 has-text-white">

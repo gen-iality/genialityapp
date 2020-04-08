@@ -185,13 +185,14 @@ section.landing{
       text-transform: lowercase;
       font-size: 5rem;
       .ql-snow{
-
+        font-family: "Montserrat", sans-serif !important;
       
         .ql-editor{
           font-size: 1.2rem;
           letter-spacing: 0.2px;
           line-height: 1.50;
           padding: 0px;
+          font-family: "Montserrat", sans-serif !important;
           h2{
             text-align: left !important;
             font-weight: bold;
@@ -241,8 +242,8 @@ section.landing{
   }
   
 }
-.ql-container .ql-snow {
-  border: 1px solid red !important;
+.ql-container{
+  
 }
 
   .container-map{
