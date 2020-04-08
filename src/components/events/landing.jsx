@@ -168,7 +168,7 @@ class Landing extends Component {
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id}/>,
       evento: (
-        <div className="columns is-centered has-margin-top-30 ">
+        <div className="columns is-centered">
           <div className="description-container column is-8">
             <Card className="event-description" bordered={true}>
 
