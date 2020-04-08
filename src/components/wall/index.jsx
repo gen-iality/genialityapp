@@ -276,22 +276,31 @@ class Wall extends Component {
     async loadMore() {
         let count = 0
         let button = document.getElementById("click")
+        
         let counts = []
+        let dataPostArray = []
+        
+        if(this.state.dataPostFilter.length < 4){
+            dataPostArray.push(this.state.dataPostFilter)
+        }
+        
 
         button.addEventListener('click', () => {
             let push = count++
             counts.push(push)
+
             let total = 6 + counts.length
 
-            let dataPost = this.state.dataPostFilter
-
-            if(dataPost.length){
-                let dataPost = this.state.dataPostFilter
-                dataPost.length = total
-                console.log("Data",dataPost)
-                dataPost = this.state.dataPostFilter
+            if (this.state.dataPostFilter) {
+                this.state.dataPostFilter.length = total
+                console.log("Data", this.state.dataPostFilter)
             }
         });
+
+        this.setState({
+            dataPostFilter: dataPostArray[0]
+        })
+        console.log(dataPostArray)
     }
 
     uploadImage() {
