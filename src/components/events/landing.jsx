@@ -170,10 +170,18 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered has-margin-top-30 ">
           <div className="description-container column is-8">
-          <Card className=" event-description" bordered={true}>
+          <Card className="event-description" bordered={true}>
 
             <div className="column is-centered">
-              <ReactPlayer style={{ maxWidth: "100%" }} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
+              <ReactPlayer 
+              style={{ 
+                maxWidth: "100%", 
+                display:"block", 
+                margin: "0 auto" 
+                }} 
+                url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' 
+                controls 
+                />
             </div>
 
             <div>
