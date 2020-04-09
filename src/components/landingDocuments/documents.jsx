@@ -67,9 +67,7 @@ class documentsDetail extends Component {
         const { data } = this.state;
 
         return (
-            <>
-            <div className="has-margin-top-70 has-margin-bottom-70">
-                
+            <>              
                 <Col 
                 xs={24}
                 sm={22}
@@ -112,8 +110,7 @@ class documentsDetail extends Component {
                         />
                     </Card>
                 </Col>
-            </div>
-        </>
+            </>
         )
     }
 }

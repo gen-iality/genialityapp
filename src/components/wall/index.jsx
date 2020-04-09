@@ -390,7 +390,7 @@ class Wall extends Component {
 
                 {/*Inicia la lista de los comentarios */}
                 {!currentCommet && (
-                    <div className="has-margin-top-70">
+                    <div>
 
                         <Row
                             style={{

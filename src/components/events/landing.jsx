@@ -28,7 +28,7 @@ import DocumentsForm from "../landingDocuments/documents"
 import FaqsForm from "../faqsLanding"
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
-import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col } from 'antd';
+import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card } from 'antd';
 import { AudioOutlined, 
         ReadOutlined,
         FolderOutlined,
@@ -41,6 +41,7 @@ import { AudioOutlined,
         RightOutlined,
         LeftOutlined,
         QuestionOutlined,
+        FileUnknownOutlined
       } from '@ant-design/icons';
 
 
@@ -140,7 +141,7 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
 
     // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "#4CD1AE"});
+    this.setState({ color: "#E6F7FE"});
     console.log("s",event)
     const sections = {
       agenda: (
@@ -168,27 +169,34 @@ class Landing extends Component {
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id}/>,
       evento: (
-        <div className="columns has-text-white is-centered has-margin-top-30 ">
-
+        <div className="columns is-centered">
           <div className="description-container column is-8">
+            <Card className="event-description" bordered={true}>
 
+              <div className="column is-centered">
+                <ReactPlayer 
+                style={{ 
+                  maxWidth: "100%", 
+                  display:"block", 
+                  margin: "0 auto" 
+                  }} 
+                  url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' 
+                  controls 
+                  />
+              </div>
 
-            <div className="column is-10 description is-centered">
-              <ReactPlayer style={{ maxWidth: "100%" }} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls />
-            </div>
-
-            <div className="column is-10 description">
-              {typeof event.description === "string" ? (
-                <ReactQuill
-                  value={event.description}
-                  modules={{ toolbar: false }}
-                  readOnly={true}
-                />
-              ) : (
-                  "json"
-                )}
-            </div>
-            {/* <h3 className="title-description is-size-5 column is-10">Conferencistas</h3> */}
+              <div>
+                {typeof event.description === "string" ? (
+                  <ReactQuill
+                    value={event.description}
+                    modules={{ toolbar: false }}
+                    readOnly={true}
+                  />
+                ) : (
+                    "json"
+                  )}
+              </div>
+            </Card>
           </div>
           <MapComponent event={event} />
         </div>
@@ -361,7 +369,7 @@ class Landing extends Component {
                             {/* Contenedor de Nombre del evento y quien lo organiza */}
                             <div className="nombre item columns is-centered">
                               <div className="column event-name">
-                                <h2 className="is-size-1 bold-text">
+                                <h2 className="is-size-3 bold-text">
                                   {event.name}
                                 </h2>
                                 <span className="is-size-4 has-text-white">
@@ -470,7 +478,6 @@ class Landing extends Component {
                     </div>
                   </div>
                 </Parallax>
-              :
             </div>
 
               {/* Menú secciones del landing */}
@@ -489,6 +496,7 @@ class Landing extends Component {
                 trigger={null} 
                 collapsible 
                 collapsed={this.state.collapsed}
+                width={250}
                 >
                 {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
                   <Menu
@@ -588,7 +596,7 @@ class Landing extends Component {
                         this.showSection("survey");
                       }}
                       >
-                        <QuestionCircleOutlined />
+                        <FileUnknownOutlined />
                         <span>
                           Encuestas
                         </span>
@@ -604,6 +612,19 @@ class Landing extends Component {
                           Preguntas Frecuentes
                         </span>
                       </Menu.Item>
+
+
+                      <Menu.Item 
+                        key="9"
+                        onClick={e => {
+                          this.showSection("faqs");
+                        }}
+                        >
+                          <QuestionCircleOutlined />
+                          <span>
+                            Preguntas Frecuentes
+                          </span>
+                        </Menu.Item>
 
                       
                   </Menu>
@@ -757,13 +778,25 @@ class Landing extends Component {
                           this.showSection("survey");
                         }}
                         >
-                          <QuestionCircleOutlined />
+                          <FileUnknownOutlined />
                           <span>
                             Encuestas
                           </span>
                         </Menu.Item>
 
-                        
+                        <Menu.Item 
+                        key="9"
+                        onClick={e => {
+                          this.showSection("faqs");
+                        }}
+                        >
+                          <QuestionCircleOutlined />
+                          <span>
+                            Preguntas Frecuentes
+                          </span>
+                        </Menu.Item>
+
+                        faqs
                       </Menu>
 
                     </Drawer>
@@ -771,7 +804,7 @@ class Landing extends Component {
                 
                     {/* Contenedor donde se mapea la información de cada seccion */}
 
-                    <div style={{ margin: '24px 6px 0', overflow: 'initial', textAlign: 'center'  }}>
+                    <div style={{ margin: '40px 6px', overflow: 'initial', textAlign: 'center'  }}>
 
                       {sections[section]}
 
@@ -786,6 +819,7 @@ class Landing extends Component {
             </Content>
 
             {/* Final del menú  */}
+            
 
 
               
@@ -832,7 +866,7 @@ class Landing extends Component {
 const MapComponent = props => {
   const { event } = props;
   return (
-    <div className="column container-map has-margin-top-50">
+    <div className="column container-map">
       <div>
         {
           console.log(event),
@@ -846,6 +880,7 @@ const MapComponent = props => {
             </div>
             :
             <div>
+              <Card>
               <div className="map-head">
                 <h2 className="data-title has-text-left">
                   <span className="is-size-5">
@@ -859,13 +894,13 @@ const MapComponent = props => {
                       <i className="far fa-clock" />
                     </span>
                   </div>
-                  <div className="column is-10 container-subtitle hours">
-                    <span className="subt is-size-6">
+                  <div className="column is-10 container-subtitle has-text-left hours">
+                    <span className="subt is-size-6 has-text-left">
                       Desde {Moment(event.hour_start).format("HH:mm")}
                     </span>
-                    <span className="subt is-size-6">
+                    <span className="subt is-size-6 has-text-left">
                       {" "}
-              a {Moment(event.hour_end).format("HH:mm")}
+                      a {Moment(event.hour_end).format("HH:mm")}
                     </span>
                   </div>
                 </div>
@@ -875,14 +910,14 @@ const MapComponent = props => {
                       <i className="fas fa-map-marker-alt" />
                     </span>
                   </div>
-                  <div className="column is-10 container-subtitle">
-                    <span className="">
+                  <div className="column is-10 container-subtitle has-text-left">
+                    <span className="has-text-left">
                       {event.venue} {event.location.FormattedAddress}
                     </span>
                   </div>
                 </div>
               </div>
-
+              </Card>
               <div style={{ height: "400px", width: "100%" }}>
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
