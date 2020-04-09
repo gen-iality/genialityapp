@@ -21,7 +21,7 @@ const Faqs = asyncComponent(()=> import("../components/faqs/index"));
 
 
 class ContentContainer extends Component {
-    componentDidMount(){
+    componentWillMount(){
         this.props.history.index=0
     }
     render() {

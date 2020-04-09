@@ -49,16 +49,13 @@ class Menu extends Component {
                     contentTab && (
                         <ul className="menu-list">
                             <li>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/agenda`}>Agenda/Actividades</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink>                          
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Configuración</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/trivia`}>Encuestas</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/news`}>Noticias</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/faqs`}>Preguntas Frecuentes</NavLink>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/documents`}>Documentos</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink> 
-
                             </li>
                         </ul>
                     )
@@ -73,41 +70,16 @@ class Menu extends Component {
                         <ul className="menu-list">
                             <li>
                                 <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/main`}>Datos del evento</NavLink>
-                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/styles`}>Estilos</NavLink>
-                                {/* <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/configurationApp`}>Secciones de contenido Habilitadas</NavLink> */}
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/conference`}>Conferencias</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/speakers`}>Conferencistas</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/agenda`}>Programación</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/espacios`}>Espacios</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/certificados`}>Certificados</NavLink>
+                                <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/pages`}>Agregar sección</NavLink>
                             </li>
                         </ul>
                     )
                 }
-
-                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ peopleTab: !peopleTab }) }}>
-                    <span className="item has-text-grey">Configuración Asistentes</span>
-                    <span className="icon"><i className={`${peopleTab ? 'up' : 'down'}`} /></span>
-                </p>
-                
-                
-                {
-                    peopleTab && (
-                        <ul className="menu-list">
-                             <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/datos`}>Datos de asistentes</NavLink></li>
-                             <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/tipo-asistentes`}>Tipo de asistentes</NavLink></li>                             
-                            {
-                                permissions.data.ids.includes(rolPermissions.admin_staff._id) && false &&
-                                <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
-                            }
-
-                            {
-                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) &&
-                                <Fragment>
-
-                                </Fragment>
-                            }
-
-                            
-                           
-                        </ul>
-                    )
-                }                
 
 
                 <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ guestTab: !guestTab }) }}>
@@ -130,6 +102,28 @@ class Menu extends Component {
                     )
                 }
 
+
+                <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ peopleTab: !peopleTab }) }}>
+                    <span className="item has-text-grey">Personas</span>
+                    <span className="icon"><i className={`${peopleTab ? 'up' : 'down'}`} /></span>
+                </p>
+                {
+                    peopleTab && (
+                        <ul className="menu-list">
+                            {
+                                permissions.data.ids.includes(rolPermissions.admin_staff._id) && false &&
+                                <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/staff`}>Organizadores</NavLink></li>
+                            }
+
+                            {
+                                (permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) &&
+                                <Fragment>
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/tipo-asistentes`}>Tipo de asistentes</NavLink></li>
+                                </Fragment>
+                            }
+                        </ul>
+                    )
+                }
                 <p className="menu-label has-text-centered-mobile" onClick={(e) => { this.setState({ commTab: !commTab }) }}>
                     <span className="item has-text-grey">Comunicaciones</span>
                     <span className="icon"><i className={`${commTab ? 'up' : 'down'}`} /></span>
@@ -143,9 +137,7 @@ class Menu extends Component {
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/messages`}>Mensajes Enviados / sInvitaciones</NavLink>
                                     </li>
-                                    <li>
-                                    <NavLink className="item" onClick={this.handleClick} activeClassName={"active"} to={`${url}/notificationsApp`}>Notificaciones</NavLink>
-                                    </li>
+                                    s
                                     {/*
                                     <li>
                                         <NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/invitaciones`}>Invitaciones</NavLink>
@@ -175,7 +167,7 @@ class Menu extends Component {
                         {
                             checkInTab && (
                                 <ul className="menu-list">
-                                    
+                                    <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/datos`}>Datos de asistentes</NavLink></li>
                                     {
                                         permissions.data.ids.includes(rolPermissions.admin_badge._id) &&
                                         <li><NavLink className="item" onClick={this.handleClick} activeClassName={'active'} to={`${url}/badge`}>Escarapela</NavLink></li>
