@@ -32,11 +32,13 @@ let [currentUser, setCurrentUser] = useState(false)
         
    
         if (resp.status !== 200 && resp.status !== 202 ) return
-        
+
           const data = resp.data;
           setCurrentUser(data);
           
           var id =  props.match.params.event;
+
+          //firestore.collection(`${id}_event_attendees`)
            
           const userRef = firestore.collection(`${id}_event_attendees`).where("properties.email", "==",data.email) 
           .get().then(snapshot => {
