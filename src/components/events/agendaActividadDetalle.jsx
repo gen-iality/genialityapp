@@ -1,13 +1,13 @@
 import React from "react";
 import Moment from "moment";
 import ReactPlayer from "react-player";
-
-//custom
+import { List, Button, Modal } from 'antd';
+import { NavLink, Link, withRouter } from 'react-router-dom';
 import { PageHeader } from 'antd';
 
 
-export default props => {
-  const { currentActivity, gotoActivityList, showIframe } = props;
+let agendaActividadDetalle = (props) => {
+  const { showModal, handleOk, handleCancel, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
     <div className="columns container-calendar-section is-centered">
 
@@ -61,7 +61,75 @@ export default props => {
                 </span>
               ))}
             </div>
+            <div>
+              <p className="has-text-left is-size-6-desktop">
+                <b>Encuestas</b>
+                <div>
+                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
+                  <List itemLayout="horizontal" dataSource={survey.data} renderItem={item => (
+                    <List.Item actions={
+                      [
+                        item.publish === "true" ?
+                          <Button type="primary" onClick={showModal}>
+                            Contestar Encuesta
+                          </Button>
+                          :
+                          <div></div>
+                      ]
+                    }>
+                      <List.Item.Meta
+                        title={
+                          <div>
+                            <p>{item.survey}</p>
+                          </div>
 
+                        } />
+                      <List.Item>
+                        {
+                          <div>
+
+                            {
+                              item.questions ?
+                                <div>
+                                  {
+                                    item.publish === "true" ?
+                                      <div>
+                                        <Modal title={item.survey} visible={visible} onOk={handleOk} onCancel={handleCancel}>
+                                          {
+                                            item.questions.map((question, key) => (
+                                              <div key={key}>
+                                                <label>{question.name}</label>
+                                                <p>{question.title}</p>
+                                                <input type={question.type} />
+                                              </div>
+                                            ))
+                                          }
+                                        </Modal>
+                                      </div>
+                                      :
+                                      <div>
+
+                                      </div>
+                                  }
+                                </div>
+                                :
+                                <div>
+                                  <Modal title={item.survey} visible={false} onOk={handleOk} onCancel={handleCancel}>
+                                    <p>No hay preguntas</p>
+                                  </Modal>
+                                </div>
+                            }
+                          </div>
+                        }
+                      </List.Item>
+                    </List.Item>
+                  )}
+                  />
+
+
+                </div>
+              </p>
+            </div>
             {/* Boton de para acceder a la conferencia */}
             <button
               className="button is-success is-outlined is-pulled-right has-margin-top-20"
@@ -123,3 +191,5 @@ export default props => {
     </div>
   );
 };
+
+export default withRouter(agendaActividadDetalle) 
