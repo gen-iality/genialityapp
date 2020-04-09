@@ -105,7 +105,7 @@ class Styles extends Component {
 
     }
     //Se envia la peitcion a la api para reconocer el token 
-    componentWillMount() {
+    componentDidMount() {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
             console.log(dataUrl);

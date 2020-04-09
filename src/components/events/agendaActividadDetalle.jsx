@@ -7,12 +7,13 @@ import * as Cookie from "js-cookie";
 import API, { OrganizationApi } from "../../helpers/request"
 import {firestore} from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
-
-//custom
+import { List, Button, Drawer } from 'antd';
+import { NavLink, Link, withRouter } from 'react-router-dom';
+import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader } from 'antd';
 
 
-export default props => {
+let agendaActividadDetalle = (props) => {
   useEffect(() => {
     (async () => {
 
@@ -63,8 +64,7 @@ export default props => {
       }
     })()
   })
-
-  const { currentActivity, gotoActivityList, showIframe } = props;
+  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
     <div className="columns container-calendar-section is-centered">
 
@@ -118,7 +118,53 @@ export default props => {
                 </span>
               ))}
             </div>
+            <div>
+              <p className="has-text-left is-size-6-desktop">
+                <b>Encuestas</b>
+                <div>
+                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
+                  <List itemLayout="horizontal" dataSource={survey.data} renderItem={item => (
+                    <List.Item actions={
+                      [
+                        item.publish === "true" ?
+                          <Button type="primary" onClick={showDrawer}>
+                            Contestar Encuesta
+                          </Button>
+                          :
+                          <div></div>
+                      ]
+                    }>
+                      <List.Item.Meta
+                        title={
+                          <div>
+                            <p>{item.survey}</p>
+                          </div>
+                        }
+                      />
+                      <List.Item>
+                        {
+                          console.log(item),
+                          <div>
 
+                          </div>
+                        }
+                      </List.Item>
+
+                      <Drawer
+                          title={item.survey}
+                          placement="right"
+                          closable={false}
+                          onClose={onClose}
+                          visible={visible}
+                        >
+                          <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                        </Drawer>
+                    </List.Item>
+                  )}
+                  />
+                </div>
+              </p>
+            </div>
             {/* Boton de para acceder a la conferencia */}
             <button
               className="button is-success is-outlined is-pulled-right has-margin-top-20"
@@ -180,3 +226,5 @@ export default props => {
     </div>
   );
 };
+
+export default withRouter(agendaActividadDetalle) 
