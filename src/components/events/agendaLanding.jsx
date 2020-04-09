@@ -219,15 +219,15 @@ class Agenda extends Component {
           <div className="container-calendar-section">
 
             {/* input donde se iteran los espacios del evento */}
-            <p className="is-size-5 has-text-white">Seleccióne el espacio</p>
+            <p className="is-size-5">Seleccióne el espacio</p>
             <div
-              className="select is-fullwidth is-hidden-desktop has-background-white"
+              className="select is-fullwidth is-hidden-desktop"
               style={{ height: "3rem" }}
             >
               <select
                 id="selectedSpace"
                 onClick={this.selectionSpace}
-                className="has-background-white has-text-black  is-pulled-left"
+                className="has-text-black  is-pulled-left"
                 style={{ height: "3rem" }}
               >
                 <option onClick={this.returnList}>Todo</option>
@@ -285,10 +285,10 @@ class Agenda extends Component {
                       <header className="card-header columns has-padding-left-7">
                         <div className="is-block is-11 column is-paddingless">
                           {/* Hora del evento */}
-                          <p className="card-header-title ">
+                          <span className="card-header-title ">
                             {Moment(agenda.datetime_start).format("h:mm a")} -{" "}
                             {Moment(agenda.datetime_end).format("h:mm a")}
-                          </p>
+                          </span>
 
                           {/* Nombre del evento */}
                           <span className="card-header-title has-text-left">
@@ -298,7 +298,7 @@ class Agenda extends Component {
                         </div>
 
                         <a
-                          className="icon is-flex has-text-white has-margin-top-30"
+                          className="icon is-flex has-margin-top-30"
                           style={{ flexDirection: "column" }}
                         >
                           <i className="fas fa-play-circle is-size-5"></i>
@@ -311,6 +311,7 @@ class Agenda extends Component {
                       <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a> */}
+                  
                       </header>
                       {generalTab && (
                         <div
@@ -363,7 +364,7 @@ class Agenda extends Component {
                               alignItems: "flex-end"
                             }}
                           >
-                            <a className="has-text-white is-size-5 is-vcentered">
+                            <a className="is-size-5 is-vcentered">
                               Ver más...
                             </a>
 

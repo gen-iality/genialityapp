@@ -1,5 +1,10 @@
 import React, { Component } from "react";
+
+//custom
 import { AgendaApi, SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
+import { Card } from 'antd';
+
+const { Meta } = Card;
 
 class Speakers extends Component {
     constructor(props) {
@@ -112,9 +117,7 @@ class Speakers extends Component {
                             </div>                         
                         </div>
 
-                        {/* Contenedor para descripcion (Hice esta cochinada ya que infoSpeaker.description 
-                            viene como etiqueta <p></p> desde base de datos.
-                            no me dejaba juntarla en un solo contenedor.
+                        {/* Contenedor para descripcion 
                             Se mapea tambien las actividades por Speaker 
                         */}
                         <div className="modal-card-body">                                                  

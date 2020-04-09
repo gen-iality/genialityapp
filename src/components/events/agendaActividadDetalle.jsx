@@ -8,6 +8,10 @@ import API, { OrganizationApi } from "../../helpers/request"
 import {firestore} from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
+//custom
+import { PageHeader } from 'antd';
+
+
 export default props => {
   useEffect(() => {
     (async () => {
@@ -62,22 +66,18 @@ export default props => {
 
   const { currentActivity, gotoActivityList, showIframe } = props;
   return (
-    <div className="container-calendar-section">
-      <h3 style={{ paddingBottom: 30 }} className="title is-1 has-text-white">
-        {currentActivity.name}
-      </h3>
+    <div className="columns container-calendar-section is-centered">
 
-      <a
-        className="has-text-white"
-        onClick={e => {
-          gotoActivityList();
-        }}
-      >
-        <h3 className="has-text-white"> Regresar a la agenda</h3>
-      </a>
 
-      <div className="container_agenda-information is-three-fifths">
+      <div className=" container_agenda-information container-calendar is-three-fifths">
         <div className="card agenda_information ">
+        <PageHeader
+          className="site-page-header"
+          onBack={e => {
+            gotoActivityList();
+          }}
+          title={currentActivity.name}
+        />
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}
@@ -166,12 +166,12 @@ export default props => {
           </button> */}
 
               <a
-                className="has-text-white"
+                className=""
                 onClick={e => {
                   gotoActivityList();
                 }}
               >
-                <h3 className="has-text-white"> Regresar a la agenda</h3>
+                <h3 className=""> Regresar a la agenda</h3>
               </a>
             </div>
           </div>
