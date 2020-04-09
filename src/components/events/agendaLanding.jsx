@@ -214,7 +214,7 @@ class Agenda extends Component {
     console.log(survey)
   }
 
-  showModal = () => {
+  showDrawer = () => {
     this.setState({
       visible: true,
     });
@@ -227,8 +227,7 @@ class Agenda extends Component {
     });
   };
 
-  handleCancel = e => {
-    console.log(e);
+  onClose = e => {
     this.setState({
       visible: false,
     });
@@ -248,7 +247,7 @@ class Agenda extends Component {
     } = this.state;
     return (
       <div>
-        {currentActivity && <AgendaActividadDetalle visible={this.state.visible} handleCancel={this.handleCancel} handleOk={this.handleOk} showModal={this.showModal} matchUrl={this.props.matchUrl} survey={survey} currentActivity={currentActivity} gotoActivityList={this.gotoActivityList} showIframe={showIframe} />}
+        {currentActivity && <AgendaActividadDetalle visible={this.state.visible} onClose={this.onClose} showDrawer={this.showDrawer} matchUrl={this.props.matchUrl} survey={survey} currentActivity={currentActivity} gotoActivityList={this.gotoActivityList} showIframe={showIframe} />}
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && (
           <div className="container-calendar-section">

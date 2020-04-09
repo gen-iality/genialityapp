@@ -1,11 +1,12 @@
 import React from "react";
 import Moment from "moment";
 import ReactPlayer from "react-player";
-import { List, Button, Modal } from 'antd';
+import { List, Button, Drawer } from 'antd';
 import { NavLink, Link, withRouter } from 'react-router-dom';
+import SurveyComponent from "./surveys/surveyComponent";
 
 let agendaActividadDetalle = (props) => {
-  const { showModal, handleOk, handleCancel, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
+  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
     <div className="container-calendar-section">
       <h3 style={{ paddingBottom: 30 }} className="title is-1 has-text-white">
@@ -72,7 +73,7 @@ let agendaActividadDetalle = (props) => {
                     <List.Item actions={
                       [
                         item.publish === "true" ?
-                          <Button type="primary" onClick={showModal}>
+                          <Button type="primary" onClick={showDrawer}>
                             Contestar Encuesta
                           </Button>
                           :
@@ -84,51 +85,29 @@ let agendaActividadDetalle = (props) => {
                           <div>
                             <p>{item.survey}</p>
                           </div>
-
-                        } />
+                        }
+                      />
                       <List.Item>
                         {
+                          console.log(item),
                           <div>
 
-                            {
-                              item.questions ?
-                                <div>
-                                  {
-                                    item.publish === "true" ?
-                                      <div>
-                                        <Modal title={item.survey} visible={visible} onOk={handleOk} onCancel={handleCancel}>
-                                          {
-                                            item.questions.map((question, key) => (
-                                              <div key={key}>
-                                                <label>{question.name}</label>
-                                                <p>{question.title}</p>
-                                                <input type={question.type} />
-                                              </div>
-                                            ))
-                                          }
-                                        </Modal>
-                                      </div>
-                                      :
-                                      <div>
-
-                                      </div>
-                                  }
-                                </div>
-                                :
-                                <div>
-                                  <Modal title={item.survey} visible={false} onOk={handleOk} onCancel={handleCancel}>
-                                    <p>No hay preguntas</p>
-                                  </Modal>
-                                </div>
-                            }
                           </div>
                         }
                       </List.Item>
+
+                      <Drawer
+                          title={item.survey}
+                          placement="right"
+                          closable={false}
+                          onClose={onClose}
+                          visible={visible}
+                        >
+                          <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                        </Drawer>
                     </List.Item>
                   )}
                   />
-
-
                 </div>
               </p>
             </div>
