@@ -13,7 +13,6 @@ import ImageInput from "../shared/imageInput";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
 
-
 /* Componente controlado tipo Input, todo esto para no pasar parametros usando arrow functions 
 requiere:
 @name nombre del campo
@@ -22,7 +21,7 @@ requiere:
 */
 const ControlledInput = (props) => {
   const [value, setValue] = useState(props.value || "");
-  const [name] = useState(props.name  || "generic");
+  const [name] = useState(props.name || "generic");
 
   const handleInputChange = (e) => {
     let valor = e.target.value;
@@ -172,7 +171,7 @@ class Faqs extends Component {
               "Agregue o edite las Preguntas Frecuentes que se muestran en la aplicación"
             }
             addAction={this.newFaqs}
-            addTitle={"Nuevo espacio"}
+            addTitle={"Nueva Pregunta"}
           >
             {this.state.loading ? (
               <Loading />
