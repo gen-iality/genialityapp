@@ -401,13 +401,13 @@ class Agenda extends Component {
                               Ver más...
                             </a>
 
-                            {/* Boton de para acceder a la conferencia */}
+                            {/* Boton de para acceder a la conferencia onClick={() =>
+                                showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
+                              } */}
                             <button
                               className="button is-success is-outlined is-pulled-right has-margin-top-20"
-                              disabled={agenda.meeting_id ? false : true}
-                              onClick={() =>
-                                showIframe(true, agenda.meeting_id)
-                              }
+                             
+
                             >
                               {agenda.meeting_id
                                 ? "Conferencia en Vivo"

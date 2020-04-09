@@ -14,27 +14,39 @@ import { PageHeader } from 'antd';
 
 
 let agendaActividadDetalle = (props) => {
+  console.log("!!PROPS",props);
+let [usuarioRegistrado, setUsuarioRegistrado] = useState(false)
+let [currentUser, setCurrentUser] = useState(false)
+
   useEffect(() => {
+    if (currentUser) return;
+    console.log("EFECTO",currentUser);
+    
     (async () => {
 
       let evius_token = Cookie.get('evius_token');
-      if (!evius_token) {
-      }
-      else {
+      
+      if (!evius_token) return;
+      
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
-        if (resp.status === 200) {
+        
+   
+        if (resp.status !== 200 && resp.status !== 202 ) return
+        
           const data = resp.data;
-
-          var url = window.location.href;
-          var id = url.slice(url.indexOf("ding/"),url.indexOf("/?")).replace('ding/','');
-          console.log(data._id);
-          const userRef = firestore.collection(`${id}_event_attendees`).where("email", "==",data.email) 
+          setCurrentUser(data);
+          
+          var id =  props.match.params.event;
+           
+          const userRef = firestore.collection(`${id}_event_attendees`).where("properties.email", "==",data.email) 
           .get().then(snapshot => {
             if (snapshot.empty) {
               toast.error("Usuario no inscrito a este evento, contacte al administrador");
               console.log('No matching documents.');
               return;  
-            }  
+            }
+            
+            
           snapshot.forEach(doc => {
           var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
           console.log(doc.id, '=>', doc.data());
@@ -48,6 +60,8 @@ let agendaActividadDetalle = (props) => {
             // Disminuye el contador si la actualizacion en la base de datos se realiza
             console.log("Document successfully updated!");
             toast.success("Usuario Chequeado");
+            setUsuarioRegistrado(true);
+
           })
                   .catch(error => {
                       console.error("Error updating document: ", error);
@@ -60,10 +74,11 @@ let agendaActividadDetalle = (props) => {
               });
         
           console.log("data ", data);
-        }
-      }
+        
+      
     })()
-  })
+  },[])
+
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
     <div className="columns container-calendar-section is-centered">
@@ -166,6 +181,9 @@ let agendaActividadDetalle = (props) => {
               </p>
             </div>
             {/* Boton de para acceder a la conferencia */}
+            
+            {usuarioRegistrado? (
+
             <button
               className="button is-success is-outlined is-pulled-right has-margin-top-20"
               disabled={currentActivity.meeting_id ? false : true}
@@ -175,6 +193,11 @@ let agendaActividadDetalle = (props) => {
                 ? "Conferencia en Vivo"
                 : "Sin Conferencia Virtual"}
             </button>
+            ):(
+              <div className="button is-warning">Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo </div>
+            )
+            }
+
 
             <hr></hr>
             <br />
