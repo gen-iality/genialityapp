@@ -15,13 +15,13 @@ function ListSurveys(props) {
       style={{ background: "#ffffff" }}
       bordered
       dataSource={jsonData}
-      renderItem={survey => (
+      renderItem={(survey) => (
         <List.Item
           key={survey._id}
           actions={[
             <Button onClick={() => props.showSurvey(survey._id)}>
               Ir a Encuesta
-            </Button>
+            </Button>,
           ]}
         >
           {survey.survey}
@@ -36,7 +36,7 @@ class SurveyForm extends Component {
     super(props);
     this.state = {
       idSurvey: null,
-      surveysData: []
+      surveysData: [],
     };
   }
 
@@ -55,7 +55,7 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = data => {
+  toggleSurvey = (data) => {
     this.setState({ idSurvey: data });
   };
 
