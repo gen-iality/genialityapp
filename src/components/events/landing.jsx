@@ -40,8 +40,7 @@ import { AudioOutlined,
         MenuOutlined,
         RightOutlined,
         LeftOutlined,
-        FileUnknownOutlined,
-        QuestionOutlined
+        FileUnknownOutlined
       } from '@ant-design/icons';
 
 
@@ -601,17 +600,21 @@ class Landing extends Component {
                           Encuestas
                         </span>
                       </Menu.Item>
+
+
                       <Menu.Item 
-                      key="9"
-                      onClick={e => {
-                        this.showSection("faqs");
-                      }}
-                      >
-                        <QuestionOutlined />
-                        <span>
-                          Preguntas Frecuentes
-                        </span>
-                      </Menu.Item>        
+                        key="9"
+                        onClick={e => {
+                          this.showSection("faqs");
+                        }}
+                        >
+                          <QuestionCircleOutlined />
+                          <span>
+                            Preguntas Frecuentes
+                          </span>
+                        </Menu.Item>
+
+                      
                   </Menu>
 
                   
@@ -780,6 +783,8 @@ class Landing extends Component {
                             Preguntas Frecuentes
                           </span>
                         </Menu.Item>
+
+                        faqs
                       </Menu>
 
                     </Drawer>
