@@ -80,7 +80,7 @@ class Agenda extends Component {
         }
       } catch (error) {
         const { status } = error.response;
-        console.log("STATUS", status, status === 401);
+      
       }
     }
   };
@@ -142,11 +142,11 @@ class Agenda extends Component {
   //Se realiza funcion para filtrar mediante dropdown
   selectionSpace() {
     let space = document.getElementById("selectedSpace").value;
-    console.log(space);
+  
 
     const filtered = this.filterBySpace(space, this.state.list);
     this.setState({ filtered, toShow: filtered, space });
-    console.log("date", this.state.days);
+   
   }
 
   //Funcion que realiza el filtro por espacio, teniendo en cuenta el dia
@@ -192,7 +192,7 @@ class Agenda extends Component {
   redirect = () => this.setState({ redirect: true });
 
   async selected() {
-    console.log(this.state.value);
+   
   }
 
   gotoActivity(activity) {
@@ -211,7 +211,7 @@ class Agenda extends Component {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
     const survey = await SurveysApi.getByActivity(this.props.event._id, activity._id)
     this.setState({ survey: survey })
-    console.log(survey)
+ 
   }
 
   showDrawer = () => {
@@ -221,7 +221,7 @@ class Agenda extends Component {
   };
 
   handleOk = e => {
-    console.log(e);
+   
     this.setState({
       visible: false,
     });
@@ -251,10 +251,6 @@ class Agenda extends Component {
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && (
           <div className="container-calendar-section">
-            {
-              console.log("props", this.props),
-              console.log("state", this.state)
-            }
             {/* input donde se iteran los espacios del evento */}
             <p className="is-size-5">Seleccióne el espacio</p>
             <div

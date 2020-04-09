@@ -101,7 +101,7 @@ class Speakers extends Component {
                         
                         {/* Contenedor para nombre y profesion del conferencista*/}
                         <div className="modal-card-head is-block" style={{ paddingTop:"1.5rem", minHeight: "40%"}}>
-                            <p class="modal-card-title has-text-right">
+                            <p className="modal-card-title has-text-right">
                                 <button className="delete" aria-label="close"></button>
                             </p>
                             <br/>
