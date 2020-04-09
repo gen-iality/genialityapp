@@ -7,7 +7,7 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col } from "antd";
+import { Button, Row, Col, Table } from "antd";
 
 import FormQuestions from "./questions";
 
@@ -23,6 +23,7 @@ class triviaEdit extends Component {
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
+      question: []
     };
     this.submit = this.submit.bind(this);
   }
@@ -42,6 +43,8 @@ class triviaEdit extends Component {
     );
     const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
+    console.log(Update)
+
     //Se envan al estado para poderlos utilizar en el markup
     this.setState({
       _id: Update._id,
@@ -50,6 +53,18 @@ class triviaEdit extends Component {
       activity_id: Update.activity_id,
       dataAgenda: dataAgenda.data,
     });
+
+    this.getQuestions()
+  }
+
+  async getQuestions() {
+    const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
+
+    const question=[]
+    for (const prop in Update.questions) {
+        question.push(Update.questions[prop])
+    }
+    this.setState({question})
   }
 
   //Funcion para guardar los datos a actualizar
@@ -72,7 +87,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -107,7 +122,28 @@ class triviaEdit extends Component {
 
   render() {
     const { survey, publish, activity_id, dataAgenda } = this.state;
-
+    const columns = [
+      {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Title',
+        dataIndex: 'title',
+        key: 'title',
+      },
+      {
+        title: 'Page',
+        dataIndex: 'page',
+        key: 'page',
+      },
+      {
+        title: 'Type',
+        dataIndex: 'type',
+        key: 'type',
+      },
+    ]
     return (
       <Fragment>
         <EventContent title="Trivias" closeAction={this.goBack}>
@@ -169,7 +205,7 @@ class triviaEdit extends Component {
           </div>
 
           <Row>
-            <Col span={12} offset={6}>
+            <Col span={5} style={{ marginTop: "3%" }}>
               <Button block size="large" onClick={this.addNewQuestion}>
                 Agregar Pregunta
               </Button>
@@ -188,10 +224,10 @@ class triviaEdit extends Component {
                   </Button>
                 </Col>
               </Row>
-
               {formQuestion}
             </div>
           ))}
+          <Table style={{ marginTop: "5%" }} dataSource={this.state.question} columns={columns} />
         </EventContent>
       </Fragment>
     );
