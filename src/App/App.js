@@ -10,7 +10,7 @@ import 'bulma-spacing/css/bulma-spacing.min.css'
 
 
 class App extends Component {
-    componentWillMount() {
+    componentDidMount() {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
             console.log(dataUrl);
