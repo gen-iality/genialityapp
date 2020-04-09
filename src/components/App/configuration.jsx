@@ -237,7 +237,7 @@ class Configuration extends Component {
             })
         }
     }
-    componentDidMount() {
+    componentWillMount() {
         let dataUrl = parseUrl(document.URL);
         if (dataUrl && dataUrl.token) {
             console.log(dataUrl);
