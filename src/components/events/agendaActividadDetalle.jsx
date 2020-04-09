@@ -1,8 +1,65 @@
-import React from "react";
 import Moment from "moment";
 import ReactPlayer from "react-player";
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
+import * as Cookie from "js-cookie";
+import API, { OrganizationApi } from "../../helpers/request"
+import {firestore} from "../../helpers/firebase";
+import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 export default props => {
+  useEffect(() => {
+    (async () => {
+
+      let evius_token = Cookie.get('evius_token');
+      if (!evius_token) {
+      }
+      else {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
+        if (resp.status === 200) {
+          const data = resp.data;
+
+          var url = window.location.href;
+          var id = url.slice(url.indexOf("ding/"),url.indexOf("/?")).replace('ding/','');
+          console.log(data._id);
+          const userRef = firestore.collection(`${id}_event_attendees`).where("email", "==",data.email) 
+          .get().then(snapshot => {
+            if (snapshot.empty) {
+              toast.error("Usuario no inscrito a este evento, contacte al administrador");
+              console.log('No matching documents.');
+              return;  
+            }  
+          snapshot.forEach(doc => {
+          var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
+          console.log(doc.id, '=>', doc.data());
+          user.update({
+            updated_at: new Date(),
+            checked_in: true,
+            checked_at: new Date()
+          })
+          .then(() => {
+          
+            // Disminuye el contador si la actualizacion en la base de datos se realiza
+            console.log("Document successfully updated!");
+            toast.success("Usuario Chequeado");
+          })
+                  .catch(error => {
+                      console.error("Error updating document: ", error);
+                      toast.error(<FormattedMessage id="toast.error" defaultMessage="Error :(" />);
+                  });
+              });
+              })
+              .catch(err => {
+                console.log('Error getting documents', err);
+              });
+        
+          console.log("data ", data);
+        }
+      }
+    })()
+  })
+
   const { currentActivity, gotoActivityList, showIframe } = props;
   return (
     <div className="container-calendar-section">
