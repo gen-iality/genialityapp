@@ -45,7 +45,7 @@ class SurveyForm extends Component {
     super(props);
     this.state = {
       idSurvey: null,
-      surveysData: []
+      surveysData: [],
     };
   }
 
@@ -64,7 +64,7 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = data => {
+  toggleSurvey = (data) => {
     this.setState({ idSurvey: data });
   };
 

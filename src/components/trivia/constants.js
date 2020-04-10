@@ -17,7 +17,9 @@ const selectOptions = [
   },
 ];
 
-const filterBy = (data, field) =>
-  data.filter(({ value }) => field.includes(value));
+const filterBy = (data, field, exclude) =>
+  exclude
+    ? data.filter(({ value }) => !field.includes(value))
+    : data.filter(({ value }) => field.includes(value));
 
 export default filterBy(selectOptions, ["checkbox", "radiogroup"]);
