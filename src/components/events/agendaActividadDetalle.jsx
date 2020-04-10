@@ -155,27 +155,35 @@ let [currentUser, setCurrentUser] = useState(false)
                         title={
                           <div>
                             <p>{item.survey}</p>
+                            {
+                              item.publish === "true" ?
+                                <div>
+                                  <Drawer
+                                    title={item.survey}
+                                    placement="right"
+                                    closable={false}
+                                    onClose={onClose}
+                                    visible={visible}
+                                  >
+                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                  </Drawer>
+                                </div>
+                                :
+                                <div>
+                                  <Drawer
+                                    title={item.survey}
+                                    placement="right"
+                                    closable={false}
+                                    onClose={onClose}
+                                    visible={false}
+                                  >
+                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                  </Drawer>
+                                </div>
+                            }
                           </div>
                         }
                       />
-                      <List.Item>
-                        {
-                          console.log(item),
-                          <div>
-
-                          </div>
-                        }
-                      </List.Item>
-
-                      <Drawer
-                          title={item.survey}
-                          placement="right"
-                          closable={false}
-                          onClose={onClose}
-                          visible={visible}
-                        >
-                          <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                        </Drawer>
                     </List.Item>
                   )}
                   />
