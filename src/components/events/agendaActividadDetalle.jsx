@@ -7,39 +7,37 @@ import * as Cookie from "js-cookie";
 import API, { OrganizationApi, EventsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
-import { List, Button, Drawer } from "antd";
+
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, List, Button, Drawer } from "antd";
+import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 let agendaActividadDetalle = props => {
-  console.log("!!PROPS", props);
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
+
   useEffect(() => {
-    console.log("EVENT", event);
     (async () => {
       //Id del evento
       var id = props.match.params.event;
       const event = await EventsApi.landingEvent(id);
       setEvent(event);
 
-      console.log("EVENT", event);
-
       if (currentUser) return;
-      let evius_token = Cookie.get("evius_token");
 
+      let evius_token = Cookie.get("evius_token");
+      console.log("token", evius_token);
       if (!evius_token) return;
 
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-
+      console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
 
       const data = resp.data;
-      setCurrentUser(data);
 
-      //firestore.collection(`${id}_event_attendees`)
+      setCurrentUser(data);
 
       const userRef = firestore
         .collection(`${id}_event_attendees`)
@@ -51,6 +49,8 @@ let agendaActividadDetalle = props => {
             console.log("No matching documents.");
             return;
           }
+
+          console.log("USUARIO REGISTRADO.");
 
           snapshot.forEach(doc => {
             var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
@@ -129,7 +129,7 @@ let agendaActividadDetalle = props => {
               ))}
             </div>
             <div>
-              <p className="has-text-left is-size-6-desktop">
+              <div className="has-text-left is-size-6-desktop">
                 <b>Encuestas</b>
                 <div>
                   {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
@@ -181,7 +181,7 @@ let agendaActividadDetalle = props => {
                     )}
                   />
                 </div>
-              </p>
+              </div>
             </div>
             {/* Boton de para acceder a la conferencia */}
 
@@ -198,38 +198,32 @@ let agendaActividadDetalle = props => {
                 comunicate con el organizador del evento
               
              */}
-            {event && event.allow_register ? <p>El Evento permite registro</p> : <p>Es Evento Privado</p>}
-            {currentUser ? <p>usuario logueado</p> : <p>Usuario anónimo</p>}
-            {usuarioRegistrado ? <p>Usuario registrado</p> : <p>Usuario sin registrar</p>}
 
-            {!currentUser && (
-              <Alert
-                onClick={alert("HOLA")}
-                message="Evento restringido. requiere usuario"
-                description="Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo, 
-                    si estas registrado en el evento ingresa al sistema con tu usuario para poder  acceder al evento, 
-                    [Ir a Ingreso]"
-                type="info"
-                showIcon
-              />
-            )}
+            <h2 className="button is-success"> Tiene Espacio Virtual </h2>
+            {console.log(usuarioRegistrado, currentUser)}
+            <Row>
+              <Col span={24}>
+                <AttendeeNotAllowedCheck
+                  event
+                  currentUser={currentUser}
+                  usuarioRegistrado={usuarioRegistrado}
+                  currentActivity={currentActivity}
+                />
 
-            {usuarioRegistrado ? (
-              <button
-                className="button is-success is-outlined is-pulled-right has-margin-top-20"
-                disabled={currentActivity.meeting_id ? false : true}
-                onClick={() => showIframe(true, currentActivity.meeting_id)}>
-                {currentActivity.meeting_id ? "Conferencia en Vivo" : "Sin Conferencia Virtual"}
-              </button>
-            ) : (
-              <div className="button is-warning">
-                Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo
-              </div>
-            )}
+                {usuarioRegistrado && (
+                  <Button
+                    type="primary"
+                    disabled={currentActivity.meeting_id ? false : true}
+                    onClick={() => showIframe(true, currentActivity.meeting_id)}>
+                    qqqqqqq
+                    {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                  </Button>
+                )}
+              </Col>
+            </Row>
 
-            <hr></hr>
-            <br />
-            <br />
+            <hr />
+            <hr />
             {/* Descripción del evento */}
 
             <div
