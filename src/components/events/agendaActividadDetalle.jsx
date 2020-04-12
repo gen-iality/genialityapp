@@ -1,100 +1,98 @@
 import Moment from "moment";
 import ReactPlayer from "react-player";
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import * as Cookie from "js-cookie";
-import API, { OrganizationApi } from "../../helpers/request"
-import {firestore} from "../../helpers/firebase";
+import API, { OrganizationApi, EventsApi } from "../../helpers/request";
+import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
-import { List, Button, Drawer } from 'antd';
-import { NavLink, Link, withRouter } from 'react-router-dom';
+import { List, Button, Drawer } from "antd";
+import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader } from 'antd';
+import { PageHeader, Alert } from "antd";
 
-
-let agendaActividadDetalle = (props) => {
-  console.log("!!PROPS",props);
-let [usuarioRegistrado, setUsuarioRegistrado] = useState(false)
-let [currentUser, setCurrentUser] = useState(false)
-
+let agendaActividadDetalle = props => {
+  console.log("!!PROPS", props);
+  let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
+  let [currentUser, setCurrentUser] = useState(false);
+  let [event, setEvent] = useState(false);
   useEffect(() => {
-    if (currentUser) return;
-    console.log("EFECTO",currentUser);
-    
+    console.log("EVENT", event);
     (async () => {
+      //Id del evento
+      var id = props.match.params.event;
+      const event = await EventsApi.landingEvent(id);
+      setEvent(event);
 
-      let evius_token = Cookie.get('evius_token');
-      
+      console.log("EVENT", event);
+
+      if (currentUser) return;
+      let evius_token = Cookie.get("evius_token");
+
       if (!evius_token) return;
-      
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`)
-        
-   
-        if (resp.status !== 200 && resp.status !== 202 ) return
 
-          const data = resp.data;
-          setCurrentUser(data);
-          
-          var id =  props.match.params.event;
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
 
-          //firestore.collection(`${id}_event_attendees`)
-           
-          const userRef = firestore.collection(`${id}_event_attendees`).where("properties.email", "==",data.email) 
-          .get().then(snapshot => {
-            if (snapshot.empty) {
-              toast.error("Usuario no inscrito a este evento, contacte al administrador");
-              console.log('No matching documents.');
-              return;  
-            }
-            
-            
+      if (resp.status !== 200 && resp.status !== 202) return;
+
+      const data = resp.data;
+      setCurrentUser(data);
+
+      //firestore.collection(`${id}_event_attendees`)
+
+      const userRef = firestore
+        .collection(`${id}_event_attendees`)
+        .where("properties.email", "==", data.email)
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            toast.error("Usuario no inscrito a este evento, contacte al administrador");
+            console.log("No matching documents.");
+            return;
+          }
+
           snapshot.forEach(doc => {
-          var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
-          console.log(doc.id, '=>', doc.data());
-          user.update({
-            updated_at: new Date(),
-            checked_in: true,
-            checked_at: new Date()
-          })
-          .then(() => {
-          
-            // Disminuye el contador si la actualizacion en la base de datos se realiza
-            console.log("Document successfully updated!");
-            toast.success("Usuario Chequeado");
-            setUsuarioRegistrado(true);
-
-          })
-                  .catch(error => {
-                      console.error("Error updating document: ", error);
-                      toast.error(<FormattedMessage id="toast.error" defaultMessage="Error :(" />);
-                  });
-              });
+            var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
+            console.log(doc.id, "=>", doc.data());
+            user
+              .update({
+                updated_at: new Date(),
+                checked_in: true,
+                checked_at: new Date()
               })
-              .catch(err => {
-                console.log('Error getting documents', err);
+              .then(() => {
+                // Disminuye el contador si la actualizacion en la base de datos se realiza
+                console.log("Document successfully updated!");
+                toast.success("Usuario Chequeado");
+                setUsuarioRegistrado(true);
+              })
+              .catch(error => {
+                console.error("Error updating document: ", error);
+                toast.error(<FormattedMessage id="toast.error" defaultMessage="Error :(" />);
               });
-        
-          console.log("data ", data);
-        
-      
-    })()
-  },[])
+          });
+        })
+        .catch(err => {
+          console.log("Error getting documents", err);
+        });
+
+      console.log("data ", data);
+    })();
+  }, []);
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
     <div className="columns container-calendar-section is-centered">
-
-
       <div className=" container_agenda-information container-calendar is-three-fifths">
         <div className="card agenda_information ">
-        <PageHeader
-          className="site-page-header"
-          onBack={e => {
-            gotoActivityList();
-          }}
-          title={currentActivity.name}
-        />
+          <PageHeader
+            className="site-page-header"
+            onBack={e => {
+              gotoActivityList();
+            }}
+            title={currentActivity.name}
+          />
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}
@@ -105,13 +103,9 @@ let [currentUser, setCurrentUser] = useState(false)
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
-              {
-                currentActivity.meeting_video && <ReactPlayer
-                  style={{ maxWidth: "100%" }}
-                  url={currentActivity.meeting_video}
-                  controls
-                />
-              }
+              {currentActivity.meeting_video && (
+                <ReactPlayer style={{ maxWidth: "100%" }} url={currentActivity.meeting_video} controls />
+              )}
             </div>
           </header>
 
@@ -129,8 +123,7 @@ let [currentUser, setCurrentUser] = useState(false)
                     background: cat.color,
                     color: cat.color ? "white" : ""
                   }}
-                  className="tag category_calendar-tag"
-                >
+                  className="tag category_calendar-tag">
                   {cat.name}
                 </span>
               ))}
@@ -140,74 +133,99 @@ let [currentUser, setCurrentUser] = useState(false)
                 <b>Encuestas</b>
                 <div>
                   {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List itemLayout="horizontal" dataSource={survey.data} renderItem={item => (
-                    <List.Item actions={
-                      [
-                        item.publish === "true" ?
-                          <Button type="primary" onClick={showDrawer}>
-                            Contestar Encuesta
-                          </Button>
-                          :
-                          <div></div>
-                      ]
-                    }>
-                      <List.Item.Meta
-                        title={
-                          <div>
-                            <p>{item.survey}</p>
-                            {
-                              item.publish === "true" ?
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={survey.data}
+                    renderItem={item => (
+                      <List.Item
+                        actions={[
+                          item.publish === "true" ? (
+                            <Button type="primary" onClick={showDrawer}>
+                              Contestar Encuesta
+                            </Button>
+                          ) : (
+                            <div></div>
+                          )
+                        ]}>
+                        <List.Item.Meta
+                          title={
+                            <div>
+                              <p>{item.survey}</p>
+                              {item.publish === "true" ? (
                                 <div>
                                   <Drawer
                                     title={item.survey}
                                     placement="right"
                                     closable={false}
                                     onClose={onClose}
-                                    visible={visible}
-                                  >
+                                    visible={visible}>
                                     <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
                                   </Drawer>
                                 </div>
-                                :
+                              ) : (
                                 <div>
                                   <Drawer
                                     title={item.survey}
                                     placement="right"
                                     closable={false}
                                     onClose={onClose}
-                                    visible={false}
-                                  >
+                                    visible={false}>
                                     <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
                                   </Drawer>
                                 </div>
-                            }
-                          </div>
-                        }
-                      />
-                    </List.Item>
-                  )}
+                              )}
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    )}
                   />
                 </div>
               </p>
             </div>
             {/* Boton de para acceder a la conferencia */}
-            
-            {usuarioRegistrado? (
 
-            <button
-              className="button is-success is-outlined is-pulled-right has-margin-top-20"
-              disabled={currentActivity.meeting_id ? false : true}
-              onClick={() => showIframe(true, currentActivity.meeting_id)}
-            >
-              {currentActivity.meeting_id
-                ? "Conferencia en Vivo"
-                : "Sin Conferencia Virtual"}
-            </button>
-            ):(
-              <div className="button is-warning">Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo </div>
-            )
-            }
+            {/*
+             event.allow_register
+              -Si es un usuario anónimo y evento privado
+              --Evento Restringido: Ingresa al sistema con tu usuario para poder  acceder al evento, 
+              recuerda que debes estar previamente registrado al evento
+              --Botón de Login: [Ir a Ingreso] Se debe mostrar el botón para llevar al login
+              después del login idealmente treaerlo de regreso al evento
 
+              -Si es un usuario logueado, evento privado pero no esta registrado en el evento
+              --Evento Restringido: Debes estar previamente registrado al evento para acceder al espacio en vivo
+                comunicate con el organizador del evento
+              
+             */}
+            {event && event.allow_register ? <p>El Evento permite registro</p> : <p>Es Evento Privado</p>}
+            {currentUser ? <p>usuario logueado</p> : <p>Usuario anónimo</p>}
+            {usuarioRegistrado ? <p>Usuario registrado</p> : <p>Usuario sin registrar</p>}
+
+            {!currentUser && (
+              <Alert
+                onClick={alert("HOLA")}
+                message="Evento restringido. requiere usuario"
+                description="Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo, 
+                    si estas registrado en el evento ingresa al sistema con tu usuario para poder  acceder al evento, 
+                    [Ir a Ingreso]"
+                type="info"
+                showIcon
+              />
+            )}
+
+            {usuarioRegistrado ? (
+              <button
+                className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                disabled={currentActivity.meeting_id ? false : true}
+                onClick={() => showIframe(true, currentActivity.meeting_id)}>
+                {currentActivity.meeting_id ? "Conferencia en Vivo" : "Sin Conferencia Virtual"}
+              </button>
+            ) : (
+              <div className="button is-warning">
+                Evento Restringido: debes estar previamente registrado al evento para acceder al espacio en vivo
+              </div>
+            )}
 
             <hr></hr>
             <br />
@@ -235,8 +253,7 @@ let [currentUser, setCurrentUser] = useState(false)
                 borderTop: "none",
                 justifyContent: "space-between",
                 alignItems: "flex-end"
-              }}
-            >
+              }}>
               {/* <button
             className="button button-color-agenda has-text-light is-pulled-right is-medium"
             onClick={() => this.registerInActivity(agenda._id)}
@@ -248,8 +265,7 @@ let [currentUser, setCurrentUser] = useState(false)
                 className=""
                 onClick={e => {
                   gotoActivityList();
-                }}
-              >
+                }}>
                 <h3 className=""> Regresar a la agenda</h3>
               </a>
             </div>
@@ -260,4 +276,4 @@ let [currentUser, setCurrentUser] = useState(false)
   );
 };
 
-export default withRouter(agendaActividadDetalle) 
+export default withRouter(agendaActividadDetalle);

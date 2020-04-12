@@ -96,7 +96,7 @@ class General extends Component {
         const valid = (event.name.length > 0 && event.venue.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length > 0);
         this.setState({ valid: !valid, error })
     };
-    //Cambio en la descripción
+    //Cambio descripción
     chgTxt = content => this.setState({ event: { ...this.state.event, description: content } });
     //Funciones para manejar el cambio en listas desplegables
     selectCategory = (selectedCategories) => {
@@ -353,7 +353,7 @@ class General extends Component {
                         </div>
 
                         <div className="field">
-                            <label className="label required">Desea mantener activa las fechas en la aplicacion?</label>
+                            <label className="label required">Desea mantener activa las fechas ?</label>
                             <div class="select is-primary">
                                 <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
@@ -364,18 +364,18 @@ class General extends Component {
                         </div>
 
                         <div className="field">
-                            <label className="label required">Desea Tener Registro en la aplicación?</label>
+                            <label className="label required">El evento es público o es privado?</label>
+                            <p>En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido añadidas por un administrador u organizador del evento</p>
                             <div class="select is-primary">
                                 <select name={"allow_register"} value={event.allow_register} defaultValue={event.allow_register} onChange={this.handleChange}>
-                                    <option>Seleccionar...</option>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
+                                    <option value={true}>Público</option>
+                                    <option value={false}>Privado</option>
                                 </select>
                             </div>
                         </div>
 
                         <div className="field">
-                            <label className="label required">Desea observar el detalle de la agenda en la aplicación?</label>
+                            <label className="label required">Desea observar el detalle de la agenda ?</label>
                             <div class="select is-primary">
                                 <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
                                     <option>Seleccionar...</option>
@@ -404,16 +404,16 @@ class General extends Component {
                                     <div class="select is-primary">
                                         <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>
                                             <option value={null}>Banner de inicio</option>
-                                            <option value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.name : ''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
-                                            <option value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title : 'Favor Seleccionar items del menu para la aplicación'}</option>
+                                            <option value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.name : ''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                            <option value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
                                         </select>
                                     </div>
                                 </div>

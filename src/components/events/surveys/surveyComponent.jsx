@@ -23,6 +23,7 @@ class SurveyComponent extends Component {
   }
 
   componentDidMount() {
+    console.log("AQUI")
     this.loadData();
   }
 
@@ -65,7 +66,7 @@ class SurveyComponent extends Component {
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta
     // Si la pregunta tiene la propiedad 'page'
-
+    console.log(dataSurvey["questions"]);
     // Aqui se itera cada pregunta y se asigna a una pagina
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
