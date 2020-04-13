@@ -20,13 +20,13 @@ class FormQuestions extends Component {
     super(props);
     this.state = {
       isSubmitting: false,
-      quantityQuestions: 0,
+      quantityQuestions: 0
     };
   }
 
   componentDidMount() {}
 
-  validationField = (values) => {
+  validationField = values => {
     console.log("realizando validaciones:", values);
 
     const errors = {};
@@ -38,20 +38,17 @@ class FormQuestions extends Component {
     return errors;
   };
 
-  sendData = async (values) => {
+  sendData = async values => {
     const { eventId, surveyId, questionId, removeQuestion } = this.props;
     this.setState({ isSubmitting: true });
+
+    values.id = questionId;
 
     console.log("SENDING DATA:", values);
 
     // Funcion que excluye las propiedades de un objeto
     // para no enviarlas a la base de datos
-    const exclude = ({
-      selectOptions,
-      quantityOptions,
-      questionOptions,
-      ...rest
-    }) => rest;
+    const exclude = ({ selectOptions, quantityOptions, questionOptions, ...rest }) => rest;
 
     // Ejecuta el servicio
     SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
@@ -72,11 +69,10 @@ class FormQuestions extends Component {
                 title: "",
                 page: "",
                 selectOptions: showSelectOptions,
-                quantityOptions: [1, 2, 3, 4],
+                quantityOptions: [1, 2, 3, 4]
               }}
               onSubmit={this.sendData}
-              render={DisplayForm}
-            ></Formik>
+              render={DisplayForm}></Formik>
           </div>
         </EventContent>
       </Fragment>

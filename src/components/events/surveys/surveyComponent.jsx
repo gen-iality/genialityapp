@@ -23,7 +23,7 @@ class SurveyComponent extends Component {
   }
 
   componentDidMount() {
-    console.log("AQUI")
+    console.log("AQUI");
     this.loadData();
   }
 
@@ -35,9 +35,7 @@ class SurveyComponent extends Component {
       this.setState({ user: false });
     } else {
       try {
-        const resp = await API.get(
-          `/auth/currentUser?evius_token=${Cookie.get("evius_token")}`
-        );
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
@@ -54,6 +52,9 @@ class SurveyComponent extends Component {
   loadData = async () => {
     const { idSurvey, eventId } = this.props;
     let { surveyData } = this.state;
+
+    // Esto permite que el json pueda asignar el id a cada pregunta
+    Survey.JsonObject.metaData.addProperty("question", "id");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
@@ -97,9 +98,7 @@ class SurveyComponent extends Component {
         category: "none"
       });
 
-    let questions = survey
-      .getAllQuestions()
-      .filter(surveyInfo => surveyInfo.id);
+    let questions = survey.getAllQuestions().filter(surveyInfo => surveyInfo.id);
 
     const executeService = (SurveyData, questions, uid) => {
       let sendAnswers = 0;
@@ -121,15 +120,11 @@ class SurveyComponent extends Component {
                 })
                 .catch(err => (responseError = err));
             } else {
-              await SurveyAnswers.registerLikeGuest(
-                surveyData._id,
-                question.id,
-                {
-                  responseData: question.value,
-                  date: new Date(),
-                  uid: "guest"
-                }
-              )
+              await SurveyAnswers.registerLikeGuest(surveyData._id, question.id, {
+                responseData: question.value,
+                date: new Date(),
+                uid: "guest"
+              })
                 .then(result => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;

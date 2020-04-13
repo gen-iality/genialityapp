@@ -13,6 +13,7 @@
     "bulma": "^0.7.2",
     "bulma-extensions": "^4.0.1",
     "bulma-spacing": "^1.0.2",
+    "chart.js": "^2.9.3",
     "core-js": "^2.6.11",
     "firebase": "^7.7.0",
     "firebase-admin": "^8.10.0",
