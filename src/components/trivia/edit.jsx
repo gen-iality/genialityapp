@@ -199,27 +199,35 @@ class triviaEdit extends Component {
               </button>
             </div>
           </div>
-          <label style={{ marginTop: "5%" }} className="label">
-            activar la encuesta
-          </label>
-          <div className="select" style={{ marginBottom: "5%" }}>
-            <select
-              name="publish"
-              value={publish}
-              onChange={this.changeInput}
-              onClick={(e) => {
-                this.setState({ publish: e.target.value });
-              }}
-            >
-              <option>...Seleccionar</option>
-              <option value={true}>Si</option>
-              <option value={false}>No</option>
-            </select>
-          </div>
+          {
+            this.props.location.state ?
+              <div>
+                <label style={{ marginTop: "5%" }} className="label">
+                  activar la encuesta
+                </label>
+                <div className="select" style={{ marginBottom: "5%" }}>
+                  <select
+                    name="publish"
+                    value={publish}
+                    onChange={this.changeInput}
+                    onClick={(e) => {
+                      this.setState({ publish: e.target.value });
+                    }}
+                  >
+                    <option>...Seleccionar</option>
+                    <option value={true}>Si</option>
+                    <option value={false}>No</option>
+                  </select>
+                </div>
+              </div>
+              :
+              <div>
 
+              </div>
+          }
           <br />
+          <label className="label">Seleccione una actividad a referenciar</label>
           <div className="select">
-            <label className="Seleccione una actividad a referenciar"></label>
             <select
               name="activity_id"
               value={activity_id}
