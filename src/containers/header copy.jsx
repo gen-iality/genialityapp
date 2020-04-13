@@ -10,9 +10,10 @@ import LetterAvatar from "../components/shared/letterAvatar";
 import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
-import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import Menu from "../components/events/shared/menu";
+
+import { Layout } from "antd";
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -115,6 +116,7 @@ class Header extends Component {
   };
 
   openMenu = () => {
+    console.log("estado menu", this.state.menuOpen);
     this.setState(menuState => {
       return { menuOpen: !menuState.menuOpen, filterOpen: false };
     });
@@ -135,55 +137,82 @@ class Header extends Component {
     const { timeout, serverError, errorData, photo, name, showAdmin, showEventMenu } = this.state;
     const { eventMenu, location } = this.props;
     return (
-      <React.Fragment>
-        <header>
-          <nav
-            className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile"
-            style={{ display: "flex", alignItems: "center" }}>
-            <div className="navbar-brand">
-              {/*evius LOGO */}
-              <Link className="navbar-item" to={"/"}>
-                <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
-              </Link>
+      <Layout.Header style={{ position: "fixed", zIndex: 1, width: "100%", backgroundColor: "#FDFDFD" }}>
+        <div className="navbar-brand">
+          {/*evius LOGO */}
+          <Link className="navbar-item" to={"/"}>
+            <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
+          </Link>
 
-              {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
-              {showAdmin && (
-                <div className="navbar-item" data-target="navbarBasicExample">
-                  <p>
-                    <span className="icon icon-menu" onClick={this.handleMenuEvent}>
-                      <i className="fas fa-th"></i>
-                    </span>
-                    <span className="icon-menu" onClick={this.handleMenuEvent}>
-                      Administrar evento
-                    </span>
-                  </p>
-                </div>
-              )}
+          {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
+          {showAdmin && (
+            <div className="navbar-item" data-target="navbarBasicExample">
+              <p>
+                <span className="icon icon-menu" onClick={this.handleMenuEvent}>
+                  <i className="fas fa-th"></i>
+                </span>
+                <span className="icon-menu" onClick={this.handleMenuEvent}>
+                  Administrar evento
+                </span>
+              </p>
             </div>
-            {showAdmin && showEventMenu && (
-              <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
-                <div className="navbar-start">
-                  <MenuOld match={location.pathname} />
-                </div>
+          )}
+          {/* Menú administrativo del evento */}
+          {showAdmin && showEventMenu && (
+            <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
+              <div className="navbar-start">
+                <Menu match={location.pathname} />
               </div>
-            )}
+            </div>
+          )}
 
-            <UserStatusAndMenu
-              isLoading={this.state.loader}
-              user={this.state.user}
-              menuOpen={this.state.menuOpen}
-              loader={this.state.loader}
-              photo={photo}
-              name={name}
-              eventId={this.state.id}
-              logout={this.logout}
-              openMenu={this.openMenu}
-            />
-          </nav>
-        </header>
+          <a
+            onClick={this.openMenu}
+            role="button"
+            class="navbar-burger burger is-active"
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div id="navbarBasicExample" className={this.state.menuOpen ? "navbar-menu" : "navbar-menu is-active"}>
+          <div class="navbar-start">
+            <a class="navbar-item">Home</a>
+
+            <a class="navbar-item">Documentation</a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">More</a>
+
+              <div class="navbar-dropdown">
+                <a class="navbar-item">About</a>
+                <a class="navbar-item">Jobs</a>
+                <a class="navbar-item">Contact</a>
+                <hr class="navbar-divider" />
+                <a class="navbar-item">Report an issue</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-primary">
+                  <strong>Sign up</strong>
+                </a>
+                <a class="button is-light">Log in</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {timeout && <LogOut />}
         {serverError && <ErrorServe errorData={errorData} />}
-      </React.Fragment>
+      </Layout.Header>
     );
   }
 }
