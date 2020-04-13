@@ -76,7 +76,7 @@ class SurveyComponent extends Component {
       };
     });
 
-    // Esto tambien es temporal
+    // Se excluyen las propiedades
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
@@ -107,24 +107,40 @@ class SurveyComponent extends Component {
 
       return new Promise((resolve, reject) => {
         questions.forEach(async question => {
+          // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
+          let optionIndex = question.choices.findIndex(item => item.itemValue == question.value);
+          let optionQuantity = question.choices.length;
+
+          // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+          // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
           if (question.value)
             if (uid) {
-              await SurveyAnswers.registerWithUID(surveyData._id, question.id, {
-                responseData: question.value,
-                date: new Date(),
-                uid
-              })
+              await SurveyAnswers.registerWithUID(
+                surveyData._id,
+                question.id,
+                {
+                  responseData: question.value,
+                  date: new Date(),
+                  uid
+                },
+                { optionQuantity, optionIndex }
+              )
                 .then(result => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;
                 })
                 .catch(err => (responseError = err));
             } else {
-              await SurveyAnswers.registerLikeGuest(surveyData._id, question.id, {
-                responseData: question.value,
-                date: new Date(),
-                uid: "guest"
-              })
+              await SurveyAnswers.registerLikeGuest(
+                surveyData._id,
+                question.id,
+                {
+                  responseData: question.value,
+                  date: new Date(),
+                  uid: "guest"
+                },
+                { optionQuantity, optionIndex }
+              )
                 .then(result => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;

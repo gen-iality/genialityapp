@@ -11668,6 +11668,14 @@ react-attr-converter@^0.3.1:
   resolved "https://registry.yarnpkg.com/react-attr-converter/-/react-attr-converter-0.3.1.tgz#4a2abf6d907b7ddae4d862dfec80e489ce41ad6e"
   integrity sha512-dSxo2Mn6Zx4HajeCeQNLefwEO4kNtV/0E682R1+ZTyFRPqxDa5zYb5qM/ocqw9Bxr/kFQO0IUiqdV7wdHw+Cdg==
 
+react-chartjs-2@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-2.9.0.tgz#d054dbdd763fbe9a76296a4ae0752ea549b76d9e"
+  integrity sha512-IYwqUUnQRAJ9SNA978vxulHJTcUFTJk2LDVfbAyk0TnJFZZG7+6U/2flsE4MCw6WCbBjTTypy8T82Ch7XrPtRw==
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.8"
+
 react-codemirror2@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-codemirror2/-/react-codemirror2-5.1.0.tgz#62de4460178adea40eb52eabf7491669bf3794b8"

@@ -4,6 +4,7 @@ import { Route, Switch, withRouter, Link } from "react-router-dom";
 import { SurveysApi } from "../../../helpers/request";
 
 import SurveyComponent from "./surveyComponent";
+import Graphics from "./graphics";
 
 import { List, Button, Card, Col } from "antd";
 
@@ -11,30 +12,18 @@ function ListSurveys(props) {
   let { jsonData } = props;
 
   return (
-    <Col 
-    xs={24}
-    sm={22}
-    md={18} 
-    lg={18} 
-    xl={18}
-    style={{ margin: "0 auto" }}
-    >
+    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
       <Card>
         <List
           dataSource={jsonData}
           renderItem={survey => (
             <List.Item
               key={survey._id}
-              actions={[
-                <Button onClick={() => props.showSurvey(survey._id)}>
-                  Ir a Encuesta
-                </Button>
-              ]}
-            >
+              actions={[<Button onClick={() => props.showSurvey(survey._id)}>Ir a Encuesta</Button>]}>
               {survey.survey}
             </List.Item>
           )}
-      />
+        />
       </Card>
     </Col>
   );
@@ -46,6 +35,7 @@ class SurveyForm extends Component {
     this.state = {
       idSurvey: null,
       surveysData: [],
+      hasVote: false
     };
   }
 
@@ -64,37 +54,26 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = (data) => {
+  toggleSurvey = data => {
     this.setState({ idSurvey: data });
   };
 
   render() {
-    let { idSurvey, surveysData } = this.state;
+    let { idSurvey, surveysData, hasVote } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
-      return (
-        <Col 
-        xs={24}
-        sm={22}
-        md={18} 
-        lg={18} 
-        xl={18}
-        style={{ margin: "0 auto" }}
-        >
+      return !hasVote ? (
+        <Graphics idSurvey={idSurvey} showListSurvey={this.toggleSurvey} eventId={event._id} />
+      ) : (
+        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
           <Card>
-            <SurveyComponent
-              idSurvey={idSurvey}
-              showListSurvey={this.toggleSurvey}
-              eventId={event._id}
-            />
+            <SurveyComponent idSurvey={idSurvey} showListSurvey={this.toggleSurvey} eventId={event._id} />
           </Card>
         </Col>
       );
 
-    return (
-      <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />
-    );
+    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
 }
 
