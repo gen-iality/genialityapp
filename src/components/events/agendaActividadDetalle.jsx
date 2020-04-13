@@ -204,7 +204,7 @@ let agendaActividadDetalle = props => {
             <Row>
               <Col span={24}>
                 <AttendeeNotAllowedCheck
-                  event
+                  event={event}
                   currentUser={currentUser}
                   usuarioRegistrado={usuarioRegistrado}
                   currentActivity={currentActivity}
@@ -215,7 +215,6 @@ let agendaActividadDetalle = props => {
                     type="primary"
                     disabled={currentActivity.meeting_id ? false : true}
                     onClick={() => showIframe(true, currentActivity.meeting_id)}>
-                    qqqqqqq
                     {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
                   </Button>
                 )}

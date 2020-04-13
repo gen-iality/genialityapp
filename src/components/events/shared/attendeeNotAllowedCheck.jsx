@@ -33,7 +33,6 @@ export default props => {
 
       {currentUser && !usuarioRegistrado && (
         <Alert
-          onClick={() => alert("HOLA")}
           message="Evento restringido. requiere registro previo"
           description={
             <p>
