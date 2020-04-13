@@ -5,9 +5,10 @@ import { List, Button, Drawer } from 'antd';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader } from 'antd';
+import DetailSpeaker from './ModalDetalleSpeaker';
 
 let agendaActividadDetalle = (props) => {
-  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
+  const { handleOk, handleCancel, showDrawer, eventId, onClose, survey, currentActivity, gotoActivityList, showIframe, visibleModal, visible, showModal } = props;
 
   return (
     <div className="columns container-calendar-section is-centered">
@@ -15,13 +16,13 @@ let agendaActividadDetalle = (props) => {
 
       <div className=" container_agenda-information container-calendar is-three-fifths">
         <div className="card agenda_information ">
-        <PageHeader
-          className="site-page-header"
-          onBack={e => {
-            gotoActivityList();
-          }}
-          title={currentActivity.name}
-        />
+          <PageHeader
+            className="site-page-header"
+            onBack={e => {
+              gotoActivityList();
+            }}
+            title={currentActivity.name}
+          />
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}
@@ -144,7 +145,12 @@ let agendaActividadDetalle = (props) => {
             <p className="has-text-left is-size-6-desktop">
               <b>Conferencista:</b> &nbsp;
               {currentActivity.hosts.map((speaker, key) => (
-                <span key={key}>{speaker.name}, &nbsp;</span>
+                <span key={key}>
+                  <a className="modal-button" onClick={showModal} data-target="#myModal" aria-haspopup="true">
+                    {speaker.name},
+                      <DetailSpeaker visibleModal={visibleModal} handleOk={handleOk} handleCancel={handleCancel} eventId={eventId} speakerId={speaker._id} />
+                  </a> &nbsp;
+                </span>
               ))}
             </p>
 

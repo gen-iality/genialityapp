@@ -34,6 +34,7 @@ class Agenda extends Component {
       currentActivity: null,
       survey: [],
       visible: false,
+      visibleModal: false,
       redirect: false,
       disabled: false,
       generalTab: true
@@ -211,7 +212,7 @@ class Agenda extends Component {
     //Con el objeto activity se extrae el _id para consultar la api y traer la encuesta de ese evento
     const survey = await SurveysApi.getByActivity(this.props.event._id, activity._id)
     this.setState({ survey: survey })
-    console.log(survey)
+    //console.log(survey)
   }
 
   showDrawer = () => {
@@ -225,11 +226,33 @@ class Agenda extends Component {
     this.setState({
       visible: false,
     });
+
   };
 
   onClose = e => {
     this.setState({
       visible: false,
+    });
+  };
+
+  showModal = () => {
+    this.setState({
+      visibleModal: true,
+    });
+  };
+
+
+  handleOkModal = e => {
+    //console.log(e);
+    this.setState({
+      visibleModal: false,
+    });
+  };
+
+  handleCancel = e => {
+    //console.log(e);
+    this.setState({
+      visibleModal: false,
     });
   };
 
@@ -247,7 +270,7 @@ class Agenda extends Component {
     } = this.state;
     return (
       <div>
-        {currentActivity && <AgendaActividadDetalle visible={this.state.visible} onClose={this.onClose} showDrawer={this.showDrawer} matchUrl={this.props.matchUrl} survey={survey} currentActivity={currentActivity} gotoActivityList={this.gotoActivityList} showIframe={showIframe} />}
+        {currentActivity && <AgendaActividadDetalle eventId={this.props.event._id} visibleModal={this.state.visibleModal} handleCancel={this.handleOk} handleCancel={this.handleCancel} showModal={this.showModal} visible={this.state.visible} onClose={this.onClose} showDrawer={this.showDrawer} matchUrl={this.props.matchUrl} survey={survey} currentActivity={currentActivity} gotoActivityList={this.gotoActivityList} showIframe={showIframe} />}
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && (
           <div className="container-calendar-section">
@@ -348,7 +371,7 @@ class Agenda extends Component {
                       <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a> */}
-                  
+
                       </header>
                       {generalTab && (
                         <div
@@ -373,7 +396,9 @@ class Agenda extends Component {
                           <p className="has-text-left is-size-6-desktop">
                             <b>Conferencista:</b> &nbsp;
                             {agenda.hosts.map((speaker, key) => (
-                              <span key={key}>{speaker.name}, &nbsp;</span>
+                              <span key={key}>
+                                {speaker.name}, &nbsp;
+                              </span>
                             ))}
                           </p>
 
