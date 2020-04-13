@@ -232,7 +232,7 @@ class TicketsForm extends Component {
                         <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===0?'is-active':''}`}
                              onClick={e=>changeStep(0)}>Escoge tu Boleta</div>
                         {
-                            seatsConfig && <div className={`column is-3 has-text-centered has-text-weight-semibold step ${step===1?'is-active':''}`}
+                            seatsConfig && <div className={`column is-3 has-text-centered step ${step===1?'is-active':''}`}
                                                 onClick={e=>changeStep(1)}>Escoge tu Silla</div>
                         }
                     </div>

@@ -23,10 +23,9 @@
 //**************** Agenda landing*******************//
 
 .container-calendar-section{
-  margin-top: 5%;
 
   .container_calendar-description{
-    padding: 0 20px;
+    padding: 0 30px;
   }
   .button-color-agenda{
     background-color: $color-prueba;
@@ -64,9 +63,10 @@
 
 .container_agenda-information{
   margin-bottom: 3%;
+  .site-page-header {
+    border: 1px solid rgb(255, 255, 255);
+  }
   .agenda_information{
-    background-color:  rgba(0, 0, 0, 0.2);
-    color: white;
     padding: 20px;
     border: none;
     border-radius: 10px;
@@ -83,10 +83,9 @@
     }
 
     .card-header-title{
-      color: white;
       justify-content: start;
       font-weight: bolder;
-      font: normal normal 500 25px/35px $family-sans-serif;
+      font: normal normal 500 23px/25px $family-sans-serif;
       text-align: initial;
     }
 
@@ -96,7 +95,6 @@
         margin: 3% 0%;
       }
       .card-header-subtitle{
-        color: white;
         justify-content: start;
         font-weight: 600;
         font-size: 1.06rem;
@@ -137,8 +135,8 @@
     }
     
     .unselect-day{
-      background-color: rgba(0, 0, 0, 0.2) !important;
-      color: white !important;
+      background-color:white !important;
+      color: rgb(75, 69, 69) !important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 2rem;
