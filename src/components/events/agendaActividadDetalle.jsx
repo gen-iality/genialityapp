@@ -1,15 +1,14 @@
 import React from "react";
 import Moment from "moment";
 import ReactPlayer from "react-player";
-import { List, Button, Drawer } from 'antd';
+import { List, Avatar, Button, Drawer } from 'antd';
 import { NavLink, Link, withRouter } from 'react-router-dom';
 import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader } from 'antd';
-import DetailSpeaker from './ModalDetalleSpeaker';
 
 let agendaActividadDetalle = (props) => {
-  const { handleOk, handleCancel, showDrawer, eventId, onClose, survey, currentActivity, gotoActivityList, showIframe, visibleModal, visible, showModal } = props;
-
+  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
+  console.log(currentActivity.hosts)
   return (
     <div className="columns container-calendar-section is-centered">
 
@@ -144,14 +143,22 @@ let agendaActividadDetalle = (props) => {
             {/* Conferencistas del evento */}
             <p className="has-text-left is-size-6-desktop">
               <b>Conferencista:</b> &nbsp;
-              {currentActivity.hosts.map((speaker, key) => (
-                <span key={key}>
-                  <a className="modal-button" onClick={showModal} data-target="#myModal" aria-haspopup="true">
-                    {speaker.name},
-                      <DetailSpeaker visibleModal={visibleModal} handleOk={handleOk} handleCancel={handleCancel} eventId={eventId} speakerId={speaker._id} />
-                  </a> &nbsp;
-                </span>
-              ))}
+            
+                <div>
+                  <List
+                  itemLayout="horizontal"
+                  dataSource={currentActivity.hosts}
+                  renderItem={item => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={<Avatar src={item.image ? item.image : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"} />}
+                        title={<strong>{item.name}</strong>}
+                        description={item.profession}
+                      />
+                    </List.Item>
+                  )}
+                />
+                </div>
             </p>
 
             <div
