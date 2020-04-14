@@ -13,5 +13,25 @@ export const dataFrame = {
         data: []
       }
     ]
+  },
+  options: {
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1
+          }
+        }
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1
+          }
+        }
+      ]
+    }
   }
 };
