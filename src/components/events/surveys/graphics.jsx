@@ -5,29 +5,17 @@ import { Pagination } from "antd";
 
 import { SurveyAnswers } from "./services";
 import { SurveysApi } from "../../../helpers/request";
-
-const data = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "My First dataset",
-      backgroundColor: "rgba(255,99,132,0.2)",
-      borderColor: "rgba(255,99,132,1)",
-      borderWidth: 1,
-      hoverBackgroundColor: "rgba(255,99,132,0.4)",
-      hoverBorderColor: "rgba(255,99,132,1)",
-      data: [65, 59, 80, 81, 56, 55, 40]
-    }
-  ]
-};
+import { dataFrame } from "./frame";
 
 class Graphics extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataSurvey: {},
-      currentPage: 1
+      currentPage: 1,
+      dataFrame
     };
+    this.chartReference = React.createRef();
   }
 
   loadData = async () => {
@@ -39,27 +27,32 @@ class Graphics extends Component {
   };
 
   mountChart = async page => {
-    const { idSurvey } = this.props;
-    let { dataSurvey, currentPage } = this.state;
+    const { idSurvey, eventId } = this.props;
+    let { dataSurvey, currentPage, dataFrame } = this.state;
 
     let { questions } = dataSurvey;
 
-    let respuesta = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage].id);
+    let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage].id, eventId);
+    let { options, answer_count } = response;
 
-    console.log(respuesta);
+    dataFrame.labels = options.choices;
+    dataFrame.datasets.data = Object.values(answer_count);
+
+    this.setState({ dataFrame });
   };
 
   componentDidMount() {
     this.loadData();
+    console.log(this.chartReference); // returns a Chart.js instance reference
   }
 
   render() {
-    let { dataSurvey, currentPage } = this.state;
+    let { dataSurvey, currentPage, dataFrame, referenceChart } = this.state;
     console.log(this.state);
     if (dataSurvey.questions)
       return (
         <div>
-          <Bar data={data} />
+          <Bar data={dataFrame} ref={this.chartReference} />
           <Pagination
             defaultCurrent={currentPage}
             total={dataSurvey.questions.length * 10}
