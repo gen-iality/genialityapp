@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import LetterAvatar from "./letterAvatar";
 import WithLoading from "./withLoading";
-import { Menu, Dropdown, Avatar } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import { Menu, Dropdown, Avatar, Button, Col, Row } from "antd";
+import { DownOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, withRouter } from "react-router-dom";
 
 let userStatusAndMenu = props => {
@@ -35,13 +35,15 @@ let userStatusAndMenu = props => {
       </Menu.Item>
       <Menu.Item>
         <Link to={"/create-event"}>
-          <button className="button is-primary has-text-weight-bold">
+          <Button type="primary">
             <FormattedMessage id="header.create_event" defaultMessage="Create Event" />
-          </button>
+          </Button>
         </Link>
       </Menu.Item>
+      <Menu.Divider />
       <Menu.Item>
-        <a className="navbar-item has-text-weight-bold has-text-grey-light" onClick={logout}>
+        <a onClick={logout}>
+          <LogoutOutlined /> &nbsp;&nbsp;
           <FormattedMessage id="header.logout" defaultMessage="Log Out" />
         </a>
       </Menu.Item>
@@ -50,23 +52,27 @@ let userStatusAndMenu = props => {
 
   let loggedOutUser = (
     <div style={{ flex: 1, textAlign: "right" }}>
-      <button className="button is-primary has-text-weight-bold" onClick={logout}>
+      <Button type="primary" onClick={logout}>
         <FormattedMessage id="header.login" defaultMessage="Sign In" />
-      </button>
+      </Button>
     </div>
   );
 
   let loggedInuser = (
-    <Dropdown className={"is-pulled-right"} overlay={menu} trigger="click">
-      <a style={{ flex: 1, textAlign: "right" }} className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-        &nbsp;&nbsp;&nbsp;{name}&nbsp;&nbsp;
-        <Avatar size="large" src={photo}>
-          {name && name.charAt(0)}
-        </Avatar>
-        <DownOutlined />
-        {/* icon={<UserOutlined />} {name} */}
-      </a>
-    </Dropdown>
+    <Row style={{ flex: 1, textAlign: "right" }}>
+      <Col style={{ flex: 1, textAlign: "right" }}>
+        <Dropdown overlay={menu}>
+          <a onClick={e => e.preventDefault()}>
+            <Avatar size="large" src={photo}>
+              {name && name.charAt(0)}
+            </Avatar>
+            &nbsp;&nbsp;&nbsp;{name}&nbsp;&nbsp;
+            <DownOutlined />
+            {/* icon={<UserOutlined />} {name} */}
+          </a>
+        </Dropdown>
+      </Col>
+    </Row>
   );
 
   //<img src={photo} alt={`avatar_${name}`} className="author-image is-hidden-mobile" />

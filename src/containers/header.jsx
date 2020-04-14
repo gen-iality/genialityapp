@@ -11,8 +11,8 @@ import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar } from "antd";
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
+import { Menu, Dropdown, Avatar, Drawer, Button } from "antd";
+import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -38,6 +38,18 @@ class Header extends Component {
       tabEvtCat: true
     };
   }
+
+  showDrawer = () => {
+    this.setState({
+      showEventMenu: true
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      showEventMenu: false
+    });
+  };
 
   async componentDidMount() {
     let evius_token = Cookie.get("evius_token");
@@ -151,22 +163,17 @@ class Header extends Component {
                 <div className="navbar-item" data-target="navbarBasicExample">
                   <p>
                     <span className="icon icon-menu" onClick={this.handleMenuEvent}>
-                      <i className="fas fa-th"></i>
-                    </span>
-                    <span className="icon-menu" onClick={this.handleMenuEvent}>
-                      Administrar evento
+                      <Button onClick={this.showDrawer}>
+                        {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                          className: "trigger",
+                          onClick: this.toggle
+                        })}
+                      </Button>
                     </span>
                   </p>
                 </div>
               )}
             </div>
-            {showAdmin && showEventMenu && (
-              <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
-                <div className="navbar-start">
-                  <MenuOld match={location.pathname} />
-                </div>
-              </div>
-            )}
 
             <UserStatusAndMenu
               isLoading={this.state.loader}
@@ -181,6 +188,22 @@ class Header extends Component {
             />
           </nav>
         </header>
+
+        {/* Menu mobile */}
+        {showAdmin && showEventMenu && (
+          <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
+            <Drawer
+              title="Administrar evento"
+              maskClosable={true}
+              bodyStyle={{ padding: "0px" }}
+              placement="left"
+              closable={true}
+              onClose={this.onClose}
+              visible={this.state.showEventMenu}>
+              <MenuOld match={location.pathname} />
+            </Drawer>
+          </div>
+        )}
         {timeout && <LogOut />}
         {serverError && <ErrorServe errorData={errorData} />}
       </React.Fragment>
