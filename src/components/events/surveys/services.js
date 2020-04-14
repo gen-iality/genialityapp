@@ -118,17 +118,20 @@ export const SurveyAnswers = {
         });
     });
   },
-  getAnswersQuestion: async (surveyId, questionId) => {
+  getAnswersQuestion: async (surveyId, questionId, eventId) => {
     let docs = [];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+      let options = dataSurvey.questions.find(question => question.id == questionId);
+
       firestore
         .collection("surveys")
         .doc(surveyId)
         .collection("answer_count")
         .doc(questionId)
         .onSnapshot(listResponse => {
-          resolve(listResponse.data());
+          resolve({ answer_count: listResponse.data(), options });
         });
     });
   }
