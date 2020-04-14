@@ -37,51 +37,79 @@ class triviaEdit extends Component {
 
   async componentDidMount() {
     //Se consultan las api para traer en primera los datos de la encuesta para actualizar y en segunda los datos la agenda
-    const Update = await SurveysApi.getOne(
-      this.props.event._id,
-      this.props.location.state.edit
-    );
-    const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
-    console.log(Update)
+    if (this.props.location.state) {
+      const Update = await SurveysApi.getOne(
+        this.props.event._id,
+        this.props.location.state.edit
+      );
+      const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
 
-    //Se envan al estado para poderlos utilizar en el markup
-    this.setState({
-      _id: Update._id,
-      survey: Update.survey,
-      publish: Update.publish,
-      activity_id: Update.activity_id,
-      dataAgenda: dataAgenda.data,
-    });
+      console.log(Update)
 
-    this.getQuestions()
+      //Se envan al estado para poderlos utilizar en el markup
+      this.setState({
+        _id: Update._id,
+        survey: Update.survey,
+        publish: Update.publish,
+        activity_id: Update.activity_id,
+        dataAgenda: dataAgenda.data,
+      });
+
+      this.getQuestions()
+    }
+    else {
+      const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
+      this.setState({
+        dataAgenda: dataAgenda.data,
+      });
+    }
+
+
   }
 
   async getQuestions() {
     const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
 
-    const question=[]
+    const question = []
     for (const prop in Update.questions) {
-        question.push(Update.questions[prop])
+      question.push(Update.questions[prop])
     }
-    this.setState({question})
+    this.setState({ question })
   }
 
   //Funcion para guardar los datos a actualizar
   async submit() {
-    //Se recogen los datos a actualizar
-    const data = {
-      id: this.state._id,
-      survey: this.state.survey,
-      publish: this.state.publish,
-      activity_id: this.state.activity_id,
-    };
+    if (this.props.location.state) {
+      //Se recogen los datos a actualizar
+      const data = {
+        id: this.state._id,
+        survey: this.state.survey,
+        publish: this.state.publish,
+        activity_id: this.state.activity_id,
+      };
 
-    // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-    await SurveysApi.editOne(data, data.id, this.props.event._id);
-    // Se da la información de datos actualizados y se redirige a la vista principal
-    toast.success("datos actualizados");
-    window.location.replace(this.props.matchUrl);
+      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+      await SurveysApi.editOne(data, data.id, this.props.event._id);
+      // Se da la información de datos actualizados y se redirige a la vista principal
+      toast.success("datos actualizados");
+      window.location.replace(this.props.matchUrl);
+    } else {
+      //Se recogen los datos a actualizar
+      const data = {
+        id: this.state._id,
+        survey: this.state.survey,
+        publish: this.state.publish,
+        activity_id: this.state.activity_id,
+      };
+
+      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+      await SurveysApi.createOne(this.props.event._id, data);
+      // Se da la información de datos actualizados y se redirige a la vista principal
+      toast.success("datos creados");
+      window.location.replace(this.props.matchUrl);
+    }
+
   }
 
   // Funcion para generar un id a cada pregunta 'esto es temporal'
@@ -120,6 +148,8 @@ class triviaEdit extends Component {
     this.setState({ listQuestions: newArray });
   };
 
+  goBack = () => this.props.history.goBack();
+
   render() {
     const { survey, publish, activity_id, dataAgenda } = this.state;
     const columns = [
@@ -146,11 +176,11 @@ class triviaEdit extends Component {
     ]
     return (
       <Fragment>
-        <EventContent title="Trivias" closeAction={this.goBack}>
+        <EventContent title="Encuestas" closeAction={this.goBack}>
           <div className="columns is-6">
             <div>
               <label style={{ marginTop: "15%" }} className="label">
-                Nombre de la trivia
+                Nombre de la Encuesta
               </label>
               <input
                 value={survey}
@@ -169,27 +199,35 @@ class triviaEdit extends Component {
               </button>
             </div>
           </div>
-          <label style={{ marginTop: "5%" }} className="label">
-            activar la encuesta
-          </label>
-          <div className="select" style={{ marginBottom: "5%" }}>
-            <select
-              name="publish"
-              value={publish}
-              onChange={this.changeInput}
-              onClick={(e) => {
-                this.setState({ publish: e.target.value });
-              }}
-            >
-              <option>...Seleccionar</option>
-              <option value={true}>Si</option>
-              <option value={false}>No</option>
-            </select>
-          </div>
+          {
+            this.props.location.state ?
+              <div>
+                <label style={{ marginTop: "5%" }} className="label">
+                  activar la encuesta
+                </label>
+                <div className="select" style={{ marginBottom: "5%" }}>
+                  <select
+                    name="publish"
+                    value={publish}
+                    onChange={this.changeInput}
+                    onClick={(e) => {
+                      this.setState({ publish: e.target.value });
+                    }}
+                  >
+                    <option>...Seleccionar</option>
+                    <option value={true}>Si</option>
+                    <option value={false}>No</option>
+                  </select>
+                </div>
+              </div>
+              :
+              <div>
 
+              </div>
+          }
           <br />
+          <label className="label">Seleccione una actividad a referenciar</label>
           <div className="select">
-            <label className="Seleccione una actividad a referenciar"></label>
             <select
               name="activity_id"
               value={activity_id}
@@ -203,31 +241,37 @@ class triviaEdit extends Component {
               ))}
             </select>
           </div>
-
-          <Row>
-            <Col span={5} style={{ marginTop: "3%" }}>
-              <Button block size="large" onClick={this.addNewQuestion}>
-                Agregar Pregunta
+          {
+            this.props.location.state ?
+              <div>
+                <Row>
+                  <Col span={5} style={{ marginTop: "3%" }}>
+                    <Button block size="large" onClick={this.addNewQuestion}>
+                      Agregar Pregunta
               </Button>
-            </Col>
-          </Row>
-          {this.state.listQuestions.map((formQuestion) => (
-            <div key={formQuestion.key}>
-              <Row>
-                <Col>
-                  <Button
-                    span={6}
-                    offset={6}
-                    onClick={() => this.removeQuestion(formQuestion.key)}
-                  >
-                    Eliminar
+                  </Col>
+                </Row>
+                {this.state.listQuestions.map((formQuestion) => (
+                  <div key={formQuestion.key}>
+                    <Row>
+                      <Col>
+                        <Button
+                          span={6}
+                          offset={6}
+                          onClick={() => this.removeQuestion(formQuestion.key)}
+                        >
+                          Eliminar
                   </Button>
-                </Col>
-              </Row>
-              {formQuestion}
-            </div>
-          ))}
-          <Table style={{ marginTop: "5%" }} dataSource={this.state.question} columns={columns} />
+                      </Col>
+                    </Row>
+                    {formQuestion}
+                  </div>
+                ))}
+                <Table style={{ marginTop: "5%" }} dataSource={this.state.question} columns={columns} />
+              </div> :
+              <div></div>
+          }
+
         </EventContent>
       </Fragment>
     );

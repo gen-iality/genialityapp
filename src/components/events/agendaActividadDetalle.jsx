@@ -9,6 +9,7 @@ import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
+import { List, Avatar } from "antd";
 import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader, Alert, Row, Col, Tag, List, Button, Drawer } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
@@ -225,20 +226,106 @@ let agendaActividadDetalle = props => {
             <hr />
             {/* Descripción del evento */}
 
-            <div
-              className="is-size-5-desktop has-margin-bottom-10"
-              dangerouslySetInnerHTML={{
-                __html: currentActivity.description
-              }}
-            />
-
+            {currentActivity.hosts.length === 0 ? (
+              <div></div>
+            ) : (
+              <div>
+                <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                  <b>Conferencista:</b> &nbsp;
+                  <div>
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={currentActivity.hosts}
+                      renderItem={item => (
+                        <List.Item>
+                          <List.Item.Meta
+                            avatar={
+                              <Avatar
+                                src={
+                                  item.image
+                                    ? item.image
+                                    : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                }
+                              />
+                            }
+                            title={<strong>{item.name}</strong>}
+                            description={item.profession}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </div>
+                </p>
+              </div>
+            )}
             {/* Conferencistas del evento */}
-            <p className="has-text-left is-size-6-desktop">
-              <b>Conferencista:</b> &nbsp;
-              {currentActivity.hosts.map((speaker, key) => (
-                <span key={key}>{speaker.name}, &nbsp;</span>
-              ))}
-            </p>
+            <div>
+              <p className="has-text-left is-size-6-desktop">
+                <b>Encuestas</b>
+                <div>
+                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
+                  <List
+                    itemLayout="horizontal"
+                    dataSource={survey.data}
+                    renderItem={item => (
+                      <List.Item
+                        actions={[
+                          item.publish === "true" ? (
+                            <Button type="primary" onClick={showDrawer}>
+                              Contestar Encuesta
+                            </Button>
+                          ) : (
+                            <div></div>
+                          )
+                        ]}>
+                        <List.Item.Meta
+                          title={
+                            <div>
+                              <p>{item.survey}</p>
+                              {item.publish === "true" ? (
+                                <div>
+                                  <Drawer
+                                    title={item.survey}
+                                    placement="right"
+                                    closable={false}
+                                    onClose={onClose}
+                                    visible={visible}>
+                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                  </Drawer>
+                                </div>
+                              ) : (
+                                <div>
+                                  <Drawer
+                                    title={item.survey}
+                                    placement="right"
+                                    closable={false}
+                                    onClose={onClose}
+                                    visible={false}>
+                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                  </Drawer>
+                                </div>
+                              )}
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              </p>
+            </div>
+            {/* Boton de para acceder a la conferencia */}
+            <button
+              className="button is-success is-outlined is-pulled-right has-margin-top-20"
+              disabled={currentActivity.meeting_id ? false : true}
+              onClick={() => showIframe(true, currentActivity.meeting_id)}>
+              {currentActivity.meeting_id ? "Conferencia en Vivo" : "Sin Conferencia Virtual"}
+            </button>
+
+            <hr></hr>
+            <br />
+            <br />
+            {/* Descripción del evento */}
 
             <div
               className="card-footer is-12 is-flex"
@@ -248,6 +335,21 @@ let agendaActividadDetalle = props => {
                 alignItems: "flex-end"
               }}>
               {/* <button
+                  <div
+                    className="is-size-5-desktop has-margin-bottom-10"
+                    dangerouslySetInnerHTML={{
+                      __html: currentActivity.description
+                    }}
+                  />
+                  <div
+                    className="card-footer is-12 is-flex"
+                    style={{
+                      borderTop: "none",
+                      justifyContent: "space-between",
+                      alignItems: "flex-end"
+                    }}
+                  >
+                    {/* <button
             className="button button-color-agenda has-text-light is-pulled-right is-medium"
             onClick={() => this.registerInActivity(agenda._id)}
           >
