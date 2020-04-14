@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
 import { Pagination } from "antd";
+import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
 import { SurveysApi } from "../../../helpers/request";
@@ -13,9 +14,10 @@ class Graphics extends Component {
     this.state = {
       dataSurvey: {},
       currentPage: 1,
-      dataFrame
+      dataFrame,
+      chart: {},
+      chartCreated: false
     };
-    this.chartReference = React.createRef();
   }
 
   loadData = async () => {
@@ -23,40 +25,52 @@ class Graphics extends Component {
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-    this.setState({ dataSurvey }, () => this.mountChart);
+    this.setState({ dataSurvey }, this.mountChart);
   };
 
-  mountChart = async page => {
-    const { idSurvey, eventId } = this.props;
-    let { dataSurvey, currentPage, dataFrame } = this.state;
+  setCurrentPage = page => {
+    this.setState({ currentPage: page }, this.mountChart);
+  };
 
+  mountChart = async () => {
+    const { idSurvey, eventId } = this.props;
+    let { dataSurvey, currentPage, dataFrame, chartCreated, chart } = this.state;
     let { questions } = dataSurvey;
 
-    let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage].id, eventId);
+    let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId);
     let { options, answer_count } = response;
 
-    dataFrame.labels = options.choices;
-    dataFrame.datasets.data = Object.values(answer_count);
+    if (!chartCreated) {
+      dataFrame.data.labels = options.choices;
+      dataFrame.data.datasets[0].data = Object.values(answer_count);
 
-    this.setState({ dataFrame });
+      const canvas = document.getElementById("chart").getContext("2d");
+      const chart = new Chart(canvas, dataFrame);
+
+      this.setState({ dataFrame, chart, chartCreated: true });
+    } else {
+      chart.data.labels = options.choices;
+      chart.data.datasets[0].data = Object.values(answer_count);
+      chart.update();
+      this.setState({ chart });
+    }
   };
 
   componentDidMount() {
     this.loadData();
-    console.log(this.chartReference); // returns a Chart.js instance reference
   }
 
   render() {
     let { dataSurvey, currentPage, dataFrame, referenceChart } = this.state;
-    console.log(this.state);
+
     if (dataSurvey.questions)
       return (
         <div>
-          <Bar data={dataFrame} ref={this.chartReference} />
+          <canvas id="chart"></canvas>
           <Pagination
             defaultCurrent={currentPage}
             total={dataSurvey.questions.length * 10}
-            onChange={this.mountChart}
+            onChange={this.setCurrentPage}
           />
         </div>
       );
