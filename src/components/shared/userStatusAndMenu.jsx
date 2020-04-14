@@ -63,11 +63,9 @@ let userStatusAndMenu = props => {
       <Col style={{ flex: 1, textAlign: "right" }}>
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
-            <Avatar size="large" src={photo}>
-              {name && name.charAt(0)}
-            </Avatar>
+            {photo ? <Avatar src={photo} /> : <Avatar>{name && name.charAt(0).toUpperCase()}</Avatar>}
             &nbsp;&nbsp;&nbsp;{name}&nbsp;&nbsp;
-            <DownOutlined />
+            {/* <DownOutlined /> */}
             {/* icon={<UserOutlined />} {name} */}
           </a>
         </Dropdown>

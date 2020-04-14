@@ -11,7 +11,7 @@ import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button } from "antd";
+import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row } from "antd";
 import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 class Header extends Component {
   constructor(props) {
@@ -161,7 +161,7 @@ class Header extends Component {
               {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
               {showAdmin && (
                 <div className="navbar-item" data-target="navbarBasicExample">
-                  <p>
+                  <Row justify="space-around" align="middle">
                     <span className="icon icon-menu" onClick={this.handleMenuEvent}>
                       <Button onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -170,7 +170,7 @@ class Header extends Component {
                         })}
                       </Button>
                     </span>
-                  </p>
+                  </Row>
                 </div>
               )}
             </div>
@@ -191,8 +191,9 @@ class Header extends Component {
 
         {/* Menu mobile */}
         {showAdmin && showEventMenu && (
-          <div id="navbarBasicExample" className={`is-hidden-desktop navbar-menu ${eventMenu ? "is-active" : ""}`}>
+          <div id="navbarBasicExample" className={`${eventMenu ? "is-active" : ""}`}>
             <Drawer
+              className="hiddenMenuMobile_Landing"
               title="Administrar evento"
               maskClosable={true}
               bodyStyle={{ padding: "0px" }}
@@ -204,6 +205,7 @@ class Header extends Component {
             </Drawer>
           </div>
         )}
+
         {timeout && <LogOut />}
         {serverError && <ErrorServe errorData={errorData} />}
       </React.Fragment>
