@@ -134,5 +134,9 @@ export const SurveyAnswers = {
           resolve({ answer_count: listResponse.data(), options });
         });
     });
+  },
+  getUserById: async (eventId, surveyId) => {
+    let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+    console.log(dataSurvey);
   }
 };

@@ -5,6 +5,7 @@ import { SurveysApi } from "../../../helpers/request";
 
 import SurveyComponent from "./surveyComponent";
 import Graphics from "./graphics";
+import RootPage from "./rootPage";
 
 import { List, Button, Card, Col } from "antd";
 
@@ -62,16 +63,7 @@ class SurveyForm extends Component {
     let { idSurvey, surveysData, hasVote } = this.state;
     const { event } = this.props;
 
-    if (idSurvey)
-      return !hasVote ? (
-        <Graphics idSurvey={idSurvey} showListSurvey={this.toggleSurvey} eventId={event._id} />
-      ) : (
-        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
-          <Card>
-            <SurveyComponent idSurvey={idSurvey} showListSurvey={this.toggleSurvey} eventId={event._id} />
-          </Card>
-        </Col>
-      );
+    if (idSurvey) return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} />;
 
     return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
