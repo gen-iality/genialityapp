@@ -76,6 +76,7 @@ class SurveyComponent extends Component {
         category: "none"
       });
 
+    // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter(surveyInfo => surveyInfo.id);
 
     const executeService = (SurveyData, questions, uid) => {

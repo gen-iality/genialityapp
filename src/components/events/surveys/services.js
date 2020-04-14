@@ -61,6 +61,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 };
 
 export const SurveyAnswers = {
+  // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
@@ -90,6 +91,7 @@ export const SurveyAnswers = {
         });
     });
   },
+  // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
@@ -118,6 +120,7 @@ export const SurveyAnswers = {
         });
     });
   },
+  // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId) => {
     let docs = [];
 
@@ -135,6 +138,7 @@ export const SurveyAnswers = {
         });
     });
   },
+  // Servicio para validar si un usuario ha respondido la encuesta
   getUserById: async (eventId, surveyId, userId) => {
     let counterDocuments = 0;
 
