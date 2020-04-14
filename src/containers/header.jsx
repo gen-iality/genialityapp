@@ -10,10 +10,14 @@ import LetterAvatar from "../components/shared/letterAvatar";
 import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
+import { Logo } from "../../src/logo.svg";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row } from "antd";
+import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
 import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-class Header extends Component {
+
+const { Header, Content, Footer } = Layout;
+
+class Headers extends Component {
   constructor(props) {
     super(props);
     this.props.history.listen((location, action) => {
@@ -148,19 +152,17 @@ class Header extends Component {
     const { eventMenu, location } = this.props;
     return (
       <React.Fragment>
-        <header>
-          <nav
-            className="navbar is-fixed-top has-shadow is-spaced has-text-centered-mobile"
-            style={{ display: "flex", alignItems: "center" }}>
-            <div className="navbar-brand">
+        <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
+          <Menu theme="light" mode="horizontal">
+            <Row justify="space-around" align="middle">
               {/*evius LOGO */}
-              <Link className="navbar-item" to={"/"}>
+              <Link to={"/"}>
                 <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
               </Link>
 
               {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
               {showAdmin && (
-                <div className="navbar-item" data-target="navbarBasicExample">
+                <div data-target="navbarBasicExample">
                   <Row justify="space-around" align="middle">
                     <span className="icon icon-menu" onClick={this.handleMenuEvent}>
                       <Button onClick={this.showDrawer}>
@@ -173,23 +175,34 @@ class Header extends Component {
                   </Row>
                 </div>
               )}
-            </div>
 
-            <UserStatusAndMenu
-              isLoading={this.state.loader}
-              user={this.state.user}
-              menuOpen={this.state.menuOpen}
-              loader={this.state.loader}
-              photo={photo}
-              name={name}
-              eventId={this.state.id}
-              logout={this.logout}
-              openMenu={this.openMenu}
-            />
-          </nav>
-        </header>
+              {/* Items para la barra del menu */}
+
+              {/* <Menu theme="light" mode="horizontal" defaultSelectedKeys={["3"]}>
+                  <Menu.Item key="1">nav 1</Menu.Item>
+                  <Menu.Item key="2">nav 2</Menu.Item>
+                  <Menu.Item key="3">nav 3</Menu.Item>
+                </Menu> */}
+
+              {/* Dropdown de navegacion para el usuario  */}
+
+              <UserStatusAndMenu
+                isLoading={this.state.loader}
+                user={this.state.user}
+                menuOpen={this.state.menuOpen}
+                loader={this.state.loader}
+                photo={photo}
+                name={name}
+                eventId={this.state.id}
+                logout={this.logout}
+                openMenu={this.openMenu}
+              />
+            </Row>
+          </Menu>
+        </Header>
 
         {/* Menu mobile */}
+
         {showAdmin && showEventMenu && (
           <div id="navbarBasicExample" className={`${eventMenu ? "is-active" : ""}`}>
             <Drawer
@@ -222,4 +235,4 @@ const mapStateToProps = state => ({
   error: state.categories.error
 });
 
-export default connect(mapStateToProps)(withRouter(Header));
+export default connect(mapStateToProps)(withRouter(Headers));
