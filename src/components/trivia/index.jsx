@@ -15,7 +15,7 @@ function TriviaRoutes({ ...props }) {
         />
         <Route
           exact
-          path={`${match.url}/editar`}
+          path={`${match.url}/encuesta`}
           render={() => <TriviaEdit event={event} matchUrl={match.url} />}
         />
       </Switch>

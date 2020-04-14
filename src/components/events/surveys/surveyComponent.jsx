@@ -23,7 +23,7 @@ class SurveyComponent extends Component {
   }
 
   componentDidMount() {
-    console.log("AQUI")
+    console.log("AQUI");
     this.loadData();
   }
 
@@ -35,9 +35,7 @@ class SurveyComponent extends Component {
       this.setState({ user: false });
     } else {
       try {
-        const resp = await API.get(
-          `/auth/currentUser?evius_token=${Cookie.get("evius_token")}`
-        );
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
@@ -54,6 +52,9 @@ class SurveyComponent extends Component {
   loadData = async () => {
     const { idSurvey, eventId } = this.props;
     let { surveyData } = this.state;
+
+    // Esto permite que el json pueda asignar el id a cada pregunta
+    Survey.JsonObject.metaData.addProperty("question", "id");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
@@ -75,7 +76,7 @@ class SurveyComponent extends Component {
       };
     });
 
-    // Esto tambien es temporal
+    // Se excluyen las propiedades
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
@@ -97,9 +98,7 @@ class SurveyComponent extends Component {
         category: "none"
       });
 
-    let questions = survey
-      .getAllQuestions()
-      .filter(surveyInfo => surveyInfo.id);
+    let questions = survey.getAllQuestions().filter(surveyInfo => surveyInfo.id);
 
     const executeService = (SurveyData, questions, uid) => {
       let sendAnswers = 0;
@@ -108,13 +107,24 @@ class SurveyComponent extends Component {
 
       return new Promise((resolve, reject) => {
         questions.forEach(async question => {
+          // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
+          let optionIndex = question.choices.findIndex(item => item.itemValue == question.value);
+          let optionQuantity = question.choices.length;
+
+          // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+          // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
           if (question.value)
             if (uid) {
-              await SurveyAnswers.registerWithUID(surveyData._id, question.id, {
-                responseData: question.value,
-                date: new Date(),
-                uid
-              })
+              await SurveyAnswers.registerWithUID(
+                surveyData._id,
+                question.id,
+                {
+                  responseData: question.value,
+                  date: new Date(),
+                  uid
+                },
+                { optionQuantity, optionIndex }
+              )
                 .then(result => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;
@@ -128,7 +138,8 @@ class SurveyComponent extends Component {
                   responseData: question.value,
                   date: new Date(),
                   uid: "guest"
-                }
+                },
+                { optionQuantity, optionIndex }
               )
                 .then(result => {
                   sendAnswers++;
