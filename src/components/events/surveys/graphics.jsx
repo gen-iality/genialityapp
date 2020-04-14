@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
-import { Pagination } from "antd";
+import { Pagination, Spin } from "antd";
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
@@ -86,7 +86,7 @@ class Graphics extends Component {
         </div>
       );
 
-    return <h1>Esto hay que cambiarlo luego</h1>;
+    return <Spin></Spin>;
   }
 }
 

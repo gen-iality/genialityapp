@@ -135,8 +135,26 @@ export const SurveyAnswers = {
         });
     });
   },
-  getUserById: async (eventId, surveyId) => {
-    let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-    console.log(dataSurvey);
+  getUserById: async (eventId, surveyId, userId) => {
+    let counterDocuments = 0;
+
+    return new Promise((resolve, reject) => {
+      firestore
+        .collectionGroup("responses")
+        .where("id_user", "==", userId)
+        .get()
+        .then(result => {
+          result.forEach(function(doc) {
+            if (doc.exists) {
+              counterDocuments++;
+            }
+          });
+          if (counterDocuments > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+    });
   }
 };
