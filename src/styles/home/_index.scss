@@ -1,6 +1,6 @@
 div.icon-header {
   width: 115px;
-  margin-right: 50px;
+  margin-right: 0px;
 }
 
 .icon-menu {
@@ -12,8 +12,11 @@ div.icon-header {
 
 .ant-layout-header {
   background: #fff !important;
+  height: 67px !important;
+  padding: 0 30px !important;
 }
 .main {
+  margin-top: 5%;
   .columns {
     margin: 0;
   }

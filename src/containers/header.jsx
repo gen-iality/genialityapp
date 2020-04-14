@@ -154,16 +154,17 @@ class Headers extends Component {
       <React.Fragment>
         <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
           <Menu theme="light" mode="horizontal">
-            <Row justify="space-around" align="middle">
+            <Row justify="space-between" align="middle">
               {/*evius LOGO */}
-              <Link to={"/"}>
-                <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
-              </Link>
 
-              {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
-              {showAdmin && (
-                <div data-target="navbarBasicExample">
-                  <Row justify="space-around" align="middle">
+              <Row justify="space-between" align="middle">
+                <Link to={"/"}>
+                  <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
+                </Link>
+
+                {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
+                {showAdmin && (
+                  <Col span={2} offset={3} data-target="navbarBasicExample">
                     <span className="icon icon-menu" onClick={this.handleMenuEvent}>
                       <Button onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -172,9 +173,9 @@ class Headers extends Component {
                         })}
                       </Button>
                     </span>
-                  </Row>
-                </div>
-              )}
+                  </Col>
+                )}
+              </Row>
 
               {/* Items para la barra del menu */}
 

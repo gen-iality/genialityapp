@@ -13,7 +13,7 @@ import app from "firebase/app";
 import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card } from "antd";
-import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
+import { MenuOutlined, RightOutlined, LeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 //custom
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
@@ -444,7 +444,10 @@ class Landing extends Component {
 
                     <div className="hiddenMenuMobile_Landing">
                       <Button onClick={this.showDrawer}>
-                        <MenuOutlined />
+                        {React.createElement(this.state.visible ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                          className: "trigger",
+                          onClick: this.toggle
+                        })}
                       </Button>
                     </div>
 

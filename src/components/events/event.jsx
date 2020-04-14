@@ -25,6 +25,9 @@ import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 import ConferenceRoute from "../zoom/index";
+import { Layout } from "antd";
+
+const { Header, Footer, Sider, Content } = Layout;
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -115,11 +118,11 @@ class Event extends Component {
     if (this.props.error || permissions.error) return <ErrorServe errorData={permissions.error} />;
     if (timeout) return <LogOut />;
     return (
-      <section className="columns">
-        <aside className={`column menu event-aside is-2 is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
+      <Layout className="columns">
+        <Sider className={`column menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
           <Menu match={match} />
-        </aside>
-        <div className="column event-main">
+        </Sider>
+        <Content className="column event-main">
           <h3 className="name-event">{this.state.event.name}</h3>
           <section className="section event-wrapper">
             <Switch>
@@ -252,8 +255,8 @@ class Event extends Component {
               <Route component={NoMatch} />
             </Switch>
           </section>
-        </div>
-      </section>
+        </Content>
+      </Layout>
     );
   }
 }
