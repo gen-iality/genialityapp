@@ -1,32 +1,22 @@
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
-import { Pagination } from "antd";
+import { Pagination, Spin } from "antd";
+import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
 import { SurveysApi } from "../../../helpers/request";
-
-const data = {
-  labels: ["January", "February", "March", "April", "May", "June", "July"],
-  datasets: [
-    {
-      label: "My First dataset",
-      backgroundColor: "rgba(255,99,132,0.2)",
-      borderColor: "rgba(255,99,132,1)",
-      borderWidth: 1,
-      hoverBackgroundColor: "rgba(255,99,132,0.4)",
-      hoverBorderColor: "rgba(255,99,132,1)",
-      data: [65, 59, 80, 81, 56, 55, 40]
-    }
-  ]
-};
+import { dataFrame } from "./frame";
 
 class Graphics extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataSurvey: {},
-      currentPage: 1
+      currentPage: 1,
+      dataFrame,
+      chart: {},
+      chartCreated: false
     };
   }
 
@@ -35,18 +25,46 @@ class Graphics extends Component {
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-    this.setState({ dataSurvey }, () => this.mountChart);
+    this.setState({ dataSurvey }, this.mountChart);
   };
 
-  mountChart = async page => {
-    const { idSurvey } = this.props;
-    let { dataSurvey, currentPage } = this.state;
+  setCurrentPage = page => {
+    this.setState({ currentPage: page }, this.mountChart);
+  };
 
+  mountChart = async () => {
+    const { idSurvey, eventId } = this.props;
+    let { dataSurvey, currentPage, dataFrame, chartCreated, chart } = this.state;
     let { questions } = dataSurvey;
 
-    let respuesta = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage].id);
+    // Se ejecuta servicio para tener el conteo de las respuestas
+    let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId);
+    let { options, answer_count } = response;
 
-    console.log(respuesta);
+    // Se condiciona si el grafico ya fue creado
+    // En caso de que aun no este creado se crea, de lo contrario se actualizara
+    if (!chartCreated) {
+      // Se asignan los valores obtenidos de los servicios
+      // El nombre de las opciones y el conteo de las opciones
+      dataFrame.data.labels = options.choices;
+      dataFrame.data.datasets[0].data = Object.values(answer_count);
+      dataFrame.data.datasets[0].label = options.title;
+
+      // Se obtiene el canvas del markup y se utiliza para crear el grafico
+      const canvas = document.getElementById("chart").getContext("2d");
+      const chart = new Chart(canvas, dataFrame);
+
+      this.setState({ dataFrame, chart, chartCreated: true });
+    } else {
+      // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
+      chart.data.labels = options.choices;
+      chart.data.datasets[0].data = Object.values(answer_count);
+      dataFrame.data.datasets[0].label = options.title;
+
+      chart.update();
+
+      this.setState({ chart });
+    }
   };
 
   componentDidMount() {
@@ -54,21 +72,21 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage } = this.state;
-    console.log(this.state);
+    let { dataSurvey, currentPage, dataFrame, referenceChart } = this.state;
+
     if (dataSurvey.questions)
       return (
         <div>
-          <Bar data={data} />
+          <canvas id="chart"></canvas>
           <Pagination
             defaultCurrent={currentPage}
             total={dataSurvey.questions.length * 10}
-            onChange={this.mountChart}
+            onChange={this.setCurrentPage}
           />
         </div>
       );
 
-    return <h1>Esto hay que cambiarlo luego</h1>;
+    return <Spin></Spin>;
   }
 }
 

@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import * as Cookie from "js-cookie";
 
 import SearchComponent from "../../shared/searchTable";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
-import API, { SurveysApi, AgendaApi } from "../../../helpers/request";
+import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers } from "./services";
 
@@ -27,27 +26,6 @@ class SurveyComponent extends Component {
     this.loadData();
   }
 
-  // Funcion para consultar la informacion del actual usuario
-  getCurrentUser = async () => {
-    let evius_token = Cookie.get("evius_token");
-
-    if (!evius_token) {
-      this.setState({ user: false });
-    } else {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-        if (resp.status === 200) {
-          const data = resp.data;
-          // Solo se desea obtener el id del usuario
-          this.setState({ uid: data._id });
-        }
-      } catch (error) {
-        const { status } = error.response;
-        console.log("STATUS", status, status === 401);
-      }
-    }
-  };
-
   // Funcion para cargar datos de la encuesta seleccionada
   loadData = async () => {
     const { idSurvey, eventId } = this.props;
@@ -67,7 +45,7 @@ class SurveyComponent extends Component {
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta
     // Si la pregunta tiene la propiedad 'page'
-    console.log(dataSurvey["questions"]);
+
     // Aqui se itera cada pregunta y se asigna a una pagina
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
@@ -86,7 +64,7 @@ class SurveyComponent extends Component {
 
   // Funcion para enviar la informacion de las respuestas
   sendDataToServer = survey => {
-    const { showListSurvey, eventId } = this.props;
+    const { showListSurvey, eventId, userId } = this.props;
     let { surveyData, uid } = this.state;
 
     firestore
@@ -98,6 +76,7 @@ class SurveyComponent extends Component {
         category: "none"
       });
 
+    // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter(surveyInfo => surveyInfo.id);
 
     const executeService = (SurveyData, questions, uid) => {
@@ -156,7 +135,7 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, uid).then(result => {
+    executeService(surveyData, questions, userId).then(result => {
       toast.success(result);
     });
 

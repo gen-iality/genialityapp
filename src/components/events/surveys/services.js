@@ -61,6 +61,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 };
 
 export const SurveyAnswers = {
+  // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
@@ -90,6 +91,7 @@ export const SurveyAnswers = {
         });
     });
   },
+  // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
@@ -118,17 +120,44 @@ export const SurveyAnswers = {
         });
     });
   },
-  getAnswersQuestion: async (surveyId, questionId) => {
+  // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
+  getAnswersQuestion: async (surveyId, questionId, eventId) => {
     let docs = [];
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
+      let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
+      let options = dataSurvey.questions.find(question => question.id == questionId);
+
       firestore
         .collection("surveys")
         .doc(surveyId)
         .collection("answer_count")
         .doc(questionId)
         .onSnapshot(listResponse => {
-          resolve(listResponse.data());
+          resolve({ answer_count: listResponse.data(), options });
+        });
+    });
+  },
+  // Servicio para validar si un usuario ha respondido la encuesta
+  getUserById: async (eventId, surveyId, userId) => {
+    let counterDocuments = 0;
+
+    return new Promise((resolve, reject) => {
+      firestore
+        .collectionGroup("responses")
+        .where("id_user", "==", userId)
+        .get()
+        .then(result => {
+          result.forEach(function(doc) {
+            if (doc.exists) {
+              counterDocuments++;
+            }
+          });
+          if (counterDocuments > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         });
     });
   }
