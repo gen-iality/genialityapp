@@ -102,13 +102,30 @@ class Landing extends Component {
     });
   };
 
+  /* Carga  dinamicamente los colores base para el evento */
+  async loadDynamicEventStyles(eventId) {
+    const eventStyles = await EventsApi.getStyles(eventId);
+
+    var head = document.getElementsByTagName("head")[0];
+    var styleElement = document.createElement("style");
+    styleElement.innerHTML = eventStyles.styles;
+    styleElement.type = "text/css";
+    document.body.appendChild(styleElement);
+    head.append(styleElement);
+    /* Fin Carga */
+  }
+
   async componentDidMount() {
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
+
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
+
+    this.loadDynamicEventStyles(id);
+
     if (status === "5b859ed02039276ce2b996f0") {
       this.setState({ showConfirm: true });
     }
