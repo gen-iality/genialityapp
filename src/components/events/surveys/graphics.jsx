@@ -37,21 +37,32 @@ class Graphics extends Component {
     let { dataSurvey, currentPage, dataFrame, chartCreated, chart } = this.state;
     let { questions } = dataSurvey;
 
+    // Se ejecuta servicio para tener el conteo de las respuestas
     let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId);
     let { options, answer_count } = response;
 
+    // Se condiciona si el grafico ya fue creado
+    // En caso de que aun no este creado se crea, de lo contrario se actualizara
     if (!chartCreated) {
+      // Se asignan los valores obtenidos de los servicios
+      // El nombre de las opciones y el conteo de las opciones
       dataFrame.data.labels = options.choices;
       dataFrame.data.datasets[0].data = Object.values(answer_count);
+      dataFrame.data.datasets[0].label = options.title;
 
+      // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
       const chart = new Chart(canvas, dataFrame);
 
       this.setState({ dataFrame, chart, chartCreated: true });
     } else {
+      // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = options.choices;
       chart.data.datasets[0].data = Object.values(answer_count);
+      dataFrame.data.datasets[0].label = options.title;
+
       chart.update();
+
       this.setState({ chart });
     }
   };
