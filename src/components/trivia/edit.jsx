@@ -99,7 +99,7 @@ class triviaEdit extends Component {
       const data = {
         id: this.state._id,
         survey: this.state.survey,
-        publish: this.state.publish,
+        publish: "false",
         activity_id: this.state.activity_id,
       };
 
