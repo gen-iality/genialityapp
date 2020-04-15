@@ -2,6 +2,8 @@ import React, { Component, Fragment, useEffect, useState } from "react";
 
 import EventContent from "../events/shared/content";
 
+import { selectOptions } from "./constants";
+
 import { SurveysApi, AgendaApi } from "../../helpers/request";
 
 import { withRouter } from "react-router-dom";
@@ -67,6 +69,10 @@ class triviaEdit extends Component {
 
     const question = [];
     for (const prop in Update.questions) {
+      selectOptions.forEach(option => {
+        if (Update.questions[prop].type == option.value) Update.questions[prop].type = option.text;
+      });
+
       question.push(Update.questions[prop]);
     }
     this.setState({ question });

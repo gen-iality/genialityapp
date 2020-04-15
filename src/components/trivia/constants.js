@@ -1,7 +1,7 @@
 import { AntSelect, AntInput } from "./antField";
 
 // Lista de los tipos de pregunta posibles para la encuesta
-const selectOptions = [
+export const selectOptions = [
   {
     value: "radiogroup",
     text: "Selección Unica"
