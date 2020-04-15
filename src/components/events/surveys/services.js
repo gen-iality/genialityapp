@@ -150,7 +150,8 @@ export const SurveyAnswers = {
         .then(result => {
           result.forEach(function(doc) {
             if (doc.exists) {
-              counterDocuments++;
+              let [, idSurveyFire] = doc.ref.path.split("/");
+              if (idSurveyFire == surveyId) counterDocuments++;
             }
           });
           if (counterDocuments > 0) {
