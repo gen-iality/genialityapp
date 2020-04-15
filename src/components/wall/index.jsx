@@ -111,8 +111,6 @@ class Wall extends Component {
             hidden: true,
             modal1Visible: false,
             modal2Visible: false,
-
-
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
@@ -128,7 +126,7 @@ class Wall extends Component {
 
     handleChangeCommit = e => {
         this.setState({
-            valueCommit: e.target.valueCommit,
+            valueCommit: e.target.value,
         });
     };
 
@@ -146,7 +144,7 @@ class Wall extends Component {
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment', 'desc')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('date', 'desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
                 console.log('No hay ningun comentario');
@@ -159,7 +157,8 @@ class Wall extends Component {
                     id: doc.id,
                     comment: doc.data().comment,
                     idPost: doc.data().idPost,
-                    author: doc.data().author
+                    author: doc.data().author,
+                    date: doc.data().date
                 })
                 this.setState({ dataComment })
             });
@@ -247,8 +246,15 @@ class Wall extends Component {
     async saveComment(idPost) {
         let email = this.props.event.author.email
         let eventId = this.props.event._id
-        let comments = this.state.comments
-        saveFirebase.saveComment(email, comments, eventId, idPost)
+        let comments = this.state.valueCommit
+        let fecha = new Date().toString()
+        let date = fecha
+        const data = saveFirebase.saveComment(email, comments, date, eventId, idPost)
+        if (data) {
+            document.getElementById("comment").value = ""
+            console.log(this.state.valueCommit)
+            this.getComments(idPost)
+        }
     }
 
     //Funcion para limpiar el files e image los cuales muestran el preview de la imagen
@@ -310,7 +316,7 @@ class Wall extends Component {
     }
 
     render() {
-        const { dataPost, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
+        const { dataPost, countComments, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
             <div>
                 {/*Inicia el detalle de los comentarios */}
@@ -363,7 +369,7 @@ class Wall extends Component {
                                                 <List.Item.Meta
                                                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                                                     title={<span>{item.author}</span>}
-                                                    description={<p>1 Apr 2020, 3:38pm</p>}
+                                                    description={<TimeStamp date={item.date} />}
                                                 />
 
                                                 {item.comment}
@@ -455,6 +461,7 @@ class Wall extends Component {
                                     <Comment
                                         content={
                                             <Editor
+                                                id="comment"
                                                 onChange={this.handleChange}
                                                 onSubmit={this.savePost}
                                                 submitting={submitting}
@@ -508,7 +515,6 @@ class Wall extends Component {
                                                     />,
                                                     <IconText
                                                         icon={MessageOutlined}
-                                                        text="2"
                                                         key="list-vertical-message"
                                                         onSubmit={e => { this.getComments(item.id) }}
                                                     />

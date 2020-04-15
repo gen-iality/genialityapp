@@ -21,15 +21,15 @@ export const saveFirebase = {
         return urlImage
     },
 
-    async saveComment(email, comments, eventId, idPost) {
+    async saveComment(email, comments, date, eventId, idPost) {
         const data = {
             author: email,
             comment: comments,
+            date: date,
             idPost: idPost
         }
 
         console.log(data)
-
         let addComment = firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
         console.log(await addComment)
         toast.success("Datos Guardados")

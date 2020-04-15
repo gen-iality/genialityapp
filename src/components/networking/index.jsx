@@ -3,7 +3,8 @@ import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import XLSX from "xlsx";
 import { toast } from 'react-toastify';
 import { firestore } from "../../helpers/firebase";
-import { BadgeApi, RolAttApi } from "../../helpers/request";
+import API, { BadgeApi, EventsApi, RolAttApi } from "../../helpers/request";
+import * as Cookie from "js-cookie";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
@@ -176,6 +177,18 @@ class ListEventUser extends Component {
         !data ? this.setState({ users: [] }) : this.setState({ users: data })
     };
 
+    async SendFriendship(id) {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        const data = {
+            id_user_requested: resp.data._id,
+            id_user_requesting: id,
+            event_id: this.props.event._id,
+            state: "send"
+        }
+
+        const response = await EventsApi.sendInvitation(this.props.event._id, data)
+        console.log(response)
+    }
     render() {
         const { userReq, users, pageOfItems } = this.state;
         return (
@@ -197,7 +210,7 @@ class ListEventUser extends Component {
                                     {
                                         pageOfItems.map((users, key) => (
                                             <Row key={key}>
-                                                <Card className="event-description" title={users.properties.names ? users.properties.names : "No registra Nombre"} bordered={true} style={{ width: 600, marginTop: "2%", marginBottom: "2%" }}>
+                                                <Card className="event-description" extra={<a onClick={() => { this.SendFriendship(users._id) }}>Enviar Solicitud</a>} title={users.properties.names ? users.properties.names : "No registra Nombre"} bordered={true} style={{ width: 600, marginTop: "2%", marginBottom: "2%" }}>
                                                     <Col span={4}>
                                                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                                                     </Col>
