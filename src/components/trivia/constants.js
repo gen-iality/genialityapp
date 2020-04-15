@@ -1,5 +1,6 @@
 import { AntSelect, AntInput } from "./antField";
 
+// Lista de los tipos de pregunta posibles para la encuesta
 const selectOptions = [
   {
     value: "radiogroup",
@@ -19,9 +20,11 @@ const selectOptions = [
   }
 ];
 
+// Funcion que filtra los tipos de pregunta para la encuesta
 const filterBy = (data, field, exclude) =>
   exclude ? data.filter(({ value }) => !field.includes(value)) : data.filter(({ value }) => field.includes(value));
 
+// Lista de los campos para la creacion de una pregunta
 export const fieldsFormQuestion = [
   {
     label: "Nombre",
@@ -55,6 +58,7 @@ export const fieldsFormQuestion = [
   }
 ];
 
+// Funcion que retorna los valores iniciales para los campos de la creacion de la pregunta
 export const initValues = () => {
   let valuesFields = {};
   fieldsFormQuestion.forEach(({ name }) => {
