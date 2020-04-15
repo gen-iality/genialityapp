@@ -106,10 +106,14 @@ class Landing extends Component {
   async loadDynamicEventStyles(eventId) {
     const eventStyles = await EventsApi.getStyles(eventId);
 
+    var oldStyle = document.getElementById("eviusDynamicStyle");
+    if (oldStyle) oldStyle.parentNode.removeChild(oldStyle);
+
     var head = document.getElementsByTagName("head")[0];
     var styleElement = document.createElement("style");
     styleElement.innerHTML = eventStyles.styles;
     styleElement.type = "text/css";
+    styleElement.id = "eviusDynamicStyle";
     document.body.appendChild(styleElement);
     head.append(styleElement);
     /* Fin Carga */
