@@ -5,7 +5,7 @@ import EventContent from "../events/shared/content";
 import { SurveysApi, Actions } from "../../helpers/request";
 import { AntSelect, AntInput } from "./antField";
 import DisplayForm from "./displayForm";
-import showSelectOptions from "./constants";
+import { initValues } from "./constants";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button, Input, Select, Row, Col } from "antd";
@@ -63,16 +63,7 @@ class FormQuestions extends Component {
       <Fragment>
         <EventContent>
           <div>
-            <Formik
-              initialValues={{
-                name: "",
-                title: "",
-                page: "",
-                selectOptions: showSelectOptions,
-                quantityOptions: [1, 2, 3, 4]
-              }}
-              onSubmit={this.sendData}
-              render={DisplayForm}></Formik>
+            <Formik initialValues={initValues()} onSubmit={this.sendData} render={DisplayForm}></Formik>
           </div>
         </EventContent>
       </Fragment>
