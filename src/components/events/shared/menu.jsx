@@ -126,11 +126,11 @@ class MenuConfig extends Component {
                 </NavLink>
               </Menu.Item>
 
-              <Menu.Item key="9">
+              {/* <Menu.Item key="9">
                 <NavLink onClick={this.handleClick} to={`${url}/pages`}>
                   Agregar sección
                 </NavLink>
-              </Menu.Item>
+              </Menu.Item> */}
             </SubMenu>
 
             <SubMenu
@@ -191,124 +191,6 @@ class MenuConfig extends Component {
               )}
             </SubMenu>
 
-            {/* COnfiguración de invitados */}
-
-            <SubMenu
-              key="sub4"
-              title={
-                <span>
-                  <UserAddOutlined />
-                  <span>Invitados</span>
-                </span>
-              }>
-              {permissions.data.ids.includes(rolPermissions.admin_invitations._id) ||
-                (true && (
-                  <Menu.Item>
-                    <Menu.Item key="16">
-                      <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                        Invitados sin confirmar
-                      </NavLink>
-                    </Menu.Item>
-
-                    <Menu.Item key="17">
-                      <NavLink onClick={this.handleClick} to={`${url}/invitados/importar-excel`}>
-                        Invitar nuevas personas
-                      </NavLink>
-                    </Menu.Item>
-
-                    <Menu.Item key="18">
-                      <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                        Enviar información a invitados sin confirmar
-                      </NavLink>
-                    </Menu.Item>
-
-                    <Menu.Item key="19">
-                      <NavLink onClick={this.handleClick} to={`${url}/messages`}>
-                        Invitaciones pasadas
-                      </NavLink>
-                    </Menu.Item>
-                  </Menu.Item>
-                ))}
-            </SubMenu>
-
-            {/* Seccion de envio de comunicaciones */}
-            <SubMenu
-              key="sub5"
-              title={
-                <span>
-                  <NotificationOutlined />
-                  <span>Comunicaciones</span>
-                </span>
-              }>
-              {(permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) && (
-                <Menu.Item>
-                  <Menu.Item key="20">
-                    <NavLink onClick={this.handleClick} to={`${url}/messages`}>
-                      Invitaciones enviadas
-                    </NavLink>
-                  </Menu.Item>
-
-                  <Menu.Item key="21">
-                    <NavLink onClick={this.handleClick} to={`${url}/notificationsApp`}>
-                      Notificaciones
-                    </NavLink>
-                  </Menu.Item>
-
-                  <Menu.Item key="22">
-                    <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
-                      Enviar información a invitados sin confirmar
-                    </NavLink>
-                  </Menu.Item>
-
-                  <Menu.Item key="23">
-                    <NavLink onClick={this.handleClick} to={`${url}/messages`}>
-                      Invitaciones pasadas
-                    </NavLink>
-                  </Menu.Item>
-
-                  {/* <Menu.Item 
-                                    key="2"
-                                    >                                    
-                                        <NavLink 
-                                        onClick={this.handleClick} 
-                                         to={`${url}/invitaciones`}>
-                                         Invitaciones
-                                         </NavLink>
-                                    </Menu.Item>
-
-                                    <Menu.Item 
-                                    key="2"
-                                    >
-                                        <NavLink 
-                                        onClick={this.handleClick} 
-                                         to={`${url}/correos`}>
-                                         Correos
-                                         </NavLink> 
-                                    </Menu.Item>
-
-                                    <Menu.Item 
-                                    key="2"
-                                    >
-                                        <NavLink 
-                                        onClick={this.handleClick} 
-                                         to={`${url}/encuestas`}>
-                                         Encuestas Clientes
-                                         </NavLink>
-                                    </Menu.Item>
-
-                                    <Menu.Item 
-                                    key="2"
-                                    >
-                                        <NavLink 
-                                        onClick={this.handleClick} 
-                                         to={`${url}/encuestasasesores`}>
-                                         Encuestas Asesores
-                                         </NavLink>
-                                    </Menu.Item> */}
-                </Menu.Item>
-              )}
-            </SubMenu>
-
             {/* Sección de checkin */}
 
             <SubMenu
@@ -316,20 +198,12 @@ class MenuConfig extends Component {
               title={
                 <span>
                   <IdcardOutlined />
-                  <span>Check In</span>
+                  <span>Asistentes</span>
                 </span>
               }>
-              {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
-                <Menu.Item key="24">
-                  <NavLink onClick={this.handleClick} to={`${url}/badge`}>
-                    Escarapela
-                  </NavLink>
-                </Menu.Item>
-              )}
-
               <Menu.Item key="25">
                 <NavLink onClick={this.handleClick} to={`${url}/assistants`}>
-                  Check In
+                  Asistentes / Checkin
                 </NavLink>
               </Menu.Item>
 
@@ -338,7 +212,81 @@ class MenuConfig extends Component {
                   Check In por Actividad
                 </NavLink>
               </Menu.Item>
+
+              <Menu.Item key="16">
+                <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
+                  Enviar Correos a Asistentes
+                </NavLink>
+              </Menu.Item>
+
+              {permissions.data.ids.includes(rolPermissions.admin_badge._id) && (
+                <Menu.Item key="24">
+                  <NavLink onClick={this.handleClick} to={`${url}/badge`}>
+                    Configurarr Escarapela
+                  </NavLink>
+                </Menu.Item>
+              )}
             </SubMenu>
+
+            {/* COnfiguración de invitados */}
+            {permissions.data.ids.includes(rolPermissions.admin_invitations._id) && false && (
+              <SubMenu
+                key="sub4"
+                title={
+                  <span>
+                    <UserAddOutlined />
+                    <span>Invitados</span>
+                  </span>
+                }>
+                <Menu.Item key="16">
+                  <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
+                    Invitados sin confirmar
+                  </NavLink>
+                </Menu.Item>
+
+                <Menu.Item key="18">
+                  <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
+                    Enviar información a invitados sin confirmar
+                  </NavLink>
+                </Menu.Item>
+
+                <Menu.Item key="19">
+                  <NavLink onClick={this.handleClick} to={`${url}/messages`}>
+                    Invitaciones pasadas
+                  </NavLink>
+                </Menu.Item>
+              </SubMenu>
+            )}
+
+            {/* Seccion de envio de comunicaciones */}
+            {(permissions.data.ids.includes(rolPermissions.admin_invitations._id) || true) && (
+              <SubMenu
+                key="sub5"
+                title={
+                  <span>
+                    <NotificationOutlined />
+                    <span>Comunicaciones</span>
+                  </span>
+                }>
+                <Menu.Item key="20">
+                  <NavLink onClick={this.handleClick} to={`${url}/messages`}>
+                    Comunicaciones enviadas
+                  </NavLink>
+                </Menu.Item>
+
+                <Menu.Item key="21">
+                  <NavLink onClick={this.handleClick} to={`${url}/notificationsApp`}>
+                    Push Notificaciones
+                  </NavLink>
+                </Menu.Item>
+
+                <Menu.Item key="22">
+                  <NavLink onClick={this.handleClick} to={`${url}/invitados`}>
+                    Enviar información a asistenes
+                  </NavLink>
+                </Menu.Item>
+              </SubMenu>
+            )}
 
             {/* Sección para gestion de entradas */}
 
