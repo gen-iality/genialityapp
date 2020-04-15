@@ -147,19 +147,9 @@ class triviaEdit extends Component {
     const { survey, publish, activity_id, dataAgenda } = this.state;
     const columns = [
       {
-        title: "Name",
-        dataIndex: "name",
-        key: "name"
-      },
-      {
         title: "Title",
         dataIndex: "title",
         key: "title"
-      },
-      {
-        title: "Page",
-        dataIndex: "page",
-        key: "page"
       },
       {
         title: "Type",
