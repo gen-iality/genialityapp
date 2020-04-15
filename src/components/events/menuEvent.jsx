@@ -57,6 +57,11 @@ const MenuEvent = props => {
       name: "Preguntas Frecuentes",
       section: "faqs",
       icon: "QuestionOutlined"
+    },
+    networking: {
+      name: "Networking",
+      section: "networking",
+      icon: "LaptopOutlined"
     }
   };
 

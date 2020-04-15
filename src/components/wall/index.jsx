@@ -274,11 +274,11 @@ class Wall extends Component {
     async loadMore() {
         let count = 0
         let button = document.getElementById("click")
-        
+
         let counts = []
         let dataPostArray = []
         dataPostArray.push(this.state.dataPostFilter)
-        
+
 
         button.addEventListener('click', () => {
             let push = count++
@@ -291,11 +291,6 @@ class Wall extends Component {
                 console.log("Data", this.state.dataPostFilter)
             }
         });
-
-        this.setState({
-            dataPostFilter: dataPostArray[0]
-        })
-        console.log(this.state.dataPostFilter)
     }
 
     uploadImage() {

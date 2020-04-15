@@ -28,6 +28,7 @@ import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../landingDocuments/documents";
 import FaqsForm from "../faqsLanding";
+import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -161,6 +162,7 @@ class Landing extends Component {
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
+      networking: <NetworkingForm event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
           <div className="description-container column is-8">

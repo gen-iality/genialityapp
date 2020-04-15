@@ -11,7 +11,6 @@ import { addLoginInformation, showMenu } from "../../redux/user/actions";
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar } from "antd";
-
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 let agendaActividadDetalle = props => {
