@@ -87,7 +87,9 @@ export default ({ handleSubmit, values, submitCount }) => (
 
     <Row>
       <Col span={6} offset={9}>
-        <button type="submit">Enviar</button>
+        <button className="ant-btn" type="submit">
+          Enviar
+        </button>
       </Col>
     </Row>
   </Form>

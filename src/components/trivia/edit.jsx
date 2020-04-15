@@ -9,7 +9,7 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table } from "antd";
+import { Button, Row, Col, Table, Divider } from "antd";
 
 import FormQuestions from "./questions";
 
@@ -230,6 +230,7 @@ class triviaEdit extends Component {
               </Row>
               {this.state.listQuestions.map(formQuestion => (
                 <div key={formQuestion.key}>
+                  <Divider orientation="left">Pregunta</Divider>
                   <Row>
                     <Col>
                       <Button span={6} offset={6} onClick={() => this.removeQuestion(formQuestion.key)}>
