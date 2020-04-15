@@ -3,6 +3,7 @@ import React, { Component, Fragment } from "react";
 import { AntSelect, AntInput } from "./antField";
 
 import { fieldsFormQuestion } from "./constants";
+import { isRequired } from "./validation";
 
 import EventContent from "../events/shared/content";
 
@@ -63,6 +64,7 @@ export default ({ handleSubmit, values, submitCount }) => (
           label={field.label}
           defaultValue={field.name == values.name && values.name}
           component={field.component}
+          validate={isRequired}
           hasFeedback
           type={field.type}
           name={field.name}
@@ -72,6 +74,7 @@ export default ({ handleSubmit, values, submitCount }) => (
           label={field.label}
           defaultValue={field.name == values.name && values.name}
           component={field.component}
+          validate={isRequired}
           hasFeedback
           name={field.name}
           selectOptions={field.selectOptions}

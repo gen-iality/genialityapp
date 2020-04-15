@@ -27,22 +27,10 @@ const filterBy = (data, field, exclude) =>
 // Lista de los campos para la creacion de una pregunta
 export const fieldsFormQuestion = [
   {
-    label: "Nombre",
-    component: AntInput,
-    type: "text",
-    name: "name"
-  },
-  {
     label: "Titulo",
     component: AntInput,
     type: "text",
     name: "title"
-  },
-  {
-    label: "Pagina",
-    component: AntInput,
-    type: "number",
-    name: "page"
   },
   {
     label: "Tipo de Pregunta",
