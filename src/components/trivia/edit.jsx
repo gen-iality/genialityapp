@@ -122,7 +122,7 @@ class triviaEdit extends Component {
     return uuid;
   };
 
-  // Funcion para agregar preguntas
+  // Funcion para agregar el formulario de las preguntas
   addNewQuestion = () => {
     let { listQuestions, _id } = this.state;
     let uid = this.generateUUID();
@@ -140,14 +140,14 @@ class triviaEdit extends Component {
     });
   };
 
-  // Funcion para remover preguntas
+  // Funcion para remover el formulario de las preguntas
   removeQuestion = item => {
     let { listQuestions } = this.state;
     let newArray = listQuestions.filter(question => question.key != item);
     this.setState({ listQuestions: newArray });
   };
 
-  // Funciones para los servicios -----------------------------------
+  // -------------------- Funciones para los servicios -----------------------------------
 
   // Borrar pregunta
   deleteQuestion = async questionId => {
@@ -157,11 +157,13 @@ class triviaEdit extends Component {
     let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
     toast.success(response);
   };
+
   // Editar pregunta
   editQuestion = questionId => {
     let { question } = this.state;
     let questionIndex = question.findIndex(question => question.id == questionId);
   };
+  // ---------------------------------------------------------------------------------------
 
   goBack = () => this.props.history.goBack();
 
