@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 //custom
 import { AgendaApi, SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
-import { Card, Avatar, Button } from "antd";
+import Moment from "moment";
+import { Card, Avatar, Button, Modal, Row, Col } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
@@ -14,7 +15,8 @@ class Speakers extends Component {
     this.state = {
       speakers: [],
       infoSpeaker: [],
-      activityesBySpeaker: []
+      activityesBySpeaker: [],
+      modalVisible: false,
     };
   }
 
@@ -32,7 +34,7 @@ class Speakers extends Component {
     let InfoActivityesBySpeaker = await ActivityBySpeaker.byEvent(this.props.eventId, id);
     //Se manda al estado la consulta
     this.setState({
-      activityesBySpeaker: InfoActivityesBySpeaker.data
+      activityesBySpeaker: InfoActivityesBySpeaker.data,
     });
   }
 
@@ -45,24 +47,15 @@ class Speakers extends Component {
         imagen: image,
         nombre: name,
         cargo: profession,
-        descripcion: description
-      }
-    });
-    //Se realiza la funcionalidad de la activacion del modal ya que bulma no tiene soporte javascript
-    document.querySelectorAll(".modal-button").forEach(function(el) {
-      el.addEventListener("click", function() {
-        var target = document.querySelector(el.getAttribute("data-target"));
-        var html = document.querySelector("html");
+        descripcion: description,
+      },
 
-        target.classList.add("is-active");
-
-        target.querySelector(".delete").addEventListener("click", function(e) {
-          e.preventDefault();
-          target.classList.remove("is-active");
-          html.classList.remove("is-active");
-        });
-      });
+      modalVisible: true,
     });
+  }
+
+  setModalVisible(modalVisible) {
+    this.setState({ modalVisible });
   }
 
   render() {
@@ -74,6 +67,9 @@ class Speakers extends Component {
           {speakers.map((speaker, key) => (
             <div key={key}>
               <Card
+                onClick={() =>
+                  this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
+                }
                 hoverable
                 style={{ paddingTop: "30px" }}
                 cover={
@@ -94,18 +90,18 @@ class Speakers extends Component {
                     data-target="#myModal"
                     aria-haspopup="true">
                     Ver más...
-                  </Button>
+                  </Button>,
                 ]}>
                 <Meta
                   title={[
                     <div>
                       <span>{speaker.name}</span>
-                    </div>
+                    </div>,
                   ]}
                   description={[
                     <div style={{ minHeight: "100px" }}>
                       <p>{speaker.profession}</p>
-                    </div>
+                    </div>,
                   ]}
                 />
               </Card>
@@ -114,50 +110,61 @@ class Speakers extends Component {
         </div>
 
         {/* Modal de Speakers para mostrar la información del conferencista junto con sus actividades */}
-        <div className="modal" id="myModal" style={{ zIndex: 1000 }}>
-          <div className="modal-background"></div>
-          <div className="modal-card">
-            {/* Contenedor para nombre y profesion del conferencista*/}
-            <div className="modal-card-head is-block" style={{ paddingTop: "1.5rem", minHeight: "40%" }}>
-              <p className="modal-card-title has-text-right">
-                <button className="delete" aria-label="close"></button>
+
+        <Modal
+          title="Conferencista"
+          centered
+          width={1000}
+          visible={this.state.modalVisible}
+          onCancel={() => this.setModalVisible(false)}>
+          <Row>
+            {/* Imagen del conferencista */}
+
+            <Col flex="1 1 auto">
+              {infoSpeaker.imagen ? (
+                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={infoSpeaker.imagen} />
+              ) : (
+                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
+              )}
+            </Col>
+
+            {/* Descripción del conferencista */}
+            <Col flex="1 1 600px">
+              <span>
+                <b>{infoSpeaker.nombre}</b>
+              </span>
+              <p>
+                <span>
+                  <b>{infoSpeaker.cargo}</b>
+                </span>
+                <br />
+                <br />
+                <div style={{ width: "90%" }} dangerouslySetInnerHTML={{ __html: infoSpeaker.descripcion }} />
               </p>
-              <br />
-              <div className="media">
-                <figure className="media-left image is-128x128">
-                  <img src={infoSpeaker.imagen} alt="Placeholder image" />
-                </figure>
+            </Col>
+          </Row>
 
-                <div className="media-content ">
-                  <span className="title is-3">{infoSpeaker.nombre}</span>
-                  <p className="is-4">{infoSpeaker.cargo}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Contenedor para descripcion 
+          {/* Contenedor para descripcion 
                             Se mapea tambien las actividades por Speaker 
                         */}
-            <div className="modal-card-body">
-              <div className="has-text-left" dangerouslySetInnerHTML={{ __html: infoSpeaker.descripcion }} />
-              {activityesBySpeaker.map((activities, key) => (
-                <div key={key}>
-                  <div class="content">
-                    <br />
-                    <br />
-                    <p className="title is-5 has-text-left">{activities.name}</p>
-                    <p className="title is-6 has-text-left">
-                      {activities.datetime_start} - {activities.datetime_end}
-                    </p>
-                    <br />
-                    <div className="has-text-left" dangerouslySetInnerHTML={{ __html: activities.description }} />
-                  </div>
+          <Card style={{ padding: "24px 40px", top: "50px" }}>
+            {activityesBySpeaker.map((activities, key) => (
+              <div key={key}>
+                <div>
+                  <p>
+                    <b>
+                      {Moment(activities.datetime_start).format("lll")} -{" "}
+                      {Moment(activities.datetime_end).format("lll")}
+                    </b>
+                  </p>
+                  <p>{activities.name}</p>
+                  <br />
+                  <div dangerouslySetInnerHTML={{ __html: activities.description }} />
                 </div>
-              ))}
-            </div>
-            <footer class="modal-card-foot"> </footer>
-          </div>
-        </div>
+              </div>
+            ))}
+          </Card>
+        </Modal>
       </div>
     );
   }
