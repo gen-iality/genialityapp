@@ -1,18 +1,15 @@
-.container-calendar-speaker{
+.container-calendar-speaker {
+  .calendar-speakers {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(359px, 30rem));
+    grid-gap: 40px;
+  }
 
-
-    .calendar-speakers{
-        display: grid;
-        justify-content: center;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 20rem));
-        grid-gap: 50px;
+  .content-information-speakers {
+    padding: 15px;
+    .information-speakers {
+      min-height: 5rem;
     }
-
-    .content-information-speakers{
-        padding: 15px;
-        .information-speakers{
-            min-height: 5rem; 
-        }
-    }
-
+  }
 }

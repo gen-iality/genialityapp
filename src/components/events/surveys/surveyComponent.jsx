@@ -50,7 +50,7 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
-        questions: [rest]
+        questions: [{ ...rest, isRequired: true }]
       };
     });
 

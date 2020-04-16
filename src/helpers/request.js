@@ -81,6 +81,9 @@ export const EventsApi = {
   invitations: async id => {
     return await Actions.getOne(`/api/events/${id}/`, "invitations");
   },
+  sendInvitation: async (eventId, data) => {
+    return await Actions.post(`/api/events/${eventId}/invitation`, data);
+  },
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
