@@ -21,15 +21,15 @@ export const saveFirebase = {
         return urlImage
     },
 
-    async saveComment(email, comments, eventId, idPost) {
+    async saveComment(email, comments, date, eventId, idPost) {
         const data = {
             author: email,
             comment: comments,
+            date: date,
             idPost: idPost
         }
 
         console.log(data)
-
         let addComment = firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
         console.log(await addComment)
         toast.success("Datos Guardados")
@@ -55,7 +55,7 @@ export const saveFirebase = {
         };
 
         console.log(data)
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
     async savePostSelfie(imageUrlBase64, text, author, eventId) {
@@ -66,7 +66,6 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
         let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
