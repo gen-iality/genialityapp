@@ -3,7 +3,8 @@ import FileBase64 from 'react-file-base64';
 import { toast } from "react-toastify";
 import firebase from 'firebase';
 import TimeStamp from "react-timestamp";
-import { CameraFeed } from './cameraFeed';
+import CameraFeed from './cameraFeed';
+import $ from "jquery"
 
 //custom
 import { firestore } from "../../helpers/firebase";
@@ -34,6 +35,7 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 
         <Form.Item>
             <Button
+                id="submitPost"
                 htmlType="submit"
                 loading={submitting}
                 onClick={onSubmit}
@@ -100,6 +102,10 @@ class Wall extends Component {
             comments: "",
             counts: [],
             fileName: "",
+            file: null,
+            inputKey: Date.now(),
+            keyImage: Date.now(),
+            imageSelfie: "",
             dataPost: [],
             dataPostFilter: [],
             dataComment: [],
@@ -110,14 +116,14 @@ class Wall extends Component {
             valueCommit: '',
             hidden: true,
             modal1Visible: false,
+            selfieImage: "",
             modal2Visible: false,
-
-
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
         this.previewImage = this.previewImage.bind(this)
         this.loadMore = this.loadMore.bind(this)
+        this.cancelImage = this.cancelImage.bind(this)
     }
 
     handleChange = e => {
@@ -128,7 +134,7 @@ class Wall extends Component {
 
     handleChangeCommit = e => {
         this.setState({
-            valueCommit: e.target.valueCommit,
+            valueCommit: e.target.value,
         });
     };
 
@@ -146,10 +152,10 @@ class Wall extends Component {
 
         const dataComment = [];
 
-        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('comment', 'desc')
+        let admincommentsRef = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('comment').doc(`${postId}`).collection('comments').orderBy('date', 'desc')
         let query = admincommentsRef.get().then(snapshot => {
             if (snapshot.empty) {
-                console.log('No hay ningun comentario');
+                //console.log('No hay ningun comentario');
                 this.setState({ dataComment: [] })
                 return;
             }
@@ -159,7 +165,8 @@ class Wall extends Component {
                     id: doc.id,
                     comment: doc.data().comment,
                     idPost: doc.data().idPost,
-                    author: doc.data().author
+                    author: doc.data().author,
+                    date: doc.data().date
                 })
                 this.setState({ dataComment })
             });
@@ -214,32 +221,40 @@ class Wall extends Component {
     //Funcion para guardar el post, Se recoge la informacion y se envia a ./helpers, se valida si trae imagen o no
     async savePost() {
         const image = document.getElementById("image").files[0]
-        const selfieImage = document.getElementById("getImage").src
+        const selfieImage = document.getElementById("frontImage")
 
-        if (selfieImage.length > 100) {
+        if (selfieImage && selfieImage.src.length > 100) {
+
             const imageUrl = []
-            imageUrl.push(selfieImage);
+            imageUrl.push(selfieImage.src);
             const text = document.getElementById("postText").value
             saveFirebase.savePostSelfie(imageUrl, text, this.props.event.author.email, this.props.event._id)
+            this.setState({
+                value: ''
+            })
+            this.cancelUploadImage()
             this.getPost()
-
         } else if (image) {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
-            console.log("Datos de imagen obtenidos")
+            //console.log("Datos de imagen obtenidos")
             const text = document.getElementById("postText").value
             //savePostImage se realiza para publicar el post con imagen
             saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
+            this.setState({
+                value: ''
+            })
+            this.cancelImage()
             this.getPost()
 
         } else {
             const text = document.getElementById("postText").value
             //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            this.setState({
+                value: ''
+            })
             this.getPost()
-            // this.setState({
-            //     submitting: true,
-            // });
         }
     }
 
@@ -247,8 +262,15 @@ class Wall extends Component {
     async saveComment(idPost) {
         let email = this.props.event.author.email
         let eventId = this.props.event._id
-        let comments = this.state.comments
-        saveFirebase.saveComment(email, comments, eventId, idPost)
+        let comments = this.state.valueCommit
+        let fecha = new Date().toString()
+        let date = fecha
+        const data = saveFirebase.saveComment(email, comments, date, eventId, idPost)
+        if (data) {
+            document.getElementById("comment").value = ""
+            //console.log(this.state.valueCommit)
+            this.getComments(idPost)
+        }
     }
 
     //Funcion para limpiar el files e image los cuales muestran el preview de la imagen
@@ -258,7 +280,11 @@ class Wall extends Component {
 
     //Funcion para observar la imagen antes de publicarla
     previewImage(event) {
-        console.log(URL.createObjectURL(event.target.files[0]))
+        document.getElementById("previewImage").hidden = false
+        const selfieImage = document.getElementById("frontImage")
+        this.setState({ selfieImage })
+
+        //console.log(URL.createObjectURL(event.target.files[0]))
 
         this.setState({
             image: URL.createObjectURL(event.target.files[0])
@@ -288,7 +314,7 @@ class Wall extends Component {
 
             if (this.state.dataPostFilter) {
                 this.state.dataPostFilter.length = total
-                console.log("Data", this.state.dataPostFilter)
+                //console.log("Data", this.state.dataPostFilter)
             }
         });
     }
@@ -301,16 +327,31 @@ class Wall extends Component {
 
     // Funciones para abrir y cerrar modal
 
-    setModal1Visible(modal1Visible) {
-        this.setState({ modal1Visible });
-    }
-
     setModal2Visible(modal2Visible) {
-        this.setState({ modal2Visible });
+        this.setState({ modal2Visible, keyImage: Date.now() });
+        if (document.getElementById("divImage")) {
+            document.getElementById("divImage").hidden = false
+        }
+
     }
 
+    cancelUploadImage() {
+        //console.log("Entré")
+        document.getElementById("frontImage").src = ''
+        document.getElementById("divImage").hidden = true
+    }
+
+    async cancelImage() {
+        document.getElementById('imagePost').removeAttribute('src');
+        this.setState({
+            file: null,
+            inputKey: Date.now()
+        });
+        //console.log(document.getElementById("imagePost").src)
+        document.getElementById("previewImage").hidden = true
+    }
     render() {
-        const { dataPost, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
+        const { dataPost, imageSelfie, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
         return (
             <div>
                 {/*Inicia el detalle de los comentarios */}
@@ -363,7 +404,7 @@ class Wall extends Component {
                                                 <List.Item.Meta
                                                     avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                                                     title={<span>{item.author}</span>}
-                                                    description={<p>1 Apr 2020, 3:38pm</p>}
+                                                    description={<TimeStamp date={item.date} />}
                                                 />
 
                                                 {item.comment}
@@ -406,7 +447,7 @@ class Wall extends Component {
                                             <Row>
                                                 {/* Boton para subir foto desde la galeria del dispositivo */}
                                                 <Button type="primary">
-                                                    <input class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                                    <input key={this.state.inputKey} class="file-input" type="file" id="image" onChange={this.previewImage} />
                                                     <span>Subir Foto</span>
                                                     <CloudUploadOutlined />
                                                 </Button>
@@ -427,34 +468,40 @@ class Wall extends Component {
                                                         <CameraFeed sendFile={this.uploadImage} />
 
                                                     </Modal>
-
                                                 </div>
-
-
-
                                             </Row>
-
-                                            <div>
+                                            <Row>
                                                 {
-                                                    image ?
-                                                        <div className="column is-6 card-image">
-                                                            <figure className="image is-4by3">
-                                                                <img src={image} alt="Placeholder image" />
-                                                                <button className="button is-primary" onClick={this.cancelUpload}>Cancelar</button>
-                                                            </figure>
-                                                        </div> :
-                                                        <p></p>
+                                                    document.getElementById("getImage") ?
+                                                        <div id="divImage" style={{ marginTop: "2%" }}>
+                                                            <Card
+                                                                hoverable
+                                                                style={{ width: 240 }}
+                                                                cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
+                                                            >
+                                                                <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                            </Card>,
+                                                        </div>
+                                                        :
+                                                        <div id="previewImage" hidden>
+                                                            <Card
+                                                                hoverable
+                                                                style={{ width: 240 }}
+                                                                cover={<img id="imagePost" src={image} />}
+                                                            >
+                                                                <Button onClick={this.cancelImage}>Cancelar</Button>
+                                                            </Card>,
+                                                        </div>
                                                 }
-                                            </div>
+                                            </Row>
                                         </Col>
                                     </Row>
-
-
                                     {/* Se importa el componente de textArea para agregar un comentario al post */}
 
                                     <Comment
                                         content={
                                             <Editor
+                                                id="comment"
                                                 onChange={this.handleChange}
                                                 onSubmit={this.savePost}
                                                 submitting={submitting}
@@ -462,6 +509,7 @@ class Wall extends Component {
                                             />
                                         }
                                     />
+
                                 </Card>
                             </Col>
                         </Row>
@@ -508,7 +556,6 @@ class Wall extends Component {
                                                     />,
                                                     <IconText
                                                         icon={MessageOutlined}
-                                                        text="2"
                                                         key="list-vertical-message"
                                                         onSubmit={e => { this.getComments(item.id) }}
                                                     />

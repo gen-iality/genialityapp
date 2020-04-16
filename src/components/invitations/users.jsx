@@ -46,10 +46,8 @@ class UsersRsvp extends Component {
   async componentDidMount() {
     try {
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
-      console.log("RESP", resp);
-      const columns = this.props.event.user_properties.map(
-        field => field.label
-      );
+      console.log("RESP", this.props.eventID, resp);
+      const columns = this.props.event.user_properties.map(field => field.label);
       columns.unshift(
         <div className="field">
           <input
@@ -192,10 +190,7 @@ class UsersRsvp extends Component {
       })
       .indexOf(user.id);
     if (keyIndex >= 0) {
-      selection = [
-        ...selection.slice(0, keyIndex),
-        ...selection.slice(keyIndex + 1)
-      ];
+      selection = [...selection.slice(0, keyIndex), ...selection.slice(keyIndex + 1)];
       auxArr = [...auxArr.slice(0, keyIndex), ...auxArr.slice(keyIndex + 1)];
       items = [...items.slice(0, keyIndex), ...items.slice(keyIndex + 1)];
     } else {
@@ -238,14 +233,9 @@ class UsersRsvp extends Component {
   //Add user to current list at middle column
   addToList = async () => {
     try {
-      const { data } = await UsersApi.getAll(
-        this.props.eventID,
-        "?pageSize=10000"
-      );
+      const { data } = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
       const users = handleUsers(data);
-      toast.success(
-        <FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />
-      );
+      toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
       this.setState({ users });
     } catch (error) {
       if (error.response) {
@@ -264,18 +254,14 @@ class UsersRsvp extends Component {
 
   //Search records at third column
   searchResult = data => {
-    !data
-      ? this.setState({ users: this.state.auxArr.slice(0, 10) })
-      : this.setState({ users: data });
+    !data ? this.setState({ users: this.state.auxArr.slice(0, 10) }) : this.setState({ users: data });
   };
 
   //Button Ticket Logic
   showTicket = () => {
     const html = document.querySelector("html");
     this.setState(prevState => {
-      !prevState.ticket
-        ? html.classList.add("is-clipped")
-        : html.classList.remove("is-clipped");
+      !prevState.ticket ? html.classList.add("is-clipped") : html.classList.remove("is-clipped");
       return { ticket: !prevState.ticket };
     });
   };
@@ -293,9 +279,7 @@ class UsersRsvp extends Component {
     API.post(url, { eventUsersIds: users })
       .then(res => {
         console.log(res);
-        toast.success(
-          <FormattedMessage id="toast.ticket_sent" defaultMessage="Ok!" />
-        );
+        toast.success(<FormattedMessage id="toast.ticket_sent" defaultMessage="Ok!" />);
         html.classList.remove("is-clipped");
         this.setState({
           redirect: true,
@@ -305,9 +289,7 @@ class UsersRsvp extends Component {
       })
       .catch(e => {
         console.log(e.response);
-        toast.error(
-          <FormattedMessage id="toast.error" defaultMessage="Sry :(" />
-        );
+        toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
         this.setState({ timeout: true, loader: false });
       });
   };
@@ -330,79 +312,58 @@ class UsersRsvp extends Component {
   irACreacionComunicacion = () => {
     //Actualizar el estado del padre
     if (this.state.selection[0] === undefined) {
-      sweetAlert.showLoading("Selecciona un correo")
+      sweetAlert.showLoading("Selecciona un correo");
     } else {
-      this.props.setGuestSelected(this.state.selection)
-      this.props.history.push(`${this.props.matchUrl}/createmessage`)
-      //enviar a la otra página  
-      
+      this.props.setGuestSelected(this.state.selection);
+      this.props.history.push(`${this.props.matchUrl}/createmessage`);
+      //enviar a la otra página
     }
-    
-    console.log(this.state.selection)
-  }
 
+    console.log(this.state.selection);
+  };
 
   render() {
-    if (this.state.redirect)
-      return <Redirect to={{ pathname: this.state.url_redirect }} />;
+    if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     if (this.state.loading) return <Loading />;
-    const {
-      users,
-      usersReq,
-      dropUser,
-      dropSend,
-      pageOfItems,
-      columns
-    } = this.state;
+    const { users, usersReq, dropUser, dropSend, pageOfItems, columns } = this.state;
     return (
       <Fragment>
         <EventContent
           title={"Invitados"}
           description={
-            usersReq.length <= 0
-              ? "Crear o importar una lista d epersonas que desea invitar a su evento"
-              : ""
-          }
-        >
-          <button className="button" style={{ float: "left", marginTop: "2%" }} onClick={() => this.irACreacionComunicacion()}> Enviar comunicación / Correo </button>
+            usersReq.length <= 0 ? "Crear o importar una lista d epersonas que desea invitar a su evento" : ""
+          }>
+          <button
+            className="button"
+            style={{ float: "left", marginTop: "2%" }}
+            onClick={() => this.irACreacionComunicacion()}>
+            {" "}
+            Enviar comunicación / Correo{" "}
+          </button>
 
           {usersReq.length > 0 ? (
             <div>
               <div className="columns">
                 <div className="column is-12">
                   <div
-                    className={`dropdown is-pulled-right is-right ${
-                      dropUser ? "is-active" : ""
-                      }`}
-                    onClick={this.handleDropUser}
-                  >
+                    className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
+                    onClick={this.handleDropUser}>
                     <div className="dropdown-trigger">
-                      <button
-                        className="button"
-                        aria-haspopup
-                        aria-controls={"dropdown-menu1"}
-                      >
+                      <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
                         <span>Agregar usuarios</span>
                         <span className="icon">
                           <i className="fas fa-angle-down" />
                         </span>
                       </button>
                     </div>
-                    <div
-                      className="dropdown-menu"
-                      id="dropdown-menu1"
-                      role="menu"
-                    >
+                    <div className="dropdown-menu" id="dropdown-menu1" role="menu">
                       <div className="dropdown-content">
                         <div className="dropdown-item" onClick={this.modalUser}>
                           <p>Nuevo usuario</p>
                         </div>
-                        <Link
-                          className="dropdown-item"
-                          to={`${this.props.matchUrl}/importar-excel`}
-                        >
+                        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
                           Importar usuarios de Excel
-                      </Link>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -420,36 +381,22 @@ class UsersRsvp extends Component {
                 <div className="column is-2" />
                 <div className="column">
                   <div
-                    className={`dropdown is-pulled-right is-right ${
-                      dropUser ? "is-active" : ""
-                      }`}
-                    onClick={this.handleDropUser}
-                  >
+                    className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
+                    onClick={this.handleDropUser}>
                     <div className="dropdown-trigger">
-                      <button
-                        className="button"
-                        aria-haspopup
-                        aria-controls={"dropdown-menu1"}
-                      >
+                      <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
                         <span>Agregar usuarios</span>
                         <span className="icon">
                           <i className="fas fa-angle-down" />
                         </span>
                       </button>
                     </div>
-                    <div
-                      className="dropdown-menu"
-                      id="dropdown-menu1"
-                      role="menu"
-                    >
+                    <div className="dropdown-menu" id="dropdown-menu1" role="menu">
                       <div className="dropdown-content">
                         <div className="dropdown-item" onClick={this.modalUser}>
                           <p>Nuevo usuario</p>
                         </div>
-                        <Link
-                          className="dropdown-item"
-                          to={`${this.props.matchUrl}/importar-excel`}
-                        >
+                        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
                           Importar usuarios de Excel
                         </Link>
                       </div>
@@ -511,7 +458,11 @@ class UsersRsvp extends Component {
                       </div>
                     </td>
                     {Object.keys(user.properties).map(prop => (
-                      <td key={prop}>{((parseInt() || typeof user.properties[prop] == "string")) ? user.properties[prop] : JSON.stringify(user.properties[prop])}</td>
+                      <td key={prop}>
+                        {parseInt() || typeof user.properties[prop] == "string"
+                          ? user.properties[prop]
+                          : JSON.stringify(user.properties[prop])}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -519,13 +470,11 @@ class UsersRsvp extends Component {
               <Pagination items={users} onChangePage={this.onChangePage} />
             </div>
           ) : (
-              <div>
-                <div onClick={this.modalUser}>Nuevo invitado</div>
-                <Link to={`${this.props.matchUrl}/importar-excel`}>
-                  Importar usuarios de Excel
-              </Link>
-              </div>
-            )}
+            <div>
+              <div onClick={this.modalUser}>Nuevo invitado</div>
+              <Link to={`${this.props.matchUrl}/importar-excel`}>Importar usuarios de Excel</Link>
+            </div>
+          )}
         </EventContent>
 
         {this.state.addUser && (
@@ -557,9 +506,7 @@ const handleUsers = (fields, list) => {
     users[key] = {};
     users[key]["id"] = user._id;
     users[key]["properties"] = {};
-    return fields.map(
-      field => (users[key].properties[field.name] = user.properties[field.name])
-    );
+    return fields.map(field => (users[key].properties[field.name] = user.properties[field.name]));
   });
   return users;
 };

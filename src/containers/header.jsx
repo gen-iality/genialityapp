@@ -14,6 +14,7 @@ import { Logo } from "../../src/logo.svg";
 import MenuOld from "../components/events/shared/menu";
 import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
 import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { parseUrl } from "../helpers/constants";
 
 const { Header, Content, Footer } = Layout;
 
@@ -56,14 +57,22 @@ class Headers extends Component {
   };
 
   async componentDidMount() {
+    /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = Cookie.get("evius_token");
+    let dataUrl = parseUrl(document.URL);
+    if (dataUrl && dataUrl.token) {
+      Cookie.set("evius_token", dataUrl.token);
+      evius_token = dataUrl.token;
+    }
     if (!evius_token) {
       this.setState({ user: false, loader: false });
       return;
     }
 
     try {
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+      const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
+      console.log("respuesta del server", resp);
+
       if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
         const data = resp.data;
         const name = data.name ? data.name : data.displayName ? data.displayName : data.email;

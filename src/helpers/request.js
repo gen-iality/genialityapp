@@ -81,6 +81,9 @@ export const EventsApi = {
   invitations: async id => {
     return await Actions.getOne(`/api/events/${id}/`, "invitations");
   },
+  sendInvitation: async (eventId, data) => {
+    return await Actions.post(`/api/events/${eventId}/invitation`, data);
+  },
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
@@ -98,7 +101,7 @@ export const EventsApi = {
     return await Actions.delete("/api/events/", id);
   },
   getStyles: async id => {
-    return await Actions.get(`/api/events/${id}/styles`);
+    return await Actions.get(`/api/events/${id}/stylestemp`);
   }
 };
 export const UsersApi = {
