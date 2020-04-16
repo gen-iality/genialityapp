@@ -3,7 +3,8 @@ import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import XLSX from "xlsx";
 import { toast } from "react-toastify";
 import { firestore } from "../../helpers/firebase";
-import { BadgeApi, RolAttApi } from "../../helpers/request";
+import API, { BadgeApi, EventsApi, RolAttApi } from "../../helpers/request";
+import * as Cookie from "js-cookie";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
@@ -107,8 +108,8 @@ class ListEventUser extends Component {
             user.rol_name = user.rol_name
               ? user.rol_name
               : user.rol_id
-              ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
-              : "";
+                ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
+                : "";
             user.created_at = typeof user.created_at === "object" ? user.created_at.toDate() : "sinfecha";
             user.updated_at = user.updated_at.toDate ? user.updated_at.toDate() : new Date();
             user.tiquete = listTickets.find(ticket => ticket._id === user.ticket_id);
@@ -190,6 +191,19 @@ class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
+  async SendFriendship(id) {
+    const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+    const data = {
+      id_user_requested: resp.data._id,
+      id_user_requesting: id,
+      event_id: this.props.event._id,
+      state: "send"
+    }
+
+    const response = await EventsApi.sendInvitation(this.props.event._id, data)
+    console.log(response)
+  }
+
   render() {
     const { userReq, users, pageOfItems } = this.state;
     return (
@@ -197,7 +211,7 @@ class ListEventUser extends Component {
         <EventContent>
           {/* Componente de busqueda */}
 
-          <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+          <Col extra={<a onClick={() => { this.SendFriendship(users._id) }}>Enviar Solicitud</a>} xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
             <p>
               <h1> Busca aquí el usuarios.</h1>
             </p>
@@ -219,37 +233,37 @@ class ListEventUser extends Component {
                 <h2 className="has-text-centered">Cargando...</h2>
               </Fragment>
             ) : (
-              <div>
                 <div>
-                  {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                  {pageOfItems.map((users, key) => (
-                    <Row key={key} justify="center">
-                      <Card
-                        style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                        bordered={true}>
-                        <Meta
-                          avatar={<Avatar>{users.properties.names.charAt(0).toUpperCase()}</Avatar>}
-                          title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                          description={[
-                            <div>
-                              <br />
-                              <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                              <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
-                              <p>Correo: {users.properties.email ? users.properties.email : "No registra Correo"}</p>
-                              <p>
-                                Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
-                              </p>
-                            </div>
-                          ]}
-                        />
-                      </Card>
-                    </Row>
-                  ))}
+                  <div>
+                    {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                    {pageOfItems.map((users, key) => (
+                      <Row key={key} justify="center">
+                        <Card
+                          style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                          bordered={true}>
+                          <Meta
+                            avatar={<Avatar>{users.properties.names.charAt(0).toUpperCase()}</Avatar>}
+                            title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                            description={[
+                              <div>
+                                <br />
+                                <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
+                                <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
+                                <p>Correo: {users.properties.email ? users.properties.email : "No registra Correo"}</p>
+                                <p>
+                                  Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
+                                </p>
+                              </div>
+                            ]}
+                          />
+                        </Card>
+                      </Row>
+                    ))}
+                  </div>
+                  {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                  <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                 </div>
-                {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-              </div>
-            )}
+              )}
           </div>
         </EventContent>
       </React.Fragment>
