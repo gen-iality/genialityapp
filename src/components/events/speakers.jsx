@@ -76,8 +76,8 @@ class Speakers extends Component {
                   speaker.image ? (
                     <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={speaker.image} />
                   ) : (
-                    <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
-                  )
+                      <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
+                    )
                 }
                 actions={[
                   <Button
@@ -124,8 +124,8 @@ class Speakers extends Component {
               {infoSpeaker.imagen ? (
                 <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={infoSpeaker.imagen} />
               ) : (
-                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
-              )}
+                  <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
+                )}
             </Col>
 
             {/* Descripción del conferencista */}
@@ -147,9 +147,9 @@ class Speakers extends Component {
           {/* Contenedor para descripcion 
                             Se mapea tambien las actividades por Speaker 
                         */}
-          <Card style={{ padding: "24px 40px", top: "50px" }}>
-            {activityesBySpeaker.map((activities, key) => (
-              <div key={key}>
+          {activityesBySpeaker.map((activities, key) => (
+            <div key={key}>
+              <Card style={{ padding: "24px 40px", top: "50px", marginBottom: "30px" }}>
                 <div>
                   <p>
                     <b>
@@ -161,9 +161,9 @@ class Speakers extends Component {
                   <br />
                   <div dangerouslySetInnerHTML={{ __html: activities.description }} />
                 </div>
-              </div>
-            ))}
-          </Card>
+              </Card>
+            </div>
+          ))}
         </Modal>
       </div>
     );
