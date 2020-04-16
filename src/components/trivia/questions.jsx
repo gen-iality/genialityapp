@@ -39,8 +39,9 @@ class FormQuestions extends Component {
     const exclude = ({ selectOptions, quantityOptions, questionOptions, ...rest }) => rest;
 
     // Ejecuta el servicio
-    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
+    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(response => {
       removeQuestion(questionId);
+      toast.success("Pregunta creada");
     });
   };
 
