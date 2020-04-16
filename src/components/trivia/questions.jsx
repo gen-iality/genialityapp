@@ -40,7 +40,7 @@ class FormQuestions extends Component {
 
     // Ejecuta el servicio
     SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(response => {
-      removeQuestion(questionId);
+      removeQuestion(questionId, response);
       toast.success("Pregunta creada");
     });
   };

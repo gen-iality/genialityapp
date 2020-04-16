@@ -141,9 +141,13 @@ class triviaEdit extends Component {
   };
 
   // Funcion para remover el formulario de las preguntas
-  removeQuestion = item => {
-    let { listQuestions } = this.state;
+  removeQuestion = (item, newQuestion) => {
+    let { listQuestions, question } = this.state;
     let newArray = listQuestions.filter(question => question.key != item);
+    if (newQuestion) {
+      question = [...question, newQuestion];
+      this.setState({ question });
+    }
     this.setState({ listQuestions: newArray });
   };
 
@@ -153,8 +157,13 @@ class triviaEdit extends Component {
   deleteQuestion = async questionId => {
     let { question, _id } = this.state;
     const { event } = this.props;
+
     let questionIndex = question.findIndex(question => question.id == questionId);
     let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
+
+    let newListQuestion = question.filter(infoQuestion => infoQuestion.id != questionId);
+    this.setState({ question: newListQuestion });
+
     toast.success(response);
   };
 
@@ -168,7 +177,7 @@ class triviaEdit extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
-    const { survey, publish, activity_id, dataAgenda } = this.state;
+    const { survey, publish, activity_id, dataAgenda, question } = this.state;
     const columns = [
       {
         title: "Pregunta",
@@ -278,7 +287,7 @@ class triviaEdit extends Component {
                   {formQuestion}
                 </div>
               ))}
-              <Table style={{ marginTop: "5%" }} dataSource={this.state.question} columns={columns} />
+              <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
             </div>
           ) : (
             <div></div>
