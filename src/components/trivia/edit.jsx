@@ -150,12 +150,17 @@ class triviaEdit extends Component {
   // Funciones para los servicios -----------------------------------
 
   // Borrar pregunta
-  deleteQuestion = questionId => {
-    console.log("Eliminando pregunta", questionId);
+  deleteQuestion = async questionId => {
+    let { question, _id } = this.state;
+    const { event } = this.props;
+    let questionIndex = question.findIndex(question => question.id == questionId);
+    let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
+    console.log("response:", response);
   };
   // Editar pregunta
   editQuestion = questionId => {
-    console.log("Editando pregunta", questionId);
+    let { question } = this.state;
+    let questionIndex = question.findIndex(question => question.id == questionId);
   };
 
   goBack = () => this.props.history.goBack();

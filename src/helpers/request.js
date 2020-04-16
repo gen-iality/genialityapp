@@ -172,6 +172,9 @@ export const SurveysApi = {
   },
   createQuestion: async (event, id, data) => {
     return await Actions.put(`/api/events/${event}/surveys/${id}?newquestion=1`, data);
+  },
+  deleteQuestion: async (event, surveyId, index) => {
+    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}?delete=`, index, true);
   }
 };
 
