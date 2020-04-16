@@ -9,7 +9,7 @@ import $ from "jquery"
 //custom
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers"
-import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal } from 'antd';
+import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal, Alert } from 'antd';
 import {
     CloudUploadOutlined,
     MessageOutlined,
@@ -105,6 +105,8 @@ class Wall extends Component {
             file: null,
             inputKey: Date.now(),
             keyImage: Date.now(),
+            showInfo: false,
+            keyForm: Date.now(),
             imageSelfie: "",
             dataPost: [],
             dataPostFilter: [],
@@ -118,33 +120,34 @@ class Wall extends Component {
             modal1Visible: false,
             selfieImage: "",
             modal2Visible: false,
+            showInfo: false,
+            loading: false,
+            visible: false,
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
         this.previewImage = this.previewImage.bind(this)
         this.loadMore = this.loadMore.bind(this)
         this.cancelImage = this.cancelImage.bind(this)
-        this.cancelModal = this.cancelModal.bind(this)
+        this.stayForm = this.stayForm.bind(this)
     }
-
+    //Funcion para enviar al estado la informacion de la caja de texto del post
     handleChange = e => {
         this.setState({
             value: e.target.value,
         });
     };
 
+    //Funcion para enviar al estado el dato de la caja de texto del comentario
     handleChangeCommit = e => {
         this.setState({
             valueCommit: e.target.value,
         });
     };
 
-
-
     //Se monta el componente getPost antes
     componentDidMount = async () => {
         this.getPost()
-        this.getComments()
     }
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
@@ -232,10 +235,14 @@ class Wall extends Component {
             const text = document.getElementById("postText").value
             saveFirebase.savePostSelfie(imageUrl, text, this.props.event.author.email, this.props.event._id)
             this.setState({
-                value: ''
+                value: '',
+                showInfo: true,
+                keyForm: Date.now()
             })
             this.cancelUploadImage()
             this.getPost()
+            setTimeout(() => { this.stayForm() }, 3000);
+
         } else if (image) {
             // let imageUrl = this.saveImage(image)
             let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
@@ -244,21 +251,36 @@ class Wall extends Component {
             //savePostImage se realiza para publicar el post con imagen
             saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
             this.setState({
-                value: ''
+                value: '',
+                showInfo: true,
+                keyForm: Date.now()
             })
+
             this.cancelImage()
             this.getPost()
-
+            setTimeout(() => { this.stayForm() }, 3000);
         } else {
             const text = document.getElementById("postText").value
             //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
-
             this.setState({
-                value: ''
+                value: '',
+                showInfo: true,
+                keyForm: Date.now()
             })
             this.getPost()
+            setTimeout(() => { this.stayForm() }, 3000);
         }
+    }
+
+    //Funcion para cerrar el mensaje de post guardado
+    stayForm() {
+        this.setState({
+            value: '',
+            showInfo: false,
+            visible: false,
+            keyForm: Date.now()
+        })
     }
 
     //Se salva el comentario, el proceso se encuentra en ./helpers.js 
@@ -328,7 +350,7 @@ class Wall extends Component {
     };
 
 
-    // Funciones para abrir y cerrar modal
+    // Funciones para abrir y cerrar modal de la camara
 
     setModal2Visible(modal2Visible) {
         this.setState({ modal2Visible, keyImage: Date.now() });
@@ -337,18 +359,13 @@ class Wall extends Component {
         }
     }
 
+    //Funcion para limpiar el input de la selfie y ocultar el componente card que muestra la selfie
     cancelUploadImage() {
         //console.log("Entré")
         document.getElementById("frontImage").src = ''
         document.getElementById("divImage").hidden = true
     }
-    cancelModal(modal2Visible) {
-        this.setState({
-            modal2Visible,
-            keyImage: Date.now()
-        })
-    }
-
+    //Funcion para limpiar el input de la imagen del archivo
     async cancelImage() {
         document.getElementById('imagePost').removeAttribute('src');
         this.setState({
@@ -358,8 +375,26 @@ class Wall extends Component {
         //console.log(document.getElementById("imagePost").src)
         document.getElementById("previewImage").hidden = true
     }
+
+    //Funciones para mostrar o cerrar el modal que contiene el formulario para guardar post
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = () => {
+        this.setState({ loading: true });
+        setTimeout(() => {
+            this.setState({ loading: false, visible: false });
+        }, 3000);
+    };
+
+    handleCancel = () => {
+        this.setState({ visible: false });
+    };
     render() {
-        const { dataPost, dataComment, hidden, image, submitting, value, currentCommet, valueCommit } = this.state
+        const { loading, visible, dataPost, dataComment, hidden, image, submitting, value, currentCommet, valueCommit } = this.state
         return (
             <div>
                 {/*Inicia el detalle de los comentarios */}
@@ -446,87 +481,108 @@ class Wall extends Component {
 
                             <Col xs={24} sm={20} md={20} lg={20} xl={12}>
 
-                                <Card size="small" title="Crear publicación" extra={<div></div>}>
+                                <Card size="small" title="Publicaciones" extra={<div></div>}>
+                                    {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
+                                    <div key={this.state.keyForm}>
+                                        {
+                                            // Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje
+                                            this.state.showInfo === true ?
+                                                <Alert message="Post Publicado" type="success" />
+                                                :
+                                                // Desde aqui empieza el formulario para guardar un post
+                                                <div>
+                                                    {/* Se valida si hay imagen para mostrar o no */}
 
-                                    {/* Se valida si hay imagen para mostrar o no */}
-
-                                    <Row >
-                                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                            <Row>
-                                                {/* Boton para subir foto desde la galeria del dispositivo */}
-                                                <Button type="primary">
-                                                    <input key={this.state.inputKey} class="file-input" type="file" id="image" onChange={this.previewImage} />
-                                                    <span>Subir Foto</span>
-                                                    <CloudUploadOutlined />
-                                                </Button>
-
-                                                {/* Boton para abrir la camara */}
-                                                <Button style={{ marginLeft: "3%" }} onClick={e => { this.setState({ hidden: true }, this.setModal2Visible(true)) }}><CameraOutlined /></Button>
-
-                                                {/* Modal para camara  */}
-
-                                                <div hidden={hidden} className="App">
+                                                    <Button type="primary" onClick={this.showModal}>
+                                                        Crear Publicación
+                                                    </Button>
                                                     <Modal
-                                                        title="Camara"
-                                                        centered
-                                                        visible={this.state.modal2Visible}
-                                                        onOk={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
-                                                        footer={[
-                                                            <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
-                                                                Cerrar
-                                                            </Button>
-                                                        ]}
-                                                    >
-                                                        <CameraFeed sendFile={this.uploadImage} />
+                                                        visible={visible}
+                                                        title="Publicaciones"
+                                                        onOk={this.handleOk}
+                                                        onCancel={this.handleCancel}
+                                                        footer={[]}>
+                                                        <Row >
+                                                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                                                <Row>
+                                                                    {/* Boton para subir foto desde la galeria del dispositivo */}
+                                                                    <Button type="primary">
+                                                                        <input key={this.state.inputKey} class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                                                        <span>Subir Foto</span>
+                                                                        <CloudUploadOutlined />
+                                                                    </Button>
 
+                                                                    {/* Boton para abrir la camara */}
+                                                                    <Button style={{ marginLeft: "3%" }} onClick={e => { this.setState({ hidden: true }, this.setModal2Visible(true)) }}><CameraOutlined /></Button>
+
+                                                                    {/* Modal para camara  */}
+
+                                                                    <div hidden={hidden} className="App">
+                                                                        <Modal
+                                                                            title="Camara"
+                                                                            centered
+                                                                            visible={this.state.modal2Visible}
+                                                                            onOk={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
+                                                                            footer={[
+                                                                                <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
+                                                                                    Cerrar
+                                                                                </Button>
+                                                                            ]}>
+                                                                            <CameraFeed sendFile={this.uploadImage} />
+                                                                        </Modal>
+                                                                    </div>
+                                                                </Row>
+                                                                <Row>
+                                                                    {
+                                                                        //Se valida si existe getImage y se valida si contiene mas de 100 caracteres para mostrar la selfie
+                                                                        document.getElementById("getImage") ?
+                                                                            document.getElementById("getImage").src.length > 100 ?
+                                                                                <div id="divImage" style={{ marginTop: "2%" }}>
+                                                                                    <Card
+                                                                                        hoverable
+                                                                                        style={{ width: 240 }}
+                                                                                        cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
+                                                                                    >
+                                                                                        <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                                                    </Card>
+                                                                                </div>
+                                                                                :
+                                                                                <div />
+                                                                            :
+                                                                            <div />
+                                                                    }
+
+                                                                    {/* Se oculta este div para mostrar el archivo solamente cuando se suba el archivo */}
+                                                                    <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
+                                                                        <Card
+                                                                            hoverable
+                                                                            style={{ width: 240 }}
+                                                                            cover={<img id="imagePost" src={image} />}
+                                                                        >
+                                                                            <Button onClick={this.cancelImage}>Cancelar</Button>
+                                                                        </Card>
+                                                                    </div>
+                                                                </Row>
+                                                            </Col>
+                                                        </Row>
+                                                        {/* Se importa el componente de textArea para agregar un comentario al post */}
+
+                                                        <Comment
+                                                            content={
+                                                                <Editor
+                                                                    id="comment"
+                                                                    onChange={this.handleChange}
+                                                                    onSubmit={this.savePost}
+                                                                    submitting={submitting}
+                                                                    value={value}
+                                                                />
+                                                            }
+                                                        />
                                                     </Modal>
                                                 </div>
-                                            </Row>
-                                            <Row>
-                                                {
-                                                    document.getElementById("getImage") ?
-                                                        document.getElementById("getImage").src.length > 100 ?
-                                                            <div id="divImage" style={{ marginTop: "2%" }}>
-                                                                <Card
-                                                                    hoverable
-                                                                    style={{ width: 240 }}
-                                                                    cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
-                                                                >
-                                                                    <Button onClick={this.cancelUploadImage}>Cancelar</Button>
-                                                                </Card>
-                                                            </div>
-                                                            :
-                                                            <div></div>
-                                                        :
-                                                        <div>
-                                                        </div>
-                                                }
-                                                <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
-                                                    <Card
-                                                        hoverable
-                                                        style={{ width: 240 }}
-                                                        cover={<img id="imagePost" src={image} />}
-                                                    >
-                                                        <Button onClick={this.cancelImage}>Cancelar</Button>
-                                                    </Card>
-                                                </div>
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                    {/* Se importa el componente de textArea para agregar un comentario al post */}
-
-                                    <Comment
-                                        content={
-                                            <Editor
-                                                id="comment"
-                                                onChange={this.handleChange}
-                                                onSubmit={this.savePost}
-                                                submitting={submitting}
-                                                value={value}
-                                            />
+                                            // aqui termina modal de publicacion de post
                                         }
-                                    />
-
+                                    </div>
                                 </Card>
                             </Col>
                         </Row>
