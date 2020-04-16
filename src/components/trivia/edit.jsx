@@ -150,12 +150,12 @@ class triviaEdit extends Component {
   // Funciones para los servicios -----------------------------------
 
   // Borrar pregunta
-  deleteQuestion = (e, f, g) => {
-    console.log("Eliminando pregunta", e, f, g);
+  deleteQuestion = questionId => {
+    console.log("Eliminando pregunta", questionId);
   };
   // Editar pregunta
-  editQuestion = (e, f, g) => {
-    console.log("Editando pregunta", e, f, g);
+  editQuestion = questionId => {
+    console.log("Editando pregunta", questionId);
   };
 
   goBack = () => this.props.history.goBack();
@@ -177,19 +177,19 @@ class triviaEdit extends Component {
         title: "Acciones",
         key: "action",
         render: (text, record) => (
-          <a href="">Action {record.title}</a>
+          <div>
+            <Button onClick={() => this.deleteQuestion(record.id)} style={{ marginRight: 16, color: "red" }}>
+              <span className="icon">
+                <i className="fas fa-trash-alt" />
+              </span>
+            </Button>
 
-          // <a onClick={this.deleteQuestion(record.key, text, record)} style={{ marginRight: 16, color: "red" }}>
-          //   <span className="icon">
-          //     <i className="fas fa-trash-alt" />
-          //   </span>
-          // </a>
-
-          // <a onClick={this.editQuestion(record.key, text, record)}>
-          //   <span className="icon">
-          //     <i className="fas fa-edit" />
-          //   </span>
-          // </a>
+            <Button onClick={() => this.editQuestion(record.id)}>
+              <span className="icon">
+                <i className="fas fa-edit" />
+              </span>
+            </Button>
+          </div>
         )
       }
     ];
