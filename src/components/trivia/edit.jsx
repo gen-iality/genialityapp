@@ -178,6 +178,8 @@ class triviaEdit extends Component {
   editQuestion = questionId => {
     let { question } = this.state;
     let questionIndex = question.findIndex(question => question.id == questionId);
+    console.log("---- Hace falta descubrir el api para modificar las preguntas ----");
+    // console.log(questionId, questionIndex);
   };
   // ---------------------------------------------------------------------------------------
 
