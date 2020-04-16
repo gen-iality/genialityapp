@@ -112,7 +112,7 @@ class Landing extends Component {
 
     var head = document.getElementsByTagName("head")[0];
     var styleElement = document.createElement("style");
-    styleElement.innerHTML = eventStyles.styles;
+    styleElement.innerHTML = eventStyles;
     styleElement.type = "text/css";
     styleElement.id = "eviusDynamicStyle";
     document.body.appendChild(styleElement);

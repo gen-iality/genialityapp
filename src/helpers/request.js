@@ -98,7 +98,7 @@ export const EventsApi = {
     return await Actions.delete("/api/events/", id);
   },
   getStyles: async id => {
-    return await Actions.get(`/api/events/${id}/styles`);
+    return await Actions.get(`/api/events/${id}/stylestemp`);
   }
 };
 export const UsersApi = {
