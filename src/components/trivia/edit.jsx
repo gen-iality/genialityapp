@@ -144,7 +144,14 @@ class triviaEdit extends Component {
   removeQuestion = (item, newQuestion) => {
     let { listQuestions, question } = this.state;
     let newArray = listQuestions.filter(question => question.key != item);
+
+    // Este condicional sirve para actualizar el estado local
     if (newQuestion) {
+      // Se iteran las opciones y se asigna el texto para el tipo de pregunta
+      selectOptions.forEach(option => {
+        if (newQuestion.type == option.value) newQuestion.type = option.text;
+      });
+
       question = [...question, newQuestion];
       this.setState({ question });
     }
