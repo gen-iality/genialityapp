@@ -124,6 +124,7 @@ class Wall extends Component {
         this.previewImage = this.previewImage.bind(this)
         this.loadMore = this.loadMore.bind(this)
         this.cancelImage = this.cancelImage.bind(this)
+        this.cancelModal = this.cancelModal.bind(this)
     }
 
     handleChange = e => {
@@ -143,6 +144,7 @@ class Wall extends Component {
     //Se monta el componente getPost antes
     componentDidMount = async () => {
         this.getPost()
+        this.getComments()
     }
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
@@ -251,6 +253,7 @@ class Wall extends Component {
             const text = document.getElementById("postText").value
             //savepost se realiza para publicar el post sin imagen
             saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+
             this.setState({
                 value: ''
             })
@@ -332,13 +335,18 @@ class Wall extends Component {
         if (document.getElementById("divImage")) {
             document.getElementById("divImage").hidden = false
         }
-
     }
 
     cancelUploadImage() {
         //console.log("Entré")
         document.getElementById("frontImage").src = ''
         document.getElementById("divImage").hidden = true
+    }
+    cancelModal(modal2Visible) {
+        this.setState({
+            modal2Visible,
+            keyImage: Date.now()
+        })
     }
 
     async cancelImage() {
@@ -351,7 +359,7 @@ class Wall extends Component {
         document.getElementById("previewImage").hidden = true
     }
     render() {
-        const { dataPost, imageSelfie, dataComment, hidden, texto, image, comments, submitting, value, avatar, currentCommet, valueCommit } = this.state
+        const { dataPost, dataComment, hidden, image, submitting, value, currentCommet, valueCommit } = this.state
         return (
             <div>
                 {/*Inicia el detalle de los comentarios */}
@@ -463,7 +471,11 @@ class Wall extends Component {
                                                         centered
                                                         visible={this.state.modal2Visible}
                                                         onOk={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
-                                                        onCancel={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
+                                                        footer={[
+                                                            <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
+                                                                Cerrar
+                                                            </Button>
+                                                        ]}
                                                     >
                                                         <CameraFeed sendFile={this.uploadImage} />
 
@@ -473,26 +485,31 @@ class Wall extends Component {
                                             <Row>
                                                 {
                                                     document.getElementById("getImage") ?
-                                                        <div id="divImage" style={{ marginTop: "2%" }}>
-                                                            <Card
-                                                                hoverable
-                                                                style={{ width: 240 }}
-                                                                cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
-                                                            >
-                                                                <Button onClick={this.cancelUploadImage}>Cancelar</Button>
-                                                            </Card>,
-                                                        </div>
+                                                        document.getElementById("getImage").src.length > 100 ?
+                                                            <div id="divImage" style={{ marginTop: "2%" }}>
+                                                                <Card
+                                                                    hoverable
+                                                                    style={{ width: 240 }}
+                                                                    cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
+                                                                >
+                                                                    <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                                </Card>
+                                                            </div>
+                                                            :
+                                                            <div></div>
                                                         :
-                                                        <div id="previewImage" hidden>
-                                                            <Card
-                                                                hoverable
-                                                                style={{ width: 240 }}
-                                                                cover={<img id="imagePost" src={image} />}
-                                                            >
-                                                                <Button onClick={this.cancelImage}>Cancelar</Button>
-                                                            </Card>,
+                                                        <div>
                                                         </div>
                                                 }
+                                                <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
+                                                    <Card
+                                                        hoverable
+                                                        style={{ width: 240 }}
+                                                        cover={<img id="imagePost" src={image} />}
+                                                    >
+                                                        <Button onClick={this.cancelImage}>Cancelar</Button>
+                                                    </Card>
+                                                </div>
                                             </Row>
                                         </Col>
                                     </Row>
@@ -557,6 +574,7 @@ class Wall extends Component {
                                                     <IconText
                                                         icon={MessageOutlined}
                                                         key="list-vertical-message"
+                                                        text=""
                                                         onSubmit={e => { this.getComments(item.id) }}
                                                     />
                                                 ]}
@@ -608,9 +626,10 @@ class Wall extends Component {
                         </Row>
 
                     </div>
-                )}
+                )
+                }
                 {/*Finaliza la lista de los comentarios */}
-            </div>
+            </div >
         )
     }
 }

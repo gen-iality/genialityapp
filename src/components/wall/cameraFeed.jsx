@@ -70,9 +70,9 @@ class CameraFeed extends Component {
         toast.error("Imagen Eliminada")
     }
     render() {
-        const { image, hidden } = this.state
+        const { image, hidden, hide } = this.state
         return (
-            <div className="c-camera-feed">
+            <div className="c-camera-feed" hidden={hide}>
 
                 {/* camara */}
 
@@ -96,26 +96,16 @@ class CameraFeed extends Component {
                     >
                         <CameraOutlined style={{ fontSize: "2rem" }} />
                     </Button>
+                    {
+                        this.state.image === "" ? <div></div> : <Button onClick={() => { this.setState({ hidden: true, image: "" }) }}>Tomar Otra Foto</Button>
+                    }
+
 
                 </div>
-
-
                 {/* Imagen capturada  */}
                 <div className="c-camera-feed__stage">
                     <canvas width="470" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
                     <img id="getImage" hidden src={image} />
-                    <div>
-                        {image.length > 0 &&
-                            <Button
-                                danger
-                                style={{ display: "block", margin: "20px auto" }}
-                                onClick={e => { this.clearImage() }}
-                            >
-                                <DeleteOutlined />
-                                Eliminar
-                            </Button>
-                        }
-                    </div>
                 </div>
 
             </div>

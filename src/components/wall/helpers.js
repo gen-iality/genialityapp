@@ -29,9 +29,9 @@ export const saveFirebase = {
             idPost: idPost
         }
 
-        console.log(data)
-        let addComment = firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
-        console.log(await addComment)
+        //console.log(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
+        //console.log(await addComment)
         toast.success("Datos Guardados")
     },
 
@@ -42,9 +42,10 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
+        //console.log(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
+
     },
     async savePostImage(imageUrl, text, author, eventId) {
         let data = {
@@ -54,7 +55,7 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
+        //console.log(data)
         firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
@@ -66,7 +67,7 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
     async deletePost(postId, eventId) {
