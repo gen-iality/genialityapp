@@ -192,7 +192,7 @@ section.landing {
           font-family: "Montserrat", sans-serif !important;
 
           .ql-editor {
-            font-size: 1.2rem;
+            font-size: 1.2rem !important;
             letter-spacing: 0.2px;
             line-height: 1.5;
             padding: 0px;
@@ -204,11 +204,13 @@ section.landing {
             span,
             a {
               color: white !important;
+              font-size: 1.2rem !important;
             }
           }
         }
       }
     }
+
     .container-hero-landing {
       margin: -70px 4% auto;
     }
@@ -312,4 +314,13 @@ section.landing {
 
 .ant-comment-avatar {
   margin-right: 0px !important;
+}
+
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor {
+  font-size: 1.1555rem !important;
 }

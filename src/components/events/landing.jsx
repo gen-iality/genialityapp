@@ -599,6 +599,8 @@ const MapComponent = props => {
               ))
         }
       </div>
+
+      {/* ESTO ES UNA PRUEBA */}
       <div className="has-margin-top-50 is-hidden-touch" >
         <img style={{ width: "100%" }} src="http://www.ofifacil.com/ideas-ejemplos/varios/ofifacil-hacer-pagina-web-diseno-grafico-023.gif" alt="" srcset="" />
       </div>
