@@ -55,7 +55,7 @@ export const saveFirebase = {
         };
 
         console.log(data)
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
     async savePostSelfie(imageUrlBase64, text, author, eventId) {
@@ -66,7 +66,6 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
         let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
         toast.success("Datos Guardados")
     },
