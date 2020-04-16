@@ -155,7 +155,7 @@ class triviaEdit extends Component {
     const { event } = this.props;
     let questionIndex = question.findIndex(question => question.id == questionId);
     let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
-    console.log("response:", response);
+    toast.success(response);
   };
   // Editar pregunta
   editQuestion = questionId => {
