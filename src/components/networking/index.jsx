@@ -127,27 +127,6 @@ class ListEventUser extends Component {
 
                 break;
               case "modified":
-                // Function counter check in
-                checkIn = this.checkInCounter(user, newItems, change.oldIndex, checkIn);
-
-                // Removed the information of user updated of newItems array
-                newItems.splice(change.oldIndex, 1);
-
-                // Added the information of user of newItems array
-                newItems.splice(change.newIndex, 0, user);
-
-                // Aumenta contador de usuarios sin sincronizar
-                this.setState(prevState => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }));
-
-                changeItem = !changeItem;
-                break;
-              case "removed":
-                if (user.checked_in) checkIn -= 1;
-                newItems.splice(change.oldIndex, 1);
-
-                // Aumenta contador de usuarios sin sincronizar
-                localChanges == "Local" &&
-                  this.setState(prevState => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }));
 
                 break;
               default:
