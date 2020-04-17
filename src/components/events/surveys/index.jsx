@@ -53,7 +53,9 @@ class SurveyForm extends Component {
     const { event } = this.props;
 
     surveysData = await SurveysApi.getAll(event._id);
-    this.setState({ surveysData: surveysData.data });
+    let publishedSurveys = surveysData.data.filter(survey => survey.publish == "true");
+
+    this.setState({ surveysData: publishedSurveys });
   };
 
   // Funcion para consultar la informacion del actual usuario
