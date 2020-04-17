@@ -1,13 +1,12 @@
-import React, { Component, useRef, useState } from "react";
-import FileBase64 from 'react-file-base64';
+import React, { Component } from "react";
 import { toast } from "react-toastify";
-import firebase from 'firebase';
 import TimeStamp from "react-timestamp";
 import CameraFeed from './cameraFeed';
-import $ from "jquery"
+import * as Cookie from "js-cookie";
 
 //custom
 import { firestore } from "../../helpers/firebase";
+import API from "../../helpers/request";
 import { saveFirebase } from "./helpers"
 import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal, Alert } from 'antd';
 import {
@@ -65,6 +64,7 @@ const EditorComment = ({ onChange, onSubmit, submitting, valueCommit, icon }) =>
                 />
             </Col>
             <Button
+                id="submitButton"
                 htmlType="submit"
                 type="link"
                 onClick={onSubmit}
@@ -112,6 +112,7 @@ class Wall extends Component {
             dataPostFilter: [],
             dataComment: [],
             idPostComment: [],
+            dataUser: [],
             currentCommet: null,
             submitting: false,
             value: '',
@@ -123,6 +124,7 @@ class Wall extends Component {
             showInfo: false,
             loading: false,
             visible: false,
+            user: true
         }
         this.savePost = this.savePost.bind(this)
         this.cancelUpload = this.cancelUpload.bind(this)
@@ -148,6 +150,23 @@ class Wall extends Component {
     //Se monta el componente getPost antes
     componentDidMount = async () => {
         this.getPost()
+        let evius_token = Cookie.get("evius_token");
+
+        if (!evius_token) {
+            this.setState({ user: false });
+        } else {
+            try {
+                const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+                if (resp.status === 200) {
+                    const data = resp.data;
+                    // Solo se desea obtener el id del usuario
+                    this.setState({ dataUser: data })
+                }
+            } catch (error) {
+                const { status } = error.response;
+                console.log(status)
+            }
+        }
     }
 
     // se obtienen los comentarios, Se realiza la muestra del modal y se envian los datos a dataComment del state
@@ -226,14 +245,15 @@ class Wall extends Component {
     //Funcion para guardar el post, Se recoge la informacion y se envia a ./helpers, se valida si trae imagen o no
     async savePost() {
         const image = document.getElementById("image").files[0]
-        const selfieImage = document.getElementById("frontImage")
+        const selfieImage = document.getElementById("frontImage");
+        const dataUser = this.state.dataUser;
 
         if (selfieImage && selfieImage.src.length > 100) {
 
             const imageUrl = []
             imageUrl.push(selfieImage.src);
             const text = document.getElementById("postText").value
-            saveFirebase.savePostSelfie(imageUrl, text, this.props.event.author.email, this.props.event._id)
+            saveFirebase.savePostSelfie(imageUrl, text, dataUser.correo, this.props.event._id)
             this.setState({
                 value: '',
                 showInfo: true,
@@ -245,11 +265,13 @@ class Wall extends Component {
 
         } else if (image) {
             // let imageUrl = this.saveImage(image)
-            let imageUrl = saveFirebase.saveImage(this.props.event._id, image)
+            let imageUrl = await saveFirebase.saveImage(this.props.event._id, image)
             //console.log("Datos de imagen obtenidos")
             const text = document.getElementById("postText").value
+            const dataUser = this.state.dataUser
             //savePostImage se realiza para publicar el post con imagen
-            saveFirebase.savePostImage(imageUrl, text, this.props.event.author.email, this.props.event._id)
+
+            saveFirebase.savePostImage(imageUrl, text, dataUser.correo, this.props.event._id)
             this.setState({
                 value: '',
                 showInfo: true,
@@ -261,8 +283,9 @@ class Wall extends Component {
             setTimeout(() => { this.stayForm() }, 3000);
         } else {
             const text = document.getElementById("postText").value
+            const dataUser = this.state.dataUser
             //savepost se realiza para publicar el post sin imagen
-            saveFirebase.savePost(text, this.props.event.author.email, this.props.event._id)
+            saveFirebase.savePost(text, dataUser.correo, this.props.event._id)
             this.setState({
                 value: '',
                 showInfo: true,
@@ -285,7 +308,7 @@ class Wall extends Component {
 
     //Se salva el comentario, el proceso se encuentra en ./helpers.js 
     async saveComment(idPost) {
-        let email = this.props.event.author.email
+        let email = this.state.dataUser.correo
         let eventId = this.props.event._id
         let comments = this.state.valueCommit
         let fecha = new Date().toString()
@@ -367,13 +390,16 @@ class Wall extends Component {
     }
     //Funcion para limpiar el input de la imagen del archivo
     async cancelImage() {
-        document.getElementById('imagePost').removeAttribute('src');
+        if (document.getElementById('imagePost')) {
+            document.getElementById('imagePost').removeAttribute('src');
+        }
         this.setState({
             file: null,
             inputKey: Date.now()
         });
-        //console.log(document.getElementById("imagePost").src)
-        document.getElementById("previewImage").hidden = true
+        if (document.getElementById("previewImage")) {
+            document.getElementById("previewImage").hidden = true
+        }
     }
 
     //Funciones para mostrar o cerrar el modal que contiene el formulario para guardar post
@@ -394,298 +420,309 @@ class Wall extends Component {
         this.setState({ visible: false });
     };
     render() {
-        const { loading, visible, dataPost, dataComment, hidden, image, submitting, value, currentCommet, valueCommit } = this.state
+        const { user, loading, visible, dataPost, dataComment, hidden, image, submitting, value, currentCommet, valueCommit } = this.state
         return (
             <div>
-                {/*Inicia el detalle de los comentarios */}
 
-                {/*Inicia el detalle de los comentarios */}
-                {currentCommet && (
-                    <div className="">
-                        <a
-                            className="has-text-white"
-                            onClick={e => {
-                                this.gotoCommentList();
-                            }}
-                        >
-                            <h3 className="has-text-white"> Regresar a los comentarios</h3>
-                            <br />
-                        </a>
+                {
+                    user === false ?
+                        <div>
+                            <Alert message="No iniciaste sesión, inicia sesión para poder realizar publicaciones" type="error" />
+                        </div>
+                        :
+                        <div>
+                            {/*Inicia el detalle de los comentarios */}
 
-                        {/* Se mapea la información de los comentario */}
-                        <Row
-                            style={{
-                                display: "flex",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <Col xs={24} sm={20} md={20} lg={20} xl={12} >
-                                <Card style={{ display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px" }}>
-                                    <List
-                                        itemLayout="vertical"
-                                        size="large"
-                                        style={{ texteAling: "left" }}
-                                        // pagination={{
-                                        //     onChange: page => {
-                                        //         console.log(page);
-                                        //     },
-                                        //     pageSize: 3,
-                                        // }}
+                            {/*Inicia el detalle de los comentarios */}
+                            {currentCommet && (
+                                <div className="">
+                                    <a
+                                        className="has-text-white"
+                                        onClick={e => {
+                                            this.gotoCommentList();
+                                        }}
+                                    >
+                                        <h3 className="has-text-white"> Regresar a los comentarios</h3>
+                                        <br />
+                                    </a>
 
-                                        // Aqui se llama al array del state 
-                                        dataSource={dataComment}
+                                    {/* Se mapea la información de los comentario */}
+                                    <Row
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                        }}
+                                    >
+                                        <Col xs={24} sm={20} md={20} lg={20} xl={12} >
+                                            <Card style={{ display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px" }}>
+                                                <List
+                                                    itemLayout="vertical"
+                                                    size="large"
+                                                    style={{ texteAling: "left" }}
+                                                    // pagination={{
+                                                    //     onChange: page => {
+                                                    //         console.log(page);
+                                                    //     },
+                                                    //     pageSize: 3,
+                                                    // }}
+
+                                                    // Aqui se llama al array del state 
+                                                    dataSource={dataComment}
 
 
-                                        // Aqui se mapea al array del state 
-                                        renderItem={item => (
+                                                    // Aqui se mapea al array del state 
+                                                    renderItem={item => (
 
-                                            <List.Item
-                                                key={item.id}
+                                                        <List.Item
+                                                            key={item.id}
 
 
-                                            >
-                                                <List.Item.Meta
-                                                    avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                                                    title={<span>{item.author}</span>}
-                                                    description={<TimeStamp date={item.date} />}
+                                                        >
+                                                            <List.Item.Meta
+                                                                avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                                                                title={<span>{item.author}</span>}
+                                                                description={<TimeStamp date={item.date} />}
+                                                            />
+
+                                                            {item.comment}
+                                                        </List.Item>
+                                                    )}
                                                 />
 
-                                                {item.comment}
-                                            </List.Item>
-                                        )}
-                                    />
-
-                                </Card>
+                                            </Card>
 
 
-                            </Col>
-                        </Row>
-                    </div>
-                )}
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )}
 
-                {/*finaliza el detalle de los comentarios */}
+                            {/*finaliza el detalle de los comentarios */}
 
 
 
-                {/*Inicia la lista de los comentarios */}
-                {!currentCommet && (
-                    <div>
+                            {/*Inicia la lista de los comentarios */}
+                            {!currentCommet && (
+                                <div>
 
-                        <Row
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                marginBottom: "20px"
-                            }}
-                        >
+                                    <Row
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            marginBottom: "20px"
+                                        }}
+                                    >
 
-                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
 
-                                <Card size="small" title="Publicaciones" extra={<div></div>}>
-                                    {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
-                                    <div key={this.state.keyForm}>
-                                        {
-                                            // Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje
-                                            this.state.showInfo === true ?
-                                                <Alert message="Post Publicado" type="success" />
-                                                :
-                                                // Desde aqui empieza el formulario para guardar un post
-                                                <div>
-                                                    {/* Se valida si hay imagen para mostrar o no */}
+                                            <Card size="small" title="Publicaciones" extra={<div></div>}>
+                                                {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
+                                                <div key={this.state.keyForm}>
+                                                    {
+                                                        // Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje
+                                                        this.state.showInfo === true ?
+                                                            <Alert message="Post Publicado" type="success" />
+                                                            :
+                                                            // Desde aqui empieza el formulario para guardar un post
+                                                            <div>
+                                                                {/* Se valida si hay imagen para mostrar o no */}
 
-                                                    <Button type="primary" onClick={this.showModal}>
-                                                        Crear Publicación
+                                                                <Button type="primary" onClick={this.showModal}>
+                                                                    Crear Publicación
                                                     </Button>
-                                                    <Modal
-                                                        visible={visible}
-                                                        title="Publicaciones"
-                                                        onOk={this.handleOk}
-                                                        onCancel={this.handleCancel}
-                                                        footer={[]}>
-                                                        <Row >
-                                                            <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                                                <Row>
-                                                                    {/* Boton para subir foto desde la galeria del dispositivo */}
-                                                                    <Button type="primary">
-                                                                        <input key={this.state.inputKey} class="file-input" type="file" id="image" onChange={this.previewImage} />
-                                                                        <span>Subir Foto</span>
-                                                                        <CloudUploadOutlined />
-                                                                    </Button>
-
-                                                                    {/* Boton para abrir la camara */}
-                                                                    <Button style={{ marginLeft: "3%" }} onClick={e => { this.setState({ hidden: true }, this.setModal2Visible(true)) }}><CameraOutlined /></Button>
-
-                                                                    {/* Modal para camara  */}
-
-                                                                    <div hidden={hidden} className="App">
-                                                                        <Modal
-                                                                            title="Camara"
-                                                                            centered
-                                                                            visible={this.state.modal2Visible}
-                                                                            onOk={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
-                                                                            footer={[
-                                                                                <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
-                                                                                    Cerrar
+                                                                <Modal
+                                                                    visible={visible}
+                                                                    title="Publicaciones"
+                                                                    onOk={this.handleOk}
+                                                                    onCancel={this.handleCancel}
+                                                                    footer={[]}>
+                                                                    <Row >
+                                                                        <Col xs={24} sm={20} md={20} lg={20} xl={12}>
+                                                                            <Row>
+                                                                                {/* Boton para subir foto desde la galeria del dispositivo */}
+                                                                                <Button type="primary">
+                                                                                    <input key={this.state.inputKey} class="file-input" type="file" id="image" onChange={this.previewImage} />
+                                                                                    <span>Subir Foto</span>
+                                                                                    <CloudUploadOutlined />
                                                                                 </Button>
-                                                                            ]}>
-                                                                            <CameraFeed sendFile={this.uploadImage} />
-                                                                        </Modal>
-                                                                    </div>
-                                                                </Row>
-                                                                <Row>
-                                                                    {
-                                                                        //Se valida si existe getImage y se valida si contiene mas de 100 caracteres para mostrar la selfie
-                                                                        document.getElementById("getImage") ?
-                                                                            document.getElementById("getImage").src.length > 100 ?
-                                                                                <div id="divImage" style={{ marginTop: "2%" }}>
+
+                                                                                {/* Boton para abrir la camara */}
+                                                                                <Button style={{ marginLeft: "3%" }} onClick={e => { this.setState({ hidden: true }, this.setModal2Visible(true)) }}><CameraOutlined /></Button>
+
+                                                                                {/* Modal para camara  */}
+
+                                                                                <div hidden={hidden} className="App">
+                                                                                    <Modal
+                                                                                        title="Camara"
+                                                                                        centered
+                                                                                        visible={this.state.modal2Visible}
+                                                                                        onOk={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
+                                                                                        onCancel={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
+                                                                                        footer={[
+                                                                                            <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
+                                                                                                Cerrar
+                                                                                </Button>
+                                                                                        ]}>
+                                                                                        <CameraFeed sendFile={this.uploadImage} />
+                                                                                    </Modal>
+                                                                                </div>
+                                                                            </Row>
+                                                                            <Row>
+                                                                                {
+                                                                                    //Se valida si existe getImage y se valida si contiene mas de 100 caracteres para mostrar la selfie
+                                                                                    document.getElementById("getImage") ?
+                                                                                        document.getElementById("getImage").src.length > 100 ?
+                                                                                            <div id="divImage" style={{ marginTop: "2%" }}>
+                                                                                                <Card
+                                                                                                    hoverable
+                                                                                                    style={{ width: 240 }}
+                                                                                                    cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
+                                                                                                >
+                                                                                                    <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                                                                </Card>
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div />
+                                                                                        :
+                                                                                        <div />
+                                                                                }
+
+                                                                                {/* Se oculta este div para mostrar el archivo solamente cuando se suba el archivo */}
+                                                                                <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
                                                                                     <Card
                                                                                         hoverable
                                                                                         style={{ width: 240 }}
-                                                                                        cover={<img id="frontImage" key={this.state.keyImage} src={document.getElementById("getImage").src} />}
+                                                                                        cover={<img id="imagePost" src={image} />}
                                                                                     >
-                                                                                        <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                                                        <Button onClick={this.cancelImage}>Cancelar</Button>
                                                                                     </Card>
                                                                                 </div>
-                                                                                :
-                                                                                <div />
-                                                                            :
-                                                                            <div />
-                                                                    }
+                                                                            </Row>
+                                                                        </Col>
+                                                                    </Row>
+                                                                    {/* Se importa el componente de textArea para agregar un comentario al post */}
 
-                                                                    {/* Se oculta este div para mostrar el archivo solamente cuando se suba el archivo */}
-                                                                    <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
-                                                                        <Card
-                                                                            hoverable
-                                                                            style={{ width: 240 }}
-                                                                            cover={<img id="imagePost" src={image} />}
-                                                                        >
-                                                                            <Button onClick={this.cancelImage}>Cancelar</Button>
-                                                                        </Card>
-                                                                    </div>
-                                                                </Row>
-                                                            </Col>
-                                                        </Row>
-                                                        {/* Se importa el componente de textArea para agregar un comentario al post */}
-
-                                                        <Comment
-                                                            content={
-                                                                <Editor
-                                                                    id="comment"
-                                                                    onChange={this.handleChange}
-                                                                    onSubmit={this.savePost}
-                                                                    submitting={submitting}
-                                                                    value={value}
-                                                                />
-                                                            }
-                                                        />
-                                                    </Modal>
+                                                                    <Comment
+                                                                        content={
+                                                                            <Editor
+                                                                                id="comment"
+                                                                                onChange={this.handleChange}
+                                                                                onSubmit={this.savePost}
+                                                                                submitting={submitting}
+                                                                                value={value}
+                                                                            />
+                                                                        }
+                                                                    />
+                                                                </Modal>
+                                                            </div>
+                                                        // aqui termina modal de publicacion de post
+                                                    }
                                                 </div>
-                                            // aqui termina modal de publicacion de post
-                                        }
-                                    </div>
-                                </Card>
-                            </Col>
-                        </Row>
+                                            </Card>
+                                        </Col>
+                                    </Row>
 
-                        {/* Se mapean los datos que provienen de firebase del post */}
-                        <Row
-                            style={{
-                                display: "flex",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <Col xs={24} sm={20} md={20} lg={20} xl={12} style={{ display: "block", margin: "0 auto", textAlign: "left" }}>
+                                    {/* Se mapean los datos que provienen de firebase del post */}
+                                    <Row
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center"
+                                        }}
+                                    >
+                                        <Col xs={24} sm={20} md={20} lg={20} xl={12} style={{ display: "block", margin: "0 auto", textAlign: "left" }}>
 
 
-                                <List
-                                    itemLayout="vertical"
-                                    size="small"
-                                    style={{ texteAling: "left", marginBottom: "20px" }}
-                                    // pagination={{
-                                    //     onChange: page => {
-                                    //         console.log(page);
-                                    //     },
-                                    //     pageSize: 3,
-                                    // }}
+                                            <List
+                                                itemLayout="vertical"
+                                                size="small"
+                                                style={{ texteAling: "left", marginBottom: "20px" }}
+                                                // pagination={{
+                                                //     onChange: page => {
+                                                //         console.log(page);
+                                                //     },
+                                                //     pageSize: 3,
+                                                // }}
 
-                                    // Aqui se llama al array del state 
-                                    dataSource={dataPost}
+                                                // Aqui se llama al array del state 
+                                                dataSource={dataPost}
 
-                                    // Aqui se mapea al array del state 
-                                    renderItem={item => (
+                                                // Aqui se mapea al array del state 
+                                                renderItem={item => (
 
-                                        <Card
-                                            style={{ marginBottom: "20px" }}
-                                        >
-                                            <List.Item
-                                                key={item.id}
-                                                style={{ padding: "0px" }}
-                                                // Se importa el boton de like y el de redireccionamiento al detalle del post
-                                                actions={[
-                                                    <IconText
-                                                        icon={LikeOutlined}
-                                                        text="0"
-                                                        key="list-vertical-like-o"
-                                                    />,
-                                                    <IconText
-                                                        icon={MessageOutlined}
-                                                        key="list-vertical-message"
-                                                        text=""
-                                                        onSubmit={e => { this.getComments(item.id) }}
-                                                    />
-                                                ]}
+                                                    <Card
+                                                        style={{ marginBottom: "20px" }}
+                                                    >
+                                                        <List.Item
+                                                            key={item.id}
+                                                            style={{ padding: "0px" }}
+                                                            // Se importa el boton de like y el de redireccionamiento al detalle del post
+                                                            actions={[
+                                                                <IconText
+                                                                    icon={LikeOutlined}
+                                                                    text="0"
+                                                                    key="list-vertical-like-o"
+                                                                />,
+                                                                <IconText
+                                                                    icon={MessageOutlined}
+                                                                    key="list-vertical-message"
+                                                                    text=""
+                                                                    onSubmit={e => { this.getComments(item.id) }}
+                                                                />
+                                                            ]}
 
-                                            >
+                                                        >
 
-                                                <List.Item.Meta
-                                                    avatar={
-                                                        item.avatar ?
-                                                            <Avatar src={item.avatar} /> :
-                                                            <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
+                                                            <List.Item.Meta
+                                                                avatar={
+                                                                    item.avatar ?
+                                                                        <Avatar src={item.avatar} /> :
+                                                                        <Avatar>{item.author.charAt(0).toUpperCase()}</Avatar>
 
-                                                    }
-                                                    title={<span>{item.author}</span>}
-                                                    description={
-                                                        <span style={{ fontSize: "12px" }}><TimeStamp date={item.datePost.seconds} /></span>
-                                                    }
-                                                />
+                                                                }
+                                                                title={<span>{item.author}</span>}
+                                                                description={
+                                                                    <span style={{ fontSize: "12px" }}><TimeStamp date={item.datePost.seconds} /></span>
+                                                                }
+                                                            />
 
-                                                <br />
-                                                {item.post}
-                                                <br />
-                                                <br />
-                                                {
-                                                    item.urlImage ?
-                                                        <img
-                                                            width={"100%"}
-                                                            style={{
-                                                                display: "block",
-                                                                margin: "0 auto",
-                                                            }}
-                                                            alt="logo"
-                                                            src={item.urlImage}
-                                                        /> : null
-                                                }
-                                                <br />
-                                                <EditorComment
-                                                    onChange={this.handleChangeCommit}
-                                                    onSubmit={e => { this.saveComment(item.id) }}
-                                                    submitting={submitting}
-                                                    valueCommit={valueCommit}
-                                                />
-                                            </List.Item>
-                                        </Card>
-                                    )}
-                                />
-                                <Button id="click" onClick={this.loadMore}>loading more</Button>
-                            </Col>
-                        </Row>
+                                                            <br />
+                                                            {item.post}
+                                                            <br />
+                                                            <br />
+                                                            {
+                                                                item.urlImage ?
+                                                                    <img
+                                                                        width={"100%"}
+                                                                        style={{
+                                                                            display: "block",
+                                                                            margin: "0 auto",
+                                                                        }}
+                                                                        alt="logo"
+                                                                        src={item.urlImage}
+                                                                    /> : null
+                                                            }
+                                                            <br />
+                                                            <EditorComment
+                                                                onChange={this.handleChangeCommit}
+                                                                onSubmit={e => { this.saveComment(item.id) }}
+                                                                submitting={submitting}
+                                                                valueCommit={valueCommit}
+                                                            />
+                                                        </List.Item>
+                                                    </Card>
+                                                )}
+                                            />
+                                            <Button id="click" onClick={this.loadMore}>loading more</Button>
+                                        </Col>
+                                    </Row>
 
-                    </div>
-                )
+                                </div>
+                            )
+                            }
+                            {/*Finaliza la lista de los comentarios */}
+                        </div>
                 }
-                {/*Finaliza la lista de los comentarios */}
-            </div >
+            </div>
         )
     }
 }
