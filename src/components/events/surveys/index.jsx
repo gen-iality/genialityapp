@@ -9,7 +9,7 @@ import SurveyComponent from "./surveyComponent";
 import Graphics from "./graphics";
 import RootPage from "./rootPage";
 
-import { List, Button, Card, Col } from "antd";
+import { List, Button, Card, Col, Tag } from "antd";
 
 function ListSurveys(props) {
   let { jsonData } = props;
@@ -27,7 +27,12 @@ function ListSurveys(props) {
                   {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
                 </Button>
               ]}>
-              {survey.survey}
+              <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+              {survey.userHasVoted && (
+                <div>
+                  <Tag color="success">Respondida</Tag>
+                </div>
+              )}
             </List.Item>
           )}
         />
