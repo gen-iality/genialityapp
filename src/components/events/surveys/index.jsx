@@ -12,7 +12,7 @@ import RootPage from "./rootPage";
 import { List, Button, Card, Col, Tag } from "antd";
 
 function ListSurveys(props) {
-  let { jsonData, userId } = props;
+  let { jsonData } = props;
 
   return (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
@@ -23,9 +23,7 @@ function ListSurveys(props) {
             <List.Item
               key={survey._id}
               actions={[
-                <Button
-                  onClick={() => props.showSurvey(survey._id)}
-                  loading={userId && survey.userHasVoted == undefined}>
+                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
                   {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
                 </Button>
               ]}>
@@ -56,7 +54,6 @@ class SurveyForm extends Component {
 
   componentDidMount() {
     this.loadData();
-    this.getCurrentUser();
   }
 
   // Funcion para solicitar servicio y cargar datos
@@ -67,7 +64,7 @@ class SurveyForm extends Component {
     surveysData = await SurveysApi.getAll(event._id);
     let publishedSurveys = surveysData.data.filter(survey => survey.publish == "true");
 
-    this.setState({ surveysData: publishedSurveys });
+    this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
   };
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
@@ -96,7 +93,7 @@ class SurveyForm extends Component {
     let evius_token = Cookie.get("evius_token");
 
     if (!evius_token) {
-      this.setState({ user: false });
+      this.setState({ user: false }, this.seeIfUserHasVote);
     } else {
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
@@ -124,7 +121,7 @@ class SurveyForm extends Component {
     if (idSurvey)
       return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} userId={uid} />;
 
-    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} userId={uid} />;
+    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
 }
 
