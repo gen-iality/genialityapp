@@ -79,7 +79,8 @@ export const SurveyAnswers = {
         .set({
           response: responseData,
           created: date,
-          id_user: uid
+          id_user: uid,
+          id_survey: surveyId
         })
         .then(() => {
           console.log("Document successfully updated!");
@@ -108,7 +109,8 @@ export const SurveyAnswers = {
         .add({
           response: responseData,
           created: date,
-          id_user: uid
+          id_user: uid,
+          id_survey: surveyId
         })
         .then(() => {
           console.log("Document successfully updated!");
@@ -145,13 +147,13 @@ export const SurveyAnswers = {
     return new Promise((resolve, reject) => {
       firestore
         .collectionGroup("responses")
+        .where("id_survey", "==", surveyId)
         .where("id_user", "==", userId)
         .get()
         .then(result => {
           result.forEach(function(doc) {
             if (doc.exists) {
-              let [, idSurveyFire] = doc.ref.path.split("/");
-              if (idSurveyFire == surveyId) counterDocuments++;
+              counterDocuments++;
             }
           });
           if (counterDocuments > 0) {
