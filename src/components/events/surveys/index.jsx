@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Route, Switch, withRouter, Link } from "react-router-dom";
 import * as Cookie from "js-cookie";
 
+import { SurveyAnswers } from "./services";
 import API, { SurveysApi } from "../../../helpers/request";
 
 import SurveyComponent from "./surveyComponent";
@@ -21,7 +22,11 @@ function ListSurveys(props) {
           renderItem={survey => (
             <List.Item
               key={survey._id}
-              actions={[<Button onClick={() => props.showSurvey(survey._id)}>Ir a Encuesta</Button>]}>
+              actions={[
+                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
+                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                </Button>
+              ]}>
               {survey.survey}
             </List.Item>
           )}
@@ -58,6 +63,27 @@ class SurveyForm extends Component {
     this.setState({ surveysData: publishedSurveys });
   };
 
+  // Funcion que valida si el usuario ha votado en cada una de las encuestas
+  seeIfUserHasVote = async () => {
+    let { uid, surveysData } = this.state;
+    const { event } = this.props;
+
+    const votesUserInSurvey = new Promise((resolve, reject) => {
+      let surveys = [];
+      // Se itera surveysData y se ejecuta el servicio que valida las respuestas
+      surveysData.forEach(async (survey, index, arr) => {
+        let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
+        surveys.push({ ...arr[index], userHasVoted });
+
+        if (surveys.length == arr.length) resolve(surveys);
+      });
+    });
+
+    let stateSurveys = await votesUserInSurvey;
+
+    this.setState({ surveysData: stateSurveys });
+  };
+
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
     let evius_token = Cookie.get("evius_token");
@@ -70,7 +96,7 @@ class SurveyForm extends Component {
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
-          this.setState({ uid: data._id });
+          this.setState({ uid: data._id }, this.seeIfUserHasVote);
         }
       } catch (error) {
         const { status } = error.response;
