@@ -12,7 +12,7 @@ import RootPage from "./rootPage";
 import { List, Button, Card, Col, Tag } from "antd";
 
 function ListSurveys(props) {
-  let { jsonData } = props;
+  let { jsonData, userId } = props;
 
   return (
     <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
@@ -23,7 +23,9 @@ function ListSurveys(props) {
             <List.Item
               key={survey._id}
               actions={[
-                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
+                <Button
+                  onClick={() => props.showSurvey(survey._id)}
+                  loading={userId && survey.userHasVoted == undefined}>
                   {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
                 </Button>
               ]}>
@@ -122,7 +124,7 @@ class SurveyForm extends Component {
     if (idSurvey)
       return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} userId={uid} />;
 
-    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
+    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} userId={uid} />;
   }
 }
 
