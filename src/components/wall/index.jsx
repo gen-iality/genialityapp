@@ -529,7 +529,7 @@ class Wall extends Component {
 
                                                                 <Button type="primary" onClick={this.showModal}>
                                                                     Crear Publicación
-                                                    </Button>
+                                                                </Button>
                                                                 <Modal
                                                                     visible={visible}
                                                                     title="Publicaciones"
@@ -553,6 +553,7 @@ class Wall extends Component {
 
                                                                                 <div hidden={hidden} className="App">
                                                                                     <Modal
+                                                                                        id="Camera"
                                                                                         title="Camara"
                                                                                         centered
                                                                                         visible={this.state.modal2Visible}
@@ -560,8 +561,8 @@ class Wall extends Component {
                                                                                         onCancel={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}
                                                                                         footer={[
                                                                                             <Button key="submit" type="primary" onClick={e => { this.setState({ hidden: false }, this.setModal2Visible(false)) }}>
-                                                                                                Cerrar
-                                                                                </Button>
+                                                                                                Cerrar / Publicar
+                                                                                            </Button>
                                                                                         ]}>
                                                                                         <CameraFeed sendFile={this.uploadImage} />
                                                                                     </Modal>
