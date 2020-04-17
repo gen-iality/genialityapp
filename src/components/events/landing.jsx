@@ -551,11 +551,9 @@ const MapComponent = props => {
                 <div>
                   <Card>
                     <div className="map-head">
-                      <h2 className="data-title has-text-left">
-                        <span className="is-size-5">
-                          {" "}
-                          <b>Encuentra la ubicación</b>
-                        </span>
+                      <h2 className="title is-size-5 has-text-left has-padding-top-15">
+                        <b>Encuentra la ubicación</b>
+
                       </h2>
                       <div className="lugar item columns">
                         <div className="column is-1 container-icon hours">
