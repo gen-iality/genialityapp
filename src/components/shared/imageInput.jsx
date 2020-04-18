@@ -29,7 +29,8 @@ let ImageInput = (props) => {
 
   return (
     <div>
-      {props.picture ? (
+      {/* el #FFF es por un error que se nos fue a la base de datos*/}
+      {props.picture && props.picture != "#FFF" ? (
         <div className={divClass}>
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone accept="image/*" onDrop={props.changeImg} className={classDrop}>

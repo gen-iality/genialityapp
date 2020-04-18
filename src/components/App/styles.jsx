@@ -26,14 +26,46 @@ class Styles extends Component {
       styles: {},
       isLoading: false,
       editIsVisible: false,
+      //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
+      colorDrawer: [
+        {
+          title: "Elige El fondo de tu app",
+          fieldColorName: "containerBgColor",
+          editIsVisible: false,
+        },
+        {
+          title: "Elige un color para los botones",
+          fieldColorName: "brandPrimary",
+          editIsVisible: false,
+        },
+        {
+          title: "Elige un color para el menu",
+          fieldColorName: "toolbarDefaultBg",
+          editIsVisible: false,
+        },
+        {
+          title: "Elige un color para el texto del menu",
+          fieldColorName: "textMenu",
+          editIsVisible: false,
+        },
+        {
+          title: "Elige un color para item seleccionado del menu",
+          fieldColorName: "activeText",
+          editIsVisible: false,
+        },
+      ],
     };
     //Se establecen las funciones para su posterior uso
     this.saveEventImage = this.saveEventImage.bind(this);
-    // this.saveMenuImage = this.saveMenuImage.bind(this)
-    // this.saveBannerImage = this.saveBannerImage.bind(this)
-    // this.saveBackgroundImage = this.saveBackgroundImage.bind(this)
-    // this.saveFooterImage = this.saveFooterImage.bind(this)
     this.submit = this.submit.bind(this);
+
+    this.imageDrawer = [
+      { title: "Elige una imagen de logo", imageFieldName: "event_image" },
+      { title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
+      { title: "Elige una imagen de fondo", imageFieldName: "BackgroundImage" },
+      { title: "Elige una imagen para el boton de la seccion especial(opcional)", imageFieldName: "FooterImage" },
+      { title: "Elige una imagen para el banner", imageFieldName: "banner_image" },
+    ];
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
   async componentDidMount() {
@@ -43,17 +75,17 @@ class Styles extends Component {
     if (info.styles) {
       this.setState({
         styles: {
-          brandPrimary: info.styles.brandPrimary || "#FFF",
-          brandSuccess: info.styles.brandSuccess || "#FFF",
-          brandInfo: info.styles.brandInfo || "#FFF",
-          brandDanger: info.styles.brandDanger || "#FFF",
-          containerBgColor: info.styles.containerBgColor || "#FFF",
-          brandWarning: info.styles.brandWarning || "#FFF",
-          toolbarDefaultBg: info.styles.toolbarDefaultBg || "#FFF",
-          brandDark: info.styles.brandDark || "#FFF",
-          brandLight: info.styles.brandLight || "#FFF",
-          textMenu: info.styles.textMenu || "#FFF",
-          activeText: info.styles.activeText || "#FFF",
+          brandPrimary: info.styles.brandPrimary || "#FFFFFF",
+          brandSuccess: info.styles.brandSuccess || "#FFFFFF",
+          brandInfo: info.styles.brandInfo || "#FFFFFF",
+          brandDanger: info.styles.brandDanger || "#FFFFFF",
+          containerBgColor: info.styles.containerBgColor || "#FFFFFF",
+          brandWarning: info.styles.brandWarning || "#FFFFFF",
+          toolbarDefaultBg: info.styles.toolbarDefaultBg || "#FFFFFF",
+          brandDark: info.styles.brandDark || "#FFFFFF",
+          brandLight: info.styles.brandLight || "#FFFFFF",
+          textMenu: info.styles.textMenu || "#FFFFFF",
+          activeText: info.styles.activeText || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
           menu_image: info.styles.menu_image || null,
@@ -157,55 +189,25 @@ class Styles extends Component {
     this.setState({ styles: temp });
   };
 
-  handleClick = () => {
-    this.setState({ editIsVisible: !this.state.editIsVisible });
+  handleClickSelectColor = (key) => {
+    //react recomiendo copiar las cosas antes de modificarlas
+    //Copiamos el array ColorDrawer a uno nuevo usando el spread operator (...)
+    let newColorDrawer = [...this.state.colorDrawer];
+    //invertimos el valor de editIsVisible del elemento clikeado indicado por key
+    newColorDrawer[key].editIsVisible = !newColorDrawer[key].editIsVisible;
+    //Actualizamos el estado
+    this.setState({ colorDrawer: newColorDrawer });
   };
 
   render() {
     const { timeout } = this.state;
 
-    //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
-    const colorDrawer = [
-      {
-        title: "Elige El fondo de tu app",
-        fieldColorName: "containerBgColor",
-        editIsVisible: this.state.editIsVisible,
-      },
-      {
-        title: "Elige un color para los botones",
-        fieldColorName: "brandPrimary",
-        editIsVisible: this.state.editIsVisible,
-      },
-      {
-        title: "Elige un color para el menu",
-        fieldColorName: "toolbarDefaultBg",
-        editIsVisible: this.state.editIsVisible,
-      },
-      {
-        title: "Elige un color para el texto del menu",
-        fieldColorName: "textMenu",
-        editIsVisible: this.state.editIsVisible,
-      },
-      {
-        title: "Elige un color para item seleccionado del menu",
-        fieldColorName: "activeText",
-        editIsVisible: this.state.editIsVisible,
-      },
-    ];
-    const imageDrawer = [
-      { title: "Elige una imagen de logo", imageFieldName: "event_image" },
-      { title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
-      { title: "Elige una imagen de fondo", imageFieldName: "BackgroundImage" },
-      { title: "Elige una imagen para el boton de la seccion especial(opcional)", imageFieldName: "FooterImage" },
-      { title: "Elige una imagen para el banner", imageFieldName: "banner_image" },
-    ];
-
     return (
       <React.Fragment>
         <div className="columns general">
           <div className="column is-12">
-            <h2 className="title-section">Configuracion de Estilos</h2>
-            {colorDrawer.map((item, key) => (
+            <h2 className="title-section">Configuración de Estilos</h2>
+            {this.state.colorDrawer.map((item, key) => (
               <div className="column inner-column" key={key}>
                 {item.editIsVisible && (
                   <SketchPicker
@@ -215,22 +217,20 @@ class Styles extends Component {
                     }}
                   />
                 )}
-                <div>
+                <div onClick={() => this.handleClickSelectColor(key)}>
                   <label className="label has-text-grey-light">{item.title}</label>
                   <input
                     type="color"
                     disabled
                     style={{ marginRight: "3%", width: "5%" }}
                     value={this.state.styles[item.fieldColorName]}
+                    onChange={() => {}}
                   />
-                  <button className="button" onClick={this.handleClick}>
-                    {" "}
-                    {this.state.editIsVisible ? "Desactivar" : "Activar"}
-                  </button>
+                  <button className="button"> {item.editIsVisible ? "Seleccionar" : "Escoger"}</button>
                 </div>
               </div>
             ))}
-            {imageDrawer.map((item, key) => (
+            {this.imageDrawer.map((item, key) => (
               <div className="column inner-column" key={key}>
                 <label className="label has-text-grey-light">{item.title}</label>
                 <div className="control">
