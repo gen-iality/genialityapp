@@ -73,10 +73,14 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, dataFrame, referenceChart } = this.state;
+    const { showListSurvey } = this.props;
 
     if (dataSurvey.questions)
       return (
         <div>
+          <a className="has-text-black" onClick={() => showListSurvey()}>
+            <h3 className="has-text-black"> Regresar a las encuestas</h3>
+          </a>
           <canvas id="chart"></canvas>
           <Pagination
             defaultCurrent={currentPage}

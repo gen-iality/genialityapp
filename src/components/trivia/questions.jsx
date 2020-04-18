@@ -26,18 +26,6 @@ class FormQuestions extends Component {
 
   componentDidMount() {}
 
-  validationField = values => {
-    console.log("realizando validaciones:", values);
-
-    const errors = {};
-    if (!values.email) {
-      errors.email = "Required";
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = "Invalid email address";
-    }
-    return errors;
-  };
-
   sendData = async values => {
     const { eventId, surveyId, questionId, removeQuestion } = this.props;
     this.setState({ isSubmitting: true });
@@ -51,8 +39,9 @@ class FormQuestions extends Component {
     const exclude = ({ selectOptions, quantityOptions, questionOptions, ...rest }) => rest;
 
     // Ejecuta el servicio
-    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(() => {
-      removeQuestion(questionId);
+    SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then(response => {
+      removeQuestion(questionId, response);
+      toast.success("Pregunta creada");
     });
   };
 

@@ -122,7 +122,7 @@ class triviaEdit extends Component {
     return uuid;
   };
 
-  // Funcion para agregar preguntas
+  // Funcion para agregar el formulario de las preguntas
   addNewQuestion = () => {
     let { listQuestions, _id } = this.state;
     let uid = this.generateUUID();
@@ -140,17 +140,53 @@ class triviaEdit extends Component {
     });
   };
 
-  // Funcion para remover preguntas
-  removeQuestion = item => {
-    let { listQuestions } = this.state;
+  // Funcion para remover el formulario de las preguntas
+  removeQuestion = (item, newQuestion) => {
+    let { listQuestions, question } = this.state;
     let newArray = listQuestions.filter(question => question.key != item);
+
+    // Este condicional sirve para actualizar el estado local
+    if (newQuestion) {
+      // Se iteran las opciones y se asigna el texto para el tipo de pregunta
+      selectOptions.forEach(option => {
+        if (newQuestion.type == option.value) newQuestion.type = option.text;
+      });
+
+      question = [...question, newQuestion];
+      this.setState({ question });
+    }
     this.setState({ listQuestions: newArray });
   };
+
+  // -------------------- Funciones para los servicios -----------------------------------
+
+  // Borrar pregunta
+  deleteQuestion = async questionId => {
+    let { question, _id } = this.state;
+    const { event } = this.props;
+
+    let questionIndex = question.findIndex(question => question.id == questionId);
+    let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
+
+    let newListQuestion = question.filter(infoQuestion => infoQuestion.id != questionId);
+    this.setState({ question: newListQuestion });
+
+    toast.success(response);
+  };
+
+  // Editar pregunta
+  editQuestion = questionId => {
+    let { question } = this.state;
+    let questionIndex = question.findIndex(question => question.id == questionId);
+    console.log("---- Hace falta descubrir el api para modificar las preguntas ----");
+    // console.log(questionId, questionIndex);
+  };
+  // ---------------------------------------------------------------------------------------
 
   goBack = () => this.props.history.goBack();
 
   render() {
-    const { survey, publish, activity_id, dataAgenda } = this.state;
+    const { survey, publish, activity_id, dataAgenda, question } = this.state;
     const columns = [
       {
         title: "Pregunta",
@@ -161,6 +197,25 @@ class triviaEdit extends Component {
         title: "Tipo de Pregunta",
         dataIndex: "type",
         key: "type"
+      },
+      {
+        title: "Acciones",
+        key: "action",
+        render: (text, record) => (
+          <div>
+            <Button onClick={() => this.deleteQuestion(record.id)} style={{ marginRight: 16, color: "red" }}>
+              <span className="icon">
+                <i className="fas fa-trash-alt" />
+              </span>
+            </Button>
+
+            <Button onClick={() => this.editQuestion(record.id)}>
+              <span className="icon">
+                <i className="fas fa-edit" />
+              </span>
+            </Button>
+          </div>
+        )
       }
     ];
     return (
@@ -240,7 +295,7 @@ class triviaEdit extends Component {
                   {formQuestion}
                 </div>
               ))}
-              <Table style={{ marginTop: "5%" }} dataSource={this.state.question} columns={columns} />
+              <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
             </div>
           ) : (
               <div></div>
