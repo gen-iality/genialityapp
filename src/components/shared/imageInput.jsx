@@ -1,7 +1,13 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
 let ImageInput = (props) => {
+  //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
+  const [stillOldImage, setStillOldImage] = useState(false);
+  if (stillOldImage && stillOldImage != props.picture) {
+    setStillOldImage(false);
+  }
+
   let style = props.style || {
     cursor: "pointer",
     display: "flex",
@@ -20,7 +26,7 @@ let ImageInput = (props) => {
       onClick={(e) => {
         e.preventDefault();
       }}
-      className={`button is-primary is-inverted is-outlined ${props.isLoading ? "is-loading" : ""}`}>
+      className={`button is-primary is-inverted is-outlined ${stillOldImage ? "is-loading" : ""}`}>
       Cambiar foto
     </button>
   );
@@ -33,7 +39,13 @@ let ImageInput = (props) => {
       {props.picture && props.picture != "#FFF" ? (
         <div className={divClass}>
           <img src={props.picture} alt={"Imagen"} />
-          <Dropzone accept="image/*" onDrop={props.changeImg} className={classDrop}>
+          <Dropzone
+            accept="image/*"
+            onDrop={(e) => {
+              setStillOldImage(props.picture);
+              props.changeImg(e);
+            }}
+            className={classDrop}>
             {contentDrop}
           </Dropzone>
         </div>

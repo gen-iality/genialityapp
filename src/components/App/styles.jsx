@@ -63,7 +63,10 @@ class Styles extends Component {
       { title: "Elige una imagen de logo", imageFieldName: "event_image" },
       { title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
       { title: "Elige una imagen de fondo", imageFieldName: "BackgroundImage" },
-      { title: "Elige una imagen para el boton de la seccion especial(opcional)", imageFieldName: "FooterImage" },
+      {
+        title: "Elige una imagen para el botón de la seccion especial(opcional)",
+        imageFieldName: "FooterImage",
+      },
       { title: "Elige una imagen para el banner", imageFieldName: "banner_image" },
     ];
   }
@@ -240,7 +243,6 @@ class Styles extends Component {
                       this.saveEventImage(files, item.imageFieldName);
                     }}
                     errImg={this.state.errImg}
-                    isLoading={this.state.isLoading}
                   />
                 </div>
                 {this.state.fileMsg && <p className="help is-success">{this.state.fileMsg}</p>}
