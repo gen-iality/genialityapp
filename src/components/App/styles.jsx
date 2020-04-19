@@ -4,17 +4,7 @@ import axios from "axios/index";
 import { toast } from "react-toastify";
 import { Actions } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
-import { EventsApi } from "../../helpers/request";
-import { Link } from "react-router-dom";
-import LoadingEvent from "../loaders/loadevent";
-import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
-import { app } from "../../helpers/firebase";
-import ImageUploader from "react-images-upload";
-import * as Cookie from "js-cookie";
-import privateInstance from "../../helpers/request";
-import { parseUrl } from "../../helpers/constants";
-import { BaseUrl } from "../../helpers/constants";
 import { SketchPicker } from "react-color";
 
 class Styles extends Component {
