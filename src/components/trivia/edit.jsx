@@ -331,11 +331,18 @@ class triviaEdit extends Component {
               <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
               <Modal
                 width={700}
-                title="Editando Preguntas"
+                title="Editando Pregunta"
                 visible={visibleModal}
                 onOk={this.sendForm}
-                confirmLoading={confirmLoading}
-                onCancel={this.closeModal}>
+                onCancel={this.closeModal}
+                footer={[
+                  <Button key="back" onClick={this.closeModal}>
+                    Cancelar
+                  </Button>,
+                  <Button key="submit" type="primary" loading={confirmLoading} onClick={this.sendForm}>
+                    Guardar
+                  </Button>,
+                ]}>
                 {currentQuestion.map((question) => (
                   <FormQuestionEdit
                     ref={this.formEditRef}
