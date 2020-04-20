@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, forwardRef } from "react";
 
 import { fieldsFormQuestion } from "./constants";
 
@@ -24,10 +24,11 @@ const validateMessages = {
   },
 };
 
-export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
+const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
   const [defaultValues, setDefaultValues] = useState({});
   const [questionId, setQuestionId] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -52,7 +53,9 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
       }
     }
 
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, values).then((result) => {
+    const exclude = ({ questionOptions, ...rest }) => rest;
+
+    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values)).then((result) => {
       console.log(("result": result));
       form.resetFields();
       closeModal();
@@ -68,6 +71,7 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
       <Form
         {...layout}
         form={form}
+        ref={ref}
         name="form-edit"
         onFinish={onFinish}
         validateMessages={validateMessages}
@@ -111,13 +115,10 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
             <Input />
           </Form.Item>
         ))}
-        <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-          <Button type="primary" htmlType="submit">
-            Guardar
-          </Button>
-        </Form.Item>
       </Form>
     );
 
   return <Spin></Spin>;
 };
+
+export default forwardRef(formEdit);

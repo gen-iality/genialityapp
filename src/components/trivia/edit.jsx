@@ -17,6 +17,7 @@ import FormQuestionEdit from "./formEdit";
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
+    this.formEditRef = React.createRef();
     this.state = {
       loading: false,
       redirect: false,
@@ -194,6 +195,10 @@ class triviaEdit extends Component {
   };
 
   sendForm = () => {
+    if (this.formEditRef.current) {
+      this.formEditRef.current.submit();
+    }
+
     this.setState({
       ModalText: "The modal will be closed after two seconds",
       confirmLoading: true,
@@ -343,6 +348,7 @@ class triviaEdit extends Component {
                 onCancel={this.closeModal}>
                 {currentQuestion.map((question) => (
                   <FormQuestionEdit
+                    ref={this.formEditRef}
                     valuesQuestion={question}
                     eventId={this.props.event._id}
                     surveyId={this.state._id}
