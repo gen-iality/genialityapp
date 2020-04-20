@@ -20,12 +20,12 @@ class RenderQuantityField extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 0
+      quantity: 0,
     };
   }
 
   // Funcion para cargar los datos
-  loadData = async prevProps => {
+  loadData = async (prevProps) => {
     const { quantity } = this.props;
     if (!prevProps || quantity !== prevProps.quantity) await this.setState({ quantity });
   };
@@ -44,7 +44,7 @@ class RenderQuantityField extends Component {
 
     if (quantity > 0)
       for (let i = 0; i < quantity; i++) {
-        let label = `Opción ${i + 1}`;
+        let label = `Respuesta ${i + 1}`;
         let name = `opcion_${i + 1}`;
 
         listOptions.push(
@@ -58,7 +58,7 @@ class RenderQuantityField extends Component {
 
 export default ({ handleSubmit, values, submitCount }) => (
   <Form onSubmit={handleSubmit}>
-    {fieldsFormQuestion.map(field =>
+    {fieldsFormQuestion.map((field) =>
       field.type ? (
         <Field
           label={field.label}

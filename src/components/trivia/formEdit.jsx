@@ -10,18 +10,18 @@ const { Option } = Select;
 
 const layout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
 const validateMessages = {
   required: "${label} is required!",
   types: {
     email: "${label} is not validate email!",
-    number: "${label} is not a validate number!"
+    number: "${label} is not a validate number!",
   },
   number: {
-    range: "${label} must be between ${min} and ${max}"
-  }
+    range: "${label} must be between ${min} and ${max}",
+  },
 };
 
 export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
@@ -40,7 +40,7 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
     setQuestionIndex(valuesQuestion.questionIndex);
   }, [valuesQuestion]);
 
-  const onFinish = values => {
+  const onFinish = (values) => {
     console.log(values);
     values["choices"] = [];
     values["id"] = questionId;
@@ -52,14 +52,14 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
       }
     }
 
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, values).then(result => {
+    SurveysApi.editQuestion(eventId, surveyId, questionIndex, values).then((result) => {
       console.log(("result": result));
       form.resetFields();
       closeModal();
     });
   };
 
-  const onSelectChange = values => {
+  const onSelectChange = (values) => {
     console.log(values);
   };
 
@@ -106,14 +106,14 @@ export default ({ valuesQuestion, eventId, surveyId, closeModal }) => {
           <Form.Item
             key={`option${index}`}
             name={`choices[${index}]`}
-            label={`Opcion ${index + 1}`}
+            label={`Respuesta ${index + 1}`}
             rules={[{ required: true }]}>
             <Input />
           </Form.Item>
         ))}
         <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
           <Button type="primary" htmlType="submit">
-            Submit
+            Guardar
           </Button>
         </Form.Item>
       </Form>
