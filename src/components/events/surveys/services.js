@@ -16,7 +16,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
     let firstData = {};
     for (var i = 0; i < optionQuantity; i++) {
       let idResponse = i.toString();
-      firstData[idResponse] = 0;
+      firstData[idResponse] = optionIndex == idResponse ? 1 : 0;
     }
 
     // Valida si la colleccion existe, si no, se asigna el arreglo con valores iniciales
@@ -27,7 +27,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
     });
 
     // Se resuelve la promesa si la coleccion ya existe
-    ref_quantity.onSnapshot(data => {
+    ref_quantity.get().then(data => {
       if (data.exists) {
         resolve({ message: "Existe el documento", optionIndex, surveyId, questionId });
       }
