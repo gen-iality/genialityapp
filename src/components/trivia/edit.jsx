@@ -89,7 +89,7 @@ class triviaEdit extends Component {
       const data = {
         id: this.state._id,
         survey: this.state.survey,
-        publish: this.state.publish,
+        publish: this.state.publish === "true" ? "true" : "false",
         activity_id: this.state.activity_id
       };
 
@@ -118,7 +118,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -277,10 +277,10 @@ class triviaEdit extends Component {
           </div>
           {this.props.location.state ? (
             <div>
-              <label style={{ marginTop: "5%" }} className="label">
+              <label style={{ marginTop: "3%" }} className="label">
                 activar la encuesta
               </label>
-              <div className="select" style={{ marginBottom: "5%" }}>
+              <div className="select" style={{ marginBottom: "1%" }}>
                 <select
                   name="publish"
                   value={publish}
@@ -295,10 +295,9 @@ class triviaEdit extends Component {
               </div>
             </div>
           ) : (
-            <div></div>
-          )}
-          <br />
-          <label className="label">Seleccione una actividad a referenciar</label>
+              <div></div>
+            )}
+          <label style={{ marginTop: "2%" }} className="label">Seleccione una actividad a referenciar</label>
           <div className="select">
             <select name="activity_id" value={activity_id} onChange={this.changeInput}>
               <option>...Selecciona</option>
@@ -350,8 +349,8 @@ class triviaEdit extends Component {
               </Modal>
             </div>
           ) : (
-            <div></div>
-          )}
+              <div></div>
+            )}
         </EventContent>
       </Fragment>
     );

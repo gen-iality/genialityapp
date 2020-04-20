@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 import { firestore } from "../../helpers/firebase";
-import { toast } from "react-toastify";
 
 export const saveFirebase = {
     async saveImage(eventId, image) {
@@ -29,10 +28,9 @@ export const saveFirebase = {
             idPost: idPost
         }
 
-        console.log(data)
-        let addComment = firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
-        console.log(await addComment)
-        toast.success("Datos Guardados")
+        //console.log(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${idPost}`).collection('comments').add(data)
+        //console.log(await addComment)
     },
 
     async savePost(text, authorPost, eventId) {
@@ -42,9 +40,8 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
-        toast.success("Datos Guardados")
+        //console.log(data)
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
     },
     async savePostImage(imageUrl, text, author, eventId) {
         let data = {
@@ -54,9 +51,8 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        console.log(data)
+        //console.log(data)
         firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
-        toast.success("Datos Guardados")
     },
     async savePostSelfie(imageUrlBase64, text, author, eventId) {
         let data = {
@@ -66,8 +62,7 @@ export const saveFirebase = {
             datePost: new Date()
         };
 
-        let addDoc = firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
-        toast.success("Datos Guardados")
+        firestore.collection('adminPost').doc(`${eventId}`).collection('posts').add(data)
     },
     async deletePost(postId, eventId) {
         firestore.collection('adminPost').doc(`${eventId}`).collection('posts').doc(`${postId}`).delete();
@@ -81,7 +76,5 @@ export const saveFirebase = {
                 doc.ref.delete();
             });
         })
-
-        toast.success("Dato eliminado")
     }
 }

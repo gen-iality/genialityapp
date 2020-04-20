@@ -190,7 +190,7 @@ class ListEventUser extends Component {
         <EventContent>
           {/* Componente de busqueda */}
 
-          <Col extra={<a onClick={() => { this.SendFriendship(users._id) }}>Enviar Solicitud</a>} xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+          <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
             <p>
               <h1> Busca aquí el usuarios.</h1>
             </p>
@@ -218,10 +218,11 @@ class ListEventUser extends Component {
                     {pageOfItems.map((users, key) => (
                       <Row key={key} justify="center">
                         <Card
+                          extra={<a onClick={() => { this.SendFriendship(users._id) }}>Enviar Solicitud</a>}
                           style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                           bordered={true}>
                           <Meta
-                            avatar={<Avatar>{users.properties.names.charAt(0).toUpperCase()}</Avatar>}
+                            avatar={<Avatar>{users.properties.names ? users.properties.names.charAt(0).toUpperCase() : users.properties.names}</Avatar>}
                             title={users.properties.names ? users.properties.names : "No registra Nombre"}
                             description={[
                               <div>

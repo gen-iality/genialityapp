@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Alert, Tag, Button } from "antd";
 
-export default props => {
+import { AuthUrl } from "../../../helpers/constants";
+
+export default (props) => {
   let event = props.event;
   let currentUser = props.currentUser;
   let usuarioRegistrado = props.usuarioRegistrado;
@@ -22,7 +24,7 @@ export default props => {
               si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento,
               &nbsp;&nbsp;
               <Button type="primary">
-                <a href="https://eviusauth.netlify.com">Ir a Ingreso</a>
+                <a href={AuthUrl}>Ir a Ingreso</a>
               </Button>
             </p>
           }

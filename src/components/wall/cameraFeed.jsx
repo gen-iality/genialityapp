@@ -10,7 +10,8 @@ class CameraFeed extends Component {
         super(props);
         this.state = {
             image: "",
-            hidden: true
+            hidden: true,
+            hiddeVideo: false
         }
     }
     /**
@@ -59,7 +60,7 @@ class CameraFeed extends Component {
         context.drawImage(this.videoPlayer, 0, 0, 680, 360);
         this.canvas.toBlob(sendFile);
         let image = this.canvas.toDataURL()
-        this.setState({ image, hidden: false })
+        this.setState({ image, hidden: false, hiddeVideo: true })
         toast.success("Imagen Salvada")
     };
 
@@ -69,10 +70,15 @@ class CameraFeed extends Component {
         console.log(this.state.hidden, this.state.image)
         toast.error("Imagen Eliminada")
     }
+
+    renderingCode() {
+        this.setState({ hidden: true, image: "", hiddeVideo: false })
+        this.forceUpdate()
+    }
     render() {
-        const { image, hidden } = this.state
+        const { image, hidden, hide } = this.state
         return (
-            <div className="c-camera-feed">
+            <div className="c-camera-feed" hidden={hide}>
 
                 {/* camara */}
 
@@ -82,6 +88,7 @@ class CameraFeed extends Component {
                 <div>
                     <div className="c-camera-feed__viewer">
                         <video
+                            hidden={this.state.hiddeVideo}
                             ref={ref => (this.videoPlayer = ref)}
                             width="680"
                             heigh="360"
@@ -89,6 +96,7 @@ class CameraFeed extends Component {
                     </div>
 
                     <Button
+                        hidden={this.state.hiddeVideo}
                         type="primary"
                         size="large"
                         style={{ display: "block", margin: "20px auto" }}
@@ -96,28 +104,20 @@ class CameraFeed extends Component {
                     >
                         <CameraOutlined style={{ fontSize: "2rem" }} />
                     </Button>
+                    {
+                        this.state.image === "" ? <div></div> :
+                            <div>
+                                <Button onClick={() => { this.renderingCode() }}>Tomar Otra Foto</Button>
+                            </div>
+                    }
+
 
                 </div>
-
-
                 {/* Imagen capturada  */}
                 <div className="c-camera-feed__stage">
                     <canvas width="470" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
                     <img id="getImage" hidden src={image} />
-                    <div>
-                        {image.length > 0 &&
-                            <Button
-                                danger
-                                style={{ display: "block", margin: "20px auto" }}
-                                onClick={e => { this.clearImage() }}
-                            >
-                                <DeleteOutlined />
-                                Eliminar
-                            </Button>
-                        }
-                    </div>
                 </div>
-
             </div>
         );
     }
