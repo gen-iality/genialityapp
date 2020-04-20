@@ -21,6 +21,7 @@ import TriviaRoutes from "../trivia";
 import DocumentsRoutes from "../documents";
 import Speakers from "../speakers";
 import Surveys from "../surveys";
+import MenuLanding from "../menuLanding"
 import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
@@ -144,6 +145,7 @@ class Event extends Component {
               <Route path={`${match.url}/trivia`} render={() => <TriviaRoutes event={this.state.event} />} />
               <Route path={`${match.url}/documents`} render={() => <DocumentsRoutes event={this.state.event} />} />
               <Route path={`${match.url}/conference`} render={() => <ConferenceRoute event={this.state.event} />} />
+              <Route path={`${match.url}/menuLanding`} render={() => <MenuLanding event={this.state.event} />} />
               <Protected
                 path={`${match.url}/assistants`}
                 component={ListEventUser}
@@ -278,8 +280,8 @@ const Protected = ({ component: Component, event, eventId, url, ...rest }) => (
       event.user_properties && event.user_properties.length > 0 ? (
         <Component {...props} event={event} eventId={eventId} url={url} />
       ) : (
-        <Redirect push to={`${url}/main`} />
-      )
+          <Redirect push to={`${url}/main`} />
+        )
     }
   />
 );
