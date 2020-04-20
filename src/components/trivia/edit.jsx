@@ -30,7 +30,7 @@ class triviaEdit extends Component {
       question: [],
       visibleModal: false,
       confirmLoading: false,
-      currentQuestion: [],
+      currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
     };
     this.submit = this.submit.bind(this);
   }
@@ -200,7 +200,24 @@ class triviaEdit extends Component {
       this.formEditRef.current.submit();
     }
   };
-  closeModal = () => {
+  closeModal = (info) => {
+    let { question } = this.state;
+
+    // Condicional que actualiza el estado local
+    // Con esto se ve reflejado el cambio en la tabla
+    if (Object.entries(info).length === 2) {
+      let { questionIndex, data } = info;
+      let updateQuestion = question;
+      this.setState({ question: [] });
+
+      // Se iteran las opciones y se asigna el texto para el tipo de pregunta
+      selectOptions.forEach((option) => {
+        if (data.type == option.value) data.type = option.text;
+      });
+
+      updateQuestion.splice(questionIndex, 1, data);
+      this.setState({ question: updateQuestion });
+    }
     this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
   };
   // ---------------------------------------------------------------------------------------

@@ -58,7 +58,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
 
     SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values)).then(() => {
       form.resetFields();
-      closeModal();
+      closeModal({ questionIndex, data: exclude(values) });
       toast.success("pregunta actualizada");
     });
   };
