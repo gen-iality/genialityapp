@@ -1,11 +1,12 @@
 import React, { Component, useState, useEffect, forwardRef } from "react";
 
-import { fieldsFormQuestion } from "./constants";
+import { fieldsFormQuestion, selectOptions } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
 import { toast } from "react-toastify";
 import { Form, Input, InputNumber, Button, Select, Spin } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -33,10 +34,6 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    valuesQuestion.choices.forEach((option, index, arr) => {
-      valuesQuestion = { ...valuesQuestion, [`choices[${index}]`]: option };
-    });
-
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
@@ -44,23 +41,23 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
 
   const onFinish = (values) => {
     console.log(values);
-    values["choices"] = [];
     values["id"] = questionId;
 
-    for (const key in values) {
-      if (key.indexOf("choices[") == 0) {
-        values.choices.push(values[key]);
-        delete values[key];
-      }
+    if (values.type.indexOf(" ") > 0) {
+      selectOptions.forEach((option) => {
+        if (values.type == option.text) values.type = option.value;
+      });
     }
 
     const exclude = ({ questionOptions, ...rest }) => rest;
 
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values)).then(() => {
-      form.resetFields();
-      closeModal({ questionIndex, data: exclude(values) });
-      toast.success("pregunta actualizada");
-    });
+    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values))
+      .then(() => {
+        form.resetFields();
+        closeModal({ questionIndex, data: exclude(values) });
+        toast.success("pregunta actualizada");
+      })
+      .catch((err) => toast.error("No se pudo actualizar la pregunta: ", err));
   };
 
   if (Object.entries(defaultValues).length !== 0)
@@ -83,32 +80,69 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
               <Input />
             </Form.Item>
           ) : (
-            <Form.Item key={`field${key}`} name={field.name} label={field.label} rules={[{ required: true }]}>
-              <Select placeholder="Seleccione una Opcion" disabled={field.name == "questionOptions"}>
-                {field.selectOptions.map((option, index) =>
-                  option.text ? (
-                    <Option key={`type${index}`} value={option.value}>
-                      {option.text}
-                    </Option>
-                  ) : (
-                    <Option key={`quantity${index}`} value={option}>
-                      {option}
-                    </Option>
-                  )
-                )}
-              </Select>
-            </Form.Item>
+            field.name != "questionOptions" && (
+              <Form.Item key={`field${key}`} name={field.name} label={field.label} rules={[{ required: true }]}>
+                <Select placeholder="Seleccione una Opcion">
+                  {field.selectOptions.map((option, index) =>
+                    option.text ? (
+                      <Option key={`type${index}`} value={option.value}>
+                        {option.text}
+                      </Option>
+                    ) : (
+                      <Option key={`quantity${index}`} value={option}>
+                        {option}
+                      </Option>
+                    )
+                  )}
+                </Select>
+              </Form.Item>
+            )
           )
         )}
-        {defaultValues.choices.map((option, index) => (
-          <Form.Item
-            key={`option${index}`}
-            name={`choices[${index}]`}
-            label={`Respuesta ${index + 1}`}
-            rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        ))}
+
+        <Form.List name={`choices`}>
+          {(fields, { add, remove }) => {
+            return (
+              <div>
+                {fields.map((field, index) => (
+                  <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                    <Form.Item
+                      {...field}
+                      validateTrigger={["onChange", "onBlur"]}
+                      rules={[
+                        {
+                          required: true,
+                          whitespace: true,
+                          message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                        },
+                      ]}
+                      noStyle>
+                      <Input placeholder="option name" style={{ width: "90%" }} />
+                    </Form.Item>
+                    {fields.length > 2 ? (
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        style={{ margin: "0 8px" }}
+                        onClick={() => {
+                          remove(field.name);
+                        }}
+                      />
+                    ) : null}
+                  </Form.Item>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add();
+                    }}>
+                    <PlusOutlined /> Agregar Otra Respuesta
+                  </Button>
+                </Form.Item>
+              </div>
+            );
+          }}
+        </Form.List>
       </Form>
     );
 
