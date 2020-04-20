@@ -63,7 +63,7 @@ class Landing extends Component {
       modal: false,
       editorState: "",
       sections: {},
-      section: "agenda",
+      section: "evento",
       showIframeZoom: false,
       meeting_id: null,
       color: "",
