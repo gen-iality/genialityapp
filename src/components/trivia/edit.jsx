@@ -195,23 +195,13 @@ class triviaEdit extends Component {
   };
 
   sendForm = () => {
+    this.setState({ confirmLoading: true });
     if (this.formEditRef.current) {
       this.formEditRef.current.submit();
     }
-
-    this.setState({
-      ModalText: "The modal will be closed after two seconds",
-      confirmLoading: true,
-    });
-    setTimeout(() => {
-      this.setState({
-        visibleModal: false,
-        confirmLoading: false,
-      });
-    }, 2000);
   };
   closeModal = () => {
-    this.setState({ visibleModal: false, currentQuestion: [] });
+    this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
   };
   // ---------------------------------------------------------------------------------------
 

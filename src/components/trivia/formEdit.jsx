@@ -4,6 +4,7 @@ import { fieldsFormQuestion } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
+import { toast } from "react-toastify";
 import { Form, Input, InputNumber, Button, Select, Spin } from "antd";
 
 const { Option } = Select;
@@ -55,15 +56,11 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
 
     const exclude = ({ questionOptions, ...rest }) => rest;
 
-    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values)).then((result) => {
-      console.log(("result": result));
+    SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values)).then(() => {
       form.resetFields();
       closeModal();
+      toast.success("pregunta actualizada");
     });
-  };
-
-  const onSelectChange = (values) => {
-    console.log(values);
   };
 
   if (Object.entries(defaultValues).length !== 0)
@@ -87,17 +84,14 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
             </Form.Item>
           ) : (
             <Form.Item key={`field${key}`} name={field.name} label={field.label} rules={[{ required: true }]}>
-              <Select
-                placeholder="Seleccione una Opcion"
-                disabled={field.name == "questionOptions"}
-                onChange={onSelectChange}>
+              <Select placeholder="Seleccione una Opcion" disabled={field.name == "questionOptions"}>
                 {field.selectOptions.map((option, index) =>
                   option.text ? (
                     <Option key={`type${index}`} value={option.value}>
                       {option.text}
                     </Option>
                   ) : (
-                    <Option key={`type${index}`} value={option}>
+                    <Option key={`quantity${index}`} value={option}>
                       {option}
                     </Option>
                   )
