@@ -1,73 +1,91 @@
 section.landing {
+
   // background-image: url("../back.png");
-  .hero-head {
-  }
+  .hero-head {}
+
   padding: 0;
+
   .container-nombre {
     display: block;
     margin: 0% auto;
     font-size: 1.3rem;
+
     .nombre {
       .event-name {
+
         h2,
         span {
           color: white;
         }
       }
+
       .bold-text {
         font-weight: bolder !important;
         color: black;
       }
     }
   }
+
   .banner-head {
     justify-content: center;
     align-items: center;
   }
+
   .columns.content-tabs {
     flex-direction: row;
     align-items: center;
     justify-content: center;
   }
+
   .info {
     padding: 10px !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
     .fecha {
       display: flex;
       flex-direction: row;
+
       .fecha-uno,
       .fecha-dos {
         span {
           margin: 0 auto;
+
           &.title {
             color: white;
           }
         }
       }
+
       .vertical-line {
         background: white;
         width: 1px;
       }
     }
+
     .lugar {
       color: white;
+
       .container-icon,
       .container-subtitle {
         display: inline-block !important;
       }
+
       span {
         color: white;
       }
+
       .column {
         display: flex;
         align-items: center;
       }
+
       .subtitle {
         font-weight: 900;
       }
     }
+
     .nombre {
       .column {
         h2 {
@@ -75,11 +93,14 @@ section.landing {
         }
       }
     }
+
     .descripcion-c {
       margin-top: auto;
     }
+
     .ver-mas {
       .aforo {
+
         // display: none; //temporal
         .titulo {
           font-weight: 900;
@@ -87,15 +108,18 @@ section.landing {
       }
     }
   }
+
   .banner {
     position: relative;
     display: flex;
     align-items: center;
+
     .info {
       .container {
         padding: 2em;
       }
     }
+
     .image {
       img {
         object-fit: cover;
@@ -107,6 +131,7 @@ section.landing {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+
     .fav-button {
       cursor: pointer;
       background: $primary;
@@ -120,23 +145,29 @@ section.landing {
       width: 45px;
     }
   }
+
   .data {
     .data-title {
       line-height: 1.1;
       margin-bottom: 2em 0;
     }
   }
+
   .title-frame {
     padding: 13px;
   }
+
   .subtitle {
     font-weight: 900;
   }
+
   .image-4-1 {
     max-width: 100%;
   }
+
   .arrows {
     .arrow {
+
       &.left,
       &.right {
         display: block;
@@ -144,24 +175,29 @@ section.landing {
         z-index: 999;
         top: 50%;
         transform: translateY(-50%);
+
         svg {
           width: 2rem;
           height: 2rem;
           vertical-align: middle;
           cursor: pointer;
+
           path {
             fill: $white;
           }
         }
       }
+
       &.left {
         left: 0;
       }
+
       &.right {
         right: 0;
       }
     }
   }
+
   .hero-body {
     padding: 0;
     margin-top: -21px;
@@ -177,17 +213,20 @@ section.landing {
         align-items: center;
         flex-direction: column;
       }
+
       .title-description {
         display: block;
         margin: 0% auto;
         font-weight: bold;
         font-size: 1.6rem !important;
       }
+
       .description {
         display: block;
         margin: 0% auto;
         text-transform: lowercase;
         font-size: 5rem;
+
         .ql-snow {
           font-family: "Montserrat", sans-serif !important;
 
@@ -197,10 +236,12 @@ section.landing {
             line-height: 1.5;
             padding: 0px;
             font-family: "Montserrat", sans-serif !important;
+
             h2 {
               text-align: left !important;
               font-weight: bold;
             }
+
             span,
             a {
               color: white !important;
@@ -214,19 +255,23 @@ section.landing {
     .container-hero-landing {
       margin: -70px 4% auto;
     }
+
     .container-nav-item {
       background: transparent;
       position: sticky;
       top: 0.4%;
       z-index: 100;
       justify-content: center;
+
       @media (max-width: 1020px) {
         position: relative;
         z-index: 1;
       }
+
       .nav-item {
         font-weight: 600;
         padding: 10px 20px 13px 10px !important;
+
         a {
           height: 3.5rem;
           display: flex;
@@ -234,9 +279,11 @@ section.landing {
           justify-content: center;
         }
       }
+
       .nav-item-active {
         font-weight: 600;
         padding: 10px 20px 13px 10px !important;
+
         a {
           height: 3rem;
           border-bottom: solid $color-evius;
@@ -246,18 +293,20 @@ section.landing {
         }
       }
     }
-    .ql-container {
-    }
+
+    .ql-container {}
 
     .container-map {
       .map-head {
         border: solid 2px #e0e0e0;
         padding: 13px;
         text-align: left;
+
         .subtitle {
           padding: 10px;
         }
       }
+
       .hours {
         padding-bottom: 0% !important;
       }
@@ -268,6 +317,7 @@ section.landing {
     .info {
       margin: 0 !important;
     }
+
     .section {
       padding: 3rem 1.5rem;
     }
@@ -277,9 +327,11 @@ section.landing {
     .info {
       flex: none;
     }
+
     .lugar {
       flex-direction: row !important;
     }
+
     .columns {
       flex-direction: row;
     }
@@ -307,6 +359,7 @@ section.landing {
   top: 65px;
   left: 0%;
   z-index: 1;
+
   @media screen and (min-width: "1030px") {
     display: none;
   }
@@ -325,7 +378,7 @@ section.landing {
   font-size: 1.13rem !important;
 }
 
-.ql-container.ql-snow {
-  border: 1px solid white !important;
+.ql-container.ql-snow,
+.ql-bubble {
   font-family: $family-sans-serif !important;
 }

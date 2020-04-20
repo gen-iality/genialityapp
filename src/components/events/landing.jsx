@@ -185,7 +185,7 @@ class Landing extends Component {
 
               <div>
                 {typeof event.description === "string" ? (
-                  <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} />
+                  <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
                 ) : (
                     "json"
                   )}
