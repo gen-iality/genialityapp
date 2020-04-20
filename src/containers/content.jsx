@@ -13,7 +13,7 @@ const Events = asyncComponent(() => import("../components/events"));
 const NewEvent = asyncComponent(() => import("../components/events/newEvent"));
 const Organization = asyncComponent(() => import("../components/organization"));
 const MyProfile = asyncComponent(() => import("../components/profile"));
-const Purchase = asyncComponent(() => import("../components/profile/compras"));
+const Purchase = asyncComponent(() => import("../components/profile/purchase"));
 const EventEdit = asyncComponent(() => import("../components/profile/events"));
 const Terms = asyncComponent(() => import("../components/policies/termsService"));
 const Privacy = asyncComponent(() => import("../components/policies/privacyPolicy"));
