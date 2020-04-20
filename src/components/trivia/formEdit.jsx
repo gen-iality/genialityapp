@@ -130,15 +130,17 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
                     ) : null}
                   </Form.Item>
                 ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add();
-                    }}>
-                    <PlusOutlined /> Agregar Otra Respuesta
-                  </Button>
-                </Form.Item>
+                {fields.length < 5 && (
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add();
+                      }}>
+                      <PlusOutlined /> Agregar Otra Respuesta
+                    </Button>
+                  </Form.Item>
+                )}
               </div>
             );
           }}
