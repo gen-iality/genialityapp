@@ -9,7 +9,8 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider } from "antd";
+
+import { Button, Row, Col, Table, Divider, Input } from "antd";
 
 import FormQuestions from "./questions";
 
@@ -88,26 +89,24 @@ class triviaEdit extends Component {
         publish: this.state.publish === "true" ? "true" : "false",
         activity_id: this.state.activity_id
       };
-
+      console.log(data)
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
       await SurveysApi.editOne(data, data.id, this.props.event._id);
       // Se da la información de datos actualizados y se redirige a la vista principal
       toast.success("datos actualizados");
-      window.location.replace(this.props.matchUrl);
     } else {
       //Se recogen los datos a actualizar
       const data = {
-        id: this.state._id,
         survey: this.state.survey,
         publish: "false",
-        activity_id: this.state.activity_id
+        event_id: this.props.event._id
       };
-
+      console.log(data)
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-      await SurveysApi.createOne(this.props.event._id, data);
+      const save = await SurveysApi.createOne(this.props.event._id, data);
+      console.log(save)
       // Se da la información de datos actualizados y se redirige a la vista principal
       toast.success("datos creados");
-      window.location.replace(this.props.matchUrl);
     }
   }
 
@@ -221,23 +220,15 @@ class triviaEdit extends Component {
     return (
       <Fragment>
         <EventContent title="Encuestas" closeAction={this.goBack}>
-          <div className="columns is-6">
+          <div>
             <div>
-              <label style={{ marginTop: "15%" }} className="label">
+              <label style={{ marginTop: "2%" }} className="label">
                 Nombre de la Encuesta
               </label>
-              <input
-                value={survey}
-                className="input"
+              <Input value={survey}
                 placeholder="Nombre de la encuesta"
                 name={"survey"}
-                onChange={this.changeInput}
-              />
-            </div>
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
-              </button>
+                onChange={this.changeInput} />
             </div>
           </div>
           {this.props.location.state ? (
@@ -253,7 +244,6 @@ class triviaEdit extends Component {
                   onClick={e => {
                     this.setState({ publish: e.target.value });
                   }}>
-                  <option>...Seleccionar</option>
                   <option value={true}>Si</option>
                   <option value={false}>No</option>
                 </select>
@@ -262,21 +252,34 @@ class triviaEdit extends Component {
           ) : (
               <div></div>
             )}
-          <label style={{ marginTop: "2%" }} className="label">Seleccione una actividad a referenciar</label>
-          <div className="select">
-            <select name="activity_id" value={activity_id} onChange={this.changeInput}>
-              <option>...Selecciona</option>
-              {dataAgenda.map((activity, key) => (
-                <option key={key} value={activity._id}>
-                  {activity.name}
-                </option>
-              ))}
-            </select>
+
+          {
+            this.props.location.state ?
+              <div>
+                <label style={{ marginTop: "2%" }} className="label">Relacionar esta encuesta a una actividad</label>
+                <div className="select">
+                  <select name="activity_id" value={activity_id} onChange={this.changeInput}>
+                    <option value="0">No relacionar</option>
+                    {dataAgenda.map((activity, key) => (
+                      <option key={key} value={activity._id}>
+                        {activity.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              :
+              <div />
+          }
+          <div className="column">
+            <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+              Guardar
+              </button>
           </div>
           {this.props.location.state ? (
             <div>
               <Row>
-                <Col span={5} style={{ marginTop: "3%" }}>
+                <Col span={7} style={{ marginTop: "3%" }}>
                   <Button block size="large" onClick={this.addNewQuestion}>
                     Agregar Pregunta
                   </Button>
