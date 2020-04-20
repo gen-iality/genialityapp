@@ -61,13 +61,13 @@ class trivia extends Component {
         return (
             <Fragment className="columns is-12">
                 <EventContent title={"Encuestas"}>
-                    <Link to={{pathname: `${matchUrl}/encuesta`}}>
+                    <Link to={{ pathname: `${matchUrl}/encuesta` }}>
                         <button className="columns is-pulled-right button is-primary">
                             <span className="icon"><i className="fas fa-plus-circle" /></span>
                             <spa>Nueva Encuesta</spa>
                         </button>
                     </Link>
-                    <EvenTable style={{ marginTop: "5%" }} head={["Titulo de encuesta", "Publicada", ""]}>
+                    <EvenTable style={{ marginTop: "5%" }} head={["Nombre de encuesta", "Publicada", ""]}>
                         {
                             data.map((trivia, key) => (
                                 <tr key={key}>
