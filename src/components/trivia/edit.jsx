@@ -150,6 +150,7 @@ class triviaEdit extends Component {
     let newArray = listQuestions.filter(question => question.key != item);
 
     // Este condicional sirve para actualizar el estado local
+    // Solo se invoca al crear una nueva pregunta y despues se agrega la pregunta creada a la tabla
     if (newQuestion) {
       // Se iteran las opciones y se asigna el texto para el tipo de pregunta
       selectOptions.forEach(option => {
@@ -172,6 +173,7 @@ class triviaEdit extends Component {
     let questionIndex = question.findIndex(question => question.id == questionId);
     let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
 
+    // Se actualiza el estado local, borrando la pregunta de la tabla
     let newListQuestion = question.filter(infoQuestion => infoQuestion.id != questionId);
     this.setState({ question: newListQuestion });
 
