@@ -9,9 +9,10 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider } from "antd";
+import { Button, Row, Col, Table, Divider, Modal, Form, Input } from "antd";
 
 import FormQuestions from "./questions";
+import FormQuestionEdit from "./formEdit";
 
 class triviaEdit extends Component {
   constructor(props) {
@@ -25,7 +26,10 @@ class triviaEdit extends Component {
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
-      question: []
+      question: [],
+      visibleModal: false,
+      confirmLoading: false,
+      currentQuestion: []
     };
     this.submit = this.submit.bind(this);
   }
@@ -176,17 +180,46 @@ class triviaEdit extends Component {
 
   // Editar pregunta
   editQuestion = questionId => {
-    let { question } = this.state;
+    let { question, currentQuestion } = this.state;
     let questionIndex = question.findIndex(question => question.id == questionId);
-    console.log("---- Hace falta descubrir el api para modificar las preguntas ----");
-    // console.log(questionId, questionIndex);
+
+    currentQuestion = question.filter(infoQuestion => infoQuestion.id == questionId);
+    currentQuestion[0]["questionIndex"] = questionIndex;
+    currentQuestion[0]["questionOptions"] = currentQuestion[0].choices.length;
+
+    this.setState({ visibleModal: true, currentQuestion });
+  };
+
+  sendForm = () => {
+    this.setState({
+      ModalText: "The modal will be closed after two seconds",
+      confirmLoading: true
+    });
+    setTimeout(() => {
+      this.setState({
+        visibleModal: false,
+        confirmLoading: false
+      });
+    }, 2000);
+  };
+  closeModal = () => {
+    this.setState({ visibleModal: false, currentQuestion: [] });
   };
   // ---------------------------------------------------------------------------------------
 
   goBack = () => this.props.history.goBack();
 
   render() {
-    const { survey, publish, activity_id, dataAgenda, question } = this.state;
+    const {
+      survey,
+      publish,
+      activity_id,
+      dataAgenda,
+      question,
+      visibleModal,
+      confirmLoading,
+      currentQuestion
+    } = this.state;
     const columns = [
       {
         title: "Pregunta",
@@ -297,6 +330,22 @@ class triviaEdit extends Component {
                 </div>
               ))}
               <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
+              <Modal
+                width={700}
+                title="Editando Preguntas"
+                visible={visibleModal}
+                onOk={this.sendForm}
+                confirmLoading={confirmLoading}
+                onCancel={this.closeModal}>
+                {currentQuestion.map(question => (
+                  <FormQuestionEdit
+                    valuesQuestion={question}
+                    eventId={this.props.event._id}
+                    surveyId={this.state._id}
+                    closeModal={this.closeModal}
+                  />
+                ))}
+              </Modal>
             </div>
           ) : (
             <div></div>
