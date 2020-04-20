@@ -145,9 +145,11 @@ class menuLanding extends Component {
                         let IconoComponente = iconComponents[menu[key].icon];
                         return (
                             <Menu.Item key={menu[key].section}>
+                                <label style={{ marginRight: "2%" }} className="checkbox">
+                                    <input id={menu[key].name} type="checkbox" onClick={() => { this.saveMenu(menu[key].name, menu[key]) }} />
+                                </label>
                                 <IconoComponente />
                                 <span> {menu[key].name}</span>
-                                <input id={menu[key].name} type="checkbox" onClick={() => { this.saveMenu(menu[key].name, menu[key]) }} />
                             </Menu.Item>
                         );
                     })}
