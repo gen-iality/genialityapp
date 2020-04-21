@@ -185,9 +185,9 @@ class triviaEdit extends Component {
     let { question, currentQuestion } = this.state;
     let questionIndex = question.findIndex((question) => question.id == questionId);
 
-    currentQuestion = question.filter((infoQuestion) => infoQuestion.id == questionId);
-    currentQuestion[0]["questionIndex"] = questionIndex;
-    currentQuestion[0]["questionOptions"] = currentQuestion[0].choices.length;
+    currentQuestion = question.find((infoQuestion) => infoQuestion.id == questionId);
+    currentQuestion["questionIndex"] = questionIndex;
+    currentQuestion["questionOptions"] = currentQuestion.choices.length;
 
     this.setState({ visibleModal: true, currentQuestion });
   };
@@ -217,7 +217,7 @@ class triviaEdit extends Component {
       updateQuestion.splice(questionIndex, 1, data);
       this.setState({ question: updateQuestion });
     }
-    this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
+    this.setState({ visibleModal: false, currentQuestion: {}, confirmLoading: false });
   };
 
   toggleConfirmLoading = () => {
@@ -363,16 +363,16 @@ class triviaEdit extends Component {
                     Guardar
                   </Button>,
                 ]}>
-                {currentQuestion.map((question) => (
+                {Object.entries(currentQuestion).length !== 0 && (
                   <FormQuestionEdit
                     ref={this.formEditRef}
-                    valuesQuestion={question}
+                    valuesQuestion={currentQuestion}
                     eventId={this.props.event._id}
                     surveyId={this.state._id}
                     closeModal={this.closeModal}
                     toggleConfirmLoading={this.toggleConfirmLoading}
                   />
-                ))}
+                )}
               </Modal>
             </div>
           ) : (
