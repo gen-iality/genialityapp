@@ -22,6 +22,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: "",
       publish: "",
+      privateSurvey: "",
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -55,6 +56,7 @@ class triviaEdit extends Component {
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
+        privateSurvey: Update.isPrivate,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
@@ -90,6 +92,7 @@ class triviaEdit extends Component {
         id: this.state._id,
         survey: this.state.survey,
         publish: this.state.publish === "true" ? "true" : "false",
+        isPrivate: this.state.privateSurvey,
         activity_id: this.state.activity_id,
       };
       console.log(data);
@@ -185,9 +188,9 @@ class triviaEdit extends Component {
     let { question, currentQuestion } = this.state;
     let questionIndex = question.findIndex((question) => question.id == questionId);
 
-    currentQuestion = question.filter((infoQuestion) => infoQuestion.id == questionId);
-    currentQuestion[0]["questionIndex"] = questionIndex;
-    currentQuestion[0]["questionOptions"] = currentQuestion[0].choices.length;
+    currentQuestion = question.find((infoQuestion) => infoQuestion.id == questionId);
+    currentQuestion["questionIndex"] = questionIndex;
+    currentQuestion["questionOptions"] = currentQuestion.choices.length;
 
     this.setState({ visibleModal: true, currentQuestion });
   };
@@ -217,7 +220,7 @@ class triviaEdit extends Component {
       updateQuestion.splice(questionIndex, 1, data);
       this.setState({ question: updateQuestion });
     }
-    this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
+    this.setState({ visibleModal: false, currentQuestion: {}, confirmLoading: false });
   };
 
   toggleConfirmLoading = () => {
@@ -231,6 +234,7 @@ class triviaEdit extends Component {
     const {
       survey,
       publish,
+      privateSurvey,
       activity_id,
       dataAgenda,
       question,
@@ -304,6 +308,28 @@ class triviaEdit extends Component {
 
           {this.props.location.state ? (
             <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Encuesta privada
+              </label>
+              <div className="select" style={{ marginBottom: "1%" }}>
+                <select
+                  name="privateSurvey"
+                  value={privateSurvey}
+                  onChange={this.changeInput}
+                  onClick={(e) => {
+                    this.setState({ privateSurvey: e.target.value });
+                  }}>
+                  <option value={true}>Si</option>
+                  <option value={false}>No</option>
+                </select>
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+
+          {this.props.location.state ? (
+            <div>
               <label style={{ marginTop: "2%" }} className="label">
                 Relacionar esta encuesta a una actividad
               </label>
@@ -363,16 +389,16 @@ class triviaEdit extends Component {
                     Guardar
                   </Button>,
                 ]}>
-                {currentQuestion.map((question) => (
+                {Object.entries(currentQuestion).length !== 0 && (
                   <FormQuestionEdit
                     ref={this.formEditRef}
-                    valuesQuestion={question}
+                    valuesQuestion={currentQuestion}
                     eventId={this.props.event._id}
                     surveyId={this.state._id}
                     closeModal={this.closeModal}
                     toggleConfirmLoading={this.toggleConfirmLoading}
                   />
-                ))}
+                )}
               </Modal>
             </div>
           ) : (
