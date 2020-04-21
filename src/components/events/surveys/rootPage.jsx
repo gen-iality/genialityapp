@@ -56,7 +56,7 @@ export default class RootPage extends Component {
   render() {
     let { idSurvey, hasVote, eventId, isLoading, userId, guestVoteInSurvey } = this.state;
     const { toggleSurvey } = this.props;
-    console.log(this.state);
+
     if (!isLoading)
       return hasVote || guestVoteInSurvey ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
