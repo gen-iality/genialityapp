@@ -13,15 +13,15 @@ const MenuEvent = props => {
   //let collapsed = props.collapsed;
 
   let itemsMenu = {
-    agenda: {
-      name: "Agenda",
-      section: "agenda",
-      icon: "ReadOutlined"
-    },
     evento: {
       name: "Evento",
       section: "evento",
       icon: "CalendarOutlined"
+    },
+    agenda: {
+      name: "Agenda",
+      section: "agenda",
+      icon: "ReadOutlined"
     },
     speakers: {
       name: "Conferencistas",
