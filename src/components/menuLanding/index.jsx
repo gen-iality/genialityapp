@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react"
 import * as iconComponents from "@ant-design/icons";
-import { Checkbox, Menu } from "antd";
+import { Typography, Menu, Button } from "antd";
+import { Actions } from "../../helpers/request";
+import { toast } from "react-toastify";
+const { Title } = Typography;
 
 class menuLanding extends Component {
     constructor(props) {
@@ -62,6 +65,7 @@ class menuLanding extends Component {
         }
         this.saveMenu = this.saveMenu.bind(this)
         this.getMenuLanding = this.getMenuLanding.bind(this)
+        this.submit = this.submit.bind(this)
     }
 
     async componentDidMount() {
@@ -69,30 +73,15 @@ class menuLanding extends Component {
     }
 
     async getMenuLanding() {
+        const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`)
         let menuMapped = this.state.menu
-        let menuDatabase = {
-            agenda: {
-                name: "Agenda",
-                section: "agenda",
-                icon: "ReadOutlined",
-            },
-            certs: {
-                name: "Certificados",
-                section: "certs",
-                icon: "FileDoneOutlined",
-            },
-            networking: {
-                name: "Networking",
-                section: "networking",
-                icon: "LaptopOutlined",
-            }
-        }
+        let menuDatabase = menuLanding.itemsMenu
 
         for (const prop in menuMapped) {
             for (const prop1 in menuDatabase) {
                 if (menuMapped[prop].name === menuDatabase[prop1].name) {
                     await this.saveMenu(menuDatabase[prop1].name, menuDatabase[prop1])
-                    document.getElementById(`${menuDatabase[prop].name}`).checked = true
+                    document.getElementById(`${menuMapped[prop].name}`).checked = true
                 } else { continue }
             }
         }
@@ -127,20 +116,17 @@ class menuLanding extends Component {
         }
     }
 
-    submit() {
-        console.log(this.state.itemsMenu)
+    async submit() {
+        await Actions.put(`api/events/${this.props.event._id}`, this.state.itemsMenu);
+        toast.success("Información guardada")
     }
 
     render() {
         const { menu } = this.state
         return (
             <Fragment>
-                <Menu
-                    mode="inline"
-                    // theme="dark"
-                    defaultSelectedKeys={["1"]}
-                    // defaultOpenKeys={['sub1']}
-                    style={{ height: "100%", padding: "50px 0" }}>
+                <Title level={3}>Habilitar secciones de landing</Title>
+                <Menu mode="inline" defaultSelectedKeys={["1"]}>
                     {Object.keys(menu).map((key, i) => {
                         let IconoComponente = iconComponents[menu[key].icon];
                         return (
@@ -153,10 +139,11 @@ class menuLanding extends Component {
                             </Menu.Item>
                         );
                     })}
+                    <Button onClick={this.submit}>Guardar</Button>
                 </Menu>
             </Fragment>
         )
     }
 }
 
-export default menuLanding
+export default menuLanding  
