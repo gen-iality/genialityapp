@@ -9,6 +9,7 @@ import { addLoginInformation } from "../../redux/user/actions";
 import { Actions, CategoriesApi, EventsApi, UsersApi } from "../../helpers/request";
 import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
+import EventCard from "../shared/eventCard";
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
 import { TiArrowLoopOutline } from "react-icons/ti";
@@ -19,6 +20,7 @@ import { auth } from "../../helpers/firebase";
 import { DateTimePicker } from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import { FormattedMessage } from "react-intl";
+import { ApiUrl } from "../../helpers/constants";
 import * as Cookie from "js-cookie";
 import ErrorServe from "../modal/serverError";
 
@@ -325,6 +327,45 @@ class Index extends Component {
                                             <button className="button is-primary" onClick={this.saveForm} disabled={valid}>Guardar</button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="profile-data" id={'compras'}>
+                                <h2 className="data-title">
+                                    <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br />
+                                    <span className="has-text-grey-dark is-size-3">Compras</span>
+                                </h2>
+                                <iframe title={'Compras'} src={`${ApiUrl}/es/viewOrdersUsers/${userId}?evius_token=${evius_token}`} width={'100%'} height={'600px'} />
+                            </div>
+                            <div className="profile-data columns" id={'events'}>
+                                <div className="column is-8">
+                                    <h2 className="data-title">
+                                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br />
+                                        <span className="has-text-grey-dark is-size-3">Eventos</span>
+                                    </h2>
+                                    <div className="columns home is-multiline">
+                                        {
+                                            events.map((event, key) => {
+                                                return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
+                                                    <div className="edit">
+                                                        <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
+                                                            <span className="icon is-medium">
+                                                                <i className="fas fa-lg fa-cogs" />
+                                                            </span>
+                                                            <span className="is-size-7 is-italic">Administrar</span>
+                                                        </Link>
+                                                    </div>
+                                                }
+                                                />
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                                <div className="column is-4">
+                                    <h2 className="data-title">
+                                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br />
+                                        <span className="has-text-grey-dark is-size-3">Tickets</span>
+                                    </h2>
+                                    <div className="tickets soon"></div>
                                 </div>
                             </div>
                         </div>

@@ -9,14 +9,14 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-
-import { Button, Row, Col, Table, Divider, Input } from "antd";
-
+import { Button, Row, Col, Table, Divider, Modal, Form, Input } from "antd";
 import FormQuestions from "./questions";
+import FormQuestionEdit from "./formEdit";
 
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
+    this.formEditRef = React.createRef();
     this.state = {
       loading: false,
       redirect: false,
@@ -26,13 +26,16 @@ class triviaEdit extends Component {
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
-      question: []
+      question: [],
+      visibleModal: false,
+      confirmLoading: false,
+      currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
     };
     this.submit = this.submit.bind(this);
   }
 
   //Funcion para poder cambiar el value del input o select
-  changeInput = e => {
+  changeInput = (e) => {
     const { name } = e.target;
     const { value } = e.target;
     this.setState({ [name]: value });
@@ -53,14 +56,14 @@ class triviaEdit extends Component {
         survey: Update.survey,
         publish: Update.publish,
         activity_id: Update.activity_id,
-        dataAgenda: dataAgenda.data
+        dataAgenda: dataAgenda.data,
       });
 
       this.getQuestions();
     } else {
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
       this.setState({
-        dataAgenda: dataAgenda.data
+        dataAgenda: dataAgenda.data,
       });
     }
   }
@@ -70,7 +73,7 @@ class triviaEdit extends Component {
 
     const question = [];
     for (const prop in Update.questions) {
-      selectOptions.forEach(option => {
+      selectOptions.forEach((option) => {
         if (Update.questions[prop].type == option.value) Update.questions[prop].type = option.text;
       });
 
@@ -87,7 +90,7 @@ class triviaEdit extends Component {
         id: this.state._id,
         survey: this.state.survey,
         publish: this.state.publish === "true" ? "true" : "false",
-        activity_id: this.state.activity_id
+        activity_id: this.state.activity_id,
       };
       console.log(data)
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -99,7 +102,8 @@ class triviaEdit extends Component {
       const data = {
         survey: this.state.survey,
         publish: "false",
-        event_id: this.props.event._id
+        event_id: this.props.event._id,
+        activity_id: this.state.activity_id,
       };
       console.log(data)
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -134,20 +138,21 @@ class triviaEdit extends Component {
           eventId={this.props.event._id}
           surveyId={_id}
           removeQuestion={this.removeQuestion}
-        />
-      ]
+        />,
+      ],
     });
   };
 
   // Funcion para remover el formulario de las preguntas
   removeQuestion = (item, newQuestion) => {
     let { listQuestions, question } = this.state;
-    let newArray = listQuestions.filter(question => question.key != item);
+    let newArray = listQuestions.filter((question) => question.key != item);
 
     // Este condicional sirve para actualizar el estado local
+    // Solo se invoca al crear una nueva pregunta y despues se agrega la pregunta creada a la tabla
     if (newQuestion) {
       // Se iteran las opciones y se asigna el texto para el tipo de pregunta
-      selectOptions.forEach(option => {
+      selectOptions.forEach((option) => {
         if (newQuestion.type == option.value) newQuestion.type = option.text;
       });
 
@@ -160,42 +165,84 @@ class triviaEdit extends Component {
   // -------------------- Funciones para los servicios -----------------------------------
 
   // Borrar pregunta
-  deleteQuestion = async questionId => {
+  deleteQuestion = async (questionId) => {
     let { question, _id } = this.state;
     const { event } = this.props;
 
-    let questionIndex = question.findIndex(question => question.id == questionId);
-    let response = await SurveysApi.deleteQuestion(event._id, _id, questionIndex);
+    let questionIndex = question.findIndex((question) => question.id == questionId);
 
-    let newListQuestion = question.filter(infoQuestion => infoQuestion.id != questionId);
-    this.setState({ question: newListQuestion });
+    SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
+      // Se actualiza el estado local, borrando la pregunta de la tabla
+      let newListQuestion = question.filter((infoQuestion) => infoQuestion.id != questionId);
 
-    toast.success(response);
+      this.setState({ question: newListQuestion });
+      toast.success(response);
+    });
   };
 
   // Editar pregunta
-  editQuestion = questionId => {
+  editQuestion = (questionId) => {
+    let { question, currentQuestion } = this.state;
+    let questionIndex = question.findIndex((question) => question.id == questionId);
+
+    currentQuestion = question.filter((infoQuestion) => infoQuestion.id == questionId);
+    currentQuestion[0]["questionIndex"] = questionIndex;
+    currentQuestion[0]["questionOptions"] = currentQuestion[0].choices.length;
+
+    this.setState({ visibleModal: true, currentQuestion });
+  };
+
+  sendForm = () => {
+    this.setState({ confirmLoading: true });
+    if (this.formEditRef.current) {
+      this.formEditRef.current.submit();
+    }
+  };
+  closeModal = (info) => {
     let { question } = this.state;
-    let questionIndex = question.findIndex(question => question.id == questionId);
-    console.log("---- Hace falta descubrir el api para modificar las preguntas ----");
-    // console.log(questionId, questionIndex);
+
+    // Condicional que actualiza el estado local
+    // Con esto se ve reflejado el cambio en la tabla
+    if (Object.entries(info).length === 2) {
+      let { questionIndex, data } = info;
+      let updateQuestion = question;
+      this.setState({ question: [] });
+
+      // Se iteran las opciones y se asigna el texto para el tipo de pregunta
+      selectOptions.forEach((option) => {
+        if (data.type == option.value) data.type = option.text;
+      });
+
+      updateQuestion.splice(questionIndex, 1, data);
+      this.setState({ question: updateQuestion });
+    }
+    this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
   };
   // ---------------------------------------------------------------------------------------
 
   goBack = () => this.props.history.goBack();
 
   render() {
-    const { survey, publish, activity_id, dataAgenda, question } = this.state;
+    const {
+      survey,
+      publish,
+      activity_id,
+      dataAgenda,
+      question,
+      visibleModal,
+      confirmLoading,
+      currentQuestion,
+    } = this.state;
     const columns = [
       {
         title: "Pregunta",
         dataIndex: "title",
-        key: "title"
+        key: "title",
       },
       {
         title: "Tipo de Pregunta",
         dataIndex: "type",
-        key: "type"
+        key: "type",
       },
       {
         title: "Acciones",
@@ -214,8 +261,8 @@ class triviaEdit extends Component {
               </span>
             </Button>
           </div>
-        )
-      }
+        ),
+      },
     ];
     return (
       <Fragment>
@@ -241,7 +288,7 @@ class triviaEdit extends Component {
                   name="publish"
                   value={publish}
                   onChange={this.changeInput}
-                  onClick={e => {
+                  onClick={(e) => {
                     this.setState({ publish: e.target.value });
                   }}>
                   <option value={true}>Si</option>
@@ -285,7 +332,7 @@ class triviaEdit extends Component {
                   </Button>
                 </Col>
               </Row>
-              {this.state.listQuestions.map(formQuestion => (
+              {this.state.listQuestions.map((formQuestion) => (
                 <div key={formQuestion.key}>
                   <Divider orientation="left">Pregunta</Divider>
                   <Row>
@@ -299,6 +346,30 @@ class triviaEdit extends Component {
                 </div>
               ))}
               <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
+              <Modal
+                width={700}
+                title="Editando Pregunta"
+                visible={visibleModal}
+                onOk={this.sendForm}
+                onCancel={this.closeModal}
+                footer={[
+                  <Button key="back" onClick={this.closeModal}>
+                    Cancelar
+                  </Button>,
+                  <Button key="submit" type="primary" loading={confirmLoading} onClick={this.sendForm}>
+                    Guardar
+                  </Button>,
+                ]}>
+                {currentQuestion.map((question) => (
+                  <FormQuestionEdit
+                    ref={this.formEditRef}
+                    valuesQuestion={question}
+                    eventId={this.props.event._id}
+                    surveyId={this.state._id}
+                    closeModal={this.closeModal}
+                  />
+                ))}
+              </Modal>
             </div>
           ) : (
               <div></div>

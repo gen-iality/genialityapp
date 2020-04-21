@@ -63,7 +63,7 @@ class Landing extends Component {
       modal: false,
       editorState: "",
       sections: {},
-      section: "agenda",
+      section: "evento",
       showIframeZoom: false,
       meeting_id: null,
       color: "",
@@ -185,7 +185,7 @@ class Landing extends Component {
 
               <div>
                 {typeof event.description === "string" ? (
-                  <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} />
+                  <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
                 ) : (
                     "json"
                   )}

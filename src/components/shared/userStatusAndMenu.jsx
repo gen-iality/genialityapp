@@ -20,23 +20,28 @@ let userStatusAndMenu = props => {
     <Menu>
       <Menu.Item>
         <Link to={`/profile/${eventId}`}>
-          <FormattedMessage id="header.profile" defaultMessage="Profile" />
+          <FormattedMessage id="header.profile" defaultMessage="Perfil" />
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to={`/profile/${eventId}#events`}>
+        <Link to={`/eventEdit/${eventId}`}>
           <FormattedMessage id="header.my_events" defaultMessage="Eventos" />
         </Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to={`/profile/${eventId}#events`}>
+        <Link to={`/eventEdit/${eventId}#events`}>
           <FormattedMessage id="header.my_tickets" defaultMessage="Ticket" />
+        </Link>
+      </Menu.Item>
+      <Menu.Item>
+        <Link to={`/purchase/${eventId}`}>
+          <FormattedMessage id="header.purchase" defaultMessage="Compras" />
         </Link>
       </Menu.Item>
       <Menu.Item>
         <Link to={"/create-event"}>
           <Button type="primary">
-            <FormattedMessage id="header.create_event" defaultMessage="Create Event" />
+            <FormattedMessage id="header.create_event" defaultMessage="Crear Evento" />
           </Button>
         </Link>
       </Menu.Item>

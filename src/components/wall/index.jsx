@@ -236,56 +236,29 @@ class Wall extends Component {
     const selfieImage = document.getElementById("frontImage");
     const dataUser = this.state.dataUser;
 
+    const text = document.getElementById("postText").value;
+    const imageUrl = [];
+
     if (selfieImage && selfieImage.src.length > 100) {
-      const imageUrl = [];
       imageUrl.push(selfieImage.src);
-      const text = document.getElementById("postText").value;
       saveFirebase.savePostSelfie(imageUrl, text, dataUser.correo, this.props.event._id);
-      this.setState({
-        value: "",
-        showInfo: true,
-        keyForm: Date.now(),
-      });
       this.cancelUploadImage();
-      this.getPost();
-      setTimeout(() => {
-        this.stayForm();
-      }, 3000);
     } else if (image) {
-      // let imageUrl = this.saveImage(image)
       let imageUrl = await saveFirebase.saveImage(this.props.event._id, image);
-      //console.log("Datos de imagen obtenidos")
-      const text = document.getElementById("postText").value;
-      const dataUser = this.state.dataUser;
-      //savePostImage se realiza para publicar el post con imagen
-
       saveFirebase.savePostImage(imageUrl, text, dataUser.correo, this.props.event._id);
-      this.setState({
-        value: "",
-        showInfo: true,
-        keyForm: Date.now(),
-      });
-
       this.cancelImage();
-      this.getPost();
-      setTimeout(() => {
-        this.stayForm();
-      }, 3000);
     } else {
-      const text = document.getElementById("postText").value;
-      const dataUser = this.state.dataUser;
+      console.log("dataUser", dataUser);
       //savepost se realiza para publicar el post sin imagen
-      saveFirebase.savePost(text, dataUser.correo, this.props.event._id);
-      this.setState({
-        value: "",
-        showInfo: true,
-        keyForm: Date.now(),
-      });
-      this.getPost();
-      setTimeout(() => {
-        this.stayForm();
-      }, 3000);
+      saveFirebase.savePost(text, dataUser.displayName, this.props.event._id);
     }
+
+    this.setState({ value: "", showInfo: true, keyForm: Date.now() });
+
+    setTimeout(() => {
+      this.stayForm();
+    }, 3000);
+    this.getPost();
   }
 
   //Funcion para cerrar el mensaje de post guardado
