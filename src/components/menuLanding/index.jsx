@@ -71,41 +71,43 @@ class menuLanding extends Component {
                     checked: false,
                 }
             },
-            values: {
-
-            },
+            values: {},
             itemsMenu: {}
         }
         this.submit = this.submit.bind(this)
     }
 
     async componentDidMount() {
+        const menuBase = this.state.menu
         const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`)
-        console.log(menuLanding.itemsMenu)
+
+        for (const prop in menuBase) {
+            for (const prop1 in menuLanding.itemsMenu) {
+                if (prop1 === prop) {
+                    this.saveMenuItems(prop)
+                }
+            }
+        }
     }
 
     async submit() {
-        console.log(this.state.itemsMenu)
+        const itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }
+
+        await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
         toast.success("Información guardada")
     }
 
-    saveItemsMenu = key => {
+    async saveMenuItems(key) {
         let menuBase = { ...this.state.menu }
-        let itemsMenuCP = { ...this.state.itemsMenu }
+        let itemsMenuDB = { ...this.state.itemsMenu }
         menuBase[key].checked = !menuBase[key].checked
 
         if (menuBase[key].checked) {
-            itemsMenuCP[key] = menuBase[key]
+            itemsMenuDB[key] = menuBase[key]
         } else {
-
-            delete itemsMenuCP[key]
+            delete itemsMenuDB[key]
         }
-        this.setState({
-            itemsMenu: {
-                itemsMenu: menuBase
-            },
-            values: menuBase
-        })
+        this.setState({ itemsMenu: itemsMenuDB, values: menuBase })
     };
     render() {
         return (
@@ -118,7 +120,7 @@ class menuLanding extends Component {
                             <div key={key}>
                                 <Checkbox
                                     checked={this.state.menu[key].checked}
-                                    onChange={(e) => { this.saveItemsMenu(key) }}
+                                    onChange={(e) => { this.saveMenuItems(key) }}
                                 // onChange={this.onChange}
                                 >
                                     <IconoComponente />
@@ -128,9 +130,6 @@ class menuLanding extends Component {
                             </div>
                         )
                     })
-                }
-                {
-                    console.log(this.state.itemsMenu)
                 }
                 <Button onClick={this.submit}>Guardar</Button>
             </Fragment>
