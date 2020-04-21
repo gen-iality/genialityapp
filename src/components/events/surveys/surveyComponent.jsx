@@ -17,7 +17,7 @@ class SurveyComponent extends Component {
     super(props);
     this.state = {
       surveyData: {},
-      uid: null
+      uid: null,
     };
   }
 
@@ -50,7 +50,7 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: true }]
+        questions: [{ ...rest, isRequired: true }],
       };
     });
 
@@ -63,7 +63,7 @@ class SurveyComponent extends Component {
   };
 
   // Funcion para enviar la informacion de las respuestas
-  sendDataToServer = survey => {
+  sendDataToServer = (survey) => {
     const { showListSurvey, eventId, userId } = this.props;
     let { surveyData, uid } = this.state;
 
@@ -73,11 +73,11 @@ class SurveyComponent extends Component {
       .set({
         eventId: eventId,
         name: surveyData.title,
-        category: "none"
+        category: "none",
       });
 
     // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
-    let questions = survey.getAllQuestions().filter(surveyInfo => surveyInfo.id);
+    let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
 
     const executeService = (SurveyData, questions, uid) => {
       let sendAnswers = 0;
@@ -85,9 +85,9 @@ class SurveyComponent extends Component {
       let responseError = null;
 
       return new Promise((resolve, reject) => {
-        questions.forEach(async question => {
+        questions.forEach(async (question) => {
           // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
-          let optionIndex = question.choices.findIndex(item => item.itemValue == question.value);
+          let optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
           let optionQuantity = question.choices.length;
 
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos
@@ -100,31 +100,34 @@ class SurveyComponent extends Component {
                 {
                   responseData: question.value,
                   date: new Date(),
-                  uid
+                  uid,
                 },
                 { optionQuantity, optionIndex }
               )
-                .then(result => {
+                .then((result) => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;
                 })
-                .catch(err => (responseError = err));
+                .catch((err) => (responseError = err));
             } else {
+              // Sirve para controlar si un usuario anonimo ha votado
+              localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
+
               await SurveyAnswers.registerLikeGuest(
                 surveyData._id,
                 question.id,
                 {
                   responseData: question.value,
                   date: new Date(),
-                  uid: "guest"
+                  uid: "guest",
                 },
                 { optionQuantity, optionIndex }
               )
-                .then(result => {
+                .then((result) => {
                   sendAnswers++;
                   responseMessage = !responseMessage && result;
                 })
-                .catch(err => (responseError = err));
+                .catch((err) => (responseError = err));
             }
           if (responseMessage && sendAnswers == questions.length) {
             await resolve(responseMessage);
@@ -135,7 +138,7 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, userId).then(result => {
+    executeService(surveyData, questions, userId).then((result) => {
       toast.success(result);
     });
 

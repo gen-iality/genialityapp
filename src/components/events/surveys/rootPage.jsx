@@ -13,13 +13,14 @@ export default class RootPage extends Component {
     this.state = {
       idSurvey: "",
       hasVote: false,
+      guestVoteInSurvey: false,
       eventId: "",
       isLoading: true,
-      userId: ""
+      userId: "",
     };
   }
 
-  loadData = prevProps => {
+  loadData = (prevProps) => {
     const { idSurvey, eventId, userId } = this.props;
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
       this.setState({ idSurvey, eventId, userId }, this.seeIfUserHasVote);
@@ -36,16 +37,28 @@ export default class RootPage extends Component {
 
   seeIfUserHasVote = async () => {
     let { idSurvey, hasVote, eventId, userId } = this.state;
-    let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, userId);
-    this.setState({ hasVote: userHasVoted, isLoading: false });
+
+    if (userId) {
+      let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, userId);
+      this.setState({ hasVote: userHasVoted, isLoading: false });
+    }
+
+    // Esto solo se ejecuta si no hay algun usuario logeado
+    const guestUser = new Promise((resolve, reject) => {
+      let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
+      surveyId ? resolve(true) : resolve(false);
+    });
+
+    let guestVoteInSurvey = await guestUser;
+    this.setState({ guestVoteInSurvey, isLoading: false });
   };
 
   render() {
-    let { idSurvey, hasVote, eventId, isLoading, userId } = this.state;
+    let { idSurvey, hasVote, eventId, isLoading, userId, guestVoteInSurvey } = this.state;
     const { toggleSurvey } = this.props;
 
     if (!isLoading)
-      return hasVote ? (
+      return hasVote || guestVoteInSurvey ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
       ) : (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
