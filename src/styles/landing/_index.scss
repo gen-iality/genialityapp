@@ -1,8 +1,13 @@
 section.landing {
 
-  * {
+  *:not(span) {
     color: $fontColor;
   }
+
+  .ant-btn-primary {
+    color: white;
+  }
+
 
   // background-image: url("../back.png");
   .hero-head {}
