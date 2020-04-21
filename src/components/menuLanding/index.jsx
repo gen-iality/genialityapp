@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
 import * as iconComponents from "@ant-design/icons";
-import { Typography, Menu, Button } from "antd";
+import { Typography, Checkbox, Menu, Button } from "antd";
 import { Actions } from "../../helpers/request";
 import { toast } from "react-toastify";
 const { Title } = Typography;
@@ -14,133 +14,125 @@ class menuLanding extends Component {
                     name: "Agenda",
                     section: "agenda",
                     icon: "ReadOutlined",
+                    checked: false,
                 },
                 evento: {
                     name: "Evento",
                     section: "evento",
                     icon: "CalendarOutlined",
+                    checked: false,
                 },
                 speakers: {
                     name: "Conferencistas",
                     section: "speakers",
                     icon: "AudioOutlined",
+                    checked: false,
                 },
                 tickets: {
                     name: "Boletería",
                     section: "tickets",
                     icon: "CreditCardOutlined",
+                    checked: false,
                 },
                 certs: {
                     name: "Certificados",
                     section: "certs",
                     icon: "FileDoneOutlined",
+                    checked: false,
                 },
                 documents: {
                     name: "Documentos",
                     section: "documents",
                     icon: "FolderOutlined",
+                    checked: false,
                 },
                 wall: {
                     name: "Muro",
                     section: "wall",
                     icon: "TeamOutlined",
+                    checked: false,
                 },
                 survey: {
                     name: "Encuestas",
                     section: "survey",
                     icon: "FileUnknownOutlined",
+                    checked: false,
                 },
                 faqs: {
                     name: "Preguntas Frecuentes",
                     section: "faqs",
                     icon: "QuestionOutlined",
+                    checked: false,
                 },
                 networking: {
                     name: "Networking",
                     section: "networking",
                     icon: "LaptopOutlined",
+                    checked: false,
                 }
             },
-            values: []
+            values: {
+
+            },
+            itemsMenu: {}
         }
-        this.saveMenu = this.saveMenu.bind(this)
-        this.getMenuLanding = this.getMenuLanding.bind(this)
         this.submit = this.submit.bind(this)
     }
 
     async componentDidMount() {
-        this.getMenuLanding()
-    }
-
-    async getMenuLanding() {
         const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`)
-        let menuMapped = this.state.menu
-        let menuDatabase = menuLanding.itemsMenu
-
-        for (const prop in menuMapped) {
-            for (const prop1 in menuDatabase) {
-                if (menuMapped[prop].name === menuDatabase[prop1].name) {
-                    await this.saveMenu(menuDatabase[prop1].name, menuDatabase[prop1])
-                    document.getElementById(`${menuMapped[prop].name}`).checked = true
-                } else { continue }
-            }
-        }
-    }
-
-    async saveMenu(name, val) {
-        if (this.state.values[name]) {
-            delete this.state.values[name];
-            console.log('Eliminado', this.state.values);
-            this.setState({
-                itemsMenu: {
-                    itemsMenu: {
-                        ...this.state.values
-                    }
-                }
-            })
-        } else {
-            await this.setState({
-                values: {
-                    ...this.state.values, [name]: val
-                }
-            })
-
-            await this.setState({
-                itemsMenu: {
-                    itemsMenu: {
-                        ...this.state.values, [name]: val
-                    }
-                }
-            })
-            console.log('campo nuevo agregado', this.state.itemsMenu)
-        }
+        console.log(menuLanding.itemsMenu)
     }
 
     async submit() {
-        await Actions.put(`api/events/${this.props.event._id}`, this.state.itemsMenu);
+        console.log(this.state.itemsMenu)
         toast.success("Información guardada")
     }
 
+    saveItemsMenu = key => {
+        let menuBase = { ...this.state.menu }
+        let itemsMenuCP = { ...this.state.itemsMenu }
+        menuBase[key].checked = !menuBase[key].checked
+
+        if (menuBase[key].checked) {
+            itemsMenuCP[key] = menuBase[key]
+        } else {
+
+            delete itemsMenuCP[key]
+        }
+        this.setState({
+            itemsMenu: {
+                itemsMenu: menuBase
+            },
+            values: menuBase
+        })
+    };
     render() {
-        const { menu } = this.state
         return (
             <Fragment>
                 <Title level={3}>Habilitar secciones de landing</Title>
-                <Menu mode="inline" defaultSelectedKeys={["1"]}>
-                    {Object.keys(menu).map((key, i) => {
-                        let IconoComponente = iconComponents[menu[key].icon];
+                {
+                    Object.keys(this.state.menu).map((key) => {
+                        let IconoComponente = iconComponents[this.state.menu[key].icon];
                         return (
-                            <Menu.Item key={menu[key].section}>
-                                <label style={{ marginRight: "2%" }} className="checkbox">
-                                    <input id={menu[key].name} type="checkbox" onClick={() => { this.saveMenu(menu[key].name, menu[key]) }} />
-                                </label>
-                                <IconoComponente />
-                                <span> {menu[key].name}</span>
-                            </Menu.Item>
-                        );
-                    })}
-                    <Button onClick={this.submit}>Guardar</Button>
-                </Menu>
+                            <div key={key}>
+                                <Checkbox
+                                    checked={this.state.menu[key].checked}
+                                    onChange={(e) => { this.saveItemsMenu(key) }}
+                                // onChange={this.onChange}
+                                >
+                                    <IconoComponente />
+                                    {this.state.menu[key].name}
+
+                                </Checkbox>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    console.log(this.state.itemsMenu)
+                }
+                <Button onClick={this.submit}>Guardar</Button>
             </Fragment>
         )
     }
