@@ -19,13 +19,13 @@ function ListSurveys(props) {
       <Card>
         <List
           dataSource={jsonData}
-          renderItem={survey => (
+          renderItem={(survey) => (
             <List.Item
               key={survey._id}
               actions={[
                 <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
                   {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>
+                </Button>,
               ]}>
               <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
               {survey.userHasVoted && (
@@ -48,7 +48,7 @@ class SurveyForm extends Component {
       idSurvey: null,
       surveysData: [],
       hasVote: false,
-      uid: null
+      uid: null,
     };
   }
 
@@ -62,7 +62,7 @@ class SurveyForm extends Component {
     const { event } = this.props;
 
     surveysData = await SurveysApi.getAll(event._id);
-    let publishedSurveys = surveysData.data.filter(survey => survey.publish == "true");
+    let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
 
     this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
   };
@@ -74,10 +74,21 @@ class SurveyForm extends Component {
 
     const votesUserInSurvey = new Promise((resolve, reject) => {
       let surveys = [];
+
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
       surveysData.forEach(async (survey, index, arr) => {
-        let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
-        surveys.push({ ...arr[index], userHasVoted });
+        if (uid) {
+          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
+          surveys.push({ ...arr[index], userHasVoted });
+        } else {
+          // Esto solo se ejecuta si no hay algun usuario logeado
+          const guestUser = new Promise((resolve, reject) => {
+            let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
+            surveyId ? resolve(true) : resolve(false);
+          });
+          let guestHasVote = await guestUser;
+          surveys.push({ ...arr[index], userHasVoted: guestHasVote });
+        }
 
         if (surveys.length == arr.length) resolve(surveys);
       });
@@ -110,7 +121,7 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = data => {
+  toggleSurvey = (data) => {
     this.setState({ idSurvey: data });
   };
 
