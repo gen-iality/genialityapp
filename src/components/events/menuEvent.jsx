@@ -5,84 +5,49 @@ import { Layout, Menu } from "antd";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
+import { Actions } from "../../helpers/request";
+import { Component } from "react";
 
 const { Sider } = Layout;
+class MenuEvent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      itemsMenu: {},
+      showSection: this.props.showSection
+    }
+  }
 
-const MenuEvent = props => {
-  let showSection = props.showSection;
+  async componentDidMount() {
+    console.log(this.props)
+    const menuLanding = await Actions.getAll(`/api/events/${this.props.eventId}`)
+    this.setState({ itemsMenu: menuLanding.itemsMenu })
+  }
+
   //let collapsed = props.collapsed;
 
-  let itemsMenu = {
-    evento: {
-      name: "Evento",
-      section: "evento",
-      icon: "CalendarOutlined"
-    },
-    agenda: {
-      name: "Agenda",
-      section: "agenda",
-      icon: "ReadOutlined"
-    },
-    speakers: {
-      name: "Conferencistas",
-      section: "speakers",
-      icon: "AudioOutlined"
-    },
-    tickets: {
-      name: "Boletería",
-      section: "tickets",
-      icon: "CreditCardOutlined"
-    },
-    certs: {
-      name: "Certificados",
-      section: "certs",
-      icon: "FileDoneOutlined"
-    },
-    documents: {
-      name: "Documentos",
-      section: "documents",
-      icon: "FolderOutlined"
-    },
-    wall: {
-      name: "Muro",
-      section: "wall",
-      icon: "TeamOutlined"
-    },
-    survey: {
-      name: "Encuestas",
-      section: "survey",
-      icon: "FileUnknownOutlined"
-    },
-    faqs: {
-      name: "Preguntas Frecuentes",
-      section: "faqs",
-      icon: "QuestionOutlined"
-    },
-    networking: {
-      name: "Networking",
-      section: "networking",
-      icon: "LaptopOutlined"
-    }
-  };
+  render() {
+    const { itemsMenu } = this.state
+    return (
+      <Menu
+        mode="inline"
+        // theme="dark"
+        defaultSelectedKeys={["1"]}
+        // defaultOpenKeys={['sub1']}
+        style={{ height: "100%", padding: "50px 0" }}>
+        {Object.keys(itemsMenu).map((key, i) => {
+          let IconoComponente = iconComponents[itemsMenu[key].icon];
+          return (
+            <Menu.Item key={itemsMenu[key].section} onClick={e => this.state.showSection(itemsMenu[key].section)}>
+              <IconoComponente />
+              <span> {itemsMenu[key].name}</span>
+            </Menu.Item>
+          );
+        })}
+      </Menu>
+    );
+  }
 
-  return (
-    <Menu
-      mode="inline"
-      // theme="dark"
-      defaultSelectedKeys={["1"]}
-      // defaultOpenKeys={['sub1']}
-      style={{ height: "100%", padding: "50px 0" }}>
-      {Object.keys(itemsMenu).map((key, i) => {
-        let IconoComponente = iconComponents[itemsMenu[key].icon];
-        return (
-          <Menu.Item key={itemsMenu[key].section} onClick={e => showSection(itemsMenu[key].section)}>
-            <IconoComponente />
-            <span> {itemsMenu[key].name}</span>
-          </Menu.Item>
-        );
-      })}
-    </Menu>
-  );
 };
 
 export default WithLoading(MenuEvent);
