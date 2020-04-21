@@ -4,10 +4,9 @@ section.landing {
     color: $fontColor;
   }
 
-  .ant-btn-primary {
+  .ant-btn-primary:not([disabled]) {
     color: white;
   }
-
 
   // background-image: url("../back.png");
   .hero-head {}
