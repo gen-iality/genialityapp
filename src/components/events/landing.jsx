@@ -267,6 +267,7 @@ class Landing extends Component {
 
   showSection = section => {
     this.setState({ section });
+    this.setState({ visible: false });
     console.log(this.state.section);
   };
 
@@ -477,11 +478,10 @@ class Landing extends Component {
                       <Drawer
                         title="Menú"
                         placement={this.state.placement}
-                        closable={false}
+                        closable={true}
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
-                        closable={true}
                         bodyStyle={{ padding: "0px" }}>
                         <MenuEvent showSection={this.showSection} />
                       </Drawer>
