@@ -467,16 +467,17 @@ class Landing extends Component {
                       {/*Aqui empieza el menu para dispositivos < tablet*/}
 
                       <div className="hiddenMenuMobile_Landing">
-                        <Button onClick={this.showDrawer}>
-                          {React.createElement(this.state.visible ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                        <Button block onClick={this.showDrawer}>
+                          {React.createElement(MenuOutlined, {
                             className: "trigger",
                             onClick: this.toggle
                           })}
+                          Menu
                         </Button>
                       </div>
 
                       <Drawer
-                        title="Menú"
+                        title="Menu"
                         placement={this.state.placement}
                         closable={true}
                         onClose={this.onClose}
