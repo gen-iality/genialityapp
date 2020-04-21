@@ -323,7 +323,7 @@ class Landing extends Component {
                                 <span className="title is-size-5">
                                   {" "}
                                 al {Moment(event.date_end).format("DD")}{" "}
-                                  <span className="is-size-5">{Moment(event.date_end).format("MMM YY")}</span>
+                                  <span className="is-size-5 has-text-white">{Moment(event.date_end).format("MMM YY")}</span>
                                 </span>
                                 {/* <span className="subt is-size-6 is-italic has-text-white">Desde {Moment(event.hour_start).format('HH:mm')}</span> */}
                               </div>
@@ -352,7 +352,7 @@ class Landing extends Component {
                             <div className="lugar item columns">
                               <div className="column is-1 container-icon">
                                 <span className="icon is-size-5">
-                                  <i className="fas fa-map-marker-alt fa-2x" />
+                                  <i className="fas fa-map-marker-alt fa-2x has-text-white" />
                                 </span>
                               </div>
                               <div className="column is-9 container-subtitle">
