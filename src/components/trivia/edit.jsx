@@ -22,7 +22,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: "",
       publish: "",
-      privateSurvey: false,
+      privateSurvey: "",
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -56,6 +56,7 @@ class triviaEdit extends Component {
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
+        privateSurvey: Update.isPrivate,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
