@@ -92,7 +92,7 @@ class triviaEdit extends Component {
         publish: this.state.publish === "true" ? "true" : "false",
         activity_id: this.state.activity_id,
       };
-      console.log(data)
+      console.log(data);
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
       await SurveysApi.editOne(data, data.id, this.props.event._id);
       // Se da la información de datos actualizados y se redirige a la vista principal
@@ -105,10 +105,10 @@ class triviaEdit extends Component {
         event_id: this.props.event._id,
         activity_id: this.state.activity_id,
       };
-      console.log(data)
+      console.log(data);
       // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
       const save = await SurveysApi.createOne(this.props.event._id, data);
-      console.log(save)
+      console.log(save);
       // Se da la información de datos actualizados y se redirige a la vista principal
       toast.success("datos creados");
     }
@@ -117,7 +117,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -198,6 +198,7 @@ class triviaEdit extends Component {
       this.formEditRef.current.submit();
     }
   };
+
   closeModal = (info) => {
     let { question } = this.state;
 
@@ -217,6 +218,10 @@ class triviaEdit extends Component {
       this.setState({ question: updateQuestion });
     }
     this.setState({ visibleModal: false, currentQuestion: [], confirmLoading: false });
+  };
+
+  toggleConfirmLoading = () => {
+    this.setState({ confirmLoading: false });
   };
   // ---------------------------------------------------------------------------------------
 
@@ -272,10 +277,7 @@ class triviaEdit extends Component {
               <label style={{ marginTop: "2%" }} className="label">
                 Nombre de la Encuesta
               </label>
-              <Input value={survey}
-                placeholder="Nombre de la encuesta"
-                name={"survey"}
-                onChange={this.changeInput} />
+              <Input value={survey} placeholder="Nombre de la encuesta" name={"survey"} onChange={this.changeInput} />
             </div>
           </div>
           {this.props.location.state ? (
@@ -297,31 +299,32 @@ class triviaEdit extends Component {
               </div>
             </div>
           ) : (
-              <div></div>
-            )}
+            <div></div>
+          )}
 
-          {
-            this.props.location.state ?
-              <div>
-                <label style={{ marginTop: "2%" }} className="label">Relacionar esta encuesta a una actividad</label>
-                <div className="select">
-                  <select name="activity_id" value={activity_id} onChange={this.changeInput}>
-                    <option value="0">No relacionar</option>
-                    {dataAgenda.map((activity, key) => (
-                      <option key={key} value={activity._id}>
-                        {activity.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+          {this.props.location.state ? (
+            <div>
+              <label style={{ marginTop: "2%" }} className="label">
+                Relacionar esta encuesta a una actividad
+              </label>
+              <div className="select">
+                <select name="activity_id" value={activity_id} onChange={this.changeInput}>
+                  <option value="0">No relacionar</option>
+                  {dataAgenda.map((activity, key) => (
+                    <option key={key} value={activity._id}>
+                      {activity.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              :
-              <div />
-          }
+            </div>
+          ) : (
+            <div />
+          )}
           <div className="column">
             <button onClick={this.submit} className="columns is-pulled-right button is-primary">
               Guardar
-              </button>
+            </button>
           </div>
           {this.props.location.state ? (
             <div>
@@ -367,13 +370,14 @@ class triviaEdit extends Component {
                     eventId={this.props.event._id}
                     surveyId={this.state._id}
                     closeModal={this.closeModal}
+                    toggleConfirmLoading={this.toggleConfirmLoading}
                   />
                 ))}
               </Modal>
             </div>
           ) : (
-              <div></div>
-            )}
+            <div></div>
+          )}
         </EventContent>
       </Fragment>
     );

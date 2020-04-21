@@ -26,7 +26,7 @@ const validateMessages = {
   },
 };
 
-const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
+const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading }, ref) => {
   const [defaultValues, setDefaultValues] = useState({});
   const [questionId, setQuestionId] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -38,6 +38,15 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
   }, [valuesQuestion]);
+
+  const fieldValidation = (rule, value) => {
+    if (!value) {
+      toggleConfirmLoading();
+      return Promise.resolve();
+    } else {
+      return Promise.reject();
+    }
+  };
 
   const onFinish = (values) => {
     console.log(values);
@@ -115,9 +124,12 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal }, ref) => {
                           whitespace: true,
                           message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
                         },
+                        {
+                          validator: fieldValidation,
+                        },
                       ]}
                       noStyle>
-                      <Input placeholder="option name" style={{ width: "90%" }} />
+                      <Input placeholder="Texto de la Respuesta" style={{ width: "90%" }} />
                     </Form.Item>
                     {fields.length > 2 ? (
                       <MinusCircleOutlined
