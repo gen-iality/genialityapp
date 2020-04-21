@@ -446,7 +446,7 @@ class Landing extends Component {
                       collapsed={this.state.collapsed}
                       width={250}>
                       {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
-                      <MenuEvent showSection={this.showSection} collapsed={this.state.collapsed} />
+                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                     </Sider>
                   </div>
                   {/*Aqui termina el menu para dispositivos >  */}

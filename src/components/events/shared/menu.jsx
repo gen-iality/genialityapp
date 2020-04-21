@@ -161,7 +161,7 @@ class MenuConfig extends Component {
 
               <Menu.Item key="13">
                 <NavLink onClick={this.handleClick} to={`${url}/menuLanding`}>
-                  Habilitar secciones de landing
+                  Habilitar secciones del evento
                 </NavLink>
               </Menu.Item>
             </SubMenu>

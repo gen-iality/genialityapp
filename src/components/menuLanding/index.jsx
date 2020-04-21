@@ -84,7 +84,7 @@ class menuLanding extends Component {
         for (const prop in menuBase) {
             for (const prop1 in menuLanding.itemsMenu) {
                 if (prop1 === prop) {
-                    this.saveMenuItems(prop)
+                    this.mapActiveItemsToAvailable(prop)
                 }
             }
         }
@@ -97,7 +97,7 @@ class menuLanding extends Component {
         toast.success("Información guardada")
     }
 
-    async saveMenuItems(key) {
+    async mapActiveItemsToAvailable(key) {
         let menuBase = { ...this.state.menu }
         let itemsMenuDB = { ...this.state.itemsMenu }
         menuBase[key].checked = !menuBase[key].checked
@@ -112,7 +112,7 @@ class menuLanding extends Component {
     render() {
         return (
             <Fragment>
-                <Title level={3}>Habilitar secciones de landing</Title>
+                <Title level={3}>Habilitar secciones del evento</Title>
                 {
                     Object.keys(this.state.menu).map((key) => {
                         let IconoComponente = iconComponents[this.state.menu[key].icon];
@@ -120,18 +120,16 @@ class menuLanding extends Component {
                             <div key={key}>
                                 <Checkbox
                                     checked={this.state.menu[key].checked}
-                                    onChange={(e) => { this.saveMenuItems(key) }}
-                                // onChange={this.onChange}
+                                    onChange={(e) => { this.mapActiveItemsToAvailable(key) }}
                                 >
                                     <IconoComponente />
                                     {this.state.menu[key].name}
-
                                 </Checkbox>
                             </div>
                         )
                     })
                 }
-                <Button onClick={this.submit}>Guardar</Button>
+                <Button style={{ marginTop: "2%" }} onClick={this.submit}>Guardar</Button>
             </Fragment>
         )
     }
