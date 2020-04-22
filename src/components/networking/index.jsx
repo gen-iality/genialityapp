@@ -16,6 +16,7 @@ import { networkingFire } from "./services";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
+import ContactList from "./contactList";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -283,7 +284,9 @@ class ListEventUser extends Component {
                     <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                   </div>
                 </TabPane>
-                <TabPane tab="Mis Contactos" key="2"></TabPane>
+                <TabPane tab="Mis Contactos" key="2">
+                  <ContactList eventId={this.props.event._id} />
+                </TabPane>
                 <TabPane tab="Solicitudes" key="3"></TabPane>
               </Tabs>
             )}
