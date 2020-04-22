@@ -20,8 +20,12 @@ class MenuEvent extends Component {
 
   async componentDidMount() {
     console.log(this.props)
-    const menuLanding = await Actions.getAll(`/api/events/${this.props.eventId}`)
-    this.setState({ itemsMenu: menuLanding.itemsMenu })
+
+
+    const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
+    const menuEvent = event.itemsMenu || {};
+    console.log("MENU LANDING", menuEvent);
+    this.setState({ itemsMenu: menuEvent })
   }
 
   //let collapsed = props.collapsed;

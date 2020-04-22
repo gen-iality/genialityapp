@@ -12,7 +12,7 @@ import firebase from "firebase";
 import app from "firebase/app";
 import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
-import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card } from "antd";
+import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 
 //custom
@@ -171,6 +171,12 @@ class Landing extends Component {
         <div className="columns is-centered">
           <div className="description-container column is-8">
             <Card className="event-description" bordered={true}>
+
+
+              <h1 className="is-size-3 bold-text">{event.name}</h1>
+
+
+
               <div className="column is-centered">
                 <ReactPlayer
                   style={{
@@ -178,7 +184,7 @@ class Landing extends Component {
                     display: "block",
                     margin: "0 auto"
                   }}
-                  url="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+                  url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                   controls
                 />
               </div>
@@ -396,14 +402,18 @@ class Landing extends Component {
                               <Slider images={event.picture} />
                             </div>
                           ) : (
-                              <figure className="image">
-                                <img
-                                  src={
-                                    this.state.loading ? "https://bulma.io/images/placeholders/1280x960.png" : event.picture
-                                  }
-                                  alt="Evius.co"
-                                />
-                              </figure>
+                              <Row >
+                                <Col xs={0} sm={0} md={12} lg={12} xl={12}>
+                                  <figure className="image">
+                                    <img
+                                      src={
+                                        this.state.loading ? "https://bulma.io/images/placeholders/1280x960.png" : event.picture
+                                      }
+                                      alt="Evius.co"
+                                    />
+                                  </figure>
+                                </Col>
+                              </Row>
                             )}
                           {this.state.showFull && (
                             <div className="info show-full columns is-centered is-hidden-mobile">
@@ -432,6 +442,7 @@ class Landing extends Component {
                       </div>
                     </div>
                   </div>
+
                 </Parallax>
               </div>
 

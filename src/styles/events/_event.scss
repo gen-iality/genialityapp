@@ -1,10 +1,22 @@
+.player-wrapper {
+  width: auto; // Reset width
+  height: auto; // Reset height
+}
+.react-player {
+  padding-top: 56.25%; // Percentage ratio for 16:9
+  position: relative; // Set to relative
+}
 
-.name-event{
-    display: inline-flex;
-    color: #4462DC;
-    font: Italic 12px/15px Montserrat;
-    align-items: center;
-    word-break: normal;
+.react-player > div {
+  position: absolute; // Scaling will occur since parent is relative now
+}
+
+.name-event {
+  display: inline-flex;
+  color: #4462dc;
+  font: Italic 12px/15px Montserrat;
+  align-items: center;
+  word-break: normal;
 }
 .event-main {
   max-width: 83%;
@@ -12,12 +24,12 @@
   .event-wrapper {
     margin: 1rem 0;
     padding: 0;
-    .title-section{
+    .title-section {
       font-weight: 700;
       font-size: 1em;
       padding: 5px;
     }
-    .subtitle-section{
+    .subtitle-section {
       font-weight: 500;
       color: $grey-dark;
       font-size: 1em;
@@ -61,7 +73,7 @@
               border-radius: 0;
             }
             &:after {
-              left: 0.40rem;
+              left: 0.4rem;
               height: 0.6rem;
             }
           }
@@ -186,15 +198,15 @@
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
-  .event-main{
+  .event-main {
     max-width: 100%;
   }
   .event-vertical-line {
     display: none;
   }
-  .name-event{
-    .title{
-      font-size: 1.30rem;
+  .name-event {
+    .title {
+      font-size: 1.3rem;
     }
   }
   .event-inv-send {
