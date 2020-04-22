@@ -12,8 +12,8 @@ import firebase from "firebase";
 import app from "firebase/app";
 import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
-import { Layout, Menu, Breadcrumb, Affix, Drawer, Button, Col, Card, Row } from "antd";
-import { MenuOutlined, RightOutlined, LeftOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
+import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 //custom
 import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
@@ -32,6 +32,7 @@ import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
+import BannerEvent from "./bannerEvent"
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -309,146 +310,29 @@ class Landing extends Component {
 
                 {/* Componente banner */}
 
-                <Parallax
+                <BannerEvent
                   bgImage={event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png"}
-                  strength={500}
-                // bgImageSizes={ "cover" }
-                // blur={{ min: -3, max: 100 }}
-                >
-                  {/* Contenedor general de información del banner */}
-                  {/* Es obligatorio declararle un alto al contenedor para que el banner se muestre */}
-                  <div style={{ minHeight: "60vh" }}>
-                    <div style={insideStyles}>
-                      <div style={{ minHeight: "60vh" }} className="columns is-gapless is-centered">
-                        {/* Descripción del evento */}
-                        <div className="column info is-half">
-                          <div className="column is-10 container-nombre">
-                            {/* fecha del evento */}
-                            <div className="fecha item columns">
-                              <div className="column fecha-uno ">
-                                <span className="title is-size-5">Del {Moment(event.date_start).format("DD")}</span>
-                                <span className="title is-size-5">
-                                  {" "}
-                                al {Moment(event.date_end).format("DD")}{" "}
-                                  <span className="is-size-5 has-text-white">{Moment(event.date_end).format("MMM YY")}</span>
-                                </span>
-                                {/* <span className="subt is-size-6 is-italic has-text-white">Desde {Moment(event.hour_start).format('HH:mm')}</span> */}
-                              </div>
-                              <div className="column fecha-dos has-text-centered">
-                                {/* <span className="subt is-size-6 is-italic has-text-white">a {Moment(event.hour_end).format('HH:mm')}</span> */}
-                              </div>
-                            </div>
+                  title={event.name}
+                  organizado={
+                    <Link
+                      to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                      {event.organizer.name ? event.organizer.name : event.organizer.email}
+                    </Link>
+                  }
+                  place={<span>{event.venue} {event.location.FormattedAddress}</span>
+                  }
+                  dateStart={event.date_start}
+                  dateEnd={event.date_end}
+                />
 
-                            {/* Contenedor de Nombre del evento y quien lo organiza */}
-                            <div className="nombre item columns is-centered">
-                              <div className="column event-name">
-                                <h2 className="is-size-3 bold-text">{event.name}</h2>
-                                <span className="is-size-4 has-text-white">
-                                  Organizado por:{" "}
-                                  <Link
-                                    className="has-text-white"
-                                    to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                                    {event.organizer.name ? event.organizer.name : event.organizer.email}
-                                  </Link>
-                                </span>
-                              </div>
-                            </div>
+                {/* fin del banner */}
 
-                            {/* Lugar del evento */}
-
-                            <div className="lugar item columns">
-                              <div className="column is-1 container-icon">
-                                <span className="icon is-size-5">
-                                  <i className="fas fa-map-marker-alt fa-2x has-text-white" />
-                                </span>
-                              </div>
-                              <div className="column is-9 container-subtitle">
-                                <span className=" is-size-5">
-                                  {event.venue} {event.location.FormattedAddress}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* <div className="descripcion-c item columns is-centered">
-                              <div className="column is-10">
-                                  { typeof event.description === 'string'?  (<div dangerouslySetInnerHTML={{__html:event.description}}/>): 'json'  }
-                              </div>
-                          </div> */}
-                            <div className="ver-mas item columns">
-                              {/*<div className="column is-5 is-offset-1">
-                                <div className="aforo">
-                                    <span className="titulo">150/400</span><br/>
-                                    <span className="is-italic has-text-grey">Aforo</span>
-                                </div>
-                            </div>*/}
-                              {/*{
-                                (event.description.length >= 80 && !this.state.showFull) && (
-                                    <div className="column is-5 is-offset-6 button-cont">
-                                        <span className="has-text-weight-semibold has-text-grey">Ver más</span>
-                                        <div className="fav-button has-text-weight-bold" onClick={(e)=>{this.setState({showFull:true})}}>
-                                            <i className="icon fa fa-plus"></i>
-                                        </div>
-                                    </div>
-                                )
-                            }*/}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Contenedor de la imagen del evento */}
-                        <div className="column banner is-two-fifths">
-                          {typeof event.picture === "object" ? (
-                            <div style={{ width: "134vh" }}>
-                              <Slider images={event.picture} />
-                            </div>
-                          ) : (
-                              <Row >
-                                <Col xs={0} sm={0} md={12} lg={12} xl={12}>
-                                  <figure className="image">
-                                    <img
-                                      src={
-                                        this.state.loading ? "https://bulma.io/images/placeholders/1280x960.png" : event.picture
-                                      }
-                                      alt="Evius.co"
-                                    />
-                                  </figure>
-                                </Col>
-                              </Row>
-                            )}
-                          {this.state.showFull && (
-                            <div className="info show-full columns is-centered is-hidden-mobile">
-                              <div className="container column is-12">
-                                <div className="item is-italic has-text-grey">
-                                  <p>{event.description}</p>
-                                </div>
-                                <div className="item">
-                                  <div className="columns is-mobile">
-                                    <div className="button-cont column is-8 is-offset-4">
-                                      <span className="has-text-weight-semibold has-text-grey">Ver menos</span>
-                                      <div
-                                        className="fav-button has-text-weight-bold"
-                                        onClick={e => {
-                                          this.setState({ showFull: false });
-                                        }}>
-                                        <i className="icon fa fa-minus"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </Parallax>
               </div>
 
               {/* Menú secciones del landing */}
               <Content>
                 <Layout className="site-layout">
+
                   {/*Aqui empieza el menu para dispositivos >  */}
                   <div className="hiddenMenu_Landing">
                     <Sider
@@ -610,7 +494,7 @@ const MapComponent = props => {
         }
       </div>
 
-      {/* ESTO ES UNA PRUEBA */}
+      {/* ESTO ES UNA PRUEBA PARA UN BANNER DE PUBLICIDAD*/}
       <div className="has-margin-top-50 is-hidden-touch" >
         <img style={{ width: "100%" }} src="http://www.ofifacil.com/ideas-ejemplos/varios/ofifacil-hacer-pagina-web-diseno-grafico-023.gif" alt="" srcset="" />
       </div>
