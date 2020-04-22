@@ -14,9 +14,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
-import { Row, Col, Table, Card, Avatar, Alert } from "antd";
+import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
 
 const { Meta } = Card;
+const { TabPane } = Tabs;
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -212,57 +213,66 @@ class ListEventUser extends Component {
             />
           </Col>
 
-          <div>
+          <div style={{ marginTop: 10 }}>
             {this.state.loading ? (
               <Fragment>
                 <Loading />
                 <h2 className="has-text-centered">Cargando...</h2>
               </Fragment>
             ) : (
-              <div>
-                <div>
-                  {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                  {pageOfItems.map((users, key) => (
-                    <Row key={key} justify="center">
-                      <Card
-                        extra={
-                          <a
-                            onClick={() => {
-                              this.SendFriendship(users._id);
-                            }}>
-                            Enviar Solicitud
-                          </a>
-                        }
-                        style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                        bordered={true}>
-                        <Meta
-                          avatar={
-                            <Avatar>
-                              {users.properties.names
-                                ? users.properties.names.charAt(0).toUpperCase()
-                                : users.properties.names}
-                            </Avatar>
-                          }
-                          title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                          description={[
-                            <div>
-                              <br />
-                              <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                              <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
-                              <p>Correo: {users.properties.email ? users.properties.email : "No registra Correo"}</p>
-                              <p>
-                                Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
-                              </p>
-                            </div>,
-                          ]}
-                        />
-                      </Card>
-                    </Row>
-                  ))}
-                </div>
-                {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-              </div>
+              <Tabs defaultActiveKey="1" type="card">
+                <TabPane tab="Asistentes" key="1">
+                  <div>
+                    <div>
+                      {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                      {pageOfItems.map((users, key) => (
+                        <Row key={key} justify="center">
+                          <Card
+                            extra={
+                              <a
+                                onClick={() => {
+                                  this.SendFriendship(users._id);
+                                }}>
+                                Enviar Solicitud
+                              </a>
+                            }
+                            style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                            bordered={true}>
+                            <Meta
+                              avatar={
+                                <Avatar>
+                                  {users.properties.names
+                                    ? users.properties.names.charAt(0).toUpperCase()
+                                    : users.properties.names}
+                                </Avatar>
+                              }
+                              title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                              description={[
+                                <div>
+                                  <br />
+                                  <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
+                                  <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
+                                  <p>
+                                    Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                  </p>
+                                  <p>
+                                    Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
+                                  </p>
+                                </div>,
+                              ]}
+                            />
+                          </Card>
+                        </Row>
+                      ))}
+                    </div>
+
+                    {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                    <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                  </div>
+                </TabPane>
+                <TabPane tab="Mis Contactos" key="2"></TabPane>
+                <TabPane tab="Solicitudes" key="3"></TabPane>
+              </Tabs>
             )}
           </div>
         </EventContent>
