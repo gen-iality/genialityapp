@@ -441,27 +441,23 @@ const MapComponent = props => {
 
                       </h2>
                       <div className="lugar item columns">
-                        <div className="column is-1 container-icon hours">
+                        <div className="column is-12 container-icon hours has-text-left">
                           <span className="icon is-small">
                             <i className="far fa-clock" />
                           </span>
-                        </div>
-                        <div className="column is-10 container-subtitle has-text-left hours">
                           <span className="subt is-size-6 has-text-left">
-                            Desde {Moment(event.hour_start).format("HH:mm")}
+                            {""} Desde {Moment(event.hour_start).format("HH:mm")}
                           </span>
                           <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
                         </div>
                       </div>
                       <div className="lugar item columns">
-                        <div className="column is-1 container-icon">
+                        <div className="column is-12 container-icon has-text-left">
                           <span className="icon is-small">
                             <i className="fas fa-map-marker-alt" />
                           </span>
-                        </div>
-                        <div className="column is-10 container-subtitle has-text-left">
                           <span className="has-text-left">
-                            {event.venue} {event.location.FormattedAddress}
+                            {""} {event.venue} {event.location.FormattedAddress}
                           </span>
                         </div>
                       </div>
