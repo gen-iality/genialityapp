@@ -6,16 +6,26 @@ import * as Cookie from "js-cookie";
 import { userRequest, getCurrentUserId } from "./services";
 
 export default ({ eventId }) => {
-  const [contactsList, setContactsList] = useState([]);
+  const [requestList, setRequestList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  const getuserContactList = async () => {
-    let response = await getCurrentUserId(Cookie.get("evius_token"));
-    setCurrentUserId(response);
+  const getUserRequestList = async () => {
+    let userId = await getCurrentUserId(Cookie.get("evius_token"));
+
+    userRequest
+      .getUserRequestList(eventId, userId)
+      .then((list) => {
+        console.log("esta es la respuesta :", list);
+        setCurrentUserId(userId);
+        if (list) setRequestList(list);
+      })
+      .catch((err) => {
+        console.log("Hubo un problema:", err);
+      });
   };
 
   useEffect(() => {
-    getuserContactList();
+    getUserRequestList();
   }, [eventId]);
 
   if (currentUserId)
@@ -28,10 +38,10 @@ export default ({ eventId }) => {
           showIcon
         />
       </Col>
-    ) : contactsList.length > 0 ? (
+    ) : requestList.length > 0 ? (
       <Divider>Aqui se cargara la lista</Divider>
     ) : (
-      <Divider>No tiene contactos actualmente</Divider>
+      <Divider>No tiene solicitudes actualmente</Divider>
     );
 
   return <Spin></Spin>;

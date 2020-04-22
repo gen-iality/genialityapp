@@ -17,6 +17,7 @@ import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
 import ContactList from "./contactList";
+import RequestList from "./requestList";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -287,7 +288,9 @@ class ListEventUser extends Component {
                 <TabPane tab="Mis Contactos" key="2">
                   <ContactList eventId={this.props.event._id} />
                 </TabPane>
-                <TabPane tab="Solicitudes" key="3"></TabPane>
+                <TabPane tab="Solicitudes" key="3">
+                  <RequestList eventId={this.props.event._id} />
+                </TabPane>
               </Tabs>
             )}
           </div>
