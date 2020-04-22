@@ -495,7 +495,7 @@ class Landing extends Component {
                         visible={this.state.visible}
                         maskClosable={true}
                         bodyStyle={{ padding: "0px" }}>
-                        <MenuEvent showSection={this.showSection} />
+                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
                       {/* Contenedor donde se mapea la información de cada seccion */}
