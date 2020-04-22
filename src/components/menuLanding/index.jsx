@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from "react"
 import * as iconComponents from "@ant-design/icons";
-import { Typography, Select, Checkbox, Card, Input, Button } from "antd";
+import { Typography, Select, Checkbox, Card, Input, Button, Col, Row } from "antd";
 import { Actions } from "../../helpers/request";
 import { toast } from "react-toastify";
 import { now } from "moment";
 const { Title } = Typography;
-const { Option, OptGroup } = Select;
+const { Option } = Select;
+const { Meta } = Card;
 
 class menuLanding extends Component {
     constructor(props) {
@@ -145,32 +146,43 @@ class menuLanding extends Component {
         return (
             <Fragment>
                 <Title level={3}>Habilitar secciones del evento</Title>
-                {
-                    Object.keys(this.state.menu).map((key) => {
-                        let IconoComponente = iconComponents[this.state.menu[key].icon];
-                        return (
-                            <div key={key}>
-                                <Card title={this.state.menu[key].name} bordered={true} style={{ width: 300, marginTop: "2%" }}>
-                                    <Checkbox checked={this.state.menu[key].checked} onChange={(e) => { this.mapActiveItemsToAvailable(key) }}>
-                                        <IconoComponente />
-                                        {this.state.menu[key].name}
-                                        <div style={{ marginTop: "2%" }}>
-                                            <Input disabled={this.state.menu[key].checked === true ? false : true} onChange={(e) => { this.changeNameMenu(key, e.target.value) }} placeholder={this.state.menu[key].name} />
-                                        </div>
-                                        <div style={{ marginTop: "2%" }}>
-                                            <Select key={this.state.keySelect} disabled={this.state.menu[key].checked === true ? false : true} defaultValue={this.state.menu[key].permissions} style={{ width: 200 }} onChange={(e) => { this.changePermissions(key, e) }}>
-                                                <Option value="public">Publico</Option>
-                                                <Option value="assistants">Solo asistentes del evento</Option>
-                                            </Select>
-                                        </div>
-                                    </Checkbox>
-                                </Card>
-                            </div>
-                        )
-                    })
-                }
                 <Button style={{ marginTop: "2%" }} onClick={this.submit}>Guardar</Button>
-            </Fragment>
+                <Row gutter={16}>
+                    {
+                        Object.keys(this.state.menu).map((key) => {
+                            let IconoComponente = iconComponents[this.state.menu[key].icon];
+                            return (
+                                <div key={key}>
+                                    <Col style={{ marginTop: "3%" }} span={8}>
+                                        <Card
+                                            title={<Title level={4}>{this.state.menu[key].name}</Title>}
+                                            bordered={true}
+                                            //extra={<Checkbox disabled checked={this.state.menu[key].checked} />}
+                                            style={{ width: 300, marginTop: "2%" }}>
+
+                                            <div style={{ marginBottom: "3%" }}>
+                                                <Button onClick={(e) => { this.mapActiveItemsToAvailable(key) }}>{this.state.menu[key].checked === true ? "Deshabilitar" : "Habilitar"}</Button>
+                                            </div>
+
+
+                                            <div style={{ marginTop: "4%" }}>
+                                                <label>Cambiar nombre de la sección</label>
+                                                <Input disabled={this.state.menu[key].checked === true ? false : true} onChange={(e) => { this.changeNameMenu(key, e.target.value) }} placeholder={this.state.menu[key].name} />
+                                            </div>
+                                            <div style={{ marginTop: "4%" }}>
+                                                <label>Permisos para la sección</label>
+                                                <Select key={this.state.keySelect} disabled={this.state.menu[key].checked === true ? false : true} defaultValue={this.state.menu[key].permissions} style={{ width: 200 }} onChange={(e) => { this.changePermissions(key, e) }}>
+                                                    <Option value="public">Abierto para todos</Option>
+                                                    <Option value="assistants">Usuarios inscritos al evento</Option>
+                                                </Select>
+                                            </div>
+                                        </Card>
+                                    </Col>
+                                </div>
+                            )
+                        })}
+                </Row>
+            </Fragment >
         )
     }
 }

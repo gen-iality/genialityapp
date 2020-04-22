@@ -153,11 +153,11 @@ class MenuConfig extends Component {
                 </NavLink>
               </Menu.Item>
 
-              <Menu.Item key="12">
+              {/* <Menu.Item key="12">
                 <NavLink onClick={this.handleClick} to={`${url}/configurationApp`}>
                   Habilitar secciones
                 </NavLink>
-              </Menu.Item>
+              </Menu.Item> */}
 
               <Menu.Item key="13">
                 <NavLink onClick={this.handleClick} to={`${url}/menuLanding`}>
