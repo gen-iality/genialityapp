@@ -156,12 +156,12 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered">
           <div className="description-container column is-8">
-            <Card className="event-description" bodyStyle={{ padding: "5px" }} bordered={true}>
-
-
-              <h1 className="is-size-3 bold-text">{event.name}</h1>
-
-
+            <Card
+              className="event-description"
+              bodyStyle={{ padding: "25px 5px" }}
+              bordered={true}
+            >
+              <h1 className="is-size-3-desktop bold-text">{event.name}</h1>
 
               <div className="column is-centered">
                 <ReactPlayer

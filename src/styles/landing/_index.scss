@@ -8,9 +8,6 @@ section.landing {
     color: white;
   }
 
-  // background-image: url("../back.png");
-  .hero-head {}
-
   padding: 0;
 
   .container-nombre {
@@ -209,8 +206,6 @@ section.landing {
   .hero-body {
     padding: 0;
     margin-top: -21px;
-    // display: flex;
-    // justify-content: center;
 
     .description-container {
       text-align: justify;
@@ -241,7 +236,6 @@ section.landing {
           font-family: "Montserrat", sans-serif !important;
 
           .ql-editor {
-            font-size: 1.2rem !important;
             letter-spacing: 0.2px;
             line-height: 1.5;
             padding: 0px;
@@ -304,8 +298,6 @@ section.landing {
       }
     }
 
-    .ql-container {}
-
     .container-map {
       .map-head {
         border: solid 2px #e0e0e0;
@@ -351,9 +343,6 @@ section.landing {
 // Medias para ocultar y mostrar el menu de la landing
 
 .hiddenMenu_Landing {
-
-
-
   .containerMenu_Landing {
     height: 100%;
     background-color: white !important;
@@ -391,13 +380,42 @@ section.landing {
 
 // Estilos del editor
 
+.ql-editor a,
 .ql-editor p,
 .ql-editor ol,
 .ql-editor ul,
 .ql-editor pre,
+.ql-editor span,
 .ql-editor blockquote,
 .ql-editor {
-  font-size: 2.3999vh !important;
+  font-size: 1rem !important;
+
+  @media only screen and (min-width: $breakpoint-mobile) {
+    font-size: 1.3rem !important;
+  }
+
+  @media only screen and (min-width: $breakpoint-tablet) {
+    font-size: 1.3rem !important;
+  }
+}
+
+.ql-bubble {
+  .ql-editor h2 {
+    font-size: 1.5rem !important;
+
+    @media only screen and (max-width: $breakpoint-mobile) {
+      font-size: 1rem !important;
+    }
+
+    @media only screen and (max-width: $breakpoint-tablet) {
+      font-size: 1rem !important;
+    }
+  }
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 0.5em !important
 }
 
 .ql-container.ql-snow,
@@ -405,10 +423,6 @@ section.landing {
   font-family: $family-sans-serif !important;
 }
 
-.ql-editor ol,
-.ql-editor ul {
-  padding-left: 0.5em !important
-}
 
 
 // Estilos del banner
