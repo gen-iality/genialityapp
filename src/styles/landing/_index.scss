@@ -351,8 +351,17 @@ section.landing {
 // Medias para ocultar y mostrar el menu de la landing
 
 .hiddenMenu_Landing {
+
+
+
   .containerMenu_Landing {
     height: 100%;
+    background-color: white !important;
+  }
+
+  .items-menu_Landing {
+    position: sticky;
+    top: 9%;
   }
 
   @media only screen and (max-width: $breakpoint-mobile) {
@@ -379,7 +388,8 @@ section.landing {
   margin-right: 0px !important;
 }
 
-// EStilos del editor
+
+// Estilos del editor
 
 .ql-editor p,
 .ql-editor ol,
@@ -399,6 +409,7 @@ section.landing {
 .ql-editor ul {
   padding-left: 0.5em !important
 }
+
 
 // Estilos del banner
 

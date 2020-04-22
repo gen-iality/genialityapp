@@ -327,14 +327,17 @@ class Landing extends Component {
                       collapsible
                       collapsed={this.state.collapsed}
                       width={250}>
-                      {/* <Affix offsetTop={50} onChange={affixed => console.log(affixed)}> */}
-                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                      <div className="items-menu_Landing ">
+                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                      </div>
                     </Sider>
                   </div>
                   {/*Aqui termina el menu para dispositivos >  */}
 
+
                   <Layout className="site-layout">
                     <Content className="site-layout-background">
+
                       {/* Boton que abre el menu para dispositivos > tablet  */}
                       <div className="hiddenMenu_Landing">
                         <Button onClick={this.toggle}>
