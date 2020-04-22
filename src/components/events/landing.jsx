@@ -161,7 +161,7 @@ class Landing extends Component {
               bodyStyle={{ padding: "25px 5px" }}
               bordered={true}
             >
-              <h1 className="is-size-3-desktop bold-text">{event.name}</h1>
+              <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
 
               <div className="column is-centered">
                 <ReactPlayer
