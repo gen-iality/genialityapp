@@ -12,6 +12,7 @@ import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import "react-toastify/dist/ReactToastify.css";
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
+import { networkingFire } from "./services";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
@@ -160,6 +161,11 @@ class ListEventUser extends Component {
     }
   }
 
+  sendRequestInFire = (data) => {
+    const { event } = this.props;
+    networkingFire.sendRequestToUser(event._id, data);
+  };
+
   onChangePage = (pageOfItems) => {
     console.log(pageOfItems);
     this.setState({ pageOfItems: pageOfItems });
@@ -171,16 +177,23 @@ class ListEventUser extends Component {
   };
 
   async SendFriendship(id) {
-    const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-    const data = {
-      id_user_requested: resp.data._id,
-      id_user_requesting: id,
-      event_id: this.props.event._id,
-      state: "send",
-    };
+    let currentUser = Cookie.get("evius_token");
+    if (currentUser) {
+      const resp = await API.get(`/auth/currentUser?evius_token=${currentUser}`);
+      const data = {
+        id_user_requested: resp.data._id,
+        id_user_requesting: id,
+        event_id: this.props.event._id,
+        state: "send",
+      };
 
-    const response = await EventsApi.sendInvitation(this.props.event._id, data);
-    console.log(response);
+      this.sendRequestInFire(data);
+
+      const response = await EventsApi.sendInvitation(this.props.event._id, data);
+      console.log(response);
+    } else {
+      toast.warn("Para enviar la solicitud es necesario iniciar sesión");
+    }
   }
 
   render() {
