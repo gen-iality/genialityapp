@@ -436,7 +436,7 @@ const MapComponent = props => {
                 <div>
                   <Card>
                     <div className="map-head">
-                      <h2 className="title is-size-5 has-text-left has-padding-top-15">
+                      <h2 className="is-size-5 has-text-left">
                         <b>Encuentra la ubicación</b>
 
                       </h2>
