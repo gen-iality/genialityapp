@@ -2,10 +2,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import GoogleMapReact from "google-map-react";
-import ComponentSlider from "@kapost/react-component-slider";
-import { Parallax, Background } from "react-parallax";
-import { FaChevronRight } from "react-icons/fa";
-import { FaChevronLeft } from "react-icons/fa";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
@@ -42,18 +38,7 @@ momentLocalizer();
 
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
-// Estilos del parallax
-const insideStyles = {
-  backgroundColor: "rgba(0, 0, 0, 0.3)",
-  padding: 20,
-  position: "absolute",
-  top: "40vh",
-  left: "50%",
-  transform: "translate(-50%,-43vh)",
-  width: "100%",
-  minHeight: "60vh"
-};
+let factor = 0.3;
 
 class Landing extends Component {
   constructor(props) {
@@ -171,7 +156,7 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered">
           <div className="description-container column is-8">
-            <Card className="event-description" bordered={true}>
+            <Card className="event-description" bodyStyle={{ padding: "5px" }} bordered={true}>
 
 
               <h1 className="is-size-3 bold-text">{event.name}</h1>
@@ -180,8 +165,9 @@ class Landing extends Component {
 
               <div className="column is-centered">
                 <ReactPlayer
+                  width={"100%"}
+                  height={"auto"}
                   style={{
-                    maxWidth: "100%",
                     display: "block",
                     margin: "0 auto"
                   }}

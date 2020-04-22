@@ -220,7 +220,9 @@ section.landing {
         justify-content: center;
         align-items: center;
         flex-direction: column;
+
       }
+
 
       .title-description {
         display: block;
@@ -377,18 +379,25 @@ section.landing {
   margin-right: 0px !important;
 }
 
+// EStilos del editor
+
 .ql-editor p,
 .ql-editor ol,
 .ql-editor ul,
 .ql-editor pre,
 .ql-editor blockquote,
 .ql-editor {
-  font-size: 1.4rem !important;
+  font-size: 2.3999vh !important;
 }
 
 .ql-container.ql-snow,
 .ql-bubble {
   font-family: $family-sans-serif !important;
+}
+
+.ql-editor ol,
+.ql-editor ul {
+  padding-left: 0.5em !important
 }
 
 // Estilos del banner
