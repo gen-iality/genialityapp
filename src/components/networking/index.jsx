@@ -12,11 +12,15 @@ import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import "react-toastify/dist/ReactToastify.css";
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
+import { networkingFire } from "./services";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
-import { Row, Col, Table, Card, Avatar } from "antd";
+import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
+import ContactList from "./contactList";
+import RequestList from "./requestList";
 
 const { Meta } = Card;
+const { TabPane } = Tabs;
 
 const html = document.querySelector("html");
 class ListEventUser extends Component {
@@ -42,19 +46,19 @@ class ListEventUser extends Component {
       ticket: "",
       localChanges: null,
       quantityUsersSync: 0,
-      lastUpdate: new Date()
+      lastUpdate: new Date(),
     };
   }
 
-  addDefaultLabels = extraFields => {
-    extraFields = extraFields.map(field => {
+  addDefaultLabels = (extraFields) => {
+    extraFields = extraFields.map((field) => {
       field["label"] = field["label"] ? field["label"] : field["name"];
       return field;
     });
     return extraFields;
   };
 
-  orderFieldsByWeight = extraFields => {
+  orderFieldsByWeight = (extraFields) => {
     extraFields = extraFields.sort((a, b) =>
       (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
         ? -1
@@ -90,14 +94,14 @@ class ListEventUser extends Component {
           // Listen for document metadata changes
           //includeMetadataChanges: true
         },
-        snapshot => {
+        (snapshot) => {
           // Set data localChanges with hasPendingWrites
           localChanges = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
           this.setState({ localChanges });
 
           let user,
             acompanates = 0;
-          snapshot.docChanges().forEach(change => {
+          snapshot.docChanges().forEach((change) => {
             /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
             console.log("cambios", change);
             // Condicional, toma el primer registro que es el mas reciente
@@ -108,11 +112,11 @@ class ListEventUser extends Component {
             user.rol_name = user.rol_name
               ? user.rol_name
               : user.rol_id
-                ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
-                : "";
+              ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
+              : "";
             user.created_at = typeof user.created_at === "object" ? user.created_at.toDate() : "sinfecha";
             user.updated_at = user.updated_at.toDate ? user.updated_at.toDate() : new Date();
-            user.tiquete = listTickets.find(ticket => ticket._id === user.ticket_id);
+            user.tiquete = listTickets.find((ticket) => ticket._id === user.ticket_id);
 
             switch (change.type) {
               case "added":
@@ -123,17 +127,16 @@ class ListEventUser extends Component {
 
                 // Aumenta contador de usuarios sin sincronizar
                 localChanges == "Local" &&
-                  this.setState(prevState => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }));
+                  this.setState((prevState) => ({ quantityUsersSync: prevState.quantityUsersSync + 1 }));
 
                 break;
               case "modified":
-
                 break;
               default:
                 break;
             }
           });
-          this.setState(prevState => {
+          this.setState((prevState) => {
             const usersToShow =
               ticket.length <= 0 || stage.length <= 0 ? [...newItems].slice(0, 100) : [...prevState.users];
             return {
@@ -145,11 +148,11 @@ class ListEventUser extends Component {
               loading: false,
               total: newItems.length + acompanates,
               checkIn,
-              clearSearch: !prevState.clearSearch
+              clearSearch: !prevState.clearSearch,
             };
           });
         },
-        error => {
+        (error) => {
           console.log(error);
           this.setState({ timeout: true, errorData: { message: error, status: 708 } });
         }
@@ -160,27 +163,39 @@ class ListEventUser extends Component {
     }
   }
 
-  onChangePage = pageOfItems => {
+  sendRequestInFire = (data) => {
+    const { event } = this.props;
+    networkingFire.sendRequestToUser(event._id, data);
+  };
+
+  onChangePage = (pageOfItems) => {
     console.log(pageOfItems);
     this.setState({ pageOfItems: pageOfItems });
   };
 
   //Search records at third column
-  searchResult = data => {
+  searchResult = (data) => {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
   async SendFriendship(id) {
-    const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-    const data = {
-      id_user_requested: resp.data._id,
-      id_user_requesting: id,
-      event_id: this.props.event._id,
-      state: "send"
-    }
+    let currentUser = Cookie.get("evius_token");
+    if (currentUser) {
+      const resp = await API.get(`/auth/currentUser?evius_token=${currentUser}`);
+      const data = {
+        id_user_requested: resp.data._id,
+        id_user_requesting: id,
+        event_id: this.props.event._id,
+        state: "send",
+      };
 
-    const response = await EventsApi.sendInvitation(this.props.event._id, data)
-    console.log(response)
+      this.sendRequestInFire(data);
+
+      const response = await EventsApi.sendInvitation(this.props.event._id, data);
+      console.log(response);
+    } else {
+      toast.warn("Para enviar la solicitud es necesario iniciar sesión");
+    }
   }
 
   render() {
@@ -204,46 +219,80 @@ class ListEventUser extends Component {
               clear={this.state.clearSearch}
             />
           </Col>
+          <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+            <Alert
+              message="Información Adicicional"
+              description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
+              type="info"
+              closable
+            />
+          </Col>
 
-          <div>
+          <div style={{ marginTop: 10 }}>
             {this.state.loading ? (
               <Fragment>
                 <Loading />
                 <h2 className="has-text-centered">Cargando...</h2>
               </Fragment>
             ) : (
-                <div>
+              <Tabs defaultActiveKey="1" type="card">
+                <TabPane tab="Asistentes" key="1">
                   <div>
-                    {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                    {pageOfItems.map((users, key) => (
-                      <Row key={key} justify="center">
-                        <Card
-                          extra={<a onClick={() => { this.SendFriendship(users._id) }}>Enviar Solicitud</a>}
-                          style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                          bordered={true}>
-                          <Meta
-                            avatar={<Avatar>{users.properties.names ? users.properties.names.charAt(0).toUpperCase() : users.properties.names}</Avatar>}
-                            title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                            description={[
-                              <div>
-                                <br />
-                                <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                                <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
-                                <p>Correo: {users.properties.email ? users.properties.email : "No registra Correo"}</p>
-                                <p>
-                                  Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
-                                </p>
-                              </div>
-                            ]}
-                          />
-                        </Card>
-                      </Row>
-                    ))}
+                    <div>
+                      {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                      {pageOfItems.map((users, key) => (
+                        <Row key={key} justify="center">
+                          <Card
+                            extra={
+                              <a
+                                onClick={() => {
+                                  this.SendFriendship(users._id);
+                                }}>
+                                Enviar Solicitud
+                              </a>
+                            }
+                            style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                            bordered={true}>
+                            <Meta
+                              avatar={
+                                <Avatar>
+                                  {users.properties.names
+                                    ? users.properties.names.charAt(0).toUpperCase()
+                                    : users.properties.names}
+                                </Avatar>
+                              }
+                              title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                              description={[
+                                <div>
+                                  <br />
+                                  <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
+                                  <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
+                                  <p>
+                                    Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                  </p>
+                                  <p>
+                                    Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
+                                  </p>
+                                </div>,
+                              ]}
+                            />
+                          </Card>
+                        </Row>
+                      ))}
+                    </div>
+
+                    {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                    <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                   </div>
-                  {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                  <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-                </div>
-              )}
+                </TabPane>
+                <TabPane tab="Mis Contactos" key="2">
+                  <ContactList eventId={this.props.event._id} />
+                </TabPane>
+                <TabPane tab="Solicitudes" key="3">
+                  <RequestList eventId={this.props.event._id} />
+                </TabPane>
+              </Tabs>
+            )}
           </div>
         </EventContent>
       </React.Fragment>
