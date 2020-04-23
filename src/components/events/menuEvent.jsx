@@ -44,33 +44,16 @@ class MenuEvent extends Component {
     let itemsMenu = []
     let menuBase = []
 
-    try {
-      const userLogged = await API.get(
-        `/auth/currentUser?evius_token=${Cookie.get("evius_token")}`
-      );
-      //Si el usuario logueado se encuentra en el evento, muestra el menu por completo, si no muestra el menu publico
-      if (userLogged.status === 200) {
-        for (const userEvnt in usersEvent.data) {
-          if (userLogged.data.email === usersEvent.data[userEvnt].email) {
-            let menuBase = { ...event.itemsMenu }
-            this.setState({ itemsMenu: menuBase })
-          } else {
-            this.publicItems(event)
-          }
-        }
 
-      }
-    } catch (error) {
-      console.log(error)
-      for (const prop in items) {
-        if (items[prop].permissions === "public") {
-          console.log(itemsMenu)
-          itemsMenu.push(items[prop])
-          this.setState({ itemsMenu })
-        }
-      }
+
+    //Si el usuario logueado se encuentra en el evento, muestra el menu por completo, si no muestra el menu publico
+
+    for (const userEvnt in usersEvent.data) {
+
+      let menuBase = { ...event.itemsMenu }
+      this.setState({ itemsMenu: menuBase })
+
     }
-
   }
 
   publicItems(event) {
