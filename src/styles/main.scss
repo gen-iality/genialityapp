@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900');
-$font-path: '~react-widgets/lib/fonts';
-$img-path: '~react-widgets/lib/img';
-$family-sans-serif: "Montserrat",
-sans-serif;
-$color-evius: #1CDCB7;
-$evius-secundary: #009FD9;
+@import url("https://fonts.googleapis.com/css?family=Montserrat:100,300,400,700,900");
+$font-path: "~react-widgets/lib/fonts";
+$img-path: "~react-widgets/lib/img";
+$family-sans-serif: "Montserrat", sans-serif;
+$color-evius: #1cdcb7;
+$evius-secundary: #009fd9;
 // $evius-secundary: #0e1c35;
-$color-prueba:#7FB744;
+$color-prueba: #7fb744;
 $title-agenda: #fb0b74;
 $primary: $color-evius;
 $pagination-current-background-color: #00b89c;
@@ -22,8 +21,7 @@ $tabs-link-active-color: #000000;
 $tabs-link-padding: 0.5em 3em;
 $breakpoint-mobile: 768px;
 $breakpoint-tablet: 1024px;
-$fontColor: rgba(0, 0, 0, 0.900);
-
+$fontColor: #222222;
 
 body {
   font-family: $family-sans-serif !important;
@@ -74,7 +72,7 @@ body {
 @import "~react-quill/dist/quill.bubble.css";
 
 // ant desing
-@import '~antd/dist/antd.css';
+@import "~antd/dist/antd.css";
 @import "./loading";
 @import "./tickets";
 @import "./msg";
