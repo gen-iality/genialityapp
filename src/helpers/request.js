@@ -481,7 +481,7 @@ export const Activity = {
   },
 };
 
-export const networking = {
+export const Networking = {
   getInvitationsReceived: async (eventId, userId) => {
     return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}`);
   },
