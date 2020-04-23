@@ -55,7 +55,7 @@ export const networkingFire = {
           .collection(refCollection)
           .add({ ...exclude(data), created_at: new Date(), updated_at: new Date() })
           .then((result) => {
-            resolve({ message: "Se creo el documento", state: true });
+            resolve({ message: "Se ha enviado la solicitud", state: true });
           })
           .catch((err) => {
             reject("Hubo un problema: ", err);
