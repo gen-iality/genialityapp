@@ -30,11 +30,13 @@ export default class ListEventUser extends Component {
       clearSearch: false,
       loading: true,
       changeItem: false,
+      eventUserId: null,
     };
   }
 
   componentDidMount() {
     this.loadData();
+    this.getInfoCurrentUser();
   }
 
   loadData = async () => {
@@ -62,7 +64,7 @@ export default class ListEventUser extends Component {
       getCurrentUserId(currentUser).then(async (userId) => {
         let response = await getCurrentEventUser(event._id, userId);
         console.log("eventUserId:", response);
-        this.setState({ eventUserId: response.account_id });
+        this.setState({ eventUserId: response._id });
       });
     }
   };
@@ -82,11 +84,11 @@ export default class ListEventUser extends Component {
   };
 
   async SendFriendship(id) {
+    let { eventUserId } = this.state;
     let currentUser = Cookie.get("evius_token");
     if (currentUser) {
-      const resp = await API.get(`/auth/currentUser?evius_token=${currentUser}`);
       const data = {
-        id_user_requested: resp.data._id,
+        id_user_requested: eventUserId,
         id_user_requesting: id,
         event_id: this.props.event._id,
         state: "send",
