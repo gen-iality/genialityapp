@@ -12,7 +12,7 @@ import EventContent from "../events/shared/content";
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
-import { networkingFire, userRequest } from "./services";
+import { getCurrentUserId, getCurrentEventUser, networkingFire, userRequest } from "./services";
 
 import ContactList from "./contactList";
 import RequestList from "./requestList";
@@ -35,6 +35,7 @@ export default class ListEventUser extends Component {
 
   componentDidMount() {
     this.loadData();
+    this.getInfoCurrentUser();
   }
 
   loadData = async () => {
@@ -52,6 +53,19 @@ export default class ListEventUser extends Component {
         clearSearch: !prevState.clearSearch,
       };
     });
+  };
+
+  getInfoCurrentUser = () => {
+    const { event } = this.props;
+    let currentUser = Cookie.get("evius_token");
+
+    if (currentUser) {
+      getCurrentUserId(currentUser).then(async (userId) => {
+        let response = await getCurrentEventUser(event._id, userId);
+        console.log("eventUserId:", response);
+        this.setState({ eventUserId: response.account_id });
+      });
+    }
   };
 
   sendRequestInFire = (data) => {
