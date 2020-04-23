@@ -71,7 +71,18 @@ export default class ListEventUser extends Component {
 
   sendRequestInFire = (data) => {
     const { event } = this.props;
-    networkingFire.sendRequestToUser(event._id, data);
+    networkingFire
+      .sendRequestToUser(event._id, data)
+      .then(({ message, state }) => {
+        if (!state) {
+          toast.warn(message);
+        } else {
+          toast.success(message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
 
   onChangePage = (pageOfItems) => {

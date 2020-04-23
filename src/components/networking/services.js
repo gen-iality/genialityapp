@@ -48,16 +48,22 @@ export const networkingFire = {
 
     const exclude = ({ event_id, ...rest }) => rest;
 
-    let refCollection = refUsersRequests(eventId);
-    firestore
-      .collection(refCollection)
-      .add({ ...exclude(data), created_at: new Date(), updated_at: new Date() })
-      .then((result) => {
-        console.log("Se creo el documento", result);
-      })
-      .catch((err) => {
-        console.log("Hubo un problema: ", err);
-      });
+    return new Promise((resolve, reject) => {
+      if (data.id_user_requested) {
+        let refCollection = refUsersRequests(eventId);
+        firestore
+          .collection(refCollection)
+          .add({ ...exclude(data), created_at: new Date(), updated_at: new Date() })
+          .then((result) => {
+            resolve({ message: "Se creo el documento", state: true });
+          })
+          .catch((err) => {
+            reject("Hubo un problema: ", err);
+          });
+      } else {
+        resolve({ message: "Debe estar registrado en el evento para agregar usuarios", state: false });
+      }
+    });
   },
   acceptedRequest: async (eventId) => {
     console.log("Aceptando solicitud");
