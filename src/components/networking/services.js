@@ -2,6 +2,7 @@ import { firestore } from "../../helpers/firebase";
 import API from "../../helpers/request";
 
 const refUsersRequests = (eventId) => `${eventId}_users_requests`;
+const refUsersList = (eventId) => `${eventId}_event_attendees`;
 
 // Funcion para consultar la informacion del actual usuario
 export const getCurrentUserId = (token) => {
@@ -45,7 +46,9 @@ export const networkingFire = {
   },
 };
 
+// User services
 export const userRequest = {
+  // Obtiene las solicitudes de un usuario
   getUserRequestList: async (eventId, currentUser) => {
     return new Promise((resolve, reject) => {
       let refCollection = refUsersRequests(eventId);
@@ -68,7 +71,28 @@ export const userRequest = {
         });
     });
   },
+
+  //   Obtiene los contactos de un usuario
   getUserContactList: async () => {
     console.log("Obteniendo la lista de contactos");
+  },
+
+  //   Obtiene la lista de los asistentes al evento
+  getEventUserList: async (eventId) => {
+    let refEventUser = refUsersList(eventId);
+
+    return new Promise((resolve, reject) => {
+      firestore
+        .collection(refEventUser)
+        .orderBy("updated_at", "desc")
+        .onSnapshot((docs) => {
+          let docsList = [];
+          if (docs.empty) resolve(false);
+          docs.forEach((infoDoc) => {
+            if (infoDoc.data().account_id) docsList.push(infoDoc.data());
+          });
+          resolve(docsList);
+        });
+    });
   },
 };
