@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WithLoading from "./../shared/withLoading";
 import { Link, withRouter } from "react-router-dom";
 import { Layout, Menu } from "antd";
+import { firestore } from "../../helpers/firebase";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
@@ -20,7 +21,7 @@ class MenuEvent extends Component {
       logged: false,
       email: false
     }
-    this.validationMenu = this.validationMenu.bind(this)
+    this.obtainUserFirebase = this.obtainUserFirebase.bind(this)
   }
 
   async componentDidMount() {
@@ -29,48 +30,42 @@ class MenuEvent extends Component {
     // const menuEvent = event.itemsMenu || {};
     // console.log("MENU LANDING", menuEvent);
     // this.setState({ itemsMenu: menuEvent })
-    this.validationMenu()
+
+    this.obtainUserFirebase()
   }
 
-  async validationMenu() {
-    //Se consultan las api necesarias para obtener el menu y los usuarios del evento 
-    const usersEvent = await UsersApi.getAll(this.props.eventId, "?pageSize=10000")
+  async obtainUserFirebase() {
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
-
-    //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
-    let items = event.itemsMenu || {}
-
-    //Se declara un array para guardar las secciones que tengan permiso publico
-    let itemsMenu = []
-    let menuBase = []
-
     try {
-      const userLogged = await API.get(
-        `/auth/currentUser?evius_token=${Cookie.get("evius_token")}`
-      );
-      //Si el usuario logueado se encuentra en el evento, muestra el menu por completo, si no muestra el menu publico
-      if (userLogged.status === 200) {
-        for (const userEvnt in usersEvent.data) {
-          if (userLogged.data.email === usersEvent.data[userEvnt].email) {
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+      console.log("respuesta status", resp.status !== 202);
+
+
+      if (resp.status !== 200 && resp.status !== 202)
+        return;
+
+      firestore.collection(`${this.props.eventId}_event_attendees`)
+        .where("properties.email", "==", resp.data.email)
+        .get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            this.publicItems(event)
+            console.log("No matching documents.");
+            return;
+          } else {
+            console.log("USUARIO REGISTRADO.");
             let menuBase = { ...event.itemsMenu }
             this.setState({ itemsMenu: menuBase })
-          } else {
-            this.publicItems(event)
           }
-        }
+        })
+        .catch(err => {
+          console.log("Error getting documents", err);
+        });
 
-      }
-    } catch (error) {
-      console.log(error)
-      for (const prop in items) {
-        if (items[prop].permissions === "public") {
-          console.log(itemsMenu)
-          itemsMenu.push(items[prop])
-          this.setState({ itemsMenu })
-        }
-      }
+      console.log("data ", resp.data);
+    } catch{
+      this.publicItems(event)
     }
-
   }
 
   publicItems(event) {
