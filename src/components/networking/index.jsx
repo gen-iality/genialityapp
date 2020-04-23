@@ -35,14 +35,13 @@ export default class ListEventUser extends Component {
 
   componentDidMount() {
     this.loadData();
-    this.getInfoCurrentUser();
   }
 
   loadData = async () => {
     let { changeItem } = this.state;
     const { event } = this.props;
 
-    let eventUserList = await userRequest.getEventUserList(event._id);
+    let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
     console.log(eventUserList);
     this.setState((prevState) => {
       return {

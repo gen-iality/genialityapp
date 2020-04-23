@@ -99,21 +99,25 @@ export const userRequest = {
   },
 
   //   Obtiene la lista de los asistentes al evento
-  getEventUserList: async (eventId) => {
+  getEventUserList: async (eventId, token) => {
     let refEventUser = refUsersList(eventId);
 
     return new Promise((resolve, reject) => {
-      firestore
-        .collection(refEventUser)
-        .orderBy("updated_at", "desc")
-        .onSnapshot((docs) => {
-          let docsList = [];
-          if (docs.empty) resolve(false);
-          docs.forEach((infoDoc) => {
-            if (infoDoc.data().account_id) docsList.push(infoDoc.data());
+      // Se obtiene el id del token recibido
+      getCurrentUserId(token).then(async (userId) => {
+        firestore
+          .collection(refEventUser)
+          .orderBy("updated_at", "desc")
+          .onSnapshot((docs) => {
+            let docsList = [];
+            if (docs.empty) resolve(false);
+            docs.forEach((infoDoc) => {
+              // Se obtiene la lista de los asistentes si poseen el 'Account_id' y se excluye el usuario actual
+              if (infoDoc.data().account_id && infoDoc.data().account_id != userId) docsList.push(infoDoc.data());
+            });
+            resolve(docsList);
           });
-          resolve(docsList);
-        });
+      });
     });
   },
 };
