@@ -1,11 +1,32 @@
+// Logo evius header
+
 div.icon-header {
   width: 115px;
   margin-right: 0px;
+  top: 6px;
+  @media screen and (max-width: "1030px") {
+    position: absolute;
+    top: 6px;
+    left: 35%;
+  }
+}
+
+// Menu de usuario header
+.avatar_menu-user {
+  background: $color-evius !important;
+}
+
+.name_menu-user {
+  color: initial;
+  @media screen and (max-width: "1030px") {
+    display: none;
+  }
 }
 
 .icon-menu {
   cursor: pointer;
 }
+
 .title-home {
   font-weight: 900;
 }
@@ -15,8 +36,10 @@ div.icon-header {
   height: 67px !important;
   padding: 0 30px !important;
 }
+
 .main {
   margin-top: 5%;
+
   .columns {
     margin: 0;
   }
@@ -29,10 +52,12 @@ div.icon-header {
 
 section.home {
   padding: 0 0.75rem;
+
   div.dynamic-content {
     min-height: 100%;
     position: relative;
     padding: 0 0.75rem;
+
     .column {
       padding: 0 0.75rem 1.5rem 0.75rem;
     }
@@ -49,6 +74,7 @@ section.home {
   .main {
     padding-top: 3em;
   }
+
   .media {
     flex-direction: row;
   }

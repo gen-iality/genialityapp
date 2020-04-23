@@ -37,39 +37,10 @@ class MenuEvent extends Component {
   async obtainUserFirebase() {
     //Se trae el api que contiene el menu
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
-    try {
-      //Dentro del try catch se trae el api que trae el token, 
-      //Si existe el token realiza la validacion si existe o no en el evento para traer el menu publico, 
-      //si no, trae el menu para usuarios inscritos al evento
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      console.log("respuesta status", resp.status !== 202);
-      //Si resp es verdadero y trae status 200 pasara a validar si existe o no en el evento
-      if (resp.status !== 200 && resp.status !== 202)
-        return;
 
-      firestore.collection(`${this.props.eventId}_event_attendees`)
-        .where("properties.email", "==", resp.data.email)
-        .get()
-        .then(snapshot => {
-          if (snapshot.empty) {
-            //Si no existe cargara los items publicos
-            this.publicItems(event)
-            console.log("No matching documents.");
-            return;
-          } else {
-            //Si existe cargará el menu para usuarios inscritos
-            console.log("USUARIO REGISTRADO.");
-            let menuBase = { ...event.itemsMenu }
-            this.setState({ itemsMenu: menuBase })
-          }
-        })
-        .catch(err => {
-          console.log("Error getting documents", err);
-        });
-    } catch{
-      //Si el api que trae el token falla, cargara los items publicos
-      this.publicItems(event)
-    }
+    //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
+    let items = event.itemsMenu || {}
+    this.setState({ itemsMenu: items })
   }
 
   //Funcion que carga los items publicos del menu

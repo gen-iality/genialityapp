@@ -38,7 +38,14 @@ momentLocalizer();
 
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
-let factor = 0.3;
+
+
+const drawerButton = {
+  height: "46px",
+  padding: "7px 10px",
+  fontSize: "10px",
+
+}
 
 class Landing extends Component {
   constructor(props) {
@@ -55,7 +62,8 @@ class Landing extends Component {
       color: "",
       collapsed: false,
       visible: false,
-      placement: "left"
+      placement: "left",
+      headerVisible: "true"
     };
   }
 
@@ -64,6 +72,12 @@ class Landing extends Component {
       collapsed: !this.state.collapsed
     });
   };
+
+  hideHeader = () => {
+    this.setState({
+      headerVisible: false
+    });
+  }
 
   /*componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) {
@@ -75,6 +89,7 @@ class Landing extends Component {
     this.setState({
       visible: true
     });
+    this.hideHeader();
   };
 
   onClose = () => {
@@ -224,6 +239,7 @@ class Landing extends Component {
     };
     ui.start("#firebaseui-auth-container", uiConfig);
   };
+
   openLogin = () => {
     html.classList.add("is-clipped");
     this.setState({ modal: true, modalTicket: false });
@@ -290,7 +306,7 @@ class Landing extends Component {
           <Loading />
         ) : (
             <React.Fragment>
-              <div className="hero-head">
+              {this.state.headerVisible && <div className="hero-head" >
                 {/* Condicion para mostrar el componente de zoom */}
                 {showIframeZoom && <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} />}
 
@@ -313,7 +329,7 @@ class Landing extends Component {
 
                 {/* fin del banner */}
 
-              </div>
+              </div>}
 
               {/* Menú secciones del landing */}
               <Content>
@@ -351,12 +367,13 @@ class Landing extends Component {
                       {/*Aqui empieza el menu para dispositivos < tablet*/}
 
                       <div className="hiddenMenuMobile_Landing">
-                        <Button block onClick={this.showDrawer}>
-                          {React.createElement(MenuOutlined, {
+                        <Button block style={drawerButton} onClick={this.showDrawer}>
+                          {/* {React.createElement( {
                             className: "trigger",
                             onClick: this.toggle
-                          })}
-                          Menu
+                          })} */}
+                          <MenuOutlined style={{ fontSize: "15px" }} />
+                          <div>Menu</div>
                         </Button>
                       </div>
 
@@ -410,7 +427,8 @@ class Landing extends Component {
                 second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
             </React.Fragment>
-          )}
+          )
+        }
       </section>
     );
   }
