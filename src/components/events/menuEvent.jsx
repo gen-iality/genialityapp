@@ -35,12 +35,15 @@ class MenuEvent extends Component {
   }
 
   async obtainUserFirebase() {
+    //Se trae el api que contiene el menu
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
     try {
+      //Dentro del try catch se trae el api que trae el token, 
+      //Si existe el token realiza la validacion si existe o no en el evento para traer el menu publico, 
+      //si no, trae el menu para usuarios inscritos al evento
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
-
-
+      //Si resp es verdadero y trae status 200 pasara a validar si existe o no en el evento
       if (resp.status !== 200 && resp.status !== 202)
         return;
 
@@ -49,10 +52,12 @@ class MenuEvent extends Component {
         .get()
         .then(snapshot => {
           if (snapshot.empty) {
+            //Si no existe cargara los items publicos
             this.publicItems(event)
             console.log("No matching documents.");
             return;
           } else {
+            //Si existe cargará el menu para usuarios inscritos
             console.log("USUARIO REGISTRADO.");
             let menuBase = { ...event.itemsMenu }
             this.setState({ itemsMenu: menuBase })
@@ -61,13 +66,13 @@ class MenuEvent extends Component {
         .catch(err => {
           console.log("Error getting documents", err);
         });
-
-      console.log("data ", resp.data);
     } catch{
+      //Si el api que trae el token falla, cargara los items publicos
       this.publicItems(event)
     }
   }
 
+  //Funcion que carga los items publicos del menu
   publicItems(event) {
     let items = event.itemsMenu || {}
     let itemsMenu = []
