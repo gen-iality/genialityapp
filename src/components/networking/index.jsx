@@ -94,39 +94,38 @@ export default class ListEventUser extends Component {
       <React.Fragment>
         <EventContent>
           {/* Componente de busqueda */}
+          <Tabs>
+            <TabPane tab="Asistentes" key="1">
+              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                <p>
+                  <h1> Busca aquí el usuarios.</h1>
+                </p>
 
-          <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-            <p>
-              <h1> Busca aquí el usuarios.</h1>
-            </p>
+                <SearchComponent
+                  placeholder={""}
+                  data={userReq}
+                  kind={"user"}
+                  event={this.props.event._id}
+                  searchResult={this.searchResult}
+                  clear={this.state.clearSearch}
+                />
+              </Col>
+              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                <Alert
+                  message="Información Adicicional"
+                  description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
+                  type="info"
+                  closable
+                />
+              </Col>
 
-            <SearchComponent
-              placeholder={""}
-              data={userReq}
-              kind={"user"}
-              event={this.props.event._id}
-              searchResult={this.searchResult}
-              clear={this.state.clearSearch}
-            />
-          </Col>
-          <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-            <Alert
-              message="Información Adicicional"
-              description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
-              type="info"
-              closable
-            />
-          </Col>
-
-          <div style={{ marginTop: 10 }}>
-            {this.state.loading ? (
-              <Fragment>
-                <Loading />
-                <h2 className="has-text-centered">Cargando...</h2>
-              </Fragment>
-            ) : (
-              <Tabs defaultActiveKey="1" type="card">
-                <TabPane tab="Asistentes" key="1">
+              <div style={{ marginTop: 10 }}>
+                {this.state.loading ? (
+                  <Fragment>
+                    <Loading />
+                    <h2 className="has-text-centered">Cargando...</h2>
+                  </Fragment>
+                ) : (
                   <div>
                     <div>
                       {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
@@ -174,16 +173,17 @@ export default class ListEventUser extends Component {
                     {/* Paginacion para mostrar datos de una manera mas ordenada */}
                     <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                   </div>
-                </TabPane>
-                <TabPane tab="Mis Contactos" key="2">
-                  <ContactList eventId={this.props.event._id} />
-                </TabPane>
-                <TabPane tab="Solicitudes" key="3">
-                  <RequestList eventId={this.props.event._id} />
-                </TabPane>
-              </Tabs>
-            )}
-          </div>
+                )}
+              </div>
+            </TabPane>
+            <TabPane tab="Mis Contactos" key="2">
+              <ContactList eventId={this.props.event._id} />
+            </TabPane>
+
+            <TabPane tab="Solicitudes" key="3">
+              <RequestList eventId={this.props.event._id} />
+            </TabPane>
+          </Tabs>
         </EventContent>
       </React.Fragment>
     );
