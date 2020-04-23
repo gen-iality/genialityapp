@@ -17,6 +17,9 @@ import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from
 import { parseUrl } from "../helpers/constants";
 
 const { Header, Content, Footer } = Layout;
+const zIndex = {
+  zIndex: "1"
+}
 
 class Headers extends Component {
   constructor(props) {
@@ -164,9 +167,10 @@ class Headers extends Component {
         <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
           <Menu theme="light" mode="horizontal">
             <Row justify="space-between" align="middle">
+
               {/*evius LOGO */}
 
-              <Row justify="space-between" align="middle">
+              <Row className="logo-header" justify="space-between" align="middle">
                 <Link to={"/"}>
                   <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
                 </Link>
@@ -175,7 +179,7 @@ class Headers extends Component {
                 {showAdmin && (
                   <Col span={2} offset={3} data-target="navbarBasicExample">
                     <span className="icon icon-menu" onClick={this.handleMenuEvent}>
-                      <Button onClick={this.showDrawer}>
+                      <Button style={zIndex} onClick={this.showDrawer}>
                         {React.createElement(this.state.showEventMenu ? MenuUnfoldOutlined : MenuFoldOutlined, {
                           className: "trigger",
                           onClick: this.toggle

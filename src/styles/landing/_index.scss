@@ -1,5 +1,4 @@
 section.landing {
-
   *:not(span) {
     color: $fontColor;
   }
@@ -17,7 +16,6 @@ section.landing {
 
     .nombre {
       .event-name {
-
         h2,
         span {
           color: white;
@@ -105,7 +103,6 @@ section.landing {
 
     .ver-mas {
       .aforo {
-
         // display: none; //temporal
         .titulo {
           font-weight: 900;
@@ -172,7 +169,6 @@ section.landing {
 
   .arrows {
     .arrow {
-
       &.left,
       &.right {
         display: block;
@@ -215,9 +211,7 @@ section.landing {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-
       }
-
 
       .title-description {
         display: block;
@@ -364,8 +358,8 @@ section.landing {
 
 .hiddenMenuMobile_Landing {
   position: fixed;
-  top: 55px;
-  left: 0%;
+  top: 10px;
+  left: 20px;
   z-index: 1;
 
   @media screen and (min-width: "1030px") {
@@ -376,7 +370,6 @@ section.landing {
 .ant-comment-avatar {
   margin-right: 0px !important;
 }
-
 
 // Estilos del editor
 
@@ -415,7 +408,7 @@ section.landing {
 
 .ql-editor ol,
 .ql-editor ul {
-  padding-left: 0.5em !important
+  padding-left: 0.5em !important;
 }
 
 .ql-container.ql-snow,
@@ -423,15 +416,11 @@ section.landing {
   font-family: $family-sans-serif !important;
 }
 
-
-
 // Estilos del banner
 
 .banner-anim {
   min-height: 52vh !important;
   max-height: 60vh !important;
-
-
 
   // .banner-user {
   //   height: 55vh;
@@ -443,7 +432,6 @@ section.landing {
     position: relative;
     overflow: hidden;
     padding: 0 6%;
-
   }
 
   .banner-user-text-container {
@@ -469,7 +457,6 @@ section.landing {
   .banner-user-elem .banner-user-text {
     font-size: 1.5rem;
     padding: 0% 6% 3%;
-
   }
 
   .banner-anim-elem .bg {

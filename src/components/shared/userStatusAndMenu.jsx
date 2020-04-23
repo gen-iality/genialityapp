@@ -6,6 +6,11 @@ import { Menu, Dropdown, Avatar, Button, Col, Row } from "antd";
 import { DownOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, withRouter } from "react-router-dom";
 
+const MenuStyle = {
+  flex: 1,
+  textAlign: "right"
+}
+
 let userStatusAndMenu = props => {
   let user = props.user;
   let menuOpen = props.menuOpen;
@@ -56,7 +61,7 @@ let userStatusAndMenu = props => {
   );
 
   let loggedOutUser = (
-    <div style={{ flex: 1, textAlign: "right" }}>
+    <div style={MenuStyle}>
       <Button type="primary" onClick={logout}>
         <FormattedMessage id="header.login" defaultMessage="Sign In" />
       </Button>
@@ -64,14 +69,12 @@ let userStatusAndMenu = props => {
   );
 
   let loggedInuser = (
-    <Row style={{ flex: 1, textAlign: "right" }}>
-      <Col style={{ flex: 1, textAlign: "right" }}>
+    <Row style={MenuStyle}>
+      <Col style={MenuStyle}>
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
-            {photo ? <Avatar src={photo} /> : <Avatar>{name && name.charAt(0).toUpperCase()}</Avatar>}
-            &nbsp;&nbsp;&nbsp;{name}&nbsp;&nbsp;
-            {/* <DownOutlined /> */}
-            {/* icon={<UserOutlined />} {name} */}
+            {photo ? <Avatar src={photo} /> : <Avatar className="avatar_menu-user">{name && name.charAt(0).toUpperCase()}</Avatar>}
+            <span className="name_menu-user">&nbsp;&nbsp;{name}&nbsp;&nbsp;</span>
           </a>
         </Dropdown>
       </Col>

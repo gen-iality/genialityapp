@@ -38,7 +38,14 @@ momentLocalizer();
 
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
-let factor = 0.3;
+
+
+const drawerButton = {
+  height: "46px",
+  padding: "7px 10px",
+  fontSize: "10px",
+
+}
 
 class Landing extends Component {
   constructor(props) {
@@ -360,12 +367,13 @@ class Landing extends Component {
                       {/*Aqui empieza el menu para dispositivos < tablet*/}
 
                       <div className="hiddenMenuMobile_Landing">
-                        <Button block onClick={this.showDrawer}>
-                          {React.createElement(MenuOutlined, {
+                        <Button block style={drawerButton} onClick={this.showDrawer}>
+                          {/* {React.createElement( {
                             className: "trigger",
                             onClick: this.toggle
-                          })}
-                          Menu
+                          })} */}
+                          <MenuOutlined style={{ fontSize: "15px" }} />
+                          <div>Menu</div>
                         </Button>
                       </div>
 
