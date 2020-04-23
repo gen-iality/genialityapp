@@ -13,17 +13,17 @@ class menuLanding extends Component {
         super(props);
         this.state = {
             menu: {
-                agenda: {
-                    name: "Agenda",
-                    section: "agenda",
-                    icon: "ReadOutlined",
-                    checked: false,
-                    permissions: "public"
-                },
                 evento: {
                     name: "Evento",
                     section: "evento",
                     icon: "CalendarOutlined",
+                    checked: false,
+                    permissions: "public"
+                },
+                agenda: {
+                    name: "Agenda",
+                    section: "agenda",
+                    icon: "ReadOutlined",
                     checked: false,
                     permissions: "public"
                 },
