@@ -35,8 +35,8 @@ export default class ListEventUser extends Component {
   }
 
   componentDidMount() {
-    this.loadData();
     this.getInfoCurrentUser();
+    this.loadData();
   }
 
   loadData = async () => {
