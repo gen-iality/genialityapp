@@ -299,7 +299,7 @@ class Landing extends Component {
           <Loading />
         ) : (
             <React.Fragment>
-              ({this.state.headerVisible && <div className="hero-head" >
+              {this.state.headerVisible && <div className="hero-head" >
                 {/* Condicion para mostrar el componente de zoom */}
                 {showIframeZoom && <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} />}
 
@@ -322,7 +322,7 @@ class Landing extends Component {
 
                 {/* fin del banner */}
 
-              </div>})
+              </div>}
 
               {/* Menú secciones del landing */}
               <Content>
