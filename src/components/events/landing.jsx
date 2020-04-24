@@ -47,6 +47,16 @@ const drawerButton = {
 
 }
 
+const imageCenter = {
+  maxWidth: "100%",
+  margin: "0 auto",
+  display: "block"
+}
+
+const defautlColorMenu = {
+  backgroundColor: "white"
+}
+
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -313,7 +323,8 @@ class Landing extends Component {
                 {/* Componente banner */}
 
                 <BannerEvent
-                  bgImage={event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png"}
+                  bgImage={event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
+                  bgImageText={event.styles.event_image}
                   title={event.name}
                   organizado={
                     <Link
@@ -339,11 +350,14 @@ class Landing extends Component {
                   <div className="hiddenMenu_Landing">
                     <Sider
                       className="containerMenu_Landing"
+                      style={{ backgroundColor: event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
                       trigger={null}
                       collapsible
                       collapsed={this.state.collapsed}
                       width={250}>
+
                       <div className="items-menu_Landing ">
+                        <img src={event.styles.event_image} style={imageCenter} />
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
@@ -378,13 +392,14 @@ class Landing extends Component {
                       </div>
 
                       <Drawer
-                        title="Menu"
+                        title={event.name}
                         placement={this.state.placement}
                         closable={true}
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
                         bodyStyle={{ padding: "0px" }}>
+                        <img src={event.styles.event_image} style={imageCenter} />
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
@@ -495,11 +510,6 @@ const MapComponent = props => {
                 </div>
               ))
         }
-      </div>
-
-      {/* ESTO ES UNA PRUEBA PARA UN BANNER DE PUBLICIDAD*/}
-      <div className="has-margin-top-50 is-hidden-touch" >
-        <img style={{ width: "100%" }} src="http://www.ofifacil.com/ideas-ejemplos/varios/ofifacil-hacer-pagina-web-diseno-grafico-023.gif" alt="" srcset="" />
       </div>
     </div>
   );

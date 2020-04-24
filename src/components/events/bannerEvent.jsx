@@ -10,7 +10,7 @@ import { EnvironmentOutlined } from "@ant-design/icons";
 const BgElement = Element.BgElement;
 
 
-let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd }) => {
+let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText }) => {
 
     return (
         <BannerAnim prefixCls="banner-user">
@@ -27,7 +27,13 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd }) =>
                         backgroundPosition: 'center',
                     }}
                 />
-                <div className="banner-user-text-container">
+                <div className="banner-user-text-container"
+                    style={{
+                        backgroundImage: `url(${bgImageText})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+
+                    }}>
                     <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
 
                         {/* Fecha del evento */}
