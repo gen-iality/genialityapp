@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import WithLoading from "./../shared/withLoading";
 import { Link, withRouter } from "react-router-dom";
 import { Layout, Menu } from "antd";
+import { firestore } from "../../helpers/firebase";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
@@ -20,7 +21,7 @@ class MenuEvent extends Component {
       logged: false,
       email: false
     }
-    this.validationMenu = this.validationMenu.bind(this)
+    this.obtainUserFirebase = this.obtainUserFirebase.bind(this)
   }
 
   async componentDidMount() {
@@ -29,33 +30,20 @@ class MenuEvent extends Component {
     // const menuEvent = event.itemsMenu || {};
     // console.log("MENU LANDING", menuEvent);
     // this.setState({ itemsMenu: menuEvent })
-    this.validationMenu()
+
+    this.obtainUserFirebase()
   }
 
-  async validationMenu() {
-    //Se consultan las api necesarias para obtener el menu y los usuarios del evento 
-    const usersEvent = await UsersApi.getAll(this.props.eventId, "?pageSize=10000")
+  async obtainUserFirebase() {
+    //Se trae el api que contiene el menu
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
 
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
     let items = event.itemsMenu || {}
-
-    //Se declara un array para guardar las secciones que tengan permiso publico
-    let itemsMenu = []
-    let menuBase = []
-
-
-
-    //Si el usuario logueado se encuentra en el evento, muestra el menu por completo, si no muestra el menu publico
-
-    for (const userEvnt in usersEvent.data) {
-
-      let menuBase = { ...event.itemsMenu }
-      this.setState({ itemsMenu: menuBase })
-
-    }
+    this.setState({ itemsMenu: items })
   }
 
+  //Funcion que carga los items publicos del menu
   publicItems(event) {
     let items = event.itemsMenu || {}
     let itemsMenu = []
