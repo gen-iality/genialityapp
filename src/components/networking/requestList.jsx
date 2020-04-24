@@ -10,8 +10,11 @@ export default ({ eventId }) => {
   const [requestList, setRequestList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
+  // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
+    // Se consulta el id del usuario por el token
     getCurrentUserId(Cookie.get("evius_token")).then(async (userId) => {
+      // Se consulta la informacion del Id recibido en Firebase (EventUser)
       let response = await getCurrentEventUser(eventId, userId);
 
       Networking.getInvitationsReceived(eventId, response._id).then(({ data }) => {
@@ -22,6 +25,7 @@ export default ({ eventId }) => {
     });
   };
 
+  // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = (userId, state) => {
     let data = { response: state ? "acepted" : "rejected" };
     Networking.acceptOrDeclineInvitation(eventId, userId, data)
