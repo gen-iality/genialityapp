@@ -625,6 +625,7 @@ class AgendaEdit extends Component {
                                                             </thead>
                                                             <tbody>
                                                                 {
+
                                                                     start_url ?
                                                                         <tr>
                                                                             <th>

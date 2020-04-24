@@ -10,9 +10,10 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-
+import { List, Avatar } from 'antd';
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 //custom
-import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
+import { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
@@ -47,6 +48,12 @@ const drawerButton = {
 
 }
 
+const IconText = ({ icon, text }) => (
+  <span>
+    {React.createElement(icon, { style: { marginRight: 8 } })}
+    {text}
+  </span>
+);
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -126,7 +133,17 @@ class Landing extends Component {
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
+    console.log(id)
+    const infoAgenda = await AgendaApi.byEvent(id)
+    const infoAgendaArr = []
+    for (const prop in infoAgenda.data) {
+      if ("Aqui", infoAgenda.data[prop].meeting_id) {
+        infoAgendaArr.push(infoAgenda.data[prop])
+      }
+    }
 
+    console.log(infoAgendaArr)
+    this.setState({ infoAgendaArr })
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
 
@@ -200,7 +217,7 @@ class Landing extends Component {
               </div>
             </Card>
           </div>
-          <MapComponent event={event} />
+          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} />
         </div>
       )
     };
@@ -435,8 +452,8 @@ class Landing extends Component {
 }
 
 //Component del lado del mapa
-const MapComponent = props => {
-  const { event } = props;
+const MapComponent = (props) => {
+  const { event, infoAgendaArr } = props;
   return (
     <div className="column container-map">
       <div>
@@ -448,6 +465,29 @@ const MapComponent = props => {
                   value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
                   modules={{ toolbar: false }}
                   readOnly={true}
+                />
+                <h1>Listado de conferencias Virtuales</h1>
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  pagination={{
+                    onChange: page => {
+                      console.log(page);
+                    },
+                    pageSize: 3,
+                  }}
+                  dataSource={infoAgendaArr}
+                  renderItem={item => (
+                    <List.Item
+                      key={item.name}
+                    >
+                      <List.Item.Meta
+                        title="Entrar a esta conferencia"
+                        description={<a href={item.join_url}>{item.name}</a>}
+                      />
+                      {item.content}
+                    </List.Item>
+                  )}
                 />
               </div>
             ) : (
