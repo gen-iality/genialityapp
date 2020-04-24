@@ -222,6 +222,7 @@ class General extends Component {
             datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
             datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
             picture: path.length > 1 ? path : event.picture,
+            video: event.video || null,
             venue: event.venue,
             analytics: event.analytics,
             address: event.address,
@@ -342,7 +343,7 @@ class General extends Component {
                             </div>
                         </div>
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required has-text-grey-light">Contenido de administrador</label>
                             <div className="control">
                                 <input className="input" name={"adminContenido"} type="text"
@@ -350,9 +351,9 @@ class General extends Component {
                                     onChange={this.handleChange}
                                 />
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required">Desea mantener activa las fechas ?</label>
                             <div class="select is-primary">
                                 <select name={"has_date"} value={event.has_date} defaultValue={event.has_date} onChange={this.handleChange}>
@@ -361,10 +362,10 @@ class General extends Component {
                                     <option value={false}>No</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="field">
-                            <label className="label required">El evento es público o es privado?</label>
+                            <label className="label required">El evento acepta registros o es privado</label>
                             <p>En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido añadidas por un administrador u organizador del evento</p>
                             <div class="select is-primary">
                                 <select name={"allow_register"} value={event.allow_register} defaultValue={event.allow_register} onChange={this.handleChange}>
@@ -374,7 +375,7 @@ class General extends Component {
                             </div>
                         </div>
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required">Desea observar el detalle de la agenda ?</label>
                             <div class="select is-primary">
                                 <select name={"allow_detail_calendar"} defaultValue={event.allow_detail_calendar} value={event.allow_detail_calendar} onChange={this.handleChange}>
@@ -383,9 +384,9 @@ class General extends Component {
                                     <option value={false}>No</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required">Desea Habilitar la traducción del lenguaje en el aplicativo</label>
                             <div class="select is-primary">
                                 <select name={"enable_language"} defaultValue={event.enable_language} value={event.enable_language} onChange={this.handleChange}>
@@ -394,7 +395,7 @@ class General extends Component {
                                     <option value={false}>No</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> */}
                         {
                             event.app_configuration
 
@@ -450,23 +451,23 @@ class General extends Component {
                             </div>
                         </div>
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required has-text-grey-light">Id Analiticas</label>
                             <div className="control">
                                 <input className="input" name={"analytics"} type="text"
                                     placeholder="Id analiticas" value={event.analytics}
                                     onChange={this.handleChange} />
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="field">
+                        {/* <div className="field">
                             <label className="label required has-text-grey-light">link de banner externo</label>
                             <div className="control">
                                 <input className="input" name={"banner_image_link"} type="text"
                                     placeholder="Link de banner externo" value={event.banner_image_link}
                                     onChange={this.handleChange} />
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="field">
                             <div className="columns is-mobile">
@@ -561,6 +562,16 @@ class General extends Component {
                                 </div>
                                 {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
                             </div>
+                            <div className="field">
+                                <label className="label has-text-grey-light">Video</label>
+                                <div className="control">
+                                    <input className="input" name={"video"} type="text"
+                                        placeholder="¿El evento tiene video promocional?" value={event.video}
+                                        onChange={this.handleChange} />
+                                </div>
+                            </div>
+
+
                             <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true} />
                             <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.selectType} options={types} required={true} />
                         </div>

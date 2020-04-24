@@ -10,9 +10,10 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-
+import { List, Avatar } from 'antd';
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 //custom
-import { Actions, EventsApi, SpeakersApi } from "../../helpers/request";
+import { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
@@ -47,6 +48,12 @@ const drawerButton = {
 
 }
 
+const IconText = ({ icon, text }) => (
+  <span>
+    {React.createElement(icon, { style: { marginRight: 8 } })}
+    {text}
+  </span>
+);
 const imageCenter = {
   maxWidth: "100%",
   minWidth: "100%",
@@ -137,7 +144,17 @@ class Landing extends Component {
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
+    console.log(id)
+    const infoAgenda = await AgendaApi.byEvent(id)
+    const infoAgendaArr = []
+    for (const prop in infoAgenda.data) {
+      if ("Aqui", infoAgenda.data[prop].meeting_id) {
+        infoAgendaArr.push(infoAgenda.data[prop])
+      }
+    }
 
+    console.log(infoAgendaArr)
+    this.setState({ infoAgendaArr })
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
 
@@ -189,18 +206,20 @@ class Landing extends Component {
             >
               <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
 
-              <div className="column is-centered">
+              {event.video && <div className="column is-centered mediaplayer">
                 <ReactPlayer
-                  width={"100%"}
-                  height={"auto"}
+                  //width={"100%"}
+                  //height={"500px"}
                   style={{
                     display: "block",
                     margin: "0 auto"
                   }}
-                  url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                  //
+                  url={event.video}
+                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                   controls
                 />
-              </div>
+              </div>}
 
               <div>
                 {typeof event.description === "string" ? (
@@ -211,7 +230,7 @@ class Landing extends Component {
               </div>
             </Card>
           </div>
-          <MapComponent event={event} />
+          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} />
         </div>
       )
     };
@@ -324,8 +343,8 @@ class Landing extends Component {
                 {/* Componente banner */}
 
                 <BannerEvent
-                  bgImage={event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
-                  bgImageText={event.styles.event_image}
+                  bgImage={event.styles && event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
+                  bgImageText={((event.styles && event.styles.event_image) ? event.styles.event_image : "")}
                   title={event.name}
                   organizado={
                     <Link
@@ -351,14 +370,14 @@ class Landing extends Component {
                   <div className="hiddenMenu_Landing">
                     <Sider
                       className="containerMenu_Landing"
-                      style={{ backgroundColor: event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
+                      style={{ backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
                       trigger={null}
                       collapsible
                       collapsed={this.state.collapsed}
                       width={250}>
 
                       <div className="items-menu_Landing ">
-                        <img src={event.styles.event_image} style={imageCenter} />
+                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
@@ -395,8 +414,8 @@ class Landing extends Component {
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
-                        bodyStyle={{ padding: "0px", backgroundColor: event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}>
-                        <img src={event.styles.event_image} style={imageCenter} />
+                        bodyStyle={{ padding: "0px", backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}>
+                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
@@ -447,8 +466,8 @@ class Landing extends Component {
 }
 
 //Component del lado del mapa
-const MapComponent = props => {
-  const { event } = props;
+const MapComponent = (props) => {
+  const { event, infoAgendaArr } = props;
   return (
     <div className="column container-map">
       <div>
@@ -460,6 +479,29 @@ const MapComponent = props => {
                   value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
                   modules={{ toolbar: false }}
                   readOnly={true}
+                />
+                <h1>Listado de conferencias Virtuales</h1>
+                <List
+                  itemLayout="vertical"
+                  size="large"
+                  pagination={{
+                    onChange: page => {
+                      console.log(page);
+                    },
+                    pageSize: 3,
+                  }}
+                  dataSource={infoAgendaArr}
+                  renderItem={item => (
+                    <List.Item
+                      key={item.name}
+                    >
+                      <List.Item.Meta
+                        title="Entrar a esta conferencia"
+                        description={<a href={item.join_url}>{item.name}</a>}
+                      />
+                      {item.content}
+                    </List.Item>
+                  )}
                 />
               </div>
             ) : (

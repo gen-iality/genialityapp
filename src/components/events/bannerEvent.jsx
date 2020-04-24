@@ -29,7 +29,7 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
                 />
                 <div className="banner-user-text-container"
                     style={{
-                        backgroundImage: `url(${bgImageText})`,
+                        //backgroundImage: `url(${bgImageText})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
 
