@@ -144,8 +144,8 @@ let agendaActividadDetalle = (props) => {
                               Contestar Encuesta
                             </Button>
                           ) : (
-                            <div></div>
-                          ),
+                              <div></div>
+                            ),
                         ]}>
                         <List.Item.Meta
                           title={
@@ -163,17 +163,17 @@ let agendaActividadDetalle = (props) => {
                                   </Drawer>
                                 </div>
                               ) : (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={false}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              )}
+                                  <div>
+                                    <Drawer
+                                      title={item.survey}
+                                      placement="right"
+                                      closable={false}
+                                      onClose={onClose}
+                                      visible={false}>
+                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                    </Drawer>
+                                  </div>
+                                )}
                             </div>
                           }
                         />
@@ -202,8 +202,8 @@ let agendaActividadDetalle = (props) => {
             {currentActivity.meeting_id ? (
               <h2 className="button is-success">Tiene espacio virtual </h2>
             ) : (
-              <h2 className="button is-warning">No tiene espacio Virtual </h2>
-            )}
+                <h2 className="button is-warning">No tiene espacio Virtual </h2>
+              )}
 
             {console.log(usuarioRegistrado, currentUser)}
             <Row>
@@ -235,35 +235,35 @@ let agendaActividadDetalle = (props) => {
             {currentActivity.hosts.length === 0 ? (
               <div></div>
             ) : (
-              <div>
-                <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                  <b>Conferencista:</b> &nbsp;
+                <div>
+                  <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                    <b>Conferencista:</b> &nbsp;
                   <div>
-                    <List
-                      itemLayout="horizontal"
-                      dataSource={currentActivity.hosts}
-                      renderItem={(item) => (
-                        <List.Item>
-                          <List.Item.Meta
-                            avatar={
-                              <Avatar
-                                src={
-                                  item.image
-                                    ? item.image
-                                    : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                }
-                              />
-                            }
-                            title={<strong>{item.name}</strong>}
-                            description={item.profession}
-                          />
-                        </List.Item>
-                      )}
-                    />
-                  </div>
-                </p>
-              </div>
-            )}
+                      <List
+                        itemLayout="horizontal"
+                        dataSource={currentActivity.hosts}
+                        renderItem={(item) => (
+                          <List.Item>
+                            <List.Item.Meta
+                              avatar={
+                                <Avatar
+                                  src={
+                                    item.image
+                                      ? item.image
+                                      : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                  }
+                                />
+                              }
+                              title={<strong>{item.name}</strong>}
+                              description={item.profession}
+                            />
+                          </List.Item>
+                        )}
+                      />
+                    </div>
+                  </p>
+                </div>
+              )}
             {/* Conferencistas del evento */}
             <div>
               <p className="has-text-left is-size-6-desktop">
@@ -281,8 +281,8 @@ let agendaActividadDetalle = (props) => {
                               Contestar Encuesta
                             </Button>
                           ) : (
-                            <div></div>
-                          ),
+                              <div></div>
+                            ),
                         ]}>
                         <List.Item.Meta
                           title={
@@ -300,17 +300,17 @@ let agendaActividadDetalle = (props) => {
                                   </Drawer>
                                 </div>
                               ) : (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={false}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              )}
+                                  <div>
+                                    <Drawer
+                                      title={item.survey}
+                                      placement="right"
+                                      closable={false}
+                                      onClose={onClose}
+                                      visible={false}>
+                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                    </Drawer>
+                                  </div>
+                                )}
                             </div>
                           }
                         />
@@ -321,20 +321,26 @@ let agendaActividadDetalle = (props) => {
               </p>
             </div>
             {/* Boton de para acceder a la conferencia */}
-            {currentActivity.meeting_id ? (
-              <div>
-                <button
-                  className="button is-success is-outlined is-pulled-right has-margin-top-20"
-                  disabled={currentActivity.meeting_id ? false : true}
-                  onClick={() =>
-                    showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
-                  }>
-                  Conferencia en Vivo
+            {
+              currentUser.names ? <div /> :
+                <div>
+                  {currentActivity.meeting_id ? (
+                    <div>
+                      <button
+                        className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                        disabled={currentActivity.meeting_id ? false : true}
+                        onClick={() =>
+                          showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                        }>
+                        Conferencia en Vivo en anonimo
                 </button>
-              </div>
-            ) : (
-              <div />
-            )}
+                    </div>
+                  ) : (
+                      <div />
+                    )}
+                </div>
+            }
+
             <hr></hr>
             <br />
             <br />
