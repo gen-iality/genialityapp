@@ -295,7 +295,7 @@ class MenuConfig extends Component {
             )}
 
             {/* Sección para gestion de entradas */}
-
+            {/* 
             <SubMenu
               key="sub7"
               title={
@@ -315,7 +315,7 @@ class MenuConfig extends Component {
                   Pedidos
                 </NavLink>
               </Menu.Item>
-            </SubMenu>
+            </SubMenu> */}
 
             {/* Sección estadisticas */}
 
