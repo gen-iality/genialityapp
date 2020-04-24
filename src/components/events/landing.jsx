@@ -313,7 +313,7 @@ class Landing extends Component {
                 {/* Componente banner */}
 
                 <BannerEvent
-                  bgImage={event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png"}
+                  bgImage={event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
                   title={event.name}
                   organizado={
                     <Link
@@ -343,7 +343,9 @@ class Landing extends Component {
                       collapsible
                       collapsed={this.state.collapsed}
                       width={250}>
+
                       <div className="items-menu_Landing ">
+                        <img src={event.styles.event_image} style={{ maxWidth: "100%" }} />
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
