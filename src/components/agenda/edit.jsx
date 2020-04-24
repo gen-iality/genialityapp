@@ -96,7 +96,7 @@ class AgendaEdit extends Component {
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
             console.log(info.selected_document)
-            this.setState({ virtualConference: info.start_url ? "true" : "false", selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
+            this.setState({ virtualConference: info.meeting_id ? "true" : "false", selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -258,8 +258,8 @@ class AgendaEdit extends Component {
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image } = this.state;
+        const { name, subtitle, virtualConference, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image, meeting_id } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
@@ -283,7 +283,9 @@ class AgendaEdit extends Component {
             type_id,
             has_date,
             timeConference: "",
-            selected_document
+            selected_document,
+            meeting_id: null,
+            virtualConference
         }
     };
 
@@ -319,6 +321,8 @@ class AgendaEdit extends Component {
             const info = await AgendaApi.getOne(state.edit, this.props.event._id);
             this.setState({ meeting_id: info.meeting_id, start_url: info.start_url, join_url: info.join_url, key: new Date() })
             console.log(info)
+        } else {
+            this.setState({ meeting_id: null })
         }
     }
 
