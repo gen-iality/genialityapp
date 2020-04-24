@@ -56,6 +56,7 @@ const IconText = ({ icon, text }) => (
 );
 const imageCenter = {
   maxWidth: "100%",
+  minWidth: "100%",
   margin: "0 auto",
   display: "block"
 }
@@ -401,10 +402,6 @@ class Landing extends Component {
 
                       <div className="hiddenMenuMobile_Landing">
                         <Button block style={drawerButton} onClick={this.showDrawer}>
-                          {/* {React.createElement( {
-                            className: "trigger",
-                            onClick: this.toggle
-                          })} */}
                           <MenuOutlined style={{ fontSize: "15px" }} />
                           <div>Menu</div>
                         </Button>
@@ -417,7 +414,7 @@ class Landing extends Component {
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
-                        bodyStyle={{ padding: "0px" }}>
+                        bodyStyle={{ padding: "0px", backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}>
                         {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
