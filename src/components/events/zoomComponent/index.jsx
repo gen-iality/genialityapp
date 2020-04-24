@@ -9,19 +9,19 @@ export default class ZoomComponent extends Component {
       id_conference: "284693751",
       url_conference: `https://gifted-colden-fe560c.netlify.com/?meetingNumber=`,
       meeting_id: null,
+      userEntered: null,
       isFull: false,
     };
   }
   componentDidMount() {
-    let { meetingId } = this.props;
-    this.setState({ meeting_id: meetingId });
-
+    let { meetingId, userEntered } = this.props;
+    this.setState({ meeting_id: meetingId, userEntered });
   }
 
   componentDidUpdate(prevProps) {
-    const { meetingId } = this.props;
+    const { meetingId, userEntered } = this.props;
     if (prevProps.meetingId !== meetingId) {
-      this.setState({ meeting_id: meetingId });
+      this.setState({ meeting_id: meetingId, userEntered });
     }
   }
 
@@ -34,7 +34,7 @@ export default class ZoomComponent extends Component {
 
   render() {
     const { hideIframe } = this.props;
-    let { url_conference, meeting_id } = this.state;
+    let { url_conference, meeting_id, userEntered } = this.state;
     return (
       <div className="content-zoom">
 
@@ -51,8 +51,11 @@ export default class ZoomComponent extends Component {
           enabled={this.state.isFull}
           onChange={isFull => this.setState({ isFull })}
         >
-
-          <iframe src={url_conference + meeting_id} className="iframe-zoom">
+          <iframe
+            src={url_conference + meeting_id + `&userName=${userEntered}`}
+            allow="camera *;microphone *"
+            allowusermedia
+            className="iframe-zoom nuevo">
             <p>Your browser does not support iframes.</p>
           </iframe>
         </Fullscreen>
