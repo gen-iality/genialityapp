@@ -1,31 +1,29 @@
 import React, { Fragment, useState, useEffect } from "react";
 
-import { Spin, Alert, Col, Divider } from "antd";
+import { Spin, Alert, Col, Divider, Card } from "antd";
 
 import * as Cookie from "js-cookie";
-import { userRequest, getCurrentUserId } from "./services";
+import { Networking } from "../../helpers/request";
+import { userRequest, getCurrentUserId, getCurrentEventUser } from "./services";
 
 export default ({ eventId }) => {
   const [requestList, setRequestList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  const getUserRequestList = async () => {
-    let userId = await getCurrentUserId(Cookie.get("evius_token"));
+  const getInvitationsList = async () => {
+    getCurrentUserId(Cookie.get("evius_token")).then(async (userId) => {
+      let response = await getCurrentEventUser(eventId, userId);
 
-    userRequest
-      .getUserRequestList(eventId, userId)
-      .then((list) => {
-        console.log("esta es la respuesta :", list);
+      Networking.getInvitationsReceived(eventId, response._id).then(({ data }) => {
+        console.log("esta es la respuesta :", data);
         setCurrentUserId(userId);
-        if (list) setRequestList(list);
-      })
-      .catch((err) => {
-        console.log("Hubo un problema:", err);
+        if (data) setRequestList(data);
       });
+    });
   };
 
   useEffect(() => {
-    getUserRequestList();
+    getInvitationsList();
   }, [eventId]);
 
   if (currentUserId)
