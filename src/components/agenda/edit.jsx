@@ -49,13 +49,14 @@ class AgendaEdit extends Component {
             categories: [],
             start_url: "",
             join_url: "",
+            meeting_id: "",
             documents: [],
             types: [],
             roles: [],
             hosts: [],
             selected_document: [],
             nameDocuments: [],
-            virtualConference:"false"
+            virtualConference: "false"
         }
         this.createConference = this.createConference.bind(this)
     }
@@ -95,7 +96,7 @@ class AgendaEdit extends Component {
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
             console.log(info.selected_document)
-            this.setState({ virtualConference: info.start_url ?"true":"false" ,selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
+            this.setState({ virtualConference: info.start_url ? "true" : "false", selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -288,16 +289,16 @@ class AgendaEdit extends Component {
 
     async createConference() {
         console.log(this.state.virtualConference)
-        if(this.state.virtualConference === "true"){
+        if (this.state.virtualConference === "true") {
             const zoomData = {
                 activity_id: this.props.location.state.edit,
                 activity_name: this.state.name,
                 event_id: this.props.event._id,
                 agenda: this.props.event.description,
             }
-    
+
             console.log(zoomData)
-    
+
             const options = {
                 method: 'POST',
                 headers: {
@@ -306,17 +307,17 @@ class AgendaEdit extends Component {
                 data: zoomData,
                 url: ApiEviusZoomServer,
             };
-    
+
             let response = await axios(options);
-    
+
             console.log(response)
-    
+
             toast.success("Conferencia Creada")
 
             const { event, location: { state } } = this.props;
 
             const info = await AgendaApi.getOne(state.edit, this.props.event._id);
-            this.setState({start_url: info.start_url, join_url: info.join_url, key: new Date()})
+            this.setState({ meeting_id: info.meeting_id, start_url: info.start_url, join_url: info.join_url, key: new Date() })
             console.log(info)
         }
     }
@@ -602,10 +603,18 @@ class AgendaEdit extends Component {
                                                 <option value="true">Si</option>
                                             </select>
                                         </div>
-                                        <div>
-                                            <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Crear espacio virtual</button>
+                                        <div style={{ marginTop: "2%" }}>
+                                            {
+                                                this.state.meeting_id ?
+                                                    <div>
+                                                        <p>El id de la conferencia virtual es:</p>
+                                                        <p>{this.state.meeting_id}</p>
+                                                    </div>
+                                                    :
+                                                    <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Crear espacio virtual</button>
+                                            }
                                         </div>
-                                        
+
                                     </div>
                                     :
                                     <div />
@@ -620,18 +629,18 @@ class AgendaEdit extends Component {
                                         </thead>
                                         <tbody>
                                             {
-                                            join_url ? 
-                                            <tr>
-                                                <th>
-                                                    <a href={join_url} >Acceso para conferencistas</a>
-                                                </th>
-                                            </tr>
-                                            :
-                                            <tr>
-                                                <th>
-                                                    <p>Crea una conferencia virtual</p>
-                                                </th>
-                                            </tr>
+                                                join_url ?
+                                                    <tr>
+                                                        <th>
+                                                            <a href={join_url} >Acceso para conferencistas</a>
+                                                        </th>
+                                                    </tr>
+                                                    :
+                                                    <tr>
+                                                        <th>
+                                                            <p>Crea una conferencia virtual</p>
+                                                        </th>
+                                                    </tr>
                                             }
                                         </tbody>
                                     </table>
