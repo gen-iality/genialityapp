@@ -40,13 +40,11 @@ export const Actions = {
     return privateInstance.post(url, data).then(({ data }) => data);
   },
   delete: (url, id, unsafe) => {
-    if (unsafe)
-      return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
+    if (unsafe) return publicInstance.delete(`${url}${id}`).then(({ data }) => data);
     return privateInstance.delete(`${url}/${id}`).then(({ data }) => data);
   },
   edit: (url, data, id, unsafe) => {
-    if (unsafe)
-      return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
+    if (unsafe) return publicInstance.put(`${url}${id}`, data).then(({ data }) => data);
     return privateInstance.put(`${url}/${id}`, data).then(({ data }) => data);
   },
   post: (url, data, unsafe) => {
@@ -62,8 +60,7 @@ export const Actions = {
     return privateInstance.put(url, data).then(({ data }) => data);
   },
   getOne: (url, id, unsafe) => {
-    if (unsafe)
-      return publicInstance.get(`${url}${id}`).then(({ data }) => data);
+    if (unsafe) return publicInstance.get(`${url}${id}`).then(({ data }) => data);
     return privateInstance.get(`${url}${id}`).then(({ data }) => data);
   },
   getAll: (url, unsafe) => {
@@ -84,6 +81,9 @@ export const EventsApi = {
   invitations: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, "invitations");
   },
+  sendInvitation: async (eventId, data) => {
+    return await Actions.post(`/api/events/${eventId}/invitation`, data);
+  },
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
@@ -99,6 +99,9 @@ export const EventsApi = {
   },
   deleteOne: async (id) => {
     return await Actions.delete("/api/events/", id);
+  },
+  getStyles: async (id) => {
+    return await Actions.get(`/api/events/${id}/stylestemp`);
   },
 };
 export const UsersApi = {
@@ -122,10 +125,7 @@ export const UsersApi = {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
   createOne: async (data, id) => {
-    return await Actions.post(
-      `/api/eventUsers/createUserAndAddtoEvent/${id}`,
-      data
-    );
+    return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
   },
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
@@ -158,8 +158,6 @@ export const SurveysApi = {
     return await Actions.getAll(`/api/events/${event}/surveys?indexby=activity_id&value=${activity_id}`);
   },
 
-  
-
   getOne: async (event, id) => {
     return await Actions.getOne(`/api/events/${event}/surveys/`, id);
   },
@@ -173,10 +171,13 @@ export const SurveysApi = {
     return await Actions.delete(`/api/events/${event}/surveys`, id);
   },
   createQuestion: async (event, id, data) => {
-    return await Actions.put(
-      `/api/events/${event}/surveys/${id}?newquestion=1`,
-      data
-    );
+    return await Actions.put(`/api/events/${event}/surveys/${id}?newquestion=1`, data);
+  },
+  deleteQuestion: async (event, surveyId, index) => {
+    return await Actions.delete(`/api/events/${event}/surveys/${surveyId}?delete=`, index, true);
+  },
+  editQuestion: async (event, id, index, data) => {
+    return await Actions.put(`/api/events/${event}/questionedit/${id}?questionNo=${index}`, data);
   },
 };
 
@@ -185,15 +186,11 @@ export const DocumentsApi = {
     return await Actions.getAll(`api/events/${event}/documents`);
   },
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/documents`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/documents`).then(({ data }) => data);
   },
 
   getFiles: async (event, id) => {
-    return await Actions.getAll(
-      `api/events/${event}/documents?father_id=${id}`
-    );
+    return await Actions.getAll(`api/events/${event}/documents?father_id=${id}`);
   },
   getOne: async (event, id) => {
     return await Actions.getOne(`api/events/${event}/documents/`, id);
@@ -284,21 +281,13 @@ export const HelperApi = {
 };
 export const CertsApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/certificates`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/certificates`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/certificate/`, id);
   },
   generate: async (content, image) => {
-    return await Actions.get(
-      `api/pdfcertificate?content=` +
-        content +
-        "&image=" +
-        image +
-        "&download=1"
-    );
+    return await Actions.get(`api/pdfcertificate?content=` + content + "&image=" + image + "&download=1");
   },
   editOne: async (data, id) => {
     return await Actions.edit("/api/certificates", data, id);
@@ -327,9 +316,7 @@ export const CertsApi = {
 
 export const NewsFeed = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/newsfeed`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/newsfeed/`, id);
@@ -347,9 +334,7 @@ export const NewsFeed = {
 
 export const PushFeed = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/sendpush`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${id}/sendpush`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/sendpush/`, id);
@@ -367,9 +352,7 @@ export const PushFeed = {
 
 export const FaqsApi = {
   byEvent: async (id) => {
-    return await Actions.getAll(`api/events/${id}/faqs`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${id}/faqs`).then(({ data }) => data);
   },
   getOne: async (id) => {
     return await Actions.get(`api/events/${id}/faqs/`, id);
@@ -404,9 +387,7 @@ export const RolAttApi = {
 };
 export const SpacesApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/spaces`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/spaces`).then(({ data }) => data);
   },
   getOne: async (event, id) => {
     return await Actions.get(`api/events/${event}/spaces/`, id);
@@ -423,19 +404,13 @@ export const SpacesApi = {
 };
 export const CategoriesAgendaApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/categoryactivities`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/categoryactivities/`, id);
   },
   editOne: async (data, id, event) => {
-    return await Actions.edit(
-      `api/events/${event}/categoryactivities`,
-      data,
-      id
-    );
+    return await Actions.edit(`api/events/${event}/categoryactivities`, data, id);
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`api/events/${event}/categoryactivities`, id);
@@ -446,9 +421,7 @@ export const CategoriesAgendaApi = {
 };
 export const TypesAgendaApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/type`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/type`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/type/`, id);
@@ -480,17 +453,12 @@ export const AgendaApi = {
     return await Actions.create(`api/events/${event}/activities`, data);
   },
   duplicate: async (event, data, id) => {
-    return await Actions.create(
-      `api/events/${event}/duplicateactivitie/${id}`,
-      data
-    );
+    return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`, data);
   },
 };
 export const SpeakersApi = {
   byEvent: async (event) => {
-    return await Actions.getAll(`api/events/${event}/host`).then(
-      ({ data }) => data
-    );
+    return await Actions.getAll(`api/events/${event}/host`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/host/`, id);
@@ -509,19 +477,22 @@ export const SpeakersApi = {
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
     var info = { user_id, activity_id };
-    return await Actions.create(
-      `api/events/${event}/activity/activity_attendee`,
-      info
-    );
+    return await Actions.create(`api/events/${event}/activity/activity_attendee`, info);
+  },
+};
+
+export const Networking = {
+  getInvitationsReceived: async (eventId, userId) => {
+    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}`);
+  },
+  getInvitationsSent: async (eventId, userId) => {
+    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}`);
   },
 };
 
 export const ActivityBySpeaker = {
   byEvent: async (event, idSpeaker) => {
-    return await Actions.getOne(
-      `api/events/${event}/activitiesbyhost/`,
-      idSpeaker
-    );
+    return await Actions.getOne(`api/events/${event}/activitiesbyhost/`, idSpeaker);
   },
 };
 

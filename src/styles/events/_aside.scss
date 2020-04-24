@@ -19,7 +19,7 @@
 .event-aside {
   height: auto;
   padding: 1.25rem 0 !important;
-  background: #F5F5F5;
+  min-width: 250px !important;
   .subtitle {
     display: inline-flex;
     align-items: center;
@@ -29,8 +29,7 @@
     }
   }
 
-
-  .menu-label{
+  .menu-label {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -79,7 +78,7 @@
     }
   }
 }
-.menu-label{
+.menu-label {
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -106,10 +105,10 @@
   }
 }
 
-.icon-menu{
+.icon-menu {
   margin-right: 1em;
 }
-.is-hidden-mobile{
+.is-hidden-mobile {
   box-shadow: none;
 }
 

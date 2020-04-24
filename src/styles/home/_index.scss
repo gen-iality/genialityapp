@@ -1,35 +1,65 @@
+// Logo evius header
+
 div.icon-header {
-  height: 20px;
   width: 115px;
+  margin-right: 0px;
+  top: 6px;
+  @media screen and (max-width: "1030px") {
+    position: absolute;
+    top: 6px;
+    left: 35%;
+  }
 }
 
-.icon-menu{
+// Menu de usuario header
+.avatar_menu-user {
+  background: $color-evius !important;
+}
+
+.name_menu-user {
+  color: initial;
+  @media screen and (max-width: "1030px") {
+    display: none;
+  }
+}
+
+.icon-menu {
   cursor: pointer;
 }
-.title-home{
+
+.title-home {
   font-weight: 900;
 }
 
-.main{
-  padding-top: 6rem;
+.ant-layout-header {
+  background: #fff !important;
+  height: 67px !important;
+  padding: 0 30px !important;
+}
+
+.main {
+  margin-top: 5%;
+
   .columns {
     margin: 0;
   }
 }
 
-.menu-filter{
+.menu-filter {
   display: flex;
   flex-direction: row;
 }
 
-section.home{
-  padding: 0 .75rem;
-  div.dynamic-content{
+section.home {
+  padding: 0 0.75rem;
+
+  div.dynamic-content {
     min-height: 100%;
     position: relative;
-    padding: 0 .75rem;
+    padding: 0 0.75rem;
+
     .column {
-      padding: 0 .75rem 1.5rem .75rem;
+      padding: 0 0.75rem 1.5rem 0.75rem;
     }
   }
 }
@@ -40,13 +70,12 @@ section.home{
   width: 100%;
 }
 
-
-
 @media only screen and (max-width: $breakpoint-mobile) {
   .main {
     padding-top: 3em;
   }
-  .media{
+
+  .media {
     flex-direction: row;
   }
 }

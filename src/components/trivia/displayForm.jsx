@@ -2,6 +2,9 @@ import React, { Component, Fragment } from "react";
 
 import { AntSelect, AntInput } from "./antField";
 
+import { fieldsFormQuestion } from "./constants";
+import { isRequired } from "./validation";
+
 import EventContent from "../events/shared/content";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -24,8 +27,7 @@ class RenderQuantityField extends Component {
   // Funcion para cargar los datos
   loadData = async (prevProps) => {
     const { quantity } = this.props;
-    if (!prevProps || quantity !== prevProps.quantity)
-      await this.setState({ quantity });
+    if (!prevProps || quantity !== prevProps.quantity) await this.setState({ quantity });
   };
 
   componentDidMount() {
@@ -42,18 +44,11 @@ class RenderQuantityField extends Component {
 
     if (quantity > 0)
       for (let i = 0; i < quantity; i++) {
-        let label = `Opción ${i + 1}`;
+        let label = `Respuesta ${i + 1}`;
         let name = `opcion_${i + 1}`;
 
         listOptions.push(
-          <Field
-            key={name}
-            label={label}
-            component={AntInput}
-            hasFeedback
-            type="text"
-            name={`choices[${i}]`}
-          />
+          <Field key={name} label={label} component={AntInput} hasFeedback type="text" name={`choices[${i}]`} />
         );
       }
 
@@ -61,62 +56,40 @@ class RenderQuantityField extends Component {
   }
 }
 
-// Campos del formulario a mostrar
 export default ({ handleSubmit, values, submitCount }) => (
   <Form onSubmit={handleSubmit}>
-    <Field
-      label="Nombre"
-      defaultValue={values.name}
-      component={AntInput}
-      hasFeedback
-      type="text"
-      name="name"
-    />
-
-    <Field
-      label="Titulo"
-      defaultValue={values.title}
-      component={AntInput}
-      hasFeedback
-      type="text"
-      name="title"
-    />
-
-    <Field
-      label="Pagina"
-      defaultValue={values.page}
-      component={AntInput}
-      hasFeedback
-      type="number"
-      name="page"
-    />
-
-    <Field
-      label="Tipo de Pregunta"
-      defaultValue={values.type}
-      component={AntSelect}
-      hasFeedback
-      name="type"
-      selectOptions={values.selectOptions}
-    />
-
-    <Field
-      label="Opciones"
-      defaultValue={values.questionOptions}
-      component={AntSelect}
-      hasFeedback
-      name="questionOptions"
-      selectOptions={values.quantityOptions}
-    />
+    {fieldsFormQuestion.map((field) =>
+      field.type ? (
+        <Field
+          label={field.label}
+          defaultValue={field.name == values.name && values.name}
+          component={field.component}
+          validate={isRequired}
+          hasFeedback
+          type={field.type}
+          name={field.name}
+        />
+      ) : (
+        <Field
+          label={field.label}
+          defaultValue={field.name == values.name && values.name}
+          component={field.component}
+          validate={isRequired}
+          hasFeedback
+          name={field.name}
+          selectOptions={field.selectOptions}
+        />
+      )
+    )}
 
     {/* Componente para renderizar la cantidad de opciones escogidas */}
-    {values.questionOptions > 0 && (
-      <RenderQuantityField quantity={values.questionOptions} />
-    )}
+    {values.questionOptions > 0 && <RenderQuantityField quantity={values.questionOptions} />}
 
     <Row>
       <Col span={6} offset={9}>
-        <button type="submit">Enviar</button>
+        <button className="ant-btn" type="submit">
+          Enviar
+        </button>
       </Col>
     </Row>
   </Form>

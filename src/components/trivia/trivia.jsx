@@ -19,7 +19,6 @@ class trivia extends Component {
             publish: "",
             shareholders: [{ name: "" }]
         }
-        this.submit = this.submit.bind(this)
         this.destroy = this.destroy.bind(this)
     }
 
@@ -46,22 +45,6 @@ class trivia extends Component {
         this.setState({ [name]: value });
     };
 
-    //Funcion para guardar los datos de la encuesta
-    submit = async () => {
-        //Se recoge la data del estado para poder guardarla 
-        const data = {
-            survey: this.state.survey,
-            publish: this.state.publish,
-            activity_id: this.state.activity_id
-        }
-
-        //Se realiza la peticion post para guardar la informacion de la data enviando tambien el id del evento
-        const dataTrivia = await SurveysApi.createOne(this.props.event._id, data)
-        console.log(dataTrivia)
-
-        //Se obtiene la lista para evitar recargar la pagina, de esta manera se actualiza la lista
-        this.getInformation()
-    }
     //Funcion para eliminar un dato de la lista
     async destroy(idTrivia) {
         const TriviaDestroy = await SurveysApi.deleteOne(this.props.event._id, idTrivia)
@@ -73,45 +56,18 @@ class trivia extends Component {
 
     render() {
         const { matchUrl } = this.props;
-        const { survey, dataAgenda, data } = this.state;
+        const { data } = this.state;
         if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
         return (
-            <Fragment>
-                <EventContent title="Trivias">
-                    <div className="columns is-6">
-                        <div>
-                            <label style={{ marginTop: "15%" }} className="label">Nombre de la trivia</label>
-                            <input className="input" placeholder="Nombre de la encuesta" name={"survey"} onChange={this.changeInput} />
-                        </div>
-                        <div className="column">
-                            <button onClick={this.submit} className="columns is-pulled-right button is-primary">Guardar</button>
-                        </div>
-                    </div>
-                    <label style={{ marginTop: "5%" }} className="label">activar la encuesta</label>
-                    <div className="select" style={{ marginBottom: "5%" }}>
-                        <select onClick={e => { this.setState({ publish: e.target.value }) }}>
-                            <option>...Seleccionar</option>
-                            <option value={true}>Si</option>
-                            <option value={false}>No</option>
-                        </select>
-                    </div>
-
-                    <br />
-                    <div>
-                        <label className="label">Seleccione una actividad a referenciar</label>
-                        <div className="select">
-                            <select onChange={e => { this.setState({ activity_id: e.target.value }) }} >
-                                <option>...Selecciona</option>
-                                {
-                                    dataAgenda.map((activity, key) => (
-                                        <option key={key} value={activity._id}>{activity.name}</option>
-                                    ))
-                                }
-
-                            </select>
-                        </div>
-                    </div>
-                    <EvenTable style={{ marginTop: "5%" }} head={["Titulo de encuesta", "Publicada", ""]}>
+            <Fragment className="columns is-12">
+                <EventContent title={"Encuestas"}>
+                    <Link to={{ pathname: `${matchUrl}/encuesta` }}>
+                        <button className="columns is-pulled-right button is-primary">
+                            <span className="icon"><i className="fas fa-plus-circle" /></span>
+                            <spa>Nueva Encuesta</spa>
+                        </button>
+                    </Link>
+                    <EvenTable style={{ marginTop: "5%" }} head={["Nombre de encuesta", "Publicada", ""]}>
                         {
                             data.map((trivia, key) => (
                                 <tr key={key}>
@@ -124,7 +80,7 @@ class trivia extends Component {
                                         }
                                     </td>
                                     <td>
-                                        <Link to={{ pathname: `${this.props.matchUrl}/editar`, state: { edit: trivia._id } }}>
+                                        <Link to={{ pathname: `${this.props.matchUrl}/encuesta`, state: { edit: trivia._id } }}>
                                             <button><span className="icon"><i className="fas fa-edit" /></span></button>
                                         </Link>
                                         <button onClick={this.destroy.bind(trivia.survey, trivia._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>

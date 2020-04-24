@@ -77,7 +77,7 @@ class Agenda extends Component {
             <Tabs>
                 <TabList>
                     <Tab>Programación</Tab>
-                    <Tab>Programación en ingles</Tab>
+                    {/* <Tab>Programación en ingles</Tab> */}
                 </TabList>
                 <TabPanel>
                     <EventContent title={"Programación"} classes={"agenda-list"} addAction={this.redirect} addTitle={"Nueva actividad"}>
@@ -103,10 +103,10 @@ class Agenda extends Component {
                                     {agenda.type && <p><strong>{agenda.type.name}</strong></p>}
                                 </td>
                                 <td>
-                                    {agenda.activity_categories.map(cat => <span style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
+                                    {agenda.activity_categories.map((cat,keycat) => <span key={keycat} style={{ background: cat.color, color: cat.color ? "white" : "" }} className="tag">{cat.name}</span>)}
                                 </td>
                                 <td>{agenda.space ? agenda.space.name : ""}</td>
-                                <td>{agenda.hosts.map(({ name }) => <p>{name}</p>)}</td>
+                                <td>{agenda.hosts.map(({name}, hostkey) => <p key={hostkey}>{name}</p>)}</td>
                                 <td>
 
                                     <Link to={{ pathname: `${this.props.matchUrl}/actividad`, state: { edit: agenda._id } }}>

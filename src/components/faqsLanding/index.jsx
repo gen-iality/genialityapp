@@ -1,9 +1,16 @@
 import React, { Component } from "react"
 import { FaqsApi } from "../../helpers/request"
-import { Collapse } from 'antd'
+import { Collapse, Col } from 'antd'
 
 const { Panel } = Collapse
 
+const faqs = {
+    textAlign: "left"
+};
+
+const center = {
+    margin: "0 auto"
+};
 class Faqs extends Component {
 
     constructor(props) {
@@ -26,16 +33,25 @@ class Faqs extends Component {
     render() {
         const { faqsData } = this.state
         return (
-            <Collapse defaultActiveKey={['0']}>
-                {
-                    faqsData.map((faqs, key) => (
-                        <Panel key={key} header={faqs.title} >
-                            <div dangerouslySetInnerHTML={{ __html: faqs.content}}/>
-                        </Panel>
-                    ))
-                }
+            <Col
+                xs={22}
+                sm={22}
+                md={18}
+                lg={18}
+                xl={18}
+                style={center}
+            >
+                <Collapse style={faqs} defaultActiveKey={['0']}>
+                    {
+                        faqsData.map((faqs, key) => (
+                            <Panel key={key} header={faqs.title} >
+                                <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
+                            </Panel>
+                        ))
+                    }
 
-            </Collapse>
+                </Collapse>
+            </Col>
         )
     }
 }

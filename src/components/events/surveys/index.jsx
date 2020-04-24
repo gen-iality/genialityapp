@@ -1,40 +1,41 @@
 import React, { Component, Fragment } from "react";
 import { Route, Switch, withRouter, Link } from "react-router-dom";
+import * as Cookie from "js-cookie";
 
-import { SurveysApi } from "../../../helpers/request";
+import { SurveyAnswers } from "./services";
+import API, { SurveysApi } from "../../../helpers/request";
 
 import SurveyComponent from "./surveyComponent";
+import Graphics from "./graphics";
+import RootPage from "./rootPage";
 
-import { List, Button, Card, Col } from "antd";
+import { List, Button, Card, Col, Tag } from "antd";
 
 function ListSurveys(props) {
   let { jsonData } = props;
 
   return (
-    <Col 
-    xs={24}
-    sm={22}
-    md={18} 
-    lg={18} 
-    xl={18}
-    style={{ margin: "0 auto" }}
-    >
+    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
       <Card>
         <List
           dataSource={jsonData}
-          renderItem={survey => (
+          renderItem={(survey) => (
             <List.Item
               key={survey._id}
               actions={[
-                <Button onClick={() => props.showSurvey(survey._id)}>
-                  Ir a Encuesta
-                </Button>
-              ]}
-            >
-              {survey.survey}
+                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
+                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                </Button>,
+              ]}>
+              <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+              {survey.userHasVoted && (
+                <div>
+                  <Tag color="success">Respondida</Tag>
+                </div>
+              )}
             </List.Item>
           )}
-      />
+        />
       </Card>
     </Col>
   );
@@ -45,7 +46,9 @@ class SurveyForm extends Component {
     super(props);
     this.state = {
       idSurvey: null,
-      surveysData: []
+      surveysData: [],
+      hasVote: false,
+      uid: null,
     };
   }
 
@@ -59,42 +62,77 @@ class SurveyForm extends Component {
     const { event } = this.props;
 
     surveysData = await SurveysApi.getAll(event._id);
-    console.log(surveysData);
-    this.setState({ surveysData: surveysData.data });
+    let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
+
+    this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
+  };
+
+  // Funcion que valida si el usuario ha votado en cada una de las encuestas
+  seeIfUserHasVote = async () => {
+    let { uid, surveysData } = this.state;
+    const { event } = this.props;
+
+    const votesUserInSurvey = new Promise((resolve, reject) => {
+      let surveys = [];
+
+      // Se itera surveysData y se ejecuta el servicio que valida las respuestas
+      surveysData.forEach(async (survey, index, arr) => {
+        if (uid) {
+          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
+          surveys.push({ ...arr[index], userHasVoted });
+        } else {
+          // Esto solo se ejecuta si no hay algun usuario logeado
+          const guestUser = new Promise((resolve, reject) => {
+            let surveyId = localStorage.getItem(`userHasVoted_${survey._id}`);
+            surveyId ? resolve(true) : resolve(false);
+          });
+          let guestHasVote = await guestUser;
+          surveys.push({ ...arr[index], userHasVoted: guestHasVote });
+        }
+
+        if (surveys.length == arr.length) resolve(surveys);
+      });
+    });
+
+    let stateSurveys = await votesUserInSurvey;
+
+    this.setState({ surveysData: stateSurveys });
+  };
+
+  // Funcion para consultar la informacion del actual usuario
+  getCurrentUser = async () => {
+    let evius_token = Cookie.get("evius_token");
+
+    if (!evius_token) {
+      this.setState({ user: false }, this.seeIfUserHasVote);
+    } else {
+      try {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        if (resp.status === 200) {
+          const data = resp.data;
+          // Solo se desea obtener el id del usuario
+          this.setState({ uid: data._id }, this.seeIfUserHasVote);
+        }
+      } catch (error) {
+        const { status } = error.response;
+        console.log("STATUS", status, status === 401);
+      }
+    }
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = data => {
+  toggleSurvey = (data) => {
     this.setState({ idSurvey: data });
   };
 
   render() {
-    let { idSurvey, surveysData } = this.state;
+    let { idSurvey, surveysData, hasVote, uid } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
-      return (
-        <Col 
-        xs={24}
-        sm={22}
-        md={18} 
-        lg={18} 
-        xl={18}
-        style={{ margin: "0 auto" }}
-        >
-          <Card>
-            <SurveyComponent
-              idSurvey={idSurvey}
-              showListSurvey={this.toggleSurvey}
-              eventId={event._id}
-            />
-          </Card>
-        </Col>
-      );
+      return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} userId={uid} />;
 
-    return (
-      <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />
-    );
+    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
 }
 

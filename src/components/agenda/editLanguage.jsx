@@ -3,7 +3,8 @@ import { Redirect, withRouter, Link } from "react-router-dom";
 import Moment from "moment";
 import ReactQuill from "react-quill";
 import { DateTimePicker } from "react-widgets";
-import Select, { Creatable } from "react-select";
+import Select from "react-select";
+import Creatable from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
@@ -45,7 +46,7 @@ class AgendaEdit extends Component {
             types: [],
             roles: [],
             hosts: [],
-            
+
         }
     }
 
@@ -177,7 +178,7 @@ class AgendaEdit extends Component {
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle,has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, image } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -256,7 +257,7 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({ redirect: true });
 
     render() {
-        const { loading, name, subtitle, has_date,idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
+        const { loading, name, subtitle, has_date, idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
         const { hosts, spaces, categories, types, roles, isLoading } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
