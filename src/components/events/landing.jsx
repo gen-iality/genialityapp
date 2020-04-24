@@ -61,8 +61,14 @@ const imageCenter = {
   display: "block"
 }
 
-const defautlColorMenu = {
-  backgroundColor: "white"
+const mediumScreen = {
+  height: "75%",
+  width: "70%",
+  top: "10%",
+  left: "0",
+  bottom: "10%",
+  right: "0",
+  margin: "0 auto",
 }
 
 class Landing extends Component {
@@ -338,7 +344,7 @@ class Landing extends Component {
             <React.Fragment>
               {this.state.headerVisible && <div className="hero-head" >
                 {/* Condicion para mostrar el componente de zoom */}
-                {showIframeZoom && <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} />}
+                {showIframeZoom && <ZoomComponent styles={{ width: 1000 }} hideIframe={this.toggleConference} meetingId={meeting_id} />}
 
                 {/* Componente banner */}
 
