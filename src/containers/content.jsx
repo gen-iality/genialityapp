@@ -20,6 +20,7 @@ const Privacy = asyncComponent(() => import("../components/policies/privacyPolic
 const Policies = asyncComponent(() => import("../components/policies/policies"));
 const About = asyncComponent(() => import("../components/policies/about"));
 const Faqs = asyncComponent(() => import("../components/faqs/index"));
+const SinginTest = asyncComponent(() => import("../components/signintest"));
 
 
 class ContentContainer extends Component {
@@ -45,6 +46,7 @@ class ContentContainer extends Component {
                     <Route exact path="/policies" component={Policies} />
                     <Route exact path="/about" component={About} />
                     <Route exact path="/faqs" component={Faqs} />
+                    <Route exact path="/singintest" component={SinginTest} />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect} />
                 </Switch>
             </main>
