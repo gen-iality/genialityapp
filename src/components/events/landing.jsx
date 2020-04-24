@@ -13,7 +13,8 @@ import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 //custom
-import { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
+import API, { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
+import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
@@ -30,6 +31,7 @@ import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
+
 const { Title } = Typography;
 
 const { SubMenu } = Menu;
@@ -88,6 +90,7 @@ class Landing extends Component {
       visible: false,
       placement: "left",
       headerVisible: "true",
+      namesUser: ""
     };
   }
 
@@ -146,6 +149,17 @@ class Landing extends Component {
   }
 
   async componentDidMount() {
+    try {
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+      console.log("respuesta status", resp.status !== 202);
+      if (resp.status !== 200 && resp.status !== 202) return;
+
+      const data = resp.data;
+      this.setState({ namesUser: data.names })
+    } catch{
+
+    }
+
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
@@ -234,7 +248,7 @@ class Landing extends Component {
               </div>
             </Card>
           </div>
-          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} toggleConference={this.toggleConference} />
+          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} toggleConference={this.toggleConference} namesUser={this.state.namesUser} />
         </div>
       ),
     };
@@ -484,7 +498,7 @@ class Landing extends Component {
 
 //Component del lado del mapa
 const MapComponent = (props) => {
-  const { event, infoAgendaArr, toggleConference } = props;
+  const { event, infoAgendaArr, toggleConference, namesUser } = props;
   return (
     <div className="column container-map">
       <div>
@@ -497,27 +511,36 @@ const MapComponent = (props) => {
                   modules={{ toolbar: false }}
                   readOnly={true}
                 />
-                <h1>Listado de conferencias Virtuales</h1>
-                <List
-                  itemLayout="vertical"
-                  size="large"
-                  pagination={{
-                    onChange: (page) => {
-                      console.log(page);
-                    },
-                    pageSize: 3,
-                  }}
-                  dataSource={infoAgendaArr}
-                  renderItem={(item) => (
-                    <List.Item key={item.name}>
-                      <List.Item.Meta
-                        title="Entrar a esta conferencia"
-                        description={<a href={item.join_url}>{item.name}</a>}
-                      />
-                      {item.content}
-                    </List.Item>
-                  )}
-                />
+                {
+                  namesUser ?
+                    <div>
+                      <h1>Listado de conferencias Virtuales</h1>
+                      {
+                        infoAgendaArr.map((item, key) => (
+                          <div key={key}>
+                            <Card title={item.name} bordered={true} style={{ width: 300, marginBottom: "3%" }}>
+                              <p>
+                                {item.hosts ?
+                                  <div>
+                                    {
+                                      item.hosts.map((item, key) => (
+                                        <p key={key}>Conferencista: {item.name}</p>
+                                      ))
+                                    }
+                                  </div> :
+                                  <div />
+                                }
+                              </p>
+                              <p>{item.datetime_start} - {item.datetime_end}</p>
+                              <Button onClick={() => { toggleConference(true, item.meeting_id, namesUser) }}>Entrar a la conferencia </Button>
+                            </Card>
+                          </div>
+                        ))
+                      }
+                    </div> :
+                    <h1>Debes estar logueado para poder acceder a la videoconferencia</h1>
+                }
+
               </div>
             ) : (
                 <div>
