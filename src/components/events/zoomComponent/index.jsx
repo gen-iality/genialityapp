@@ -27,7 +27,7 @@ export default class ZoomComponent extends Component {
     return (
       <div className="content-zoom">
         <button onClick={() => hideIframe(false)}>-</button>
-        <iframe src={url_conference + meeting_id} className="iframe-zoom">
+        <iframe src={url_conference + meeting_id} allow="camera *;microphone *" allowusermedia className="iframe-zoom">
           <p>Your browser does not support iframes.</p>
         </iframe>
       </div>
