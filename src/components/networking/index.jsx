@@ -31,6 +31,7 @@ export default class ListEventUser extends Component {
       loading: true,
       changeItem: false,
       eventUserId: null,
+      currentUserName: null,
     };
   }
 
@@ -43,8 +44,10 @@ export default class ListEventUser extends Component {
     let { changeItem } = this.state;
     const { event } = this.props;
 
+    // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
-    console.log(eventUserList);
+    // console.log(eventUserList);
+
     this.setState((prevState) => {
       return {
         userReq: eventUserList,
@@ -56,6 +59,7 @@ export default class ListEventUser extends Component {
     });
   };
 
+  // Funcion que trae el eventUserId del usuario actual
   getInfoCurrentUser = () => {
     const { event } = this.props;
     let currentUser = Cookie.get("evius_token");
@@ -63,12 +67,13 @@ export default class ListEventUser extends Component {
     if (currentUser) {
       getCurrentUserId(currentUser).then(async (userId) => {
         let response = await getCurrentEventUser(event._id, userId);
-        console.log("eventUserId:", response);
-        this.setState({ eventUserId: response._id });
+        // console.log("Info eventUser:", response);
+        this.setState({ eventUserId: response._id, currentUserName: response.names ? response.names : response.email });
       });
     }
   };
 
+  // Funcion que ejecuta el servio para enviar solicitud (Firebase)
   sendRequestInFire = (data) => {
     const { event } = this.props;
     networkingFire
@@ -94,19 +99,24 @@ export default class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
-  async SendFriendship(id) {
-    let { eventUserId } = this.state;
+  async SendFriendship({ eventUserIdReceiver, userName }) {
+    let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
     if (currentUser) {
+      // Se usan los event user id para el usuario que envia y recibe (Firebase)
       const data = {
         id_user_requested: eventUserId,
-        id_user_requesting: id,
+        id_user_requesting: eventUserIdReceiver,
+        user_name_requested: currentUserName,
+        user_name_requesting: userName,
         event_id: this.props.event._id,
         state: "send",
       };
 
+      // Se ejecuta el servicio de firebase
       this.sendRequestInFire(data);
 
+      // Se ejecuta el servicio del api de evius
       const response = await EventsApi.sendInvitation(this.props.event._id, data);
       console.log(response);
     } else {
@@ -161,7 +171,10 @@ export default class ListEventUser extends Component {
                             extra={
                               <a
                                 onClick={() => {
-                                  this.SendFriendship(users._id);
+                                  this.SendFriendship({
+                                    eventUserIdReceiver: users._id,
+                                    userName: users.names ? users.names : users.email,
+                                  });
                                 }}>
                                 Enviar Solicitud
                               </a>
