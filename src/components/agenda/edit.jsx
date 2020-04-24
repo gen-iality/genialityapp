@@ -603,49 +603,55 @@ class AgendaEdit extends Component {
                                                 <option value="true">Si</option>
                                             </select>
                                         </div>
-                                        <div style={{ marginTop: "2%" }}>
-                                            {
-                                                this.state.meeting_id ?
-                                                    <div>
-                                                        <p>El id de la conferencia virtual es:</p>
-                                                        <p>{this.state.meeting_id}</p>
-                                                    </div>
-                                                    :
-                                                    <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Crear espacio virtual</button>
-                                            }
-                                        </div>
+                                        {this.state.virtualConference === "true" ?
+                                            <div style={{ marginTop: "2%" }}>
+                                                {
+                                                    this.state.meeting_id ?
+                                                        <div>
+                                                            <p>El id de la conferencia virtual es:</p>
+                                                            <p>{this.state.meeting_id}</p>
+                                                        </div>
+                                                        :
+                                                        <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Crear espacio virtual</button>
+                                                }
+
+                                                <div key={this.state.key}>
+                                                    <p>
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Accesos</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {
+                                                                    join_url ?
+                                                                        <tr>
+                                                                            <th>
+                                                                                <a href={join_url} >Acceso para conferencistas</a>
+                                                                            </th>
+                                                                        </tr>
+                                                                        :
+                                                                        <tr>
+                                                                            <th>
+                                                                                <p>Crea una conferencia virtual</p>
+                                                                            </th>
+                                                                        </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            :
+                                            <div />
+                                        }
+
 
                                     </div>
                                     :
                                     <div />
                             }
-                            <div key={this.state.key}>
-                                <p>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Acceso para Conferencistas</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                join_url ?
-                                                    <tr>
-                                                        <th>
-                                                            <a href={join_url} >Acceso para conferencistas</a>
-                                                        </th>
-                                                    </tr>
-                                                    :
-                                                    <tr>
-                                                        <th>
-                                                            <p>Crea una conferencia virtual</p>
-                                                        </th>
-                                                    </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </p>
-                            </div>
                         </div>
                     </div>
                 }
