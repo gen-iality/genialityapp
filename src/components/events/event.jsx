@@ -128,7 +128,7 @@ class Event extends Component {
           <h3 className="name-event">{this.state.event.name}</h3>
           <section className="section event-wrapper">
             <Switch>
-              <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/main`} />} />
+              <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/agenda`} />} />
               <Route
                 exact
                 path={`${match.url}/main`}
