@@ -620,7 +620,7 @@ class AgendaEdit extends Component {
                                                         <table class="table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Acceso para Conferencistas</th>
+                                                                    <th>Accesos</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
