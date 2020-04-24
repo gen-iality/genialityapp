@@ -54,6 +54,16 @@ const IconText = ({ icon, text }) => (
     {text}
   </span>
 );
+const imageCenter = {
+  maxWidth: "100%",
+  margin: "0 auto",
+  display: "block"
+}
+
+const defautlColorMenu = {
+  backgroundColor: "white"
+}
+
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -195,18 +205,20 @@ class Landing extends Component {
             >
               <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
 
-              <div className="column is-centered">
+              {event.video && <div className="column is-centered mediaplayer">
                 <ReactPlayer
-                  width={"100%"}
-                  height={"auto"}
+                  //width={"100%"}
+                  //height={"500px"}
                   style={{
                     display: "block",
                     margin: "0 auto"
                   }}
-                  url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                  //
+                  url={event.video}
+                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                   controls
                 />
-              </div>
+              </div>}
 
               <div>
                 {typeof event.description === "string" ? (
@@ -330,7 +342,8 @@ class Landing extends Component {
                 {/* Componente banner */}
 
                 <BannerEvent
-                  bgImage={event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png"}
+                  bgImage={event.styles && event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
+                  bgImageText={((event.styles && event.styles.event_image) ? event.styles.event_image : "")}
                   title={event.name}
                   organizado={
                     <Link
@@ -356,11 +369,14 @@ class Landing extends Component {
                   <div className="hiddenMenu_Landing">
                     <Sider
                       className="containerMenu_Landing"
+                      style={{ backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
                       trigger={null}
                       collapsible
                       collapsed={this.state.collapsed}
                       width={250}>
+
                       <div className="items-menu_Landing ">
+                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
@@ -395,13 +411,14 @@ class Landing extends Component {
                       </div>
 
                       <Drawer
-                        title="Menu"
+                        title={event.name}
                         placement={this.state.placement}
                         closable={true}
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
                         bodyStyle={{ padding: "0px" }}>
+                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
@@ -535,11 +552,6 @@ const MapComponent = (props) => {
                 </div>
               ))
         }
-      </div>
-
-      {/* ESTO ES UNA PRUEBA PARA UN BANNER DE PUBLICIDAD*/}
-      <div className="has-margin-top-50 is-hidden-touch" >
-        <img style={{ width: "100%" }} src="http://www.ofifacil.com/ideas-ejemplos/varios/ofifacil-hacer-pagina-web-diseno-grafico-023.gif" alt="" srcset="" />
       </div>
     </div>
   );
