@@ -31,6 +31,7 @@ export default class ListEventUser extends Component {
       loading: true,
       changeItem: false,
       eventUserId: null,
+      currentUserName: null,
     };
   }
 
@@ -67,7 +68,7 @@ export default class ListEventUser extends Component {
       getCurrentUserId(currentUser).then(async (userId) => {
         let response = await getCurrentEventUser(event._id, userId);
         // console.log("Info eventUser:", response);
-        this.setState({ eventUserId: response._id });
+        this.setState({ eventUserId: response._id, currentUserName: response.names ? response.names : response.email });
       });
     }
   };
@@ -98,14 +99,16 @@ export default class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
-  async SendFriendship(id) {
-    let { eventUserId } = this.state;
+  async SendFriendship({ eventUserIdReceiver, userName }) {
+    let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
     if (currentUser) {
       // Se usan los event user id para el usuario que envia y recibe (Firebase)
       const data = {
         id_user_requested: eventUserId,
-        id_user_requesting: id,
+        id_user_requesting: eventUserIdReceiver,
+        user_name_requested: currentUserName,
+        user_name_requesting: userName,
         event_id: this.props.event._id,
         state: "send",
       };
@@ -168,7 +171,10 @@ export default class ListEventUser extends Component {
                             extra={
                               <a
                                 onClick={() => {
-                                  this.SendFriendship(users._id);
+                                  this.SendFriendship({
+                                    eventUserIdReceiver: users._id,
+                                    userName: users.names ? users.names : users.email,
+                                  });
                                 }}>
                                 Enviar Solicitud
                               </a>

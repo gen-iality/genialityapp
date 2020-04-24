@@ -67,10 +67,12 @@ export default ({ eventId }) => {
                 <List.Item.Meta
                   avatar={
                     <Avatar>
-                      {item.id_user_requested ? item.id_user_requested.charAt(0).toUpperCase() : item.id_user_requested}
+                      {item.user_name_requested
+                        ? item.user_name_requested.charAt(0).toUpperCase()
+                        : item.user_name_requested}
                     </Avatar>
                   }
-                  title={item.id_user_requested}
+                  title={item.user_name_requested}
                   style={{ textAlign: "left" }}
                 />
               </List.Item>
