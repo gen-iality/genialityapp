@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { UsersApi } from "../../helpers/request";
 import { Form, Input, InputNumber, Button, Card, Col, Row } from 'antd';
 import EventModal from "../events/shared/eventModal";
-
+import { EventsApi } from "../../helpers/request";
+import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
 
 const card = {
     textAlign: "left"
@@ -33,12 +34,40 @@ class UserRegistration extends Component {
             message: {},
             user: {},
             emailError: false,
-            valid: true
+            valid: true,
+            extraFields: []
+
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+    addDefaultLabels = extraFields => {
+        extraFields = extraFields.map(field => {
+            field["label"] = field["label"] ? field["label"] : field["name"];
+            return field;
+        });
+        return extraFields;
+    };
 
-    componentDidMount() {
+    orderFieldsByWeight = (extraFields) => {
+        extraFields = extraFields.sort((a, b) =>
+            (a.order_weight && !b.order_weight) ||
+                (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+                ? -1
+                : 1
+        );
+        return extraFields;
+    };
+
+    async componentDidMount() {
+
+        const event = await EventsApi.getOne(this.props.eventId);
+
+        const properties = event.user_properties;
+        let extraFields = fieldNameEmailFirst(properties);
+        extraFields = this.addDefaultLabels(extraFields);
+        extraFields = this.orderFieldsByWeight(extraFields);
+        this.setState({ extraFields });
+        console.log("event", event);
         let user = {};
         this.props.extraFields
             .map(obj => (
@@ -79,7 +108,7 @@ class UserRegistration extends Component {
     }
 
     renderForm = () => {
-        const { extraFields } = this.props;
+        const { extraFields } = this.state;
         let formUI = extraFields.map((m, key) => {
             let type = m.type || "text";
             let props = m.props || {};
@@ -140,13 +169,13 @@ class UserRegistration extends Component {
         const { addUser } = this.props;
         return (
             <>
+                <h1>Pruebas formulario</h1>
+                {this.renderForm()}
 
                 <EventModal modal={this.props.modal} title={"Registrar Usuario"} closeModal={this.props.handleModal}>
                     <section className="modal-card-body">
 
-                        {
-                            Object.keys(this.state.user).length > 0 && this.renderForm()
-                        }
+                        {this.renderForm()}
 
                         <Row justify="center" >
                             <Button type="primary" htmlType="submit" rules={[{ required: true }]} onClick={() => this.handleSubmit}>

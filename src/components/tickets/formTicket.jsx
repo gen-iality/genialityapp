@@ -236,11 +236,7 @@ class TicketsForm extends Component {
         return (
             <>
 
-                <Event render={item => (
-                    <UserRegistration handleModal={item.handleModal} modal={item.modal} eventId={item.eventId}
-                        ticket={item.ticket} tickets={item.tickets} rolesList={item.rolesList}
-                        value={item.value} checkIn={item.checkIn} badgeEvent={item.badgeEvent}
-                        extraFields={item.extraFields} spacesEvent={item.spacesEvent} edit={item.edit} substractSyncQuantity={item.substractSyncQuantity} addUser={item.addUser} />
+                <UserRegistration extraFields={[]} eventId={this.props.eventId} />
 
                 )}
                 />
