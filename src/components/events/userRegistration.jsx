@@ -1,30 +1,24 @@
 import React, { Component } from "react";
-import { UsersApi } from "../../helpers/request";
-import { Form, Input, InputNumber, Button, Card, Col, Row } from 'antd';
-import EventModal from "../events/shared/eventModal";
-import { EventsApi } from "../../helpers/request";
-import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
 
-const card = {
+
+import { EventsApi } from "../../helpers/request";
+import { fieldNameEmailFirst } from "../../helpers/utils";
+import { Form, Input, Button, Card, Col, Row } from 'antd';
+
+const textLeft = {
     textAlign: "left"
 };
 
+const center = {
+    margin: "0 auto"
+}
+
+// Grid para formulario
 const layout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 12 },
 };
 
-
-const validateMessages = {
-    required: '${label} es requerido!',
-    types: {
-        email: '${label} no es valido!',
-        number: '${label} no es valido!',
-    },
-    number: {
-        range: '${label} debe estar en un rango de ${min} a ${max} numeros',
-    },
-};
 
 class UserRegistration extends Component {
 
@@ -40,6 +34,9 @@ class UserRegistration extends Component {
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
+
+    // Agrega el nombre del input 
+
     addDefaultLabels = extraFields => {
         extraFields = extraFields.map(field => {
             field["label"] = field["label"] ? field["label"] : field["name"];
@@ -60,9 +57,12 @@ class UserRegistration extends Component {
 
     async componentDidMount() {
 
+        // Trae la información del evento
         const event = await EventsApi.getOne(this.props.eventId);
 
         const properties = event.user_properties;
+
+        // Trae la informacion para los input
         let extraFields = fieldNameEmailFirst(properties);
         extraFields = this.addDefaultLabels(extraFields);
         extraFields = this.orderFieldsByWeight(extraFields);
@@ -78,34 +78,11 @@ class UserRegistration extends Component {
     async handleSubmit(e) {
         e.preventDefault();
         e.stopPropagation();
-        const snap = {
-            properties: this.state.user
-        };
-        console.log(snap);
-        let message = {};
-        this.setState({ create: true });
-        try {
-            let resp = await UsersApi.createOne(snap, this.props.eventId);
-            console.log(resp);
-            if (resp.message === 'OK') {
-                this.props.addToList(resp.data);
-                message.class = (resp.status === 'CREATED') ? 'msg_success' : 'msg_warning';
-                message.content = 'USER ' + resp.status;
-            } else {
-                message.class = 'msg_danger';
-                message.content = 'User can`t be created';
-            }
-            setTimeout(() => {
-                message.class = message.content = '';
-                this.closeModal();
-            }, 1000)
-        } catch (err) {
-            console.log(err.response);
-            message.class = 'msg_error';
-            message.content = 'ERROR...TRYING LATER';
-        }
-        this.setState({ message, create: false });
+
     }
+
+
+    // Función que crea los input del componente
 
     renderForm = () => {
         const { extraFields } = this.state;
@@ -121,12 +98,11 @@ class UserRegistration extends Component {
                 key={key}
                 name={name}
                 value={value}
-                onChange={(e) => { this.onChange(e, type) }}
             />;
 
             return (
 
-                <Form key={'g' + key} {...layout} name="nest-messages" validateMessages={validateMessages}>
+                <Form key={'g' + key} {...layout} name="nest-messages">
                     {m.type !== "boolean" &&
                         <Form.Item label={name} name={name} rules={[` required: ${mandatory ? 'required' : ''}`]}
                             key={"l" + key}
@@ -141,56 +117,38 @@ class UserRegistration extends Component {
         return formUI;
     };
 
-    onChange = (e, type) => {
-        const { value, name } = e.target;
-        (type === "boolean") ?
-            this.setState(prevState => { return { user: { ...this.state.user, [name]: !prevState.user[name] } } }, this.validForm)
-            : this.setState({ user: { ...this.state.user, [name]: value } }, this.validForm);
-    };
 
-    validForm = () => {
-        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
-        const { extraFields } = this.props, { user } = this.state,
-            mandatories = extraFields.filter(field => field.mandatory), validations = [];
-        mandatories.map((field, key) => {
-            let valid;
-            if (field.type === 'email') valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
-            if (field.type === 'text' || field.type === 'list') valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
-            if (field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
-            if (field.type === 'boolean') valid = (typeof user[field.name] === "boolean");
-            return validations[key] = valid;
-        });
-        const valid = validations.reduce((sum, next) => sum && next, true);
-        this.setState({ valid: !valid })
-    };
+
 
 
     render() {
-        const { addUser } = this.props;
+
         return (
             <>
-                <h1>Pruebas formulario</h1>
-                {this.renderForm()}
+                <Col
+                    xs={24}
+                    sm={22}
+                    md={18}
+                    lg={18}
+                    xl={18}
+                    style={center}>
+                    <Card title="Formulario de registro" bodyStyle={textLeft}>
 
-                <EventModal modal={this.props.modal} title={"Registrar Usuario"} closeModal={this.props.handleModal}>
-                    <section className="modal-card-body">
-
+                        {/* //Renderiza el formulario */}
                         {this.renderForm()}
 
                         <Row justify="center" >
-                            <Button type="primary" htmlType="submit" rules={[{ required: true }]} onClick={() => this.handleSubmit}>
-                                Enviar
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                rules={[{ required: true }]}
+                            >
+                                Registrarse
                             </Button>
                         </Row>
-                    </section>
-                </EventModal>
 
-                <Row justify="center" >
-                    <Button type="primary" htmlType="submit" rules={[{ required: true }]} onClick={() => addUser}>
-                        Agregar usuario
-                    </Button>
-                </Row>
-
+                    </Card>
+                </Col>
             </>
         );
     }
