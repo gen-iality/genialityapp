@@ -625,10 +625,10 @@ class AgendaEdit extends Component {
                                                             </thead>
                                                             <tbody>
                                                                 {
-                                                                    join_url ?
+                                                                    start_url ?
                                                                         <tr>
                                                                             <th>
-                                                                                <a href={join_url} >Acceso para conferencistas</a>
+                                                                                <a href={start_url} >Acceso para conferencistas</a>
                                                                             </th>
                                                                         </tr>
                                                                         :
