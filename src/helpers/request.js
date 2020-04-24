@@ -488,7 +488,7 @@ export const Networking = {
   getInvitationsSent: async (eventId, userId) => {
     return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}`);
   },
-  AcceptOrDeclineInvitation: async (eventId, userId, data) => {
+  acceptOrDeclineInvitation: async (eventId, userId, data) => {
     return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);
   },
 };

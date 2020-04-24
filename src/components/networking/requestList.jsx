@@ -22,6 +22,17 @@ export default ({ eventId }) => {
     });
   };
 
+  const sendResponseToInvitation = (userId, state) => {
+    let data = { response: state ? "acepted" : "rejected" };
+    Networking.acceptOrDeclineInvitation(eventId, userId, data)
+      .then((result) => {
+        console.log("Respuesta enviada :", result);
+      })
+      .catch((err) => {
+        console.log("Hubo un problema :", err);
+      });
+  };
+
   useEffect(() => {
     getInvitationsList();
   }, [eventId]);
@@ -42,7 +53,12 @@ export default ({ eventId }) => {
           <List
             dataSource={requestList}
             renderItem={(item) => (
-              <List.Item key={item._id} actions={[<Button>Aceptar</Button>, <Button>Rechazar</Button>]}>
+              <List.Item
+                key={item._id}
+                actions={[
+                  <Button onClick={() => sendResponseToInvitation(item.id_user_requested, true)}>Aceptar</Button>,
+                  <Button onClick={() => sendResponseToInvitation(item.id_user_requested, false)}>Rechazar</Button>,
+                ]}>
                 <List.Item.Meta
                   avatar={
                     <Avatar>
