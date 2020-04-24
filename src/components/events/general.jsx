@@ -550,7 +550,7 @@ class General extends Component {
                             </div>
                             <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer} options={organizers} required={true} />
                             <div className="field picture">
-                                <label className="label has-text-grey-light">Imagen</label>
+                                <label className="label has-text-grey-light">Imagen General (para el listado) </label>
                                 <div className="control">
                                     <ImageInput picture={event.picture} imageFile={this.state.imageFile}
                                         divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'} />}
@@ -573,15 +573,7 @@ class General extends Component {
                     first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.deleteEvent }}
                     message={this.state.message} isLoading={this.state.isLoading}
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
-                <div className="control">
-                    <label className="label">Banner de inicio</label>
-                    <ImageInput picture={event.banner_image} imageFile={this.state.imageFileBannerImage}
-                        divClass={'drop-img'} content={<img src={event.banner_image ? event.banner_image[0] : event.picture} alt={'Imagen Perfil'} />}
-                        classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFileBannerImage ? 'is-loading' : ''}`}>Cambiar foto</button>}
-                        contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                        changeImg={this.banner_image} errImg={this.state.errImg}
-                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10 }} />
-                </div>
+
                 {this.state.fileMsgBanner && (<p className="help is-success">{this.state.fileMsgBanner}</p>)}
             </React.Fragment>
         );

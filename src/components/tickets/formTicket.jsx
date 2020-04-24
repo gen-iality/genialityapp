@@ -7,7 +7,8 @@ import { Actions } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import { toast } from "react-toastify";
 import UserRegistration from "../events/userRegistration"
-Moment.locale('es');
+import Event from "../event-users/index"
+import Item from "antd/lib/list/Item";
 
 class TicketsForm extends Component {
     constructor(props) {
@@ -234,7 +235,10 @@ class TicketsForm extends Component {
             selectStage, handleQuantity, onClick, changeStep } = this;
         return (
             <>
-                <UserRegistration />
+
+                {/* <UserRegistration extraFields={[]} eventId={this.props.eventId} /> */}
+
+
                 <div className="columns is-centered">
                     <div className="column">
                         <div className="columns menu-steps">
