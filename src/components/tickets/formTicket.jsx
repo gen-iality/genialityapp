@@ -236,10 +236,7 @@ class TicketsForm extends Component {
         return (
             <>
 
-                <UserRegistration extraFields={[]} eventId={this.props.eventId} />
-
-                )}
-                />
+                {/* <UserRegistration extraFields={[]} eventId={this.props.eventId} /> */}
 
 
                 <div className="columns is-centered">
