@@ -65,11 +65,8 @@ export const networkingFire = {
       }
     });
   },
-  acceptedRequest: async (eventId) => {
-    console.log("Aceptando solicitud");
-  },
-  rejectRequest: async (eventId) => {
-    console.log("Rechazando solicitud");
+  acceptOrRejectRequest: async (eventId) => {
+    console.log("Aceptando o rechazando solicitud");
   },
 };
 
