@@ -10,7 +10,7 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar } from 'antd';
+import { List, Avatar, Typography } from 'antd';
 import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 //custom
 import { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
@@ -29,7 +29,8 @@ import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
-import BannerEvent from "./bannerEvent"
+import BannerEvent from "./bannerEvent";
+const { Title } = Typography;
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -230,7 +231,7 @@ class Landing extends Component {
               </div>
             </Card>
           </div>
-          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} />
+          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} toggleConference={this.toggleConference} />
         </div>
       )
     };
@@ -467,7 +468,7 @@ class Landing extends Component {
 
 //Component del lado del mapa
 const MapComponent = (props) => {
-  const { event, infoAgendaArr } = props;
+  const { event, infoAgendaArr, toggleConference } = props;
   return (
     <div className="column container-map">
       <div>
@@ -480,7 +481,7 @@ const MapComponent = (props) => {
                   modules={{ toolbar: false }}
                   readOnly={true}
                 />
-                <h1>Listado de conferencias Virtuales</h1>
+                <Title level={3}>Listado de conferencias Virtuales</Title>
                 <List
                   itemLayout="vertical"
                   size="large"
@@ -496,12 +497,26 @@ const MapComponent = (props) => {
                       key={item.name}
                     >
                       <List.Item.Meta
-                        title="Entrar a esta conferencia"
-                        description={<a href={item.join_url}>{item.name}</a>}
+                        title={item.name}
+                        description={<Button onClick={() => { toggleConference(item.meeting_id) }}>Entrar a la conferencia </Button>}
                       />
-                      {item.content}
+                      {console.log(item.meeting_id)}
+                      <p>Conferencista:
+                        {
+                          item.hosts ?
+                            <div>
+                              {
+                                item.hosts.map((item, key) => (
+                                  <p key={key}>{item.name}</p>
+                                ))
+                              }
+                            </div> : <div />
+                        }
+                      </p>
+                      <p>{item.datetime_start}</p>-<p>{item.datetime_end}</p>
                     </List.Item>
                   )}
+
                 />
               </div>
             ) : (
