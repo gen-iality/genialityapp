@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 
-import { Spin, Alert, Col, Divider, Card } from "antd";
+import { Spin, Alert, Col, Divider, Card, List, Button, Avatar } from "antd";
 
 import * as Cookie from "js-cookie";
 import { Networking } from "../../helpers/request";
@@ -37,7 +37,26 @@ export default ({ eventId }) => {
         />
       </Col>
     ) : requestList.length > 0 ? (
-      <Divider>Aqui se cargara la lista</Divider>
+      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+        <Card>
+          <List
+            dataSource={requestList}
+            renderItem={(item) => (
+              <List.Item key={item._id} actions={[<Button>Aceptar</Button>, <Button>Rechazar</Button>]}>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar>
+                      {item.id_user_requested ? item.id_user_requested.charAt(0).toUpperCase() : item.id_user_requested}
+                    </Avatar>
+                  }
+                  title={item.id_user_requested}
+                  style={{ textAlign: "left" }}
+                />
+              </List.Item>
+            )}
+          />
+        </Card>
+      </Col>
     ) : (
       <Divider>No tiene solicitudes actualmente</Divider>
     );
