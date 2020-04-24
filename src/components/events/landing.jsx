@@ -509,42 +509,28 @@ const MapComponent = (props) => {
                   namesUser ?
                     <div>
                       <h1>Listado de conferencias Virtuales</h1>
-                      <List
-                        itemLayout="vertical"
-                        size="large"
-                        pagination={{
-                          onChange: (page) => {
-                            console.log(page);
-                          },
-                          pageSize: 3,
-                        }}
-                        dataSource={infoAgendaArr}
-                        renderItem={(item) => (
-                          <List.Item
-                            key={item.name}
-                          >
-                            <List.Item.Meta
-                              title={item.name}
-                              description={
-                                <div>
-                                  {item.hosts ?
-                                    <div>
-                                      {
-                                        item.hosts.map((item, key) => (
-                                          <p key={key}>Conferencista: {item.name}</p>
-                                        ))
-                                      }
-                                    </div> :
-                                    <div />
-                                  }
-                                </div>
-                              }
-                            />
-                            <div>{item.datetime_start} - {item.datetime_end}</div>
-                            <Button onClick={() => { toggleConference(true, item.meeting_id, namesUser) }}>Entrar a la conferencia </Button>
-                          </List.Item>
-                        )}
-                      />
+                      {
+                        infoAgendaArr.map((item, key) => (
+                          <div key={key}>
+                            <Card title={item.name} bordered={true} style={{ width: 300, marginBottom: "3%" }}>
+                              <p>
+                                {item.hosts ?
+                                  <div>
+                                    {
+                                      item.hosts.map((item, key) => (
+                                        <p key={key}>Conferencista: {item.name}</p>
+                                      ))
+                                    }
+                                  </div> :
+                                  <div />
+                                }
+                              </p>
+                              <p>{item.datetime_start} - {item.datetime_end}</p>
+                              <Button onClick={() => { toggleConference(true, item.meeting_id, namesUser) }}>Entrar a la conferencia </Button>
+                            </Card>
+                          </div>
+                        ))
+                      }
                     </div> :
                     <h1>Debes estar logueado para poder acceder a la videoconferencia</h1>
                 }
