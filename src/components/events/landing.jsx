@@ -10,8 +10,8 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { List, Avatar } from "antd";
+import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
 import { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import Loading from "../loaders/loading";
@@ -29,7 +29,7 @@ import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
-import BannerEvent from "./bannerEvent"
+import BannerEvent from "./bannerEvent";
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -40,13 +40,11 @@ momentLocalizer();
 const html = document.querySelector("html");
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
-
 const drawerButton = {
   height: "46px",
   padding: "7px 10px",
   fontSize: "10px",
-
-}
+};
 
 const IconText = ({ icon, text }) => (
   <span>
@@ -58,12 +56,12 @@ const imageCenter = {
   maxWidth: "100%",
   minWidth: "100%",
   margin: "0 auto",
-  display: "block"
-}
+  display: "block",
+};
 
 const defautlColorMenu = {
-  backgroundColor: "white"
-}
+  backgroundColor: "white",
+};
 
 class Landing extends Component {
   constructor(props) {
@@ -77,25 +75,26 @@ class Landing extends Component {
       section: "evento",
       showIframeZoom: false,
       meeting_id: null,
+      userEntered: null,
       color: "",
       collapsed: false,
       visible: false,
       placement: "left",
-      headerVisible: "true"
+      headerVisible: "true",
     };
   }
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsed: !this.state.collapsed,
     });
   };
 
   hideHeader = () => {
     this.setState({
-      headerVisible: false
+      headerVisible: false,
     });
-  }
+  };
 
   /*componentDidUpdate(prevProps) {
         if (this.props.location === prevProps.location) {
@@ -105,20 +104,20 @@ class Landing extends Component {
 
   showDrawer = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
     this.hideHeader();
   };
 
   onClose = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
-  onChange = e => {
+  onChange = (e) => {
     this.setState({
-      placement: e.target.value
+      placement: e.target.value,
     });
   };
 
@@ -144,17 +143,17 @@ class Landing extends Component {
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
-    console.log(id)
-    const infoAgenda = await AgendaApi.byEvent(id)
-    const infoAgendaArr = []
+    console.log(id);
+    const infoAgenda = await AgendaApi.byEvent(id);
+    const infoAgendaArr = [];
     for (const prop in infoAgenda.data) {
-      if ("Aqui", infoAgenda.data[prop].meeting_id) {
-        infoAgendaArr.push(infoAgenda.data[prop])
+      if (("Aqui", infoAgenda.data[prop].meeting_id)) {
+        infoAgendaArr.push(infoAgenda.data[prop]);
       }
     }
 
-    console.log(infoAgendaArr)
-    this.setState({ infoAgendaArr })
+    console.log(infoAgendaArr);
+    this.setState({ infoAgendaArr });
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
 
@@ -199,40 +198,38 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered">
           <div className="description-container column is-8">
-            <Card
-              className="event-description"
-              bodyStyle={{ padding: "25px 5px" }}
-              bordered={true}
-            >
+            <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
               <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
 
-              {event.video && <div className="column is-centered mediaplayer">
-                <ReactPlayer
-                  //width={"100%"}
-                  //height={"500px"}
-                  style={{
-                    display: "block",
-                    margin: "0 auto"
-                  }}
-                  //
-                  url={event.video}
-                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                  controls
-                />
-              </div>}
+              {event.video && (
+                <div className="column is-centered mediaplayer">
+                  <ReactPlayer
+                    //width={"100%"}
+                    //height={"500px"}
+                    style={{
+                      display: "block",
+                      margin: "0 auto",
+                    }}
+                    //
+                    url={event.video}
+                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                    controls
+                  />
+                </div>
+              )}
 
               <div>
                 {typeof event.description === "string" ? (
                   <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
                 ) : (
-                    "json"
-                  )}
+                  "json"
+                )}
               </div>
             </Card>
           </div>
           <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} />
         </div>
-      )
+      ),
     };
     this.setState({ event, loading: false, sections }, () => {
       this.firebaseUI();
@@ -258,14 +255,14 @@ class Landing extends Component {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
-        }
+        },
       },
       //Disabled accountchooser
       credentialHelper: "none",
       // Terms of service url.
       tosUrl: `${BaseUrl}/terms`,
       // Privacy policy url.
-      privacyPolicyUrl: `${BaseUrl}/privacy`
+      privacyPolicyUrl: `${BaseUrl}/privacy`,
     };
     ui.start("#firebaseui-auth-container", uiConfig);
   };
@@ -274,7 +271,7 @@ class Landing extends Component {
     html.classList.add("is-clipped");
     this.setState({ modal: true, modalTicket: false });
   };
-  closeLogin = user => {
+  closeLogin = (user) => {
     html.classList.remove("is-clipped");
     this.setState({ modal: false });
     if (user) {
@@ -304,28 +301,28 @@ class Landing extends Component {
     this.setState({ modal: false, modalTicket: false });
   };
 
-  showSection = section => {
+  showSection = (section) => {
     this.setState({ section });
     this.setState({ visible: false });
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id) => {
+  toggleConference = (state, meeting_id, userEntered) => {
     if (meeting_id != undefined) {
-      this.setState({ meeting_id });
+      this.setState({ meeting_id, userEntered });
     }
     this.setState({ showIframeZoom: state });
   };
 
   render() {
-    const { event, modal, modalTicket, section, sections, showIframeZoom, meeting_id } = this.state;
+    const { event, modal, modalTicket, section, sections, showIframeZoom, meeting_id, userEntered } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
               className="delete"
-              onClick={e => {
+              onClick={(e) => {
                 this.setState({ showConfirm: false });
               }}
             />
@@ -335,131 +332,144 @@ class Landing extends Component {
         {this.state.loading ? (
           <Loading />
         ) : (
-            <React.Fragment>
-              {this.state.headerVisible && <div className="hero-head" >
+          <React.Fragment>
+            {this.state.headerVisible && (
+              <div className="hero-head">
                 {/* Condicion para mostrar el componente de zoom */}
-                {showIframeZoom && <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} />}
+                {showIframeZoom && (
+                  <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
+                )}
 
                 {/* Componente banner */}
 
                 <BannerEvent
-                  bgImage={event.styles && event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
-                  bgImageText={((event.styles && event.styles.event_image) ? event.styles.event_image : "")}
+                  bgImage={
+                    event.styles && event.styles.banner_image
+                      ? event.styles.banner_image
+                      : event.picture
+                      ? event.picture
+                      : "https://bulma.io/images/placeholders/1280x960.png"
+                  }
+                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
                   title={event.name}
                   organizado={
-                    <Link
-                      to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
                       {event.organizer.name ? event.organizer.name : event.organizer.email}
                     </Link>
                   }
-                  place={<span>{event.venue} {event.location.FormattedAddress}</span>
+                  place={
+                    <span>
+                      {event.venue} {event.location.FormattedAddress}
+                    </span>
                   }
                   dateStart={event.date_start}
                   dateEnd={event.date_end}
                 />
 
                 {/* fin del banner */}
-
-              </div>}
-
-              {/* Menú secciones del landing */}
-              <Content>
-                <Layout className="site-layout">
-
-                  {/*Aqui empieza el menu para dispositivos >  */}
-                  <div className="hiddenMenu_Landing">
-                    <Sider
-                      className="containerMenu_Landing"
-                      style={{ backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
-                      trigger={null}
-                      collapsible
-                      collapsed={this.state.collapsed}
-                      width={250}>
-
-                      <div className="items-menu_Landing ">
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </div>
-                    </Sider>
-                  </div>
-                  {/*Aqui termina el menu para dispositivos >  */}
-
-
-                  <Layout className="site-layout">
-                    <Content className="site-layout-background">
-
-                      {/* Boton que abre el menu para dispositivos > tablet  */}
-                      <div className="hiddenMenu_Landing">
-                        <Button onClick={this.toggle}>
-                          {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
-                            className: "trigger",
-                            onClick: this.toggle
-                          })}
-                        </Button>
-                      </div>
-
-                      {/*Aqui empieza el menu para dispositivos < tablet*/}
-
-                      <div className="hiddenMenuMobile_Landing">
-                        <Button block style={drawerButton} onClick={this.showDrawer}>
-                          <MenuOutlined style={{ fontSize: "15px" }} />
-                          <div>Menu</div>
-                        </Button>
-                      </div>
-
-                      <Drawer
-                        title={event.name}
-                        placement={this.state.placement}
-                        closable={true}
-                        onClose={this.onClose}
-                        visible={this.state.visible}
-                        maskClosable={true}
-                        bodyStyle={{ padding: "0px", backgroundColor: event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}>
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </Drawer>
-
-                      {/* Contenedor donde se mapea la información de cada seccion */}
-
-                      <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                        {sections[section]}
-                      </div>
-                    </Content>
-                  </Layout>
-                </Layout>
-              </Content>
-
-              {/* Final del menú  */}
-
-              <div className={`modal ${modal ? "is-active" : ""}`}>
-                <div className="modal-background"></div>
-                <div className="modal-content">
-                  <div id="firebaseui-auth-container" />
-                </div>
-                <button
-                  className="modal-close is-large"
-                  aria-label="close"
-                  onClick={e => {
-                    this.closeLogin();
-                  }}
-                />
               </div>
-              <Dialog
-                modal={modalTicket}
-                title={"Atención!!"}
-                content={
-                  <p className="has-text-weight-bold">Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-                }
-                first={{
-                  title: "Iniciar Sesión o Registrarse",
-                  class: "is-info",
-                  action: this.openLogin
+            )}
+
+            {/* Menú secciones del landing */}
+            <Content>
+              <Layout className="site-layout">
+                {/*Aqui empieza el menu para dispositivos >  */}
+                <div className="hiddenMenu_Landing">
+                  <Sider
+                    className="containerMenu_Landing"
+                    style={{
+                      backgroundColor:
+                        event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
+                    }}
+                    trigger={null}
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    width={250}>
+                    <div className="items-menu_Landing ">
+                      {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                    </div>
+                  </Sider>
+                </div>
+                {/*Aqui termina el menu para dispositivos >  */}
+
+                <Layout className="site-layout">
+                  <Content className="site-layout-background">
+                    {/* Boton que abre el menu para dispositivos > tablet  */}
+                    <div className="hiddenMenu_Landing">
+                      <Button onClick={this.toggle}>
+                        {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
+                          className: "trigger",
+                          onClick: this.toggle,
+                        })}
+                      </Button>
+                    </div>
+
+                    {/*Aqui empieza el menu para dispositivos < tablet*/}
+
+                    <div className="hiddenMenuMobile_Landing">
+                      <Button block style={drawerButton} onClick={this.showDrawer}>
+                        <MenuOutlined style={{ fontSize: "15px" }} />
+                        <div>Menu</div>
+                      </Button>
+                    </div>
+
+                    <Drawer
+                      title={event.name}
+                      placement={this.state.placement}
+                      closable={true}
+                      onClose={this.onClose}
+                      visible={this.state.visible}
+                      maskClosable={true}
+                      bodyStyle={{
+                        padding: "0px",
+                        backgroundColor:
+                          event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
+                      }}>
+                      {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                    </Drawer>
+
+                    {/* Contenedor donde se mapea la información de cada seccion */}
+
+                    <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
+                      {sections[section]}
+                    </div>
+                  </Content>
+                </Layout>
+              </Layout>
+            </Content>
+
+            {/* Final del menú  */}
+
+            <div className={`modal ${modal ? "is-active" : ""}`}>
+              <div className="modal-background"></div>
+              <div className="modal-content">
+                <div id="firebaseui-auth-container" />
+              </div>
+              <button
+                className="modal-close is-large"
+                aria-label="close"
+                onClick={(e) => {
+                  this.closeLogin();
                 }}
-                second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
-            </React.Fragment>
-          )
-        }
+            </div>
+            <Dialog
+              modal={modalTicket}
+              title={"Atención!!"}
+              content={
+                <p className="has-text-weight-bold">Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
+              }
+              first={{
+                title: "Iniciar Sesión o Registrarse",
+                class: "is-info",
+                action: this.openLogin,
+              }}
+              second={{ title: "Cancelar", class: "", action: this.closeModal }}
+            />
+          </React.Fragment>
+        )}
       </section>
     );
   }
@@ -473,81 +483,78 @@ const MapComponent = (props) => {
       <div>
         {
           (console.log(event),
-            event.type_event === "onlineEvent" ? (
-              <div>
-                <ReactQuill
-                  value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
-                  modules={{ toolbar: false }}
-                  readOnly={true}
-                />
-                <h1>Listado de conferencias Virtuales</h1>
-                <List
-                  itemLayout="vertical"
-                  size="large"
-                  pagination={{
-                    onChange: page => {
-                      console.log(page);
-                    },
-                    pageSize: 3,
-                  }}
-                  dataSource={infoAgendaArr}
-                  renderItem={item => (
-                    <List.Item
-                      key={item.name}
-                    >
-                      <List.Item.Meta
-                        title="Entrar a esta conferencia"
-                        description={<a href={item.join_url}>{item.name}</a>}
-                      />
-                      {item.content}
-                    </List.Item>
-                  )}
-                />
-              </div>
-            ) : (
-                <div>
-                  <Card>
-                    <div className="map-head">
-                      <h2 className="is-size-5 has-text-left">
-                        <b>Encuentra la ubicación</b>
-
-                      </h2>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon hours has-text-left">
-                          <span className="icon is-small">
-                            <i className="far fa-clock" />
-                          </span>
-                          <span className="subt is-size-6 has-text-left">
-                            {""} Desde {Moment(event.hour_start).format("HH:mm")}
-                          </span>
-                          <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
-                        </div>
-                      </div>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon has-text-left">
-                          <span className="icon is-small">
-                            <i className="fas fa-map-marker-alt" />
-                          </span>
-                          <span className="has-text-left">
-                            {""} {event.venue} {event.location.FormattedAddress}
-                          </span>
-                        </div>
-                      </div>
+          event.type_event === "onlineEvent" ? (
+            <div>
+              <ReactQuill
+                value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
+                modules={{ toolbar: false }}
+                readOnly={true}
+              />
+              <h1>Listado de conferencias Virtuales</h1>
+              <List
+                itemLayout="vertical"
+                size="large"
+                pagination={{
+                  onChange: (page) => {
+                    console.log(page);
+                  },
+                  pageSize: 3,
+                }}
+                dataSource={infoAgendaArr}
+                renderItem={(item) => (
+                  <List.Item key={item.name}>
+                    <List.Item.Meta
+                      title="Entrar a esta conferencia"
+                      description={<a href={item.join_url}>{item.name}</a>}
+                    />
+                    {item.content}
+                  </List.Item>
+                )}
+              />
+            </div>
+          ) : (
+            <div>
+              <Card>
+                <div className="map-head">
+                  <h2 className="is-size-5 has-text-left">
+                    <b>Encuentra la ubicación</b>
+                  </h2>
+                  <div className="lugar item columns">
+                    <div className="column is-12 container-icon hours has-text-left">
+                      <span className="icon is-small">
+                        <i className="far fa-clock" />
+                      </span>
+                      <span className="subt is-size-6 has-text-left">
+                        {""} Desde {Moment(event.hour_start).format("HH:mm")}
+                      </span>
+                      <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
                     </div>
-                  </Card>
-                  <div style={{ height: "400px", width: "100%" }}>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
-                      defaultCenter={{
-                        lat: event.location.Latitude,
-                        lng: event.location.Longitude
-                      }}
-                      defaultZoom={11}>
-                      <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
-                    </GoogleMapReact>
+                  </div>
+                  <div className="lugar item columns">
+                    <div className="column is-12 container-icon has-text-left">
+                      <span className="icon is-small">
+                        <i className="fas fa-map-marker-alt" />
+                      </span>
+                      <span className="has-text-left">
+                        {""} {event.venue} {event.location.FormattedAddress}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              ))
+              </Card>
+              <div style={{ height: "400px", width: "100%" }}>
+                <GoogleMapReact
+                  bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
+                  defaultCenter={{
+                    lat: event.location.Latitude,
+                    lng: event.location.Longitude,
+                  }}
+                  defaultZoom={11}>
+                  <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
+                </GoogleMapReact>
+              </div>
+            </div>
+          ))
         }
       </div>
     </div>
