@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { UsersApi } from "../../helpers/request";
 import { Form, Input, InputNumber, Button, Card, Col, Row } from 'antd';
+import EventModal from "../events/shared/eventModal";
 
 
 const card = {
@@ -40,9 +41,9 @@ class UserRegistration extends Component {
     componentDidMount() {
         let user = {};
         this.props.extraFields
-            .map((obj) => (
+            .map(obj => (
                 user[obj.name] = ''));
-        this.setState({ user, edit: false });
+        this.setState({ user });
     }
 
     async handleSubmit(e) {
@@ -77,46 +78,90 @@ class UserRegistration extends Component {
         this.setState({ message, create: false });
     }
 
-    render() {
+    renderForm = () => {
         const { extraFields } = this.props;
+        let formUI = extraFields.map((m, key) => {
+            let type = m.type || "text";
+            let props = m.props || {};
+            let name = m.name;
+            let mandatory = m.mandatory;
+            let target = name;
+            let value = this.state.user[target];
+            let input = <Input {...props}
+                type={type}
+                key={key}
+                name={name}
+                value={value}
+                onChange={(e) => { this.onChange(e, type) }}
+            />;
+
+            return (
+
+                <Form key={'g' + key} {...layout} name="nest-messages" validateMessages={validateMessages}>
+                    {m.type !== "boolean" &&
+                        <Form.Item label={name} name={name} rules={[` required: ${mandatory ? 'required' : ''}`]}
+                            key={"l" + key}
+                            htmlFor={key}>
+                            {input}
+
+                        </Form.Item>}
+
+                </Form>
+            );
+        });
+        return formUI;
+    };
+
+    onChange = (e, type) => {
+        const { value, name } = e.target;
+        (type === "boolean") ?
+            this.setState(prevState => { return { user: { ...this.state.user, [name]: !prevState.user[name] } } }, this.validForm)
+            : this.setState({ user: { ...this.state.user, [name]: value } }, this.validForm);
+    };
+
+    validForm = () => {
+        const EMAIL_REGEX = new RegExp('[^@]+@[^@]+\\.[^@]+');
+        const { extraFields } = this.props, { user } = this.state,
+            mandatories = extraFields.filter(field => field.mandatory), validations = [];
+        mandatories.map((field, key) => {
+            let valid;
+            if (field.type === 'email') valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
+            if (field.type === 'text' || field.type === 'list') valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
+            if (field.type === 'number') valid = user[field.name] && user[field.name] >= 0;
+            if (field.type === 'boolean') valid = (typeof user[field.name] === "boolean");
+            return validations[key] = valid;
+        });
+        const valid = validations.reduce((sum, next) => sum && next, true);
+        this.setState({ valid: !valid })
+    };
+
+
+    render() {
+        const { addUser } = this.props;
         return (
             <>
-                <Col
-                    xs={24}
-                    sm={22}
-                    md={18}
-                    lg={18}
-                    xl={18}
-                    style={{ margin: "0 auto" }}>
-                    <Card title="Registro de usuarios" bodyStyle={card}>
 
-                        {extraFields.map((m, key) => {
-                            <Form key={key} {...layout} name="nest-messages" validateMessages={validateMessages}>
+                <EventModal modal={this.props.modal} title={"Registrar Usuario"} closeModal={this.props.handleModal}>
+                    <section className="modal-card-body">
 
-                                <Form.Item name={m.name} label="Nombre" rules={[{ required: true }]}>
-                                    <Input type={m.type} />
-                                </Form.Item>
-                                <Form.Item name={['user', 'email']} label="Email" rules={[{ required: true, type: 'email' }]}>
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item name={['user', 'identification']} label="Identificación" rules={[{ required: true, type: 'number', min: 10 }]}>
-                                    <InputNumber />
-                                </Form.Item>
-
-                                <Form.Item name={['user', 'position']} label="Cargo">
-                                    <Input />
-                                </Form.Item>
-                                <Row justify="center" >
-                                    <Button type="primary" htmlType="submit" rules={[{ required: true }]}>
-                                        Enviar
-                                </Button>
-                                </Row>
-                            </Form>
-                        })
+                        {
+                            Object.keys(this.state.user).length > 0 && this.renderForm()
                         }
 
-                    </Card>
-                </Col>
+                        <Row justify="center" >
+                            <Button type="primary" htmlType="submit" rules={[{ required: true }]} onClick={() => this.handleSubmit}>
+                                Enviar
+                            </Button>
+                        </Row>
+                    </section>
+                </EventModal>
+
+                <Row justify="center" >
+                    <Button type="primary" htmlType="submit" rules={[{ required: true }]} onClick={() => addUser}>
+                        Agregar usuario
+                    </Button>
+                </Row>
+
             </>
         );
     }
