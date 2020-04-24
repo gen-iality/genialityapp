@@ -387,13 +387,14 @@ class Landing extends Component {
                       </div>
 
                       <Drawer
-                        title="Menu"
+                        title={event.name}
                         placement={this.state.placement}
                         closable={true}
                         onClose={this.onClose}
                         visible={this.state.visible}
                         maskClosable={true}
                         bodyStyle={{ padding: "0px" }}>
+                        <img src={event.styles.event_image} style={imageCenter} />
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 

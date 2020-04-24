@@ -66,7 +66,7 @@ class MenuEvent extends Component {
         // theme="dark"
         defaultSelectedKeys={["1"]}
         // defaultOpenKeys={['sub1']}
-        style={{ height: "100%", padding: "50px 0" }}>
+        style={{ height: "100%", padding: "30px 0" }}>
         {Object.keys(itemsMenu).map((key, i) => {
           let IconoComponente = iconComponents[itemsMenu[key].icon];
           return (
