@@ -12,6 +12,12 @@ import * as Cookie from "js-cookie";
 import API, { UsersApi } from "../../helpers/request";
 
 const { Sider } = Layout;
+
+const stylesMenuItems = {
+  height: "100%",
+  padding: "30px 0",
+  backgroundColor: "transparent"
+}
 class MenuEvent extends Component {
   constructor(props) {
     super(props);
@@ -66,7 +72,7 @@ class MenuEvent extends Component {
         // theme="dark"
         defaultSelectedKeys={["1"]}
         // defaultOpenKeys={['sub1']}
-        style={{ height: "100%", padding: "30px 0" }}>
+        style={stylesMenuItems}>
         {Object.keys(itemsMenu).map((key, i) => {
           let IconoComponente = iconComponents[itemsMenu[key].icon];
           return (

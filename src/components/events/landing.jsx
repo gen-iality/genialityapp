@@ -53,6 +53,10 @@ const imageCenter = {
   display: "block"
 }
 
+const defautlColorMenu = {
+  backgroundColor: "white"
+}
+
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -346,6 +350,7 @@ class Landing extends Component {
                   <div className="hiddenMenu_Landing">
                     <Sider
                       className="containerMenu_Landing"
+                      style={{ backgroundColor: event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white" }}
                       trigger={null}
                       collapsible
                       collapsed={this.state.collapsed}
