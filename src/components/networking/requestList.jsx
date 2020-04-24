@@ -18,9 +18,11 @@ export default ({ eventId }) => {
       let response = await getCurrentEventUser(eventId, userId);
 
       Networking.getInvitationsReceived(eventId, response._id).then(({ data }) => {
-        console.log("esta es la respuesta :", data);
+        // console.log("esta es la respuesta :", data);
         setCurrentUserId(userId);
-        if (data) setRequestList(data);
+
+        // Solo se obtendran las invitaciones que no tengan respuesta
+        if (data) setRequestList(data.filter((item) => !item.response));
       });
     });
   };
