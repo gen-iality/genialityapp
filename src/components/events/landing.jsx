@@ -49,6 +49,7 @@ const drawerButton = {
 
 const imageCenter = {
   maxWidth: "100%",
+  minWidth: "100%",
   margin: "0 auto",
   display: "block"
 }
