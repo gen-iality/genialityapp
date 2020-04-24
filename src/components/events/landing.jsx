@@ -314,6 +314,7 @@ class Landing extends Component {
 
                 <BannerEvent
                   bgImage={event.styles.banner_image ? event.styles.banner_image : (event.picture ? event.picture : "https://bulma.io/images/placeholders/1280x960.png")}
+                  bgImageText={event.styles.event_image}
                   title={event.name}
                   organizado={
                     <Link
