@@ -1,6 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar } from "antd";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import * as Cookie from "js-cookie";
 import { Networking } from "../../helpers/request";
@@ -32,11 +34,12 @@ export default ({ eventId }) => {
     let data = { response: state ? "acepted" : "rejected" };
 
     Networking.acceptOrDeclineInvitation(eventId, userId, data)
-      .then((result) => {
-        console.log("Respuesta enviada :", result);
+      .then(() => {
+        toast.success("Respuesta enviada");
       })
       .catch((err) => {
-        console.log("Hubo un problema :", err);
+        console.log(err);
+        toast.error("Hubo un problema", err);
       });
   };
 
