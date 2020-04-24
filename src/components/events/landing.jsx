@@ -47,6 +47,12 @@ const drawerButton = {
 
 }
 
+const imageCenter = {
+  maxWidth: "100%",
+  margin: "0 auto",
+  display: "block"
+}
+
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -346,7 +352,7 @@ class Landing extends Component {
                       width={250}>
 
                       <div className="items-menu_Landing ">
-                        <img src={event.styles.event_image} style={{ maxWidth: "100%" }} />
+                        <img src={event.styles.event_image} style={imageCenter} />
                         <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
