@@ -62,9 +62,15 @@ const imageCenter = {
   display: "block",
 };
 
-const defautlColorMenu = {
-  backgroundColor: "white",
-};
+const mediumScreen = {
+  height: "75%",
+  width: "70%",
+  top: "10%",
+  left: "0",
+  bottom: "10%",
+  right: "0",
+  margin: "0 auto",
+}
 
 class Landing extends Component {
   constructor(props) {
