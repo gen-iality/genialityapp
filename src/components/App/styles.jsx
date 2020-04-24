@@ -19,30 +19,33 @@ class Styles extends Component {
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
         {
-          title: "Elige El fondo de tu app",
+          title: "Elige aquí el color de fondo que deseas para la pagina.",
           fieldColorName: "containerBgColor",
           editIsVisible: false,
         },
         {
-          title: "Elige un color para los botones",
-          fieldColorName: "brandPrimary",
-          editIsVisible: false,
-        },
-        {
-          title: "Elige un color para el menu",
+          title: "Elige aquí el color de fondo que deseas para el menu.",
           fieldColorName: "toolbarDefaultBg",
           editIsVisible: false,
         },
-        {
-          title: "Elige un color para el texto del menu",
-          fieldColorName: "textMenu",
-          editIsVisible: false,
-        },
-        {
-          title: "Elige un color para item seleccionado del menu",
-          fieldColorName: "activeText",
-          editIsVisible: false,
-        },
+
+        // Se comentan porque no se necesitan por el momento.
+
+        // {
+        //   title: "Elige un color para los botones",
+        //   fieldColorName: "brandPrimary",
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: "Elige un color para el texto del menu",
+        //   fieldColorName: "textMenu",
+        //   editIsVisible: false,
+        // },
+        // {
+        //   title: "Elige un color para item seleccionado del menu",
+        //   fieldColorName: "activeText",
+        //   editIsVisible: false,
+        // },
       ],
     };
     //Se establecen las funciones para su posterior uso
@@ -50,14 +53,26 @@ class Styles extends Component {
     this.submit = this.submit.bind(this);
 
     this.imageDrawer = [
-      { title: "Elige una imagen de logo", imageFieldName: "event_image" },
-      { title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
-      { title: "Elige una imagen de fondo", imageFieldName: "BackgroundImage" },
+
+      // Se comenta porque no se necesitan por el momento.
+      // { title: "Elige una imagen de logo", imageFieldName: "event_image" },
       {
-        title: "Elige una imagen para el botón de la seccion especial(opcional)",
+        title: "Elige el logo que deseas para el menu de la pagina.",
+        imageFieldName: "menu_image"
+      },
+      {
+        title: "Elige la imagen que deseas mostrar en el banner de la pagina.",
+        imageFieldName: "banner_image"
+      },
+      {
+        title: "Elige la imagen de fondo que deseas para la pagina. (Fondo opcional)",
+        imageFieldName: "BackgroundImage"
+      },
+      {
+        title: "Si deseas agregar un boton extra al final del menu, elige aquí una imagen. (Boton opcional)",
         imageFieldName: "FooterImage",
       },
-      { title: "Elige una imagen para el banner", imageFieldName: "banner_image" },
+
     ];
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
@@ -176,7 +191,7 @@ class Styles extends Component {
     }
   }
 
-  onColorChange = function(color, fieldName) {
+  onColorChange = function (color, fieldName) {
     let temp = { ...this.state.styles };
     temp[fieldName] = color.hex;
     this.setState({ styles: temp });
@@ -217,7 +232,7 @@ class Styles extends Component {
                     disabled
                     style={{ marginRight: "3%", width: "5%" }}
                     value={this.state.styles[item.fieldColorName]}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <button className="button"> {item.editIsVisible ? "Seleccionar" : "Escoger"}</button>
                 </div>
