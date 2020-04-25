@@ -111,12 +111,11 @@ class CameraFeed extends Component {
                             </div>
                     }
 
-
                 </div>
                 {/* Imagen capturada  */}
                 <div className="c-camera-feed__stage">
                     <canvas width="470" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
-                    <img id="getImage" hidden src={image} />
+                    <img width="470" height="360" id="getImage" hidden src={image} />
                 </div>
             </div>
         );
