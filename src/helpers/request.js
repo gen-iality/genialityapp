@@ -6,24 +6,24 @@ import { handleSelect } from "./utils";
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
-  pushURL: "https://104.248.125.133:6477/pushNotification"
+  pushURL: "https://104.248.125.133:6477/pushNotification",
 });
 const privateInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
-  withCredentials: true
+  withCredentials: true,
 });
 
 const privateInstancePush = axios.create({
   // pushURL: 'https://104.248.125.133:6477/pushNotification',
-  withCredentials: false
+  withCredentials: false,
 });
 let evius_token = Cookie.get("evius_token");
 if (evius_token) {
   privateInstance.defaults.params = {};
   privateInstance.defaults.params["evius_token"] = evius_token;
 }
-privateInstance.interceptors.response.use(response => {
+privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
     console.log("Se acab� la moneda");
@@ -66,19 +66,19 @@ export const Actions = {
   getAll: (url, unsafe) => {
     if (unsafe) return publicInstance.get(`${url}`).then(({ data }) => data);
     return privateInstance.get(`${url}`).then(({ data }) => data);
-  }
+  },
 };
 export const EventsApi = {
-  getPublic: async query => {
+  getPublic: async (query) => {
     return await Actions.getAll(`/api/events${query}`, true);
   },
-  getOldEvents: async query => {
+  getOldEvents: async (query) => {
     return await Actions.getAll(`/api/eventsbeforetoday${query}`, true);
   },
-  landingEvent: async id => {
+  landingEvent: async (id) => {
     return await Actions.getOne("/api/events/", id, true);
   },
-  invitations: async id => {
+  invitations: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, "invitations");
   },
   sendInvitation: async (eventId, data) => {
@@ -91,37 +91,37 @@ export const EventsApi = {
     const events = await Actions.getAll("/api/me/contributors/events");
     return events;
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.getOne("/api/events/", id);
   },
   editOne: async (data, id) => {
     return await Actions.edit("/api/events", data, id);
   },
-  deleteOne: async id => {
+  deleteOne: async (id) => {
     return await Actions.delete("/api/events/", id);
   },
-  getStyles: async id => {
+  getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`);
-  }
+  },
 };
 export const UsersApi = {
   getAll: async (id, query) => {
     query = query ? query : "";
     return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
   },
-  getProfile: async id => {
+  getProfile: async (id) => {
     return await Actions.getOne("/api/users/", id);
   },
   editProfile: async (data, id) => {
     return await Actions.edit("/api/users/", data, id);
   },
-  findByEmail: async email => {
+  findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
   },
   mineTickets: async () => {
     return await Actions.getAll(`/api/me/eventUsers`);
   },
-  mineOrdes: async id => {
+  mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
   createOne: async (data, id) => {
@@ -129,10 +129,10 @@ export const UsersApi = {
   },
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);
-  }
+  },
 };
 export const EventFieldsApi = {
-  getAll: async event => {
+  getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
   },
   getOne: async (event, id) => {
@@ -146,11 +146,11 @@ export const EventFieldsApi = {
   },
   deleteOne: async (id, event) => {
     return await Actions.delete(`/api/events/${event}/userproperties`, id);
-  }
+  },
 };
 
 export const SurveysApi = {
-  getAll: async event => {
+  getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/surveys`);
   },
 
@@ -178,14 +178,14 @@ export const SurveysApi = {
   },
   editQuestion: async (event, id, index, data) => {
     return await Actions.put(`/api/events/${event}/questionedit/${id}?questionNo=${index}`, data);
-  }
+  },
 };
 
 export const DocumentsApi = {
-  getAll: async event => {
+  getAll: async (event) => {
     return await Actions.getAll(`api/events/${event}/documents`);
   },
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/documents`).then(({ data }) => data);
   },
 
@@ -203,39 +203,39 @@ export const DocumentsApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/documents`, data);
-  }
+  },
 };
 
 export const CategoriesApi = {
   getAll: async () => {
     const resp = await Actions.getAll("api/categories");
     return handleSelect(resp.data);
-  }
+  },
 };
 export const TypesApi = {
   getAll: async () => {
     const resp = await Actions.getAll("api/eventTypes");
     return handleSelect(resp.data);
-  }
+  },
 };
 export const OrganizationApi = {
   mine: async () => {
     const resp = await Actions.getAll("api/me/organizations");
-    let data = resp.data.map(item => {
+    let data = resp.data.map((item) => {
       return { id: item._id, name: item.name };
     });
     return data;
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.getOne("/api/organizations/", id);
   },
   editOne: async (data, id) => {
     return await Actions.edit("/api/organizations", data, id);
   },
-  events: async id => {
+  events: async (id) => {
     return await Actions.getOne(`/api/organizations/${id}/`, "events");
   },
-  getUsers: async id => {
+  getUsers: async (id) => {
     return await Actions.get(`/api/organizations/${id}/users`);
   },
   getUser: async (org, member) => {
@@ -249,24 +249,24 @@ export const OrganizationApi = {
   },
   deleteUser: async (org, member) => {
     return await Actions.delete(`/api/organizations/${org}/users/`, member);
-  }
+  },
 };
 export const BadgeApi = {
-  create: async data => {
+  create: async (data) => {
     return await Actions.post(`/api/escarapelas`, data);
   },
   edit: async (data, id) => {
     return await Actions.edit("/api/escarapelas/", data, id);
   },
-  get: async id => {
+  get: async (id) => {
     return await Actions.getOne("/api/escarapelas/", id);
-  }
+  },
 };
 export const HelperApi = {
-  listHelper: async id => {
+  listHelper: async (id) => {
     return await Actions.getOne(`api/contributors/events/`, id);
   },
-  rolesOne: async event => {
+  rolesOne: async (event) => {
     return await Actions.get(`api/contributors/events/${event}/me`);
   },
   saveHelper: async (event, data) => {
@@ -277,13 +277,13 @@ export const HelperApi = {
   },
   removeHelper: async (id, event) => {
     return await Actions.delete(`api/events/${event}/contributors`, id);
-  }
+  },
 };
 export const CertsApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/certificates`).then(({ data }) => data);
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.get(`api/certificate/`, id);
   },
   generate: async (content, image) => {
@@ -292,84 +292,84 @@ export const CertsApi = {
   editOne: async (data, id) => {
     return await Actions.edit("/api/certificates", data, id);
   },
-  deleteOne: async id => {
+  deleteOne: async (id) => {
     return await Actions.delete("/api/certificates", id);
   },
-  create: async data => {
+  create: async (data) => {
     return await Actions.create(`api/certificates`, data);
   },
-  generateCert: async body => {
+  generateCert: async (body) => {
     return new Promise((resolve, reject) => {
       privateInstance
         .post("/api/generatecertificate?download=1", body, {
-          responseType: "blob"
+          responseType: "blob",
         })
-        .then(response => {
+        .then((response) => {
           resolve({
             type: response.headers["content-type"],
-            blob: response.data
+            blob: response.data,
           });
         });
     });
-  }
+  },
 };
 
 export const NewsFeed = {
-  byEvent: async id => {
+  byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/newsfeed`).then(({ data }) => data);
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.get(`api/events/${id}/newsfeed/`, id);
   },
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/newsfeed`, data, id);
   },
-  deleteOne: async id => {
+  deleteOne: async (id) => {
     return await Actions.delete(`api/events/${id}/newsfeed`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/newsfeed`, data);
-  }
+  },
 };
 
 export const PushFeed = {
-  byEvent: async id => {
+  byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/sendpush`).then(({ data }) => data);
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.get(`api/events/${id}/sendpush/`, id);
   },
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/sendpush`, data, id);
   },
-  deleteOne: async id => {
+  deleteOne: async (id) => {
     return await Actions.delete(`api/events/${id}/sendpush`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/sendpush`, data);
-  }
+  },
 };
 
 export const FaqsApi = {
-  byEvent: async id => {
+  byEvent: async (id) => {
     return await Actions.getAll(`api/events/${id}/faqs`).then(({ data }) => data);
   },
-  getOne: async id => {
+  getOne: async (id) => {
     return await Actions.get(`api/events/${id}/faqs/`, id);
   },
   editOne: async (data, id) => {
     return await Actions.edit(`api/events/${id}/faqs`, data, id);
   },
-  deleteOne: async id => {
+  deleteOne: async (id) => {
     return await Actions.delete(`api/events/${id}/faqs`, id);
   },
   create: async (data, id) => {
     return await Actions.create(`api/events/${id}/faqs`, data);
-  }
+  },
 };
 
 export const RolAttApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/rolesattendees`);
   },
   getOne: async (event, id) => {
@@ -383,10 +383,10 @@ export const RolAttApi = {
   },
   create: async (data, event) => {
     return await Actions.create(`api/events/${event}/rolesattendees`, data);
-  }
+  },
 };
 export const SpacesApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/spaces`).then(({ data }) => data);
   },
   getOne: async (event, id) => {
@@ -400,10 +400,10 @@ export const SpacesApi = {
   },
   create: async (data, event) => {
     return await Actions.create(`api/events/${event}/spaces`, data);
-  }
+  },
 };
 export const CategoriesAgendaApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/categoryactivities`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
@@ -417,10 +417,10 @@ export const CategoriesAgendaApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/categoryactivities`, data);
-  }
+  },
 };
 export const TypesAgendaApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/type`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
@@ -434,10 +434,10 @@ export const TypesAgendaApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/type`, data);
-  }
+  },
 };
 export const AgendaApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/activities`);
   },
   getOne: async (id, event) => {
@@ -454,10 +454,10 @@ export const AgendaApi = {
   },
   duplicate: async (event, data, id) => {
     return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`, data);
-  }
+  },
 };
 export const SpeakersApi = {
-  byEvent: async event => {
+  byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/host`).then(({ data }) => data);
   },
   getOne: async (id, event) => {
@@ -471,20 +471,32 @@ export const SpeakersApi = {
   },
   create: async (event, data) => {
     return await Actions.create(`api/events/${event}/host`, data);
-  }
+  },
 };
 
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
     var info = { user_id, activity_id };
     return await Actions.create(`api/events/${event}/activity/activity_attendee`, info);
-  }
+  },
+};
+
+export const Networking = {
+  getInvitationsReceived: async (eventId, userId) => {
+    return await Actions.get(`api/events/${eventId}/indexinvitationsrecieved/${userId}`);
+  },
+  getInvitationsSent: async (eventId, userId) => {
+    return await Actions.get(`api/events/${eventId}/indexinvitations/${userId}`);
+  },
+  acceptOrDeclineInvitation: async (eventId, userId, data) => {
+    return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);
+  },
 };
 
 export const ActivityBySpeaker = {
   byEvent: async (event, idSpeaker) => {
     return await Actions.getOne(`api/events/${event}/activitiesbyhost/`, idSpeaker);
-  }
+  },
 };
 
 export default privateInstance;

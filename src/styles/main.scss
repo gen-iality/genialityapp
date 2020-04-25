@@ -55,10 +55,14 @@ body {
   // background: url("../back.png");
 }
 
+.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
 .ant-layout-sider {
   position: relative;
   min-width: 0;
-  background: transparent !important;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }

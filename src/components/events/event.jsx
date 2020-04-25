@@ -26,7 +26,7 @@ import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 import ConferenceRoute from "../zoom/index";
-import Test from "../events/testButton"
+//import Test from "../events/testButton"
 import { Layout } from "antd";
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -128,7 +128,7 @@ class Event extends Component {
           <h3 className="name-event">{this.state.event.name}</h3>
           <section className="section event-wrapper">
             <Switch>
-              <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/main`} />} />
+              <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/agenda`} />} />
               <Route
                 exact
                 path={`${match.url}/main`}
@@ -147,7 +147,7 @@ class Event extends Component {
               <Route path={`${match.url}/documents`} render={() => <DocumentsRoutes event={this.state.event} />} />
               <Route path={`${match.url}/conference`} render={() => <ConferenceRoute event={this.state.event} />} />
               <Route path={`${match.url}/menuLanding`} render={() => <MenuLanding event={this.state.event} />} />
-              <Route path={`${match.url}/test`} render={() => <Test event={this.state.event} ></Test>} />
+              {/* <Route path={`${match.url}/test`} render={() => <Test event={this.state.event} ></Test>} /> */}
               <Protected
                 path={`${match.url}/assistants`}
                 component={ListEventUser}

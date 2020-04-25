@@ -361,9 +361,16 @@ class Agenda extends Component {
                             {/* Boton de para acceder a la conferencia onClick={() =>
                                 showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
                               } */}
-                            <button className="button is-success is-outlined is-pulled-right has-margin-top-20">
-                              {agenda.meeting_id ? "Conferencia en Vivo" : "Sin Conferencia Virtual"}
-                            </button>
+                            {
+                              agenda.meeting_id ?
+                                <div>
+                                  <button className="button is-success is-outlined is-pulled-right has-margin-top-20">
+                                    Conferencia en Vivo
+                                  </button>
+                                </div>
+                                :
+                                <div />
+                            }
 
                             {/* <button
                         className="button button-color-agenda has-text-light is-pulled-right is-medium"
