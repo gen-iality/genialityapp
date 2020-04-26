@@ -8,6 +8,7 @@ import ContentContainer from "./content";
 import Footer from "./footer";
 import { ToastContainer } from "react-toastify";
 import { Layout } from "antd";
+import { userContext } from './userContext';
 //const { Header, Footer, Sider, Content } = Layout;
 
 class MainRouter extends Component {
@@ -23,15 +24,24 @@ class MainRouter extends Component {
 
   render() {
     return (
+
       <Router>
         <Layout>
-          <Header />
-          <ContentContainer />
-          <Footer />
-          <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange />
+          <userContext.Consumer>{(user) => {
+            return (
+              <>
+                <Header user={user} />
+                <ContentContainer />
+                <Footer />
+                <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange />
+              </>
+            )
+          }
+          }
+          </userContext.Consumer>
         </Layout>
-      </Router>
-    );
+      </Router>);
+
   }
 }
 
