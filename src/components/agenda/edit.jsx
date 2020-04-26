@@ -651,7 +651,7 @@ class AgendaEdit extends Component {
                                         </div>)}
                                     </>
                                 )}
-                            </Card>>
+                            </Card>
 
 
                         </div>
