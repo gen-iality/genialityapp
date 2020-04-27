@@ -157,7 +157,7 @@ class SurveyComponent extends Component {
 
     executeService(surveyData, questions, userId).then((result) => {
       toast.success(result);
-      showListSurvey();
+      showListSurvey(null, "reload");
     });
   };
 
