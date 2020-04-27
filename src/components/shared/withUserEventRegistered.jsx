@@ -68,7 +68,9 @@ function WithUserEventRegistered(Component) {
                 )}
 
             </div>)
-        return <Component {...props} />
+        return <>
+            <Component {...props} />
+        </>
     };
 }
 export default WithUserEventRegistered;
