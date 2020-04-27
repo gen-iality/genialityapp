@@ -25,6 +25,7 @@ class App extends Component {
 
   */
   async componentDidMount() {
+    return;
     let dataUrl = parseUrl(document.URL);
     let evius_token = null;
 
