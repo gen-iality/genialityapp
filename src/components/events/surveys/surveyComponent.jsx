@@ -116,9 +116,12 @@ class SurveyComponent extends Component {
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = !responseMessage && result;
+                  responseMessage = result;
                 })
-                .catch((err) => (responseError = err));
+                .catch((err) => {
+                  sendAnswers++;
+                  responseError = err;
+                });
             } else {
               // Sirve para controlar si un usuario anonimo ha votado
               localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
@@ -135,10 +138,14 @@ class SurveyComponent extends Component {
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = !responseMessage && result;
+                  responseMessage = result;
                 })
-                .catch((err) => (responseError = err));
+                .catch((err) => {
+                  sendAnswers++;
+                  responseError = err;
+                });
             }
+
           if (responseMessage && sendAnswers == questions.length) {
             await resolve(responseMessage);
           } else if (responseError) {
@@ -150,9 +157,8 @@ class SurveyComponent extends Component {
 
     executeService(surveyData, questions, userId).then((result) => {
       toast.success(result);
+      showListSurvey();
     });
-
-    showListSurvey();
   };
 
   render() {

@@ -53,7 +53,6 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 
       // Se obtiene el index de la opcion escogida
       const position = optionIndex;
-      console.log(position, typeof position, position.length);
 
       // Update count in a transaction
       return firestore.runTransaction((t) => {
