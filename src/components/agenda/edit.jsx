@@ -194,6 +194,8 @@ class AgendaEdit extends Component {
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
                 this.setState({ isLoading: true });
+                console.log("AGUARDAR", info, state.edit);
+
                 if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
                 else {
                     const agenda = await AgendaApi.create(event._id, info);
@@ -288,7 +290,7 @@ class AgendaEdit extends Component {
             has_date,
             timeConference: "",
             selected_document,
-            meeting_id: null,
+            meeting_id: meeting_id,
         }
     };
 
