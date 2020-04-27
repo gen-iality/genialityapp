@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { userContext } from '../../containers/userContext';
 export default () => {
 
     http://localhost:3000/?apiKey=AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc&oobCode=e4W2VepAbeejxCxZZyD4sM-YmdQO5sT2P6lpGv_N068AAAFxrAyQag&mode=signIn&lang=es
@@ -38,7 +39,8 @@ export default () => {
 
 
     return (
-
-        <h2 className="is-size-2 bold-text">Sign In Test</h2>
+        <userContext.Consumer>
+            {(value) => (<h2 className="is-size-2 bold-text">Sign In Test {value.name}</h2>)}
+        </userContext.Consumer>
     )
 }
