@@ -278,10 +278,10 @@ class AgendaListadoActividades extends Component {
                     </div>
 
 
-                    <a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
+                    {agenda.meeting_video && (<a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
                       <i class="fas fa-play-circle is-size-5"></i>
                       <span class="is-size-6">Video</span>
-                    </a>
+                    </a>)}
 
                     {/* icono que abre y cierra el card */}
                     {/* <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>

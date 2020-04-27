@@ -13,7 +13,7 @@ import SurveyComponent from "./surveys/surveyComponent";
 import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
-import DocumentsList from "../documents//documentsList"
+import DocumentsList from "../documents/documentsList"
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
@@ -103,20 +103,26 @@ let agendaActividadDetalle = (props) => {
                 {Moment(currentActivity.datetime_start).format("h:mm a")} -{" "}
                 {Moment(currentActivity.datetime_end).format("h:mm a")}
               </p>
+              {/* Lugar del evento */}
+              <p className="has-text-left is-size-6-desktop">
+                <b>Lugar:</b> {currentActivity.space.name}
+              </p>
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {currentActivity.meeting_video && (
                 <ReactPlayer style={{ maxWidth: "100%" }} url={currentActivity.meeting_video} controls />
               )}
+
+              {!currentActivity.meeting_video && currentActivity.image && (
+                <img className="activity_image" src={currentActivity.image} />
+              )}
+
             </div>
           </header>
 
           <div className="card-content has-text-left container_calendar-description">
-            {/* Lugar del evento */}
-            <p className="has-text-left is-size-6-desktop">
-              <b>Lugar:</b> {currentActivity.space.name}
-            </p>
+
             <div className="calendar-category has-margin-top-7">
               {/* Tags de categorias */}
               {currentActivity.activity_categories.map((cat, key) => (
@@ -340,7 +346,8 @@ let agendaActividadDetalle = (props) => {
                 onClick={(e) => {
                   gotoActivityList();
                 }}>
-                <h3 className=""> Regresar a la agenda</h3>
+
+                <Button >Regresar a la agenda</Button>
               </a>
             </div>
           </div>
