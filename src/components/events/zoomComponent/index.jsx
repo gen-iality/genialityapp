@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import Fullscreen from "react-full-screen";
-import { CloseSquareOutlined, FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined, FullscreenOutlined, SwitcherOutlined, LineOutlined, TrademarkCircleFilled } from "@ant-design/icons";
 
 
 export default class ZoomComponent extends Component {
@@ -30,17 +30,17 @@ export default class ZoomComponent extends Component {
   }
 
 
-  // Funcion full screen
+  // Función full screen
   goFull = () => {
     this.setState({ isFull: true });
   }
 
-  // Funcion medium screen
+  // Función medium screen
   goMedium = () => {
     this.setState({ isMedium: !this.state.isMedium });
   }
 
-  // Funcion minimize screen
+  // Función minimize screen
   goMinimize = () => {
     this.setState({ isMinimize: !this.state.isMinimize });
   }
@@ -50,19 +50,32 @@ export default class ZoomComponent extends Component {
     const { hideIframe } = this.props;
     let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize } = this.state;
     return (
-      <div className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
+      <div className={`content-zoom ${isMedium === true && isMinimize === false ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
 
-        {/* boton pantalla completa */}
-        <Button onClick={this.goFull}><FullscreenOutlined /></Button>
+        <div className="buttons-header">
+          <div>
 
-        {/* boton pantalla media */}
-        <Button onClick={this.goMedium}><SwitcherOutlined /></Button>
+            <div className="title-header">
+              <span className="icon-live" >&#9673;</span>&nbsp;
+              <span>Conferencia en vivo</span>
+            </div>
+          </div>
 
-        {/* boton pantalla minimizada */}
-        <Button onClick={this.goMinimize}><LineOutlined /></Button>
+          <div>
 
-        {/* boton cerrar */}
-        <Button onClick={() => hideIframe(false)}><CloseSquareOutlined /></Button>
+            {/* botón pantalla completa */}
+            <Button onClick={this.goFull}><FullscreenOutlined /></Button>
+
+            {/* botón pantalla media */}
+            <Button onClick={this.goMedium}><SwitcherOutlined /></Button>
+
+            {/* botón pantalla minimizada */}
+            <Button onClick={this.goMinimize}><LineOutlined /></Button>
+
+            {/* botón cerrar */}
+            <Button onClick={() => hideIframe(false)}><span className="icon-close" >&#10006;</span></Button>
+          </div>
+        </div>
 
         <Fullscreen
           enabled={isFull}
