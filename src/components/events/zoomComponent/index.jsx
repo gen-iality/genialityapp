@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import Fullscreen from "react-full-screen";
-import { CloseCircleOutlined, FullscreenOutlined, SwitcherOutlined, LineOutlined, TrademarkCircleFilled } from "@ant-design/icons";
+import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+
 
 
 export default class ZoomComponent extends Component {
