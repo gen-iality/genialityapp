@@ -87,7 +87,17 @@ class SurveyComponent extends Component {
       return new Promise((resolve, reject) => {
         questions.forEach(async (question) => {
           // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
-          let optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+          let optionIndex = [];
+
+          // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
+          if (typeof question.value == "object") {
+            question.value.forEach((value) => {
+              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+            });
+          } else {
+            optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+          }
+
           let optionQuantity = question.choices.length;
 
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos

@@ -16,18 +16,24 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
     let firstData = {};
     for (var i = 0; i < optionQuantity; i++) {
       let idResponse = i.toString();
-      firstData[idResponse] = optionIndex == idResponse ? 1 : 0;
+
+      // Se valida si se escogio mas de una opcion en la pregunta o no
+      if (optionIndex.length > 1) {
+        firstData[idResponse] = optionIndex.includes(i) ? 1 : 0;
+      } else {
+        firstData[idResponse] = optionIndex == idResponse ? 1 : 0;
+      }
     }
 
     // Valida si la colleccion existe, si no, se asigna el arreglo con valores iniciales
-    ref_quantity.get().then(data => {
+    ref_quantity.get().then((data) => {
       if (!data.exists) {
         ref_quantity.set(firstData);
       }
     });
 
     // Se resuelve la promesa si la coleccion ya existe
-    ref_quantity.get().then(data => {
+    ref_quantity.get().then((data) => {
       if (data.exists) {
         resolve({ message: "Existe el documento", optionIndex, surveyId, questionId });
       }
@@ -47,12 +53,22 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 
       // Se obtiene el index de la opcion escogida
       const position = optionIndex;
+      console.log(position, typeof position, position.length);
 
       // Update count in a transaction
-      return firestore.runTransaction(t => {
-        return t.get(shard_ref).then(doc => {
-          const new_count = doc.data()[position] + 1;
-          t.update(shard_ref, { [position]: new_count });
+      return firestore.runTransaction((t) => {
+        return t.get(shard_ref).then((doc) => {
+          // Condiciona si tiene mas de una opcion escogida
+          if (position.length > 1) {
+            position.forEach((element) => {
+              const new_count = doc.data()[element] + 1;
+              t.update(shard_ref, { [element]: new_count });
+            });
+          } else {
+            const new_count = doc.data()[position] + 1;
+            t.update(shard_ref, { [position]: new_count });
+          }
+
           // console.log(doc.data()[position]);
         });
       });
@@ -80,13 +96,13 @@ export const SurveyAnswers = {
           response: responseData,
           created: date,
           id_user: uid,
-          id_survey: surveyId
+          id_survey: surveyId,
         })
         .then(() => {
           console.log("Document successfully updated!");
           resolve("Las respuestas han sido enviadas");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Document successfully updated!");
           reject(err);
         });
@@ -110,13 +126,13 @@ export const SurveyAnswers = {
           response: responseData,
           created: date,
           id_user: uid,
-          id_survey: surveyId
+          id_survey: surveyId,
         })
         .then(() => {
           console.log("Document successfully updated!");
           resolve("Las respuestas han sido enviadas");
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Document successfully updated!");
           reject(err);
         });
@@ -128,14 +144,14 @@ export const SurveyAnswers = {
 
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-      let options = dataSurvey.questions.find(question => question.id == questionId);
+      let options = dataSurvey.questions.find((question) => question.id == questionId);
 
       firestore
         .collection("surveys")
         .doc(surveyId)
         .collection("answer_count")
         .doc(questionId)
-        .onSnapshot(listResponse => {
+        .onSnapshot((listResponse) => {
           resolve({ answer_count: listResponse.data(), options });
         });
     });
@@ -150,7 +166,7 @@ export const SurveyAnswers = {
         .where("id_survey", "==", surveyId)
         .where("id_user", "==", userId)
         .get()
-        .then(result => {
+        .then((result) => {
           result.forEach(function(doc) {
             if (doc.exists) {
               counterDocuments++;
@@ -163,5 +179,5 @@ export const SurveyAnswers = {
           }
         });
     });
-  }
+  },
 };
