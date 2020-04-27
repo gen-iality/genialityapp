@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import Fullscreen from "react-full-screen";
-import { CloseSquareOutlined, FullscreenOutlined, SwitcherOutlined } from "@ant-design/icons";
+import { CloseSquareOutlined, FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+
+
 export default class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -11,6 +13,8 @@ export default class ZoomComponent extends Component {
       meeting_id: null,
       userEntered: null,
       isFull: false,
+      isMedium: false,
+      isMinimize: false,
     };
   }
   componentDidMount() {
@@ -31,12 +35,22 @@ export default class ZoomComponent extends Component {
     this.setState({ isFull: true });
   }
 
+  // Funcion medium screen
+  goMedium = () => {
+    this.setState({ isMedium: !this.state.isMedium });
+  }
+
+  // Funcion minimize screen
+  goMinimize = () => {
+    this.setState({ isMinimize: !this.state.isMinimize });
+  }
+
 
   render() {
     const { hideIframe } = this.props;
-    let { url_conference, meeting_id, userEntered } = this.state;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize } = this.state;
     return (
-      <div className="content-zoom">
+      <div className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
 
         {/* boton pantalla completa */}
         <Button onClick={this.goFull}><FullscreenOutlined /></Button>
@@ -44,11 +58,14 @@ export default class ZoomComponent extends Component {
         {/* boton pantalla media */}
         <Button onClick={this.goMedium}><SwitcherOutlined /></Button>
 
+        {/* boton pantalla minimizada */}
+        <Button onClick={this.goMinimize}><LineOutlined /></Button>
+
         {/* boton cerrar */}
         <Button onClick={() => hideIframe(false)}><CloseSquareOutlined /></Button>
 
         <Fullscreen
-          enabled={this.state.isFull}
+          enabled={isFull}
           onChange={isFull => this.setState({ isFull })}
         >
           <iframe

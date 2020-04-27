@@ -1,0 +1,33 @@
+// contenedor general
+.content-zoom {
+  position: fixed;
+  z-index: 3;
+  right: 2%;
+  bottom: 5%;
+  height: 45%;
+  width: 45%;
+}
+
+// Estilos para pantalla completa
+.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+// Estilos para pantalla media
+.mediumScreen {
+  height: 75%;
+  width: 70%;
+  top: 10%;
+  left: 0;
+  bottom: 10%;
+  right: 0;
+  margin: 0 auto;
+}
+
+// Estilos para minimizar la pantalla
+.minimizeScreen {
+  height: 0%;
+  left: 80%;
+  top: 90%;
+}
