@@ -24,7 +24,8 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
-import DocumentsForm from "../landingDocuments/documents";
+import DocumentsForm from "../documents/front/documentsLanding";
+
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
