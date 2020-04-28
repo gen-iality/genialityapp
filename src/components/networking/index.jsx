@@ -48,15 +48,17 @@ export default class ListEventUser extends Component {
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
     // console.log(eventUserList);
 
-    this.setState((prevState) => {
-      return {
-        userReq: eventUserList,
-        users: eventUserList.slice(0, 100),
-        changeItem,
-        loading: false,
-        clearSearch: !prevState.clearSearch,
-      };
-    });
+    if (eventUserList) {
+      this.setState((prevState) => {
+        return {
+          userReq: eventUserList,
+          users: eventUserList.slice(0, 100),
+          changeItem,
+          loading: false,
+          clearSearch: !prevState.clearSearch,
+        };
+      });
+    }
   };
 
   // Funcion que trae el eventUserId del usuario actual
@@ -162,57 +164,57 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                  <div>
                     <div>
-                      {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                      {pageOfItems.map((users, key) => (
-                        <Row key={key} justify="center">
-                          <Card
-                            extra={
-                              <a
-                                onClick={() => {
-                                  this.SendFriendship({
-                                    eventUserIdReceiver: users._id,
-                                    userName: users.names ? users.names : users.email,
-                                  });
-                                }}>
-                                Enviar Solicitud
+                      <div>
+                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                        {pageOfItems.map((users, key) => (
+                          <Row key={key} justify="center">
+                            <Card
+                              extra={
+                                <a
+                                  onClick={() => {
+                                    this.SendFriendship({
+                                      eventUserIdReceiver: users._id,
+                                      userName: users.names ? users.names : users.email,
+                                    });
+                                  }}>
+                                  Enviar Solicitud
                               </a>
-                            }
-                            style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                            bordered={true}>
-                            <Meta
-                              avatar={
-                                <Avatar>
-                                  {users.properties.names
-                                    ? users.properties.names.charAt(0).toUpperCase()
-                                    : users.properties.names}
-                                </Avatar>
                               }
-                              title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                              description={[
-                                <div>
-                                  <br />
-                                  <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                                  <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
-                                  <p>
-                                    Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                  </p>
-                                  <p>
-                                    Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
-                                  </p>
-                                </div>,
-                              ]}
-                            />
-                          </Card>
-                        </Row>
-                      ))}
-                    </div>
+                              style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                              bordered={true}>
+                              <Meta
+                                avatar={
+                                  <Avatar>
+                                    {users.properties.names
+                                      ? users.properties.names.charAt(0).toUpperCase()
+                                      : users.properties.names}
+                                  </Avatar>
+                                }
+                                title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                                description={[
+                                  <div>
+                                    <br />
+                                    <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
+                                    <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
+                                    <p>
+                                      Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                    </p>
+                                    <p>
+                                      Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
+                                    </p>
+                                  </div>,
+                                ]}
+                              />
+                            </Card>
+                          </Row>
+                        ))}
+                      </div>
 
-                    {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                    <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-                  </div>
-                )}
+                      {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                      <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                    </div>
+                  )}
               </div>
             </TabPane>
             <TabPane tab="Mis Contactos" key="2">

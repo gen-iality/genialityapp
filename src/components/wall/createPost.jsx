@@ -62,13 +62,12 @@ class CreatePost extends Component {
             showInfo: false,
             loading: false,
             visible: false,
-            user: true,
+            user: false,
         }
         this.savePost = this.savePost.bind(this);
         this.previewImage = this.previewImage.bind(this);
         this.cancelImage = this.cancelImage.bind(this);
         this.stayForm = this.stayForm.bind(this);
-        this.detectChange = this.detectChange.bind(this)
     }
 
     async componentDidMount() {
@@ -82,7 +81,7 @@ class CreatePost extends Component {
                 if (resp.status === 200) {
                     const data = resp.data;
                     // Solo se desea obtener el id del usuario
-                    this.setState({ dataUser: data });
+                    this.setState({ dataUser: data, user: true });
                 }
             } catch (error) {
                 const { status } = error.response;
@@ -129,21 +128,6 @@ class CreatePost extends Component {
             keyList: Date.now()
         });
     }
-
-    detectChange() {
-        let doc = firestore.collection('adminPost').doc(`${this.props.event._id}`).collection('posts')
-
-        let data = doc.onSnapshot(docSnapshot => {
-            console.log(docSnapshot);
-            // ...
-        }, err => {
-            console.log(`Encountered error: ${err}`);
-        });
-
-        console.log(data)
-
-    }
-
     previewImage(event) {
         document.getElementById("previewImage").hidden = false;
         const selfieImage = document.getElementById("frontImage");
@@ -216,7 +200,6 @@ class CreatePost extends Component {
         const { event } = this.props
         return (
             <Fragment>
-                <Button onClick={this.detectChange}>click me</Button>
                 <Card size="small" title="Publicaciones" extra={<div></div>}>
                     {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
                     <div>
