@@ -10,7 +10,7 @@ import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 import DocumentsList from "../documents/documentsList"
@@ -136,62 +136,10 @@ let agendaActividadDetalle = (props) => {
                   {cat.name}
                 </span>
               ))}
+
+              <span className="tag category_calendar-tag">{currentActivity.meeting_id ? "Tiene espacio virtual" : "No tiene espacio Virtual"}</span>
             </div>
-            <div>
-              <div className="has-text-left is-size-6-desktop">
-                <b>Encuestas</b>
-                <div>
-                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={survey.data}
-                    renderItem={(item) => (
-                      <List.Item
-                        actions={[
-                          item.publish === "true" ? (
-                            <Button type="primary" onClick={showDrawer}>
-                              Contestar Encuesta
-                            </Button>
-                          ) : (
-                              <div></div>
-                            ),
-                        ]}>
-                        <List.Item.Meta
-                          title={
-                            <div>
-                              <p>{item.survey}</p>
-                              {item.publish === "true" ? (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={visible}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              ) : (
-                                  <div>
-                                    <Drawer
-                                      title={item.survey}
-                                      placement="right"
-                                      closable={false}
-                                      onClose={onClose}
-                                      visible={false}>
-                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                    </Drawer>
-                                  </div>
-                                )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+
             {/* Boton de para acceder a la conferencia */}
 
             {/*
@@ -208,13 +156,8 @@ let agendaActividadDetalle = (props) => {
               
              */}
 
-            {currentActivity.meeting_id ? (
-              <h2 className="button is-success">Tiene espacio virtual </h2>
-            ) : (
-                <h2 className="button is-warning">No tiene espacio Virtual </h2>
-              )}
+            <div className="is-size-5-desktop has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
 
-            {console.log(usuarioRegistrado, currentUser)}
             <Row>
               <Col span={24}>
                 <AttendeeNotAllowedCheck
@@ -239,7 +182,65 @@ let agendaActividadDetalle = (props) => {
 
             <hr />
             <hr />
-            {/* Descripción del evento */}
+            <div>
+
+
+              <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                <b>Encuestas:</b>&nbsp;
+                <div>
+                  <Card style={{ textAlign: "left" }}>
+                    {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={survey.data}
+                      renderItem={(item) => (
+                        <List.Item
+                          actions={[
+                            item.publish === "true" ? (
+                              <Button type="primary" onClick={showDrawer}>
+                                Contestar Encuesta
+                              </Button>
+                            ) : (
+                                <div></div>
+                              ),
+                          ]}>
+                          <List.Item.Meta
+                            title={
+                              <div>
+                                <p>{item.survey}</p>
+                                {item.publish === "true" ? (
+                                  <div>
+                                    <Drawer
+                                      title={item.survey}
+                                      placement="right"
+                                      closable={false}
+                                      onClose={onClose}
+                                      visible={visible}>
+                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                    </Drawer>
+                                  </div>
+                                ) : (
+                                    <div>
+                                      <Drawer
+                                        title={item.survey}
+                                        placement="right"
+                                        closable={false}
+                                        onClose={onClose}
+                                        visible={false}>
+                                        <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                      </Drawer>
+                                    </div>
+                                  )}
+                              </div>
+                            }
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </div>
+              </div>
+            </div>
 
             {currentActivity.hosts.length === 0 ? (
               <div></div>
@@ -248,27 +249,29 @@ let agendaActividadDetalle = (props) => {
                   <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                     <b>Conferencistas:</b> &nbsp;
                   <div>
-                      <List
-                        itemLayout="horizontal"
-                        dataSource={currentActivity.hosts}
-                        renderItem={(item) => (
-                          <List.Item>
-                            <List.Item.Meta
-                              avatar={
-                                <Avatar
-                                  src={
-                                    item.image
-                                      ? item.image
-                                      : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                  }
-                                />
-                              }
-                              title={<strong>{item.name}</strong>}
-                              description={item.profession}
-                            />
-                          </List.Item>
-                        )}
-                      />
+                      <Card style={{ textAlign: "left" }}>
+                        <List
+                          itemLayout="horizontal"
+                          dataSource={currentActivity.hosts}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <List.Item.Meta
+                                avatar={
+                                  <Avatar
+                                    src={
+                                      item.image
+                                        ? item.image
+                                        : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                    }
+                                  />
+                                }
+                                title={<strong>{item.name}</strong>}
+                                description={item.profession}
+                              />
+                            </List.Item>
+                          )}
+                        />
+                      </Card>
                     </div>
                   </p>
                 </div>
