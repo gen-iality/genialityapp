@@ -99,7 +99,7 @@ let agendaActividadDetalle = (props) => {
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}
-              <p className="card-header-title ">
+              <p className="card-header-title has-padding-left-0 ">
                 {Moment(currentActivity.datetime_start).format("h:mm a")} -{" "}
                 {Moment(currentActivity.datetime_end).format("h:mm a")}
               </p>
@@ -111,7 +111,7 @@ let agendaActividadDetalle = (props) => {
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {currentActivity.meeting_video && (
-                <ReactPlayer style={{ maxWidth: "100%" }} url={currentActivity.meeting_video} controls />
+                <ReactPlayer width="100%" height="auto" url={currentActivity.meeting_video} controls />
               )}
 
               {!currentActivity.meeting_video && currentActivity.image && (
