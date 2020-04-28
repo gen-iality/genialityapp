@@ -3,6 +3,9 @@ import { withRouter } from "react-router-dom";
 
 import EventContent from "../events/shared/content";
 
+import { SurveysApi } from "../../helpers/request";
+import { getTotalVotes } from "./services";
+
 import { Input, List, Card } from "antd";
 
 const data = [
@@ -30,20 +33,40 @@ class TriviaReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentSurvey: {
-        name: "Encuesta 1",
-      },
+      surveyQuestions: [],
     };
   }
 
+  loadData = async () => {
+    const { event, matchUrl, location } = this.props;
+    let { surveyQuestions } = this.state;
+
+    SurveysApi.getOne(event._id, location.state.report)
+      .then(async (response) => {
+        const votes = new Promise((resolve, reject) => {
+          let questions = [];
+
+          response.questions.forEach(async (question, index, arr) => {
+            let infoQuestion = await getTotalVotes(location.state.report, question);
+            questions.push(infoQuestion);
+            if (questions.length == arr.length) resolve(questions);
+          });
+        });
+
+        let questions = await votes;
+        this.setState({ surveyQuestions: questions });
+      })
+      .catch((err) => {});
+  };
+
   componentDidMount() {
-    console.log(this.props);
+    this.loadData();
   }
 
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { currentSurvey } = this.state;
+    let { surveyQuestions } = this.state;
     return (
       <Fragment>
         <EventContent title="Encuestas" closeAction={this.goBack}>
@@ -57,10 +80,14 @@ class TriviaReport extends Component {
               xl: 3,
               xxl: 3,
             }}
-            dataSource={data}
+            dataSource={surveyQuestions}
             renderItem={(item) => (
               <List.Item>
-                <Card title={item.title}>Card content</Card>
+                <Card title={item.title}>
+                  {item.quantityResponses == 0
+                    ? "No se ha respondido aun la pregunta"
+                    : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                </Card>
               </List.Item>
             )}
           />
