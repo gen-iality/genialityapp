@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 import EventContent from "../events/shared/content";
 
 import { SurveysApi } from "../../helpers/request";
 import { getTotalVotes } from "./services";
 
-import { Input, List, Card } from "antd";
+import { Input, List, Card, Button, Spin, Empty } from "antd";
 
 const data = [
   {
@@ -34,6 +34,7 @@ class TriviaReport extends Component {
     super(props);
     this.state = {
       surveyQuestions: [],
+      loading: true,
     };
   }
 
@@ -54,10 +55,12 @@ class TriviaReport extends Component {
         });
 
         let questions = await votes;
-        this.setState({ surveyQuestions: questions });
+        this.setState({ surveyQuestions: questions, loading: false });
       })
       .catch((err) => {});
   };
+
+  seeReport = (questionId) => {};
 
   componentDidMount() {
     this.loadData();
@@ -66,35 +69,47 @@ class TriviaReport extends Component {
   goBack = () => this.props.history.goBack();
 
   render() {
-    let { surveyQuestions } = this.state;
-    return (
-      <Fragment>
-        <EventContent title="Encuestas" closeAction={this.goBack}>
-          <List
-            grid={{
-              gutter: 16,
-              xs: 1,
-              sm: 2,
-              md: 2,
-              lg: 3,
-              xl: 3,
-              xxl: 3,
-            }}
-            dataSource={surveyQuestions}
-            renderItem={(item) => (
-              <List.Item>
-                <Card title={item.title}>
-                  {item.quantityResponses == 0
-                    ? "No se ha respondido aun la pregunta"
-                    : `${item.quantityResponses} usuarios han respondido la pregunta`}
-                </Card>
-              </List.Item>
+    let { surveyQuestions, loading } = this.state;
+    if (!loading)
+      return (
+        <Fragment>
+          <EventContent title="Encuestas" closeAction={this.goBack}>
+            {surveyQuestions.length > 0 ? (
+              <List
+                grid={{
+                  gutter: 16,
+                  xs: 1,
+                  sm: 2,
+                  md: 2,
+                  lg: 3,
+                  xl: 3,
+                  xxl: 3,
+                }}
+                dataSource={surveyQuestions}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Link
+                      to={{
+                        pathname: `${this.props.matchUrl}/report/${item.id}`,
+                        state: { titleQuestion: item.title },
+                      }}>
+                      <Card title={item.title} hoverable>
+                        {item.quantityResponses == 0
+                          ? "No se ha respondido aun la pregunta"
+                          : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                      </Card>
+                    </Link>
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <Empty />
             )}
-          />
-          ,
-        </EventContent>
-      </Fragment>
-    );
+          </EventContent>
+        </Fragment>
+      );
+
+    return <Spin></Spin>;
   }
 }
 
