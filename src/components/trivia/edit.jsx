@@ -22,7 +22,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: "",
       publish: "",
-      privateSurvey: "",
+      openSurvey: false,
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -56,7 +56,7 @@ class triviaEdit extends Component {
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
-        privateSurvey: Update.isPrivate,
+        openSurvey: Update.open,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
@@ -92,7 +92,7 @@ class triviaEdit extends Component {
         id: this.state._id,
         survey: this.state.survey,
         publish: this.state.publish === "true" ? "true" : "false",
-        isPrivate: this.state.privateSurvey,
+        open: this.state.openSurvey,
         activity_id: this.state.activity_id,
       };
       console.log(data);
@@ -234,7 +234,7 @@ class triviaEdit extends Component {
     const {
       survey,
       publish,
-      privateSurvey,
+      openSurvey,
       activity_id,
       dataAgenda,
       question,
@@ -309,15 +309,15 @@ class triviaEdit extends Component {
           {this.props.location.state ? (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
-                Encuesta privada
+                Encuesta Abierta
               </label>
               <div className="select" style={{ marginBottom: "1%" }}>
                 <select
-                  name="privateSurvey"
-                  value={privateSurvey}
+                  name="openSurvey"
+                  value={openSurvey}
                   onChange={this.changeInput}
                   onClick={(e) => {
-                    this.setState({ privateSurvey: e.target.value });
+                    this.setState({ openSurvey: e.target.value });
                   }}>
                   <option value={true}>Si</option>
                   <option value={false}>No</option>
