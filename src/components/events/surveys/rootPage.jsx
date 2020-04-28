@@ -55,10 +55,10 @@ export default class RootPage extends Component {
 
   render() {
     let { idSurvey, hasVote, eventId, isLoading, userId, guestVoteInSurvey } = this.state;
-    const { toggleSurvey } = this.props;
+    const { toggleSurvey, openSurvey } = this.props;
 
     if (!isLoading)
-      return hasVote || guestVoteInSurvey ? (
+      return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
       ) : (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>

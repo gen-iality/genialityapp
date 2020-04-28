@@ -19,22 +19,33 @@ function ListSurveys(props) {
       <Card>
         <List
           dataSource={jsonData}
-          renderItem={(survey) => (
-            <List.Item
-              key={survey._id}
-              actions={[
-                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
-                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>,
-              ]}>
-              <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-              {survey.userHasVoted && (
+          renderItem={(survey) =>
+            survey.open == "true" ? (
+              <List.Item
+                key={survey._id}
+                actions={[
+                  <Button onClick={() => props.showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                    {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                  </Button>,
+                ]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                {survey.userHasVoted && (
+                  <div>
+                    <Tag color="success">Respondida</Tag>
+                  </div>
+                )}
+              </List.Item>
+            ) : (
+              <List.Item
+                key={survey._id}
+                actions={[<Button onClick={() => props.showSurvey(survey)}>Ver Resultados</Button>]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                 <div>
-                  <Tag color="success">Respondida</Tag>
+                  <Tag color="red">Cerrada</Tag>
                 </div>
-              )}
-            </List.Item>
-          )}
+              </List.Item>
+            )
+          }
         />
       </Card>
     </Col>
@@ -49,6 +60,7 @@ class SurveyForm extends Component {
       surveysData: [],
       hasVote: false,
       uid: null,
+      openSurvey: false,
     };
   }
 
@@ -122,16 +134,29 @@ class SurveyForm extends Component {
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
+    if (data) {
+      let { _id, open } = data;
+      this.setState({ idSurvey: _id, openSurvey: open });
+    } else {
+      this.setState({ idSurvey: null });
+    }
     if (reload) this.loadData();
-    this.setState({ idSurvey: data });
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, uid } = this.state;
+    let { idSurvey, surveysData, hasVote, uid, openSurvey } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
-      return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} userId={uid} />;
+      return (
+        <RootPage
+          idSurvey={idSurvey}
+          toggleSurvey={this.toggleSurvey}
+          eventId={event._id}
+          userId={uid}
+          openSurvey={openSurvey}
+        />
+      );
 
     return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
