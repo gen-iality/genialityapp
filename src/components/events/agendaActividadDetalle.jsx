@@ -10,8 +10,10 @@ import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
+
+import DocumentsList from "../documents/documentsList"
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
@@ -82,6 +84,7 @@ let agendaActividadDetalle = (props) => {
   }, []);
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
+  console.log("EVENTO", event);
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
@@ -100,20 +103,26 @@ let agendaActividadDetalle = (props) => {
                 {Moment(currentActivity.datetime_start).format("h:mm a")} -{" "}
                 {Moment(currentActivity.datetime_end).format("h:mm a")}
               </p>
+              {/* Lugar del evento */}
+              <p className="has-text-left is-size-6-desktop">
+                <b>Lugar:</b> {currentActivity.space.name}
+              </p>
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {currentActivity.meeting_video && (
                 <ReactPlayer style={{ maxWidth: "100%" }} url={currentActivity.meeting_video} controls />
               )}
+
+              {!currentActivity.meeting_video && currentActivity.image && (
+                <img className="activity_image" src={currentActivity.image} />
+              )}
+
             </div>
           </header>
 
           <div className="card-content has-text-left container_calendar-description">
-            {/* Lugar del evento */}
-            <p className="has-text-left is-size-6-desktop">
-              <b>Lugar:</b> {currentActivity.space.name}
-            </p>
+
             <div className="calendar-category has-margin-top-7">
               {/* Tags de categorias */}
               {currentActivity.activity_categories.map((cat, key) => (
@@ -127,62 +136,10 @@ let agendaActividadDetalle = (props) => {
                   {cat.name}
                 </span>
               ))}
+
+              <span className="tag category_calendar-tag">{currentActivity.meeting_id ? "Tiene espacio virtual" : "No tiene espacio Virtual"}</span>
             </div>
-            <div>
-              <div className="has-text-left is-size-6-desktop">
-                <b>Encuestas</b>
-                <div>
-                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={survey.data}
-                    renderItem={(item) => (
-                      <List.Item
-                        actions={[
-                          item.publish === "true" ? (
-                            <Button type="primary" onClick={showDrawer}>
-                              Contestar Encuesta
-                            </Button>
-                          ) : (
-                              <div></div>
-                            ),
-                        ]}>
-                        <List.Item.Meta
-                          title={
-                            <div>
-                              <p>{item.survey}</p>
-                              {item.publish === "true" ? (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={visible}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              ) : (
-                                  <div>
-                                    <Drawer
-                                      title={item.survey}
-                                      placement="right"
-                                      closable={false}
-                                      onClose={onClose}
-                                      visible={false}>
-                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                    </Drawer>
-                                  </div>
-                                )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+
             {/* Boton de para acceder a la conferencia */}
 
             {/*
@@ -199,13 +156,8 @@ let agendaActividadDetalle = (props) => {
               
              */}
 
-            {currentActivity.meeting_id ? (
-              <h2 className="button is-success">Tiene espacio virtual </h2>
-            ) : (
-                <h2 className="button is-warning">No tiene espacio Virtual </h2>
-              )}
+            <div className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
 
-            {console.log(usuarioRegistrado, currentUser)}
             <Row>
               <Col span={24}>
                 <AttendeeNotAllowedCheck
@@ -230,97 +182,114 @@ let agendaActividadDetalle = (props) => {
 
             <hr />
             <hr />
-            {/* Descripción del evento */}
-
-            {currentActivity.hosts.length === 0 ? (
-              <div></div>
-            ) : (
-                <div>
-                  <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                    <b>Conferencista:</b> &nbsp;
-                  <div>
-                      <List
-                        itemLayout="horizontal"
-                        dataSource={currentActivity.hosts}
-                        renderItem={(item) => (
-                          <List.Item>
-                            <List.Item.Meta
-                              avatar={
-                                <Avatar
-                                  src={
-                                    item.image
-                                      ? item.image
-                                      : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                  }
-                                />
-                              }
-                              title={<strong>{item.name}</strong>}
-                              description={item.profession}
-                            />
-                          </List.Item>
-                        )}
-                      />
-                    </div>
-                  </p>
-                </div>
-              )}
-            {/* Conferencistas del evento */}
             <div>
-              <p className="has-text-left is-size-6-desktop">
-                <b>Encuestas</b>
+
+
+              <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                <b>Encuestas:</b>&nbsp;
                 <div>
-                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={survey.data}
-                    renderItem={(item) => (
-                      <List.Item
-                        actions={[
-                          item.publish === "true" ? (
-                            <Button type="primary" onClick={showDrawer}>
-                              Contestar Encuesta
-                            </Button>
-                          ) : (
-                              <div></div>
-                            ),
-                        ]}>
-                        <List.Item.Meta
-                          title={
-                            <div>
-                              <p>{item.survey}</p>
-                              {item.publish === "true" ? (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={visible}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              ) : (
+                  <Card style={{ textAlign: "left" }}>
+                    {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
+                    <List
+                      itemLayout="horizontal"
+                      dataSource={survey.data}
+                      renderItem={(item) => (
+                        <List.Item
+                          actions={[
+                            item.publish === "true" ? (
+                              <Button type="primary" onClick={showDrawer}>
+                                Contestar Encuesta
+                              </Button>
+                            ) : (
+                                <div></div>
+                              ),
+                          ]}>
+                          <List.Item.Meta
+                            title={
+                              <div>
+                                <p>{item.survey}</p>
+                                {item.publish === "true" ? (
                                   <div>
                                     <Drawer
                                       title={item.survey}
                                       placement="right"
                                       closable={false}
                                       onClose={onClose}
-                                      visible={false}>
+                                      visible={visible}>
                                       <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
                                     </Drawer>
                                   </div>
-                                )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
+                                ) : (
+                                    <div>
+                                      <Drawer
+                                        title={item.survey}
+                                        placement="right"
+                                        closable={false}
+                                        onClose={onClose}
+                                        visible={false}>
+                                        <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                      </Drawer>
+                                    </div>
+                                  )}
+                              </div>
+                            }
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
                 </div>
-              </p>
+              </div>
             </div>
-            {/* Boton de para acceder a la conferencia */}
+
+            {currentActivity.hosts.length === 0 ? (
+              <div></div>
+            ) : (
+                <div>
+                  <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                    <b>Conferencistas:</b> &nbsp;
+                  <div>
+                      <Card style={{ textAlign: "left" }}>
+                        <List
+                          itemLayout="horizontal"
+                          dataSource={currentActivity.hosts}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <List.Item.Meta
+                                avatar={
+                                  <Avatar
+                                    src={
+                                      item.image
+                                        ? item.image
+                                        : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                    }
+                                  />
+                                }
+                                title={<strong>{item.name}</strong>}
+                                description={item.profession}
+                              />
+                            </List.Item>
+                          )}
+                        />
+                      </Card>
+                    </div>
+                  </p>
+                </div>
+              )}
+
+            {(currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0) && (
+
+              <div>
+                <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                  <b>Documentos:</b> &nbsp;
+                  <div>
+                    <DocumentsList data={currentActivity.selected_document} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+
             {
               currentUser.names ? <div /> :
                 <div>
@@ -380,7 +349,8 @@ let agendaActividadDetalle = (props) => {
                 onClick={(e) => {
                   gotoActivityList();
                 }}>
-                <h3 className=""> Regresar a la agenda</h3>
+
+                <Button >Regresar a la agenda</Button>
               </a>
             </div>
           </div>

@@ -24,13 +24,15 @@ import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
-import DocumentsForm from "../landingDocuments/documents";
+import DocumentsForm from "../documents/front/documentsLanding";
+
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
+import VirtualConference from "./virtualConference"
 
 const { Title } = Typography;
 
@@ -155,26 +157,18 @@ class Landing extends Component {
       if (resp.status !== 200 && resp.status !== 202) return;
 
       const data = resp.data;
-      this.setState({ namesUser: data.names })
+
+      console.log(data)
+      this.setState({ data })
     } catch{
 
     }
-
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
     console.log(id);
-    const infoAgenda = await AgendaApi.byEvent(id);
-    const infoAgendaArr = [];
-    for (const prop in infoAgenda.data) {
-      if (("Aqui", infoAgenda.data[prop].meeting_id)) {
-        infoAgendaArr.push(infoAgenda.data[prop]);
-      }
-    }
 
-    console.log(infoAgendaArr);
-    this.setState({ infoAgendaArr });
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
 
@@ -248,7 +242,7 @@ class Landing extends Component {
               </div>
             </Card>
           </div>
-          <MapComponent event={event} infoAgendaArr={this.state.infoAgendaArr} toggleConference={this.toggleConference} namesUser={this.state.namesUser} />
+          <MapComponent event={event} toggleConference={this.toggleConference} namesUser={this.state.namesUser} />
         </div>
       ),
     };
@@ -498,7 +492,7 @@ class Landing extends Component {
 
 //Component del lado del mapa
 const MapComponent = (props) => {
-  const { event, infoAgendaArr, toggleConference, namesUser } = props;
+  const { event, toggleConference, namesUser } = props;
   return (
     <div className="column container-map">
       <div>
@@ -511,36 +505,11 @@ const MapComponent = (props) => {
                   modules={{ toolbar: false }}
                   readOnly={true}
                 />
-                {
-                  namesUser ?
-                    <div>
-                      <h1>Listado de conferencias Virtuales</h1>
-                      {
-                        infoAgendaArr.map((item, key) => (
-                          <div key={key}>
-                            <Card title={item.name} bordered={true} style={{ width: 300, marginBottom: "3%" }}>
-                              <p>
-                                {item.hosts ?
-                                  <div>
-                                    {
-                                      item.hosts.map((item, key) => (
-                                        <p key={key}>Conferencista: {item.name}</p>
-                                      ))
-                                    }
-                                  </div> :
-                                  <div />
-                                }
-                              </p>
-                              <p>{item.datetime_start} - {item.datetime_end}</p>
-                              <Button onClick={() => { toggleConference(true, item.meeting_id, namesUser) }}>Entrar a la conferencia </Button>
-                            </Card>
-                          </div>
-                        ))
-                      }
-                    </div> :
-                    <h1>Debes estar logueado para poder acceder a la videoconferencia</h1>
-                }
-
+                <VirtualConference
+                  event={event}
+                  toggleConference={toggleConference}
+                  currentUser={namesUser}
+                />
               </div>
             ) : (
                 <div>
