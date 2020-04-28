@@ -156,7 +156,7 @@ let agendaActividadDetalle = (props) => {
               
              */}
 
-            <div className="is-size-5-desktop has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
+            <div className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
 
             <Row>
               <Col span={24}>
