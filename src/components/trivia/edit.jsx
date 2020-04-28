@@ -9,7 +9,7 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider, Modal, Form, Input } from "antd";
+import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch } from "antd";
 import FormQuestions from "./questions";
 import FormQuestionEdit from "./formEdit";
 
@@ -289,18 +289,10 @@ class triviaEdit extends Component {
               <label style={{ marginTop: "3%" }} className="label">
                 activar la encuesta
               </label>
-              <div className="select" style={{ marginBottom: "1%" }}>
-                <select
-                  name="publish"
-                  value={publish}
-                  onChange={this.changeInput}
-                  onClick={(e) => {
-                    this.setState({ publish: e.target.value });
-                  }}>
-                  <option value={true}>Si</option>
-                  <option value={false}>No</option>
-                </select>
-              </div>
+              <Switch
+                checked={publish == "true"}
+                onChange={(checked) => this.setState({ publish: checked ? "true" : "false" })}
+              />
             </div>
           ) : (
             <div></div>
@@ -311,18 +303,10 @@ class triviaEdit extends Component {
               <label style={{ marginTop: "3%" }} className="label">
                 Encuesta Abierta
               </label>
-              <div className="select" style={{ marginBottom: "1%" }}>
-                <select
-                  name="openSurvey"
-                  value={openSurvey}
-                  onChange={this.changeInput}
-                  onClick={(e) => {
-                    this.setState({ openSurvey: e.target.value });
-                  }}>
-                  <option value={true}>Si</option>
-                  <option value={false}>No</option>
-                </select>
-              </div>
+              <Switch
+                checked={openSurvey == "true"}
+                onChange={(checked) => this.setState({ openSurvey: checked ? "true" : "false" })}
+              />
             </div>
           ) : (
             <div></div>
