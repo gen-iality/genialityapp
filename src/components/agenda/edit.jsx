@@ -64,7 +64,7 @@ class AgendaEdit extends Component {
 
     async componentDidMount() {
 
-        console.log(this.state.selectedHosts.length > 0 ? 'con campos' : 'sin campos');
+
         const { event, location: { state } } = this.props;
         let days = [];
         const init = Moment(event.date_start);
@@ -77,14 +77,14 @@ class AgendaEdit extends Component {
         let documents = await DocumentsApi.byEvent(this.props.event._id);
         let nameDocuments = []
         for (var i = 0; i < documents.length; i += 1) {
-            nameDocuments.push({ name: documents[i].title, value: documents[i].title, label: documents[i].title })
+            nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title })
         }
         this.setState({ nameDocuments })
-        console.log(nameDocuments)
+
 
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
-        console.log(hosts)
+
         let roles = await RolAttApi.byEvent(this.props.event._id);
         let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         let types = await TypesAgendaApi.byEvent(this.props.event._id);
@@ -97,7 +97,7 @@ class AgendaEdit extends Component {
 
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
-            console.log(info.selected_document)
+
             this.setState({
                 selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url
             })
@@ -134,7 +134,7 @@ class AgendaEdit extends Component {
         this.setState({ selectedCategories });
     };
     selectHost = (selectedHosts) => {
-        console.log(selectedHosts);
+
         this.setState({ selectedHosts });
     };
     selectRol = (selectedRol) => {
@@ -142,7 +142,7 @@ class AgendaEdit extends Component {
     };
 
     selectDocuments = (selected_document) => {
-        console.log(selected_document);
+
         this.setState({ selected_document });
     }
     //FN para los select que permiten crear opción
@@ -190,10 +190,12 @@ class AgendaEdit extends Component {
         if (this.validForm()) {
             try {
                 const info = this.buildInfo();
-                console.log(info)
+
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
                 this.setState({ isLoading: true });
+                console.log("AGUARDAR", info, state.edit);
+
                 if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
                 else {
                     const agenda = await AgendaApi.create(event._id, info);
@@ -205,7 +207,7 @@ class AgendaEdit extends Component {
                 sweetAlert.showError(handleRequestError(e))
             }
         }
-        console.log(this.state.has_date)
+
     };
 
 
@@ -213,7 +215,6 @@ class AgendaEdit extends Component {
         if (this.validForm()) {
             try {
                 const info = this.buildInfoLanguage();
-                console.log(info)
 
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
@@ -229,7 +230,7 @@ class AgendaEdit extends Component {
                 sweetAlert.showError(handleRequestError(e))
             }
         }
-        console.log(this.state.has_date)
+
     };
 
     buildInfoLanguage = () => {
@@ -289,7 +290,7 @@ class AgendaEdit extends Component {
             has_date,
             timeConference: "",
             selected_document,
-            meeting_id: null,
+            meeting_id: meeting_id,
         }
     };
 
@@ -312,8 +313,6 @@ class AgendaEdit extends Component {
             event_id: this.props.event._id,
             agenda: this.props.event.description,
         }
-
-        console.log(zoomData)
 
         const options = {
             method: 'POST',
@@ -338,7 +337,7 @@ class AgendaEdit extends Component {
             if (e.response) {
                 response = JSON.stringify(e.response.data);
             }
-            console.log("error", e, e.response, e.response.data);
+
             alert("No se pudo crear la conferencia virtual, intente más tarde. " + e + " " + response);
             this.setState({ creatingConference: false });
         }
@@ -651,7 +650,7 @@ class AgendaEdit extends Component {
                                         </div>)}
                                     </>
                                 )}
-                            </Card>>
+                            </Card>
 
 
                         </div>

@@ -24,7 +24,27 @@ class App extends Component {
   eyJhbGciOiJSUzI1NiIsImtpZCI6IjVlOWVlOTdjODQwZjk3ZTAyNTM2ODhhM2I3ZTk0NDczZTUyOGE3YjUiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiZXZpdXMgY28iLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXZpdXNhdXRoIiwiYXVkIjoiZXZpdXNhdXRoIiwiYXV0aF90aW1lIjoxNTg3OTE0MjAxLCJ1c2VyX2lkIjoiNU14bXdEUlZ5MWRVTEczb1NraWdFMXNoaTd6MSIsInN1YiI6IjVNeG13RFJWeTFkVUxHM29Ta2lnRTFzaGk3ejEiLCJpYXQiOjE1ODc5MTQyMDEsImV4cCI6MTU4NzkxNzgwMSwiZW1haWwiOiJldml1c0Bldml1cy5jbyIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJldml1c0Bldml1cy5jbyJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.SpgxWQeZkzXCtI3JoHuVpSU_FxhC7bhLkMpe9foQAY10KkRGEvgLp0A2Wiah7B0QKPsgMv02apTsPgl6I9Y7drV4YTq_6JaCTTjJNAJII3ani1E9lgXyXbYww60SFzuO1HDFh3BL8qLtIm07KK8tncGloHfYBoI5PxFo9OIwS5672GWaAZHwQ_5MA4gBkRxl4I4IF-T5yOr8qqEOM4T7u1kdBlWtI1xx-YOgzDu-4usAd9b8tyk0yKYNfPqP3cCClXV9WoG51hWLzdjgjUPkdhoLXXa0-U2HqmjG_WtQTQkjtrQyFHV5q7piOemqNRGJbPNMUp3P1QYL-YQax7TYWg
 
   */
+
+  componentDidMount() {
+    let dataUrl = parseUrl(document.URL);
+    if (dataUrl && dataUrl.token) {
+      if (dataUrl.token) {
+        Cookie.set("evius_token", dataUrl.token);
+        privateInstance.defaults.params = {};
+        privateInstance.defaults.params["evius_token"] = dataUrl.token;
+      }
+      if (dataUrl.refresh_token) {
+        Actions.put("/api/me/storeRefreshToken", { refresh_token: dataUrl.refresh_token }).then((resp) => {
+          console.log(resp);
+        });
+      }
+    }
+  }
+
+  /*
+
   async componentDidMount() {
+    return;
     let dataUrl = parseUrl(document.URL);
     let evius_token = null;
 
@@ -91,7 +111,7 @@ class App extends Component {
       });
     }
   }
-
+*/
   render() {
     return (
       <userContext.Provider value={this.state.user}>

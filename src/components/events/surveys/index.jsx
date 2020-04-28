@@ -121,7 +121,8 @@ class SurveyForm extends Component {
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
-  toggleSurvey = (data) => {
+  toggleSurvey = (data, reload) => {
+    if (reload) this.loadData();
     this.setState({ idSurvey: data });
   };
 
