@@ -70,6 +70,8 @@ class TriviaReport extends Component {
 
   render() {
     let { surveyQuestions, loading } = this.state;
+    const { location } = this.props;
+
     if (!loading)
       return (
         <Fragment>
@@ -91,7 +93,7 @@ class TriviaReport extends Component {
                     <Link
                       to={{
                         pathname: `${this.props.matchUrl}/report/${item.id}`,
-                        state: { titleQuestion: item.title },
+                        state: { titleQuestion: item.title, surveyId: location.state.report },
                       }}>
                       <Card title={item.title} hoverable>
                         {item.quantityResponses == 0

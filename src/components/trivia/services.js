@@ -16,3 +16,26 @@ export const getTotalVotes = (surveyId, question) => {
       });
   });
 };
+
+export const getAnswersByQuestion = (surveyId, questionId) => {
+  console.log(surveyId, questionId);
+  return new Promise((resolve, reject) => {
+    let docs = [];
+    firestore
+      .collection(`surveys/${surveyId}/answers/${questionId}/responses`)
+      .orderBy("created", "desc")
+      .get()
+      .then((result) => {
+        if (result.empty) {
+          resolve(false);
+        }
+        result.forEach((infoDoc) => {
+          docs.push({ ...infoDoc.data(), _id: infoDoc.id });
+        });
+        resolve(docs);
+      })
+      .catch((err) => {
+        reject("Hubo un problema ", err);
+      });
+  });
+};
