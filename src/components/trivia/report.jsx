@@ -95,7 +95,7 @@ class TriviaReport extends Component {
                         pathname: `${this.props.matchUrl}/report/${item.id}`,
                         state: { titleQuestion: item.title, surveyId: location.state.report },
                       }}>
-                      <Card title={item.title} hoverable>
+                      <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
                         {item.quantityResponses == 0
                           ? "No se ha respondido aun la pregunta"
                           : `${item.quantityResponses} usuarios han respondido la pregunta`}
