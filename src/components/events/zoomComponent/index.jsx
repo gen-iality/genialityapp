@@ -48,12 +48,18 @@ export default class ZoomComponent extends Component {
 
   // Función medium screen
   goMedium = () => {
-    this.setState({ isMedium: !this.state.isMedium });
+    this.setState({
+      isMedium: !this.state.isMedium,
+      isMinimize: false
+    });
   }
 
   // Función minimize screen
   goMinimize = () => {
-    this.setState({ isMinimize: !this.state.isMinimize });
+    this.setState({
+      isMinimize: !this.state.isMinimize,
+      isMedium: false
+    });
   }
 
 
@@ -61,7 +67,7 @@ export default class ZoomComponent extends Component {
     const { hideIframe } = this.props;
     let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize } = this.state;
     return (
-      <div className={`content-zoom ${isMedium === true && isMinimize === false ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
+      <div className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
 
         <div className="buttons-header">
           <div>
