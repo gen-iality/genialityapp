@@ -111,7 +111,14 @@ let agendaActividadDetalle = (props) => {
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {currentActivity.meeting_video && (
-                <ReactPlayer width="100%" height="auto" url={currentActivity.meeting_video} controls />
+                <ReactPlayer
+                  style={{
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  width="100%"
+                  height="auto"
+                  url={currentActivity.meeting_video} controls />
               )}
 
               {!currentActivity.meeting_video && currentActivity.image && (
@@ -295,14 +302,14 @@ let agendaActividadDetalle = (props) => {
                 <div>
                   {currentActivity.meeting_id ? (
                     <div>
-                      <button
-                        className="button is-success is-outlined is-pulled-right has-margin-top-20"
+                      <Button
+                        type="primary"
                         disabled={currentActivity.meeting_id ? false : true}
                         onClick={() =>
                           showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
                         }>
                         Conferencia en Vivo en anónimo
-                </button>
+                      </Button>
                     </div>
                   ) : (
                       <div />
