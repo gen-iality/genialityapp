@@ -16,14 +16,14 @@ export default class RootPage extends Component {
       guestVoteInSurvey: false,
       eventId: "",
       isLoading: true,
-      userId: "",
+      currentUser: "",
     };
   }
 
   loadData = (prevProps) => {
-    const { idSurvey, eventId, userId } = this.props;
+    const { idSurvey, eventId, currentUser } = this.props;
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
-      this.setState({ idSurvey, eventId, userId }, this.seeIfUserHasVote);
+      this.setState({ idSurvey, eventId, currentUser }, this.seeIfUserHasVote);
     }
   };
 
@@ -36,10 +36,10 @@ export default class RootPage extends Component {
   }
 
   seeIfUserHasVote = async () => {
-    let { idSurvey, hasVote, eventId, userId } = this.state;
+    let { idSurvey, hasVote, eventId, currentUser } = this.state;
 
-    if (userId) {
-      let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, userId);
+    if (currentUser) {
+      let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, currentUser._id);
       this.setState({ hasVote: userHasVoted, isLoading: false });
     }
 
@@ -54,7 +54,7 @@ export default class RootPage extends Component {
   };
 
   render() {
-    let { idSurvey, hasVote, eventId, isLoading, userId, guestVoteInSurvey } = this.state;
+    let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey } = this.state;
     const { toggleSurvey, openSurvey } = this.props;
 
     if (!isLoading)
@@ -63,7 +63,12 @@ export default class RootPage extends Component {
       ) : (
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
           <Card>
-            <SurveyComponent idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} userId={userId} />
+            <SurveyComponent
+              idSurvey={idSurvey}
+              showListSurvey={toggleSurvey}
+              eventId={eventId}
+              currentUser={currentUser}
+            />
           </Card>
         </Col>
       );

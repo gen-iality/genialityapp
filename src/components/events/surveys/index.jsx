@@ -59,7 +59,7 @@ class SurveyForm extends Component {
       idSurvey: null,
       surveysData: [],
       hasVote: false,
-      uid: null,
+      currentUser: null,
       openSurvey: false,
     };
   }
@@ -81,7 +81,7 @@ class SurveyForm extends Component {
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
   seeIfUserHasVote = async () => {
-    let { uid, surveysData } = this.state;
+    let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
     const votesUserInSurvey = new Promise((resolve, reject) => {
@@ -89,8 +89,8 @@ class SurveyForm extends Component {
 
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
       surveysData.forEach(async (survey, index, arr) => {
-        if (uid) {
-          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
+        if (currentUser) {
+          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, currentUser._id);
           surveys.push({ ...arr[index], userHasVoted });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -123,7 +123,7 @@ class SurveyForm extends Component {
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
-          this.setState({ uid: data._id }, this.seeIfUserHasVote);
+          this.setState({ currentUser: data }, this.seeIfUserHasVote);
         }
       } catch (error) {
         const { status } = error.response;
@@ -144,7 +144,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, uid, openSurvey } = this.state;
+    let { idSurvey, surveysData, hasVote, currentUser, openSurvey } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -153,7 +153,7 @@ class SurveyForm extends Component {
           idSurvey={idSurvey}
           toggleSurvey={this.toggleSurvey}
           eventId={event._id}
-          userId={uid}
+          currentUser={currentUser}
           openSurvey={openSurvey}
         />
       );
