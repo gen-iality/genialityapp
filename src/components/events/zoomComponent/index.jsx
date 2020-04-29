@@ -3,7 +3,12 @@ import { Button } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
 
-
+const closeFullScreen = {
+  position: "absolute",
+  top: "7px",
+  right: "7px",
+  bottom: 0
+}
 
 export default class ZoomComponent extends Component {
   constructor(props) {
@@ -35,6 +40,11 @@ export default class ZoomComponent extends Component {
   goFull = () => {
     this.setState({ isFull: true });
   }
+
+  closeFull = () => {
+    this.setState({ isFull: false });
+  }
+
 
   // Función medium screen
   goMedium = () => {
@@ -82,6 +92,16 @@ export default class ZoomComponent extends Component {
           enabled={isFull}
           onChange={isFull => this.setState({ isFull })}
         >
+          {(isFull === true ?
+            <Button
+              type="primary"
+              danger
+              style={closeFullScreen}
+              onClick={this.closeFull}
+            >
+              <span className="icon-close" >&#10006;</span>
+            </Button> : null
+          )}
           <iframe
             src={url_conference + meeting_id + `&userName=${userEntered}`}
             allow="camera *;microphone *"
