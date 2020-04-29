@@ -6,13 +6,14 @@ import { getAnswersByQuestion } from "./services";
 
 import EventContent from "../events/shared/content";
 
-import { Table } from "antd";
+import { Table, Divider } from "antd";
 
 const columns = [
   {
     title: "Creado",
     dataIndex: "created",
     key: "created",
+    render: (date) => <span>{Moment.unix(date.seconds).format("DD MMM YYYY hh:mm a")}</span>,
   },
   {
     title: "Nombre",
@@ -35,9 +36,8 @@ class ReportQuestion extends Component {
   }
 
   loadData = async () => {
-    console.log(this.props);
     const { location, match, event } = this.props;
-    // console.log(props, props.match, props.match.params);
+
     this.setState({ nameQuestion: location.state.titleQuestion });
     let response = await getAnswersByQuestion(location.state.surveyId, match.params.id);
     this.setState({ listOfUserResponse: response });
@@ -54,7 +54,7 @@ class ReportQuestion extends Component {
     return (
       <Fragment>
         <EventContent title={nameQuestion} closeAction={this.goBack}>
-          <h1>ReportQuestion</h1>
+          <Divider orientation="right">Reporte</Divider>
           <Table dataSource={listOfUserResponse} columns={columns} />;
         </EventContent>
       </Fragment>

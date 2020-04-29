@@ -9,7 +9,7 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider, Modal, Form, Input } from "antd";
+import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch } from "antd";
 import FormQuestions from "./questions";
 import FormQuestionEdit from "./formEdit";
 
@@ -22,7 +22,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: "",
       publish: "",
-      privateSurvey: "",
+      openSurvey: false,
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -56,7 +56,7 @@ class triviaEdit extends Component {
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
-        privateSurvey: Update.isPrivate,
+        openSurvey: Update.open,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
@@ -92,7 +92,7 @@ class triviaEdit extends Component {
         id: this.state._id,
         survey: this.state.survey,
         publish: this.state.publish === "true" ? "true" : "false",
-        isPrivate: this.state.privateSurvey,
+        open: this.state.openSurvey,
         activity_id: this.state.activity_id,
       };
       console.log(data);
@@ -234,7 +234,7 @@ class triviaEdit extends Component {
     const {
       survey,
       publish,
-      privateSurvey,
+      openSurvey,
       activity_id,
       dataAgenda,
       question,
@@ -289,18 +289,10 @@ class triviaEdit extends Component {
               <label style={{ marginTop: "3%" }} className="label">
                 activar la encuesta
               </label>
-              <div className="select" style={{ marginBottom: "1%" }}>
-                <select
-                  name="publish"
-                  value={publish}
-                  onChange={this.changeInput}
-                  onClick={(e) => {
-                    this.setState({ publish: e.target.value });
-                  }}>
-                  <option value={true}>Si</option>
-                  <option value={false}>No</option>
-                </select>
-              </div>
+              <Switch
+                checked={publish == "true"}
+                onChange={(checked) => this.setState({ publish: checked ? "true" : "false" })}
+              />
             </div>
           ) : (
             <div></div>
@@ -309,20 +301,12 @@ class triviaEdit extends Component {
           {this.props.location.state ? (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
-                Encuesta privada
+                Encuesta Abierta
               </label>
-              <div className="select" style={{ marginBottom: "1%" }}>
-                <select
-                  name="privateSurvey"
-                  value={privateSurvey}
-                  onChange={this.changeInput}
-                  onClick={(e) => {
-                    this.setState({ privateSurvey: e.target.value });
-                  }}>
-                  <option value={true}>Si</option>
-                  <option value={false}>No</option>
-                </select>
-              </div>
+              <Switch
+                checked={openSurvey == "true"}
+                onChange={(checked) => this.setState({ openSurvey: checked ? "true" : "false" })}
+              />
             </div>
           ) : (
             <div></div>

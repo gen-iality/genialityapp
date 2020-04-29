@@ -18,7 +18,6 @@ export const getTotalVotes = (surveyId, question) => {
 };
 
 export const getAnswersByQuestion = (surveyId, questionId) => {
-  console.log(surveyId, questionId);
   return new Promise((resolve, reject) => {
     let docs = [];
     firestore
