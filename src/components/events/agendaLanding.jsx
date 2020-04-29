@@ -212,12 +212,9 @@ class Agenda extends Component {
 
   onClose = e => {
     console.log(e);
-    e.addEventListener(
-      "click",
-      this.setState({
-        visible: false
-      })
-    );
+    this.setState({
+      visible: false
+    })
   };
 
   render() {
