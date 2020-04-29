@@ -301,7 +301,7 @@ let agendaActividadDetalle = (props) => {
                         onClick={() =>
                           showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
                         }>
-                        Conferencia en Vivo en anonimo
+                        Conferencia en Vivo en anónimo
                 </button>
                     </div>
                   ) : (
