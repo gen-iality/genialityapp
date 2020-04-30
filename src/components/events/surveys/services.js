@@ -78,7 +78,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
-    const { responseData, date, uid } = dataAnswer;
+    const { responseData, date, uid, email, names } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
@@ -95,6 +95,8 @@ export const SurveyAnswers = {
           response: responseData,
           created: date,
           id_user: uid,
+          user_email: email,
+          user_name: names,
           id_survey: surveyId,
         })
         .then(() => {
