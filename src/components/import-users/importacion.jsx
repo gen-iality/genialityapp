@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import XLSX from "xlsx";
 import Moment from "moment"
 import momentLocalizer from 'react-widgets-moment';
@@ -10,13 +10,13 @@ class Importacion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showMsg:false
+            showMsg: false
         };
         this.handleXlsFile = this.handleXlsFile.bind(this) // properly bound once
     }
 
     handleXlsFile(files) {
-        let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        let abc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
         const f = files[0];
         const reader = new FileReader();
         const self = this;
@@ -25,7 +25,7 @@ class Importacion extends Component {
             const workbook = XLSX.read(data, { type: "binary" });
             const sheetName = workbook.SheetNames[0];
             const sheetObj = workbook.Sheets[sheetName];
-            if(sheetObj["!ref"]) {
+            if (sheetObj["!ref"]) {
                 const dimension = sheetObj["!ref"].split(":");
                 let inicio = dimension[0].substring(0, 1);
                 let fin = dimension[1].substring(0, 1);
@@ -37,13 +37,13 @@ class Importacion extends Component {
 
                 for (let i = inicio; i < fin + 1; i++) {
 
-                    if(!sheetObj[abc[i] + 1] || !sheetObj[abc[i] + 1].w){
-                        this.setState({errMsg:'Excel sin formato adecuado'});
+                    if (!sheetObj[abc[i] + 1] || !sheetObj[abc[i] + 1].w) {
+                        this.setState({ errMsg: 'Excel sin formato adecuado' });
                         break;
                     }
 
                     let key = sheetObj[abc[i] + 1].w.trim();
-                    fields[i] = {key: key, list: [], used: false};
+                    fields[i] = { key: key, list: [], used: false };
 
                     //Se itera sobre la segunda columna ya que las primeras indican los headers y revisamos si estan llenas las filas
                     for (let j = 2; j < finN + 1; j++) {
@@ -51,23 +51,25 @@ class Importacion extends Component {
                             sheetObj[abc[i] + j].w &&
                             sheetObj[abc[i] + j].w.trim().length >= 0) {
                             let fieldValue = sheetObj[abc[i] + j].w.trim();
-                            //Se pasan todas las columnas a mayusculas a excepcion de email y contraseña para organizar la base de datos e ingresar email y contraseña en minusculas
-                            if(["email","password"].indexOf(key) == -1){
-                                fieldValue= fieldValue.toUpperCase();
-                            }
-
                             fields[i].list.push(fieldValue)
-                        }else{
+                        } else {
                             fields[i].list.push(undefined)
                         }
                     }
 
-                    
+                    //Se condiciona si en el array la key tiene como propiedad "email", 
+                    //si es así, convierte en muniscula el correo e iguala el array list de fields al nuevo campo 
+                    if (fields[i].key === "email") {
+                        fields[i].list[0].toLowerCase()
+                        let email = fields[i].list[0].toLowerCase()
+                        fields[i].list[0] = email
+                    }
+                    console.log(fields[i])
                     fields[i].list.slice(0, finN - 1);
                 }
                 self.props.handleXls(fields)
-            }else{
-                this.setState({errMsg:'Excel en blanco'})
+            } else {
+                this.setState({ errMsg: 'Excel en blanco' })
             }
         };
         reader.readAsBinaryString(f);
@@ -75,8 +77,8 @@ class Importacion extends Component {
 
     downloadExcel = () => {
         let data = [{}];
-        this.props.extraFields.map((extra)=>{
-           return data[0][extra.name] = ''
+        this.props.extraFields.map((extra) => {
+            return data[0][extra.name] = ''
         });
         data[0]['tiquete'] = '';
         const ws = XLSX.utils.json_to_sheet(data);
@@ -99,7 +101,7 @@ class Importacion extends Component {
                         </div>
                         <div className="column is-12 is-paddingless">
                             <div className="ejm-tabla columns is-mobile is-gapless">
-                                {this.props.extraFields.map((extra,key)=>{
+                                {this.props.extraFields.map((extra, key) => {
                                     return <div className="column" key={key}>
                                         <span className="has-text-grey-light">{extra.name}</span>
                                     </div>
@@ -114,7 +116,7 @@ class Importacion extends Component {
                     </Dropzone>
                     <p className="help is-danger">{this.state.errMsg}</p>
                     <button className="button is-text" onClick={this.downloadExcel}>
-                        <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true"/></span>
+                        <span className="icon"><i className="fas fa-cloud-download-alt" aria-hidden="true" /></span>
                         <span><ins>Descargar Template</ins></span>
                     </button>
                 </div>
