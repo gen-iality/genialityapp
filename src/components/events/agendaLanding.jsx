@@ -10,6 +10,7 @@ import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
 import { Button } from 'antd';
+import { DesktopOutlined } from '@ant-design/icons';
 
 class Agenda extends Component {
   constructor(props) {
@@ -337,6 +338,14 @@ class Agenda extends Component {
                               </p>
 
                               <div className="calendar-category has-margin-top-7">
+                                {/* Tag que muestra si tiene o no conferencia virtual*/}
+                                <p>
+                                  <span className="tag category_calendar-tag"><DesktopOutlined />&nbsp;{agenda.meeting_id ? "Tiene espacio virtual" : "No tiene espacio virtual"}</span>
+                                  {/* <Button type="primary" dash>
+                                       conferencia en vivo
+                                    </Button> */}
+                                </p>
+
                                 {/* Tags de categorias */}
                                 {agenda.activity_categories.map((cat, key) => (
                                   <p
@@ -349,6 +358,7 @@ class Agenda extends Component {
                                     {cat.name}
                                   </p>
                                 ))}
+
                               </div>
 
                               <div
@@ -363,17 +373,7 @@ class Agenda extends Component {
                                 {/* Boton de para acceder a la conferencia onClick={() =>
                                 showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
                               } */}
-                                {
-                                  agenda.meeting_id ?
-                                    <div>
-                                      <Button type="primary">
-                                        Conferencia en Vivo
-                                      </Button>
 
-                                    </div>
-                                    :
-                                    <div />
-                                }
                               </div>
 
                             </div>
