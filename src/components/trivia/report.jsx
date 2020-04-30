@@ -8,27 +8,6 @@ import { getTotalVotes } from "./services";
 
 import { Input, List, Card, Button, Spin, Empty } from "antd";
 
-const data = [
-  {
-    title: "Title 1",
-  },
-  {
-    title: "Title 2",
-  },
-  {
-    title: "Title 3",
-  },
-  {
-    title: "Title 4",
-  },
-  {
-    title: "Title 5",
-  },
-  {
-    title: "Title 6",
-  },
-];
-
 class TriviaReport extends Component {
   constructor(props) {
     super(props);
