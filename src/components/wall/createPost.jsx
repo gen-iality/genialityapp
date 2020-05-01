@@ -17,7 +17,7 @@ const { TextArea } = Input;
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
     <div>
         <Form.Item>
-            <TextArea placeholder="¿Qué está pasando?" rows={4} onChange={onChange} value={value} id="postText" />
+            <TextArea placeholder="¿Qué está pasando?" rows={4} onChange={onChange} value={value} />
         </Form.Item>
 
         <Form.Item>
@@ -34,40 +34,24 @@ class CreatePost extends Component {
         this.state = {
             avatar:
                 "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481",
-            files: [],
-            urlPost: "",
-            comment: "",
-            comments: "",
-            counts: [],
-            fileName: "",
-            file: null,
             inputKey: Date.now(),
             keyImage: Date.now(),
-            showInfo: false,
             keyList: Date.now(),
-            imageSelfie: "",
-            dataPost: [],
-            dataPostFilter: [],
-
-            idPostComment: [],
             dataUser: [],
-            currentCommet: null,
             submitting: false,
             value: "",
-            valueCommit: "",
             hidden: true,
-            modal1Visible: false,
-            selfieImage: "",
             modal2Visible: false,
             showInfo: false,
             loading: false,
             visible: false,
             user: false,
+            image: ""
         }
         this.savePost = this.savePost.bind(this);
         this.previewImage = this.previewImage.bind(this);
-        this.cancelImage = this.cancelImage.bind(this);
-        this.stayForm = this.stayForm.bind(this);
+        this.cancelUploadImage = this.cancelUploadImage.bind(this);
+        this.getImage = this.getImage.bind(this);
     }
 
     async componentDidMount() {
@@ -89,89 +73,64 @@ class CreatePost extends Component {
             }
         }
     }
-
+    //Funcion para guardar el post y enviar el mensaje de publicacion
     async savePost() {
-        const image = document.getElementById("image").files[0];
-        const selfieImage = document.getElementById("frontImage");
-        const dataUser = this.state.dataUser;
-
-        const text = document.getElementById("postText").value;
-        const imageUrl = [];
-
-        if (selfieImage && selfieImage.src.length > 100) {
-            imageUrl.push(selfieImage.src);
-            saveFirebase.savePostSelfie(imageUrl, text, dataUser.correo, this.props.event._id);
-            this.cancelUploadImage();
-        } else if (image) {
-            let imageUrl = await saveFirebase.saveImage(this.props.event._id, image);
-            saveFirebase.savePostImage(imageUrl, text, dataUser.correo, this.props.event._id);
-            this.cancelImage();
-        } else {
-            console.log("dataUser", dataUser);
-            //savepost se realiza para publicar el post sin imagen
-            saveFirebase.savePost(text, dataUser.displayName, this.props.event._id);
+        let data = {
+            urlImage: this.state.image,
+            post: this.state.value,
+            author: this.state.dataUser.email,
+            datePost: new Date(),
         }
+        console.log(data)
 
-        this.setState({ value: "", showInfo: true, });
+        //savepost se realiza para publicar el post
+        saveFirebase.savePost(data, this.props.event._id);
+
+        this.setState({ value: "", image: "", showInfo: true, });
 
         setTimeout(() => {
-            this.stayForm();
+            this.setState({
+                showInfo: false,
+                visible: false,
+                keyList: Date.now()
+            });
         }, 3000);
     }
 
-    stayForm() {
-        this.setState({
-            value: "",
-            showInfo: false,
-            visible: false,
-
-            keyList: Date.now()
-        });
-    }
+    //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
     previewImage(event) {
-        document.getElementById("previewImage").hidden = false;
-        const selfieImage = document.getElementById("frontImage");
-        this.setState({ selfieImage });
-
-        //console.log(URL.createObjectURL(event.target.files[0]))
-
-        this.setState({
-            image: URL.createObjectURL(event.target.files[0]),
-        });
+        event.preventDefault();
+        let file = event.target.files[0];
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            this.setState({ image: reader.result, inputKey: Date.now() });
+        };
     }
 
+    //Funcion para poder pasarla por props y obtener la selfie de cameraFeed en este componente
+    getImage(image) {
+        this.setState({ image })
+        console.log(this.state.image)
+    }
+
+    //Funcion para actualizar el canvas y poder tomar la foto
     uploadImage() {
         const formData = new FormData();
         formData.append("file", formData);
     }
 
+    //Funcion para cerrar la modal
     setModal2Visible(modal2Visible) {
         this.setState({ modal2Visible, keyImage: Date.now() });
-        if (document.getElementById("divImage")) {
-            document.getElementById("divImage").hidden = false;
-        }
     }
 
     //Funcion para limpiar el input de la selfie y ocultar el componente card que muestra la selfie
     cancelUploadImage() {
-        //console.log("Entré")
-        document.getElementById("frontImage").src = "";
-        document.getElementById("divImage").hidden = true;
-    }
-    //Funcion para limpiar el input de la imagen del archivo
-    async cancelImage() {
-        if (document.getElementById("imagePost")) {
-            document.getElementById("imagePost").removeAttribute("src");
-        }
-        this.setState({
-            file: null,
-            inputKey: Date.now(),
-        });
-        if (document.getElementById("previewImage")) {
-            document.getElementById("previewImage").hidden = true;
-        }
+        this.setState({ image: "" })
     }
 
+    //Funcion para enviar al estado el comentario del post
     handleChange = (e) => {
         this.setState({
             value: e.target.value,
@@ -184,6 +143,7 @@ class CreatePost extends Component {
         });
     };
 
+    //Funcion para cerrar el modal de publicacion en caso de no realizar ninguna publicación
     handleOk = () => {
         this.setState({ loading: true });
         setTimeout(() => {
@@ -191,6 +151,7 @@ class CreatePost extends Component {
         }, 3000);
     };
 
+    //Funcion para cerrar el modal de publicacion en caso de no realizar ninguna publicación
     handleCancel = () => {
         this.setState({ visible: false });
     };
@@ -245,7 +206,6 @@ class CreatePost extends Component {
                                                                 key={this.state.inputKey}
                                                                 class="file-input"
                                                                 type="file"
-                                                                id="image"
                                                                 onChange={this.previewImage}
                                                             />
                                                             <span>Subir Foto</span>
@@ -266,7 +226,6 @@ class CreatePost extends Component {
                                                         <div hidden={hidden} className="App">
                                                             {/* En esta modal se muestra la imagen de selfie */}
                                                             <Modal
-                                                                id="Camera"
                                                                 title="Camara"
                                                                 centered
                                                                 visible={this.state.modal2Visible}
@@ -286,41 +245,27 @@ class CreatePost extends Component {
                                                                         Cerrar / Publicar
                                                                     </Button>,
                                                                 ]}>
-                                                                <CameraFeed sendFile={this.uploadImage} />
+                                                                <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                                                             </Modal>
                                                         </div>
                                                     </Row>
                                                     <Row>
-                                                        {//Se valida si existe getImage y se valida si contiene mas de 100 caracteres para mostrar la selfie
-                                                            document.getElementById("getImage") ? (
-                                                                document.getElementById("getImage").src.length > 100 ? (
-                                                                    <div id="divImage" style={{ marginTop: "2%" }}>
-                                                                        <Card
-                                                                            hoverable
-                                                                            style={{ width: 240 }}
-                                                                            cover={
-                                                                                <img
-                                                                                    id="frontImage"
-                                                                                    key={this.state.keyImage}
-                                                                                    src={document.getElementById("getImage").src}
-                                                                                />
-                                                                            }>
-                                                                            <Button onClick={this.cancelUploadImage}>Cancelar</Button>
-                                                                        </Card>
-                                                                    </div>
-                                                                ) : (
-                                                                        <div />
-                                                                    )
-                                                            ) : (
-                                                                    <div />
-                                                                )}
-
-                                                        {/* Se oculta este div para mostrar el archivo solamente cuando se suba el archivo */}
-                                                        <div style={{ marginTop: "2%", marginLeft: "1%" }} id="previewImage" hidden>
-                                                            <Card hoverable style={{ width: 240 }} cover={<img id="imagePost" src={image} />}>
-                                                                <Button onClick={this.cancelImage}>Cancelar</Button>
-                                                            </Card>
-                                                        </div>
+                                                        {
+                                                            image ?
+                                                                <Card
+                                                                    hoverable
+                                                                    style={{ width: 240 }}
+                                                                    cover={
+                                                                        <img
+                                                                            key={this.state.keyImage}
+                                                                            src={image}
+                                                                        />
+                                                                    }>
+                                                                    <Button onClick={this.cancelUploadImage}>Cancelar</Button>
+                                                                </Card>
+                                                                :
+                                                                <div />
+                                                        }
                                                     </Row>
                                                 </Col>
                                             </Row>
@@ -329,7 +274,6 @@ class CreatePost extends Component {
                                             <Comment
                                                 content={
                                                     <Editor
-                                                        id="comment"
                                                         onChange={this.handleChange}
                                                         onSubmit={this.savePost}
                                                         submitting={submitting}
