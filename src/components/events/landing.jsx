@@ -493,6 +493,7 @@ class Landing extends Component {
 //Component del lado del mapa
 const MapComponent = (props) => {
   const { event, toggleConference, namesUser } = props;
+  { console.log(props.event) }
   return (
     <div className="column container-map">
       <div>
