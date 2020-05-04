@@ -50,7 +50,7 @@ class Index extends Component {
             //const tickets = await UsersApi.mineTickets();
             user.name = (user.displayName) ? user.displayName : user.name ? user.name : user.email;
             user.picture = (user.picture) ? user.picture : user.photoUrl ? user.photoUrl : 'https://bulma.io/images/placeholders/128x128.png';
-            user.location = user.location ? user.location : {};
+            user.location = user.location ? user.location : '';
             user.network = user.network ? user.network : { facebook: '', twitter: '', instagram: '', linkedIn: '' };
             user.birth_date = user.birth_date ? Moment(user.birth_date).toDate() : new Date();
             user.phoneNumber = user.phoneNumber ? user.phoneNumber : '';
@@ -132,10 +132,10 @@ class Index extends Component {
             phoneValid = true;
             error.phone = phoneValid && 'Fill a phone with at least 7 digits';
         }
-        if (!location.FormattedAddress && !location.PlaceId) {
-            locationValid = true;
-            error.location = locationValid && 'Fill a correct address'
-        }
+        // if (!location.FormattedAddress && !location.PlaceId) {
+        //     locationValid = true;
+        //     error.location = locationValid && 'Fill a correct address'
+        // }
         let valid = (nameValid || emailValid || dniValid || phoneValid || locationValid);
         this.setState({ valid, error })
     };
@@ -144,42 +144,9 @@ class Index extends Component {
         this.setState({ user: { ...this.state.user, [name]: value } })
     };
 
-    onSuggestSelect = (suggest) => {
-        if (suggest) {
-            const place = suggest.gmaps;
-            const location = place.geometry && place.geometry.location ? {
-                Latitude: place.geometry.location.lat(),
-                Longitude: place.geometry.location.lng()
-            } : {};
-            const componentForm = {
-                street_number: 'short_name',
-                route: 'long_name',
-                locality: 'long_name',
-                administrative_area_level_1: 'short_name'
-            };
-            const mapping = {
-                street_number: 'number',
-                route: 'street',
-                locality: 'city',
-                administrative_area_level_1: 'state'
-            };
-            for (let i = 0; i < place.address_components.length; i++) {
-                const addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    const val = place.address_components[i][componentForm[addressType]];
-                    location[mapping[addressType]] = val;
-                }
-            }
-            location.FormattedAddress = place.formatted_address;
-            location.PlaceId = place.place_id;
-            this.setState({ user: { ...this.state.user, location } }, this.valid)
-        } else {
-            this.setState({ user: { ...this.state.user, location: {} } }, this.valid)
-        }
-    };
-
     async saveForm() {
         const { user } = this.state;
+        console.log(user)
         user.birth_date = Moment(user.birth_date).format('YYYY-MM-DD HH:mm:ss');
         console.log(user);
         try {
@@ -264,17 +231,14 @@ class Index extends Component {
                                         <div className="field column">
                                             <label className="label is-size-7 required has-text-grey-light">Cédula</label>
                                             <div className="control">
-                                                <input className="input has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="1234567890" onChange={this.handleChange} />
+                                                <input className="input required has-text-weight-bold" name={"dni_number"} value={user.dni_number} type="number" placeholder="1234567890" onChange={this.handleChange} />
                                             </div>
                                             {error.dni && <p className="help is-danger">{error.dni}</p>}
                                         </div>
                                         <div className="field column">
-                                            <label className="label is-size-7 has-text-grey-light required">Dirección</label>
+                                            <label className="label is-size-7 has-text-grey-light">Dirección</label>
                                             <div className="control">
-                                                <Geosuggest
-                                                    placeholder={'Ingresa tu dirección'}
-                                                    onSuggestSelect={this.onSuggestSelect}
-                                                    radius="20" />
+                                                <input className="input required has-text-weight-bold" value={user.location} name={"location"} type="text" placeholder="Ingresa tu dirección" onChange={this.handleChange} />
                                             </div>
                                             {error.location && <p className="help is-danger">{error.location}</p>}
                                         </div>
