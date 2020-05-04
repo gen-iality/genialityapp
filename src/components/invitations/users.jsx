@@ -236,9 +236,8 @@ class UsersRsvp extends Component {
       //const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
       //let data = resp.data;
       const newUsersFormated = handleUsers(this.props.event.user_properties, [user]);
-
       let usuarios = [...newUsersFormated, ...this.state.users]
-      console.log("data", usuarios);
+
 
       toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
       this.setState({ users: usuarios, usersReq: usuarios });
