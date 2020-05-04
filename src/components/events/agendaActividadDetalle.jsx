@@ -15,13 +15,14 @@ import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 import DocumentsList from "../documents/documentsList"
 import { UserOutlined } from "@ant-design/icons";
+import ModalSpeaker from "./modalSpeakers"
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
   let [modalVisible, setModalVisible] = useState(false);
-  let [speakers, setSpeakers] = useState(false);
+  let [idSpeaker, setIdSpeaker] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -87,13 +88,10 @@ let agendaActividadDetalle = (props) => {
   }, []);
 
   async function getSpeakers(idSpeaker) {
-    let speakers = await SpeakersApi.getOne(idSpeaker, event._id);
-    setSpeakers(speakers)
-    setModalVisible(true)
+    setIdSpeaker(idSpeaker)
   }
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
-  console.log("EVENTO", event);
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
@@ -287,41 +285,12 @@ let agendaActividadDetalle = (props) => {
                               <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
                             </List.Item>
                           )} />
-                        <Modal
-                          title="Conferencista"
-                          centered
-                          width={1000}
-                          visible={modalVisible}
-                          onCancel={() => setModalVisible(false)}
-                          onOk={() => setModalVisible(false)}
-                        >
-                          <Row>
-                            {/* Imagen del conferencista */}
-
-                            <Col flex="1 1 auto">
-                              {speakers.image ? (
-                                <Avatar style={{ display: "block", margin: "0 auto" }} size={130} src={speakers.image} />
-                              ) : (
-                                  <Avatar style={{ display: "block", margin: "0 auto" }} size={130} icon={<UserOutlined />} />
-                                )}
-                            </Col>
-
-                            {/* Descripción del conferencista */}
-                            <Col flex="1 1 600px">
-                              <span>
-                                <b>{speakers.name}</b>
-                              </span>
-                              <p>
-                                <span>
-                                  <b>{speakers.profession}</b>
-                                </span>
-                                <br />
-                                <br />
-                                <div style={{ width: "90%" }} dangerouslySetInnerHTML={{ __html: speakers.description }} />
-                              </p>
-                            </Col>
-                          </Row>
-                        </Modal>
+                        {
+                          idSpeaker ?
+                            <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                            :
+                            <></>
+                        }
                       </Card>
                     </div>
                   </p>
