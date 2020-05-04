@@ -111,7 +111,7 @@ class SurveyComponent extends Component {
                   date: new Date(),
                   uid: infoUser._id,
                   email: infoUser.email,
-                  names: infoUser.names,
+                  names: infoUser.names || infoUser.displayName,
                 },
                 { optionQuantity, optionIndex }
               )
