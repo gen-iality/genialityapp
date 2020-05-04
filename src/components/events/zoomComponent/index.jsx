@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import { Button } from "antd";
 import Fullscreen from "react-full-screen";
-import { CloseSquareOutlined, FullscreenOutlined, SwitcherOutlined } from "@ant-design/icons";
+import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+
+const closeFullScreen = {
+  position: "absolute",
+  top: "7px",
+  right: "7px",
+  bottom: 0
+}
+
 export default class ZoomComponent extends Component {
   constructor(props) {
     super(props);
@@ -11,6 +19,8 @@ export default class ZoomComponent extends Component {
       meeting_id: null,
       userEntered: null,
       isFull: false,
+      isMedium: false,
+      isMinimize: false,
     };
   }
   componentDidMount() {
@@ -26,31 +36,78 @@ export default class ZoomComponent extends Component {
   }
 
 
-  // Funcion full screen
+  // Función full screen
   goFull = () => {
     this.setState({ isFull: true });
+  }
+
+  closeFull = () => {
+    this.setState({ isFull: false });
+  }
+
+
+  // Función medium screen
+  goMedium = () => {
+    this.setState({
+      isMedium: !this.state.isMedium,
+      isMinimize: false
+    });
+  }
+
+  // Función minimize screen
+  goMinimize = () => {
+    this.setState({
+      isMinimize: !this.state.isMinimize,
+      isMedium: false
+    });
   }
 
 
   render() {
     const { hideIframe } = this.props;
-    let { url_conference, meeting_id, userEntered } = this.state;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize } = this.state;
     return (
-      <div className="content-zoom">
+      <div className={`content-zoom ${isMedium === true ? 'mediumScreen' : ''} ${isMinimize === true ? 'minimizeScreen' : ''}`} >
 
-        {/* boton pantalla completa */}
-        <Button onClick={this.goFull}><FullscreenOutlined /></Button>
+        <div className="buttons-header">
+          <div>
 
-        {/* boton pantalla media */}
-        <Button onClick={this.goMedium}><SwitcherOutlined /></Button>
+            <div className="title-header">
+              <span className="icon-live" >&#9673;</span>&nbsp;
+              <span>Conferencia en vivo</span>
+            </div>
+          </div>
 
-        {/* boton cerrar */}
-        <Button onClick={() => hideIframe(false)}><CloseSquareOutlined /></Button>
+          <div>
+
+            {/* botón pantalla completa */}
+            <Button onClick={this.goFull}><FullscreenOutlined /></Button>
+
+            {/* botón pantalla media */}
+            <Button onClick={this.goMedium}><SwitcherOutlined /></Button>
+
+            {/* botón pantalla minimizada */}
+            <Button onClick={this.goMinimize}><LineOutlined /></Button>
+
+            {/* botón cerrar */}
+            <Button onClick={() => hideIframe(false)}><span className="icon-close" >&#10006;</span></Button>
+          </div>
+        </div>
 
         <Fullscreen
-          enabled={this.state.isFull}
+          enabled={isFull}
           onChange={isFull => this.setState({ isFull })}
         >
+          {(isFull === true ?
+            <Button
+              type="primary"
+              danger
+              style={closeFullScreen}
+              onClick={this.closeFull}
+            >
+              <span className="icon-close" >&#10006;</span>
+            </Button> : null
+          )}
           <iframe
             src={url_conference + meeting_id + `&userName=${userEntered}`}
             allow="camera *;microphone *"

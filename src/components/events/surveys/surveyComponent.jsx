@@ -17,7 +17,6 @@ class SurveyComponent extends Component {
     super(props);
     this.state = {
       surveyData: {},
-      uid: null,
     };
   }
 
@@ -64,8 +63,8 @@ class SurveyComponent extends Component {
 
   // Funcion para enviar la informacion de las respuestas
   sendDataToServer = (survey) => {
-    const { showListSurvey, eventId, userId } = this.props;
-    let { surveyData, uid } = this.state;
+    const { showListSurvey, eventId, currentUser } = this.props;
+    let { surveyData } = this.state;
 
     firestore
       .collection("surveys")
@@ -79,7 +78,7 @@ class SurveyComponent extends Component {
     // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
 
-    const executeService = (SurveyData, questions, uid) => {
+    const executeService = (SurveyData, questions, infoUser) => {
       let sendAnswers = 0;
       let responseMessage = null;
       let responseError = null;
@@ -103,14 +102,16 @@ class SurveyComponent extends Component {
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos
           // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
           if (question.value)
-            if (uid) {
+            if (infoUser) {
               await SurveyAnswers.registerWithUID(
                 surveyData._id,
                 question.id,
                 {
                   responseData: question.value,
                   date: new Date(),
-                  uid,
+                  uid: infoUser._id,
+                  email: infoUser.email,
+                  names: infoUser.names,
                 },
                 { optionQuantity, optionIndex }
               )
@@ -155,7 +156,7 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, userId).then((result) => {
+    executeService(surveyData, questions, currentUser).then((result) => {
       toast.success(result);
       if (this.props.showListSurvey) {
         showListSurvey(null, "reload");

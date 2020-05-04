@@ -19,22 +19,33 @@ function ListSurveys(props) {
       <Card>
         <List
           dataSource={jsonData}
-          renderItem={(survey) => (
-            <List.Item
-              key={survey._id}
-              actions={[
-                <Button onClick={() => props.showSurvey(survey._id)} loading={survey.userHasVoted == undefined}>
-                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>,
-              ]}>
-              <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-              {survey.userHasVoted && (
+          renderItem={(survey) =>
+            survey.open == "true" ? (
+              <List.Item
+                key={survey._id}
+                actions={[
+                  <Button onClick={() => props.showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                    {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                  </Button>,
+                ]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                {survey.userHasVoted && (
+                  <div>
+                    <Tag color="success">Respondida</Tag>
+                  </div>
+                )}
+              </List.Item>
+            ) : (
+              <List.Item
+                key={survey._id}
+                actions={[<Button onClick={() => props.showSurvey(survey)}>Ver Resultados</Button>]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                 <div>
-                  <Tag color="success">Respondida</Tag>
+                  <Tag color="red">Cerrada</Tag>
                 </div>
-              )}
-            </List.Item>
-          )}
+              </List.Item>
+            )
+          }
         />
       </Card>
     </Col>
@@ -48,7 +59,8 @@ class SurveyForm extends Component {
       idSurvey: null,
       surveysData: [],
       hasVote: false,
-      uid: null,
+      currentUser: null,
+      openSurvey: false,
     };
   }
 
@@ -69,7 +81,7 @@ class SurveyForm extends Component {
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
   seeIfUserHasVote = async () => {
-    let { uid, surveysData } = this.state;
+    let { currentUser, surveysData } = this.state;
     const { event } = this.props;
 
     const votesUserInSurvey = new Promise((resolve, reject) => {
@@ -77,8 +89,8 @@ class SurveyForm extends Component {
 
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
       surveysData.forEach(async (survey, index, arr) => {
-        if (uid) {
-          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, uid);
+        if (currentUser) {
+          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, currentUser._id);
           surveys.push({ ...arr[index], userHasVoted });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -111,7 +123,7 @@ class SurveyForm extends Component {
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
-          this.setState({ uid: data._id }, this.seeIfUserHasVote);
+          this.setState({ currentUser: data }, this.seeIfUserHasVote);
         }
       } catch (error) {
         const { status } = error.response;
@@ -122,16 +134,29 @@ class SurveyForm extends Component {
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
+    if (data) {
+      let { _id, open } = data;
+      this.setState({ idSurvey: _id, openSurvey: open });
+    } else {
+      this.setState({ idSurvey: null });
+    }
     if (reload) this.loadData();
-    this.setState({ idSurvey: data });
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, uid } = this.state;
+    let { idSurvey, surveysData, hasVote, currentUser, openSurvey } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
-      return <RootPage idSurvey={idSurvey} toggleSurvey={this.toggleSurvey} eventId={event._id} userId={uid} />;
+      return (
+        <RootPage
+          idSurvey={idSurvey}
+          toggleSurvey={this.toggleSurvey}
+          eventId={event._id}
+          currentUser={currentUser}
+          openSurvey={openSurvey}
+        />
+      );
 
     return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }

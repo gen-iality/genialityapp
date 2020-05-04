@@ -15,7 +15,7 @@ const IconText = ({ icon, text, onSubmit }) => (
         target="_blank"
     >
 
-        {React.createElement(icon, { style: { marginRight: 8 } })}
+        {React.createElement(icon, { style: { margin: 0 } })}
         {text}
     </Button>
 );

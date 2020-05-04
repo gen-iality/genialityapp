@@ -8,27 +8,6 @@ import { getTotalVotes } from "./services";
 
 import { Input, List, Card, Button, Spin, Empty } from "antd";
 
-const data = [
-  {
-    title: "Title 1",
-  },
-  {
-    title: "Title 2",
-  },
-  {
-    title: "Title 3",
-  },
-  {
-    title: "Title 4",
-  },
-  {
-    title: "Title 5",
-  },
-  {
-    title: "Title 6",
-  },
-];
-
 class TriviaReport extends Component {
   constructor(props) {
     super(props);
@@ -95,7 +74,7 @@ class TriviaReport extends Component {
                         pathname: `${this.props.matchUrl}/report/${item.id}`,
                         state: { titleQuestion: item.title, surveyId: location.state.report },
                       }}>
-                      <Card title={item.title} hoverable>
+                      <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
                         {item.quantityResponses == 0
                           ? "No se ha respondido aun la pregunta"
                           : `${item.quantityResponses} usuarios han respondido la pregunta`}

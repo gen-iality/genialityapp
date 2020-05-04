@@ -9,6 +9,8 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
+import { Button } from 'antd';
+import { DesktopOutlined } from '@ant-design/icons';
 
 class Agenda extends Component {
   constructor(props) {
@@ -310,7 +312,7 @@ class Agenda extends Component {
                         <div key={key} className="card-content has-text-left container_calendar-description">
                           {/* Descripción del evento */}
                           <div class="columns">
-                            <div class="column is-three-quarters">
+                            <div class="column is-7">
 
 
                               {agenda.subtitle && (
@@ -336,9 +338,17 @@ class Agenda extends Component {
                               </p>
 
                               <div className="calendar-category has-margin-top-7">
+                                {/* Tag que muestra si tiene o no conferencia virtual*/}
+                                <p>
+                                  <span className="tag category_calendar-tag"><DesktopOutlined />&nbsp;{agenda.meeting_id ? "Tiene espacio virtual" : "No tiene espacio virtual"}</span>
+                                  {/* <Button type="primary" dash>
+                                       conferencia en vivo
+                                    </Button> */}
+                                </p>
+
                                 {/* Tags de categorias */}
                                 {agenda.activity_categories.map((cat, key) => (
-                                  <span
+                                  <p
                                     key={key}
                                     style={{
                                       background: cat.color,
@@ -346,35 +356,29 @@ class Agenda extends Component {
                                     }}
                                     className="tag category_calendar-tag">
                                     {cat.name}
-                                  </span>
+                                  </p>
                                 ))}
+
                               </div>
 
                               <div
-                                className="card-footer is-12 is-flex"
+                                className="card-footer is-12 is-block"
                                 style={{
                                   borderTop: "none",
-                                  justifyContent: "space-between",
                                   alignItems: "flex-end"
                                 }}>
-                                <a className="is-size-5 is-vcentered">Ver más...</a>
+                                <p>
+                                  <a className="is-size-5 is-vcentered">Ver más...</a>
+                                </p>
+                                {/* Boton de para acceder a la conferencia onClick={() =>
+                                showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
+                              } */}
+
                               </div>
 
                             </div>
-                            {agenda.image && <div class="column"><img src={agenda.image} /></div>}
-                            {/* Boton de para acceder a la conferencia onClick={() =>
-                                showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
-                              } */}
-                            {
-                              agenda.meeting_id ?
-                                <div>
-                                  <button className="button is-success is-outlined is-pulled-right has-margin-top-20">
-                                    Conferencia en Vivo
-                                  </button>
-                                </div>
-                                :
-                                <div />
-                            }
+                            {agenda.image && <div class="column is-5"><img src={agenda.image} /></div>}
+
 
                             {/* <button
                         className="button button-color-agenda has-text-light is-pulled-right is-medium"
@@ -391,7 +395,8 @@ class Agenda extends Component {
               </div>
             </div>
           </div>
-        )}
+        )
+        }
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { firestore } from "../../helpers/firebase";
+import Moment from "moment";
 
 export const getTotalVotes = (surveyId, question) => {
   return new Promise((resolve, reject) => {
@@ -18,7 +19,6 @@ export const getTotalVotes = (surveyId, question) => {
 };
 
 export const getAnswersByQuestion = (surveyId, questionId) => {
-  console.log(surveyId, questionId);
   return new Promise((resolve, reject) => {
     let docs = [];
     firestore
@@ -30,7 +30,8 @@ export const getAnswersByQuestion = (surveyId, questionId) => {
           resolve(false);
         }
         result.forEach((infoDoc) => {
-          docs.push({ ...infoDoc.data(), _id: infoDoc.id });
+          let creation_date_text = Moment.unix(infoDoc.data().created.seconds).format("DD MMM YYYY hh:mm a");
+          docs.push({ ...infoDoc.data(), _id: infoDoc.id, creation_date_text });
         });
         resolve(docs);
       })

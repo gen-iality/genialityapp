@@ -64,16 +64,6 @@ const imageCenter = {
   display: "block",
 };
 
-const mediumScreen = {
-  height: "75%",
-  width: "70%",
-  top: "10%",
-  left: "0",
-  bottom: "10%",
-  right: "0",
-  margin: "0 auto",
-}
-
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -219,8 +209,7 @@ class Landing extends Component {
               {event.video && (
                 <div className="column is-centered mediaplayer">
                   <ReactPlayer
-                    //width={"100%"}
-                    //height={"500px"}
+                    width={"100%"}
                     style={{
                       display: "block",
                       margin: "0 auto",
@@ -323,6 +312,7 @@ class Landing extends Component {
   };
 
   toggleConference = (state, meeting_id, userEntered) => {
+    console.log("ACTIVANDOSE", meeting_id, state);
     if (meeting_id != undefined) {
       this.setState({ meeting_id, userEntered });
     }
@@ -348,16 +338,16 @@ class Landing extends Component {
           <Loading />
         ) : (
             <React.Fragment>
-              {this.state.headerVisible && (
-                <div className="hero-head">
-                  {/* Condicion para mostrar el componente de zoom */}
-                  {showIframeZoom && (
-                    <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
-                  )}
 
-                  {/* Componente banner */}
+              <div className="hero-head">
+                {/* Condicion para mostrar el componente de zoom */}
+                {showIframeZoom && (
+                  <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
+                )}
+                {this.state.headerVisible && (
 
-                  <BannerEvent
+
+                  < BannerEvent
                     bgImage={
                       event.styles && event.styles.banner_image
                         ? event.styles.banner_image
@@ -381,9 +371,10 @@ class Landing extends Component {
                     dateEnd={event.date_end}
                   />
 
-                  {/* fin del banner */}
-                </div>
-              )}
+
+                )}
+              </div>
+
 
               {/* Menú secciones del landing */}
               <Content>
