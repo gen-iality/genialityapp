@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
+import { Row, Col, Table, Card, Avatar, Alert, Tabs, message } from "antd";
 
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
@@ -84,6 +84,8 @@ export default class ListEventUser extends Component {
   async SendFriendship({ eventUserIdReceiver, userName }) {
     let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
+
+    message.loading("Enviando solicitud");
     if (currentUser) {
       // Se valida si el usuario esta suscrito al evento
       if (eventUserId) {
@@ -101,12 +103,12 @@ export default class ListEventUser extends Component {
         // console.log("data:", data);
         const response = await EventsApi.sendInvitation(this.props.event._id, data);
         console.log(response);
-        if (response) toast.success("Solicitud enviada");
+        if (response) message.success("Solicitud enviada");
       } else {
-        toast.warn("No es posible enviar solicitudes. No se encuentra suscrito al evento");
+        message.warning("No es posible enviar solicitudes. No se encuentra suscrito al evento");
       }
     } else {
-      toast.warn("Para enviar la solicitud es necesario iniciar sesión");
+      message.warning("Para enviar la solicitud es necesario iniciar sesión");
     }
   }
 
