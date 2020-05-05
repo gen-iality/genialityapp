@@ -102,7 +102,7 @@ export default class ListEventUser extends Component {
         const response = await EventsApi.sendInvitation(this.props.event._id, data);
         console.log(response);
       } else {
-        toast.warn("El usuario no se encuentra suscrito al evento");
+        toast.warn("No es posible enviar solicitudes. No se encuentra suscrito al evento");
       }
     } else {
       toast.warn("Para enviar la solicitud es necesario iniciar sesión");
