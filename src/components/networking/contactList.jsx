@@ -16,6 +16,7 @@ export default ({ eventId }) => {
 
     let response = await Networking.getContactList(eventId, eventUserId);
     console.log("response:", response);
+    setContactsList(response);
   };
 
   const getuserContactList = async () => {
