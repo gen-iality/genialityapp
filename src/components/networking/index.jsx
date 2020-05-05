@@ -100,10 +100,14 @@ export default class ListEventUser extends Component {
         };
 
         // Se ejecuta el servicio del api de evius
-        // console.log("data:", data);
-        const response = await EventsApi.sendInvitation(this.props.event._id, data);
-        console.log(response);
-        if (response) message.success("Solicitud enviada");
+        try {
+          const response = await EventsApi.sendInvitation(this.props.event._id, data);
+          console.log("Esta es la respuesta:", response);
+          if (response) message.success("Solicitud enviada");
+        } catch (err) {
+          let { data } = err.response;
+          message.warning(data.message);
+        }
       } else {
         message.warning("No es posible enviar solicitudes. No se encuentra suscrito al evento");
       }
