@@ -183,13 +183,8 @@ export default class ListEventUser extends Component {
                               description={[
                                 <div>
                                   <br />
-                                  <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                                  <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
                                   <p>
                                     Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                  </p>
-                                  <p>
-                                    Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
                                   </p>
                                 </div>,
                               ]}
