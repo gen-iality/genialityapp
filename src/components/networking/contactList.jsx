@@ -4,10 +4,19 @@ import { Spin, Alert, Col, Divider } from "antd";
 
 import * as Cookie from "js-cookie";
 import { userRequest, getCurrentUser } from "./services";
+import { Networking } from "../../helpers/request";
 
 export default ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+
+  const getContactList = async () => {
+    let eventId = "5e1ceb50d74d5c1064437aa2";
+    let eventUserId = "5ea07951d74d5c428b721522";
+
+    let response = await Networking.getContactList(eventId, eventUserId);
+    console.log("response:", response);
+  };
 
   const getuserContactList = async () => {
     let response = await getCurrentUser(Cookie.get("evius_token"));
@@ -16,6 +25,7 @@ export default ({ eventId }) => {
 
   useEffect(() => {
     getuserContactList();
+    getContactList();
   }, [eventId]);
 
   if (currentUserId)
