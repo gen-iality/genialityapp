@@ -31,10 +31,10 @@ export default ({ eventId }) => {
   };
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
-  const sendResponseToInvitation = (userId, state) => {
+  const sendResponseToInvitation = (requestId, state) => {
     let data = { response: state ? "acepted" : "rejected" };
 
-    Networking.acceptOrDeclineInvitation(eventId, userId, data)
+    Networking.acceptOrDeclineInvitation(eventId, requestId, data)
       .then(() => {
         toast.success("Respuesta enviada");
       })
