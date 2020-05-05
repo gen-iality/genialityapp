@@ -12,7 +12,7 @@ import EventContent from "../events/shared/content";
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
-import { getCurrentUserId, getCurrentEventUser, networkingFire, userRequest } from "./services";
+import { getCurrentUser, getCurrentEventUser, networkingFire, userRequest } from "./services";
 
 import ContactList from "./contactList";
 import RequestList from "./requestList";
@@ -46,8 +46,7 @@ export default class ListEventUser extends Component {
 
     // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
-    // console.log(eventUserList);
-
+    // console.log("eventUserList:", eventUserList);
     this.setState((prevState) => {
       return {
         userReq: eventUserList,
@@ -65,29 +64,10 @@ export default class ListEventUser extends Component {
     let currentUser = Cookie.get("evius_token");
 
     if (currentUser) {
-      getCurrentUserId(currentUser).then(async (userId) => {
-        let response = await getCurrentEventUser(event._id, userId);
-        // console.log("Info eventUser:", response);
-        this.setState({ eventUserId: response._id, currentUserName: response.names ? response.names : response.email });
+      getCurrentUser(currentUser).then((user) => {
+        this.setState({ eventUserId: user._id, currentUserName: user.names || user.email });
       });
     }
-  };
-
-  // Funcion que ejecuta el servio para enviar solicitud (Firebase)
-  sendRequestInFire = (data) => {
-    const { event } = this.props;
-    networkingFire
-      .sendRequestToUser(event._id, data)
-      .then(({ message, state }) => {
-        if (!state) {
-          toast.warn(message);
-        } else {
-          toast.success(message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
   };
 
   onChangePage = (pageOfItems) => {
@@ -112,9 +92,6 @@ export default class ListEventUser extends Component {
         event_id: this.props.event._id,
         state: "send",
       };
-
-      // Se ejecuta el servicio de firebase
-      this.sendRequestInFire(data);
 
       // Se ejecuta el servicio del api de evius
       const response = await EventsApi.sendInvitation(this.props.event._id, data);

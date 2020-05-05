@@ -3,14 +3,14 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Spin, Alert, Col, Divider } from "antd";
 
 import * as Cookie from "js-cookie";
-import { userRequest, getCurrentUserId } from "./services";
+import { userRequest, getCurrentUser } from "./services";
 
 export default ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
   const getuserContactList = async () => {
-    let response = await getCurrentUserId(Cookie.get("evius_token"));
+    let response = await getCurrentUser(Cookie.get("evius_token"));
     setCurrentUserId(response);
   };
 

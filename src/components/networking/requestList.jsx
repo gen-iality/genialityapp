@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import * as Cookie from "js-cookie";
 import { Networking } from "../../helpers/request";
-import { userRequest, getCurrentUserId, getCurrentEventUser } from "./services";
+import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
 
 export default ({ eventId }) => {
   const [requestList, setRequestList] = useState([]);
@@ -15,7 +15,7 @@ export default ({ eventId }) => {
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-    getCurrentUserId(Cookie.get("evius_token")).then(async (userId) => {
+    getCurrentUser(Cookie.get("evius_token")).then(async (userId) => {
       // Se consulta la informacion del Id recibido en Firebase (EventUser)
       let response = await getCurrentEventUser(eventId, userId);
 
