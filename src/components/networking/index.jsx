@@ -12,7 +12,7 @@ import EventContent from "../events/shared/content";
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
-import { getCurrentUser, getCurrentEventUser, networkingFire, userRequest } from "./services";
+import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 
 import ContactList from "./contactList";
 import RequestList from "./requestList";
@@ -64,8 +64,10 @@ export default class ListEventUser extends Component {
     let currentUser = Cookie.get("evius_token");
 
     if (currentUser) {
-      getCurrentUser(currentUser).then((user) => {
-        this.setState({ eventUserId: user._id, currentUserName: user.names || user.email });
+      getCurrentUser(currentUser).then(async (user) => {
+        const eventUser = await getCurrentEventUser(event._id, user._id);
+
+        this.setState({ eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
       });
     }
   };
@@ -110,9 +112,7 @@ export default class ListEventUser extends Component {
           <Tabs>
             <TabPane tab="Asistentes" key="1">
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <p>
-                  <h1> Busca aquí el usuarios.</h1>
-                </p>
+                <h1> Busca aquí el usuarios.</h1>
 
                 <SearchComponent
                   placeholder={""}

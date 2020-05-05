@@ -15,13 +15,14 @@ export default ({ eventId }) => {
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
-    getCurrentUser(Cookie.get("evius_token")).then(async (userId) => {
-      // Se consulta la informacion del Id recibido en Firebase (EventUser)
-      let response = await getCurrentEventUser(eventId, userId);
+    getCurrentUser(Cookie.get("evius_token")).then(async (user) => {
+      // Servicio que obtiene el eventUserId del usuario actual
+      let eventUser = await getCurrentEventUser(eventId, user._id);
 
-      Networking.getInvitationsReceived(eventId, response._id).then(({ data }) => {
-        // console.log("esta es la respuesta :", data);
-        setCurrentUserId(userId);
+      // Servicio que trae las invitaciones / solicitudes
+      Networking.getInvitationsReceived(eventId, eventUser._id).then(({ data }) => {
+        console.log("esta es la respuesta :", data);
+        setCurrentUserId(user._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
         if (data) setRequestList(data.filter((item) => !item.response));
@@ -74,10 +75,10 @@ export default ({ eventId }) => {
                     <Avatar>
                       {item.user_name_requested
                         ? item.user_name_requested.charAt(0).toUpperCase()
-                        : item.user_name_requested}
+                        : item._id.charAt(0).toUpperCase()}
                     </Avatar>
                   }
-                  title={item.user_name_requested}
+                  title={item.user_name_requested || item._id}
                   style={{ textAlign: "left" }}
                 />
               </List.Item>

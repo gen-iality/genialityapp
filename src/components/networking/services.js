@@ -4,7 +4,7 @@ import API, { UsersApi } from "../../helpers/request";
 const refUsersRequests = (eventId) => `${eventId}_users_requests`;
 const refUsersList = (eventId) => `${eventId}_event_attendees`;
 
-const filterList = (list, currentUser) => list.filter((item) => item.account_id !== currentUser);
+const filterList = (list, currentUser) => list.find((item) => item.account_id == currentUser);
 
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
 export const getCurrentUser = (token) => {
@@ -23,22 +23,11 @@ export const getCurrentUser = (token) => {
   });
 };
 
+// Funcion que obtiene el eventUserId del usuario actual
 export const getCurrentEventUser = (eventId, userId) => {
-  return new Promise((resolve, reject) => {
-    let refEventUser = refUsersList(eventId);
-
-    firestore
-      .collection(refEventUser)
-      .where("account_id", "==", userId)
-      .get()
-      .then((docs) => {
-        docs.forEach((infoDoc) => {
-          resolve(infoDoc.data());
-        });
-      })
-      .catch((err) => {
-        console.log("Hubo un problema: ", err);
-      });
+  return new Promise(async (resolve, reject) => {
+    const users = await UsersApi.getAll(eventId, "?pageSize=10000");
+    resolve(filterList(users.data, userId));
   });
 };
 
