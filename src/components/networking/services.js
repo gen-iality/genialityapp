@@ -27,7 +27,10 @@ export const getCurrentUser = (token) => {
 export const getCurrentEventUser = (eventId, userId) => {
   return new Promise(async (resolve, reject) => {
     const users = await UsersApi.getAll(eventId, "?pageSize=10000");
-    resolve(filterList(users.data, userId));
+    let currentEventUser = filterList(users.data, userId);
+
+    if (currentEventUser) resolve(currentEventUser);
+    resolve(false);
   });
 };
 
