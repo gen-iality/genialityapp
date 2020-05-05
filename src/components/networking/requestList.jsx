@@ -15,6 +15,7 @@ export default ({ eventId }) => {
   // Funcion que obtiene la lista de solicitudes o invitaciones recibidas
   const getInvitationsList = async () => {
     // Se consulta el id del usuario por el token
+
     getCurrentUser(Cookie.get("evius_token")).then(async (user) => {
       // Servicio que obtiene el eventUserId del usuario actual
       let eventUser = await getCurrentEventUser(eventId, user._id);

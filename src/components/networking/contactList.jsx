@@ -1,22 +1,30 @@
 import React, { Fragment, useState, useEffect } from "react";
 
-import { Spin, Alert, Col, Divider } from "antd";
+import { Spin, Alert, Col, Divider, List, Card, Avatar, Row } from "antd";
 
 import * as Cookie from "js-cookie";
-import { userRequest, getCurrentUser } from "./services";
+import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
 import { Networking } from "../../helpers/request";
+
+const { Meta } = Card;
 
 export default ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
 
   const getContactList = async () => {
-    let eventId = "5e1ceb50d74d5c1064437aa2";
-    let eventUserId = "5ea07951d74d5c428b721522";
+    // Se consulta el id del usuario por el token
 
-    let response = await Networking.getContactList(eventId, eventUserId);
-    console.log("response:", response);
-    setContactsList(response);
+    getCurrentUser(Cookie.get("evius_token")).then(async (user) => {
+      // Servicio que obtiene el eventUserId del usuario actual
+      let eventUser = await getCurrentEventUser(eventId, user._id);
+
+      // Servicio que trae los contactos
+      Networking.getContactList(eventId, eventUser._id).then((result) => {
+        console.log("response:", result);
+        if (result) setContactsList(result);
+      });
+    });
   };
 
   const getuserContactList = async () => {
@@ -40,7 +48,41 @@ export default ({ eventId }) => {
         />
       </Col>
     ) : contactsList.length > 0 ? (
-      <Divider>Aqui se cargara la lista</Divider>
+      <div>
+        {contactsList.map((user, key) => (
+          <Row key={key} justify="center">
+            <Card
+              extra={
+                <a
+                  onClick={() => {
+                    console.log("Informacion del contacto");
+                  }}>
+                  Ver contacto
+                </a>
+              }
+              style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+              bordered={true}>
+              <Meta
+                avatar={
+                  <Avatar>
+                    {user.properties.names ? user.properties.names.charAt(0).toUpperCase() : user.properties.names}
+                  </Avatar>
+                }
+                title={user.properties.names ? user.properties.names : "No registra Nombre"}
+                description={[
+                  <div>
+                    <br />
+                    <p>Rol: {user.properties.rol ? user.properties.rol : "No registra Cargo"}</p>
+                    <p>Ciudad: {user.properties.city ? user.properties.city : "No registra Ciudad"}</p>
+                    <p>Correo: {user.properties.email ? user.properties.email : "No registra Correo"}</p>
+                    <p>Telefono: {user.properties.phone ? user.properties.phone : "No registra Telefono"}</p>
+                  </div>,
+                ]}
+              />
+            </Card>
+          </Row>
+        ))}
+      </div>
     ) : (
       <Divider>No tiene contactos actualmente</Divider>
     );
