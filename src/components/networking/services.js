@@ -33,35 +33,6 @@ export const getCurrentEventUser = (eventId, userId) => {
 
 // User services
 export const userRequest = {
-  // Obtiene las solicitudes de un usuario
-  getUserRequestList: async (eventId, currentUser) => {
-    return new Promise((resolve, reject) => {
-      let refCollection = refUsersRequests(eventId);
-
-      firestore
-        .collection(refCollection)
-        .where("id_user_requesting", "==", currentUser)
-        .onSnapshot((docs) => {
-          console.log(docs, docs.empty);
-          let requestList = [];
-          if (docs.empty) {
-            resolve(false);
-          }
-          docs.forEach((infoDoc) => {
-            console.log("----", infoDoc);
-            requestList.push({ _id: infoDoc.id, ...infoDoc.data() });
-          });
-
-          resolve(requestList);
-        });
-    });
-  },
-
-  //   Obtiene los contactos de un usuario
-  getUserContactList: async () => {
-    console.log("Obteniendo la lista de contactos");
-  },
-
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token) => {
     let refEventUser = refUsersList(eventId);
