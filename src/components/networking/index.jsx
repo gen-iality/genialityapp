@@ -85,19 +85,25 @@ export default class ListEventUser extends Component {
     let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
     if (currentUser) {
-      // Se usan los event user id para el usuario que envia y recibe (Firebase)
-      const data = {
-        id_user_requested: eventUserId,
-        id_user_requesting: eventUserIdReceiver,
-        user_name_requested: currentUserName,
-        user_name_requesting: userName,
-        event_id: this.props.event._id,
-        state: "send",
-      };
+      // Se valida si el usuario esta suscrito al evento
+      if (eventUserId) {
+        // Se usan los EventUserId
+        const data = {
+          id_user_requested: eventUserId,
+          id_user_requesting: eventUserIdReceiver,
+          user_name_requested: currentUserName,
+          user_name_requesting: userName,
+          event_id: this.props.event._id,
+          state: "send",
+        };
 
-      // Se ejecuta el servicio del api de evius
-      const response = await EventsApi.sendInvitation(this.props.event._id, data);
-      console.log(response);
+        // Se ejecuta el servicio del api de evius
+        // console.log("data:", data);
+        const response = await EventsApi.sendInvitation(this.props.event._id, data);
+        console.log(response);
+      } else {
+        toast.warn("El usuario no se encuentra suscrito al evento");
+      }
     } else {
       toast.warn("Para enviar la solicitud es necesario iniciar sesión");
     }
