@@ -84,7 +84,9 @@ export default ({ eventId }) => {
         ))}
       </div>
     ) : (
-      <Divider>No tiene contactos actualmente</Divider>
+      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+        <Card>No tiene solicitudes actualmente</Card>
+      </Col>
     );
 
   return <Spin></Spin>;
