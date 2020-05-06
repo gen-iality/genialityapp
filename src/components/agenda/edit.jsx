@@ -14,6 +14,7 @@ import { AgendaApi, Actions, CategoriesAgendaApi, RolAttApi, SpacesApi, Speakers
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
+import { Spin, Card } from 'antd';
 
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
@@ -55,10 +56,10 @@ class AgendaEdit extends Component {
             roles: [],
             hosts: [],
             selected_document: [],
-            nameDocuments: [],
-            virtualConference: "false"
+            nameDocuments: []
         }
         this.createConference = this.createConference.bind(this)
+        this.removeConference = this.removeConference.bind(this)
     }
 
     async componentDidMount() {
@@ -93,10 +94,13 @@ class AgendaEdit extends Component {
         roles = handleSelect(roles);
         categories = handleSelect(categories);
         types = handleSelect(types);
+
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
             console.log(info.selected_document)
-            this.setState({ virtualConference: info.meeting_id ? "true" : "false", selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
+            this.setState({
+                selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url
+            })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -107,6 +111,7 @@ class AgendaEdit extends Component {
         } else {
             this.setState({ date: days[0] })
         }
+
         const isLoading = { types: false, categories: false };
         this.setState({ days, spaces, hosts, categories, types, roles, loading: false, isLoading });
     }
@@ -258,7 +263,7 @@ class AgendaEdit extends Component {
 
     //FN para construir la información a enviar al api
     buildInfo = () => {
-        const { name, subtitle, virtualConference, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
+        const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
             selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image, meeting_id } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -285,45 +290,60 @@ class AgendaEdit extends Component {
             timeConference: "",
             selected_document,
             meeting_id: null,
-            virtualConference
         }
     };
 
+    async removeConference() {
+        if (window.confirm("Esta seguro?")) {
+            this.setState({ meeting_id: null }, function () {
+                this.submit();
+            })
+
+        }
+
+    }
+
     async createConference() {
-        console.log(this.state.virtualConference)
-        if (this.state.virtualConference === "true") {
-            const zoomData = {
-                activity_id: this.props.location.state.edit,
-                activity_name: this.state.name,
-                event_id: this.props.event._id,
-                agenda: this.props.event.description,
-            }
 
-            console.log(zoomData)
+        this.setState({ creatingConference: true });
+        const zoomData = {
+            activity_id: this.props.location.state.edit,
+            activity_name: this.state.name,
+            event_id: this.props.event._id,
+            agenda: this.props.event.description,
+        }
 
-            const options = {
-                method: 'POST',
-                headers: {
-                    "Content-type": "application/json"
-                },
-                data: zoomData,
-                url: ApiEviusZoomServer,
-            };
+        console.log(zoomData)
 
-            let response = await axios(options);
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-type": "application/json"
+            },
+            data: zoomData,
+            url: ApiEviusZoomServer,
+        };
+        let response = null;
 
-            console.log(response)
-
-            toast.success("Conferencia Creada")
-
+        axios.defaults.timeout = 10000;
+        try {
+            response = await axios(options);
+            toast.success("Conferencia Creada");
             const { event, location: { state } } = this.props;
-
             const info = await AgendaApi.getOne(state.edit, this.props.event._id);
             this.setState({ meeting_id: info.meeting_id, start_url: info.start_url, join_url: info.join_url, key: new Date() })
-            console.log(info)
-        } else {
-            this.setState({ meeting_id: null })
+
+        } catch (e) {
+            let response = "";
+            if (e.response) {
+                response = JSON.stringify(e.response.data);
+            }
+            console.log("error", e, e.response, e.response.data);
+            alert("No se pudo crear la conferencia virtual, intente más tarde. " + e + " " + response);
+            this.setState({ creatingConference: false });
         }
+        this.setState({ creatingConference: false });
+
     }
 
     //FN para eliminar la actividad
@@ -597,66 +617,43 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
 
-                            {
-                                this.props.location.state.edit ?
-                                    <div style={{ marginTop: "4%" }}>
-                                        <label className="label">Tiene conferencia virtual</label>
-                                        <div className="select">
-                                            <select defaultValue={this.state.virtualConference} onClick={e => this.setState({ virtualConference: e.target.value })}>
-                                                <option value="false">No</option>
-                                                <option value="true">Si</option>
-                                            </select>
-                                        </div>
-                                        {this.state.virtualConference === "true" ?
+
+
+                            <Card style={{ marginTop: "4%" }} title="Conferencia virtual" >
+
+                                {!this.props.location.state.edit && <div>Primero cree la actividad  y luego podrá crear una conferencia virtual asociada</div>}
+
+                                {this.props.location.state.edit && (
+                                    <>
+                                        {!this.state.meeting_id && (<div>
+                                            {!this.state.creatingConference && <button style={{ marginTop: "2%" }} className="button is-primary"
+                                                onClick={this.createConference}>Crear espacio virtual</button>}
+                                            {this.state.creatingConference && <Spin tip="Creando..." />}
+                                        </div>)}
+
+                                        {this.state.meeting_id && (<div>
                                             <div style={{ marginTop: "2%" }}>
-                                                {
-                                                    this.state.meeting_id ?
-                                                        <div>
-                                                            <p>El id de la conferencia virtual es:</p>
-                                                            <p>{this.state.meeting_id}</p>
-                                                        </div>
-                                                        :
-                                                        <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Crear espacio virtual</button>
-                                                }
+
+                                                <div>
+                                                    <p>El id de la conferencia virtual es:</p>
+                                                    <p>{this.state.meeting_id}</p>
+                                                </div>
 
                                                 <div key={this.state.key}>
-                                                    <p>
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Accesos</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-
-                                                                    start_url ?
-                                                                        <tr>
-                                                                            <th>
-                                                                                <a href={start_url} >Acceso para conferencistas</a>
-                                                                            </th>
-                                                                        </tr>
-                                                                        :
-                                                                        <tr>
-                                                                            <th>
-                                                                                <p>Crea una conferencia virtual</p>
-                                                                            </th>
-                                                                        </tr>
-                                                                }
-                                                            </tbody>
-                                                        </table>
-                                                    </p>
+                                                    <p><b>Accessos</b></p>
+                                                    <hr />
+                                                    <p><a target="_blank" href={start_url} >Acceso para hosts</a></p>
+                                                    <p><a target="_blank" href={join_url}  >Acceso  para asistentes</a></p>
                                                 </div>
                                             </div>
-                                            :
-                                            <div />
-                                        }
+
+                                            <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.removeConference}>Eliminar espacio virtual</button>
+                                        </div>)}
+                                    </>
+                                )}
+                            </Card>>
 
 
-                                    </div>
-                                    :
-                                    <div />
-                            }
                         </div>
                     </div>
                 }
