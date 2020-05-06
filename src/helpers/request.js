@@ -113,7 +113,7 @@ export const UsersApi = {
     return await Actions.getOne("/api/users/", id);
   },
   editProfile: async (data, id) => {
-    return await Actions.edit("/api/users/", data, id);
+    return await Actions.edit("/api/users", data, id);
   },
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
