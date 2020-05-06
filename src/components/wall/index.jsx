@@ -20,7 +20,20 @@ class Wall extends Component {
   };
 
   addPosts = (post) => {
+
     this.setState({ dataPost: [post, ...this.state.dataPost] });
+  }
+
+  deletePost = async (postId) => {
+    window.confirm("Seguro deseas borrar esta publicación");
+    var updatedPost = this.state.dataPost.filter(function (value, index, arr) { return value.id != postId; });
+    this.setState({ dataPost: updatedPost });
+
+    firestore
+      .collection("adminPost")
+      .doc(this.props.event._id)
+      .collection("comment")
+      .doc(postId).delete();
   }
 
 
@@ -41,7 +54,7 @@ class Wall extends Component {
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                 <CreatePost event={event} addPosts={this.addPosts} />
-                <ListWall key={this.state.keyList} dataPost={this.state.dataPost} />
+                <ListWall key={this.state.keyList} dataPost={this.state.dataPost} deletePost={this.deletePost} />
               </Col>
             </Row>
           </div>

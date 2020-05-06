@@ -3,7 +3,7 @@ import { firestore } from "../../helpers/firebase";
 import { Avatar, Button, Form, List, Card, Input, Row, Col, Spin, Alert } from "antd";
 import TimeStamp from "react-timestamp";
 import { toast } from "react-toastify";
-import { MessageOutlined, LikeOutlined, SendOutlined } from "@ant-design/icons";
+import { MessageOutlined, LikeOutlined, SendOutlined, DeleteOutlined } from "@ant-design/icons";
 import { saveFirebase } from "./helpers";
 import * as Cookie from "js-cookie";
 import API from "../../helpers/request";
@@ -241,6 +241,14 @@ class WallList extends Component {
                                                     this.getComments(item.id);
                                                 }}
                                             />,
+                                            <IconText
+                                                icon={DeleteOutlined}
+                                                key="list-vertical-message"
+                                                text=""
+                                                onSubmit={(e) => {
+                                                    this.props.deletePost(item.id);
+                                                }}
+                                            />
                                         ]}>
                                         <List.Item.Meta
                                             avatar={
