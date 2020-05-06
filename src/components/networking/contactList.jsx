@@ -52,14 +52,14 @@ export default ({ eventId }) => {
         {contactsList.map((user, key) => (
           <Row key={key} justify="center">
             <Card
-              extra={
-                <a
-                  onClick={() => {
-                    console.log("Informacion del contacto");
-                  }}>
-                  Ver contacto
-                </a>
-              }
+              // extra={
+              //   <a
+              //     onClick={() => {
+              //       console.log("Informacion del contacto");
+              //     }}>
+              //     Ver contacto
+              //   </a>
+              // }
               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
               bordered={true}>
               <Meta
@@ -84,7 +84,9 @@ export default ({ eventId }) => {
         ))}
       </div>
     ) : (
-      <Divider>No tiene contactos actualmente</Divider>
+      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+        <Card>No tiene solicitudes actualmente</Card>
+      </Col>
     );
 
   return <Spin></Spin>;
