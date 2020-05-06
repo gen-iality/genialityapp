@@ -33,7 +33,7 @@ export default ({ eventId }) => {
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = (requestId, state) => {
-    let data = { response: state ? "acepted" : "rejected" };
+    let data = { response: state ? "accepted" : "rejected" };
 
     Networking.acceptOrDeclineInvitation(eventId, requestId, data)
       .then(() => {
