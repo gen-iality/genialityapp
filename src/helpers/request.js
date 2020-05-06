@@ -113,7 +113,7 @@ export const UsersApi = {
     return await Actions.getOne("/api/users/", id);
   },
   editProfile: async (data, id) => {
-    return await Actions.edit("/api/users/", data, id);
+    return await Actions.edit("/api/users", data, id);
   },
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
@@ -490,6 +490,9 @@ export const Networking = {
   },
   acceptOrDeclineInvitation: async (eventId, userId, data) => {
     return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);
+  },
+  getContactList: async (eventId, userId) => {
+    return await Actions.getOne(`/api/events/${eventId}/contactlist/`, userId);
   },
 };
 
