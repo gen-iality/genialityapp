@@ -99,11 +99,13 @@ export default class ListEventUser extends Component {
           state: "send",
         };
 
+        // console.log("data:", data);
+
         // Se ejecuta el servicio del api de evius
         try {
           const response = await EventsApi.sendInvitation(this.props.event._id, data);
           console.log("Esta es la respuesta:", response);
-          if (response) message.success("Solicitud enviada");
+          message.success("Solicitud enviada");
         } catch (err) {
           let { data } = err.response;
           message.warning(data.message);
@@ -176,7 +178,7 @@ export default class ListEventUser extends Component {
                                 onClick={() => {
                                   this.SendFriendship({
                                     eventUserIdReceiver: users._id,
-                                    userName: users.names ? users.names : users.email,
+                                    userName: users.properties.names || users.properties.email,
                                   });
                                 }}>
                                 Enviar Solicitud
