@@ -52,14 +52,14 @@ export default ({ eventId }) => {
         {contactsList.map((user, key) => (
           <Row key={key} justify="center">
             <Card
-              extra={
-                <a
-                  onClick={() => {
-                    console.log("Informacion del contacto");
-                  }}>
-                  Ver contacto
-                </a>
-              }
+              // extra={
+              //   <a
+              //     onClick={() => {
+              //       console.log("Informacion del contacto");
+              //     }}>
+              //     Ver contacto
+              //   </a>
+              // }
               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
               bordered={true}>
               <Meta
