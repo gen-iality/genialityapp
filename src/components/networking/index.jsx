@@ -117,7 +117,7 @@ export default class ListEventUser extends Component {
   }
 
   render() {
-    const { userReq, users, pageOfItems } = this.state;
+    const { userReq, users, pageOfItems, eventUserId } = this.state;
     return (
       <React.Fragment>
         <EventContent>
@@ -125,7 +125,7 @@ export default class ListEventUser extends Component {
           <Tabs>
             <TabPane tab="Asistentes" key="1">
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <h1> Busca aquÃ­ el usuarios.</h1>
+                <h1> Busca aquí el usuario.</h1>
 
                 <SearchComponent
                   placeholder={""}
@@ -138,12 +138,25 @@ export default class ListEventUser extends Component {
               </Col>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <Alert
-                  message="InformaciÃ³n Adicicional"
+                  message="Información Adicicional"
                   description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
                   type="info"
                   closable
                 />
               </Col>
+              {!this.state.loading && !eventUserId && (
+                <div>
+                  <br />
+                  <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                    <Alert
+                      message="Solicitudes"
+                      description="Para enviar solicitudes desbes estar suscrito al evento"
+                      type="info"
+                      closable
+                    />
+                  </Col>
+                </div>
+              )}
 
               <div style={{ marginTop: 10 }}>
                 {this.state.loading ? (
@@ -152,52 +165,52 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
+                  <div>
                     <div>
-                      <div>
-                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {pageOfItems.map((users, key) => (
-                          <Row key={key} justify="center">
-                            <Card
-                              extra={
-                                <a
-                                  onClick={() => {
-                                    this.SendFriendship({
-                                      eventUserIdReceiver: users._id,
-                                      userName: users.names ? users.names : users.email,
-                                    });
-                                  }}>
-                                  Enviar Solicitud
+                      {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                      {pageOfItems.map((users, key) => (
+                        <Row key={key} justify="center">
+                          <Card
+                            extra={
+                              <a
+                                onClick={() => {
+                                  this.SendFriendship({
+                                    eventUserIdReceiver: users._id,
+                                    userName: users.names ? users.names : users.email,
+                                  });
+                                }}>
+                                Enviar Solicitud
                               </a>
+                            }
+                            style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                            bordered={true}>
+                            <Meta
+                              avatar={
+                                <Avatar>
+                                  {users.properties.names
+                                    ? users.properties.names.charAt(0).toUpperCase()
+                                    : users.properties.names}
+                                </Avatar>
                               }
-                              style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                              bordered={true}>
-                              <Meta
-                                avatar={
-                                  <Avatar>
-                                    {users.properties.names
-                                      ? users.properties.names.charAt(0).toUpperCase()
-                                      : users.properties.names}
-                                  </Avatar>
-                                }
-                                title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                                description={[
-                                  <div>
-                                    <br />
-                                    <p>
-                                      Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                    </p>
-                                  </div>,
-                                ]}
-                              />
-                            </Card>
-                          </Row>
-                        ))}
-                      </div>
-
-                      {/* Paginacion para mostrar datos de una manera mas ordenada */}
-                      <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                              title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                              description={[
+                                <div>
+                                  <br />
+                                  <p>
+                                    Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                  </p>
+                                </div>,
+                              ]}
+                            />
+                          </Card>
+                        </Row>
+                      ))}
                     </div>
-                  )}
+
+                    {/* Paginacion para mostrar datos de una manera mas ordenada */}
+                    <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
+                  </div>
+                )}
               </div>
             </TabPane>
             <TabPane tab="Mis Contactos" key="2">
