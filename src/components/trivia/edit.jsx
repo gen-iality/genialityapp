@@ -56,7 +56,7 @@ class triviaEdit extends Component {
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
-        openSurvey: Update.open,
+        openSurvey: Update.open || "false",
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
