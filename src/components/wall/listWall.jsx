@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState, Fragment } from "react"
 import { firestore } from "../../helpers/firebase";
-import { Avatar, Button, Form, List, Card, Input, Row, Col } from "antd";
+import { Avatar, Button, Form, List, Card, Input, Row, Col, Spin, Alert } from "antd";
 import TimeStamp from "react-timestamp";
 import { toast } from "react-toastify";
 import { MessageOutlined, LikeOutlined, SendOutlined } from "@ant-design/icons";
@@ -50,13 +50,14 @@ class WallList extends Component {
         this.state = {
             submitting: false,
             avatar: "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481",
-            dataPost: [],
+            dataPost: this.props.dataPost || undefined,
             dataComment: [],
             dataPostFilter: [],
             submitting: false,
             value: "",
             valueCommit: "",
-            currentCommet: null
+            currentCommet: null,
+
         }
     }
     //Funcion para enviar al estado el dato de la caja de texto del comentario
@@ -104,6 +105,14 @@ class WallList extends Component {
             });
     }
 
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.dataPost !== this.props.dataPost) {
+            this.setState({ dataPost: this.props.dataPost });
+
+        }
+    }
+
     async componentDidMount() {
         let evius_token = Cookie.get("evius_token");
 
@@ -122,7 +131,6 @@ class WallList extends Component {
                 console.log(status);
             }
         }
-        this.getPost()
     }
 
     //Se salva el comentario, el proceso se encuentra en ./helpers.js
@@ -143,52 +151,6 @@ class WallList extends Component {
         } catch (error) {
             toast.warning("Inicia sesion para poder realizar publicaciones")
         }
-    }
-
-    //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
-    async getPost() {
-        const dataPost = [];
-        const dataPostFilter = [];
-
-        let adminPostRef = firestore
-            .collection("adminPost")
-            .doc(`${this.props.event._id}`)
-            .collection("posts")
-            .orderBy("datePost", "desc");
-        let query = adminPostRef
-            .get()
-            .then((snapshot) => {
-                if (snapshot.empty) {
-                    toast.error("No hay ningun post");
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    dataPost.push({
-                        id: doc.id,
-                        author: doc.data().author,
-                        urlImage: doc.data().urlImage,
-                        post: doc.data().post,
-                        datePost: doc.data().datePost,
-                    });
-
-                    dataPostFilter.push({
-                        id: doc.id,
-                        author: doc.data().author,
-                        urlImage: doc.data().urlImage,
-                        post: doc.data().post,
-                        datePost: doc.data().datePost,
-                    });
-
-                    if (dataPost.length > 5) {
-                        dataPost.length = 5;
-                    }
-
-                    this.setState({ dataPost, dataPostFilter });
-                });
-            })
-            .catch((err) => {
-                console.log("Error getting documents", err);
-            });
     }
 
     gotoCommentList() {
@@ -245,8 +207,17 @@ class WallList extends Component {
                     </div>
                 ) :
                     <div>
-                        {/* Se mapean los datos que provienen de firebase del post  */}
-                        <List
+
+                        {!dataPost && <Spin size="large" tip="Cargando..." />}
+
+                        {dataPost && dataPost.length == 0 && <Alert
+                            message="Listos para la primera publicación"
+                            description="Aún esta el lienzo el blanco para crear la primera publicación, aprovecha"
+                            type="info"
+                            showIcon
+                        />}
+
+                        {dataPost && dataPost.length > 0 && (<><List
                             itemLayout="vertical"
                             size="small"
                             style={{ texteAling: "left", marginBottom: "20px" }}
@@ -315,9 +286,14 @@ class WallList extends Component {
                                 </Card>
                             )}
                         />
-                        <Button id="click" onClick={this.loadMore}>
-                            Load More
-                        </Button>
+                            <Button id="click" onClick={this.loadMore}>
+                                Load More
+                    </Button>
+                        </>
+
+                        )}
+
+
                     </div>
                 }
             </Fragment>

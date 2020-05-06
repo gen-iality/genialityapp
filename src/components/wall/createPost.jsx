@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react"
 import TimeStamp from "react-timestamp";
 import CameraFeed from "./cameraFeed";
 import * as Cookie from "js-cookie";
-import ListWall from "./listWall"
+
+
 
 //custom
 import { AuthUrl } from "../../helpers/constants";
@@ -11,7 +12,7 @@ import API from "../../helpers/request";
 import { saveFirebase } from "./helpers";
 import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal, Alert } from "antd";
 import { CloudUploadOutlined, MessageOutlined, CameraOutlined, LikeOutlined, SendOutlined } from "@ant-design/icons";
-
+import { message, Space } from 'antd';
 const { TextArea } = Input;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
@@ -84,17 +85,13 @@ class CreatePost extends Component {
         console.log(data)
 
         //savepost se realiza para publicar el post
-        saveFirebase.savePost(data, this.props.event._id);
-
+        var newPost = await saveFirebase.savePost(data, this.props.event._id);
+        console.log("newPost", newPost);
         this.setState({ value: "", image: "", showInfo: true, });
+        this.setState({ showInfo: false, visible: false, keyList: Date.now() });
+        message.success('Mensaje Publicado');
+        this.props.addPosts(newPost);
 
-        setTimeout(() => {
-            this.setState({
-                showInfo: false,
-                visible: false,
-                keyList: Date.now()
-            });
-        }, 3000);
     }
 
     //Funcion para mostrar el archivo, se pasa a base64 para poder mostrarlo
@@ -160,137 +157,128 @@ class CreatePost extends Component {
         const { user, visible, hidden, image, submitting, value } = this.state;
         const { event } = this.props
         return (
-            <Fragment>
-                <Card size="small" title="Publicaciones" extra={<div></div>}>
-                    {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
-                    <div>
-                        {// Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje
-                            this.state.showInfo === true ? (
-                                <Alert message="Post Publicado en unos momentos observará su publicación" type="success" />
-                            ) : (
-                                    // Desde aqui empieza el formulario para guardar un post
-                                    <div>
-                                        {user && (
-                                            <Button style={{ marginBottom: "3%" }} type="primary" onClick={this.showModal}>
-                                                Crear Publicación
-                                            </Button>
-                                        )}
 
-                                        {!user && (
-                                            <Alert
-                                                message={
-                                                    <p>
-                                                        <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión
+
+            <div>
+                {/* Se renueva el formulario de publicacion de post para poder mostrar el respectivo mensaje o modal */}
+                {// Si showInfo es falso muestra el modal, de lo contrario muestra el mensaje this.state.showInfo === true ? (
+                }
+
+                <div>
+                    {user && (
+                        <Button style={{ marginBottom: "3%" }} type="primary" onClick={this.showModal}>
+                            Crear Publicación
+                        </Button>
+                    )}
+
+                    {!user && (
+                        <Alert
+                            message={
+                                <p>
+                                    <b>Para públicar:</b> Para públicar un mensaje debes estar autenticado, inicia sesión
                                                             para poder realizar publicaciones &nbsp;&nbsp;
                                                         <Button type="primary">
-                                                            <a href={AuthUrl}>Ir a Ingreso</a>
-                                                        </Button>
-                                                    </p>
-                                                }
-                                                type="error"
-                                            />
-                                        )}
+                                        <a href={AuthUrl}>Ir a Ingreso</a>
+                                    </Button>
+                                </p>
+                            }
+                            type="error"
+                        />
+                    )}
 
+                    <Modal
+                        visible={visible}
+                        title="Publicaciones"
+                        onOk={this.handleOk}
+                        onCancel={this.handleCancel}
+                        footer={[]}>
+                        <Row>
+                            <Col style={{ textAlign: "center" }} xs={24} sm={24} md={24} lg={24} xl={24}>
+                                <div>
+                                    {/* Boton para subir foto desde la galeria del dispositivo */}
+                                    <Button type="primary">
+                                        <input
+                                            key={this.state.inputKey}
+                                            class="file-input"
+                                            type="file"
+                                            onChange={this.previewImage}
+                                        />
+                                        <span>Subir Foto</span>
+                                        <CloudUploadOutlined />
+                                    </Button>
+                                    {/* Boton para abrir la camara */}
+                                    <Button
+                                        style={{ marginLeft: "3%" }}
+                                        onClick={(e) => {
+                                            this.setState({ hidden: true }, this.setModal2Visible(true));
+                                        }}>
+                                        <CameraOutlined />
+                                    </Button>
+                                    {/* Modal para camara  */}
+
+                                    <div hidden={hidden} className="App">
+                                        {/* En esta modal se muestra la imagen de selfie */}
                                         <Modal
-                                            visible={visible}
-                                            title="Publicaciones"
-                                            onOk={this.handleOk}
-                                            onCancel={this.handleCancel}
-                                            footer={[]}>
-                                            <Row>
-                                                <Col xs={24} sm={20} md={20} lg={20} xl={12}>
-                                                    <Row>
-                                                        {/* Boton para subir foto desde la galeria del dispositivo */}
-                                                        <Button type="primary">
-                                                            <input
-                                                                key={this.state.inputKey}
-                                                                class="file-input"
-                                                                type="file"
-                                                                onChange={this.previewImage}
-                                                            />
-                                                            <span>Subir Foto</span>
-                                                            <CloudUploadOutlined />
-                                                        </Button>
-
-                                                        {/* Boton para abrir la camara */}
-                                                        <Button
-                                                            style={{ marginLeft: "3%" }}
-                                                            onClick={(e) => {
-                                                                this.setState({ hidden: true }, this.setModal2Visible(true));
-                                                            }}>
-                                                            <CameraOutlined />
-                                                        </Button>
-
-                                                        {/* Modal para camara  */}
-
-                                                        <div hidden={hidden} className="App">
-                                                            {/* En esta modal se muestra la imagen de selfie */}
-                                                            <Modal
-                                                                title="Camara"
-                                                                centered
-                                                                visible={this.state.modal2Visible}
-                                                                onOk={(e) => {
-                                                                    this.setState({ hidden: false }, this.setModal2Visible(false));
-                                                                }}
-                                                                onCancel={(e) => {
-                                                                    this.setState({ hidden: false }, this.setModal2Visible(false));
-                                                                }}
-                                                                footer={[
-                                                                    <Button
-                                                                        key="submit"
-                                                                        type="primary"
-                                                                        onClick={(e) => {
-                                                                            this.setState({ hidden: false }, this.setModal2Visible(false));
-                                                                        }}>
-                                                                        Cerrar / Publicar
-                                                                    </Button>,
-                                                                ]}>
-                                                                <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
-                                                            </Modal>
-                                                        </div>
-                                                    </Row>
-                                                    <Row>
-                                                        {
-                                                            image ?
-                                                                <Card
-                                                                    hoverable
-                                                                    style={{ width: 240 }}
-                                                                    cover={
-                                                                        <img
-                                                                            key={this.state.keyImage}
-                                                                            src={image}
-                                                                        />
-                                                                    }>
-                                                                    <Button onClick={this.cancelUploadImage}>Cancelar</Button>
-                                                                </Card>
-                                                                :
-                                                                <div />
-                                                        }
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-                                            {/* Se importa el componente de textArea para agregar un comentario al post */}
-
-                                            <Comment
-                                                content={
-                                                    <Editor
-                                                        onChange={this.handleChange}
-                                                        onSubmit={this.savePost}
-                                                        submitting={submitting}
-                                                        value={value}
-                                                    />
-                                                }
-                                            />
+                                            title="Camara"
+                                            centered
+                                            visible={this.state.modal2Visible}
+                                            onOk={(e) => {
+                                                this.setState({ hidden: false }, this.setModal2Visible(false));
+                                            }}
+                                            onCancel={(e) => {
+                                                this.setState({ hidden: false }, this.setModal2Visible(false));
+                                            }}
+                                            footer={[
+                                                <Button
+                                                    key="submit"
+                                                    type="primary"
+                                                    onClick={(e) => {
+                                                        this.setState({ hidden: false }, this.setModal2Visible(false));
+                                                    }}>
+                                                    Listo usar esta
+                                                </Button>,
+                                            ]}>
+                                            <CameraFeed getImage={this.getImage} sendFile={this.uploadImage} />
                                         </Modal>
                                     </div>
-                                )
-                            // aqui termina modal de publicacion de post
-                        }
-                    </div>
-                    {/* Componente de listado de post y comentarios */}
-                    <ListWall key={this.state.keyList} event={event} />
-                </Card>
-            </Fragment>
+                                </div>
+                                <div>
+                                    {
+                                        image &&
+                                        <Card
+                                            hoverable
+                                            style={{ marginRight: "auto", marginLeft: "auto", width: "100%" }}
+                                            cover={
+                                                <img
+                                                    key={this.state.keyImage}
+                                                    src={image}
+                                                />
+                                            }>
+                                            <Button onClick={this.cancelUploadImage}>Eliminar Foto</Button>
+                                        </Card>
+
+                                    }
+                                </div>
+                            </Col>
+                        </Row>
+                        {/* Se importa el componente de textArea para agregar un comentario al post */}
+
+                        <Comment
+                            content={
+                                <Editor
+                                    onChange={this.handleChange}
+                                    onSubmit={this.savePost}
+                                    submitting={submitting}
+                                    value={value}
+                                />
+                            }
+                        />
+                    </Modal>
+                </div>
+
+
+            </div>
+
         )
     }
 }
