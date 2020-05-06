@@ -82,7 +82,8 @@ class Landing extends Component {
       visible: false,
       placement: "left",
       headerVisible: "true",
-      namesUser: ""
+      namesUser: "",
+      data: null
     };
   }
 
@@ -148,8 +149,8 @@ class Landing extends Component {
 
       const data = resp.data;
 
-      console.log(data)
-      this.setState({ data })
+      console.log("USUARIO", data)
+      this.setState({ data, namesUser: data.names || data.displayName || "" })
     } catch{
 
     }
@@ -312,7 +313,7 @@ class Landing extends Component {
   };
 
   toggleConference = (state, meeting_id, userEntered) => {
-    console.log("ACTIVANDOSE", meeting_id, state);
+    console.log("ACTIVANDOSE", meeting_id, state, userEntered);
     if (meeting_id != undefined) {
       this.setState({ meeting_id, userEntered });
     }
@@ -484,6 +485,7 @@ class Landing extends Component {
 //Component del lado del mapa
 const MapComponent = (props) => {
   const { event, toggleConference, namesUser } = props;
+  { console.log(props.event) }
   return (
     <div className="column container-map">
       <div>

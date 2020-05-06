@@ -55,17 +55,17 @@ class CameraFeed extends Component {
      * @instance
      */
     takePhoto = () => {
-        const { sendFile } = this.props;
+        const { sendFile, getImage } = this.props;
         const context = this.canvas.getContext('2d');
         context.drawImage(this.videoPlayer, 0, 0, 680, 360);
         this.canvas.toBlob(sendFile);
         let image = this.canvas.toDataURL()
         this.setState({ image, hidden: false, hiddeVideo: true })
         toast.success("Imagen Salvada")
+        getImage(image)
     };
 
     async clearImage() {
-        console.log(this.props.sendFile)
         await this.setState({ hidden: true, image: "" })
         console.log(this.state.hidden, this.state.image)
         toast.error("Imagen Eliminada")

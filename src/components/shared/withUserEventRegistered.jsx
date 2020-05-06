@@ -7,7 +7,7 @@ import API from "../../helpers/request";
 function WithUserEventRegistered(Component) {
 
     return function WihLoadingComponent(props) {
-        let [currentUser, setCurrentUser] = useState(null);
+        let [currentUser, setCurrentUser] = useState({});
         let [usuarioRegistrado, setUsuarioRegistrado] = useState(null);
         let [event, setEvent] = useState(null)
 
@@ -21,7 +21,7 @@ function WithUserEventRegistered(Component) {
                 setUsuarioRegistrado(props.usuarioRegistrado)
                 setEvent(props.event)
             })();
-        })
+        }, [props.event._id])
 
         console.log("event", event, "CurrentUser", currentUser, "UsuarioRegistrado", usuarioRegistrado)
         if (!currentUser && !usuarioRegistrado)

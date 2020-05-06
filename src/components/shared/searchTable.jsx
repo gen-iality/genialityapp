@@ -120,7 +120,7 @@ class SearchComponent extends Component {
             type="text"
             size="large"
             onChange={this.handleFilter}
-            placeholder={`Buscar ${this.props.placeholder}`}
+            placeholder={`Buscar ${this.props.placeholder || ""}`}
             value={this.state.value}
             suffix={
               <Tooltip>

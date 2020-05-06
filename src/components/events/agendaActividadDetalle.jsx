@@ -4,21 +4,25 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import * as Cookie from "js-cookie";
-import API, { OrganizationApi, EventsApi } from "../../helpers/request";
+import API, { OrganizationApi, EventsApi, SpeakersApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card, Modal } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 import DocumentsList from "../documents/documentsList"
+import { UserOutlined } from "@ant-design/icons";
+import ModalSpeaker from "./modalSpeakers"
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
+  let [modalVisible, setModalVisible] = useState(false);
+  let [idSpeaker, setIdSpeaker] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -83,8 +87,11 @@ let agendaActividadDetalle = (props) => {
     })();
   }, []);
 
+  async function getSpeakers(idSpeaker) {
+    setIdSpeaker(idSpeaker)
+  }
+
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
-  console.log("EVENTO", event);
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
@@ -275,9 +282,15 @@ let agendaActividadDetalle = (props) => {
                                 title={<strong>{item.name}</strong>}
                                 description={item.profession}
                               />
+                              <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
                             </List.Item>
-                          )}
-                        />
+                          )} />
+                        {
+                          idSpeaker ?
+                            <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                            :
+                            <></>
+                        }
                       </Card>
                     </div>
                   </p>

@@ -29,7 +29,7 @@ class InvitationsList extends Component {
       .indexOf("edit");
 
     let editaction = {
-      Header: "",
+      Header: "Detalle",
       id: "edit",
       accessor: (d) => d,
       Cell: (props) => (
@@ -96,7 +96,7 @@ class InvitationsList extends Component {
 
       API.get(
         `/api/events/${eventId}/messages${query}&page=${
-          page + 1
+        page + 1
         }&pageSize=${pageSize}`
       )
         .then(({ data }) => {

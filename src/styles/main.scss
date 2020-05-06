@@ -53,6 +53,13 @@ body {
   margin-left: -24px !important;
 }
 
+iframe {
+  i .full-screen-widget__icon,
+  i .full-screen-widget__icon--full {
+    background: red;
+  }
+}
+
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";

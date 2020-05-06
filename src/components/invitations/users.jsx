@@ -381,6 +381,7 @@ class UsersRsvp extends Component {
                   data={this.state.usersReq}
                   kind={"user"}
                   searchResult={this.searchResult}
+
                   clear={this.state.clearSearch}
                 />
                 <div className="column is-2" />
