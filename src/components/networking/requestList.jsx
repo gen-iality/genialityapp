@@ -9,6 +9,7 @@ import * as Cookie from "js-cookie";
 import { Networking } from "../../helpers/request";
 import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
 
+// Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   const [invitationsReceived, setInvitationsReceived] = useState([]);
 
@@ -54,6 +55,7 @@ const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
   );
 };
 
+// Componente que lista las invitaciones enviadas -----------------------------------------------------------
 const InvitacionListSent = ({ list }) => {
   const [invitationsSent, setInvitationsSent] = useState([]);
 
