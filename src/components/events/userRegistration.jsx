@@ -18,6 +18,13 @@ const layout = {
   wrapperCol: { span: 12 },
 };
 
+const validateMessages = {
+  required: "${label} es requerido!",
+  types: {
+    email: "${label} no válido!",
+  },
+};
+
 class UserRegistration extends Component {
   constructor(props) {
     super(props);
@@ -180,15 +187,11 @@ class UserRegistration extends Component {
         );
       }
 
+      let rule = type == "email" ? { type: "email" } : { required: mandatory };
       return (
         <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
-            <Form.Item
-              label={name}
-              name={name}
-              rules={[` required: ${mandatory ? "required" : ""}`]}
-              key={"l" + key}
-              htmlFor={key}>
+            <Form.Item label={name} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}
@@ -204,7 +207,7 @@ class UserRegistration extends Component {
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
           <Card title="Formulario de registro" bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-            <Form {...layout} onFinish={this.onFinish}>
+            <Form {...layout} onFinish={this.onFinish} validateMessages={validateMessages}>
               {this.renderForm()}
               <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                 <Button type="primary" htmlType="submit">
