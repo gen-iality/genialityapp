@@ -109,10 +109,6 @@ class UserRegistration extends Component {
         message.class = "msg_danger";
         message.content = "User can`t be created";
       }
-      setTimeout(() => {
-        message.class = message.content = "";
-        this.closeModal();
-      }, 1000);
     } catch (err) {
       console.log(err.response);
       message.class = "msg_error";
@@ -128,6 +124,7 @@ class UserRegistration extends Component {
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
+      let label = m.label;
       let mandatory = m.mandatory;
       let target = name;
       let value = this.state.user[target];
@@ -165,7 +162,7 @@ class UserRegistration extends Component {
       return (
         <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
-            <Form.Item label={name} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+            <Form.Item label={label} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}
