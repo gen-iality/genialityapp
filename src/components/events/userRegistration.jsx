@@ -176,7 +176,7 @@ class UserRegistration extends Component {
       }
 
       return (
-        <Form key={"g" + key} {...layout} name="nest-messages">
+        <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
             <Form.Item
               label={name}
@@ -187,7 +187,7 @@ class UserRegistration extends Component {
               {input}
             </Form.Item>
           )}
-        </Form>
+        </div>
       );
     });
     return formUI;
@@ -199,7 +199,7 @@ class UserRegistration extends Component {
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
           <Card title="Formulario de registro" bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-            {this.renderForm()}
+            <Form {...layout}>{this.renderForm()}</Form>
 
             <Row justify="center">
               <Button
