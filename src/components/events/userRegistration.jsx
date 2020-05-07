@@ -108,6 +108,11 @@ class UserRegistration extends Component {
     console.log(snap);
   }
 
+  onFinish = (values) => {
+    console.log("On finish");
+    console.log(values);
+  };
+
   // Función que crea los input del componente
 
   renderForm = () => {
@@ -199,8 +204,15 @@ class UserRegistration extends Component {
         <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
           <Card title="Formulario de registro" bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
-            <Form {...layout}>{this.renderForm()}</Form>
-
+            <Form {...layout} onFinish={this.onFinish}>
+              {this.renderForm()}
+              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                <Button type="primary" htmlType="submit">
+                  Registrarse
+                </Button>
+              </Form.Item>
+            </Form>
+            {/* 
             <Row justify="center">
               <Button
                 type="primary"
@@ -210,7 +222,7 @@ class UserRegistration extends Component {
                 rules={[{ required: true }]}>
                 Registrarse
               </Button>
-            </Row>
+            </Row> */}
           </Card>
         </Col>
       </>
