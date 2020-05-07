@@ -50,6 +50,25 @@ class UserRegistration extends Component {
     return extraFields;
   };
 
+  validForm = () => {
+    const EMAIL_REGEX = new RegExp("[^@]+@[^@]+\\.[^@]+");
+    const { user, extraFields } = this.state,
+      mandatories = extraFields.filter((field) => field.mandatory),
+      validations = [];
+    mandatories.map((field, key) => {
+      let valid;
+      if (field.type === "email")
+        valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
+      if (field.type === "text" || field.type === "list")
+        valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
+      if (field.type === "number") valid = user[field.name] && user[field.name] >= 0;
+      if (field.type === "boolean") valid = typeof user[field.name] === "boolean";
+      return (validations[key] = valid);
+    });
+    const valid = validations.reduce((sum, next) => sum && next, true);
+    this.setState({ valid: !valid });
+  };
+
   onChange = (e, type) => {
     const { value, name } = e.target;
     type === "boolean"
@@ -183,7 +202,12 @@ class UserRegistration extends Component {
             {this.renderForm()}
 
             <Row justify="center">
-              <Button type="primary" htmlType="submit" onClick={this.handleSubmit} rules={[{ required: true }]}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                onClick={this.handleSubmit}
+                disabled={this.state.valid}
+                rules={[{ required: true }]}>
                 Registrarse
               </Button>
             </Row>
