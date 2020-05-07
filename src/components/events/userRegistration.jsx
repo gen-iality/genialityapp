@@ -57,34 +57,6 @@ class UserRegistration extends Component {
     return extraFields;
   };
 
-  validForm = () => {
-    const EMAIL_REGEX = new RegExp("[^@]+@[^@]+\\.[^@]+");
-    const { user, extraFields } = this.state,
-      mandatories = extraFields.filter((field) => field.mandatory),
-      validations = [];
-    mandatories.map((field, key) => {
-      let valid;
-      if (field.type === "email")
-        valid = user[field.name].length > 5 && user[field.name].length < 61 && EMAIL_REGEX.test(user[field.name]);
-      if (field.type === "text" || field.type === "list")
-        valid = user[field.name] && user[field.name].length > 0 && user[field.name] !== "";
-      if (field.type === "number") valid = user[field.name] && user[field.name] >= 0;
-      if (field.type === "boolean") valid = typeof user[field.name] === "boolean";
-      return (validations[key] = valid);
-    });
-    const valid = validations.reduce((sum, next) => sum && next, true);
-    this.setState({ valid: !valid });
-  };
-
-  onChange = (e, type) => {
-    const { value, name } = e.target;
-    type === "boolean"
-      ? this.setState((prevState) => {
-          return { user: { ...this.state.user, [name]: !prevState.user[name] } };
-        }, this.validForm)
-      : this.setState({ user: { ...this.state.user, [name]: value } }, this.validForm);
-  };
-
   async componentDidMount() {
     // Trae la información del evento
     const event = await EventsApi.getOne(this.props.eventId);
@@ -96,7 +68,7 @@ class UserRegistration extends Component {
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields });
-    console.log("event", event);
+
     let user = {};
     this.props.extraFields.map((obj) => (user[obj.name] = ""));
     this.setState({ user });
@@ -215,17 +187,6 @@ class UserRegistration extends Component {
                 </Button>
               </Form.Item>
             </Form>
-            {/* 
-            <Row justify="center">
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={this.handleSubmit}
-                disabled={this.state.valid}
-                rules={[{ required: true }]}>
-                Registrarse
-              </Button>
-            </Row> */}
           </Card>
         </Col>
       </>
