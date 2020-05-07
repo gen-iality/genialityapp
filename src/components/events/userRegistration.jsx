@@ -103,32 +103,12 @@ class UserRegistration extends Component {
       let mandatory = m.mandatory;
       let target = name;
       let value = this.state.user[target];
-      let input = (
-        <Input
-          {...props}
-          type={type}
-          key={key}
-          name={name}
-          value={value}
-          onChange={(e) => {
-            this.onChange(e, type);
-          }}
-        />
-      );
+      let input = <Input {...props} type={type} key={key} name={name} value={value} />;
 
       if (type === "boolean") {
         input = (
           <React.Fragment>
-            <input
-              name={name}
-              id={name}
-              className="is-checkradio is-primary is-rtl"
-              type="checkbox"
-              checked={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}
-            />
+            <input name={name} id={name} className="is-checkradio is-primary is-rtl" type="checkbox" checked={value} />
             <label className={`label has-text-grey-light is-capitalized ${mandatory ? "required" : ""}`} htmlFor={name}>
               {name}
             </label>
@@ -145,13 +125,7 @@ class UserRegistration extends Component {
         });
         input = (
           <div className="select" style={{ width: "100%" }}>
-            <select
-              style={{ width: "100%" }}
-              name={name}
-              value={value}
-              onChange={(e) => {
-                this.onChange(e, type);
-              }}>
+            <select style={{ width: "100%" }} name={name} value={value}>
               <option value={""}>Seleccione...</option>
               {input}
             </select>
