@@ -35,7 +35,6 @@ class UserRegistration extends Component {
       valid: true,
       extraFields: [],
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   // Agrega el nombre del input
@@ -68,23 +67,6 @@ class UserRegistration extends Component {
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields });
-
-    let user = {};
-    this.props.extraFields.map((obj) => (user[obj.name] = ""));
-    this.setState({ user });
-  }
-
-  async handleSubmit(e) {
-    let { user } = this.state;
-
-    e.preventDefault();
-    e.stopPropagation();
-    console.log("Handle Submit");
-
-    const snap = {
-      properties: user,
-    };
-    console.log(snap);
   }
 
   onFinish = async (values) => {
