@@ -77,9 +77,16 @@ class UserRegistration extends Component {
   }
 
   async handleSubmit(e) {
+    let { user } = this.state;
+
     e.preventDefault();
     e.stopPropagation();
     console.log("Handle Submit");
+
+    const snap = {
+      properties: user,
+    };
+    console.log(snap);
   }
 
   // Función que crea los input del componente
@@ -93,7 +100,18 @@ class UserRegistration extends Component {
       let mandatory = m.mandatory;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input {...props} type={type} key={key} name={name} value={value} />;
+      let input = (
+        <Input
+          {...props}
+          type={type}
+          key={key}
+          name={name}
+          value={value}
+          onChange={(e) => {
+            this.onChange(e, type);
+          }}
+        />
+      );
 
       if (type === "boolean") {
         input = (
