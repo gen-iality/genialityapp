@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { EventsApi } from "../../helpers/request";
+import { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import { Form, Input, Button, Card, Col, Row, Switch } from "antd";
 
@@ -87,9 +87,37 @@ class UserRegistration extends Component {
     console.log(snap);
   }
 
-  onFinish = (values) => {
+  onFinish = async (values) => {
     console.log("On finish");
     console.log(values);
+
+    const snap = {
+      properties: values,
+    };
+
+    console.log(snap);
+
+    let message = {};
+
+    try {
+      let resp = await UsersApi.createOne(snap, this.props.eventId);
+      console.log(resp);
+      if (resp.message === "OK") {
+        message.class = resp.status === "CREATED" ? "msg_success" : "msg_warning";
+        message.content = "USER " + resp.status;
+      } else {
+        message.class = "msg_danger";
+        message.content = "User can`t be created";
+      }
+      setTimeout(() => {
+        message.class = message.content = "";
+        this.closeModal();
+      }, 1000);
+    } catch (err) {
+      console.log(err.response);
+      message.class = "msg_error";
+      message.content = "ERROR...TRYING LATER";
+    }
   };
 
   // Función que crea los input del componente
