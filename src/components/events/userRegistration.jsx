@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 
-import { EventsApi, UsersApi } from "../../helpers/request";
+import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
-import { Form, Input, Button, Card, Col, Row, Switch } from "antd";
+import * as Cookie from "js-cookie";
+
+import { Form, Input, Button, Card, Col, Row, Switch, Spin } from "antd";
 
 const textLeft = {
   textAlign: "left",
@@ -34,6 +36,8 @@ class UserRegistration extends Component {
       emailError: false,
       valid: true,
       extraFields: [],
+      loading: true,
+      initialValues: {},
     };
   }
 
@@ -56,23 +60,40 @@ class UserRegistration extends Component {
     return extraFields;
   };
 
+  // Funcion para consultar la informacion del actual usuario
+  getCurrentUser = async () => {
+    let evius_token = Cookie.get("evius_token");
+
+    if (!evius_token) {
+      this.setState({ currentUser: "guest", loading: false });
+    } else {
+      try {
+        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+        if (resp.status === 200) {
+          const data = resp.data;
+          // Solo se desea obtener el id del usuario
+          this.setState({ currentUser: data, loading: false, initialValues: { names: data.names, email: data.email } });
+        }
+      } catch (error) {
+        const { status } = error.response;
+      }
+    }
+  };
+
   async componentDidMount() {
     // Trae la información del evento
     const event = await EventsApi.getOne(this.props.eventId);
 
     const properties = event.user_properties;
-    console.log("properties:", properties);
+
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
-    this.setState({ extraFields });
+    this.setState({ extraFields }, this.getCurrentUser);
   }
 
   onFinish = async (values) => {
-    console.log("On finish");
-    console.log(values);
-
     const snap = {
       properties: values,
     };
@@ -155,23 +176,30 @@ class UserRegistration extends Component {
   };
 
   render() {
-    return (
-      <>
-        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-          <Card title="Formulario de registro" bodyStyle={textLeft}>
-            {/* //Renderiza el formulario */}
-            <Form {...layout} onFinish={this.onFinish} validateMessages={validateMessages}>
-              {this.renderForm()}
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <Button type="primary" htmlType="submit">
-                  Registrarse
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </>
-    );
+    let { loading, initialValues } = this.state;
+    if (!loading)
+      return (
+        <>
+          <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+            <Card title="Formulario de registro" bodyStyle={textLeft}>
+              {/* //Renderiza el formulario */}
+              <Form
+                {...layout}
+                onFinish={this.onFinish}
+                validateMessages={validateMessages}
+                initialValues={initialValues}>
+                {this.renderForm()}
+                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                  <Button type="primary" htmlType="submit">
+                    Registrarse
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </Col>
+        </>
+      );
+    return <Spin></Spin>;
   }
 }
 
