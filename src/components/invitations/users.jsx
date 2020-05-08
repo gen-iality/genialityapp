@@ -89,7 +89,7 @@ class UsersRsvp extends Component {
     if (this.state.actualEvent._id !== event._id) {
       try {
         const resp = await UsersApi.getAll(event._id);
-        const users = handleUsers(resp.data);
+        const users = handleUsers(this.props.event.user_properties, resp.data);
         const columns = this.state.columns;
         let index = columns
           .map(e => {
@@ -231,12 +231,16 @@ class UsersRsvp extends Component {
   };
 
   //Add user to current list at middle column
-  addToList = async () => {
+  addToList = async (user) => {
     try {
-      const { data } = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
-      const users = handleUsers(data);
+      //const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
+      //let data = resp.data;
+      const newUsersFormated = handleUsers(this.props.event.user_properties, [user]);
+      let usuarios = [...newUsersFormated, ...this.state.users]
+
+
       toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
-      this.setState({ users });
+      this.setState({ users: usuarios, usersReq: usuarios });
     } catch (error) {
       if (error.response) {
         console.log(error.response);
@@ -358,9 +362,10 @@ class UsersRsvp extends Component {
                     </div>
                     <div className="dropdown-menu" id="dropdown-menu1" role="menu">
                       <div className="dropdown-content">
-                        <div className="dropdown-item" onClick={this.modalUser}>
-                          <p>Nuevo usuario</p>
-                        </div>
+
+                        <a href="#" className="dropdown-item" onClick={this.modalUser}>
+                          Nuevo usuario
+                        </a>
                         <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
                           Importar usuarios de Excel
                         </Link>
@@ -376,6 +381,7 @@ class UsersRsvp extends Component {
                   data={this.state.usersReq}
                   kind={"user"}
                   searchResult={this.searchResult}
+
                   clear={this.state.clearSearch}
                 />
                 <div className="column is-2" />
@@ -470,11 +476,11 @@ class UsersRsvp extends Component {
               <Pagination items={users} onChangePage={this.onChangePage} />
             </div>
           ) : (
-            <div>
-              <div onClick={this.modalUser}>Nuevo invitado</div>
-              <Link to={`${this.props.matchUrl}/importar-excel`}>Importar usuarios de Excel</Link>
-            </div>
-          )}
+              <div>
+                <div onClick={this.modalUser}>Nuevo invitado</div>
+                <Link to={`${this.props.matchUrl}/importar-excel`}>Importar usuarios de Excel</Link>
+              </div>
+            )}
         </EventContent>
 
         {this.state.addUser && (
