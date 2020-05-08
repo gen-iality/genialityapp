@@ -79,7 +79,7 @@ class CreatePost extends Component {
         let data = {
             urlImage: this.state.image,
             post: this.state.value,
-            author: this.state.dataUser.email,
+            author: this.state.dataUser.id,
             datePost: new Date(),
         }
         console.log(data)
