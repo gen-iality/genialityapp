@@ -105,14 +105,15 @@ class UserRegistration extends Component {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
       console.log(resp);
       if (resp.message === "OK") {
-        textMessage.content = "USER " + resp.status;
+        let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+        textMessage.content = "Usuario " + statusMessage;
       } else {
-        textMessage.content = "User can`t be created";
+        textMessage.content = "El usuario no pudo ser creado";
       }
       message.success(textMessage);
     } catch (err) {
       console.log(err.resp);
-      textMessage.content = "ERROR...TRYING LATER";
+      textMessage.content = "Error... Intentalo mas tarde";
       message.error(textMessage);
     }
 
