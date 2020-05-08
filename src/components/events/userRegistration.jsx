@@ -149,15 +149,15 @@ class UserRegistration extends Component {
 
   onFinish = async (values) => {
     let { currentUser, eventUsers } = this.state;
+    const key = "registerUserService";
 
     let existUser = eventUsers.find((user) => user.properties.email == values.email);
-
     console.log("existUser: ", existUser);
 
+    message.loading({ content: "Registrando Usuario", key });
     const snap = {
       properties: values,
     };
-
     console.log(snap);
 
     let textMessage = {};
@@ -171,10 +171,12 @@ class UserRegistration extends Component {
       } else {
         textMessage.content = "El usuario no pudo ser creado";
       }
+      textMessage.key = key;
       message.success(textMessage);
     } catch (err) {
       console.log(err.resp);
       textMessage.content = "Error... Intentalo mas tarde";
+      textMessage.key = key;
       message.error(textMessage);
     }
 
