@@ -4,7 +4,9 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography } from "antd";
+
+const { Text } = Typography;
 
 const textLeft = {
   textAlign: "left",
@@ -57,9 +59,14 @@ const UserInfoCard = ({ currentUser }) => {
     return (
       <Card title="El usuario ya se encuentra registrado">
         {infoUser.map((field, key) => (
-          <h1 key={key}>
-            {field.property} : {field.value}
-          </h1>
+          <Row key={key} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Text strong>{field.property}</Text>
+            </Col>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Text>{field.value}</Text>
+            </Col>
+          </Row>
         ))}
       </Card>
     );
