@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 
 import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
@@ -27,6 +27,44 @@ const validateMessages = {
   },
 };
 
+const UserInfoCard = ({ currentUser }) => {
+  const [infoUser, setInfoUser] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const parseObjectToArray = async (info) => {
+    let userProperties = new Promise((resolve, reject) => {
+      let userProperties = [];
+
+      for (const key in info) {
+        userProperties.push({ property: key, value: info[key] });
+      }
+      resolve(userProperties);
+    });
+
+    let result = await userProperties;
+    setInfoUser(result);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    console.log(currentUser.properties);
+    parseObjectToArray(currentUser.properties);
+  }, [currentUser]);
+
+  if (!loading)
+    return (
+      <Card title="El usuario ya se encuentra registrado">
+        {infoUser.map((field, key) => (
+          <h1 key={key}>
+            {field.property} : {field.value}
+          </h1>
+        ))}
+      </Card>
+    );
+
+  return <Spin></Spin>;
+};
+
 class UserRegistration extends Component {
   constructor(props) {
     super(props);
@@ -37,6 +75,8 @@ class UserRegistration extends Component {
       extraFields: [],
       loading: true,
       initialValues: {},
+      eventUsers: [],
+      registeredUser: false,
     };
   }
 
@@ -61,6 +101,8 @@ class UserRegistration extends Component {
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
+    let { eventUsers } = this.state;
+
     let evius_token = Cookie.get("evius_token");
 
     if (!evius_token) {
@@ -71,7 +113,15 @@ class UserRegistration extends Component {
         if (resp.status === 200) {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
-          this.setState({ currentUser: data, loading: false, initialValues: { names: data.names, email: data.email } });
+
+          let existUser = eventUsers.find((user) => user.properties.email == data.email);
+
+          this.setState({
+            currentUser: existUser && existUser,
+            loading: false,
+            registeredUser: existUser ? true : false,
+            initialValues: { names: data.names, email: data.email },
+          });
         }
       } catch (error) {
         const { status } = error.response;
@@ -83,16 +133,25 @@ class UserRegistration extends Component {
     // Trae la información del evento
     const event = await EventsApi.getOne(this.props.eventId);
 
+    const eventUsers = await UsersApi.getAll(this.props.eventId, "?pageSize=10000");
+    console.log("users:", eventUsers);
+
     const properties = event.user_properties;
 
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
-    this.setState({ extraFields }, this.getCurrentUser);
+    this.setState({ extraFields, eventUsers: eventUsers.data }, this.getCurrentUser);
   }
 
   onFinish = async (values) => {
+    let { currentUser, eventUsers } = this.state;
+
+    let existUser = eventUsers.find((user) => user.properties.email == values.email);
+
+    console.log("existUser: ", existUser);
+
     const snap = {
       properties: values,
     };
@@ -177,9 +236,9 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues } = this.state;
+    let { loading, initialValues, registeredUser, currentUser } = this.state;
     if (!loading)
-      return (
+      return !registeredUser ? (
         <>
           <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
             <Card title="Formulario de registro" bodyStyle={textLeft}>
@@ -199,6 +258,8 @@ class UserRegistration extends Component {
             </Card>
           </Col>
         </>
+      ) : (
+        <UserInfoCard currentUser={currentUser} />
       );
     return <Spin></Spin>;
   }
