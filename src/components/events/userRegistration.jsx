@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message } from "antd";
 
 const textLeft = {
   textAlign: "left",
@@ -31,7 +31,6 @@ class UserRegistration extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: {},
       user: {},
       emailError: false,
       valid: true,
@@ -100,23 +99,24 @@ class UserRegistration extends Component {
 
     console.log(snap);
 
-    let message = {};
+    let textMessage = {};
 
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
       console.log(resp);
       if (resp.message === "OK") {
-        message.class = resp.status === "CREATED" ? "msg_success" : "msg_warning";
-        message.content = "USER " + resp.status;
+        textMessage.content = "USER " + resp.status;
       } else {
-        message.class = "msg_danger";
-        message.content = "User can`t be created";
+        textMessage.content = "User can`t be created";
       }
+      message.success(textMessage);
     } catch (err) {
-      console.log(err.response);
-      message.class = "msg_error";
-      message.content = "ERROR...TRYING LATER";
+      console.log(err.resp);
+      textMessage.content = "ERROR...TRYING LATER";
+      message.error(textMessage);
     }
+
+    console.log("este es el mensaje:", textMessage);
   };
 
   // Función que crea los input del componente
