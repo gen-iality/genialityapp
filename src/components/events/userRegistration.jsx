@@ -172,7 +172,10 @@ class UserRegistration extends Component {
         textMessage.content = "El usuario no pudo ser creado";
       }
       textMessage.key = key;
-      message.success(textMessage);
+
+      message.success(textMessage).then(() => {
+        window.location.reload();
+      });
     } catch (err) {
       console.log(err.resp);
       textMessage.content = "Error... Intentalo mas tarde";
