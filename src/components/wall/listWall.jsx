@@ -1,9 +1,9 @@
 import React, { Component, useEffect, useState, Fragment } from "react"
 import { firestore } from "../../helpers/firebase";
-import { Avatar, Button, Form, List, Card, Input, Row, Col } from "antd";
+import { Avatar, Button, message, Form, List, Card, Input, Row, Col, Spin, Alert, Popconfirm } from "antd";
 import TimeStamp from "react-timestamp";
 import { toast } from "react-toastify";
-import { MessageOutlined, LikeOutlined, SendOutlined } from "@ant-design/icons";
+import { MessageOutlined, LikeOutlined, SendOutlined, DeleteOutlined } from "@ant-design/icons";
 import { saveFirebase } from "./helpers";
 import * as Cookie from "js-cookie";
 import API from "../../helpers/request";
@@ -46,19 +46,31 @@ const IconText = ({ icon, text, onSubmit }) => (
 
 class WallList extends Component {
     constructor(props) {
+
         super(props);
+
         this.state = {
             submitting: false,
             avatar: "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481",
-            dataPost: [],
+            dataPost: this.props.dataPost || undefined,
             dataComment: [],
             dataPostFilter: [],
             submitting: false,
             value: "",
             valueCommit: "",
-            currentCommet: null
+            currentCommet: null,
+            deleting: false,
+            user: undefined,
         }
     }
+    innerDeletePost = async (postId) => {
+
+        await this.setState({ deleting: postId });
+        var result = await this.props.deletePost(postId);
+        await this.setState({ deleting: null });
+        message.success("Publicación eliminada.")
+    }
+
     //Funcion para enviar al estado el dato de la caja de texto del comentario
     handleChangeCommit = (e) => {
         this.setState({
@@ -104,6 +116,17 @@ class WallList extends Component {
             });
     }
 
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.dataPost !== this.props.dataPost) {
+            this.setState({ dataPost: this.props.dataPost });
+        }
+
+        if (prevProps.user !== this.props.user) {
+            this.setState({ user: this.props.user });
+        }
+    }
+
     async componentDidMount() {
         let evius_token = Cookie.get("evius_token");
 
@@ -115,14 +138,13 @@ class WallList extends Component {
                 if (resp.status === 200) {
                     const data = resp.data;
                     // Solo se desea obtener el id del usuario
-                    this.setState({ dataUser: data });
+                    this.setState({ user: data });
                 }
             } catch (error) {
                 const { status } = error.response;
                 console.log(status);
             }
         }
-        this.getPost()
     }
 
     //Se salva el comentario, el proceso se encuentra en ./helpers.js
@@ -145,58 +167,12 @@ class WallList extends Component {
         }
     }
 
-    //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
-    async getPost() {
-        const dataPost = [];
-        const dataPostFilter = [];
-
-        let adminPostRef = firestore
-            .collection("adminPost")
-            .doc(`${this.props.event._id}`)
-            .collection("posts")
-            .orderBy("datePost", "desc");
-        let query = adminPostRef
-            .get()
-            .then((snapshot) => {
-                if (snapshot.empty) {
-                    toast.error("No hay ningun post");
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    dataPost.push({
-                        id: doc.id,
-                        author: doc.data().author,
-                        urlImage: doc.data().urlImage,
-                        post: doc.data().post,
-                        datePost: doc.data().datePost,
-                    });
-
-                    dataPostFilter.push({
-                        id: doc.id,
-                        author: doc.data().author,
-                        urlImage: doc.data().urlImage,
-                        post: doc.data().post,
-                        datePost: doc.data().datePost,
-                    });
-
-                    if (dataPost.length > 5) {
-                        dataPost.length = 5;
-                    }
-
-                    this.setState({ dataPost, dataPostFilter });
-                });
-            })
-            .catch((err) => {
-                console.log("Error getting documents", err);
-            });
-    }
-
     gotoCommentList() {
         this.setState({ currentCommet: null });
     }
 
     render() {
-        const { dataPost, submitting, valueCommit, currentCommet, dataComment } = this.state;
+        const { dataPost, submitting, valueCommit, currentCommet, dataComment, user } = this.state;
         return (
             <Fragment>
                 {/*Inicia el detalle de los comentarios */}
@@ -245,8 +221,17 @@ class WallList extends Component {
                     </div>
                 ) :
                     <div>
-                        {/* Se mapean los datos que provienen de firebase del post  */}
-                        <List
+
+                        {!dataPost && <Spin size="large" tip="Cargando..." />}
+
+                        {dataPost && dataPost.length == 0 && <Alert
+                            message="Listos para la primera publicación"
+                            description="Aún esta el lienzo el blanco para crear la primera publicación, aprovecha"
+                            type="info"
+                            showIcon
+                        />}
+
+                        {dataPost && dataPost.length > 0 && (<><List
                             itemLayout="vertical"
                             size="small"
                             style={{ texteAling: "left", marginBottom: "20px" }}
@@ -261,7 +246,14 @@ class WallList extends Component {
                                         style={{ padding: "0px" }}
                                         // Se importa el boton de like y el de redireccionamiento al detalle del post
                                         actions={[
-                                            <IconText icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
+                                            <IconText
+                                                icon={LikeOutlined} text={item.likes || 0}
+                                                key="list-vertical-like-o"
+                                                onSubmit={(e) => {
+                                                    this.props.increaseLikes(item.id);
+                                                }}
+                                            />,
+
                                             <IconText
                                                 icon={MessageOutlined}
                                                 key="list-vertical-message"
@@ -270,6 +262,20 @@ class WallList extends Component {
                                                     this.getComments(item.id);
                                                 }}
                                             />,
+                                            <>
+                                                {(user && (user.id == item.author || user.email == item.author)) && (
+                                                    <>
+                                                        <Popconfirm
+                                                            title="Seguro deseas eliminar este mensaje?"
+                                                            onConfirm={() => this.innerDeletePost(item.id)}
+                                                        >
+                                                            <Button key="list-vertical-message" shape="circle" icon={<DeleteOutlined />} />
+                                                        </Popconfirm>
+                                                        {(this.state.deleting == item.id) && <Spin />}
+                                                    </>
+                                                )}
+                                            </>
+
                                         ]}>
                                         <List.Item.Meta
                                             avatar={
@@ -315,9 +321,14 @@ class WallList extends Component {
                                 </Card>
                             )}
                         />
-                        <Button id="click" onClick={this.loadMore}>
-                            Load More
-                        </Button>
+                            <Button id="click" onClick={this.loadMore}>
+                                Load More
+                    </Button>
+                        </>
+
+                        )}
+
+
                     </div>
                 }
             </Fragment>

@@ -491,6 +491,9 @@ export const Networking = {
   acceptOrDeclineInvitation: async (eventId, userId, data) => {
     return await Actions.put(`/api/events/${eventId}/acceptordecline/${userId}`, data);
   },
+  getContactList: async (eventId, userId) => {
+    return await Actions.getOne(`/api/events/${eventId}/contactlist/`, userId);
+  },
 };
 
 export const ActivityBySpeaker = {
