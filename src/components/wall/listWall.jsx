@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState, Fragment } from "react"
 import { firestore } from "../../helpers/firebase";
-import { Avatar, Button, Form, List, Card, Input, Row, Col, Spin, Alert } from "antd";
+import { Avatar, Button, message, Form, List, Card, Input, Row, Col, Spin, Alert, Popconfirm } from "antd";
 import TimeStamp from "react-timestamp";
 import { toast } from "react-toastify";
 import { MessageOutlined, LikeOutlined, SendOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -46,7 +46,9 @@ const IconText = ({ icon, text, onSubmit }) => (
 
 class WallList extends Component {
     constructor(props) {
+
         super(props);
+
         this.state = {
             submitting: false,
             avatar: "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481",
@@ -57,9 +59,18 @@ class WallList extends Component {
             value: "",
             valueCommit: "",
             currentCommet: null,
-
+            deleting: false,
+            user: undefined,
         }
     }
+    innerDeletePost = async (postId) => {
+
+        await this.setState({ deleting: postId });
+        var result = await this.props.deletePost(postId);
+        await this.setState({ deleting: null });
+        message.success("Publicación eliminada.")
+    }
+
     //Funcion para enviar al estado el dato de la caja de texto del comentario
     handleChangeCommit = (e) => {
         this.setState({
@@ -109,7 +120,10 @@ class WallList extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.dataPost !== this.props.dataPost) {
             this.setState({ dataPost: this.props.dataPost });
+        }
 
+        if (prevProps.user !== this.props.user) {
+            this.setState({ user: this.props.user });
         }
     }
 
@@ -124,7 +138,7 @@ class WallList extends Component {
                 if (resp.status === 200) {
                     const data = resp.data;
                     // Solo se desea obtener el id del usuario
-                    this.setState({ dataUser: data });
+                    this.setState({ user: data });
                 }
             } catch (error) {
                 const { status } = error.response;
@@ -158,7 +172,7 @@ class WallList extends Component {
     }
 
     render() {
-        const { dataPost, submitting, valueCommit, currentCommet, dataComment } = this.state;
+        const { dataPost, submitting, valueCommit, currentCommet, dataComment, user } = this.state;
         return (
             <Fragment>
                 {/*Inicia el detalle de los comentarios */}
@@ -232,7 +246,14 @@ class WallList extends Component {
                                         style={{ padding: "0px" }}
                                         // Se importa el boton de like y el de redireccionamiento al detalle del post
                                         actions={[
-                                            <IconText icon={LikeOutlined} text="0" key="list-vertical-like-o" />,
+                                            <IconText
+                                                icon={LikeOutlined} text={item.likes || 0}
+                                                key="list-vertical-like-o"
+                                                onSubmit={(e) => {
+                                                    this.props.increaseLikes(item.id);
+                                                }}
+                                            />,
+
                                             <IconText
                                                 icon={MessageOutlined}
                                                 key="list-vertical-message"
@@ -241,14 +262,20 @@ class WallList extends Component {
                                                     this.getComments(item.id);
                                                 }}
                                             />,
-                                            <IconText
-                                                icon={DeleteOutlined}
-                                                key="list-vertical-message"
-                                                text=""
-                                                onSubmit={(e) => {
-                                                    this.props.deletePost(item.id);
-                                                }}
-                                            />
+                                            <>
+                                                {(user && (user.id == item.author || user.email == item.author)) && (
+                                                    <>
+                                                        <Popconfirm
+                                                            title="Seguro deseas eliminar este mensaje?"
+                                                            onConfirm={() => this.innerDeletePost(item.id)}
+                                                        >
+                                                            <Button key="list-vertical-message" shape="circle" icon={<DeleteOutlined />} />
+                                                        </Popconfirm>
+                                                        {(this.state.deleting == item.id) && <Spin />}
+                                                    </>
+                                                )}
+                                            </>
+
                                         ]}>
                                         <List.Item.Meta
                                             avatar={
