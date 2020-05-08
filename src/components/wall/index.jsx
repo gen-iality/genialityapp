@@ -100,6 +100,7 @@ class Wall extends Component {
 
   //Se obtienen los post para mapear los datos, no esta en ./helpers por motivo de que la promesa que retorna firebase no se logra pasar por return
   async getPosts() {
+
     const dataPost = [];
 
     try {

@@ -235,9 +235,14 @@ class TicketsForm extends Component {
             selectStage, handleQuantity, onClick, changeStep } = this;
         return (
             <>
+                {/* Componente de registro gratis */}
 
-                {/* <UserRegistration extraFields={[]} eventId={this.props.eventId} /> */}
+                <UserRegistration extraFields={[]} eventId={this.props.eventId} />
 
+                {/* fin del componente */}
+
+
+                {/* Componente de ticket */}
 
                 <div className="columns is-centered">
                     <div className="column">
