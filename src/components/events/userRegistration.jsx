@@ -27,16 +27,18 @@ const validateMessages = {
   },
 };
 
+// Componente que muestra la informacion del usuario registrado
 const UserInfoCard = ({ currentUser }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
 
+  // Se obtiene las propiedades y se asignan a un array con el valor que contenga
   const parseObjectToArray = async (info) => {
     let userProperties = new Promise((resolve, reject) => {
       let userProperties = [];
 
       for (const key in info) {
-        userProperties.push({ property: key, value: info[key] });
+        if (key != "displayName") userProperties.push({ property: key, value: info[key] });
       }
       resolve(userProperties);
     });
