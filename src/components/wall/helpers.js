@@ -3,10 +3,10 @@ import { firestore, fireStorage } from "../../helpers/firebase";
 import { toast } from "react-toastify";
 
 export const saveFirebase = {
-  async saveComment(email, comments, date, eventId, idPost) {
+  async saveComment(author_id, comment, date, eventId, idPost) {
     const data = {
-      author: email,
-      comment: comments,
+      author: author_id,
+      comment: comment,
       date: date,
       idPost: idPost,
     };
@@ -56,6 +56,7 @@ export const saveFirebase = {
   },
 
   async increaseLikes(postId, eventId) {
+    console.log("newPost", postId, eventId);
     var docRef = await firestore
       .collection("adminPost")
       .doc(eventId)
@@ -67,7 +68,7 @@ export const saveFirebase = {
     var doc = docSnap.data();
     console.log("postId", doc, postId, docRef, docSnap);
     doc["likes"] = doc.likes ? doc.likes + 1 : 1;
-    //doc["id"] = docRef.id;
+    doc["id"] = docRef.id;
     await docRef.update(doc);
     return doc;
   },

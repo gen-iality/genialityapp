@@ -89,7 +89,7 @@ class Wall extends Component {
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                 <CreatePost event={event} addPosts={this.addPosts} />
-                <ListWall user={user} key={this.state.keyList} dataPost={this.state.dataPost} deletePost={this.deletePost} increaseLikes={this.increaseLikes} />
+                <ListWall event={event} user={user} key={this.state.keyList} dataPost={this.state.dataPost} deletePost={this.deletePost} increaseLikes={this.increaseLikes} />
               </Col>
             </Row>
           </div>
@@ -107,8 +107,7 @@ class Wall extends Component {
       let snapshot = await adminPostRef.get()
 
       if (snapshot.empty) {
-        toast.error("No hay ningun post");
-        return;
+        return dataPost;
       }
 
       snapshot.forEach((doc) => {
@@ -121,6 +120,7 @@ class Wall extends Component {
       return dataPost;
 
     } catch (e) {
+      return undefined;
       console.log("Error getting documents", e);
     }
   }

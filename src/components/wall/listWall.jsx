@@ -147,23 +147,34 @@ class WallList extends Component {
         }
     }
 
+    /* ,
+
+      <IconText
+          icon={MessageOutlined}
+          key="list-vertical-message"
+          text=""
+          onSubmit={(e) => {
+              this.getComments(item.id);
+          }}
+      /> */
+
     //Se salva el comentario, el proceso se encuentra en ./helpers.js
-    async saveComment(idPost) {
+    saveComment = async (idPost) => {
         try {
 
-            let email = this.state.dataUser.correo;
+            let user_id = this.state.user._id;
             let eventId = this.props.event._id;
             let comments = this.state.valueCommit;
             let fecha = new Date().toString();
             let date = fecha
 
-            const data = saveFirebase.saveComment(email, comments, date, eventId, idPost);
+            const data = saveFirebase.saveComment(user_id, comments, date, eventId, idPost);
             if (data) {
                 document.getElementById("comment").value = "";
                 this.getComments(idPost);
             }
         } catch (error) {
-            toast.warning("Inicia sesion para poder realizar publicaciones")
+            toast.warning(error.message)
         }
     }
 
@@ -252,18 +263,10 @@ class WallList extends Component {
                                                 onSubmit={(e) => {
                                                     this.props.increaseLikes(item.id);
                                                 }}
-                                            />,
-
-                                            <IconText
-                                                icon={MessageOutlined}
-                                                key="list-vertical-message"
-                                                text=""
-                                                onSubmit={(e) => {
-                                                    this.getComments(item.id);
-                                                }}
-                                            />,
+                                            />
+                                            ,
                                             <>
-                                                {(user && (user.id == item.author || user.email == item.author)) && (
+                                                {(user && (user._id == item.author || user.email == item.author)) && (
                                                     <>
                                                         <Popconfirm
                                                             title="Seguro deseas eliminar este mensaje?"
