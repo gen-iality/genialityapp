@@ -263,7 +263,7 @@ class WallList extends Component {
                                                 }}
                                             />,
                                             <>
-                                                {(user && (user.id == item.author || user.email == item.author)) && (
+                                                {(user && (user._id == item.author || user.email == item.author)) && (
                                                     <>
                                                         <Popconfirm
                                                             title="Seguro deseas eliminar este mensaje?"

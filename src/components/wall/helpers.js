@@ -67,7 +67,7 @@ export const saveFirebase = {
     var doc = docSnap.data();
     console.log("postId", doc, postId, docRef, docSnap);
     doc["likes"] = doc.likes ? doc.likes + 1 : 1;
-    //doc["id"] = docRef.id;
+    doc["id"] = docRef.id;
     await docRef.update(doc);
     return doc;
   },
