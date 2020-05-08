@@ -12,6 +12,12 @@ import * as Cookie from "js-cookie";
 import API, { UsersApi } from "../../helpers/request";
 
 const { Sider } = Layout;
+
+const stylesMenuItems = {
+  height: "100%",
+  padding: "30px 0",
+  backgroundColor: "transparent"
+}
 class MenuEvent extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +25,79 @@ class MenuEvent extends Component {
       itemsMenu: {},
       showSection: this.props.showSection,
       logged: false,
-      email: false
+      email: false,
+      menuDefault: {
+        evento: {
+          name: "Evento",
+          section: "evento",
+          icon: "CalendarOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        agenda: {
+          name: "Agenda",
+          section: "agenda",
+          icon: "ReadOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        speakers: {
+          name: "Conferencistas",
+          section: "speakers",
+          icon: "AudioOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        tickets: {
+          name: "Boletería",
+          section: "tickets",
+          icon: "CreditCardOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        certs: {
+          name: "Certificados",
+          section: "certs",
+          icon: "FileDoneOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        documents: {
+          name: "Documentos",
+          section: "documents",
+          icon: "FolderOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        wall: {
+          name: "Muro",
+          section: "wall",
+          icon: "TeamOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        survey: {
+          name: "Encuestas",
+          section: "survey",
+          icon: "FileUnknownOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        faqs: {
+          name: "Preguntas Frecuentes",
+          section: "faqs",
+          icon: "QuestionOutlined",
+          checked: false,
+          permissions: "public"
+        },
+        networking: {
+          name: "Networking",
+          section: "networking",
+          icon: "LaptopOutlined",
+          checked: false,
+          permissions: "public"
+        }
+      },
     }
     this.obtainUserFirebase = this.obtainUserFirebase.bind(this)
   }
@@ -39,7 +117,7 @@ class MenuEvent extends Component {
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
 
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
-    let items = event.itemsMenu || {}
+    let items = event.itemsMenu || this.state.menuDefault
     this.setState({ itemsMenu: items })
   }
 
@@ -66,7 +144,7 @@ class MenuEvent extends Component {
         // theme="dark"
         defaultSelectedKeys={["1"]}
         // defaultOpenKeys={['sub1']}
-        style={{ height: "100%", padding: "50px 0" }}>
+        style={stylesMenuItems}>
         {Object.keys(itemsMenu).map((key, i) => {
           let IconoComponente = iconComponents[itemsMenu[key].icon];
           return (

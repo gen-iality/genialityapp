@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Card, Avatar, Alert, Tabs } from "antd";
+import { Row, Col, Table, Card, Avatar, Alert, Tabs, message } from "antd";
 
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
@@ -12,7 +12,7 @@ import EventContent from "../events/shared/content";
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
-import { getCurrentUserId, getCurrentEventUser, networkingFire, userRequest } from "./services";
+import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 
 import ContactList from "./contactList";
 import RequestList from "./requestList";
@@ -31,6 +31,7 @@ export default class ListEventUser extends Component {
       loading: true,
       changeItem: false,
       eventUserId: null,
+      currentUserName: null,
     };
   }
 
@@ -43,8 +44,9 @@ export default class ListEventUser extends Component {
     let { changeItem } = this.state;
     const { event } = this.props;
 
+    // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
-    console.log(eventUserList);
+    // console.log("eventUserList:", eventUserList);
     this.setState((prevState) => {
       return {
         userReq: eventUserList,
@@ -56,33 +58,18 @@ export default class ListEventUser extends Component {
     });
   };
 
+  // Funcion que trae el eventUserId del usuario actual
   getInfoCurrentUser = () => {
     const { event } = this.props;
     let currentUser = Cookie.get("evius_token");
 
     if (currentUser) {
-      getCurrentUserId(currentUser).then(async (userId) => {
-        let response = await getCurrentEventUser(event._id, userId);
-        console.log("eventUserId:", response);
-        this.setState({ eventUserId: response._id });
+      getCurrentUser(currentUser).then(async (user) => {
+        const eventUser = await getCurrentEventUser(event._id, user._id);
+
+        this.setState({ eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
       });
     }
-  };
-
-  sendRequestInFire = (data) => {
-    const { event } = this.props;
-    networkingFire
-      .sendRequestToUser(event._id, data)
-      .then(({ message, state }) => {
-        if (!state) {
-          toast.warn(message);
-        } else {
-          toast.success(message);
-        }
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
   };
 
   onChangePage = (pageOfItems) => {
@@ -94,28 +81,45 @@ export default class ListEventUser extends Component {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
   };
 
-  async SendFriendship(id) {
-    let { eventUserId } = this.state;
+  async SendFriendship({ eventUserIdReceiver, userName }) {
+    let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
+
+    message.loading("Enviando solicitud");
     if (currentUser) {
-      const data = {
-        id_user_requested: eventUserId,
-        id_user_requesting: id,
-        event_id: this.props.event._id,
-        state: "send",
-      };
+      // Se valida si el usuario esta suscrito al evento
+      if (eventUserId) {
+        // Se usan los EventUserId
+        const data = {
+          id_user_requested: eventUserId,
+          id_user_requesting: eventUserIdReceiver,
+          user_name_requested: currentUserName,
+          user_name_requesting: userName,
+          event_id: this.props.event._id,
+          state: "send",
+        };
 
-      this.sendRequestInFire(data);
+        // console.log("data:", data);
 
-      const response = await EventsApi.sendInvitation(this.props.event._id, data);
-      console.log(response);
+        // Se ejecuta el servicio del api de evius
+        try {
+          const response = await EventsApi.sendInvitation(this.props.event._id, data);
+          console.log("Esta es la respuesta:", response);
+          message.success("Solicitud enviada");
+        } catch (err) {
+          let { data } = err.response;
+          message.warning(data.message);
+        }
+      } else {
+        message.warning("No es posible enviar solicitudes. No se encuentra suscrito al evento");
+      }
     } else {
-      toast.warn("Para enviar la solicitud es necesario iniciar sesión");
+      message.warning("Para enviar la solicitud es necesario iniciar sesiÃ³n");
     }
   }
 
   render() {
-    const { userReq, users, pageOfItems } = this.state;
+    const { userReq, users, pageOfItems, eventUserId } = this.state;
     return (
       <React.Fragment>
         <EventContent>
@@ -123,9 +127,7 @@ export default class ListEventUser extends Component {
           <Tabs>
             <TabPane tab="Asistentes" key="1">
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <p>
-                  <h1> Busca aquí el usuarios.</h1>
-                </p>
+                <h1> Busca aquí el usuario.</h1>
 
                 <SearchComponent
                   placeholder={""}
@@ -144,6 +146,19 @@ export default class ListEventUser extends Component {
                   closable
                 />
               </Col>
+              {!this.state.loading && !eventUserId && (
+                <div>
+                  <br />
+                  <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                    <Alert
+                      message="Solicitudes"
+                      description="Para enviar solicitudes desbes estar suscrito al evento"
+                      type="info"
+                      closable
+                    />
+                  </Col>
+                </div>
+              )}
 
               <div style={{ marginTop: 10 }}>
                 {this.state.loading ? (
@@ -161,7 +176,10 @@ export default class ListEventUser extends Component {
                             extra={
                               <a
                                 onClick={() => {
-                                  this.SendFriendship(users._id);
+                                  this.SendFriendship({
+                                    eventUserIdReceiver: users._id,
+                                    userName: users.properties.names || users.properties.email,
+                                  });
                                 }}>
                                 Enviar Solicitud
                               </a>
@@ -180,13 +198,8 @@ export default class ListEventUser extends Component {
                               description={[
                                 <div>
                                   <br />
-                                  <p>Rol: {users.properties.rol ? users.properties.rol : "No registra Cargo"}</p>
-                                  <p>Ciudad: {users.properties.city ? users.properties.city : "No registra Ciudad"}</p>
                                   <p>
                                     Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                  </p>
-                                  <p>
-                                    Telefono: {users.properties.phone ? users.properties.phone : "No registra Telefono"}
                                   </p>
                                 </div>,
                               ]}

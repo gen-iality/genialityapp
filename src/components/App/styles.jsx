@@ -19,30 +19,33 @@ class Styles extends Component {
       //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
       colorDrawer: [
         {
-          title: "Elige El fondo de tu app",
+          title: "Elige un color de fondo:",
+          description: "Si escoges luego una imagen de fondo, esa imagen reemplazara este color.",
           fieldColorName: "containerBgColor",
           editIsVisible: false,
         },
         {
-          title: "Elige un color para los botones",
-          fieldColorName: "brandPrimary",
-          editIsVisible: false,
-        },
-        {
-          title: "Elige un color para el menu",
+          title: "Elige un color para el menu:",
           fieldColorName: "toolbarDefaultBg",
           editIsVisible: false,
         },
-        {
-          title: "Elige un color para el texto del menu",
-          fieldColorName: "textMenu",
-          editIsVisible: false,
-        },
-        {
-          title: "Elige un color para item seleccionado del menu",
-          fieldColorName: "activeText",
-          editIsVisible: false,
-        },
+        /*                 
+                {
+                  title: "Elige un color para los botones",
+                  fieldColorName: "brandPrimary",
+                  editIsVisible: false,
+                },
+        
+               {
+                  title: "Elige un color para el texto del menu",
+                  fieldColorName: "textMenu",
+                  editIsVisible: false,
+                },
+                {
+                  title: "Elige un color para item seleccionado del menu",
+                  fieldColorName: "activeText",
+                  editIsVisible: false,
+                }, */
       ],
     };
     //Se establecen las funciones para su posterior uso
@@ -50,14 +53,16 @@ class Styles extends Component {
     this.submit = this.submit.bind(this);
 
     this.imageDrawer = [
-      { title: "Elige una imagen de logo", imageFieldName: "event_image" },
-      { title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
-      { title: "Elige una imagen de fondo", imageFieldName: "BackgroundImage" },
       {
-        title: "Elige una imagen para el botón de la seccion especial(opcional)",
-        imageFieldName: "FooterImage",
+        title: "Elige una imagen para el banner superior:",
+        description: "Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar",
+        imageFieldName: "banner_image"
       },
-      { title: "Elige una imagen para el banner", imageFieldName: "banner_image" },
+      { title: "Elige una imagen(textura) para el fondo:", imageFieldName: "BackgroundImage" },
+      { title: "Elige una imagen para tu logo:", imageFieldName: "event_image", width: 640, height: 640 },
+      //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
+
+
     ];
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
@@ -176,7 +181,7 @@ class Styles extends Component {
     }
   }
 
-  onColorChange = function(color, fieldName) {
+  onColorChange = function (color, fieldName) {
     let temp = { ...this.state.styles };
     temp[fieldName] = color.hex;
     this.setState({ styles: temp });
@@ -211,24 +216,31 @@ class Styles extends Component {
                   />
                 )}
                 <div onClick={() => this.handleClickSelectColor(key)}>
-                  <label className="label has-text-grey-light">{item.title}</label>
+                  <p className="label">{item.title}</p>
+                  {item.description && <label className="label has-text-grey-light">{item.description}</label>}
                   <input
                     type="color"
                     disabled
                     style={{ marginRight: "3%", width: "5%" }}
                     value={this.state.styles[item.fieldColorName]}
-                    onChange={() => {}}
+                    onChange={() => { }}
                   />
                   <button className="button"> {item.editIsVisible ? "Seleccionar" : "Escoger"}</button>
                 </div>
               </div>
             ))}
+
+
             {this.imageDrawer.map((item, key) => (
               <div className="column inner-column" key={key}>
-                <label className="label has-text-grey-light">{item.title}</label>
-                <div className="control">
+                <p className="label ">{item.title}</p>
+                {item.description && <label className="label has-text-grey-light">{item.description}</label>}
+
+                <div className="control" >
                   <ImageInput
                     picture={this.state.styles[item.imageFieldName]}
+                    width={item.width}
+                    height={item.height}
                     changeImg={(files) => {
                       this.saveEventImage(files, item.imageFieldName);
                     }}

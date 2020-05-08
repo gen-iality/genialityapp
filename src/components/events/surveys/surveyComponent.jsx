@@ -17,7 +17,6 @@ class SurveyComponent extends Component {
     super(props);
     this.state = {
       surveyData: {},
-      uid: null,
     };
   }
 
@@ -64,8 +63,8 @@ class SurveyComponent extends Component {
 
   // Funcion para enviar la informacion de las respuestas
   sendDataToServer = (survey) => {
-    const { showListSurvey, eventId, userId } = this.props;
-    let { surveyData, uid } = this.state;
+    const { showListSurvey, eventId, currentUser } = this.props;
+    let { surveyData } = this.state;
 
     firestore
       .collection("surveys")
@@ -79,7 +78,7 @@ class SurveyComponent extends Component {
     // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
 
-    const executeService = (SurveyData, questions, uid) => {
+    const executeService = (SurveyData, questions, infoUser) => {
       let sendAnswers = 0;
       let responseMessage = null;
       let responseError = null;
@@ -87,28 +86,43 @@ class SurveyComponent extends Component {
       return new Promise((resolve, reject) => {
         questions.forEach(async (question) => {
           // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
-          let optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+          let optionIndex = [];
+
+          // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
+          if (typeof question.value == "object") {
+            question.value.forEach((value) => {
+              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+            });
+          } else {
+            optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+          }
+
           let optionQuantity = question.choices.length;
 
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos
           // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
           if (question.value)
-            if (uid) {
+            if (infoUser) {
               await SurveyAnswers.registerWithUID(
                 surveyData._id,
                 question.id,
                 {
                   responseData: question.value,
                   date: new Date(),
-                  uid,
+                  uid: infoUser._id,
+                  email: infoUser.email,
+                  names: infoUser.names || infoUser.displayName,
                 },
                 { optionQuantity, optionIndex }
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = !responseMessage && result;
+                  responseMessage = result;
                 })
-                .catch((err) => (responseError = err));
+                .catch((err) => {
+                  sendAnswers++;
+                  responseError = err;
+                });
             } else {
               // Sirve para controlar si un usuario anonimo ha votado
               localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
@@ -125,10 +139,14 @@ class SurveyComponent extends Component {
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = !responseMessage && result;
+                  responseMessage = result;
                 })
-                .catch((err) => (responseError = err));
+                .catch((err) => {
+                  sendAnswers++;
+                  responseError = err;
+                });
             }
+
           if (responseMessage && sendAnswers == questions.length) {
             await resolve(responseMessage);
           } else if (responseError) {
@@ -138,11 +156,12 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, userId).then((result) => {
+    executeService(surveyData, questions, currentUser).then((result) => {
       toast.success(result);
+      if (this.props.showListSurvey) {
+        showListSurvey(null, "reload");
+      }
     });
-
-    showListSurvey();
   };
 
   render() {

@@ -8,6 +8,12 @@ let ImageInput = (props) => {
     setStillOldImage(false);
   }
 
+  let width = (props.width) / 2 || 640;
+  let height = (props.height) / 2 || 320;
+
+  let widthText = props.width || 1280;
+  let heighText = props.height || 960;
+
   let style = props.style || {
     cursor: "pointer",
     display: "flex",
@@ -34,10 +40,10 @@ let ImageInput = (props) => {
   let classDrop = props.classDrop || "dropzone";
 
   return (
-    <div>
+    <div className="inputImage" style={{ "width": width, "height": height, "max-width": "100%" }}>
       {/* el #FFF es por un error que se nos fue a la base de datos*/}
       {props.picture && props.picture != "#FFF" ? (
-        <div className={divClass}>
+        <div className={divClass} style={{ "width": width, "height": height, "max-width": "100%" }}>
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone
             accept="image/*"
@@ -50,17 +56,17 @@ let ImageInput = (props) => {
           </Dropzone>
         </div>
       ) : (
-        <div>
-          <Dropzone accept="image/*" onDrop={props.changeImg} style={style}>
-            <div className="has-text-grey has-text-weight-bold has-text-centered">
-              <span>Subir foto</span>
-              <br />
-              <small>(Tamaño recomendado: 1280px x 960px)</small>
-            </div>
-          </Dropzone>
-          <span>{props.errImg}</span>
-        </div>
-      )}
+          <div>
+            <Dropzone accept="image/*" onDrop={props.changeImg} style={style}>
+              <div className="has-text-grey has-text-weight-bold has-text-centered">
+                <span>Subir foto</span>
+                <br />
+                <small>(Tamaño recomendado: {widthText}px x {heighText}px)</small>
+              </div>
+            </Dropzone>
+            <span>{props.errImg}</span>
+          </div>
+        )}
     </div>
   );
 };

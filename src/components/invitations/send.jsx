@@ -9,6 +9,7 @@ import LogOut from "../shared/logOut";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FormattedMessage } from "react-intl";
+import Quill from 'react-quill';
 Moment.locale('es-us');
 
 class SendRsvp extends Component {
@@ -64,6 +65,10 @@ class SendRsvp extends Component {
             rsvp: { ...this.state.rsvp, [name]: value }
         })
     };
+
+    QuillComplement = content => this.setState({
+        rsvp: { ...this.state.rsvp, message: content }
+    })
 
     async submit() {
         const { event, selection } = this.props;
@@ -231,7 +236,8 @@ class SendRsvp extends Component {
                             <div className="field rsvp-desc">
                                 <label className="label">Cuerpo de la invitación <br /> <small>(Por defecto será la descripción del evento)</small></label>
                                 <div className="control">
-                                    <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} />
+                                    {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
+                                    <Quill value={this.state.rsvp.message} onChange={this.QuillComplement} name="message" />
                                 </div>
                             </div>
                         </div>
@@ -263,7 +269,7 @@ class SendRsvp extends Component {
                         </div>
 
                         <div className="column has-text-centered">
-                            <Link to={{pathname:`${this.props.matchUrl}`}}>
+                            <Link to={{ pathname: `${this.props.matchUrl}` }}>
                                 <button className="button is-primary">
                                     Editar Seleccionados
                                 </button>

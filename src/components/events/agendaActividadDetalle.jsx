@@ -4,19 +4,25 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import * as Cookie from "js-cookie";
-import API, { OrganizationApi, EventsApi } from "../../helpers/request";
+import API, { OrganizationApi, EventsApi, SpeakersApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card, Modal } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
-let agendaActividadDetalle = props => {
+import DocumentsList from "../documents/documentsList"
+import { UserOutlined } from "@ant-design/icons";
+import ModalSpeaker from "./modalSpeakers"
+
+let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
+  let [modalVisible, setModalVisible] = useState(false);
+  let [idSpeaker, setIdSpeaker] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -43,7 +49,7 @@ let agendaActividadDetalle = props => {
         .collection(`${id}_event_attendees`)
         .where("properties.email", "==", data.email)
         .get()
-        .then(snapshot => {
+        .then((snapshot) => {
           if (snapshot.empty) {
             toast.error("Usuario no inscrito a este evento, contacte al administrador");
             console.log("No matching documents.");
@@ -52,14 +58,14 @@ let agendaActividadDetalle = props => {
 
           console.log("USUARIO REGISTRADO.");
 
-          snapshot.forEach(doc => {
+          snapshot.forEach((doc) => {
             var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
             console.log(doc.id, "=>", doc.data());
             user
               .update({
                 updated_at: new Date(),
                 checked_in: true,
-                checked_at: new Date()
+                checked_at: new Date(),
               })
               .then(() => {
                 // Disminuye el contador si la actualizacion en la base de datos se realiza
@@ -67,19 +73,23 @@ let agendaActividadDetalle = props => {
                 toast.success("Usuario Chequeado");
                 setUsuarioRegistrado(true);
               })
-              .catch(error => {
+              .catch((error) => {
                 console.error("Error updating document: ", error);
                 toast.error(<FormattedMessage id="toast.error" defaultMessage="Error :(" />);
               });
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Error getting documents", err);
         });
 
       console.log("data ", data);
     })();
   }, []);
+
+  async function getSpeakers(idSpeaker) {
+    setIdSpeaker(idSpeaker)
+  }
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
   return (
@@ -88,7 +98,7 @@ let agendaActividadDetalle = props => {
         <div className="card agenda_information ">
           <PageHeader
             className="site-page-header"
-            onBack={e => {
+            onBack={(e) => {
               gotoActivityList();
             }}
             title={currentActivity.name}
@@ -96,24 +106,37 @@ let agendaActividadDetalle = props => {
           <header className="card-header columns has-padding-left-7">
             <div className="is-block is-11 column is-paddingless">
               {/* Hora del evento */}
-              <p className="card-header-title ">
+              <p className="card-header-title has-padding-left-0 ">
                 {Moment(currentActivity.datetime_start).format("h:mm a")} -{" "}
                 {Moment(currentActivity.datetime_end).format("h:mm a")}
+              </p>
+              {/* Lugar del evento */}
+              <p className="has-text-left is-size-6-desktop">
+                <b>Lugar:</b> {currentActivity.space.name}
               </p>
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
               {currentActivity.meeting_video && (
-                <ReactPlayer style={{ maxWidth: "100%" }} url={currentActivity.meeting_video} controls />
+                <ReactPlayer
+                  style={{
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  width="100%"
+                  height="auto"
+                  url={currentActivity.meeting_video} controls />
               )}
+
+              {!currentActivity.meeting_video && currentActivity.image && (
+                <img className="activity_image" src={currentActivity.image} />
+              )}
+
             </div>
           </header>
 
           <div className="card-content has-text-left container_calendar-description">
-            {/* Lugar del evento */}
-            <p className="has-text-left is-size-6-desktop">
-              <b>Lugar:</b> {currentActivity.space.name}
-            </p>
+
             <div className="calendar-category has-margin-top-7">
               {/* Tags de categorias */}
               {currentActivity.activity_categories.map((cat, key) => (
@@ -121,68 +144,16 @@ let agendaActividadDetalle = props => {
                   key={key}
                   style={{
                     background: cat.color,
-                    color: cat.color ? "white" : ""
+                    color: cat.color ? "white" : "",
                   }}
                   className="tag category_calendar-tag">
                   {cat.name}
                 </span>
               ))}
+
+              <span className="tag category_calendar-tag">{currentActivity.meeting_id ? "Tiene espacio virtual" : "No tiene espacio Virtual"}</span>
             </div>
-            <div>
-              <div className="has-text-left is-size-6-desktop">
-                <b>Encuestas</b>
-                <div>
-                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={survey.data}
-                    renderItem={item => (
-                      <List.Item
-                        actions={[
-                          item.publish === "true" ? (
-                            <Button type="primary" onClick={showDrawer}>
-                              Contestar Encuesta
-                            </Button>
-                          ) : (
-                            <div></div>
-                          )
-                        ]}>
-                        <List.Item.Meta
-                          title={
-                            <div>
-                              <p>{item.survey}</p>
-                              {item.publish === "true" ? (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={visible}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              ) : (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={false}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </div>
-              </div>
-            </div>
+
             {/* Boton de para acceder a la conferencia */}
 
             {/*
@@ -199,8 +170,8 @@ let agendaActividadDetalle = props => {
               
              */}
 
-            <h2 className="button is-success"> Tiene Espacio Virtual </h2>
-            {console.log(usuarioRegistrado, currentUser)}
+            <div className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
+
             <Row>
               <Col span={24}>
                 <AttendeeNotAllowedCheck
@@ -214,7 +185,9 @@ let agendaActividadDetalle = props => {
                   <Button
                     type="primary"
                     disabled={currentActivity.meeting_id ? false : true}
-                    onClick={() => showIframe(true, currentActivity.meeting_id)}>
+                    onClick={() =>
+                      showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                    }>
                     {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
                   </Button>
                 )}
@@ -223,103 +196,139 @@ let agendaActividadDetalle = props => {
 
             <hr />
             <hr />
-            {/* Descripción del evento */}
+            <div>
 
-            {currentActivity.hosts.length === 0 ? (
-              <div></div>
-            ) : (
-              <div>
-                <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                  <b>Conferencista:</b> &nbsp;
-                  <div>
+
+              <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                <b>Encuestas:</b>&nbsp;
+                <div>
+                  <Card style={{ textAlign: "left" }}>
+                    {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
                     <List
                       itemLayout="horizontal"
-                      dataSource={currentActivity.hosts}
-                      renderItem={item => (
-                        <List.Item>
+                      dataSource={survey.data}
+                      renderItem={(item) => (
+                        <List.Item
+                          actions={[
+                            item.publish === "true" ? (
+                              <Button type="primary" onClick={showDrawer}>
+                                Contestar Encuesta
+                              </Button>
+                            ) : (
+                                <div></div>
+                              ),
+                          ]}>
                           <List.Item.Meta
-                            avatar={
-                              <Avatar
-                                src={
-                                  item.image
-                                    ? item.image
-                                    : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                }
-                              />
+                            title={
+                              <div>
+                                <p>{item.survey}</p>
+                                {item.publish === "true" ? (
+                                  <div>
+                                    <Drawer
+                                      title={item.survey}
+                                      placement="right"
+                                      closable={false}
+                                      onClose={onClose}
+                                      visible={visible}>
+                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                    </Drawer>
+                                  </div>
+                                ) : (
+                                    <div>
+                                      <Drawer
+                                        title={item.survey}
+                                        placement="right"
+                                        closable={false}
+                                        onClose={onClose}
+                                        visible={false}>
+                                        <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                      </Drawer>
+                                    </div>
+                                  )}
+                              </div>
                             }
-                            title={<strong>{item.name}</strong>}
-                            description={item.profession}
                           />
                         </List.Item>
                       )}
                     />
+                  </Card>
+                </div>
+              </div>
+            </div>
+
+            {currentActivity.hosts.length === 0 ? (
+              <div></div>
+            ) : (
+                <div>
+                  <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                    <b>Conferencistas:</b> &nbsp;
+                  <div>
+                      <Card style={{ textAlign: "left" }}>
+                        <List
+                          itemLayout="horizontal"
+                          dataSource={currentActivity.hosts}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <List.Item.Meta
+                                avatar={
+                                  <Avatar
+                                    src={
+                                      item.image
+                                        ? item.image
+                                        : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                    }
+                                  />
+                                }
+                                title={<strong>{item.name}</strong>}
+                                description={item.profession}
+                              />
+                              <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
+                            </List.Item>
+                          )} />
+                        {
+                          idSpeaker ?
+                            <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
+                            :
+                            <></>
+                        }
+                      </Card>
+                    </div>
+                  </p>
+                </div>
+              )}
+
+            {(currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0) && (
+
+              <div>
+                <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                  <b>Documentos:</b> &nbsp;
+                  <div>
+                    <DocumentsList data={currentActivity.selected_document} />
                   </div>
-                </p>
+                </div>
               </div>
             )}
-            {/* Conferencistas del evento */}
-            <div>
-              <p className="has-text-left is-size-6-desktop">
-                <b>Encuestas</b>
+
+
+            {
+              currentUser.names ? <div /> :
                 <div>
-                  {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={survey.data}
-                    renderItem={item => (
-                      <List.Item
-                        actions={[
-                          item.publish === "true" ? (
-                            <Button type="primary" onClick={showDrawer}>
-                              Contestar Encuesta
-                            </Button>
-                          ) : (
-                            <div></div>
-                          )
-                        ]}>
-                        <List.Item.Meta
-                          title={
-                            <div>
-                              <p>{item.survey}</p>
-                              {item.publish === "true" ? (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={visible}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              ) : (
-                                <div>
-                                  <Drawer
-                                    title={item.survey}
-                                    placement="right"
-                                    closable={false}
-                                    onClose={onClose}
-                                    visible={false}>
-                                    <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                  </Drawer>
-                                </div>
-                              )}
-                            </div>
-                          }
-                        />
-                      </List.Item>
+                  {currentActivity.meeting_id ? (
+                    <div>
+                      <Button
+                        type="primary"
+                        disabled={currentActivity.meeting_id ? false : true}
+                        onClick={() =>
+                          showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                        }>
+                        Conferencia en Vivo en anónimo
+                      </Button>
+                    </div>
+                  ) : (
+                      <div />
                     )}
-                  />
                 </div>
-              </p>
-            </div>
-            {/* Boton de para acceder a la conferencia */}
-            <button
-              className="button is-success is-outlined is-pulled-right has-margin-top-20"
-              disabled={currentActivity.meeting_id ? false : true}
-              onClick={() => showIframe(true, currentActivity.meeting_id)}>
-              {currentActivity.meeting_id ? "Conferencia en Vivo" : "Sin Conferencia Virtual"}
-            </button>
+            }
 
             <hr></hr>
             <br />
@@ -331,7 +340,7 @@ let agendaActividadDetalle = props => {
               style={{
                 borderTop: "none",
                 justifyContent: "space-between",
-                alignItems: "flex-end"
+                alignItems: "flex-end",
               }}>
               {/* <button
                   <div
@@ -357,10 +366,11 @@ let agendaActividadDetalle = props => {
 
               <a
                 className=""
-                onClick={e => {
+                onClick={(e) => {
                   gotoActivityList();
                 }}>
-                <h3 className=""> Regresar a la agenda</h3>
+
+                <Button >Regresar a la agenda</Button>
               </a>
             </div>
           </div>

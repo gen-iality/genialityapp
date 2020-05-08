@@ -1,10 +1,10 @@
-.agenda-list{
-  .date{
+.agenda-list {
+  .date {
     cursor: pointer;
-    &:hover{
+    &:hover {
       border-bottom: 1px solid lighten($primary, 50%);
     }
-    &.active{
+    &.active {
       border-bottom: 1px solid $primary;
       .subtitle strong {
         color: $primary !important;
@@ -15,127 +15,119 @@
 }
 
 // *************** Iframe Zoom *********************//
-.iframe-zoom{
+.iframe-zoom {
   width: 100%;
   height: 100%;
 }
 
 //**************** Agenda landing*******************//
 
-.container-calendar-section{
-
-  .container_calendar-description{
-    padding: 0 30px;
+.container-calendar-section {
+  .container_calendar-description {
+    padding: 0 15px;
   }
-  .button-color-agenda{
+  .button-color-agenda {
     background-color: $color-prueba;
   }
 
-  .container-calendar{
+  .container-calendar {
     min-width: 80%;
     @media (min-width: 1020px) {
       max-width: 65%;
-     }
-   
-  }
-.container-calendar-space{
-  margin-top: 6%;
-  min-width: 30%;
-  .button {
-    font-size: 1.1rem;
-    border-color: transparent;
-    border-width: 1px;
-    color: $evius-secundary;
-    cursor: pointer;
-    justify-content: center;
-    padding-bottom: calc(1em - 3rem);
-    padding-left: 0.75em;
-    padding-right: 0.75em;
-    padding-top: calc(1em - 3rem);
-    text-align: center;
-    white-space: nowrap;
-    height: 4rem;
-    &:focus {
-      outline: none;
     }
   }
-}
-
-.container_agenda-information{
-  margin-bottom: 3%;
-  .site-page-header {
-    border: 1px solid rgb(255, 255, 255);
-  }
-  .agenda_information{
-    padding: 20px;
-    border: none;
-    border-radius: 10px;
-    .card-header{
-      box-shadow: none;
-    }
-
-    .card-header-date{
-      color: $title-agenda;
-      justify-content: start;
-      font-weight: 600;
-      
-      
-    }
-
-    .card-header-title{
-      justify-content: start;
-      font-weight: bolder;
-      font: normal normal 500 23px/25px $family-sans-serif;
-      text-align: initial;
-    }
-
-    .container_calendar-description{
-     
-      .calendar-description{
-        margin: 3% 0%;
+  .container-calendar-space {
+    margin-top: 6%;
+    min-width: 30%;
+    .button {
+      font-size: 1.1rem;
+      border-color: transparent;
+      border-width: 1px;
+      color: $evius-secundary;
+      cursor: pointer;
+      justify-content: center;
+      padding-bottom: calc(1em - 3rem);
+      padding-left: 0.75em;
+      padding-right: 0.75em;
+      padding-top: calc(1em - 3rem);
+      text-align: center;
+      white-space: nowrap;
+      height: 4rem;
+      &:focus {
+        outline: none;
       }
-      .card-header-subtitle{
+    }
+  }
+
+  .container_agenda-information {
+    margin-bottom: 3%;
+    .site-page-header {
+      border: 1px solid rgb(255, 255, 255);
+    }
+    .agenda_information {
+      padding: 20px;
+      border: none;
+      border-radius: 10px;
+      .card-header {
+        box-shadow: none;
+      }
+
+      .card-header-date {
+        color: $title-agenda;
         justify-content: start;
         font-weight: 600;
-        font-size: 1.06rem;
       }
 
-      .category_calendar-tag{
-        margin-right: 2%;
-        font-size: 0.9rem;
+      .card-header-title {
+        justify-content: start;
+        font-weight: bolder;
+        font: normal normal 500 23px/25px $family-sans-serif;
+        text-align: initial;
+      }
+
+      .container_calendar-description {
+        .calendar-description {
+          margin: 3% 0%;
+        }
+        .card-header-subtitle {
+          justify-content: start;
+          font-weight: 600;
+          font-size: 1.06rem;
+        }
+
+        .category_calendar-tag {
+          margin-right: 2%;
+          font-size: 0.9rem;
+        }
       }
     }
-
   }
 
-  
-}
+  // Day tabs
 
-// Day tabs
-
-/** los important se colocaron por fuerza mayor para poder sobreescribir los estilos
+  /** los important se colocaron por fuerza mayor para poder sobreescribir los estilos
  de bulma, si se encuentra una mejor solución porfavor optimizarlo**/
 
-  .container-day_calendar{
+  .container-day_calendar {
     margin-bottom: 60px !important;
-    .select-day{
+    .select-day {
       background-color: $evius-secundary !important;
-      color: white!important;
+      color: white !important;
       padding: 20px 0px;
       font-weight: bold;
       font-size: 2rem;
       border-bottom-color: #dbdbdb !important;
       margin: 6px;
       border-radius: 0;
-      &:focus{
+      &:focus {
         color: white;
         border: none;
         background-color: $evius-secundary !important;
-      }  
+      }
     }
-    
-    .unselect-day{
-      background-color:white !important;
+
+    .unselect-day {
+      background-color: white !important;
       color: rgb(75, 69, 69) !important;
       padding: 20px 0px;
       font-weight: bold;
@@ -143,11 +135,11 @@
       border-bottom-color: #dbdbdb !important;
       margin: 6px;
       border-radius: 0;
-      &:focus{
+      &:focus {
         color: white;
         border: none;
         background-color: $evius-secundary !important;
-      }  
+      }
     }
   }
 }

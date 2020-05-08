@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import axios from 'axios';
 import { ApiEviusZoomServer } from "../../helpers/constants"
 import { Redirect, withRouter, Link } from "react-router-dom";
@@ -14,6 +14,7 @@ import { AgendaApi, Actions, CategoriesAgendaApi, RolAttApi, SpacesApi, Speakers
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
+import { Spin, Card } from 'antd';
 
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
@@ -32,6 +33,7 @@ class AgendaEdit extends Component {
             description: "",
             hour_start: new Date(),
             hour_end: new Date(),
+            key: new Date(),
             date: "",
             image: "",
             locale: "en",
@@ -48,6 +50,7 @@ class AgendaEdit extends Component {
             categories: [],
             start_url: "",
             join_url: "",
+            meeting_id: "",
             documents: [],
             types: [],
             roles: [],
@@ -56,11 +59,12 @@ class AgendaEdit extends Component {
             nameDocuments: []
         }
         this.createConference = this.createConference.bind(this)
+        this.removeConference = this.removeConference.bind(this)
     }
 
     async componentDidMount() {
 
-        console.log(this.state.selectedHosts.length > 0 ? 'con campos' : 'sin campos');
+
         const { event, location: { state } } = this.props;
         let days = [];
         const init = Moment(event.date_start);
@@ -73,14 +77,14 @@ class AgendaEdit extends Component {
         let documents = await DocumentsApi.byEvent(this.props.event._id);
         let nameDocuments = []
         for (var i = 0; i < documents.length; i += 1) {
-            nameDocuments.push({ name: documents[i].title, value: documents[i].title, label: documents[i].title })
+            nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title })
         }
         this.setState({ nameDocuments })
-        console.log(nameDocuments)
+
 
         let spaces = await SpacesApi.byEvent(this.props.event._id);
         let hosts = await SpeakersApi.byEvent(this.props.event._id);
-        console.log(hosts)
+
         let roles = await RolAttApi.byEvent(this.props.event._id);
         let categories = await CategoriesAgendaApi.byEvent(this.props.event._id);
         let types = await TypesAgendaApi.byEvent(this.props.event._id);
@@ -90,10 +94,13 @@ class AgendaEdit extends Component {
         roles = handleSelect(roles);
         categories = handleSelect(categories);
         types = handleSelect(types);
+
         if (state.edit) {
             const info = await AgendaApi.getOne(state.edit, event._id);
-            console.log(info.selected_document)
-            this.setState({ selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url })
+
+            this.setState({
+                selected_document: info.selected_document, start_url: info.start_url, join_url: info.join_url
+            })
             Object.keys(this.state).map(key => info[key] ? this.setState({ [key]: info[key] }) : "");
             const { date, hour_start, hour_end } = handleDate(info);
             this.setState({
@@ -104,6 +111,7 @@ class AgendaEdit extends Component {
         } else {
             this.setState({ date: days[0] })
         }
+
         const isLoading = { types: false, categories: false };
         this.setState({ days, spaces, hosts, categories, types, roles, loading: false, isLoading });
     }
@@ -126,7 +134,7 @@ class AgendaEdit extends Component {
         this.setState({ selectedCategories });
     };
     selectHost = (selectedHosts) => {
-        console.log(selectedHosts);
+
         this.setState({ selectedHosts });
     };
     selectRol = (selectedRol) => {
@@ -134,7 +142,7 @@ class AgendaEdit extends Component {
     };
 
     selectDocuments = (selected_document) => {
-        console.log(selected_document);
+
         this.setState({ selected_document });
     }
     //FN para los select que permiten crear opción
@@ -182,10 +190,12 @@ class AgendaEdit extends Component {
         if (this.validForm()) {
             try {
                 const info = this.buildInfo();
-                console.log(info)
+
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
                 this.setState({ isLoading: true });
+                console.log("AGUARDAR", info, state.edit);
+
                 if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
                 else {
                     const agenda = await AgendaApi.create(event._id, info);
@@ -197,7 +207,7 @@ class AgendaEdit extends Component {
                 sweetAlert.showError(handleRequestError(e))
             }
         }
-        console.log(this.state.has_date)
+
     };
 
 
@@ -205,7 +215,6 @@ class AgendaEdit extends Component {
         if (this.validForm()) {
             try {
                 const info = this.buildInfoLanguage();
-                console.log(info)
 
                 sweetAlert.showLoading("Espera (:", "Guardando...");
                 const { event, location: { state } } = this.props;
@@ -221,7 +230,7 @@ class AgendaEdit extends Component {
                 sweetAlert.showError(handleRequestError(e))
             }
         }
-        console.log(this.state.has_date)
+
     };
 
     buildInfoLanguage = () => {
@@ -256,7 +265,7 @@ class AgendaEdit extends Component {
     //FN para construir la información a enviar al api
     buildInfo = () => {
         const { name, subtitle, has_date, hour_start, hour_end, date, space_id, capacity, access_restriction_type,
-            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image } = this.state;
+            selectedCategories, selectedHosts, selectedType, selectedRol, description, selected_document, image, meeting_id } = this.state;
         const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
         const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
         const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
@@ -280,21 +289,30 @@ class AgendaEdit extends Component {
             type_id,
             has_date,
             timeConference: "",
-            selected_document
+            selected_document,
+            meeting_id: meeting_id,
         }
     };
 
+    async removeConference() {
+        if (window.confirm("Esta seguro?")) {
+            this.setState({ meeting_id: null }, function () {
+                this.submit();
+            })
+
+        }
+
+    }
+
     async createConference() {
+
+        this.setState({ creatingConference: true });
         const zoomData = {
             activity_id: this.props.location.state.edit,
             activity_name: this.state.name,
             event_id: this.props.event._id,
             agenda: this.props.event.description,
-            duration: this.state.timeConference ? parseInt(this.state.timeConference) : 30,
-            record: this.state.record ? this.state.record : "none"
         }
-
-        console.log(zoomData)
 
         const options = {
             method: 'POST',
@@ -304,12 +322,27 @@ class AgendaEdit extends Component {
             data: zoomData,
             url: ApiEviusZoomServer,
         };
+        let response = null;
 
-        let response = await axios(options);
+        axios.defaults.timeout = 10000;
+        try {
+            response = await axios(options);
+            toast.success("Conferencia Creada");
+            const { event, location: { state } } = this.props;
+            const info = await AgendaApi.getOne(state.edit, this.props.event._id);
+            this.setState({ meeting_id: info.meeting_id, start_url: info.start_url, join_url: info.join_url, key: new Date() })
 
-        console.log(response)
+        } catch (e) {
+            let response = "";
+            if (e.response) {
+                response = JSON.stringify(e.response.data);
+            }
 
-        toast.success("Conferencia Creada")
+            alert("No se pudo crear la conferencia virtual, intente más tarde. " + e + " " + response);
+            this.setState({ creatingConference: false });
+        }
+        this.setState({ creatingConference: false });
+
     }
 
     //FN para eliminar la actividad
@@ -510,30 +543,6 @@ class AgendaEdit extends Component {
                                         onChange={this.chgTxt} />
                                 </div>
                             </div>
-
-                            <div>
-                                <p>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Usuarios</th>
-                                                <th>Conferencistas</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th>
-                                                    <a href={start_url} >Acceso para usuarios</a>
-                                                </th>
-
-                                                <th>
-                                                    <a href={join_url} >Acceso para conferencistas</a>
-                                                </th>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </p>
-                            </div>
                         </div>
                         <div className="column is-4 general">
                             <div className="field is-grouped">
@@ -607,24 +616,43 @@ class AgendaEdit extends Component {
                                 </div>
                             </div>
 
-                            {
-                                this.props.location.state.edit ?
-                                    <div style={{ marginTop: "4%" }}>
-                                        <label className="label">Crear Conferencia</label>
-                                        <input className="input" type="number" placeholder="Tiempo de conferencia" id="time" onChange={e => this.setState({ timeConference: e.target.value })} />
-                                        <div className="select">
-                                            <select onClick={e => this.setState({ record: e.target.value })}>
-                                                <option value="none">...Seleccionar</option>
-                                                <option value="none">No grabar</option>
-                                                <option value="cloud">Grabar</option>
-                                            </select>
-                                        </div>
 
-                                        <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.createConference}>Conferencia</button>
-                                    </div>
-                                    :
-                                    <div />
-                            }
+
+                            <Card style={{ marginTop: "4%" }} title="Conferencia virtual" >
+
+                                {!this.props.location.state.edit && <div>Primero cree la actividad  y luego podrá crear una conferencia virtual asociada</div>}
+
+                                {this.props.location.state.edit && (
+                                    <>
+                                        {!this.state.meeting_id && (<div>
+                                            {!this.state.creatingConference && <button style={{ marginTop: "2%" }} className="button is-primary"
+                                                onClick={this.createConference}>Crear espacio virtual</button>}
+                                            {this.state.creatingConference && <Spin tip="Creando..." />}
+                                        </div>)}
+
+                                        {this.state.meeting_id && (<div>
+                                            <div style={{ marginTop: "2%" }}>
+
+                                                <div>
+                                                    <p>El id de la conferencia virtual es:</p>
+                                                    <p>{this.state.meeting_id}</p>
+                                                </div>
+
+                                                <div key={this.state.key}>
+                                                    <p><b>Accessos</b></p>
+                                                    <hr />
+                                                    <p><a target="_blank" href={start_url} >Acceso para hosts</a></p>
+                                                    <p><a target="_blank" href={join_url}  >Acceso  para asistentes</a></p>
+                                                </div>
+                                            </div>
+
+                                            <button style={{ marginTop: "2%" }} className="button is-primary" onClick={this.removeConference}>Eliminar espacio virtual</button>
+                                        </div>)}
+                                    </>
+                                )}
+                            </Card>
+
+
                         </div>
                     </div>
                 }

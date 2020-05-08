@@ -1,0 +1,84 @@
+import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
+import Moment from "moment";
+import XLSX from "xlsx";
+
+import { getAnswersByQuestion } from "./services";
+
+import EventContent from "../events/shared/content";
+
+import { Table, Divider, Button } from "antd";
+
+const columns = [
+  {
+    title: "Creado",
+    dataIndex: "creation_date_text",
+    key: "creation_date_text",
+  },
+  {
+    title: "Nombre",
+    dataIndex: "user_name",
+    key: "user_name",
+    render: (name) => (!name ? <span>Usuario Invitado</span> : <span>{name}</span>),
+  },
+  {
+    title: "Respuesta",
+    dataIndex: "response",
+    key: "response",
+  },
+];
+class ReportQuestion extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nameQuestion: "",
+      listOfUserResponse: [],
+    };
+  }
+
+  loadData = async () => {
+    const { location, match, event } = this.props;
+
+    this.setState({ nameQuestion: location.state.titleQuestion });
+    let response = await getAnswersByQuestion(location.state.surveyId, match.params.id);
+    this.setState({ listOfUserResponse: response });
+  };
+
+  componentDidMount() {
+    this.loadData();
+  }
+
+  exportReport = () => {
+    let { nameQuestion, listOfUserResponse } = this.state;
+    const { match } = this.props;
+
+    const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
+
+    let data = listOfUserResponse.map((item) => exclude(item));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, ws, `${nameQuestion}`);
+    const name = `${match.params.id}`;
+
+    XLSX.writeFile(wb, `${name}${Moment().format("DDMMYY")}.xls`);
+  };
+
+  goBack = () => this.props.history.goBack();
+
+  render() {
+    let { nameQuestion, listOfUserResponse } = this.state;
+    return (
+      <Fragment>
+        <EventContent title={nameQuestion} closeAction={this.goBack}>
+          <Divider orientation="right">Reporte</Divider>
+          <Button onClick={this.exportReport}>Exportar</Button>
+          <Table dataSource={listOfUserResponse} columns={columns} />;
+        </EventContent>
+      </Fragment>
+    );
+  }
+}
+
+export default withRouter(ReportQuestion);

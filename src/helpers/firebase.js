@@ -1,23 +1,34 @@
-import app from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import app from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
 
 const config = {
-    apiKey: "AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc",
-    authDomain: "eviusauth.firebaseapp.com",
-    databaseURL: "https://eviusauth.firebaseio.com",
-    projectId: "eviusauth",
-    storageBucket: "eviusauth.appspot.com",
-    messagingSenderId: "400499146867"
+  apiKey: "AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc",
+  authDomain: "eviusauth.firebaseapp.com",
+  databaseURL: "https://eviusauth.firebaseio.com",
+  projectId: "eviusauth",
+  storageBucket: "eviusauth.appspot.com",
+  messagingSenderId: "400499146867",
 };
 app.initializeApp(config);
 
 const firestore = app.firestore();
+const fireStorage = app.storage();
+console.log("fireStorage", fireStorage);
+
 firestore.settings({
-    cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED
-})
-firestore.enablePersistence().then(() => { window.eviusFailedPersistenceEnabling = false })
-    .catch((err) => { console.log(err); window.eviusFailedPersistenceEnabling = true });
+  cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
+});
+firestore
+  .enablePersistence()
+  .then(() => {
+    window.eviusFailedPersistenceEnabling = false;
+  })
+  .catch((err) => {
+    console.log(err);
+    window.eviusFailedPersistenceEnabling = true;
+  });
 const auth = app.auth();
 window.firebase = app;
-export { app, auth, firestore };
+export { app, auth, firestore, fireStorage };

@@ -5,13 +5,18 @@ import { toast } from "react-toastify";
 import { Button } from 'antd';
 import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
 
+
+const imageWidh = 1280;
+const imageheigh = 960;
+
 class CameraFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
             image: "",
             hidden: true,
-            hiddeVideo: false
+            hiddeVideo: false,
+            stream: null,
         }
     }
     /**
@@ -33,8 +38,8 @@ class CameraFeed extends Component {
      */
     async setDevice(device) {
         const { deviceId } = device;
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { deviceId } });
-        this.videoPlayer.srcObject = stream;
+        this.stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { deviceId } });
+        this.videoPlayer.srcObject = this.stream;
         this.videoPlayer.play();
     }
 
@@ -55,23 +60,29 @@ class CameraFeed extends Component {
      * @instance
      */
     takePhoto = () => {
-        const { sendFile } = this.props;
+        const { sendFile, getImage } = this.props;
         const context = this.canvas.getContext('2d');
-        context.drawImage(this.videoPlayer, 0, 0, 680, 360);
+        context.drawImage(this.videoPlayer, 0, 0, imageWidh, imageheigh);
         this.canvas.toBlob(sendFile);
         let image = this.canvas.toDataURL()
         this.setState({ image, hidden: false, hiddeVideo: true })
         toast.success("Imagen Salvada")
+
+        //Detiene el stream del video
+        this.videoPlayer.srcObject = null;
+        this.stream.getTracks().forEach(track => track.stop());
+        getImage(image)
     };
 
     async clearImage() {
-        console.log(this.props.sendFile)
         await this.setState({ hidden: true, image: "" })
         console.log(this.state.hidden, this.state.image)
         toast.error("Imagen Eliminada")
     }
 
-    renderingCode() {
+    async renderingCode() {
+        const cameras = await navigator.mediaDevices.enumerateDevices();
+        this.processDevices(cameras);
         this.setState({ hidden: true, image: "", hiddeVideo: false })
         this.forceUpdate()
     }
@@ -90,11 +101,18 @@ class CameraFeed extends Component {
                         <video
                             hidden={this.state.hiddeVideo}
                             ref={ref => (this.videoPlayer = ref)}
-                            width="680"
-                            heigh="360"
+                            width="1280"
+                            heigh="960"
                         />
                     </div>
+                </div>
+                {/* Imagen capturada  */}
+                <div className="c-camera-feed__stage">
+                    <canvas style={{ "maxWidth": "100%" }} width={imageWidh} height={imageheigh} hidden={hidden} ref={ref => (this.canvas = ref)} />
+                    <img width={imageWidh} height={imageheigh} id="getImage" hidden src={image} />
+                </div>
 
+                <div style={{ textAlign: "center" }}>
                     <Button
                         hidden={this.state.hiddeVideo}
                         type="primary"
@@ -104,19 +122,8 @@ class CameraFeed extends Component {
                     >
                         <CameraOutlined style={{ fontSize: "2rem" }} />
                     </Button>
-                    {
-                        this.state.image === "" ? <div></div> :
-                            <div>
-                                <Button onClick={() => { this.renderingCode() }}>Tomar Otra Foto</Button>
-                            </div>
-                    }
+                    {this.state.image && <Button onClick={() => { this.renderingCode() }}>Tomar Otra Foto</Button>}
 
-
-                </div>
-                {/* Imagen capturada  */}
-                <div className="c-camera-feed__stage">
-                    <canvas width="470" height="360" hidden={hidden} ref={ref => (this.canvas = ref)} />
-                    <img id="getImage" hidden src={image} />
                 </div>
             </div>
         );

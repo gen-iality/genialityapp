@@ -1,25 +1,8 @@
 import firebase from "firebase";
-import { firestore } from "../../helpers/firebase";
+import { firestore, fireStorage } from "../../helpers/firebase";
+import { toast } from "react-toastify";
 
 export const saveFirebase = {
-  async saveImage(eventId, image) {
-    //Se abre la conexion a firebase
-    const ref = firebase.storage().ref();
-    //se crea una referencia tipo child para guardar las imagenes del post en el storage
-    const uploadTask = ref.child(`imagesPost/${eventId}/${image.name}`).put(image);
-
-    //Se hace una constante para realizar push de la url
-    const urlImage = [];
-
-    //se consulta la url mediante uploadTask.snapshot.ref.getDownloadURL(),
-    // y se ejecuta la funcion para poder obtener dicha url
-    await uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-      urlImage.push(downloadURL);
-    });
-    // se retorna la url de la imagen del post para poder guardar la imagen como url
-    return urlImage;
-  },
-
   async saveComment(email, comments, date, eventId, idPost) {
     const data = {
       author: email,
@@ -39,70 +22,84 @@ export const saveFirebase = {
     //console.log(await addComment)
   },
 
-  async savePost(text, authorPost, eventId) {
-    let data = {
-      post: text,
-      author: authorPost,
-      datePost: new Date(),
-    };
+  async savePost(data, eventId) {
+    console.log(typeof data.urlImage);
 
-    //console.log(data)
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("posts")
-      .add(data);
-  },
-  async savePostImage(imageUrl, text, author, eventId) {
-    let data = {
-      urlImage: await imageUrl,
-      post: text,
-      author: author,
-      datePost: new Date(),
-    };
+    try {
+      if (data.urlImage) {
+        var storageRef = fireStorage.ref();
+        var imageName = Date.now();
+        var imageRef = storageRef.child("images/" + imageName + ".png");
+        var snapshot = await imageRef.putString(data.urlImage, "data_url");
+        var imageUrl = await snapshot.ref.getDownloadURL();
 
-    //console.log(data)
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("posts")
-      .add(data);
-  },
-  async savePostSelfie(imageUrlBase64, text, author, eventId) {
-    let data = {
-      urlImage: await imageUrlBase64,
-      post: text,
-      author: author,
-      datePost: new Date(),
-    };
+        console.log("imageUrl", imageUrl);
+        data.urlImage = imageUrl;
+      }
 
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("posts")
-      .add(data);
+      var docRef = await firestore
+        .collection("adminPost")
+        .doc(`${eventId}`)
+        .collection("posts")
+        .add(data);
+
+      var postSnapShot = await docRef.get();
+      var post = postSnapShot.data();
+      post.id = postSnapShot.id;
+      console.log("docRef", post);
+
+      return post;
+    } catch (e) {
+      toast.warning("Los datos necesarios no se han registrado, por favor intenta de nuevo");
+      console.log(e);
+    }
   },
+
+  async increaseLikes(postId, eventId) {
+    var docRef = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("posts")
+      .doc(postId);
+
+    var docSnap = await docRef.get();
+
+    var doc = docSnap.data();
+    console.log("postId", doc, postId, docRef, docSnap);
+    doc["likes"] = doc.likes ? doc.likes + 1 : 1;
+    //doc["id"] = docRef.id;
+    await docRef.update(doc);
+    return doc;
+  },
+
   async deletePost(postId, eventId) {
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("posts")
-      .doc(`${postId}`)
-      .delete();
+    try {
+      await firestore
+        .collection("adminPost")
+        .doc(eventId)
+        .collection("posts")
+        .doc(postId)
+        .delete();
 
-    // const comment = firestore.collection('adminPost').doc(`${eventId}`).collection('comment').doc(`${postId}`).delete();
-    // console.log(await comment)
+      var query = firestore
+        .collection("adminPost")
+        .doc(eventId)
+        .collection("comment")
+        .doc(postId)
+        .collection("comments");
 
-    var query = firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("comment")
-      .doc(`${postId}`)
-      .collection("comments");
-    query.get().then(function(querySnapshot) {
-      querySnapshot.forEach(function(doc) {
-        doc.ref.delete();
-      });
-    });
+      var querySnapshot = await query.get();
+      if (querySnapshot) {
+        querySnapshot.forEach(async function(doc) {
+          await doc.ref.delete();
+        });
+      }
+      return true;
+    } catch (e) {
+      console.log(e);
+      toast.warning("La información aun no ha sido eliminada, por favor intenta de nuevo");
+    }
+
+    return true;
   },
 };
