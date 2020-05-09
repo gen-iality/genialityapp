@@ -119,7 +119,7 @@ export const UsersApi = {
     return await Actions.getOne(`api/users/findByEmail/`, email);
   },
   mineTickets: async () => {
-    return await Actions.getAll(`/api/me/eventUsers`);
+    return await Actions.getAll("/api/me/eventUsers/");
   },
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
@@ -131,6 +131,13 @@ export const UsersApi = {
     return await Actions.delete(`/api/user/events/${id}`, user);
   },
 };
+
+export const TicketsApi = {
+  getAll: async (token) => {
+    return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
+  },
+};
+
 export const EventFieldsApi = {
   getAll: async (event) => {
     return await Actions.getAll(`/api/events/${event}/userproperties`);
