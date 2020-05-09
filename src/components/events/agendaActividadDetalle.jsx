@@ -17,6 +17,7 @@ import DocumentsList from "../documents/documentsList"
 import { UserOutlined } from "@ant-design/icons";
 import ModalSpeaker from "./modalSpeakers"
 
+
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
@@ -211,9 +212,16 @@ let agendaActividadDetalle = (props) => {
                         <List.Item
                           actions={[
                             item.publish === "true" ? (
-                              <Button type="primary" onClick={showDrawer}>
-                                Contestar Encuesta
-                              </Button>
+                              <div>
+                                <Button type="primary" onClick={showDrawer}>
+                                  Contestar Encuesta
+                                </Button>
+                                <div>
+                                  <br />
+
+                                  <Tag color="success">Encuesta ya constestada</Tag>
+                                </div>
+                              </div>
                             ) : (
                                 <div></div>
                               ),
