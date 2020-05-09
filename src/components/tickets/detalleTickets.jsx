@@ -41,6 +41,7 @@ class DetailTickets extends Component {
                     title={item.event}
                     visible={visible}
                     onOk={this.handleOk}
+                    onCancel={this.handleOk}
                     style={{ height: "100%" }}
                     footer={[
                         <Button key="back" type="primary" onClick={this.handleOk}>
