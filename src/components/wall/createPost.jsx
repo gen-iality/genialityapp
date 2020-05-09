@@ -38,7 +38,7 @@ class CreatePost extends Component {
             inputKey: Date.now(),
             keyImage: Date.now(),
             keyList: Date.now(),
-            dataUser: [],
+            user: undefined,
             submitting: false,
             value: "",
             hidden: true,
@@ -66,7 +66,8 @@ class CreatePost extends Component {
                 if (resp.status === 200) {
                     const data = resp.data;
                     // Solo se desea obtener el id del usuario
-                    this.setState({ dataUser: data, user: true });
+                    this.setState({ user: data });
+                    console.log("USER", data);
                 }
             } catch (error) {
                 const { status } = error.response;
@@ -79,7 +80,7 @@ class CreatePost extends Component {
         let data = {
             urlImage: this.state.image,
             post: this.state.value,
-            author: this.state.dataUser.id,
+            author: this.state.user._id,
             datePost: new Date(),
         }
         console.log(data)
