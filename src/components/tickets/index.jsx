@@ -25,7 +25,6 @@ class TicketInfo extends Component {
     async componentWillMount() {
         const token = Cookie.get("evius_token")
         const tickets = await TicketsApi.getAll(token)
-        console.log(tickets)
         const usersInscription = []
         tickets.forEach(async element => {
             const eventByTicket = await EventsApi.getOne(element.event_id)
@@ -41,15 +40,16 @@ class TicketInfo extends Component {
                     state: element.state ? element.state.name : "Sin Confirmar",
                     properties: element.properties,
                     status: element.checked_in,
-                    description: eventByTicket.description
+                    author: eventByTicket.author.displayName
                 })
             }
+            console.log(usersInscription)
             this.setState({ usersInscription })
         });
     }
 
-    async changeVisible(items) {
-        this.setState({ items, visible: this.state.visible === false ? true : false })
+    async changeVisible(item) {
+        this.setState({ item, visible: this.state.visible === false ? true : false })
     }
 
     render() {
@@ -84,14 +84,14 @@ class TicketInfo extends Component {
                                     </div>
 
                                     <div>
-                                        <p className="is-size-7">
+                                        <div className="is-size-7">
                                             <div style={{ float: "left", marginRight: "3%" }}>
                                                 <TimeStamp data={items.event_start} />
                                             </div>
                                             <div>
                                                 <TimeStamp data={items.event_end} />
                                             </div>
-                                        </p>
+                                        </div>
                                         <p>
                                             {items.place}
                                         </p>
@@ -101,7 +101,7 @@ class TicketInfo extends Component {
                         ))
                     }
                 </Row>
-                <DetailTickets items={this.state.items} visible={this.state.visible} />
+                <DetailTickets item={this.state.item} visible={this.state.visible} />
             </Fragment >
         );
     }

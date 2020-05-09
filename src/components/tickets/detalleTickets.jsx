@@ -1,30 +1,29 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router"
-import { Modal, Typography } from 'antd';
+import { Modal, Typography, Descriptions, Button } from 'antd';
+import TimeStamp from "react-timestamp";
 const { Title } = Typography;
-
 
 class DetailTickets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: {},
-            visible: this.props.visible
+            item: {},
+            visible: this.props.visible,
+            propertyName: []
         }
-        this.handleCancel = this.handleCancel.bind(this)
         this.handleOk = this.handleOk.bind(this)
     }
-    componentWillMount() {
-
-    }
     componentDidUpdate(prevProps) {
-        if (this.props.items !== prevProps.items) {
-            this.setState({ items: this.props.items, visible: true });
-            console.log(this.state.items)
+        if (this.props.item !== prevProps.item) {
+            const propertiesData = []
+            Object.keys(this.props.item.properties).map((propertyName) => {
+                propertiesData.push(propertyName)
+            })
+            this.setState({ propertyName: propertiesData, item: this.props.item, visible: true })
         }
         if (this.props.visible !== prevProps.visible) {
-            this.setState({ items: this.props.items, visible: true });
-            console.log(this.state.items)
+            this.setState({ item: this.props.item, visible: true });
         }
     }
 
@@ -34,60 +33,85 @@ class DetailTickets extends Component {
         });
     };
 
-    handleCancel = e => {
-        this.setState({
-            visible: false,
-        });
-    };
-
     render() {
-        const { visible, items } = this.state
+        const { visible, item, propertyName } = this.state
         return (
             <div>
                 <Modal
-                    title={items.event}
+                    title={item.event}
                     visible={visible}
                     onOk={this.handleOk}
-                    onCancel={this.handleCancel}
+                    style={{ height: "100%" }}
+                    footer={[
+                        <Button key="back" type="primary" onClick={this.handleOk}>
+                            Ok
+                        </Button>
+                    ]}
                 >
-
-                    {
-                        items.rol && (
-                            <p><strong>Rol: </strong>{items.rol}</p>
-                        )
-                    }
-                    {
-                        items.state && (
-                            <p><strong>Estado: </strong>{items.state}</p>
-                        )
-                    }
-                    <p><strong>Registro: </strong>{items.status === true ? "Asistencia Confirmada" : "Tu asistencia no ha sido confirmada contacta al administrador"}</p>
-                    {
-                        items.description && (
-                            <div>
-                                <Title level={4}>Descripción</Title>
-                                <div
-                                    className="is-size-5-desktop has-margin-bottom-10"
-                                    dangerouslySetInnerHTML={{
-                                        __html: items.description
-                                    }}
-                                />
-                            </div>
-                        )
-                    }
-                    {
-                        items.properties && (
-                            <div>
-                                {
-                                    Object.keys(items.properties).map((propertyName) => (
-                                        <div>
-                                            {propertyName + ": " + items.properties[propertyName]}
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        )
-                    }
+                    <Descriptions
+                        title={item.event}
+                        size="small"
+                        column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+                    >
+                        {
+                            item.rol && (
+                                <Descriptions.Item label="Rol">
+                                    {item.rol}
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.state && (
+                                <Descriptions.Item label="Estado">
+                                    {item.state}
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.event_start && (
+                                <Descriptions.Item label="Fecha de inicio">
+                                    <TimeStamp date={item.event_start} />
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.event_end && (
+                                <Descriptions.Item label="Fecha Finalización">
+                                    <TimeStamp date={item.event_end} />
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.status && (
+                                <Descriptions.Item label="Registro">
+                                    {item.status === true ? "Asistencia Confirmada" : "Asistencia sin confirmar"}
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.author && (
+                                <Descriptions.Item label="Organizador">
+                                    {item.author}
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.properties && (
+                                <Descriptions.Item title="Tu información en el evento" span={4} >
+                                    <Title level={4}>Tu información en el evento</Title>
+                                </Descriptions.Item>
+                            )
+                        }
+                        {
+                            item.properties && (
+                                propertyName.map((key) => (
+                                    <Descriptions.Item key={key} label={key} span={4}>
+                                        {item.properties[key] === item.properties.meta_data ? "Información no disponible por el momento" : item.properties[key] === item.properties.properties ? "Información no disponible por el momento" : item.properties[key]}
+                                    </Descriptions.Item>
+                                ))
+                            )
+                        }
+                    </Descriptions>
                 </Modal>
             </div >
         );
