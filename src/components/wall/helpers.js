@@ -3,24 +3,7 @@ import { firestore, fireStorage } from "../../helpers/firebase";
 import { toast } from "react-toastify";
 
 export const saveFirebase = {
-  async saveComment(author_id, comment, date, eventId, idPost) {
-    const data = {
-      author: author_id,
-      comment: comment,
-      date: date,
-      idPost: idPost,
-    };
-
-    //console.log(data)
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("comment")
-      .doc(`${idPost}`)
-      .collection("comments")
-      .add(data);
-    //console.log(await addComment)
-  },
+  async saveComment(author_id, comment, date, eventId, idPost) {},
 
   async savePost(data, eventId) {
     console.log(typeof data.urlImage);
@@ -70,6 +53,44 @@ export const saveFirebase = {
     doc["likes"] = doc.likes ? doc.likes + 1 : 1;
     doc["id"] = docRef.id;
     await docRef.update(doc);
+    return doc;
+  },
+
+  async createComment(postId, eventId, comment, authorId, authorName) {
+    console.log("newPost", postId, eventId);
+    var docRef = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("posts")
+      .doc(postId);
+
+    var docSnap = await docRef.get();
+
+    var doc = docSnap.data();
+    console.log("postId", doc, postId, docRef, docSnap);
+    doc["comments"] = doc.comments ? doc.comments + 1 : 1;
+    doc["id"] = docRef.id;
+    await docRef.update(doc);
+
+    //await saveComment(author_id, comment, date, eventId, idPost)
+    const data = {
+      authorId: authorId,
+      authorName: authorName || "Anónimo",
+      comment: comment,
+      date: new Date().toString(),
+      idPost: postId,
+    };
+
+    //console.log(data)
+    let result = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("comment")
+      .doc(postId)
+      .collection("comments")
+      .add(data);
+    //return result;
+
     return doc;
   },
 
