@@ -6,8 +6,6 @@ export const saveFirebase = {
   async saveComment(author_id, comment, date, eventId, idPost) {},
 
   async savePost(data, eventId) {
-    console.log(typeof data.urlImage);
-
     try {
       if (data.urlImage) {
         var storageRef = fireStorage.ref();
@@ -16,7 +14,6 @@ export const saveFirebase = {
         var snapshot = await imageRef.putString(data.urlImage, "data_url");
         var imageUrl = await snapshot.ref.getDownloadURL();
 
-        console.log("imageUrl", imageUrl);
         data.urlImage = imageUrl;
       }
 
@@ -29,7 +26,6 @@ export const saveFirebase = {
       var postSnapShot = await docRef.get();
       var post = postSnapShot.data();
       post.id = postSnapShot.id;
-      console.log("docRef", post);
 
       return post;
     } catch (e) {
@@ -39,7 +35,6 @@ export const saveFirebase = {
   },
 
   async increaseLikes(postId, eventId) {
-    console.log("newPost", postId, eventId);
     var docRef = await firestore
       .collection("adminPost")
       .doc(eventId)
@@ -49,7 +44,7 @@ export const saveFirebase = {
     var docSnap = await docRef.get();
 
     var doc = docSnap.data();
-    console.log("postId", doc, postId, docRef, docSnap);
+
     doc["likes"] = doc.likes ? doc.likes + 1 : 1;
     doc["id"] = docRef.id;
     await docRef.update(doc);
@@ -57,7 +52,6 @@ export const saveFirebase = {
   },
 
   async createComment(postId, eventId, comment, authorId, authorName) {
-    console.log("newPost", postId, eventId);
     var docRef = await firestore
       .collection("adminPost")
       .doc(eventId)
@@ -67,12 +61,10 @@ export const saveFirebase = {
     var docSnap = await docRef.get();
 
     var doc = docSnap.data();
-    console.log("postId", doc, postId, docRef, docSnap);
     doc["comments"] = doc.comments ? doc.comments + 1 : 1;
     doc["id"] = docRef.id;
     await docRef.update(doc);
 
-    //await saveComment(author_id, comment, date, eventId, idPost)
     const data = {
       authorId: authorId,
       authorName: authorName || "Anónimo",
@@ -81,7 +73,6 @@ export const saveFirebase = {
       idPost: postId,
     };
 
-    //console.log(data)
     let result = await firestore
       .collection("adminPost")
       .doc(eventId)

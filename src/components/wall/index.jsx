@@ -21,7 +21,7 @@ class Wall extends Component {
 
   async componentDidMount() {
     let posts = await this.getPosts();
-    console.log("post", posts)
+
     this.setState({ dataPost: posts });
 
     let evius_token = Cookie.get("evius_token");
