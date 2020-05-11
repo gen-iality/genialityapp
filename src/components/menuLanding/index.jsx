@@ -146,10 +146,10 @@ class menuLanding extends Component {
         return (
             <Fragment>
                 <Title level={3}>Habilitar secciones del evento</Title>
+                <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
                 <Row gutter={16}>
                     {
                         Object.keys(this.state.menu).map((key) => {
-                            let IconoComponente = iconComponents[this.state.menu[key].icon];
                             return (
                                 <div key={key}>
                                     <Col style={{ marginTop: "3%" }} span={8}>
@@ -180,7 +180,9 @@ class menuLanding extends Component {
                                 </div>
                             )
                         })}
-                    <Button style={{ marginTop: "1%", marginLeft: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
+                </Row>
+                <Row>
+                    <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
                 </Row>
             </Fragment >
         )

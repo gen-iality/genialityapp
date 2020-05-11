@@ -8,7 +8,10 @@ import Moment from "moment";
 import EventImage from "../../eventimage.png";
 import { Link } from 'react-router-dom';
 import DetailTickets from "./detalleTickets"
+import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
+
 const { Title } = Typography;
+
 
 class TicketInfo extends Component {
     constructor(props) {
@@ -30,6 +33,7 @@ class TicketInfo extends Component {
             const eventByTicket = await EventsApi.getOne(element.event_id)
             if (eventByTicket) {
                 usersInscription.push({
+                    _id: element._id,
                     picture: eventByTicket.picture ? eventByTicket.picture : EventImage,
                     id: eventByTicket._id,
                     place: eventByTicket.venue,
@@ -43,7 +47,7 @@ class TicketInfo extends Component {
                     author: eventByTicket.author.displayName
                 })
             }
-            console.log(usersInscription)
+            console.log(element)
             this.setState({ usersInscription })
         });
     }
@@ -94,6 +98,18 @@ class TicketInfo extends Component {
                                         </div>
                                         <p>
                                             {items.place}
+                                        </p>
+                                        <p>
+                                            {items.status === true ?
+                                                <div>
+                                                    <CheckCircleOutlined />
+                                                    <p>Asististe a este evento</p>
+                                                </div>
+                                                :
+                                                <div>
+                                                    <WarningOutlined />
+                                                    <p>No has asistido a este evento</p>
+                                                </div>}
                                         </p>
                                     </div>
                                 </Card>

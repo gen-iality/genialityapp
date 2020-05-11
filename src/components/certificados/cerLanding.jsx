@@ -7,7 +7,8 @@ import { firestore } from "../../helpers/firebase";
 import { CertsApi, RolAttApi } from "../../helpers/request";
 import { Button, Card, Col, Form, Input, Row, Alert } from 'antd';
 import { LikeOutlined, DownloadOutlined } from '@ant-design/icons';
-import withUserEventRegistered from "../shared/withUserEventRegistered"
+import withUserEventRegistered from "../shared/withUserEventRegistered";
+import UserRegistration from "../events/userRegistration"
 
 // Estructura de boton para descargar certificados
 
@@ -159,70 +160,87 @@ class CertificadoLanding extends Component {
 
     render() {
         const { dataUser } = this.state;
+        const { currentUser } = this.props
         return (
             <>
+                {console.log(dataUser)}
                 {
-                    dataUser.length > 0 ?
+                    currentUser._id ?
                         <div>
-                            <Col
-                                xs={24}
-                                sm={22}
-                                md={18}
-                                lg={18}
-                                xl={18}
-                                style={{ margin: "0 auto" }}
-                            >
-
-                            </Col>
-
-                            <br />
-
-                            {/* Conenedor donde se muestran los certificados */}
-                            <Col
-                                xs={22}
-                                sm={22}
-                                md={8}
-                                lg={8}
-                                xl={8}
-                                style={{ margin: "0 auto" }}
-                            >
-                                {/* Alert de error cuando el usuario no tiene certificados */}
-                                {this.state.message && <p><Alert message={this.state.message} type="error" showIcon /></p>}
-
-                                {/* Mapea los certificados si se encuentran en el array */}
-                                {dataUser.length > 0 &&
+                            {
+                                dataUser.length > 0 ?
                                     <div>
-                                        <Card>
-                                            {/* Alert informativo de certificados disponibles */}
-                                            <Alert message="Certificados disponibles" type="success" />
+                                        <Col
+                                            xs={24}
+                                            sm={22}
+                                            md={18}
+                                            lg={18}
+                                            xl={18}
+                                            style={{ margin: "0 auto" }}
+                                        >
+                                            <UserRegistration extraFields={[]} eventId={this.props.event._id} />
+                                        </Col>
 
-                                            {/* Se filtran y mapean los certificados */}
+                                        <br />
+
+                                        {/* Conenedor donde se muestran los certificados */}
+                                        <Col
+                                            xs={22}
+                                            sm={22}
+                                            md={8}
+                                            lg={8}
+                                            xl={8}
+                                            style={{ margin: "0 auto" }}
+                                        >
+                                            {/* Alert de error cuando el usuario no tiene certificados */}
+                                            {this.state.message && <p><Alert message={this.state.message} type="error" showIcon /></p>}
+
+                                            {/* Mapea los certificados si se encuentran en el array */}
                                             {
-                                                dataUser.filter(user => user.checked_in).map(user => (
+                                                dataUser[0].checked_in === true && (
                                                     <div>
-                                                        <br />
-                                                        {/* Nombre de evento */}
-                                                        <p>{user.ticket}</p>
+                                                        <Card>
+                                                            {/* Alert informativo de certificados disponibles */}
+                                                            <Alert message="Certificados disponibles" type="success" />
 
-                                                        {/* Importacion del boton para descargar certificado */}
-                                                        <IconText
-                                                            text="Descargar Certificado"
-                                                            icon={DownloadOutlined}
-                                                            onSubmit={e => this.generateCert(user)}
-                                                        />
-                                                        <br />
+                                                            {/* Se filtran y mapean los certificados */}
+                                                            {
+                                                                dataUser.filter(user => user.checked_in).map(user => (
+                                                                    <div>
+                                                                        <br />
+                                                                        {/* Nombre de evento */}
+                                                                        <p>{user.ticket}</p>
+
+                                                                        {/* Importacion del boton para descargar certificado */}
+                                                                        <IconText
+                                                                            text="Descargar Certificado"
+                                                                            icon={DownloadOutlined}
+                                                                            onSubmit={e => this.generateCert(user)}
+                                                                        />
+                                                                        <br />
+                                                                    </div>
+
+                                                                ))
+                                                            }
+                                                        </Card>
                                                     </div>
-
-                                                ))
+                                                )
                                             }
-                                        </Card>
-                                    </div>}
-                            </Col>
+                                        </Col>
+                                    </div>
+                                    :
+                                    <div>
+                                        <UserRegistration extraFields={[]} eventId={this.props.event._id} />
+                                        {
+                                            this.state.message !== false && (
+                                                <p>No se encuentran certificados</p>
+                                            )
+                                        }
+                                    </div>
+                            }
                         </div>
                         :
-                        <div>
-                            No hay Certificados
-                        </div>
+                        <UserRegistration extraFields={[]} eventId={this.props.event._id} />
                 }
             </>
         )

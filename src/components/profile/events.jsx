@@ -63,7 +63,7 @@ class Events extends Component {
                     loading ? <Loading /> :
                         <div className="container org-profile">
                             <div className="profile-data columns">
-                                <div className="column is-8">
+                                <div className="column is-12">
                                     <h2 className="data-title">
                                         <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br />
                                         <span className="has-text-grey-dark is-size-3">Eventos</span>
@@ -71,27 +71,21 @@ class Events extends Component {
                                     <div className="columns home is-multiline">
                                         {
                                             events.map((event, key) => {
-                                                return <EventCard event={event} key={event._id} action={''} size={'column is-half'} right={
-                                                    <div className="edit">
-                                                        <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
-                                                            <span className="icon is-medium">
-                                                                <i className="fas fa-lg fa-cogs" />
-                                                            </span>
-                                                            <span className="is-size-7 is-italic">Administrar</span>
-                                                        </Link>
-                                                    </div>
-                                                }
+                                                return <EventCard event={event} key={event._id} action={''} size={'column is-half'}
+                                                    right={
+                                                        <div className="edit">
+                                                            <Link className="button-edit has-text-grey-light" to={`/event/${event._id}`}>
+                                                                <span className="icon is-medium">
+                                                                    <i className="fas fa-lg fa-cogs" />
+                                                                </span>
+                                                                <span className="is-size-7 is-italic">Administrar</span>
+                                                            </Link>
+                                                        </div>
+                                                    }
                                                 />
                                             })
                                         }
                                     </div>
-                                </div>
-                                <div className="column is-4" id={'events'}>
-                                    <h2 className="data-title">
-                                        <small className="is-italic has-text-grey-light has-text-weight-300">Tus</small><br />
-                                        <span className="has-text-grey-dark is-size-3">Tickets</span>
-                                    </h2>
-                                    <div className="tickets soon"></div>
                                 </div>
                             </div>
                         </div>
