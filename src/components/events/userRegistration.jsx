@@ -122,8 +122,8 @@ class UserRegistration extends Component {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
           const data = resp.data;
-          // Solo se desea obtener el id del usuario
 
+          //   Se valida si el usuario ya se encuentra registrado al evento
           let existUser = eventUsers.find((user) => user.properties.email == data.email);
 
           this.setState({
@@ -155,11 +155,8 @@ class UserRegistration extends Component {
   }
 
   onFinish = async (values) => {
-    let { currentUser, eventUsers } = this.state;
+    let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
-
-    let existUser = eventUsers.find((user) => user.properties.email == values.email);
-    console.log("existUser: ", existUser);
 
     message.loading({ content: "Registrando Usuario", key });
     const snap = {
@@ -176,7 +173,10 @@ class UserRegistration extends Component {
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
         this.setState({
-          successMessage: `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
+          successMessage:
+            Object.entries(initialValues).length > 0
+              ? `Fuiste registrado al evento exitosamente`
+              : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
         });
       } else {
         textMessage.content = "El usuario no pudo ser creado";
@@ -196,7 +196,6 @@ class UserRegistration extends Component {
   };
 
   // Función que crea los input del componente
-
   renderForm = () => {
     const { extraFields } = this.state;
     let formUI = extraFields.map((m, key) => {
