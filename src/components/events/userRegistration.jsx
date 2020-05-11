@@ -165,7 +165,7 @@ class UserRegistration extends Component {
     const snap = {
       properties: values,
     };
-    console.log(snap);
+    // console.log(snap);
 
     let textMessage = {};
 
@@ -192,7 +192,7 @@ class UserRegistration extends Component {
       message.error(textMessage);
     }
 
-    console.log("este es el mensaje:", textMessage);
+    // console.log("este es el mensaje:", textMessage);
   };
 
   // Función que crea los input del componente
