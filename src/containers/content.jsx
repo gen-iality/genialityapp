@@ -21,6 +21,7 @@ const Policies = asyncComponent(() => import("../components/policies/policies"))
 const About = asyncComponent(() => import("../components/policies/about"));
 const Faqs = asyncComponent(() => import("../components/faqs/index"));
 const SinginTest = asyncComponent(() => import("../components/signintest"));
+const Tickets = asyncComponent(() => import("../components/tickets"))
 
 
 class ContentContainer extends Component {
@@ -41,6 +42,7 @@ class ContentContainer extends Component {
                     <PrivateRoute path="/organization/:id" component={Organization} />
                     <PrivateRoute path="/purchase/:id" component={Purchase} />
                     <PrivateRoute path="/eventEdit/:id" component={EventEdit} />
+                    <PrivateRoute path="/tickets/:id" component={Tickets} />
                     <Route exact path="/terms" component={Terms} />
                     <Route exact path="/privacy" component={Privacy} />
                     <Route exact path="/policies" component={Policies} />

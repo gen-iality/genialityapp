@@ -38,7 +38,7 @@ class CreatePost extends Component {
             inputKey: Date.now(),
             keyImage: Date.now(),
             keyList: Date.now(),
-            dataUser: [],
+            user: undefined,
             submitting: false,
             value: "",
             hidden: true,
@@ -66,7 +66,8 @@ class CreatePost extends Component {
                 if (resp.status === 200) {
                     const data = resp.data;
                     // Solo se desea obtener el id del usuario
-                    this.setState({ dataUser: data, user: true });
+                    this.setState({ user: data });
+
                 }
             } catch (error) {
                 const { status } = error.response;
@@ -79,14 +80,14 @@ class CreatePost extends Component {
         let data = {
             urlImage: this.state.image,
             post: this.state.value,
-            author: this.state.dataUser.id,
+            author: this.state.user._id,
             datePost: new Date(),
         }
-        console.log(data)
+
 
         //savepost se realiza para publicar el post
         var newPost = await saveFirebase.savePost(data, this.props.event._id);
-        console.log("newPost", newPost);
+
         this.setState({ value: "", image: "", showInfo: true, });
         this.setState({ showInfo: false, visible: false, keyList: Date.now() });
         message.success('Mensaje Publicado');
@@ -108,7 +109,6 @@ class CreatePost extends Component {
     //Funcion para poder pasarla por props y obtener la selfie de cameraFeed en este componente
     getImage(image) {
         this.setState({ image })
-        console.log(this.state.image)
     }
 
     //Funcion para actualizar el canvas y poder tomar la foto

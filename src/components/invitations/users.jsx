@@ -13,6 +13,7 @@ import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import Pagination from "../shared/pagination";
 import { sweetAlert } from "../../helpers/utils";
+import ModalAdvise from "./modal"
 
 class UsersRsvp extends Component {
   constructor(props) {
@@ -37,7 +38,8 @@ class UsersRsvp extends Component {
       errorData: {},
       serverError: false,
       dropUser: false,
-      dropSend: false
+      dropSend: false,
+      visible: false
     };
     this.checkEvent = this.checkEvent.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
@@ -316,7 +318,7 @@ class UsersRsvp extends Component {
   irACreacionComunicacion = () => {
     //Actualizar el estado del padre
     if (this.state.selection[0] === undefined) {
-      sweetAlert.showLoading("Selecciona un correo");
+      this.setState({ visible: this.state.visible === true ? false : true })
     } else {
       this.props.setGuestSelected(this.state.selection);
       this.props.history.push(`${this.props.matchUrl}/createmessage`);
@@ -344,7 +346,7 @@ class UsersRsvp extends Component {
             {" "}
             Enviar comunicación / Correo{" "}
           </button>
-
+          <ModalAdvise visible={this.state.visible} />
           {usersReq.length > 0 ? (
             <div>
               <div className="columns">
