@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result } from "antd";
 
 const { Text } = Typography;
 
@@ -85,6 +85,8 @@ class UserRegistration extends Component {
       initialValues: {},
       eventUsers: [],
       registeredUser: false,
+      submittedForm: false,
+      successMessage: null,
     };
   }
 
@@ -169,20 +171,22 @@ class UserRegistration extends Component {
 
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
-      console.log(resp);
+
       if (resp.message === "OK") {
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
+        this.setState({
+          successMessage: `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
+        });
       } else {
         textMessage.content = "El usuario no pudo ser creado";
       }
-      textMessage.key = key;
 
+      textMessage.key = key;
       message.success(textMessage).then(() => {
-        window.location.reload();
+        this.setState({ submittedForm: true });
       });
     } catch (err) {
-      console.log(err.resp);
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
       message.error(textMessage);
@@ -250,26 +254,32 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser } = this.state;
+    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
           <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
-            <Card title="Formulario de registro" bodyStyle={textLeft}>
-              {/* //Renderiza el formulario */}
-              <Form
-                {...layout}
-                onFinish={this.onFinish}
-                validateMessages={validateMessages}
-                initialValues={initialValues}>
-                {this.renderForm()}
-                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <Button type="primary" htmlType="submit">
-                    Registrarse
-                  </Button>
-                </Form.Item>
-              </Form>
-            </Card>
+            {!submittedForm ? (
+              <Card title="Formulario de registro" bodyStyle={textLeft}>
+                {/* //Renderiza el formulario */}
+                <Form
+                  {...layout}
+                  onFinish={this.onFinish}
+                  validateMessages={validateMessages}
+                  initialValues={initialValues}>
+                  {this.renderForm()}
+                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                    <Button type="primary" htmlType="submit">
+                      Registrarse
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Card>
+            ) : (
+              <Card>
+                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+              </Card>
+            )}
           </Col>
         </>
       ) : (
