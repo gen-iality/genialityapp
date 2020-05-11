@@ -199,7 +199,7 @@ class CreatePost extends Component {
                                     <Button type="primary">
                                         <input
                                             key={this.state.inputKey}
-                                            class="file-input"
+                                            className="file-input"
                                             type="file"
                                             onChange={this.previewImage}
                                         />

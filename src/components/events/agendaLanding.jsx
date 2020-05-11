@@ -311,8 +311,8 @@ class Agenda extends Component {
                       {generalTab && (
                         <div key={key} className="card-content has-text-left container_calendar-description">
                           {/* Descripción del evento */}
-                          <div class="columns">
-                            <div class="column is-7">
+                          <div className="columns">
+                            <div className="column is-7">
 
 
                               {agenda.subtitle && (
@@ -377,7 +377,7 @@ class Agenda extends Component {
                               </div>
 
                             </div>
-                            {agenda.image && <div class="column is-5"><img src={agenda.image} /></div>}
+                            {agenda.image && <div className="column is-5"><img src={agenda.image} /></div>}
 
 
                             {/* <button
