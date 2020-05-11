@@ -65,7 +65,7 @@ class documentsDetail extends Component {
 
                         <div className="site-card-border-less-wrapper">
                             <Card title="" bordered={false} >
-                                <Result title="Aún no se han agragado archivos." />
+                                <Result title="Aún no se han agregado archivos." />
                             </Card>
                         </div>
                     )}

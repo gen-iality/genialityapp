@@ -69,7 +69,7 @@ function WithUserEventRegistered(Component) {
 
             </div>)
         return <>
-            <Component {...props} />
+            <Component {...props} currentUser={currentUser} />
         </>
     };
 }

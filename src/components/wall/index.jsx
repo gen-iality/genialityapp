@@ -21,7 +21,7 @@ class Wall extends Component {
 
   async componentDidMount() {
     let posts = await this.getPosts();
-    console.log("post", posts)
+
     this.setState({ dataPost: posts });
 
     let evius_token = Cookie.get("evius_token");
@@ -63,13 +63,22 @@ class Wall extends Component {
   increaseLikes = async (postId) => {
 
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id)
-
-    //se borra local
+    //se actualiza local
     var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id != postId) ? value : updatedPost });
     this.setState({ dataPost: updatedPost });
     return true;
 
   }
+  createComment = async (postId, message) => {
+
+    var updatedPost = await saveFirebase.createComment(postId, this.props.event._id, message, this.state.user._id, this.state.user.names)
+    //se actualiza local
+    var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id != postId) ? value : updatedPost });
+    this.setState({ dataPost: updatedPost });
+    return true;
+
+  }
+
 
   render() {
     const { currentCommet, user } = this.state;
@@ -89,7 +98,7 @@ class Wall extends Component {
               }}>
               <Col xs={24} sm={20} md={20} lg={20} xl={12}>
                 <CreatePost event={event} addPosts={this.addPosts} />
-                <ListWall user={user} key={this.state.keyList} dataPost={this.state.dataPost} deletePost={this.deletePost} increaseLikes={this.increaseLikes} />
+                <ListWall createComment={this.createComment} event={event} user={user} key={this.state.keyList} dataPost={this.state.dataPost} deletePost={this.deletePost} increaseLikes={this.increaseLikes} />
               </Col>
             </Row>
           </div>
@@ -121,6 +130,7 @@ class Wall extends Component {
       return dataPost;
 
     } catch (e) {
+      return undefined;
       console.log("Error getting documents", e);
     }
   }

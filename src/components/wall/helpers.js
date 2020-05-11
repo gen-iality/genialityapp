@@ -3,28 +3,9 @@ import { firestore, fireStorage } from "../../helpers/firebase";
 import { toast } from "react-toastify";
 
 export const saveFirebase = {
-  async saveComment(email, comments, date, eventId, idPost) {
-    const data = {
-      author: email,
-      comment: comments,
-      date: date,
-      idPost: idPost,
-    };
-
-    //console.log(data)
-    firestore
-      .collection("adminPost")
-      .doc(`${eventId}`)
-      .collection("comment")
-      .doc(`${idPost}`)
-      .collection("comments")
-      .add(data);
-    //console.log(await addComment)
-  },
+  async saveComment(author_id, comment, date, eventId, idPost) {},
 
   async savePost(data, eventId) {
-    console.log(typeof data.urlImage);
-
     try {
       if (data.urlImage) {
         var storageRef = fireStorage.ref();
@@ -33,7 +14,6 @@ export const saveFirebase = {
         var snapshot = await imageRef.putString(data.urlImage, "data_url");
         var imageUrl = await snapshot.ref.getDownloadURL();
 
-        console.log("imageUrl", imageUrl);
         data.urlImage = imageUrl;
       }
 
@@ -46,7 +26,6 @@ export const saveFirebase = {
       var postSnapShot = await docRef.get();
       var post = postSnapShot.data();
       post.id = postSnapShot.id;
-      console.log("docRef", post);
 
       return post;
     } catch (e) {
@@ -65,10 +44,44 @@ export const saveFirebase = {
     var docSnap = await docRef.get();
 
     var doc = docSnap.data();
-    console.log("postId", doc, postId, docRef, docSnap);
+
     doc["likes"] = doc.likes ? doc.likes + 1 : 1;
     doc["id"] = docRef.id;
     await docRef.update(doc);
+    return doc;
+  },
+
+  async createComment(postId, eventId, comment, authorId, authorName) {
+    var docRef = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("posts")
+      .doc(postId);
+
+    var docSnap = await docRef.get();
+
+    var doc = docSnap.data();
+    doc["comments"] = doc.comments ? doc.comments + 1 : 1;
+    doc["id"] = docRef.id;
+    await docRef.update(doc);
+
+    const data = {
+      authorId: authorId,
+      authorName: authorName || "Anónimo",
+      comment: comment,
+      date: new Date().toString(),
+      idPost: postId,
+    };
+
+    let result = await firestore
+      .collection("adminPost")
+      .doc(eventId)
+      .collection("comment")
+      .doc(postId)
+      .collection("comments")
+      .add(data);
+    //return result;
+
     return doc;
   },
 

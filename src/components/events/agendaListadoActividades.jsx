@@ -261,7 +261,7 @@ class AgendaListadoActividades extends Component {
                 className="container_agenda-information is-three-fifths"
               >
                 <div className="card agenda_information ">
-                  <header class="card-header columns has-padding-left-7">
+                  <header className="card-header columns has-padding-left-7">
 
                     <div className="is-block is-11 column is-paddingless">
 
@@ -271,22 +271,22 @@ class AgendaListadoActividades extends Component {
                       </p>
 
                       {/* Nombre del evento */}
-                      <span class="card-header-title has-text-left">
+                      <span className="card-header-title has-text-left">
                         {agenda.name}
                       </span>
                       {/* <ReactPlayer style={{maxWidth:"100%"}} url='https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8' controls playing /> */}
                     </div>
 
 
-                    {agenda.meeting_video && (<a class="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
-                      <i class="fas fa-play-circle is-size-5"></i>
-                      <span class="is-size-6">Video</span>
+                    {agenda.meeting_video && (<a className="icon is-flex has-text-white has-margin-top-30" style={{ flexDirection: "column" }}>
+                      <i className="fas fa-play-circle is-size-5"></i>
+                      <span className="is-size-6">Video</span>
                     </a>)}
 
                     {/* icono que abre y cierra el card */}
-                    {/* <a  class="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
-                    <span class="icon is-size-3">
-                      <i key={key} class="fas fa-angle-down is-size-3" aria-hidden="true"></i>
+                    {/* <a  className="card-header-icon has-text-white" aria-label="more options" onClick={(e)=>{this.setState({generalTab:!generalTab})}}>
+                    <span className="icon is-size-3">
+                      <i key={key} className="fas fa-angle-down is-size-3" aria-hidden="true"></i>
                     </span>
                   </a> */}
 
@@ -303,7 +303,7 @@ class AgendaListadoActividades extends Component {
                         <div className="is-size-5-desktop has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: agenda.description }} />
 
                         {/* Lugar del evento */}
-                        <p class="has-text-left is-size-6-desktop">
+                        <p className="has-text-left is-size-6-desktop">
                           <b>Lugar:</b> {agenda.space.name}
                         </p>
 
@@ -335,7 +335,7 @@ class AgendaListadoActividades extends Component {
                         </div>
 
 
-                        <div class="card-footer is-12 is-flex" style={{ borderTop: "none", justifyContent: "space-between", alignItems: "flex-end" }}>
+                        <div className="card-footer is-12 is-flex" style={{ borderTop: "none", justifyContent: "space-between", alignItems: "flex-end" }}>
 
                           <a className="has-text-white is-size-5 is-vcentered">Ver más...</a>
 

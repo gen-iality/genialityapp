@@ -146,7 +146,6 @@ class menuLanding extends Component {
         return (
             <Fragment>
                 <Title level={3}>Habilitar secciones del evento</Title>
-                <Button style={{ marginTop: "2%" }} onClick={this.submit}>Guardar</Button>
                 <Row gutter={16}>
                     {
                         Object.keys(this.state.menu).map((key) => {
@@ -181,6 +180,7 @@ class menuLanding extends Component {
                                 </div>
                             )
                         })}
+                    <Button style={{ marginTop: "1%", marginLeft: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
                 </Row>
             </Fragment >
         )
