@@ -51,7 +51,6 @@ const UserInfoCard = ({ currentUser }) => {
   };
 
   useEffect(() => {
-    console.log(currentUser.properties);
     parseObjectToArray(currentUser.properties);
   }, [currentUser]);
 
@@ -143,7 +142,6 @@ class UserRegistration extends Component {
     const event = await EventsApi.getOne(this.props.eventId);
 
     const eventUsers = await UsersApi.getAll(this.props.eventId, "?pageSize=10000");
-    console.log("users:", eventUsers);
 
     const properties = event.user_properties;
 
@@ -235,7 +233,9 @@ class UserRegistration extends Component {
         );
       }
 
-      let rule = type == "email" ? { type: "email" } : { required: mandatory };
+      let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
+      rule = type == "email" ? { ...rule, type: "email" } : rule;
+
       return (
         <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
