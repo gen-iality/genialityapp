@@ -37,13 +37,12 @@ export default () => {
       .where("busy", "==", false)
       .onSnapshot((docs) => {
         let hostList = [];
-        if (docs.empty) {
-          resolve([]);
+        if (!docs.empty) {
+          docs.forEach((host) => {
+            hostList.push({ _id: host.id, ...host.data() });
+          });
+          resolve(hostList);
         }
-        docs.forEach((host) => {
-          hostList.push({ _id: host.id, ...host.data() });
-        });
-        resolve(hostList);
       });
   });
 };
