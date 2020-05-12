@@ -38,7 +38,7 @@ export default () => {
       .onSnapshot((docs) => {
         let hostList = [];
         if (docs.empty) {
-          resolve(false);
+          resolve([]);
         }
         docs.forEach((host) => {
           hostList.push({ _id: host.id, ...host.data() });
