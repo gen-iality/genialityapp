@@ -165,9 +165,6 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-    if (status === "5b859ed02039276ce2b996f0") {
-      this.setState({ showConfirm: true });
-    }
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
     event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
@@ -492,7 +489,7 @@ const MapComponent = (props) => {
         {
           (console.log(event),
             event.type_event === "onlineEvent" ? (
-              <div>
+              {/* <div>
                 <ReactQuill
                   value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
                   modules={{ toolbar: false }}
@@ -503,7 +500,7 @@ const MapComponent = (props) => {
                   toggleConference={toggleConference}
                   currentUser={namesUser}
                 />
-              </div>
+              </div> */}
             ) : (
                 <div>
                   <Card>
