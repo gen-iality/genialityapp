@@ -55,11 +55,11 @@ class DetailTickets extends Component {
                         column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
                     >
                         {
-                            item.rol && (
-                                <Descriptions.Item label="Rol">
-                                    {item.rol}
-                                </Descriptions.Item>
-                            )
+
+                            <Descriptions.Item label="Rol">
+                                {item.rol ? item.rol : "No tienes un rol asignado"}
+                            </Descriptions.Item>
+
                         }
                         {
                             item.state && (
@@ -83,11 +83,11 @@ class DetailTickets extends Component {
                             )
                         }
                         {
-                            item.status && (
-                                <Descriptions.Item label="Registro">
-                                    {item.status === true ? "Asistencia Confirmada" : "Asistencia sin confirmar"}
-                                </Descriptions.Item>
-                            )
+
+                            <Descriptions.Item label="Registro">
+                                {item.status === true ? "Asistencia Confirmada" : "Asistencia sin confirmar"}
+                            </Descriptions.Item>
+
                         }
                         {
                             item.author && (
