@@ -10,6 +10,7 @@ const { Meta } = Card;
 
 export default ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
+  const [messageService, setMessageService] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
 
   const getContactList = async () => {
@@ -22,7 +23,8 @@ export default ({ eventId }) => {
       // Servicio que trae los contactos
       Networking.getContactList(eventId, eventUser._id).then((result) => {
         console.log("response:", result);
-        if (result) setContactsList(result);
+        if (typeof result == "object") setContactsList(result);
+        if (typeof result == "string") setMessageService(result);
       });
     });
   };
@@ -85,7 +87,7 @@ export default ({ eventId }) => {
       </div>
     ) : (
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
-        <Card>No tiene solicitudes actualmente</Card>
+        <Card>{messageService}</Card>
       </Col>
     );
 
