@@ -99,7 +99,7 @@ class AgendaEdit extends Component {
     }
     this.setState({ nameDocuments });
 
-    await getHostList(this.loadHostAvailable);
+    getHostList(this.loadHostAvailable);
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
