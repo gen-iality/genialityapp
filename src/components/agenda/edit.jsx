@@ -99,6 +99,8 @@ class AgendaEdit extends Component {
     }
     this.setState({ nameDocuments });
 
+    await getHostList(this.loadHostAvailable);
+
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
 
@@ -111,21 +113,6 @@ class AgendaEdit extends Component {
     roles = handleSelect(roles);
     categories = handleSelect(categories);
     types = handleSelect(types);
-
-    this.setState({ hostAvailable: [] });
-
-    firestore
-      .collection("host")
-      .where("busy", "==", false)
-      .onSnapshot((docs) => {
-        let hostList = [];
-        if (!docs.empty) {
-          docs.forEach((host) => {
-            hostList.push({ _id: host.id, ...host.data() });
-          });
-        }
-        this.setState({ hostAvailable: hostList });
-      });
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
@@ -164,9 +151,8 @@ class AgendaEdit extends Component {
     });
   }
 
-  loadHostAvailable = async () => {
-    let hostAvailable = await getHostList();
-    this.setState({ hostAvailable });
+  loadHostAvailable = (list) => {
+    this.setState({ hostAvailable: list });
   };
 
   //FN general para cambio en input

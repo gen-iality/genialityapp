@@ -30,19 +30,17 @@ export const getAllHost = () => {
   });
 };
 
-export default () => {
-  return new Promise((resolve, reject) => {
-    firestore
-      .collection("host")
-      .where("busy", "==", false)
-      .onSnapshot((docs) => {
-        let hostList = [];
-        if (!docs.empty) {
-          docs.forEach((host) => {
-            hostList.push({ _id: host.id, ...host.data() });
-          });
-          resolve(hostList);
-        }
-      });
-  });
+export default (loadHost) => {
+  firestore
+    .collection("host")
+    .where("busy", "==", false)
+    .onSnapshot((docs) => {
+      let hostList = [];
+      if (!docs.empty) {
+        docs.forEach((host) => {
+          hostList.push({ _id: host.id, ...host.data() });
+        });
+        loadHost(hostList);
+      }
+    });
 };
