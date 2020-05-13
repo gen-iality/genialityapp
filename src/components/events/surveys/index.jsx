@@ -23,7 +23,17 @@ class SurveyForm extends Component {
   }
 
   componentDidMount() {
-    this.loadData();
+    this.getCurrentUser()
+      .then((user) => {
+        if (user) {
+          this.setState({ currentUser: user }, this.loadData);
+        } else {
+          this.setState({ user: false }, this.loadData);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   componentDidUpdate(prevProps) {
@@ -37,12 +47,12 @@ class SurveyForm extends Component {
     if (!prevProps || event !== prevProps.event || activitySurveyList !== prevProps.activitySurveyList) {
       // Condicion que valida si se esta recibiendo una lista de encuestas dentro de una actividad
       if (activitySurveyList) {
-        this.setState({ surveysData: activitySurveyList }, this.getCurrentUser);
+        this.setState({ surveysData: activitySurveyList }, this.seeIfUserHasVote);
       } else {
         surveysData = await SurveysApi.getAll(event._id);
         let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
 
-        this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
+        this.setState({ surveysData: publishedSurveys }, this.seeIfUserHasVote);
       }
     }
   };
@@ -80,24 +90,26 @@ class SurveyForm extends Component {
   };
 
   // Funcion para consultar la informacion del actual usuario
-  getCurrentUser = async () => {
+  getCurrentUser = () => {
     let evius_token = Cookie.get("evius_token");
-
-    if (!evius_token) {
-      this.setState({ user: false }, this.seeIfUserHasVote);
-    } else {
-      try {
-        const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-        if (resp.status === 200) {
-          const data = resp.data;
-          // Solo se desea obtener el id del usuario
-          this.setState({ currentUser: data }, this.seeIfUserHasVote);
+    return new Promise(async (resolve, reject) => {
+      if (!evius_token) {
+        resolve(false);
+      } else {
+        try {
+          const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+          if (resp.status === 200) {
+            const data = resp.data;
+            // Solo se desea obtener el id del usuario
+            resolve(data);
+          }
+        } catch (error) {
+          const { status } = error.response;
+          console.log("STATUS", status, status === 401);
+          reject(error.response);
         }
-      } catch (error) {
-        const { status } = error.response;
-        console.log("STATUS", status, status === 401);
       }
-    }
+    });
   };
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
