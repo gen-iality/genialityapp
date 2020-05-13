@@ -5,52 +5,10 @@ import * as Cookie from "js-cookie";
 import { SurveyAnswers } from "./services";
 import API, { SurveysApi } from "../../../helpers/request";
 
+import SurveyList from "./surveyList";
 import SurveyComponent from "./surveyComponent";
 import Graphics from "./graphics";
 import RootPage from "./rootPage";
-
-import { List, Button, Card, Col, Tag } from "antd";
-
-function ListSurveys(props) {
-  let { jsonData } = props;
-
-  return (
-    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
-      <Card>
-        <List
-          dataSource={jsonData}
-          renderItem={(survey) =>
-            survey.open == "true" ? (
-              <List.Item
-                key={survey._id}
-              >
-                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                {survey.userHasVoted && (
-                  <div>
-                    <Tag color="success">Respondida</Tag>
-                  </div>
-                )}
-                <Button onClick={() => props.showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>
-              </List.Item>
-            ) : (
-                <List.Item
-                  key={survey._id}
-                  actions={[]}>
-                  <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                  <div>
-                    <Tag color="red">Cerrada</Tag>
-                  </div>
-                  <Button onClick={() => props.showSurvey(survey)}>Ver Resultados</Button>
-                </List.Item>
-              )
-          }
-        />
-      </Card>
-    </Col>
-  );
-}
 
 class SurveyForm extends Component {
   constructor(props) {
@@ -158,7 +116,7 @@ class SurveyForm extends Component {
         />
       );
 
-    return <ListSurveys jsonData={surveysData} showSurvey={this.toggleSurvey} />;
+    return <SurveyList jsonData={surveysData} showSurvey={this.toggleSurvey} />;
   }
 }
 

@@ -1,0 +1,43 @@
+import React, { useState, useEffect } from "react";
+
+import { List, Button, Card, Col, Tag } from "antd";
+
+export default ({ jsonData, showSurvey }) => {
+  const [surveyList, setSurveyList] = useState([]);
+  useEffect(() => {
+    setSurveyList(jsonData);
+  }, [jsonData]);
+
+  return (
+    <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+      <Card>
+        <List
+          dataSource={surveyList}
+          renderItem={(survey) =>
+            survey.open == "true" ? (
+              <List.Item key={survey._id}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                {survey.userHasVoted && (
+                  <div>
+                    <Tag color="success">Respondida</Tag>
+                  </div>
+                )}
+                <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                </Button>
+              </List.Item>
+            ) : (
+              <List.Item key={survey._id} actions={[]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                <div>
+                  <Tag color="red">Cerrada</Tag>
+                </div>
+                <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
+              </List.Item>
+            )
+          }
+        />
+      </Card>
+    </Col>
+  );
+};
