@@ -56,10 +56,22 @@ class Styles extends Component {
       {
         title: "Elige una imagen para el banner superior:",
         description: "Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar",
-        imageFieldName: "banner_image"
+        imageFieldName: "banner_image",
+        width: 1920,
+        height: 540
       },
-      { title: "Elige una imagen(textura) para el fondo:", imageFieldName: "BackgroundImage" },
-      { title: "Elige una imagen para tu logo:", imageFieldName: "event_image", width: 640, height: 640 },
+      {
+        title: "Elige una imagen(textura) para el fondo:",
+        imageFieldName: "BackgroundImage",
+        width: 1080,
+        height: 1920
+      },
+      {
+        title: "Elige una imagen para tu logo:",
+        imageFieldName: "event_image",
+        width: 320,
+        height: 180
+      },
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
 
 
