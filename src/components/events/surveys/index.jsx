@@ -10,6 +10,8 @@ import SurveyComponent from "./surveyComponent";
 import Graphics from "./graphics";
 import RootPage from "./rootPage";
 
+import { Spin } from "antd";
+
 class SurveyForm extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +21,7 @@ class SurveyForm extends Component {
       hasVote: false,
       currentUser: null,
       openSurvey: false,
+      loading: true,
     };
   }
 
@@ -47,12 +50,12 @@ class SurveyForm extends Component {
     if (!prevProps || event !== prevProps.event || activitySurveyList !== prevProps.activitySurveyList) {
       // Condicion que valida si se esta recibiendo una lista de encuestas dentro de una actividad
       if (activitySurveyList) {
-        this.setState({ surveysData: activitySurveyList }, this.seeIfUserHasVote);
+        this.setState({ surveysData: activitySurveyList, loading: false }, this.seeIfUserHasVote);
       } else {
         surveysData = await SurveysApi.getAll(event._id);
         let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
 
-        this.setState({ surveysData: publishedSurveys }, this.seeIfUserHasVote);
+        this.setState({ surveysData: publishedSurveys, loading: false }, this.seeIfUserHasVote);
       }
     }
   };
@@ -124,7 +127,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, currentUser, openSurvey } = this.state;
+    let { idSurvey, surveysData, hasVote, currentUser, openSurvey, loading } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -138,7 +141,7 @@ class SurveyForm extends Component {
         />
       );
 
-    return <SurveyList jsonData={surveysData} showSurvey={this.toggleSurvey} />;
+    return !loading ? <SurveyList jsonData={surveysData} showSurvey={this.toggleSurvey} /> : <Spin></Spin>;
   }
 }
 
