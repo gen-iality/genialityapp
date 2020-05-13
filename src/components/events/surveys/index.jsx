@@ -26,15 +26,25 @@ class SurveyForm extends Component {
     this.loadData();
   }
 
+  componentDidUpdate(prevProps) {
+    this.loadData(prevProps);
+  }
+
   // Funcion para solicitar servicio y cargar datos
-  loadData = async () => {
+  loadData = async (prevProps) => {
     let { surveysData } = this.state;
-    const { event } = this.props;
+    const { event, activitySurveyList } = this.props;
+    if (!prevProps || event !== prevProps.event || activitySurveyList !== prevProps.activitySurveyList) {
+      // Condicion que valida si se esta recibiendo una lista de encuestas dentro de una actividad
+      if (activitySurveyList) {
+        this.setState({ surveysData: activitySurveyList }, this.getCurrentUser);
+      } else {
+        surveysData = await SurveysApi.getAll(event._id);
+        let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
 
-    surveysData = await SurveysApi.getAll(event._id);
-    let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
-
-    this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
+        this.setState({ surveysData: publishedSurveys }, this.getCurrentUser);
+      }
+    }
   };
 
   // Funcion que valida si el usuario ha votado en cada una de las encuestas
