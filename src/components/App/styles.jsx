@@ -63,8 +63,8 @@ class Styles extends Component {
       {
         title: "Elige una imagen(textura) para el fondo:",
         imageFieldName: "BackgroundImage",
-        width: 1080,
-        height: 1920
+        width: 1920,
+        height: 2160
       },
       {
         title: "Elige una imagen para tu logo:",
