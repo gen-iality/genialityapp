@@ -215,7 +215,7 @@ let agendaActividadDetalle = (props) => {
                               <div>
                                 {console.log(item)}
                                 {
-                                  item.open === "true" ?
+                                  item.open === "true" && usuarioRegistrado === true ?
                                     <div>
                                       <Button type="primary" onClick={showDrawer}>
                                         Contestar Encuesta
@@ -230,11 +230,10 @@ let agendaActividadDetalle = (props) => {
                                       </div>
                                     )
                                 }
-                                <div>
+                                {/* <div>
                                   <br />
-
                                   <Tag color="success">Encuesta ya constestada</Tag>
-                                </div>
+                                </div> */}
                               </div>
                             ) : (
                                 <div></div>
