@@ -213,9 +213,23 @@ let agendaActividadDetalle = (props) => {
                           actions={[
                             item.publish === "true" ? (
                               <div>
-                                <Button type="primary" onClick={showDrawer}>
-                                  Contestar Encuesta
-                                </Button>
+                                {console.log(item)}
+                                {
+                                  item.open === "true" ?
+                                    <div>
+                                      <Button type="primary" onClick={showDrawer}>
+                                        Contestar Encuesta
+                                      </Button>
+                                    </div>
+                                    :
+                                    item.allow_anonymous_answers === "true" && (
+                                      <div>
+                                        <Button type="primary" onClick={showDrawer}>
+                                          Contestar Encuesta
+                                        </Button>
+                                      </div>
+                                    )
+                                }
                                 <div>
                                   <br />
 
@@ -229,30 +243,40 @@ let agendaActividadDetalle = (props) => {
                           <List.Item.Meta
                             title={
                               <div>
-                                <p>{item.survey}</p>
-                                {item.publish === "true" ? (
-                                  <div>
-                                    <Drawer
-                                      title={item.survey}
-                                      placement="right"
-                                      closable={false}
-                                      onClose={onClose}
-                                      visible={visible}>
-                                      <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                    </Drawer>
-                                  </div>
-                                ) : (
+                                {
+                                  item.open ?
                                     <div>
-                                      <Drawer
-                                        title={item.survey}
-                                        placement="right"
-                                        closable={false}
-                                        onClose={onClose}
-                                        visible={false}>
-                                        <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                      </Drawer>
+                                      <p>{item.survey}</p>
+                                      {item.open === "true" ? (
+                                        <div>
+                                          <Drawer
+                                            title={item.survey}
+                                            placement="right"
+                                            closable={false}
+                                            onClose={onClose}
+                                            visible={visible}>
+                                            <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                          </Drawer>
+                                        </div>
+                                      ) : (
+                                          <div>
+                                            <Drawer
+                                              title={item.survey}
+                                              placement="right"
+                                              closable={false}
+                                              onClose={onClose}
+                                              visible={visible}>
+                                              <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
+                                            </Drawer>
+                                          </div>
+                                        )}
                                     </div>
-                                  )}
+                                    :
+                                    <div>
+
+                                    </div>
+                                }
+
                               </div>
                             }
                           />
