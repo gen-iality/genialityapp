@@ -96,6 +96,8 @@ class triviaEdit extends Component {
     const data = {
       survey: this.state.survey,
       publish: "false",
+      open: "false",
+      allow_anonymous_answers: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
     };
