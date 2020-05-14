@@ -1,6 +1,37 @@
 import { firestore } from "../../helpers/firebase";
 import Moment from "moment";
 
+const refSurvey = firestore.collection("surveys");
+
+export const validateSurveyCreated = (surveyId) => {
+  return new Promise((resolve, reject) => {
+    refSurvey.doc(surveyId).onSnapshot((survey) => {
+      if (!survey.exists) {
+        resolve(false);
+      }
+      resolve(true);
+    });
+  });
+};
+
+export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
+  return new Promise((resolve, reject) => {
+    validateSurveyCreated(surveyId).then((existSurvey) => {
+      if (existSurvey) {
+        refSurvey
+          .doc(surveyId)
+          .update({ ...status })
+          .then(() => resolve({ message: "Encuesta actualizada", state: "updated" }));
+      } else {
+        refSurvey
+          .doc(surveyId)
+          .set({ ...surveyInfo, ...status })
+          .then(() => resolve({ message: "Encuesta creada", state: "created" }));
+      }
+    });
+  });
+};
+
 export const getTotalVotes = (surveyId, question) => {
   return new Promise((resolve, reject) => {
     firestore
