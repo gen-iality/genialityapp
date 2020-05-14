@@ -56,7 +56,6 @@ let surveyNotification = () => {
                 title="Basic Drawer"
                 placement="right"
                 closable={true}
-                width={"auto"}
                 onClose={() => clearStates()}
                 visible={drawerVisible}
             >
