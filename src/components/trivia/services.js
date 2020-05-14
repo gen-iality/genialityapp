@@ -3,7 +3,7 @@ import Moment from "moment";
 
 const refSurvey = firestore.collection("surveys");
 
-const validateSurveyCreated = (surveyId) => {
+export const validateSurveyCreated = (surveyId) => {
   return new Promise((resolve, reject) => {
     refSurvey.doc(surveyId).onSnapshot((survey) => {
       if (!survey.exists) {
