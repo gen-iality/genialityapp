@@ -208,7 +208,7 @@ let agendaActividadDetalle = (props) => {
             <div>
               <div style={{}} className="has-text-left is-size-6-desktop">
                 <p><b>Encuestas:</b></p>
-                <SurveyComponent event={event} activitySurveyList={survey.data} />
+                <SurveyComponent event={event} usuarioRegistrado={usuarioRegistrado} activitySurveyList={survey.data} />
               </div>
             </div>
 

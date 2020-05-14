@@ -8,6 +8,7 @@ import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers } from "./services";
+import { validateSurveyCreated } from "../../trivia/services";
 
 import * as Survey from "survey-react";
 import "survey-react/survey.css";
@@ -66,14 +67,18 @@ class SurveyComponent extends Component {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData } = this.state;
 
-    firestore
-      .collection("surveys")
-      .doc(surveyData._id)
-      .set({
-        eventId: eventId,
-        name: surveyData.title,
-        category: "none",
-      });
+    validateSurveyCreated(surveyData._id).then((existSurvey) => {
+      if (!existSurvey) {
+        firestore
+          .collection("surveys")
+          .doc(surveyData._id)
+          .set({
+            eventId: eventId,
+            name: surveyData.title,
+            category: "none",
+          });
+      }
+    });
 
     // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
