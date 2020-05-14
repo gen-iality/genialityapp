@@ -22,6 +22,7 @@ class triviaEdit extends Component {
       redirect: false,
       survey: "",
       publish: "",
+      allow_anonymous_answers: "",
       openSurvey: false,
       activity_id: "",
       dataAgenda: [],
@@ -30,9 +31,11 @@ class triviaEdit extends Component {
       question: [],
       visibleModal: false,
       confirmLoading: false,
+      key: Date.now(),
       currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
     };
     this.submit = this.submit.bind(this);
+    this.submitWithQuestions = this.submitWithQuestions.bind(this)
   }
 
   //Funcion para poder cambiar el value del input o select
@@ -44,7 +47,7 @@ class triviaEdit extends Component {
 
   async componentDidMount() {
     //Se consultan las api para traer en primera los datos de la encuesta para actualizar y en segunda los datos la agenda
-
+    console.log(this.props)
     if (this.props.location.state) {
       const Update = await SurveysApi.getOne(this.props.event._id, this.props.location.state.edit);
       const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
@@ -53,10 +56,12 @@ class triviaEdit extends Component {
 
       //Se envan al estado para poderlos utilizar en el markup
       this.setState({
+        idSurvey: Update._id,
         _id: Update._id,
         survey: Update.survey,
         publish: Update.publish,
         openSurvey: Update.open || "false",
+        allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
       });
@@ -86,41 +91,42 @@ class triviaEdit extends Component {
 
   //Funcion para guardar los datos a actualizar
   async submit() {
-    if (this.props.location.state) {
-      //Se recogen los datos a actualizar
-      const data = {
-        id: this.state._id,
-        survey: this.state.survey,
-        publish: this.state.publish === "true" ? "true" : "false",
-        open: this.state.openSurvey,
-        activity_id: this.state.activity_id,
-      };
-      console.log(data);
-      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-      await SurveysApi.editOne(data, data.id, this.props.event._id);
-      // Se da la información de datos actualizados y se redirige a la vista principal
-      toast.success("datos actualizados");
-    } else {
-      //Se recogen los datos a actualizar
-      const data = {
-        survey: this.state.survey,
-        publish: "false",
-        event_id: this.props.event._id,
-        activity_id: this.state.activity_id,
-      };
-      console.log(data);
-      // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-      const save = await SurveysApi.createOne(this.props.event._id, data);
-      console.log(save);
-      // Se da la información de datos actualizados y se redirige a la vista principal
-      toast.success("datos creados");
-    }
+    //Se recogen los datos a actualizar
+    const data = {
+      survey: this.state.survey,
+      publish: "false",
+      event_id: this.props.event._id,
+      activity_id: this.state.activity_id,
+    };
+    console.log(data);
+    // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+    const save = await SurveysApi.createOne(this.props.event._id, data);
+    console.log(save);
+    const idSurvey = save._id
+    await this.setState({ idSurvey })
+    console.log(this.state.idSurvey)
+  }
+
+  async submitWithQuestions() {
+    //Se recogen los datos a actualizar
+    const data = {
+      survey: this.state.survey,
+      publish: this.state.publish === "true" ? "true" : "false",
+      allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
+      open: this.state.openSurvey,
+      activity_id: this.state.activity_id,
+    };
+    console.log(data);
+    // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
+    await SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id);
+    // Se da la información de datos actualizados y se redirige a la vista principal
+    toast.success("datos actualizados");
   }
 
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -130,7 +136,7 @@ class triviaEdit extends Component {
 
   // Funcion para agregar el formulario de las preguntas
   addNewQuestion = () => {
-    let { listQuestions, _id } = this.state;
+    let { listQuestions, idSurvey } = this.state;
     let uid = this.generateUUID();
     this.setState({
       listQuestions: [
@@ -139,7 +145,7 @@ class triviaEdit extends Component {
           key={uid}
           questionId={uid}
           eventId={this.props.event._id}
-          surveyId={_id}
+          surveyId={idSurvey}
           removeQuestion={this.removeQuestion}
         />,
       ],
@@ -198,7 +204,7 @@ class triviaEdit extends Component {
   sendForm = () => {
     this.setState({ confirmLoading: true });
     if (this.formEditRef.current) {
-      this.formEditRef.current.submit();
+      this.formEditRef.current.submitWithQuestions();
     }
   };
 
@@ -241,6 +247,8 @@ class triviaEdit extends Component {
       visibleModal,
       confirmLoading,
       currentQuestion,
+      allow_anonymous_answers
+
     } = this.state;
     const columns = [
       {
@@ -284,35 +292,43 @@ class triviaEdit extends Component {
               <Input value={survey} placeholder="Nombre de la encuesta" name={"survey"} onChange={this.changeInput} />
             </div>
           </div>
-          {this.props.location.state ? (
+          {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
-                activar la encuesta
+                Permitir usuarios anonimos
+              </label>
+              <Switch
+                checked={allow_anonymous_answers == "true"}
+                onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? "true" : "false" })}
+              />
+            </div>
+          )}
+
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Publicar encuesta
               </label>
               <Switch
                 checked={publish == "true"}
                 onChange={(checked) => this.setState({ publish: checked ? "true" : "false" })}
               />
             </div>
-          ) : (
-            <div></div>
           )}
 
-          {this.props.location.state ? (
+          {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
-                Encuesta Abierta
+                Encuesta abierta
               </label>
               <Switch
                 checked={openSurvey == "true"}
                 onChange={(checked) => this.setState({ openSurvey: checked ? "true" : "false" })}
               />
             </div>
-          ) : (
-            <div></div>
           )}
 
-          {this.props.location.state ? (
+          {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "2%" }} className="label">
                 Relacionar esta encuesta a una actividad
@@ -328,15 +344,23 @@ class triviaEdit extends Component {
                 </select>
               </div>
             </div>
-          ) : (
-            <div />
           )}
-          <div className="column">
-            <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-              Guardar
-            </button>
-          </div>
-          {this.props.location.state ? (
+          {
+            this.state.idSurvey ?
+              <div className="column">
+                <button onClick={this.submitWithQuestions} className="columns is-pulled-right button is-primary">
+                  Guardar
+                </button>
+              </div>
+              :
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
+                </button>
+              </div>
+          }
+
+          {this.state.idSurvey && (
             <div>
               <Row>
                 <Col span={7} style={{ marginTop: "3%" }}>
@@ -373,20 +397,20 @@ class triviaEdit extends Component {
                     Guardar
                   </Button>,
                 ]}>
-                {Object.entries(currentQuestion).length !== 0 && (
-                  <FormQuestionEdit
-                    ref={this.formEditRef}
-                    valuesQuestion={currentQuestion}
-                    eventId={this.props.event._id}
-                    surveyId={this.state._id}
-                    closeModal={this.closeModal}
-                    toggleConfirmLoading={this.toggleConfirmLoading}
-                  />
+                {this.state.idSurvey && (
+                  Object.entries(currentQuestion).length !== 0 && (
+                    <FormQuestionEdit
+                      ref={this.formEditRef}
+                      valuesQuestion={currentQuestion}
+                      eventId={this.props.event._id}
+                      surveyId={this.state.idSurvey}
+                      closeModal={this.closeModal}
+                      toggleConfirmLoading={this.toggleConfirmLoading}
+                    />
+                  )
                 )}
               </Modal>
             </div>
-          ) : (
-            <div></div>
           )}
         </EventContent>
       </Fragment>

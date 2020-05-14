@@ -489,18 +489,7 @@ const MapComponent = (props) => {
         {
           (console.log(event),
             event.type_event === "onlineEvent" ? (
-              {/* <div>
-                <ReactQuill
-                  value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
-                  modules={{ toolbar: false }}
-                  readOnly={true}
-                />
-                <VirtualConference
-                  event={event}
-                  toggleConference={toggleConference}
-                  currentUser={namesUser}
-                />
-              </div> */}
+              <></>
             ) : (
                 <div>
                   <Card>
