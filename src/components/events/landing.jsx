@@ -33,6 +33,7 @@ import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
 import VirtualConference from "./virtualConference"
+import SurveyNotification from "./surveyNotification";
 
 const { Title } = Typography;
 
@@ -339,6 +340,7 @@ class Landing extends Component {
     const { event, modal, modalTicket, section, sections, showIframeZoom, meeting_id, userEntered } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
+
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
@@ -360,10 +362,16 @@ class Landing extends Component {
                 {showIframeZoom && (
                   <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
                 )}
+
+                {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
+
+                {/* <SurveyNotification /> */}
+
+
+
                 {this.state.headerVisible && (
 
-
-                  < BannerEvent
+                  <BannerEvent
                     bgImage={
                       event.styles && event.styles.banner_image
                         ? event.styles.banner_image
