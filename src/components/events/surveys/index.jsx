@@ -42,6 +42,9 @@ class SurveyForm extends Component {
 
   componentDidUpdate(prevProps) {
     this.loadData(prevProps);
+    if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
+      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado })
+    }
   }
 
   // Funcion para solicitar servicio y cargar datos
@@ -159,7 +162,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, currentUser, openSurvey, loading } = this.state;
+    let { idSurvey, surveysData, hasVote, currentUser, openSurvey, loading, usuarioRegistrado } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -173,7 +176,7 @@ class SurveyForm extends Component {
         />
       );
 
-    return !loading ? <SurveyList jsonData={surveysData} showSurvey={this.toggleSurvey} /> : <Spin></Spin>;
+    return !loading ? <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} /> : <Spin></Spin>;
   }
 }
 
