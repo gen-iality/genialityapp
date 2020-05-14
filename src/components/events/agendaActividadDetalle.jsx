@@ -206,98 +206,9 @@ let agendaActividadDetalle = (props) => {
             <hr />
             <hr />
             <div>
-<<<<<<< HEAD
-
-
-              <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                <b>Encuestas:</b>&nbsp;
-                <div>
-                  <Card style={{ textAlign: "left" }}>
-                    {/* Se enlista la encuesta y se valida si esta activa o no, si esta activa se visualizará el boton de responder */}
-                    <List
-                      itemLayout="horizontal"
-                      dataSource={survey.data}
-                      renderItem={(item) => (
-                        <List.Item
-                          actions={[
-                            item.publish === "true" ? (
-                              <div>
-                                {console.log(item)}
-                                {
-                                  item.open === "true" && usuarioRegistrado === true ?
-                                    <div>
-                                      <Button type="primary" onClick={showDrawer}>
-                                        Contestar Encuesta
-                                      </Button>
-                                    </div>
-                                    :
-                                    item.allow_anonymous_answers === "true" && (
-                                      <div>
-                                        <Button type="primary" onClick={showDrawer}>
-                                          Contestar Encuesta
-                                        </Button>
-                                      </div>
-                                    )
-                                }
-                                {/* <div>
-                                  <br />
-                                  <Tag color="success">Encuesta ya constestada</Tag>
-                                </div> */}
-                              </div>
-                            ) : (
-                                <div></div>
-                              ),
-                          ]}>
-                          <List.Item.Meta
-                            title={
-                              <div>
-                                {
-                                  item.open ?
-                                    <div>
-                                      <p>{item.survey}</p>
-                                      {item.open === "true" ? (
-                                        <div>
-                                          <Drawer
-                                            title={item.survey}
-                                            placement="right"
-                                            closable={false}
-                                            onClose={onClose}
-                                            visible={visible}>
-                                            <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                          </Drawer>
-                                        </div>
-                                      ) : (
-                                          <div>
-                                            <Drawer
-                                              title={item.survey}
-                                              placement="right"
-                                              closable={false}
-                                              onClose={onClose}
-                                              visible={visible}>
-                                              <SurveyComponent idSurvey={item._id} eventId={item.event_id} />
-                                            </Drawer>
-                                          </div>
-                                        )}
-                                    </div>
-                                    :
-                                    <div>
-
-                                    </div>
-                                }
-
-                              </div>
-                            }
-                          />
-                        </List.Item>
-                      )}
-                    />
-                  </Card>
-                </div>
-=======
               <div style={{}} className="has-text-left is-size-6-desktop">
                 <p><b>Encuestas:</b></p>
                 <SurveyComponent event={event} activitySurveyList={survey.data} />
->>>>>>> ec36fe5baffe1b55baee2621de116050d8d633c1
               </div>
             </div>
 
