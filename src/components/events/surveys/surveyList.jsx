@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { List, Button, Card, Col, Tag, Spin } from "antd";
 
-export default ({ jsonData, showSurvey }) => {
+export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
   const [surveyList, setSurveyList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,9 +25,24 @@ export default ({ jsonData, showSurvey }) => {
                     <Tag color="success">Respondida</Tag>
                   </div>
                 )}
-                <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>
+                {usuarioRegistrado === true ?
+                  <div>
+                    <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                      {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                    </Button>
+                  </div>
+                  :
+                  survey.allow_anonymous_answers === "true" ?
+                    <div>
+                      <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                        {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                      </Button>
+                    </div>
+                    :
+                    <></>
+                }
+
+
               </List.Item>
             ) : (
                 <List.Item key={survey._id} actions={[]}>

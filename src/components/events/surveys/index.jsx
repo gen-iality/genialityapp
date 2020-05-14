@@ -4,6 +4,7 @@ import * as Cookie from "js-cookie";
 
 import { SurveyAnswers } from "./services";
 import API, { SurveysApi } from "../../../helpers/request";
+import { firestore } from "../../../helpers/firebase";
 
 import SurveyList from "./surveyList";
 import SurveyComponent from "./surveyComponent";
@@ -41,6 +42,9 @@ class SurveyForm extends Component {
 
   componentDidUpdate(prevProps) {
     this.loadData(prevProps);
+    if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
+      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado })
+    }
   }
 
   // Funcion para solicitar servicio y cargar datos
@@ -50,12 +54,14 @@ class SurveyForm extends Component {
     if (!prevProps || event !== prevProps.event || activitySurveyList !== prevProps.activitySurveyList) {
       // Condicion que valida si se esta recibiendo una lista de encuestas dentro de una actividad
       if (activitySurveyList) {
+        this.getStateInFire(activitySurveyList);
         this.setState({ surveysData: activitySurveyList, loading: false }, this.seeIfUserHasVote);
       } else {
         surveysData = await SurveysApi.getAll(event._id);
-        let publishedSurveys = surveysData.data.filter((survey) => survey.publish == "true");
+        let publishedSurveysAPI = surveysData.data.filter((survey) => survey.publish == "true");
 
-        this.setState({ surveysData: publishedSurveys, loading: false }, this.seeIfUserHasVote);
+        this.getStateInFire(publishedSurveysAPI);
+        this.setState({ surveysData: publishedSurveysAPI, loading: false }, this.seeIfUserHasVote);
       }
     }
   };
@@ -115,6 +121,35 @@ class SurveyForm extends Component {
     });
   };
 
+  // Funcion que actualiza el estado de las encuestas
+  getStateInFire = (surveyList) => {
+    surveyList.forEach((survey, index, arr) => {
+      firestore
+        .collection("surveys")
+        .doc(survey._id)
+        .onSnapshot((survey) => {
+          // Valida si la encuesta existe en la base de datos
+          if (survey.exists) {
+            // Extrae los estados que se encuentran registrados en firestore
+            let { isOpened, isPublished, allow_anonymous_answers } = survey.data();
+
+            // Se actualizan los estados de la encuesta actual
+            let updateSurveyState = {
+              ...arr[index],
+              open: isOpened,
+              publish: isPublished,
+              allow_anonymous_answers,
+            };
+
+            arr[index] = updateSurveyState;
+
+            // Se filtra por solo las encuestas publicadas
+            this.setState({ surveysData: arr.filter((survey) => survey.publish == "true") }, this.seeIfUserHasVote);
+          }
+        });
+    });
+  };
+
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
     if (data) {
@@ -127,7 +162,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, hasVote, currentUser, openSurvey, loading } = this.state;
+    let { idSurvey, surveysData, hasVote, currentUser, openSurvey, loading, usuarioRegistrado } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -141,7 +176,7 @@ class SurveyForm extends Component {
         />
       );
 
-    return !loading ? <SurveyList jsonData={surveysData} showSurvey={this.toggleSurvey} /> : <Spin></Spin>;
+    return !loading ? <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} /> : <Spin></Spin>;
   }
 }
 
