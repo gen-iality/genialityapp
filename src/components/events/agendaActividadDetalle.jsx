@@ -10,7 +10,7 @@ import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card, Modal } from "antd";
+import { PageHeader, Alert, Row, Col, Tag, Button, List, Avatar, Card, Modal } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 import DocumentsList from "../documents/documentsList";
@@ -114,6 +114,19 @@ let agendaActividadDetalle = (props) => {
               <p className="has-text-left is-size-6-desktop">
                 <b>Lugar:</b> {currentActivity.space.name}
               </p>
+              <p className="has-text-left is-size-6-desktop">
+                {usuarioRegistrado && (
+                  <Button
+                    type="primary"
+                    disabled={currentActivity.meeting_id ? false : true}
+                    onClick={() =>
+                      showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                    }>
+                    {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                  </Button>
+                )}
+              </p>
+
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
@@ -186,24 +199,15 @@ let agendaActividadDetalle = (props) => {
                   currentActivity={currentActivity}
                 />
 
-                {usuarioRegistrado && (
-                  <Button
-                    type="primary"
-                    disabled={currentActivity.meeting_id ? false : true}
-                    onClick={() =>
-                      showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
-                    }>
-                    {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                  </Button>
-                )}
+
               </Col>
             </Row>
 
             <hr />
             <hr />
             <div>
-              <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                <b>Encuestas:</b>&nbsp;
+              <div style={{}} className="has-text-left is-size-6-desktop">
+                <p><b>Encuestas:</b></p>
                 <SurveyComponent event={event} activitySurveyList={survey.data} />
               </div>
             </div>
@@ -211,39 +215,39 @@ let agendaActividadDetalle = (props) => {
             {currentActivity.hosts.length === 0 ? (
               <div></div>
             ) : (
-              <div>
-                <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                  <b>Conferencistas:</b> &nbsp;
-                  <div>
-                    <Card style={{ textAlign: "left" }}>
-                      <List
-                        itemLayout="horizontal"
-                        dataSource={currentActivity.hosts}
-                        renderItem={(item) => (
-                          <List.Item>
-                            <List.Item.Meta
-                              avatar={
-                                <Avatar
-                                  src={
-                                    item.image
-                                      ? item.image
-                                      : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                  }
-                                />
-                              }
-                              title={<strong>{item.name}</strong>}
-                              description={item.profession}
-                            />
-                            <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
-                          </List.Item>
-                        )}
-                      />
-                      {idSpeaker ? <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} /> : <></>}
-                    </Card>
-                  </div>
-                </p>
-              </div>
-            )}
+                <div>
+                  <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
+                    <p><b>Conferencistas:</b></p>
+                    <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
+                      <Card style={{ textAlign: "left" }}>
+                        <List
+                          itemLayout="horizontal"
+                          dataSource={currentActivity.hosts}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <List.Item.Meta
+                                avatar={
+                                  <Avatar
+                                    src={
+                                      item.image
+                                        ? item.image
+                                        : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                    }
+                                  />
+                                }
+                                title={<strong>{item.name}</strong>}
+                                description={item.profession}
+                              />
+                              <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
+                            </List.Item>
+                          )}
+                        />
+                        {idSpeaker ? <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} /> : <></>}
+                      </Card>
+                    </Col>
+                  </p>
+                </div>
+              )}
 
             {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
               <div>
@@ -259,23 +263,23 @@ let agendaActividadDetalle = (props) => {
             {currentUser.names ? (
               <div />
             ) : (
-              <div>
-                {currentActivity.meeting_id ? (
-                  <div>
-                    <Button
-                      type="primary"
-                      disabled={currentActivity.meeting_id ? false : true}
-                      onClick={() =>
-                        showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
-                      }>
-                      Conferencia en Vivo en anónimo
+                <div>
+                  {currentActivity.meeting_id ? (
+                    <div>
+                      <Button
+                        type="primary"
+                        disabled={currentActivity.meeting_id ? false : true}
+                        onClick={() =>
+                          showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                        }>
+                        Conferencia en Vivo en anónimo
                     </Button>
-                  </div>
-                ) : (
-                  <div />
-                )}
-              </div>
-            )}
+                    </div>
+                  ) : (
+                      <div />
+                    )}
+                </div>
+              )}
 
             <hr></hr>
             <br />

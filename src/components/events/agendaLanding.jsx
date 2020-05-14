@@ -365,10 +365,13 @@ class Agenda extends Component {
                                 className="card-footer is-12 is-block"
                                 style={{
                                   borderTop: "none",
-                                  alignItems: "flex-end"
                                 }}>
                                 <p>
-                                  <a className="is-size-5 is-vcentered">Ver más...</a>
+                                  <Button type="primary">Ir a la actividad</Button>
+                                  <br />
+                                  <br />
+                                  <Button type="primary">Más información sobre la actividad.</Button>
+
                                 </p>
                                 {/* Boton de para acceder a la conferencia onClick={() =>
                                 showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
