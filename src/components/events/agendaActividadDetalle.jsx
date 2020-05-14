@@ -9,14 +9,13 @@ import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
-import SurveyComponent from "./surveys/surveyComponent";
-import { PageHeader, Alert, Row, Col, Tag, Button, Drawer, List, Avatar, Card, Modal } from "antd";
+import SurveyComponent from "./surveys";
+import { PageHeader, Alert, Row, Col, Tag, Button, List, Avatar, Card, Modal } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
-import DocumentsList from "../documents/documentsList"
+import DocumentsList from "../documents/documentsList";
 import { UserOutlined } from "@ant-design/icons";
-import ModalSpeaker from "./modalSpeakers"
-
+import ModalSpeaker from "./modalSpeakers";
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
@@ -89,7 +88,7 @@ let agendaActividadDetalle = (props) => {
   }, []);
 
   async function getSpeakers(idSpeaker) {
-    setIdSpeaker(idSpeaker)
+    setIdSpeaker(idSpeaker);
   }
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
@@ -115,6 +114,19 @@ let agendaActividadDetalle = (props) => {
               <p className="has-text-left is-size-6-desktop">
                 <b>Lugar:</b> {currentActivity.space.name}
               </p>
+              <p className="has-text-left is-size-6-desktop">
+                {usuarioRegistrado && (
+                  <Button
+                    type="primary"
+                    disabled={currentActivity.meeting_id ? false : true}
+                    onClick={() =>
+                      showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
+                    }>
+                    {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                  </Button>
+                )}
+              </p>
+
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
@@ -126,18 +138,18 @@ let agendaActividadDetalle = (props) => {
                   }}
                   width="100%"
                   height="auto"
-                  url={currentActivity.meeting_video} controls />
+                  url={currentActivity.meeting_video}
+                  controls
+                />
               )}
 
               {!currentActivity.meeting_video && currentActivity.image && (
                 <img className="activity_image" src={currentActivity.image} />
               )}
-
             </div>
           </header>
 
           <div className="card-content has-text-left container_calendar-description">
-
             <div className="calendar-category has-margin-top-7">
               {/* Tags de categorias */}
               {currentActivity.activity_categories.map((cat, key) => (
@@ -152,7 +164,9 @@ let agendaActividadDetalle = (props) => {
                 </span>
               ))}
 
-              <span className="tag category_calendar-tag">{currentActivity.meeting_id ? "Tiene espacio virtual" : "No tiene espacio Virtual"}</span>
+              <span className="tag category_calendar-tag">
+                {currentActivity.meeting_id ? "Tiene espacio virtual" : "No tiene espacio Virtual"}
+              </span>
             </div>
 
             {/* Boton de para acceder a la conferencia */}
@@ -171,7 +185,10 @@ let agendaActividadDetalle = (props) => {
               
              */}
 
-            <div className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10" dangerouslySetInnerHTML={{ __html: currentActivity.description }} />
+            <div
+              className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
+              dangerouslySetInnerHTML={{ __html: currentActivity.description }}
+            />
 
             <Row>
               <Col span={24}>
@@ -182,22 +199,14 @@ let agendaActividadDetalle = (props) => {
                   currentActivity={currentActivity}
                 />
 
-                {usuarioRegistrado && (
-                  <Button
-                    type="primary"
-                    disabled={currentActivity.meeting_id ? false : true}
-                    onClick={() =>
-                      showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
-                    }>
-                    {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                  </Button>
-                )}
+
               </Col>
             </Row>
 
             <hr />
             <hr />
             <div>
+<<<<<<< HEAD
 
 
               <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
@@ -284,6 +293,11 @@ let agendaActividadDetalle = (props) => {
                     />
                   </Card>
                 </div>
+=======
+              <div style={{}} className="has-text-left is-size-6-desktop">
+                <p><b>Encuestas:</b></p>
+                <SurveyComponent event={event} activitySurveyList={survey.data} />
+>>>>>>> ec36fe5baffe1b55baee2621de116050d8d633c1
               </div>
             </div>
 
@@ -292,8 +306,8 @@ let agendaActividadDetalle = (props) => {
             ) : (
                 <div>
                   <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                    <b>Conferencistas:</b> &nbsp;
-                  <div>
+                    <p><b>Conferencistas:</b></p>
+                    <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
                       <Card style={{ textAlign: "left" }}>
                         <List
                           itemLayout="horizontal"
@@ -315,21 +329,16 @@ let agendaActividadDetalle = (props) => {
                               />
                               <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
                             </List.Item>
-                          )} />
-                        {
-                          idSpeaker ?
-                            <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} />
-                            :
-                            <></>
-                        }
+                          )}
+                        />
+                        {idSpeaker ? <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} /> : <></>}
                       </Card>
-                    </div>
+                    </Col>
                   </p>
                 </div>
               )}
 
-            {(currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0) && (
-
+            {currentActivity && currentActivity.selected_document && currentActivity.selected_document.length > 0 && (
               <div>
                 <div style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                   <b>Documentos:</b> &nbsp;
@@ -340,9 +349,9 @@ let agendaActividadDetalle = (props) => {
               </div>
             )}
 
-
-            {
-              currentUser.names ? <div /> :
+            {currentUser.names ? (
+              <div />
+            ) : (
                 <div>
                   {currentActivity.meeting_id ? (
                     <div>
@@ -353,13 +362,13 @@ let agendaActividadDetalle = (props) => {
                           showIframe(true, currentActivity.meeting_id, currentUser.names || currentUser.displayName)
                         }>
                         Conferencia en Vivo en anónimo
-                      </Button>
+                    </Button>
                     </div>
                   ) : (
                       <div />
                     )}
                 </div>
-            }
+              )}
 
             <hr></hr>
             <br />
@@ -400,8 +409,7 @@ let agendaActividadDetalle = (props) => {
                 onClick={(e) => {
                   gotoActivityList();
                 }}>
-
-                <Button >Regresar a la agenda</Button>
+                <Button>Regresar a la agenda</Button>
               </a>
             </div>
           </div>

@@ -39,11 +39,16 @@ let ImageInput = (props) => {
   let divClass = props.divClass || "drop-img";
   let classDrop = props.classDrop || "dropzone";
 
+  const ContainerDropzone = {
+    maxWidth: "100%",
+    minHeight: "auto"
+  }
+
   return (
-    <div className="inputImage" style={{ "width": width, "height": height, "max-width": "100%" }}>
+    <div className="inputImage" style={ContainerDropzone}>
       {/* el #FFF es por un error que se nos fue a la base de datos*/}
       {props.picture && props.picture != "#FFF" ? (
-        <div className={divClass} style={{ "width": width, "height": height, "max-width": "100%" }}>
+        <div className={divClass} style={ContainerDropzone}>
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone
             accept="image/*"
