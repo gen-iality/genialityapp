@@ -16,15 +16,19 @@ const validateSurveyCreated = (surveyId) => {
 
 export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
   return new Promise((resolve, reject) => {
-    validateSurveyCreated(surveyId)
-      .then((existSurvey) => {
-        if (existSurvey) {
-          refSurvey.doc(surveyId).update({ ...status });
-        } else {
-          refSurvey.doc(surveyId).set({ ...surveyInfo, ...status });
-        }
-      })
-      .catch((err) => {});
+    validateSurveyCreated(surveyId).then((existSurvey) => {
+      if (existSurvey) {
+        refSurvey
+          .doc(surveyId)
+          .update({ ...status })
+          .then(() => resolve({ message: "Encuesta actualizada", state: "updated" }));
+      } else {
+        refSurvey
+          .doc(surveyId)
+          .set({ ...surveyInfo, ...status })
+          .then(() => resolve({ message: "Encuesta creada", state: "created" }));
+      }
+    });
   });
 };
 
