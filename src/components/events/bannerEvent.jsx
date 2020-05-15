@@ -38,8 +38,16 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
 
                         {/* Fecha del evento */}
                         <div>
-                            <span>Del {Moment(dateStart).format("DD")}</span>
-                            <span> al {Moment(dateEnd).format("DD")}{" "} {Moment(dateEnd).format("MMM YY")}</span>
+                            {
+                                dateStart === dateEnd ?
+                                    <span>{Moment(dateEnd).format("DD")}{" "} {Moment(dateEnd).format("MMMM YYYY")}</span>
+                                    :
+                                    <div>
+                                        <span>Del {Moment(dateStart).format("DD")}</span>
+                                        <span> al {Moment(dateEnd).format("DD")}{" "} {Moment(dateEnd).format("MMMM YYYY")}</span>
+                                    </div>
+                            }
+
                         </div>
 
                         {/* Nombre del evento */}
