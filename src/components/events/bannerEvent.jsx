@@ -3,14 +3,22 @@ import Moment from "moment";
 import BannerAnim, { Element } from 'rc-banner-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
-import { EnvironmentOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
 
 
 
 const BgElement = Element.BgElement;
 
+function capitalize(val) {
+    val = Moment(val).format("MMMM YYYY")
+    return val.toLowerCase()
+        .trim()
+        .split(' ')
+        .map(v => v[0].toUpperCase() + v.substr(1))
+        .join(' ');
+}
 
-let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText }) => {
+let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText, type_event }) => {
 
     return (
         <BannerAnim prefixCls="banner-user">
@@ -38,8 +46,16 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
 
                         {/* Fecha del evento */}
                         <div>
-                            <span>Del {Moment(dateStart).format("DD")}</span>
-                            <span> al {Moment(dateEnd).format("DD")}{" "} {Moment(dateEnd).format("MMM YY")}</span>
+                            {
+                                dateStart === dateEnd ?
+                                    <span>{Moment(dateEnd).format("DD")}{" de "} {capitalize(dateEnd)}</span>
+                                    :
+                                    <div>
+                                        <span>Del {Moment(dateStart).format("DD")}</span>
+                                        <span> al {Moment(dateEnd).format("DD")}{" "} {capitalize(dateEnd)}</span>
+                                    </div>
+                            }
+
                         </div>
 
                         {/* Nombre del evento */}
@@ -58,8 +74,15 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
 
                         {/* Lugar del evento */}
                         <div>
+                            {
+                                type_event === "onlineEvent" ?
+                                    <div>
+                                        <span><LaptopOutlined style={{ marginRight: "2%" }} />Era virtual</span>
+                                    </div>
+                                    :
+                                    <span><EnvironmentOutlined /> {place}</span>
+                            }
 
-                            <span><EnvironmentOutlined /> {place}</span>
                         </div>
                     </TweenOne>
                 </div>

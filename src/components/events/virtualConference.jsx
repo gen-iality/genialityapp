@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react"
 import { Card, Button } from "antd"
 import WithUserEventRegistered from "../shared/withUserEventRegistered"
 import { AgendaApi } from "../../helpers/request";
+import TimeStamp from "react-timestamp";
+import Moment from "moment";
 
 class VirtualConference extends Component {
     constructor(props) {
@@ -23,6 +25,15 @@ class VirtualConference extends Component {
 
         console.log(infoAgendaArr);
         this.setState({ infoAgendaArr });
+    }
+
+    capitalizeDate(val) {
+        val = Moment(val).format("DD MMMM HH:HH")
+        return val.toLowerCase()
+            .trim()
+            .split(' ')
+            .map(v => v[0].toUpperCase() + v.substr(1))
+            .join(' ');
     }
 
     render() {
@@ -48,7 +59,7 @@ class VirtualConference extends Component {
                                             <div />
                                         }
                                     </p>
-                                    <p>{item.datetime_start} - {item.datetime_end}</p>
+                                    <p>{this.capitalizeDate(item.datetime_start)} - {this.capitalizeDate(item.datetime_end)} </p>
                                     <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
                                 </Card>
                             </div>

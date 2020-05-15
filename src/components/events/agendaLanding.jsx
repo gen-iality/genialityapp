@@ -55,6 +55,7 @@ class Agenda extends Component {
     for (let i = 0; i < diff + 1; i++) {
       days.push(Moment(init).add(i, "d"));
     }
+
     this.setState({ days, day: days[0] }, this.fetchAgenda);
   }
 
@@ -219,6 +220,15 @@ class Agenda extends Component {
     })
   };
 
+  capitalizeDate(val) {
+    val = val.format("MMMM DD").toUpperCase()
+    return val.toLowerCase()
+      .trim()
+      .split(' ')
+      .map(v => v[0].toUpperCase() + v.substr(1))
+      .join(' ');
+  }
+
   render() {
     const { showIframe } = this.props;
     const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey } = this.state;
@@ -266,7 +276,7 @@ class Agenda extends Component {
                   {days.map((date, key) => (
                     <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
                       <a className={`${date === day ? " select-day" : " unselect-day"}`}>
-                        <span className="level-item date">{date.format("MMM DD")}</span>
+                        <span className="level-item date" >{this.capitalizeDate(date)}</span>
                       </a>
                     </li>
                   ))}

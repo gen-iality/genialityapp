@@ -134,7 +134,7 @@ let agendaActividadDetalle = (props) => {
 
               {/* Nombre del evento */}
               <span className="card-header-title has-text-left"></span>
-              {currentActivity.meeting_video && (
+              {/* {currentActivity.meeting_video && (
                 <ReactPlayer
                   style={{
                     display: "block",
@@ -145,7 +145,7 @@ let agendaActividadDetalle = (props) => {
                   url={currentActivity.meeting_video}
                   controls
                 />
-              )}
+              )} */}
 
               {!currentActivity.meeting_video && currentActivity.image && (
                 <img className="activity_image" src={currentActivity.image} />

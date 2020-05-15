@@ -9,6 +9,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
   useEffect(() => {
     setSurveyList(jsonData);
     if (jsonData.length > 0) setLoading(false);
+    console.log(usuarioRegistrado)
   }, [jsonData]);
 
   return (
@@ -25,9 +26,25 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                     <Tag color="success">Respondida</Tag>
                   </div>
                 )}
-                <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                </Button>
+                {usuarioRegistrado === true ?
+                  <div>
+                    <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                      {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                    </Button>
+                  </div>
+                  :
+                  survey.allow_anonymous_answers === "true" ?
+                    <div>
+                      <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                        {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                      </Button>
+                    </div>
+                    :
+                    <>
+                    </>
+                }
+
+
               </List.Item>
             ) : (
                 <List.Item key={survey._id} actions={[]}>
