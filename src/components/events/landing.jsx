@@ -492,25 +492,32 @@ class Landing extends Component {
 //Component del lado del mapa
 const MapComponent = (props) => {
   const { event, toggleConference, namesUser } = props;
-  { console.log(props.event) }
+  { console.log(namesUser) }
   return (
     <div className="column container-map">
       <div>
         {
           (console.log(event),
             event.type_event === "onlineEvent" ? (
-              <div>
-                <ReactQuill
-                  value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
-                  modules={{ toolbar: false }}
-                  readOnly={true}
-                />
-                <VirtualConference
-                  event={event}
-                  toggleConference={toggleConference}
-                  currentUser={namesUser}
-                />
-              </div>
+              namesUser
+                ?
+                <div>
+                  <div>
+                    <ReactQuill
+                      value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
+                      modules={{ toolbar: false }}
+                      readOnly={true}
+                    />
+                    <VirtualConference
+                      event={event}
+                      toggleConference={toggleConference}
+                      currentUser={namesUser}
+                    />
+                  </div>
+                </div>
+                :
+                <></>
+
             ) : (
                 <div>
                   <Card>
