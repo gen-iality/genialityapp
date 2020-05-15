@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Button } from "antd";
+import { Button, Card } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+import SurveyComponent from "../surveys";
 
 const closeFullScreen = {
   position: "absolute",
@@ -15,6 +16,9 @@ const surveyButtons = {
   top: "37px",
   left: "7px",
   bottom: 0,
+  text: {
+    color: "#42A8FC",
+  }
 };
 
 export default class ZoomComponent extends Component {
@@ -29,6 +33,7 @@ export default class ZoomComponent extends Component {
       isMedium: false,
       isMinimize: false,
       activitySurveyList: [],
+      surveyVisible: false
     };
   }
   componentDidMount() {
@@ -72,14 +77,20 @@ export default class ZoomComponent extends Component {
     });
   };
 
+  surveyVisible = () => {
+    this.setState({
+      surveyVisible: !this.state.surveyVisible
+    });
+  };
+
   render() {
-    const { hideIframe } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList } = this.state;
+    const { hideIframe, event } = this.props;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
           isMinimize === true ? "minimizeScreen" : ""
-        }`}>
+          }`}>
         <div className="buttons-header">
           <div>
             <div className="title-header">
@@ -113,12 +124,25 @@ export default class ZoomComponent extends Component {
 
         <Fullscreen enabled={isFull} onChange={(isFull) => this.setState({ isFull })}>
           {activitySurveyList && (
-            <div style={surveyButtons}>
-              {activitySurveyList.map((survey, index) => (
-                <Button key={index} onClick={() => this.openSurvey(survey)}>
-                  {survey.survey}
+            <div>
+              <div style={surveyButtons}>
+                {/* {activitySurveyList.map((survey, index) => ( 
+                 // <Button key={index} onClick={() => this.openSurvey(survey)}>
+                  //   {survey.survey}
+                  // </Button> */}
+                <Button onClick={this.surveyVisible}>
+                  {!surveyVisible ?
+                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuestas disponibles.</span>
+                    :
+                    "Ocultar"}
                 </Button>
-              ))}
+                {/* ))} */}
+                {surveyVisible && (
+                  <Card>
+                    <SurveyComponent event={event} activitySurveyList={activitySurveyList.data} />
+                  </Card>
+                )}
+              </div>
             </div>
           )}
 
