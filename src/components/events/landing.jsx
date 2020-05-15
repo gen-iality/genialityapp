@@ -10,8 +10,8 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar, Typography } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { List, Avatar, Typography } from "antd";
+import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
 import API, { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
@@ -32,7 +32,7 @@ import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
-import VirtualConference from "./virtualConference"
+import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
 
 const { Title } = Typography;
@@ -84,7 +84,8 @@ class Landing extends Component {
       placement: "left",
       headerVisible: "true",
       namesUser: "",
-      data: null
+      data: null,
+      activitySurvey: null,
     };
   }
 
@@ -150,11 +151,9 @@ class Landing extends Component {
 
       const data = resp.data;
 
-      console.log("USUARIO", data)
-      this.setState({ data, namesUser: data.names || data.displayName || "" })
-    } catch{
-
-    }
+      console.log("USUARIO", data);
+      this.setState({ data, namesUser: data.names || data.displayName || "" });
+    } catch {}
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
@@ -225,8 +224,8 @@ class Landing extends Component {
                 {typeof event.description === "string" ? (
                   <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
                 ) : (
-                    "json"
-                  )}
+                  "json"
+                )}
               </div>
             </Card>
           </div>
@@ -310,19 +309,28 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, userEntered) => {
-    console.log("ACTIVANDOSE", meeting_id, state, userEntered);
+  toggleConference = (state, meeting_id, userEntered, activitySurvey) => {
+    console.log("ACTIVANDOSE", meeting_id, state, userEntered, activitySurvey);
     if (meeting_id != undefined) {
-      this.setState({ meeting_id, userEntered });
+      this.setState({ meeting_id, userEntered, activitySurvey });
     }
     this.setState({ showIframeZoom: state });
   };
 
   render() {
-    const { event, modal, modalTicket, section, sections, showIframeZoom, meeting_id, userEntered } = this.state;
+    const {
+      event,
+      modal,
+      modalTicket,
+      section,
+      sections,
+      showIframeZoom,
+      meeting_id,
+      userEntered,
+      activitySurvey,
+    } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
-
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
@@ -337,151 +345,150 @@ class Landing extends Component {
         {this.state.loading ? (
           <Loading />
         ) : (
-            <React.Fragment>
+          <React.Fragment>
+            <div className="hero-head">
+              {/* Condicion para mostrar el componente de zoom */}
+              {showIframeZoom && (
+                <ZoomComponent
+                  hideIframe={this.toggleConference}
+                  meetingId={meeting_id}
+                  userEntered={userEntered}
+                  activitySurveyList={activitySurvey}
+                  event={event}
+                />
+              )}
 
-              <div className="hero-head">
-                {/* Condicion para mostrar el componente de zoom */}
-                {showIframeZoom && (
-                  <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
-                )}
+              {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
 
-                {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
+              {/* <SurveyNotification /> */}
 
-                {/* <SurveyNotification /> */}
+              {this.state.headerVisible && (
+                <BannerEvent
+                  bgImage={
+                    event.styles && event.styles.banner_image
+                      ? event.styles.banner_image
+                      : event.picture
+                      ? event.picture
+                      : "https://bulma.io/images/placeholders/1280x960.png"
+                  }
+                  bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                  title={event.name}
+                  organizado={
+                    <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                      {event.organizer.name ? event.organizer.name : event.organizer.email}
+                    </Link>
+                  }
+                  place={
+                    <span>
+                      {event.venue} {event.location.FormattedAddress}
+                    </span>
+                  }
+                  dateStart={event.date_start}
+                  dateEnd={event.date_end}
+                />
+              )}
+            </div>
 
+            {/* Menú secciones del landing */}
+            <Content>
+              <Layout className="site-layout">
+                {/*Aqui empieza el menu para dispositivos >  */}
+                <div className="hiddenMenu_Landing">
+                  <Sider
+                    className="containerMenu_Landing"
+                    style={{
+                      backgroundColor:
+                        event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
+                    }}
+                    trigger={null}
+                    collapsible
+                    collapsed={this.state.collapsed}
+                    width={250}>
+                    <div className="items-menu_Landing ">
+                      {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                    </div>
+                  </Sider>
+                </div>
+                {/*Aqui termina el menu para dispositivos >  */}
 
-
-                {this.state.headerVisible && (
-
-                  <BannerEvent
-                    bgImage={
-                      event.styles && event.styles.banner_image
-                        ? event.styles.banner_image
-                        : event.picture
-                          ? event.picture
-                          : "https://bulma.io/images/placeholders/1280x960.png"
-                    }
-                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                    title={event.name}
-                    organizado={
-                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                      </Link>
-                    }
-                    place={
-                      <span>
-                        {event.venue} {event.location.FormattedAddress}
-                      </span>
-                    }
-                    dateStart={event.date_start}
-                    dateEnd={event.date_end}
-                  />
-
-
-                )}
-              </div>
-
-
-              {/* Menú secciones del landing */}
-              <Content>
                 <Layout className="site-layout">
-                  {/*Aqui empieza el menu para dispositivos >  */}
-                  <div className="hiddenMenu_Landing">
-                    <Sider
-                      className="containerMenu_Landing"
-                      style={{
+                  <Content className="site-layout-background">
+                    {/* Boton que abre el menu para dispositivos > tablet  */}
+                    <div className="hiddenMenu_Landing">
+                      <Button onClick={this.toggle}>
+                        {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
+                          className: "trigger",
+                          onClick: this.toggle,
+                        })}
+                      </Button>
+                    </div>
+
+                    {/*Aqui empieza el menu para dispositivos < tablet*/}
+
+                    <div className="hiddenMenuMobile_Landing">
+                      <Button block style={drawerButton} onClick={this.showDrawer}>
+                        <MenuOutlined style={{ fontSize: "15px" }} />
+                        <div>Menu</div>
+                      </Button>
+                    </div>
+
+                    <Drawer
+                      title={event.name}
+                      placement={this.state.placement}
+                      closable={true}
+                      onClose={this.onClose}
+                      visible={this.state.visible}
+                      maskClosable={true}
+                      bodyStyle={{
+                        padding: "0px",
                         backgroundColor:
                           event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
-                      }}
-                      trigger={null}
-                      collapsible
-                      collapsed={this.state.collapsed}
-                      width={250}>
-                      <div className="items-menu_Landing ">
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </div>
-                    </Sider>
-                  </div>
-                  {/*Aqui termina el menu para dispositivos >  */}
+                      }}>
+                      {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                      <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                    </Drawer>
 
-                  <Layout className="site-layout">
-                    <Content className="site-layout-background">
-                      {/* Boton que abre el menu para dispositivos > tablet  */}
-                      <div className="hiddenMenu_Landing">
-                        <Button onClick={this.toggle}>
-                          {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
-                            className: "trigger",
-                            onClick: this.toggle,
-                          })}
-                        </Button>
-                      </div>
+                    {/* Contenedor donde se mapea la información de cada seccion */}
 
-                      {/*Aqui empieza el menu para dispositivos < tablet*/}
-
-                      <div className="hiddenMenuMobile_Landing">
-                        <Button block style={drawerButton} onClick={this.showDrawer}>
-                          <MenuOutlined style={{ fontSize: "15px" }} />
-                          <div>Menu</div>
-                        </Button>
-                      </div>
-
-                      <Drawer
-                        title={event.name}
-                        placement={this.state.placement}
-                        closable={true}
-                        onClose={this.onClose}
-                        visible={this.state.visible}
-                        maskClosable={true}
-                        bodyStyle={{
-                          padding: "0px",
-                          backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
-                        }}>
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </Drawer>
-
-                      {/* Contenedor donde se mapea la información de cada seccion */}
-
-                      <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                        {sections[section]}
-                      </div>
-                    </Content>
-                  </Layout>
+                    <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
+                      {sections[section]}
+                    </div>
+                  </Content>
                 </Layout>
-              </Content>
+              </Layout>
+            </Content>
 
-              {/* Final del menú  */}
+            {/* Final del menú  */}
 
-              <div className={`modal ${modal ? "is-active" : ""}`}>
-                <div className="modal-background"></div>
-                <div className="modal-content">
-                  <div id="firebaseui-auth-container" />
-                </div>
-                <button
-                  className="modal-close is-large"
-                  aria-label="close"
-                  onClick={(e) => {
-                    this.closeLogin();
-                  }}
-                />
+            <div className={`modal ${modal ? "is-active" : ""}`}>
+              <div className="modal-background"></div>
+              <div className="modal-content">
+                <div id="firebaseui-auth-container" />
               </div>
-              <Dialog
-                modal={modalTicket}
-                title={"Atención!!"}
-                content={
-                  <p className="has-text-weight-bold">Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
-                }
-                first={{
-                  title: "Iniciar Sesión o Registrarse",
-                  class: "is-info",
-                  action: this.openLogin,
+              <button
+                className="modal-close is-large"
+                aria-label="close"
+                onClick={(e) => {
+                  this.closeLogin();
                 }}
-                second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
-            </React.Fragment>
-          )}
+            </div>
+            <Dialog
+              modal={modalTicket}
+              title={"Atención!!"}
+              content={
+                <p className="has-text-weight-bold">Para seleccionar tiquetes debes iniciar sesión o registrarse !!</p>
+              }
+              first={{
+                title: "Iniciar Sesión o Registrarse",
+                class: "is-info",
+                action: this.openLogin,
+              }}
+              second={{ title: "Cancelar", class: "", action: this.closeModal }}
+            />
+          </React.Fragment>
+        )}
       </section>
     );
   }
@@ -490,57 +497,59 @@ class Landing extends Component {
 //Component del lado del mapa
 const MapComponent = (props) => {
   const { event, toggleConference, namesUser } = props;
-  { console.log(props.event) }
+  {
+    console.log(props.event);
+  }
   return (
     <div className="column container-map">
       <div>
         {
           (console.log(event),
-            event.type_event === "onlineEvent" ? (
-              <></>
-            ) : (
-                <div>
-                  <Card>
-                    <div className="map-head">
-                      <h2 className="is-size-5 has-text-left">
-                        <b>Encuentra la ubicación</b>
-                      </h2>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon hours has-text-left">
-                          <span className="icon is-small">
-                            <i className="far fa-clock" />
-                          </span>
-                          <span className="subt is-size-6 has-text-left">
-                            {""} Desde {Moment(event.hour_start).format("HH:mm")}
-                          </span>
-                          <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
-                        </div>
-                      </div>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon has-text-left">
-                          <span className="icon is-small">
-                            <i className="fas fa-map-marker-alt" />
-                          </span>
-                          <span className="has-text-left">
-                            {""} {event.venue} {event.location.FormattedAddress}
-                          </span>
-                        </div>
-                      </div>
+          event.type_event === "onlineEvent" ? (
+            <></>
+          ) : (
+            <div>
+              <Card>
+                <div className="map-head">
+                  <h2 className="is-size-5 has-text-left">
+                    <b>Encuentra la ubicación</b>
+                  </h2>
+                  <div className="lugar item columns">
+                    <div className="column is-12 container-icon hours has-text-left">
+                      <span className="icon is-small">
+                        <i className="far fa-clock" />
+                      </span>
+                      <span className="subt is-size-6 has-text-left">
+                        {""} Desde {Moment(event.hour_start).format("HH:mm")}
+                      </span>
+                      <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
                     </div>
-                  </Card>
-                  <div style={{ height: "400px", width: "100%" }}>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
-                      defaultCenter={{
-                        lat: event.location.Latitude,
-                        lng: event.location.Longitude,
-                      }}
-                      defaultZoom={11}>
-                      <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
-                    </GoogleMapReact>
+                  </div>
+                  <div className="lugar item columns">
+                    <div className="column is-12 container-icon has-text-left">
+                      <span className="icon is-small">
+                        <i className="fas fa-map-marker-alt" />
+                      </span>
+                      <span className="has-text-left">
+                        {""} {event.venue} {event.location.FormattedAddress}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              ))
+              </Card>
+              <div style={{ height: "400px", width: "100%" }}>
+                <GoogleMapReact
+                  bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
+                  defaultCenter={{
+                    lat: event.location.Latitude,
+                    lng: event.location.Longitude,
+                  }}
+                  defaultZoom={11}>
+                  <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
+                </GoogleMapReact>
+              </div>
+            </div>
+          ))
         }
       </div>
     </div>
