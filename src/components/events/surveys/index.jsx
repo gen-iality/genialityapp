@@ -109,6 +109,7 @@ class SurveyForm extends Component {
           const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
           if (resp.status === 200) {
             const data = resp.data;
+            this.setState({ usuarioRegistrado: true })
             // Solo se desea obtener el id del usuario
             resolve(data);
           }

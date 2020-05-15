@@ -9,6 +9,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
   useEffect(() => {
     setSurveyList(jsonData);
     if (jsonData.length > 0) setLoading(false);
+    console.log(usuarioRegistrado)
   }, [jsonData]);
 
   return (
@@ -39,7 +40,8 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                       </Button>
                     </div>
                     :
-                    <></>
+                    <>
+                    </>
                 }
 
 
