@@ -25,24 +25,9 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                     <Tag color="success">Respondida</Tag>
                   </div>
                 )}
-                {usuarioRegistrado === true ?
-                  <div>
-                    <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                      {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                    </Button>
-                  </div>
-                  :
-                  survey.allow_anonymous_answers === "true" ?
-                    <div>
-                      <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
-                      </Button>
-                    </div>
-                    :
-                    <></>
-                }
-
-
+                <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                  {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                </Button>
               </List.Item>
             ) : (
                 <List.Item key={survey._id} actions={[]}>
@@ -59,3 +44,4 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
     </Col>
   );
 };
+
