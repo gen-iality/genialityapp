@@ -3,14 +3,14 @@ import Moment from "moment";
 import BannerAnim, { Element } from 'rc-banner-anim';
 import TweenOne from 'rc-tween-one';
 import 'rc-banner-anim/assets/index.css';
-import { EnvironmentOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
 
 
 
 const BgElement = Element.BgElement;
 
 
-let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText }) => {
+let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText, type_event }) => {
 
     return (
         <BannerAnim prefixCls="banner-user">
@@ -66,8 +66,15 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
 
                         {/* Lugar del evento */}
                         <div>
+                            {
+                                type_event === "onlineEvent" ?
+                                    <div>
+                                        <span><LaptopOutlined style={{ marginRight: "2%" }} />Era virtual</span>
+                                    </div>
+                                    :
+                                    <span><EnvironmentOutlined /> {place}</span>
+                            }
 
-                            <span><EnvironmentOutlined /> {place}</span>
                         </div>
                     </TweenOne>
                 </div>
