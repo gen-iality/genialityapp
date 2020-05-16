@@ -10,8 +10,8 @@ import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar, Typography } from 'antd';
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
+import { List, Avatar, Typography } from "antd";
+import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
 import API, { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
@@ -32,7 +32,7 @@ import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
-import VirtualConference from "./virtualConference"
+import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
 
 const { Title } = Typography;
@@ -84,7 +84,8 @@ class Landing extends Component {
       placement: "left",
       headerVisible: "true",
       namesUser: "",
-      data: null
+      data: null,
+      activitySurvey: null,
     };
   }
 
@@ -150,11 +151,9 @@ class Landing extends Component {
 
       const data = resp.data;
 
-      console.log("USUARIO", data)
-      this.setState({ data, namesUser: data.names || data.displayName || "" })
-    } catch{
-
-    }
+      console.log("USUARIO", data);
+      this.setState({ data, namesUser: data.names || data.displayName || "" });
+    } catch { }
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
@@ -314,19 +313,28 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, userEntered) => {
-    console.log("ACTIVANDOSE", meeting_id, state, userEntered);
+  toggleConference = (state, meeting_id, userEntered, activitySurvey) => {
+    console.log("ACTIVANDOSE", meeting_id, state, userEntered, activitySurvey);
     if (meeting_id != undefined) {
-      this.setState({ meeting_id, userEntered });
+      this.setState({ meeting_id, userEntered, activitySurvey });
     }
     this.setState({ showIframeZoom: state });
   };
 
   render() {
-    const { event, modal, modalTicket, section, sections, showIframeZoom, meeting_id, userEntered } = this.state;
+    const {
+      event,
+      modal,
+      modalTicket,
+      section,
+      sections,
+      showIframeZoom,
+      meeting_id,
+      userEntered,
+      activitySurvey,
+    } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
-
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
@@ -342,21 +350,23 @@ class Landing extends Component {
           <Loading />
         ) : (
             <React.Fragment>
-
               <div className="hero-head">
                 {/* Condicion para mostrar el componente de zoom */}
                 {showIframeZoom && (
-                  <ZoomComponent hideIframe={this.toggleConference} meetingId={meeting_id} userEntered={userEntered} />
+                  <ZoomComponent
+                    hideIframe={this.toggleConference}
+                    meetingId={meeting_id}
+                    userEntered={userEntered}
+                    activitySurveyList={activitySurvey}
+                    event={event}
+                  />
                 )}
 
                 {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
 
                 {/* <SurveyNotification /> */}
 
-
-
                 {this.state.headerVisible && (
-
                   <BannerEvent
                     bgImage={
                       event.styles && event.styles.banner_image
@@ -379,14 +389,9 @@ class Landing extends Component {
                     }
                     dateStart={event.date_start}
                     dateEnd={event.date_end}
-                    type_event={event.type_event}
                   />
-
-
-                )
-                }
+                )}
               </div>
-
 
               {/* Menú secciones del landing */}
               <Content>
@@ -496,32 +501,16 @@ class Landing extends Component {
 //Component del lado del mapa
 const MapComponent = (props) => {
   const { event, toggleConference, namesUser } = props;
-  { console.log(namesUser) }
+  {
+    console.log(props.event);
+  }
   return (
     <div className="column container-map">
       <div>
         {
           (console.log(event),
             event.type_event === "onlineEvent" ? (
-              namesUser
-                ?
-                <div>
-                  <div>
-                    <ReactQuill
-                      value="Este tipo de evento es virtual, Accede directo a la conferencia desde el listado de Agenda"
-                      modules={{ toolbar: false }}
-                      readOnly={true}
-                    />
-                    <VirtualConference
-                      event={event}
-                      toggleConference={toggleConference}
-                      currentUser={namesUser}
-                    />
-                  </div>
-                </div>
-                :
-                <></>
-
+              <></>
             ) : (
                 <div>
                   <Card>
