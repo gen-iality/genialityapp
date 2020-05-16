@@ -21,40 +21,35 @@ class VirtualConference extends Component {
 
     async componentDidUpdate() {
 
+        //Si aún no ha cargado el evento no podemos hacer nada más
+        if (!this.props.event) return;
 
+        //Si ya cargamos la agenda no hay que volverla a cargar o quedamos en un ciclo infinito
+        if (this.state.infoAgendaArr && this.state.infoAgendaArr.length) return;
 
-        if (!this.props.event || this.state.infoAgendaArr) return;
-        console.log("INNER event", this.props.event, "CurrentUser", this.props.currentUser, "UsuarioRegistrado", this.props.usuarioRegistrado)
-
-        const infoAgenda = await AgendaApi.byEvent(this.props.event._id);
-        console.log("EVENTOAGENDA", infoAgenda);
-
-        //Revisamos si tiene conferencia virtual
-        const infoAgendaArr = [];
-        for (const prop in infoAgenda.data) {
-            if (infoAgenda.data[prop].meeting_id) {
-                infoAgendaArr.push(infoAgenda.data[prop]);
-            }
-        }
-
-        console.log(infoAgendaArr);
-        this.setState({ infoAgendaArr });
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
+        this.setState({ infoAgendaArr: filteredAgenda });
     }
 
     async componentDidMount() {
-        console.log("EVENTOAGENDAU", this.props.event);
-        if (!this.props.event) return;
-        const infoAgenda = await AgendaApi.byEvent(this.props.event._id);
 
-        const infoAgendaArr = [];
+        if (!this.props.event) return;
+
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
+        this.setState({ infoAgendaArr: filteredAgenda });
+    }
+
+    async filterVirtualActivities(event_id) {
+        let infoAgendaArr = [];
+        if (!event_id) return infoAgendaArr;
+        const infoAgenda = await AgendaApi.byEvent(event_id);
+
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
             }
         }
-
-        console.log(infoAgendaArr);
-        this.setState({ infoAgendaArr });
+        return infoAgendaArr;
     }
 
     capitalizeDate(val) {
@@ -68,11 +63,13 @@ class VirtualConference extends Component {
 
     render() {
         const { infoAgendaArr } = this.state
-        const { toggleConference, currentUser } = this.props
+        const { toggleConference, currentUser, usuarioRegistrado } = this.props
         return (
             <Fragment>
                 <div>
-                    <h1>Listado de conferencias Virtuales</h1>
+                    <Card bordered={true} >
+                        <span>Conferencias Virtuales</span>
+                    </Card>
                     {
                         infoAgendaArr.map((item, key) => (
 
@@ -84,7 +81,8 @@ class VirtualConference extends Component {
                                             <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}</span>))}
                                         </div>
                                     }
-                                    <p>{item.datetime_start} - {item.datetime_end}</p>
+                                    <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
+
 
                                     <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
 

@@ -12,21 +12,10 @@ function WithUserEventRegistered(Component) {
         let [event, setEvent] = useState(null)
 
         useEffect(() => {
-            console.log("UU", props.event, props.usuarioRegistrado);
             (async () => {
                 let user = null;
-                //let usuarioRegistrado = null;
                 try {
-                    let token = await Cookie.get("evius_token");
-                    if (!token) return;
-
-                    const resp = await API.get(`/auth/currentUser?evius_token=${token}`);
-
-
-                    if (resp.status !== 200 && resp.status !== 202) { return; }
-                    console.log("respuesta status", resp.status, props.usuarioRegistrado);
-                    user = resp.data;
-                    setCurrentUser(user)
+                    setCurrentUser(props.currentUser)
                     setUsuarioRegistrado(props.usuarioRegistrado)
                     setEvent(props.event)
                 } catch (e) {
@@ -37,11 +26,9 @@ function WithUserEventRegistered(Component) {
             })();
         }, [props.usuarioRegistrado])
 
-        console.log("event", event, "CurrentUser", currentUser, "UsuarioRegistrado", usuarioRegistrado)
         return (
 
             <div>
-
                 {(!currentUser && !usuarioRegistrado) && (
                     <div>
                         <Tag color="geekblue">{event && event.allow_register ? "El Evento permite registro" : "Es Evento Privado"}</Tag>
@@ -88,7 +75,7 @@ function WithUserEventRegistered(Component) {
                     </div>
                 )}
 
-                <Component {...props} currentUser={currentUser} usuarioRegistrado={usuarioRegistrado} />
+                <Component {...props} event={event} currentUser={currentUser} usuarioRegistrado={usuarioRegistrado} />
             </div>
         )
 
