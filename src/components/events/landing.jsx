@@ -221,6 +221,9 @@ class Landing extends Component {
       ),
     };
 
+    //default section is firstone
+
+
     this.setState({ loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();

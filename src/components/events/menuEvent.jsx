@@ -119,6 +119,16 @@ class MenuEvent extends Component {
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
     let items = event.itemsMenu || this.state.menuDefault
     this.setState({ itemsMenu: items })
+
+
+    //Cargar por defecto la primera opcion habilitada del MENU
+    let secciones = Object.keys(items);
+    if (secciones && secciones.length >= 0) {
+      let defaultSeccion = items[secciones[0]].section;
+      this.state.showSection(defaultSeccion)
+    }
+
+
   }
 
   //Funcion que carga los items publicos del menu

@@ -118,6 +118,7 @@ class UserRegistration extends Component {
     if (!evius_token) {
       this.setState({ currentUser: "guest", loading: false });
     } else {
+
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
@@ -147,6 +148,7 @@ class UserRegistration extends Component {
 
     const properties = event.user_properties;
 
+    console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
@@ -155,21 +157,22 @@ class UserRegistration extends Component {
   }
 
   onFinish = async (values) => {
+
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
 
     message.loading({ content: "Registrando Usuario", key });
-    const snap = {
-      properties: values,
-    };
-    // console.log(snap);
+
+    const snap = { properties: values };
 
     let textMessage = {};
+    textMessage.key = key;
 
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
+
         console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
@@ -179,14 +182,18 @@ class UserRegistration extends Component {
               ? `Fuiste registrado al evento exitosamente`
               : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
         });
+        this.setState({ submittedForm: true });
+        message.success(textMessage);
       } else {
+
         textMessage.content = "El usuario no pudo ser creado";
+        message.success(textMessage);
       }
 
-      textMessage.key = key;
-      message.success(textMessage).then(() => {
-        this.setState({ submittedForm: true });
-      });
+
+
+
+
     } catch (err) {
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
