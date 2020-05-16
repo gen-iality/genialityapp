@@ -31,8 +31,21 @@ class VirtualConference extends Component {
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
 
-        let survey = await SurveysApi.getByActivity(this.props.event._id, this.state.infoAgendaArr[0]._id);
-        this.setState({ survey: survey });
+        // const { infoAgendaArr } = this.state
+        // infoAgendaArr.keys(infoAgendaArr).forEach(key => console.log("hi", key, infoAgendaArr[key]))
+
+
+        // Se recorre el array de la actividad y se extrae el id para mostrar los datos de las encuestas
+        const { infoAgendaArr } = this.state
+        const { event } = this.props
+        for (let i in infoAgendaArr) {
+            if (infoAgendaArr[i]._id) {
+                let survey = await SurveysApi.getByActivity(event._id, infoAgendaArr[i]._id);
+                this.setState({ survey: survey });
+            }
+        }
+
+
 
     }
     async componentDidMount() {
@@ -47,17 +60,12 @@ class VirtualConference extends Component {
 
     async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
-        let id = []
         if (!event_id) return infoAgendaArr;
         const infoAgenda = await AgendaApi.byEvent(event_id);
 
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
-            }
-
-            if (infoAgenda.data[prop]._id) {
-                id.push(infoAgenda.data[prop]);
             }
         }
 
@@ -97,7 +105,13 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
+                                    <Button onClick={() => {
+                                        toggleConference(
+                                            true,
+                                            item.meeting_id,
+                                            currentUser,
+                                            survey.data)
+                                    }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)
