@@ -75,6 +75,7 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
                         {/* Lugar del evento */}
                         <div>
                             {
+                                console.log(type_event),
                                 type_event === "onlineEvent" ?
                                     <div>
                                         <span><LaptopOutlined style={{ marginRight: "2%" }} />Era virtual</span>
