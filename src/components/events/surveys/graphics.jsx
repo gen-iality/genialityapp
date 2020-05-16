@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
-import { Pagination, Spin } from "antd";
+import { Pagination, Spin, Card, PageHeader } from "antd";
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
@@ -77,17 +77,23 @@ class Graphics extends Component {
 
     if (dataSurvey.questions)
       return (
-        <div>
-          <a className="has-text-black" onClick={() => showListSurvey()}>
-            <h3 className="has-text-black"> Regresar a las encuestas</h3>
-          </a>
-          <canvas id="chart"></canvas>
-          <Pagination
-            defaultCurrent={currentPage}
-            total={dataSurvey.questions.length * 10}
-            onChange={this.setCurrentPage}
-          />
-        </div>
+        <>
+          <Card>
+            <PageHeader
+              className="site-page-header"
+              onBack={() => showListSurvey()}
+              title=""
+              subTitle="Regresar a las encuestas"
+            />
+
+            <canvas id="chart"></canvas>
+            <Pagination
+              defaultCurrent={currentPage}
+              total={dataSurvey.questions.length * 10}
+              onChange={this.setCurrentPage}
+            />
+          </Card>
+        </>
       );
 
     return <Spin></Spin>;

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
+import { PageHeader } from "antd"
 
 import SearchComponent from "../../shared/searchTable";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
@@ -175,9 +176,12 @@ class SurveyComponent extends Component {
 
     return (
       <div>
-        <a className="has-text-black" onClick={() => showListSurvey()}>
-          <h3 className="has-text-black"> Regresar a las encuestas</h3>
-        </a>
+        <PageHeader
+          className="site-page-header"
+          onBack={() => showListSurvey()}
+          title=""
+          subTitle="Regresar a las encuestas"
+        />
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );
