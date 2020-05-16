@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { Card, Button } from "antd"
 import WithUserEventRegistered from "../shared/withUserEventRegistered"
-import { AgendaApi } from "../../helpers/request";
+import { AgendaApi, SurveysApi } from "../../helpers/request";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
 
@@ -14,9 +14,10 @@ class VirtualConference extends Component {
             infoAgendaArr: [],
             currentUser: this.props.currentUser || undefined,
             usuarioRegistrado: this.props.usuarioRegistrado || undefined,
-            event: this.props.event || undefined
-
+            event: this.props.event || undefined,
+            survey: [],
         }
+
     }
 
     async componentDidUpdate() {
@@ -29,18 +30,24 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
-    }
 
+        let survey = await SurveysApi.getByActivity(this.props.event._id, this.state.infoAgendaArr[0]._id);
+        this.setState({ survey: survey });
+
+    }
     async componentDidMount() {
 
         if (!this.props.event) return;
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
+
+
     }
 
     async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
+        let id = []
         if (!event_id) return infoAgendaArr;
         const infoAgenda = await AgendaApi.byEvent(event_id);
 
@@ -48,9 +55,15 @@ class VirtualConference extends Component {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
             }
+
+            if (infoAgenda.data[prop]._id) {
+                id.push(infoAgenda.data[prop]);
+            }
         }
+
         return infoAgendaArr;
     }
+
 
     capitalizeDate(val) {
         val = Moment(val).format("DD MMMM HH:HH")
@@ -62,7 +75,7 @@ class VirtualConference extends Component {
     }
 
     render() {
-        const { infoAgendaArr } = this.state
+        const { infoAgendaArr, survey } = this.state
         const { toggleConference, currentUser, usuarioRegistrado } = this.props
         return (
             <Fragment>
@@ -84,7 +97,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
+                                    <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)
