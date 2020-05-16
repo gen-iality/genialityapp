@@ -1,13 +1,10 @@
 //external
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import GoogleMapReact from "google-map-react";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
-import ReactQuill from "react-quill";
-import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
@@ -16,7 +13,7 @@ import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 import API, { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
-import { BaseUrl, EVIUS_GOOGLE_MAPS_KEY } from "../../helpers/constants";
+import { BaseUrl } from "../../helpers/constants";
 import Slider from "../shared/sliderImage";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
@@ -34,6 +31,8 @@ import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
 import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
+import MapComponent from "./mapComponet"
+import EventLanding from "./eventLanding";
 
 const { Title } = Typography;
 
@@ -44,7 +43,6 @@ Moment.locale("es");
 momentLocalizer();
 
 const html = document.querySelector("html");
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const drawerButton = {
   height: "46px",
@@ -200,39 +198,7 @@ class Landing extends Component {
       networking: <NetworkingForm event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
-          <div className="description-container column is-8">
-            {event.description.length > 11 ?
-              <div>
-                <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
-                  <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
-
-                  {event.video && (
-                    <div className="column is-centered mediaplayer">
-                      <ReactPlayer
-                        width={"100%"}
-                        style={{
-                          display: "block",
-                          margin: "0 auto",
-                        }}
-                        //
-                        url={event.video}
-                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                        controls
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    {typeof event.description === "string" ? (
-                      <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
-                    ) : (
-                        "json"
-                      )}
-                  </div>
-                </Card>
-              </div> :
-              <div></div>}
-          </div>
+          <EventLanding event={event} />
           <MapComponent event={event} toggleConference={this.toggleConference} namesUser={this.state.namesUser} />
         </div>
       ),
@@ -498,67 +464,5 @@ class Landing extends Component {
     );
   }
 }
-
-//Component del lado del mapa
-const MapComponent = (props) => {
-  const { event, toggleConference, namesUser } = props;
-  {
-    console.log(props.event);
-  }
-  return (
-    <div className="column container-map">
-      <div>
-        {
-          (console.log(event),
-            event.type_event === "onlineEvent" ? (
-              <></>
-            ) : (
-                <div>
-                  <Card>
-                    <div className="map-head">
-                      <h2 className="is-size-5 has-text-left">
-                        <b>Encuentra la ubicación</b>
-                      </h2>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon hours has-text-left">
-                          <span className="icon is-small">
-                            <i className="far fa-clock" />
-                          </span>
-                          <span className="subt is-size-6 has-text-left">
-                            {""} Desde {Moment(event.hour_start).format("HH:mm")}
-                          </span>
-                          <span className="subt is-size-6 has-text-left"> a {Moment(event.hour_end).format("HH:mm")}</span>
-                        </div>
-                      </div>
-                      <div className="lugar item columns">
-                        <div className="column is-12 container-icon has-text-left">
-                          <span className="icon is-small">
-                            <i className="fas fa-map-marker-alt" />
-                          </span>
-                          <span className="has-text-left">
-                            {""} {event.venue} {event.location.FormattedAddress}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                  <div style={{ height: "400px", width: "100%" }}>
-                    <GoogleMapReact
-                      bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
-                      defaultCenter={{
-                        lat: event.location.Latitude,
-                        lng: event.location.Longitude,
-                      }}
-                      defaultZoom={11}>
-                      <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
-                    </GoogleMapReact>
-                  </div>
-                </div>
-              ))
-        }
-      </div>
-    </div>
-  );
-};
 
 export default withRouter(Landing);
