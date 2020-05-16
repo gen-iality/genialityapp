@@ -30,9 +30,10 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
-
-        let survey = await SurveysApi.getByActivity(this.props.event._id, this.state.infoAgendaArr[0]._id);
-        this.setState({ survey: survey });
+        if (filteredAgenda && filteredAgenda.length > 0) {
+            let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
+            this.setState({ survey: survey });
+        }
 
     }
     async componentDidMount() {
