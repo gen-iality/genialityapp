@@ -23,6 +23,7 @@ class MenuEvent extends Component {
     super(props);
     this.state = {
       itemsMenu: {},
+      user: null,
       showSection: this.props.showSection,
       logged: false,
       email: false,
@@ -108,16 +109,26 @@ class MenuEvent extends Component {
     // const menuEvent = event.itemsMenu || {};
     // console.log("MENU LANDING", menuEvent);
     // this.setState({ itemsMenu: menuEvent })
-
+    if (this.props.user) {
+      this.setState({ user: this.props.user })
+    }
     this.obtainUserFirebase()
   }
 
+  async componentDidUpdate() {
+    console.log("user", this.props.user);
+    if (this.props.user && !this.state.user) {
+      this.setState({ user: this.props.user })
+    }
+  }
   async obtainUserFirebase() {
     //Se trae el api que contiene el menu
     const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
 
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
     let items = event.itemsMenu || this.state.menuDefault
+
+    console.log("items", items, this.props.user);
     this.setState({ itemsMenu: items })
 
 
@@ -156,6 +167,7 @@ class MenuEvent extends Component {
         // defaultOpenKeys={['sub1']}
         style={stylesMenuItems}>
         {Object.keys(itemsMenu).map((key, i) => {
+          if ((itemsMenu[key] && itemsMenu[key].permissions == "assistants") && !this.state.user) { return null }
           let IconoComponente = iconComponents[itemsMenu[key].icon];
           return (
             <Menu.Item key={itemsMenu[key].section} onClick={e => this.state.showSection(itemsMenu[key].section)}>

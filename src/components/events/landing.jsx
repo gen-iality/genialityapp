@@ -85,6 +85,7 @@ class Landing extends Component {
       namesUser: "",
       data: null,
       activitySurvey: null,
+      user: null,
     };
   }
 
@@ -180,6 +181,9 @@ class Landing extends Component {
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
+
+
+
     this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
 
     const sections = {
@@ -398,7 +402,7 @@ class Landing extends Component {
                       width={250}>
                       <div className="items-menu_Landing ">
                         {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
                   </div>
@@ -438,7 +442,7 @@ class Landing extends Component {
                             event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
                         }}>
                         {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
                       {/* Contenedor donde se mapea la información de cada seccion */}
