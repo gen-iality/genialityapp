@@ -377,8 +377,6 @@ class Agenda extends Component {
                                   borderTop: "none",
                                 }}>
                                 <p>
-                                  <Button type="primary">Ir a la actividad</Button>
-                                  <br />
                                   <br />
                                   <Button type="primary">Más información sobre la actividad.</Button>
 
