@@ -132,7 +132,7 @@ export default class ZoomComponent extends Component {
                   // </Button> */}
                 <Button onClick={this.surveyVisible}>
                   {!surveyVisible ?
-                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuestas disponibles.</span>
+                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuesta(s) disponible(s).</span>
                     :
                     "Ocultar"}
                 </Button>
