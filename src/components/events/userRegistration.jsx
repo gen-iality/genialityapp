@@ -170,6 +170,7 @@ class UserRegistration extends Component {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
+        console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
         this.setState({
@@ -275,15 +276,15 @@ class UserRegistration extends Component {
                 </Form>
               </Card>
             ) : (
-              <Card>
-                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
-              </Card>
-            )}
+                <Card>
+                  <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+                </Card>
+              )}
           </Col>
         </>
       ) : (
-        <UserInfoCard currentUser={currentUser} />
-      );
+          <UserInfoCard currentUser={currentUser} />
+        );
     return <Spin></Spin>;
   }
 }

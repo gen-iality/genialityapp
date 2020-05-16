@@ -179,8 +179,8 @@ class Landing extends Component {
     event.sessions = sessions;
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
-
-    this.setState({ event, eventUser, data: user, currentUser: user, namesUser: user.names || user.displayName || "" })
+    let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
+    this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} showIframe={this.toggleConference} />,
