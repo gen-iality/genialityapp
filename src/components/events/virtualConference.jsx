@@ -98,7 +98,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
+                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)
