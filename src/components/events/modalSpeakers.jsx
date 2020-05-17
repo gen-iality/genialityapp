@@ -30,6 +30,11 @@ let modalSpeakers = (props) => {
                 visible={modalVisible}
                 onCancel={() => clearStates()}
                 onOk={() => clearStates()}
+                footer={[
+                    <Button key="cerrar" type="primary" onClick={() => clearStates()}>
+                        Cerrar
+                    </Button>
+                ]}
             >
                 <Row>
                     {/* Imagen del conferencista */}
