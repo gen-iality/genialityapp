@@ -30,17 +30,23 @@ const validateMessages = {
 };
 
 // Componente que muestra la informacion del usuario registrado
-const UserInfoCard = ({ currentUser }) => {
+const UserInfoCard = ({ currentUser, extraFields }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
-
+  console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
   const parseObjectToArray = async (info) => {
     let userProperties = new Promise((resolve, reject) => {
       let userProperties = [];
 
       for (const key in info) {
-        if (key != "displayName") userProperties.push({ property: key, value: info[key] });
+
+        if (key != "displayName") {
+          let fieldLabel = "";
+          fieldLabel = extraFields.filter((item) => (key == item.name));
+          fieldLabel = (fieldLabel && fieldLabel.length && fieldLabel[0].label) ? fieldLabel[0].label : key;
+          userProperties.push({ key: key, property: fieldLabel, value: info[key] });
+        }
       }
       resolve(userProperties);
     });
@@ -154,6 +160,7 @@ class UserRegistration extends Component {
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields, eventUsers: eventUsers.data }, this.getCurrentUser);
+    console.log("extraFields", properties);
   }
 
   onFinish = async (values) => {
@@ -261,7 +268,7 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage } = this.state;
+    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage, extraFields } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
@@ -290,7 +297,7 @@ class UserRegistration extends Component {
           </Col>
         </>
       ) : (
-          <UserInfoCard currentUser={currentUser} />
+          <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
         );
     return <Spin></Spin>;
   }

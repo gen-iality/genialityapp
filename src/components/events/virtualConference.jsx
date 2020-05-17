@@ -92,7 +92,7 @@ class VirtualConference extends Component {
                                     <p>{item.name}</p>
                                     {(item.hosts && item.hosts.length > 0) &&
                                         < div >
-                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name},</span>))}
+                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
                                         </div>
                                     }
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
