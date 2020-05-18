@@ -37,6 +37,7 @@ export default class ZoomComponent extends Component {
       surveyVisible: false,
       displayName: "",
       email: null,
+      surveyPublish: 0,
 
     };
   }
@@ -50,9 +51,19 @@ export default class ZoomComponent extends Component {
       email = userEntered.email || null
     }
 
+    // Filtra el total de las actividades que se encuentran publicas
+    let surveyActive = activitySurveyList.filter(activitySurvey => activitySurvey.publish === "true");
 
-    this.setState({ meeting_id: meetingId, userEntered, activitySurveyList, displayName, email });
+    this.setState({
+      meeting_id: meetingId,
+      userEntered,
+      activitySurveyList,
+      displayName, email,
+      surveyPublish: surveyActive.length
+    });
+
   }
+
 
   componentDidUpdate(prevProps) {
     const { meetingId, userEntered, activitySurveyList } = this.props;
@@ -105,7 +116,7 @@ export default class ZoomComponent extends Component {
 
   render() {
     const { hideIframe, event } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email } = this.state;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email, surveyPublish } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
@@ -152,7 +163,7 @@ export default class ZoomComponent extends Component {
                   // </Button> */}
                 <Button onClick={this.surveyVisible}>
                   {!surveyVisible ?
-                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuesta(s) disponible(s).</span>
+                    <span>Ver <b style={surveyButtons.text}>&nbsp;{surveyPublish}&nbsp;</b> encuesta(s) disponible(s).</span>
                     :
                     "Ocultar"}
                 </Button>
