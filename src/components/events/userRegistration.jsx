@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert } from "antd";
 
 const { Text } = Typography;
 
@@ -189,6 +189,8 @@ class UserRegistration extends Component {
         message.success(textMessage);
       } else {
         textMessage.content = resp;
+
+        this.setState({ notLoggedAndRegister: true });
         message.success(textMessage);
       }
     } catch (err) {
@@ -266,10 +268,24 @@ class UserRegistration extends Component {
       submittedForm,
       successMessage,
       extraFields,
+      notLoggedAndRegister,
     } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
+          {notLoggedAndRegister && (
+            <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+              <Alert
+                message="Ya se encuentra registrado"
+                description="Ya has realizado previamente el registro al evento, por favor revisa tu correo."
+                type="info"
+                showIcon
+                closable
+              />
+            </Col>
+          )}
+
+          <br />
           <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
             {!submittedForm ? (
               <Card title="Formulario de registro" bodyStyle={textLeft}>
