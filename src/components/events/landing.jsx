@@ -142,15 +142,17 @@ class Landing extends Component {
   }
 
   async componentDidMount() {
+    let user = null;
     try {
+
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
 
-      const data = resp.data;
+      user = resp.data;
 
-      console.log("USUARIO", data);
-      this.setState({ data, namesUser: data.names || data.displayName || "" });
+      console.log("USUARIO", user);
+      this.setState({ user, namesUser: user.names || user.displayName || "" });
     } catch { }
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
@@ -162,6 +164,11 @@ class Landing extends Component {
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
 
     this.loadDynamicEventStyles(id);
+
+
+    let eventUser = await EventsApi.getEventUser(user._id, event._id);
+
+
 
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
@@ -203,7 +210,7 @@ class Landing extends Component {
         </div>
       ),
     };
-    this.setState({ event, loading: false, sections }, () => {
+    this.setState({ eventUser, event, loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();
     });

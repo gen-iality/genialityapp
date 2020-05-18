@@ -2,6 +2,7 @@ import axios from "axios";
 import { ApiUrl } from "./constants";
 import * as Cookie from "js-cookie";
 import { handleSelect } from "./utils";
+import { firestore } from "./firebase";
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -69,6 +70,14 @@ export const Actions = {
   },
 };
 export const EventsApi = {
+  getEventUser: async (user_id, event_id) => {
+    const snapshot = await firestore
+      .collection(`${event_id}_event_attendees`)
+      .where("account_id", "==", user_id)
+      .get();
+    const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    return eventUser;
+  },
   getPublic: async (query) => {
     return await Actions.getAll(`/api/events${query}`, true);
   },
