@@ -90,7 +90,7 @@ class VirtualConference extends Component {
                             (<div key={key}>
                                 <Card bordered={true} style={{ marginBottom: "3%" }}>
                                     <p>{item.name}</p>
-                                    {(item.hosts && item.hosts.length > 0) &&
+                                    {(item.hosts && item.hosts.length > 0) && false &&
                                         < div >
                                             <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
                                         </div>
