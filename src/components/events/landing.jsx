@@ -165,8 +165,10 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-
-    let eventUser = await EventsApi.getEventUser(user._id, event._id);
+    let eventUser = null;
+    if (event && user) {
+      let eventUser = await EventsApi.getEventUser(user._id, event._id);
+    }
 
 
 

@@ -61,3 +61,4 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
     </Col>
   );
 };
+
