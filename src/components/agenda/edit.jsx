@@ -21,6 +21,7 @@ import {
   SpeakersApi,
   TypesAgendaApi,
   DocumentsApi,
+  EventsApi,
 } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
@@ -93,13 +94,15 @@ class AgendaEdit extends Component {
       );
     }
     let documents = await DocumentsApi.byEvent(this.props.event._id);
+    let hostAvailable = await EventsApi.hostAvailable();
+    console.log(hostAvailable)
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
-    this.setState({ nameDocuments });
+    this.setState({ nameDocuments, hostAvailable });
 
-    getHostList(this.loadHostAvailable);
+    // getHostList(this.loadHostAvailable);
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
@@ -159,7 +162,7 @@ class AgendaEdit extends Component {
   handleChange = (e) => {
     const { name } = e.target;
     const { value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, host_id: e.target.value });
   };
   //FN para cambio en campo de fecha
   handleDate = (value, name) => {
@@ -380,13 +383,14 @@ class AgendaEdit extends Component {
     }
   }
 
-  async createConference() {
+  async createConference(host_id) {
     this.setState({ creatingConference: true });
     const zoomData = {
       activity_id: this.props.location.state.edit,
       activity_name: this.state.name,
       event_id: this.props.event._id,
       agenda: this.props.event.description,
+      host_id: this.state.host_id,
     };
 
     const options = {
@@ -395,7 +399,7 @@ class AgendaEdit extends Component {
         "Content-type": "application/json",
       },
       data: zoomData,
-      url: ApiEviusZoomServer,
+      url: ApiEviusZoomServer
     };
     let response = null;
 
@@ -416,13 +420,12 @@ class AgendaEdit extends Component {
         join_url: info.join_url,
         key: new Date(),
       });
-    } catch (e) {
+    } catch (error) {
       let response = "";
-      if (e.response) {
-        response = JSON.stringify(e.response.data);
+      if (error.response) {
+        response = JSON.stringify(error.response.data);
       }
-
-      alert("No se pudo crear la conferencia virtual, intente más tarde. " + e + " " + response);
+      console.log(error)
       this.setState({ creatingConference: false });
     }
     this.setState({ creatingConference: false });
@@ -607,7 +610,7 @@ class AgendaEdit extends Component {
                     <div className="select">
                       <select name={"space_id"} value={space_id} onChange={this.handleChange}>
                         <option>Seleccione un lugar/salón ...</option>
-                        {// console.log(this.props),
+                        {
                           spaces.map((space) => {
                             return (
                               <option key={space.value} value={space.value}>
@@ -822,9 +825,11 @@ class AgendaEdit extends Component {
                                 {this.state.hostAvailable.length > 0 &&
                                   this.state.hostAvailable.map((host) => {
                                     return (
-                                      <option key={host._id} value={host._id}>
-                                        {host.email}
-                                      </option>
+                                      host.state && host.state === "available" && (
+                                        <option value={host.id} key={host.id}>
+                                          {host.email}
+                                        </option>
+                                      )
                                     );
                                   })}
                               </select>
