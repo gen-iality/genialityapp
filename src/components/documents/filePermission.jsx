@@ -17,11 +17,11 @@ class filePermission extends Component {
             redirect: false,
             infoRol: [],
             infoUsers: [],
-            permissionRol:[],
-            permissionUser:[],
+            permissionRol: [],
+            permissionUser: [],
             setEmails: [],
-            setRol:[],
-            title:"",
+            setRol: [],
+            title: "",
             name: "",
             file: "",
             type: "",
@@ -33,9 +33,9 @@ class filePermission extends Component {
     }
 
     async componentDidMount() {
-        const data  = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
-       //console.log(data)
-        this.setState({ 
+        const data = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
+        //console.log(data)
+        this.setState({
             name: data.name,
             file: data.file,
             type: data.type,
@@ -45,7 +45,7 @@ class filePermission extends Component {
             state: data.state,
             permissionRol: data.permissionRol,
             permissionUser: data.permissionUser
-         })
+        })
 
         const infoRol = await RolAttApi.byEvent(this.props.event._id)
         this.setState({ infoRol })
@@ -123,7 +123,7 @@ class filePermission extends Component {
 
     render() {
         const { matchUrl } = this.props;
-        const { name,title ,setRol, setEmails } = this.state;
+        const { name, title, setRol, setEmails } = this.state;
 
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
         return (
@@ -131,7 +131,7 @@ class filePermission extends Component {
                 <EventContent title="Documentos" closeAction={this.goBack}>
                     <div className="column is-4">
                         <label className="label">Nombre del Documento</label>
-                        <input className="input is-primary" defaultValue={ title ? title : name} name="title" onChange={this.changeInput} type="text" />
+                        <input className="input is-primary" defaultValue={title ? title : name} name="title" onChange={this.changeInput} type="text" />
                     </div>
 
                     <div className="column">

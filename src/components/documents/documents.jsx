@@ -5,6 +5,7 @@ import { DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import firebase from "firebase";
+import { Modal, Button } from 'antd';
 
 class documents extends Component {
   constructor(props) {
@@ -16,11 +17,16 @@ class documents extends Component {
       file: "",
       disabledButton: true,
       folder: "",
-      id: ""
+      id: "",
+      fileKey: new Date(),
     };
+    this.getDocuments()
   }
 
   async componentDidMount() {
+    this.getDocuments()
+  }
+  async getDocuments() {
     const { data } = await DocumentsApi.getAll(this.props.event._id);
     this.setState({ list: data });
   }
@@ -57,7 +63,7 @@ class documents extends Component {
   succesUploadFile = async () => {
     //Si el documento esta o existe se manda a firebase se extrae la url de descarga y se manda al estado
     let { file, uploadTask } = this.state;
-    await uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+    await uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
       file = downloadURL;
     });
     this.setState({ file });
@@ -76,9 +82,8 @@ class documents extends Component {
     const savedData = await DocumentsApi.create(this.props.event._id, data);
     //console.log(savedData)
     toast.success("Documento Guardado");
-    setTimeout(function() {
-      window.location.reload();
-    }, 2000);
+    this.setState({ file: "", fileKey: new Date() });
+    this.getDocuments();
   };
 
   stateUploadFile = snapshot => {
@@ -120,18 +125,16 @@ class documents extends Component {
     // // //Delete the file
     desertRef
       .delete()
-      .then(function() {
+      .then(function () {
         //     //El dato se elimina aqui
       })
-      .catch(function(error) {
+      .catch(function (error) {
         //     //Si no muestra el error
         console.log(error);
       });
 
     toast.success("Information Deleted");
-    setTimeout(function() {
-      window.location.reload();
-    }, 2000);
+    this.getDocuments();
   };
 
   destroyFolder = async (event, id_folder) => {
@@ -149,10 +152,10 @@ class documents extends Component {
       //Delete the file
       desertRef
         .delete()
-        .then(function() {
+        .then(function () {
           //El dato se elimina aqui
         })
-        .catch(function(error) {
+        .catch(function (error) {
           //Si no muestra el error
           console.log(error);
         });
@@ -162,9 +165,7 @@ class documents extends Component {
     //console.log(information);
 
     toast.success("Information Deleted");
-    setTimeout(function() {
-      window.location.reload();
-    }, 2000);
+    this.getDocuments();
   };
 
   createFolder = async () => {
@@ -175,23 +176,28 @@ class documents extends Component {
       title: value
     };
     const savedData = await DocumentsApi.create(this.props.event._id, data);
-    //console.log(savedData)
-    setTimeout(function() {
-      window.location.reload();
-    }, 2000);
+    this.getDocuments();
+    this.setState({
+      visible: false,
+    });
   };
 
-  modal = () => {
-    document.querySelectorAll(".modal-button").forEach(function(el) {
-      el.addEventListener("click", function() {
-        var target = document.querySelector(el.getAttribute("data-target"));
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
-        target.classList.add("is-active");
+  handleOk = e => {
+    this.setState({
+      visible: false,
+    });
+  };
 
-        target.querySelector(".modal-close").addEventListener("click", function() {
-          target.classList.remove("is-active");
-        });
-      });
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
     });
   };
 
@@ -220,7 +226,7 @@ class documents extends Component {
         <div>
           <EventContent title={"Documentos"} classes={"documents-list"}>
             <div className="column is-12">
-              <div style={{ float: "right", display: "inline-block" }} className="file has-name">
+              <div key={this.state.fileKey} style={{ float: "right", display: "inline-block" }} className="file has-name">
                 <label className="label" className="file-label">
                   <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
                   <span className="file-cta">
@@ -236,32 +242,28 @@ class documents extends Component {
               <div style={{ display: "inline", marginLeft: "66%" }} className="column is-12">
                 <button
                   className="button is-primary modal-button"
-                  onClick={this.modal}
-                  data-target="#myModal"
-                  aria-haspopup="true">
+                  onClick={this.showModal}>
                   Carpeta Nueva
                 </button>
-
-                <div className="modal" id="myModal">
-                  <div className="modal-background"></div>
-                  <div className="modal-content">
-                    <div className="box">
-                      <div className="column is-12">
-                        <label className="label">Nombre de la carpeta</label>
-                        <input className="input is-primary" onChange={this.enableButton} type="text" id="folderName" />
-                        <div className="column is-4">
-                          <button
-                            className="button is-primary"
-                            disabled={this.state.disabledButton}
-                            onClick={this.createFolder}>
-                            Crear Carpeta
+                <Modal
+                  title="Basic Modal"
+                  visible={this.state.visible}
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}
+                >
+                  <div className="column is-12">
+                    <label className="label">Nombre de la carpeta</label>
+                    <input className="input is-primary" onChange={this.enableButton} type="text" id="folderName" />
+                    <div className="column is-4">
+                      <button
+                        className="button is-primary"
+                        disabled={this.state.disabledButton}
+                        onClick={this.createFolder}>
+                        Crear Carpeta
                           </button>
-                        </div>
-                      </div>
                     </div>
                   </div>
-                  <button className="modal-close is-large" aria-label="close"></button>
-                </div>
+                </Modal>
               </div>
             </div>
             <EvenTable head={["Nombre", ""]}>
@@ -274,11 +276,11 @@ class documents extends Component {
                         {documents.title}
                       </Link>
                     ) : (
-                      <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: documents._id } }}>
-                        <i style={{ marginRight: "1%" }} className="far fa-folder"></i>
-                        {documents.title}
-                      </Link>
-                    )}
+                        <Link to={{ pathname: `${this.props.matchUrl}/upload`, state: { edit: documents._id } }}>
+                          <i style={{ marginRight: "1%" }} className="far fa-folder"></i>
+                          {documents.title}
+                        </Link>
+                      )}
                   </td>
                   <td>
                     {documents.type === "folder" ? (
@@ -292,21 +294,21 @@ class documents extends Component {
                         </button>
                       </div>
                     ) : (
-                      <div>
-                        <a href={documents.file}>Descargar</a>
-                        <button
-                          onClick={this.destroy.bind(
-                            documents.type,
-                            documents.name,
-                            documents._id,
-                            this.props.event._id
-                          )}>
-                          <span className="icon">
-                            <i className="fas fa-trash-alt" />
-                          </span>
-                        </button>
-                      </div>
-                    )}
+                        <div>
+                          <a href={documents.file}>Descargar</a>
+                          <button
+                            onClick={this.destroy.bind(
+                              documents.type,
+                              documents.name,
+                              documents._id,
+                              this.props.event._id
+                            )}>
+                            <span className="icon">
+                              <i className="fas fa-trash-alt" />
+                            </span>
+                          </button>
+                        </div>
+                      )}
                   </td>
                 </tr>
               ))}
