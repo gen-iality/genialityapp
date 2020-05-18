@@ -56,6 +56,11 @@ export const dataFrame = {
       duration: 2000,
       easing: "easeInOutQuint",
     },
+    legend: {
+      labels: {
+        fontSize: 15
+      }
+    },
     scales: {
       xAxes: [{
         ticks: {
