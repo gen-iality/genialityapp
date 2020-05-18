@@ -162,6 +162,7 @@ class AgendaEdit extends Component {
   handleChange = (e) => {
     const { name } = e.target;
     const { value } = e.target;
+    console.log(e, e.target)
     this.setState({ [name]: value, host_id: e.target.value });
   };
   //FN para cambio en campo de fecha
@@ -247,7 +248,7 @@ class AgendaEdit extends Component {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
         }
-        if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
+        if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess("Información guardada");
@@ -407,7 +408,9 @@ class AgendaEdit extends Component {
     try {
       response = await axios(options);
       toast.success("Conferencia Creada");
-      let result = await setHostState(this.state.hostSelected, true);
+      console.log(this.state.host_id)
+      let result = await setHostState(this.state.host_id, true);
+
 
       const {
         event,
@@ -820,7 +823,7 @@ class AgendaEdit extends Component {
                         <Fragment>
                           <div className="control">
                             <div className="select">
-                              <select name={"hostSelected"} value={this.state.hostSelected} onChange={this.handleChange}>
+                              <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
                                 <option>Seleccione host</option>
                                 {this.state.hostAvailable.length > 0 &&
                                   this.state.hostAvailable.map((host) => {
@@ -828,6 +831,7 @@ class AgendaEdit extends Component {
                                       host.state && host.state === "available" && (
                                         <option value={host.id} key={host.id}>
                                           {host.email}
+                                          {console.log(host)}
                                         </option>
                                       )
                                     );
@@ -840,7 +844,7 @@ class AgendaEdit extends Component {
                               <button
                                 style={{ marginTop: "2%" }}
                                 className="button is-primary"
-                                disabled={!this.state.hostSelected}
+                                disabled={!this.state.host_id}
                                 onClick={this.createConference}>
                                 Crear espacio virtual
                               </button>
