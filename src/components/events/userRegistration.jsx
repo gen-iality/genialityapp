@@ -30,17 +30,23 @@ const validateMessages = {
 };
 
 // Componente que muestra la informacion del usuario registrado
-const UserInfoCard = ({ currentUser }) => {
+const UserInfoCard = ({ currentUser, extraFields }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
-
+  console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
   const parseObjectToArray = async (info) => {
     let userProperties = new Promise((resolve, reject) => {
       let userProperties = [];
 
       for (const key in info) {
-        if (key != "displayName") userProperties.push({ property: key, value: info[key] });
+
+        if (key != "displayName") {
+          let fieldLabel = "";
+          fieldLabel = extraFields.filter((item) => (key == item.name));
+          fieldLabel = (fieldLabel && fieldLabel.length && fieldLabel[0].label) ? fieldLabel[0].label : key;
+          userProperties.push({ key: key, property: fieldLabel, value: info[key] });
+        }
       }
       resolve(userProperties);
     });
@@ -118,6 +124,7 @@ class UserRegistration extends Component {
     if (!evius_token) {
       this.setState({ currentUser: "guest", loading: false });
     } else {
+
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
@@ -147,29 +154,33 @@ class UserRegistration extends Component {
 
     const properties = event.user_properties;
 
+    console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields, eventUsers: eventUsers.data }, this.getCurrentUser);
+    console.log("extraFields", properties);
   }
 
   onFinish = async (values) => {
+
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
 
     message.loading({ content: "Registrando Usuario", key });
-    const snap = {
-      properties: values,
-    };
-    // console.log(snap);
+
+    const snap = { properties: values };
 
     let textMessage = {};
+    textMessage.key = key;
 
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
+
+        console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
         this.setState({
@@ -178,14 +189,18 @@ class UserRegistration extends Component {
               ? `Fuiste registrado al evento exitosamente`
               : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
         });
+        this.setState({ submittedForm: true });
+        message.success(textMessage);
       } else {
+
         textMessage.content = "El usuario no pudo ser creado";
+        message.success(textMessage);
       }
 
-      textMessage.key = key;
-      message.success(textMessage).then(() => {
-        this.setState({ submittedForm: true });
-      });
+
+
+
+
     } catch (err) {
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
@@ -253,7 +268,7 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage } = this.state;
+    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage, extraFields } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
@@ -275,15 +290,15 @@ class UserRegistration extends Component {
                 </Form>
               </Card>
             ) : (
-              <Card>
-                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
-              </Card>
-            )}
+                <Card>
+                  <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+                </Card>
+              )}
           </Col>
         </>
       ) : (
-        <UserInfoCard currentUser={currentUser} />
-      );
+          <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
+        );
     return <Spin></Spin>;
   }
 }

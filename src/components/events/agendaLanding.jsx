@@ -254,23 +254,32 @@ class Agenda extends Component {
 
 
               <div className="container-calendar is-three-fifths">
-                <p className="is-size-5">Seleccióne el espacio</p>
-                <div className="select is-fullwidth is-three-fifths has-margin-bottom-20" style={{ height: "3rem" }}>
-                  <select
-                    id="selectedSpace"
-                    onClick={this.selectionSpace}
-                    className="has-text-black  is-pulled-left"
-                    style={{ height: "3rem" }}>
-                    <option onClick={this.returnList}>Todo</option>
-                    {spaces.map((space, key) => (
-                      <option
-                        onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)}
-                        key={key}>
-                        {space.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+
+
+
+                {(spaces && spaces.length > 1) && (
+                  <>
+                    <p className="is-size-5">Seleccióne el espacio</p>
+                    <div className="select is-fullwidth is-three-fifths has-margin-bottom-20" style={{ height: "3rem" }}>
+                      <select
+                        id="selectedSpace"
+                        onClick={this.selectionSpace}
+                        className="has-text-black  is-pulled-left"
+                        style={{ height: "3rem" }}>
+                        <option onClick={this.returnList}>Todo</option>
+                        {spaces.map((space, key) => (
+                          <option
+                            onClick={() => this.selectSpace(space.name, space.datetime_start, space.datetime_start)}
+                            key={key}>
+                            {space.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </>
+                )
+                }
+
                 {/* Contenedor donde se iteran los tabs de las fechas */}
                 <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
                   {days.map((date, key) => (
@@ -377,8 +386,6 @@ class Agenda extends Component {
                                   borderTop: "none",
                                 }}>
                                 <p>
-                                  <Button type="primary">Ir a la actividad</Button>
-                                  <br />
                                   <br />
                                   <Button type="primary">Más información sobre la actividad.</Button>
 

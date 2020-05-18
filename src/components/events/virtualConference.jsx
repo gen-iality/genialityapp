@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react"
 import { Card, Button } from "antd"
 import WithUserEventRegistered from "../shared/withUserEventRegistered"
-import { AgendaApi } from "../../helpers/request";
+import { AgendaApi, SurveysApi } from "../../helpers/request";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
 
@@ -14,48 +14,57 @@ class VirtualConference extends Component {
             infoAgendaArr: [],
             currentUser: this.props.currentUser || undefined,
             usuarioRegistrado: this.props.usuarioRegistrado || undefined,
-            event: this.props.event || undefined
-
+            event: this.props.event || undefined,
+            survey: [],
         }
+
     }
 
     async componentDidUpdate() {
 
-
-
-        if (!this.props.event || this.state.infoAgendaArr) return;
-        console.log("INNER event", this.props.event, "CurrentUser", this.props.currentUser, "UsuarioRegistrado", this.props.usuarioRegistrado)
-
-        const infoAgenda = await AgendaApi.byEvent(this.props.event._id);
-        console.log("EVENTOAGENDA", infoAgenda);
-
-        //Revisamos si tiene conferencia virtual
-        const infoAgendaArr = [];
-        for (const prop in infoAgenda.data) {
-            if (infoAgenda.data[prop].meeting_id) {
-                infoAgendaArr.push(infoAgenda.data[prop]);
-            }
-        }
-
-        console.log(infoAgendaArr);
-        this.setState({ infoAgendaArr });
-    }
-
-    async componentDidMount() {
-        console.log("EVENTOAGENDAU", this.props.event);
+        //Si aún no ha cargado el evento no podemos hacer nada más
         if (!this.props.event) return;
-        const infoAgenda = await AgendaApi.byEvent(this.props.event._id);
 
-        const infoAgendaArr = [];
+        //Si ya cargamos la agenda no hay que volverla a cargar o quedamos en un ciclo infinito
+        if (this.state.infoAgendaArr && this.state.infoAgendaArr.length) return;
+
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
+        this.setState({ infoAgendaArr: filteredAgenda });
+        if (filteredAgenda && filteredAgenda.length > 0) {
+            let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
+            this.setState({ survey: survey });
+        }
+
+    }
+    async componentDidMount() {
+
+        if (!this.props.event) return;
+
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
+        this.setState({ infoAgendaArr: filteredAgenda });
+
+
+    }
+
+    async filterVirtualActivities(event_id) {
+        let infoAgendaArr = [];
+        let id = []
+        if (!event_id) return infoAgendaArr;
+        const infoAgenda = await AgendaApi.byEvent(event_id);
+
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
             }
+
+            if (infoAgenda.data[prop]._id) {
+                id.push(infoAgenda.data[prop]);
+            }
         }
 
-        console.log(infoAgendaArr);
-        this.setState({ infoAgendaArr });
+        return infoAgendaArr;
     }
+
 
     capitalizeDate(val) {
         val = Moment(val).format("DD MMMM HH:HH")
@@ -67,12 +76,14 @@ class VirtualConference extends Component {
     }
 
     render() {
-        const { infoAgendaArr } = this.state
-        const { toggleConference, currentUser } = this.props
+        const { infoAgendaArr, survey } = this.state
+        const { toggleConference, currentUser, usuarioRegistrado } = this.props
         return (
             <Fragment>
                 <div>
-                    <h1>Listado de conferencias Virtuales</h1>
+                    <Card bordered={true} >
+                        <span>Conferencias Virtuales</span>
+                    </Card>
                     {
                         infoAgendaArr.map((item, key) => (
 
@@ -81,12 +92,13 @@ class VirtualConference extends Component {
                                     <p>{item.name}</p>
                                     {(item.hosts && item.hosts.length > 0) &&
                                         < div >
-                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}</span>))}
+                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
                                         </div>
                                     }
-                                    <p>{item.datetime_start} - {item.datetime_end}</p>
+                                    <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
-                                    <Button onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
+
+                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)

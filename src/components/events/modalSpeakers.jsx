@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react"
 import { withRouter } from "react-router"
-import { Modal, Row, Col, Avatar } from "antd"
+import { Modal, Row, Col, Avatar, Button } from "antd"
 import { SpeakersApi } from "../../helpers/request";
 import { UserOutlined } from "@ant-design/icons";
 
@@ -30,6 +30,11 @@ let modalSpeakers = (props) => {
                 visible={modalVisible}
                 onCancel={() => clearStates()}
                 onOk={() => clearStates()}
+                footer={[
+                    <Button key="cerrar" type="primary" onClick={() => clearStates()}>
+                        Cerrar
+                    </Button>
+                ]}
             >
                 <Row>
                     {/* Imagen del conferencista */}

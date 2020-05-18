@@ -75,7 +75,6 @@ class Landing extends Component {
       section: "evento",
       showIframeZoom: false,
       meeting_id: null,
-      userEntered: null,
       color: "",
       collapsed: false,
       visible: false,
@@ -84,6 +83,7 @@ class Landing extends Component {
       namesUser: "",
       data: null,
       activitySurvey: null,
+      user: null,
     };
   }
 
@@ -143,17 +143,15 @@ class Landing extends Component {
 
   async componentDidMount() {
     let user = null;
+    let eventUser = null;
     try {
 
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
-
       user = resp.data;
-
-      console.log("USUARIO", user);
-      this.setState({ user, namesUser: user.names || user.displayName || "" });
     } catch { }
+
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
@@ -165,12 +163,11 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-    let eventUser = null;
+
     if (event && user) {
-      let eventUser = await EventsApi.getEventUser(user._id, event._id);
+      eventUser = await EventsApi.getEventUser(user._id, event._id);
+
     }
-
-
 
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
@@ -181,10 +178,12 @@ class Landing extends Component {
     event.sessions = sessions;
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
+    let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
-    // manda el color de fondo al state para depues renderizarlo
-    this.setState({ color: "#E6F7FE" });
-    console.log("s", event);
+
+
+    this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
+
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} showIframe={this.toggleConference} />,
       tickets: (
@@ -208,11 +207,26 @@ class Landing extends Component {
       evento: (
         <div className="columns is-centered">
           <EventLanding event={event} />
-          <MapComponent event={event} toggleConference={this.toggleConference} namesUser={this.state.namesUser} />
+
+          <div className="column container-map">
+
+            <VirtualConference
+              event={this.state.event}
+              currentUser={this.state.currentUser}
+              usuarioRegistrado={this.state.eventUser}
+              toggleConference={this.toggleConference}
+
+            />
+            <MapComponent event={event} />
+          </div>
         </div>
       ),
     };
-    this.setState({ eventUser, event, loading: false, sections }, () => {
+
+    //default section is firstone
+
+
+    this.setState({ loading: false, sections }, () => {
       this.firebaseUI();
       this.handleScroll();
     });
@@ -252,6 +266,7 @@ class Landing extends Component {
     html.classList.add("is-clipped");
     this.setState({ modal: true, modalTicket: false });
   };
+
   closeLogin = (user) => {
     html.classList.remove("is-clipped");
     this.setState({ modal: false });
@@ -288,10 +303,10 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, userEntered, activitySurvey) => {
-    console.log("ACTIVANDOSE", meeting_id, state, userEntered, activitySurvey);
+  toggleConference = (state, meeting_id, currentUser, activitySurvey) => {
+    console.log("ACTIVANDOSE", meeting_id, state, currentUser, activitySurvey);
     if (meeting_id != undefined) {
-      this.setState({ meeting_id, userEntered, activitySurvey });
+      this.setState({ meeting_id, activitySurvey });
     }
     this.setState({ showIframeZoom: state });
   };
@@ -305,7 +320,7 @@ class Landing extends Component {
       sections,
       showIframeZoom,
       meeting_id,
-      userEntered,
+      currentUser,
       activitySurvey,
     } = this.state;
     return (
@@ -331,7 +346,7 @@ class Landing extends Component {
                   <ZoomComponent
                     hideIframe={this.toggleConference}
                     meetingId={meeting_id}
-                    userEntered={userEntered}
+                    userEntered={currentUser}
                     activitySurveyList={activitySurvey}
                     event={event}
                   />
@@ -386,7 +401,7 @@ class Landing extends Component {
                       width={250}>
                       <div className="items-menu_Landing ">
                         {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </div>
                     </Sider>
                   </div>
@@ -426,7 +441,7 @@ class Landing extends Component {
                             event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
                         }}>
                         {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                       </Drawer>
 
                       {/* Contenedor donde se mapea la información de cada seccion */}

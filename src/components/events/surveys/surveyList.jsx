@@ -28,25 +28,28 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                 )}
                 {usuarioRegistrado === true ?
                   <div>
-                    <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                      {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                    <Button
+                      type={!survey.userHasVoted ? "primary" : ""}
+                      className={`${!survey.userHasVoted ? "animate__animated  animate__pulse animate__infinite" : ""}`}
+                      onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                      {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                     </Button>
                   </div>
                   :
                   survey.allow_anonymous_answers === "true" ?
                     <div>
-                      <Button onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted ? "Ir a Encuesta" : " Ver Resultados"}
+                      <Button
+                        type={!survey.userHasVoted ? "primary" : ""}
+                        className={`${!survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""}`}
+                        onClick={() => showSurvey(survey)} loading={survey.userHasVoted == undefined}>
+                        {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                       </Button>
                     </div>
                     :
-                    <>
-                    </>
+                    <></>
                 }
-
-
-              </List.Item>
-            ) : (
+              </List.Item>)
+              : (
                 <List.Item key={survey._id} actions={[]}>
                   <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                   <div>

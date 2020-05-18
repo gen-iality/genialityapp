@@ -137,7 +137,9 @@ export const UsersApi = {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
   createOne: async (data, id) => {
-    return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
+    //Este primero es que deberia estar pero no sirve
+    //return await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${id}`, data);
+    return await Actions.post(`/api/events/${id}/adduserwithemailvalidation`, data);
   },
   deleteOne: async (user, id) => {
     return await Actions.delete(`/api/user/events/${id}`, user);

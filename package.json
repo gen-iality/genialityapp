@@ -6,6 +6,7 @@
     "@ant-design/icons": "^4.0.5",
     "@kapost/react-component-slider": "^1.0.5",
     "@seatsio/seatsio-react": "^6.0.0",
+    "animate.css": "^4.1.0",
     "antd": "^4.1.0",
     "async": "^2.6.3",
     "axios": "^0.18.1",

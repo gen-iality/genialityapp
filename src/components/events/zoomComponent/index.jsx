@@ -13,9 +13,9 @@ const closeFullScreen = {
 
 const surveyButtons = {
   position: "absolute",
+  minWidth: "95%",
   top: "37px",
   left: "7px",
-  bottom: 0,
   text: {
     color: "#42A8FC",
   }
@@ -33,18 +33,37 @@ export default class ZoomComponent extends Component {
       isMedium: false,
       isMinimize: false,
       activitySurveyList: [],
-      surveyVisible: false
+      surveyVisible: false,
+      displayName: "",
+      email: null,
+
     };
   }
   componentDidMount() {
     let { meetingId, userEntered, activitySurveyList } = this.props;
-    this.setState({ meeting_id: meetingId, userEntered, activitySurveyList });
+
+    let displayName = "Anónimo";
+    let email = "anonimo@evius.co";
+    if (userEntered) {
+      displayName = userEntered.displayName || userEntered.names || displayName;
+      email = userEntered.email || email
+    }
+
+
+    this.setState({ meeting_id: meetingId, userEntered, activitySurveyList, displayName, email });
   }
 
   componentDidUpdate(prevProps) {
     const { meetingId, userEntered, activitySurveyList } = this.props;
     if (prevProps.meetingId !== meetingId || prevProps.activitySurveyList !== activitySurveyList) {
-      this.setState({ meeting_id: meetingId, userEntered, activitySurveyList });
+      let displayName = "Anónimo";
+      let email = "anonimo@evius.co";
+      if (userEntered) {
+        displayName = userEntered.displayName || userEntered.names || displayName;
+        email = userEntered.email || email
+      }
+
+      this.setState({ meeting_id: meetingId, userEntered, activitySurveyList, displayName, email });
     }
   }
 
@@ -85,7 +104,7 @@ export default class ZoomComponent extends Component {
 
   render() {
     const { hideIframe, event } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible } = this.state;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
@@ -151,8 +170,9 @@ export default class ZoomComponent extends Component {
               <span className="icon-close">&#10006;</span>
             </Button>
           ) : null}
+
           <iframe
-            src={url_conference + meeting_id + `&userName=${userEntered}`}
+            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
             allow="camera *;microphone *"
             allowusermedia
             className="iframe-zoom nuevo">
