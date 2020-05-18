@@ -40,11 +40,10 @@ const UserInfoCard = ({ currentUser, extraFields }) => {
       let userProperties = [];
 
       for (const key in info) {
-
         if (key != "displayName") {
           let fieldLabel = "";
-          fieldLabel = extraFields.filter((item) => (key == item.name));
-          fieldLabel = (fieldLabel && fieldLabel.length && fieldLabel[0].label) ? fieldLabel[0].label : key;
+          fieldLabel = extraFields.filter((item) => key == item.name);
+          fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
           userProperties.push({ key: key, property: fieldLabel, value: info[key] });
         }
       }
@@ -124,7 +123,6 @@ class UserRegistration extends Component {
     if (!evius_token) {
       this.setState({ currentUser: "guest", loading: false });
     } else {
-
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
@@ -164,7 +162,6 @@ class UserRegistration extends Component {
   }
 
   onFinish = async (values) => {
-
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
 
@@ -179,7 +176,6 @@ class UserRegistration extends Component {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
-
         console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
@@ -192,15 +188,9 @@ class UserRegistration extends Component {
         this.setState({ submittedForm: true });
         message.success(textMessage);
       } else {
-
-        textMessage.content = "El usuario no pudo ser creado";
+        textMessage.content = resp;
         message.success(textMessage);
       }
-
-
-
-
-
     } catch (err) {
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
@@ -268,7 +258,15 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage, extraFields } = this.state;
+    let {
+      loading,
+      initialValues,
+      registeredUser,
+      currentUser,
+      submittedForm,
+      successMessage,
+      extraFields,
+    } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
@@ -290,15 +288,15 @@ class UserRegistration extends Component {
                 </Form>
               </Card>
             ) : (
-                <Card>
-                  <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
-                </Card>
-              )}
+              <Card>
+                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+              </Card>
+            )}
           </Col>
         </>
       ) : (
-          <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
-        );
+        <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
+      );
     return <Spin></Spin>;
   }
 }
