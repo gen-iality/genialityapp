@@ -30,7 +30,6 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
-<<<<<<< HEAD
 
         // const { infoAgendaArr } = this.state
         // infoAgendaArr.keys(infoAgendaArr).forEach(key => console.log("hi", key, infoAgendaArr[key]))
@@ -39,22 +38,15 @@ class VirtualConference extends Component {
         // Se recorre el array de la actividad y se extrae el id para mostrar los datos de las encuestas
         const { infoAgendaArr } = this.state
         const { event } = this.props
-        for (let i in infoAgendaArr) {
-            if (infoAgendaArr[i]._id) {
-                let survey = await SurveysApi.getByActivity(event._id, infoAgendaArr[i]._id);
+
+        for (let i in filteredAgenda) {
+            if (filteredAgenda[i]._id) {
+                let survey = await SurveysApi.getByActivity(event._id, filteredAgenda[i]._id);
                 this.setState({ survey: survey });
             }
         }
-
-
-=======
-        if (filteredAgenda && filteredAgenda.length > 0) {
-            let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
-            this.setState({ survey: survey });
-        }
->>>>>>> master
-
     }
+
     async componentDidMount() {
 
         if (!this.props.event) return;
