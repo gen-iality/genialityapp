@@ -16,7 +16,6 @@ const surveyButtons = {
   minWidth: "50%",
   maxHeight: "90%",
   top: "37px",
-  left: "7px",
   text: {
     color: "#42A8FC",
   }

@@ -58,7 +58,7 @@ export const dataFrame = {
     },
     legend: {
       labels: {
-        fontSize: 15
+        fontSize: 16
       }
     },
     scales: {

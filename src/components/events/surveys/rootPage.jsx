@@ -61,7 +61,6 @@ export default class RootPage extends Component {
       return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
       ) : (
-        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
           <Card>
             <SurveyComponent
               idSurvey={idSurvey}
@@ -70,8 +69,7 @@ export default class RootPage extends Component {
               currentUser={currentUser}
             />
           </Card>
-        </Col>
-      );
+        );
 
     return <Spin></Spin>;
   }
