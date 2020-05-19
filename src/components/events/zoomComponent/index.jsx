@@ -13,7 +13,8 @@ const closeFullScreen = {
 
 const surveyButtons = {
   position: "absolute",
-  minWidth: "95%",
+  minWidth: "50%",
+  maxHeight: "90%",
   top: "37px",
   left: "7px",
   text: {
