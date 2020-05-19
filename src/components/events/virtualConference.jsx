@@ -30,10 +30,29 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
+<<<<<<< HEAD
+
+        // const { infoAgendaArr } = this.state
+        // infoAgendaArr.keys(infoAgendaArr).forEach(key => console.log("hi", key, infoAgendaArr[key]))
+
+
+        // Se recorre el array de la actividad y se extrae el id para mostrar los datos de las encuestas
+        const { infoAgendaArr } = this.state
+        const { event } = this.props
+        for (let i in infoAgendaArr) {
+            if (infoAgendaArr[i]._id) {
+                let survey = await SurveysApi.getByActivity(event._id, infoAgendaArr[i]._id);
+                this.setState({ survey: survey });
+            }
+        }
+
+
+=======
         if (filteredAgenda && filteredAgenda.length > 0) {
             let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
             this.setState({ survey: survey });
         }
+>>>>>>> master
 
     }
     async componentDidMount() {
@@ -48,17 +67,12 @@ class VirtualConference extends Component {
 
     async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
-        let id = []
         if (!event_id) return infoAgendaArr;
         const infoAgenda = await AgendaApi.byEvent(event_id);
 
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
-            }
-
-            if (infoAgenda.data[prop]._id) {
-                id.push(infoAgenda.data[prop]);
             }
         }
 
@@ -90,7 +104,7 @@ class VirtualConference extends Component {
                             (<div key={key}>
                                 <Card bordered={true} style={{ marginBottom: "3%" }}>
                                     <p>{item.name}</p>
-                                    {(item.hosts && item.hosts.length > 0) &&
+                                    {(item.hosts && item.hosts.length > 0) && false &&
                                         < div >
                                             <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
                                         </div>

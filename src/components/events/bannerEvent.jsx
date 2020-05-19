@@ -35,9 +35,9 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
                         backgroundPosition: 'center',
                     }}
                 />
+
                 <div className="banner-user-text-container"
                     style={{
-                        //backgroundImage: `url(${bgImageText})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
 
@@ -86,9 +86,14 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
 
                         </div>
                     </TweenOne>
-                </div>
-            </Element>
 
+                </div>
+
+                {/* Imagen opcional para el logo o marca del evento  */}
+                {/* <div className="container-logoBanner">
+                    <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
+                </div> */}
+            </Element>
 
         </BannerAnim>
     );

@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert } from "antd";
 
 const { Text } = Typography;
 
@@ -40,11 +40,10 @@ const UserInfoCard = ({ currentUser, extraFields }) => {
       let userProperties = [];
 
       for (const key in info) {
-
         if (key != "displayName") {
           let fieldLabel = "";
-          fieldLabel = extraFields.filter((item) => (key == item.name));
-          fieldLabel = (fieldLabel && fieldLabel.length && fieldLabel[0].label) ? fieldLabel[0].label : key;
+          fieldLabel = extraFields.filter((item) => key == item.name);
+          fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
           userProperties.push({ key: key, property: fieldLabel, value: info[key] });
         }
       }
@@ -124,7 +123,6 @@ class UserRegistration extends Component {
     if (!evius_token) {
       this.setState({ currentUser: "guest", loading: false });
     } else {
-
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
         if (resp.status === 200) {
@@ -164,7 +162,6 @@ class UserRegistration extends Component {
   }
 
   onFinish = async (values) => {
-
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
 
@@ -179,7 +176,6 @@ class UserRegistration extends Component {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
-
         console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
@@ -192,15 +188,11 @@ class UserRegistration extends Component {
         this.setState({ submittedForm: true });
         message.success(textMessage);
       } else {
+        textMessage.content = resp;
 
-        textMessage.content = "El usuario no pudo ser creado";
+        this.setState({ notLoggedAndRegister: true });
         message.success(textMessage);
       }
-
-
-
-
-
     } catch (err) {
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
@@ -268,10 +260,32 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage, extraFields } = this.state;
+    let {
+      loading,
+      initialValues,
+      registeredUser,
+      currentUser,
+      submittedForm,
+      successMessage,
+      extraFields,
+      notLoggedAndRegister,
+    } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
+          {notLoggedAndRegister && (
+            <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+              <Alert
+                message="Ya se encuentra registrado"
+                description="Ya has realizado previamente el registro al evento, por favor revisa tu correo."
+                type="info"
+                showIcon
+                closable
+              />
+            </Col>
+          )}
+
+          <br />
           <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
             {!submittedForm ? (
               <Card title="Formulario de registro" bodyStyle={textLeft}>
@@ -290,15 +304,15 @@ class UserRegistration extends Component {
                 </Form>
               </Card>
             ) : (
-                <Card>
-                  <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
-                </Card>
-              )}
+              <Card>
+                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+              </Card>
+            )}
           </Col>
         </>
       ) : (
-          <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
-        );
+        <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
+      );
     return <Spin></Spin>;
   }
 }
