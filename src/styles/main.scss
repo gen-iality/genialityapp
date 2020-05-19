@@ -60,16 +60,6 @@ iframe {
   }
 }
 
-.ant-form-item-label {
-  word-break: break-all !important;
-  white-space: unset !important;
-  overflow: inherit !important;
-
-  & > label {
-    align-items: baseline !important;
-  }
-}
-
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
