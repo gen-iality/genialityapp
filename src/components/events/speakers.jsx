@@ -116,7 +116,14 @@ class Speakers extends Component {
           centered
           width={1000}
           visible={this.state.modalVisible}
-          onCancel={() => this.setModalVisible(false)}>
+          onCancel={() => this.setModalVisible(false)}
+          footer={[
+            <Button key="cerrar" type="primary" onClick={() => this.setModalVisible(false)}>
+              Cerrar
+            </Button>
+          ]}
+
+        >
           <Row>
             {/* Imagen del conferencista */}
 

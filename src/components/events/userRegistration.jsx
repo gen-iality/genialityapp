@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert } from "antd";
 
 const { Text } = Typography;
 
@@ -30,17 +30,22 @@ const validateMessages = {
 };
 
 // Componente que muestra la informacion del usuario registrado
-const UserInfoCard = ({ currentUser }) => {
+const UserInfoCard = ({ currentUser, extraFields }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
-
+  console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
   const parseObjectToArray = async (info) => {
     let userProperties = new Promise((resolve, reject) => {
       let userProperties = [];
 
       for (const key in info) {
-        if (key != "displayName") userProperties.push({ property: key, value: info[key] });
+        if (key != "displayName") {
+          let fieldLabel = "";
+          fieldLabel = extraFields.filter((item) => key == item.name);
+          fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
+          userProperties.push({ key: key, property: fieldLabel, value: info[key] });
+        }
       }
       resolve(userProperties);
     });
@@ -147,11 +152,13 @@ class UserRegistration extends Component {
 
     const properties = event.user_properties;
 
+    console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields, eventUsers: eventUsers.data }, this.getCurrentUser);
+    console.log("extraFields", properties);
   }
 
   onFinish = async (values) => {
@@ -159,17 +166,17 @@ class UserRegistration extends Component {
     const key = "registerUserService";
 
     message.loading({ content: "Registrando Usuario", key });
-    const snap = {
-      properties: values,
-    };
-    // console.log(snap);
+
+    const snap = { properties: values };
 
     let textMessage = {};
+    textMessage.key = key;
 
     try {
       let resp = await UsersApi.createOne(snap, this.props.eventId);
 
       if (resp.message === "OK") {
+        console.log("RESP", resp);
         let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         textMessage.content = "Usuario " + statusMessage;
         this.setState({
@@ -178,14 +185,14 @@ class UserRegistration extends Component {
               ? `Fuiste registrado al evento exitosamente`
               : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`,
         });
-      } else {
-        textMessage.content = "El usuario no pudo ser creado";
-      }
-
-      textMessage.key = key;
-      message.success(textMessage).then(() => {
         this.setState({ submittedForm: true });
-      });
+        message.success(textMessage);
+      } else {
+        textMessage.content = resp;
+
+        this.setState({ notLoggedAndRegister: true });
+        message.success(textMessage);
+      }
     } catch (err) {
       textMessage.content = "Error... Intentalo mas tarde";
       textMessage.key = key;
@@ -253,10 +260,32 @@ class UserRegistration extends Component {
   };
 
   render() {
-    let { loading, initialValues, registeredUser, currentUser, submittedForm, successMessage } = this.state;
+    let {
+      loading,
+      initialValues,
+      registeredUser,
+      currentUser,
+      submittedForm,
+      successMessage,
+      extraFields,
+      notLoggedAndRegister,
+    } = this.state;
     if (!loading)
       return !registeredUser ? (
         <>
+          {notLoggedAndRegister && (
+            <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+              <Alert
+                message="Ya se encuentra registrado"
+                description="Ya has realizado previamente el registro al evento, por favor revisa tu correo."
+                type="info"
+                showIcon
+                closable
+              />
+            </Col>
+          )}
+
+          <br />
           <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
             {!submittedForm ? (
               <Card title="Formulario de registro" bodyStyle={textLeft}>
@@ -282,7 +311,7 @@ class UserRegistration extends Component {
           </Col>
         </>
       ) : (
-        <UserInfoCard currentUser={currentUser} />
+        <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
       );
     return <Spin></Spin>;
   }

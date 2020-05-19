@@ -16,7 +16,6 @@ const surveyButtons = {
   minWidth: "95%",
   top: "37px",
   left: "7px",
-  bottom: 0,
   text: {
     color: "#42A8FC",
   }
@@ -44,11 +43,11 @@ export default class ZoomComponent extends Component {
   componentDidMount() {
     let { meetingId, userEntered, activitySurveyList } = this.props;
 
-    let displayName = "";
-    let email = null;
+    let displayName = "Anónimo";
+    let email = "anonimo@evius.co";
     if (userEntered) {
-      displayName = userEntered.displayName || userEntered.names || "Anónimo";
-      email = userEntered.email || null
+      displayName = userEntered.displayName || userEntered.names || displayName;
+      email = userEntered.email || email
     }
 
     // Filtra el total de las actividades que se encuentran publicas
@@ -68,11 +67,11 @@ export default class ZoomComponent extends Component {
   componentDidUpdate(prevProps) {
     const { meetingId, userEntered, activitySurveyList } = this.props;
     if (prevProps.meetingId !== meetingId || prevProps.activitySurveyList !== activitySurveyList) {
-      let displayName = "";
-      let email = null;
+      let displayName = "Anónimo";
+      let email = "anonimo@evius.co";
       if (userEntered) {
-        displayName = userEntered.displayName || userEntered.names || "Anónimo";
-        email = userEntered.email || null
+        displayName = userEntered.displayName || userEntered.names || displayName;
+        email = userEntered.email || email
       }
 
       this.setState({ meeting_id: meetingId, userEntered, activitySurveyList, displayName, email });

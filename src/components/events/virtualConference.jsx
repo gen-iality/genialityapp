@@ -30,6 +30,7 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
+<<<<<<< HEAD
 
         // const { infoAgendaArr } = this.state
         // infoAgendaArr.keys(infoAgendaArr).forEach(key => console.log("hi", key, infoAgendaArr[key]))
@@ -46,6 +47,12 @@ class VirtualConference extends Component {
         }
 
 
+=======
+        if (filteredAgenda && filteredAgenda.length > 0) {
+            let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
+            this.setState({ survey: survey });
+        }
+>>>>>>> master
 
     }
     async componentDidMount() {
@@ -97,21 +104,15 @@ class VirtualConference extends Component {
                             (<div key={key}>
                                 <Card bordered={true} style={{ marginBottom: "3%" }}>
                                     <p>{item.name}</p>
-                                    {(item.hosts && item.hosts.length > 0) &&
+                                    {(item.hosts && item.hosts.length > 0) && false &&
                                         < div >
-                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}</span>))}
+                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
                                         </div>
                                     }
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button onClick={() => {
-                                        toggleConference(
-                                            true,
-                                            item.meeting_id,
-                                            currentUser,
-                                            survey.data)
-                                    }}>Entrar a la conferencia </Button>
+                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)
