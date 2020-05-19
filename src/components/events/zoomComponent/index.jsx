@@ -137,9 +137,9 @@ export default class ZoomComponent extends Component {
             </Button>
 
             {/* botón pantalla media */}
-            <Button onClick={this.goMedium}>
+            {/* <Button onClick={this.goMedium}>
               <SwitcherOutlined />
-            </Button>
+            </Button> */}
 
             {/* botón pantalla minimizada */}
             <Button onClick={this.goMinimize}>
