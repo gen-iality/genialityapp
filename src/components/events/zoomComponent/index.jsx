@@ -169,7 +169,7 @@ export default class ZoomComponent extends Component {
                 {/* ))} */}
                 {surveyVisible && (
                   <Card>
-                    <SurveyComponent event={event} activitySurveyList={activitySurveyList.data} />
+                    <SurveyComponent event={event} activitySurveyList={activitySurveyList} />
                   </Card>
                 )}
               </div>
