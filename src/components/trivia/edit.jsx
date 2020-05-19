@@ -10,7 +10,7 @@ import { createOrUpdateSurvey } from "./services";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch } from "antd";
+import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message } from "antd";
 import FormQuestions from "./questions";
 import FormQuestionEdit from "./formEdit";
 
@@ -120,6 +120,7 @@ class triviaEdit extends Component {
   }
 
   async submitWithQuestions() {
+    message.loading({ content: "Actualizando información", key: "updating" });
     //Se recogen los datos a actualizar
     const data = {
       survey: this.state.survey,
@@ -129,18 +130,23 @@ class triviaEdit extends Component {
       activity_id: this.state.activity_id,
     };
     console.log(data);
+
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
-    await SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id);
+    SurveysApi.editOne(data, this.state.idSurvey, this.props.event._id)
+      .then(async () => {
+        // Esto permite almacenar los estados en firebase
+        let setDataInFire = await createOrUpdateSurvey(
+          this.state.idSurvey,
+          { isPublished: data.publish, isOpened: data.open, allow_anonymous_answers: data.allow_anonymous_answers },
+          { eventId: this.props.event._id, name: data.survey, category: "none" }
+        );
 
-    // Esto permite almacenar los estados en firebase
-    let setDataInFire = await createOrUpdateSurvey(
-      this.state.idSurvey,
-      { isPublished: data.publish, isOpened: data.open, allow_anonymous_answers: data.allow_anonymous_answers },
-      { eventId: this.props.event._id, name: data.survey, category: "none" }
-    );
-    console.log("Fire:", setDataInFire);
-
-    toast.success("datos actualizados");
+        console.log("Fire:", setDataInFire);
+        message.success({ content: "Datos actualizados", key: "updating" });
+      })
+      .catch((err) => {
+        console.log("Hubo un error", err);
+      });
   }
 
   // Funcion para generar un id a cada pregunta 'esto es temporal'
