@@ -33,8 +33,6 @@ import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
 import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
-import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
-
 
 const { Title } = Typography;
 
@@ -381,6 +379,7 @@ class Landing extends Component {
                     }
                     dateStart={event.date_start}
                     dateEnd={event.date_end}
+                    type_event={event.type_event}
                   />
                 )}
               </div>
