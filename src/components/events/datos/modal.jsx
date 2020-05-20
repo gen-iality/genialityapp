@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { typeInputs } from "../../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
+import { Radio } from "antd";
+
 
 const html = document.querySelector("html");
 class DatosModal extends Component {
@@ -78,7 +80,7 @@ class DatosModal extends Component {
             <Fragment>
                 <section className="modal-card-body">
                     <div className="field">
-                        <label className="label required has-text-grey-light">Dato</label>
+                        <label className="label required has-text-grey-light">Nombre Campo </label>
                         <div className="control">
                             <input className="input" name={"label"} type="text"
                                 placeholder="Ej: Celular" value={info.label}
@@ -87,12 +89,31 @@ class DatosModal extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label has-text-grey-light">Etiqueta a la izquierda</label>
-                        <div className="control">
-                            <input className="input" name={"labelizquierdo"} type="text"
-                                placeholder="Ej: Celular" value={info.labelizquierdo}
-                                onChange={this.handleChange}
-                            />
+                        <label className="label has-text-grey-light">Posición Nombre del Campo </label>
+                        <div className="">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="labelPosition"
+                                    value="arriba"
+                                    className="form-check-input"
+                                    checked={info.labelPosition == "arriba" || !info.labelPosition}
+                                    onChange={this.handleChange}
+                                />
+    Arriba &nbsp;</label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="labelPosition"
+                                    value="izquierda"
+                                    className="form-check-input"
+                                    checked={info.labelPosition == "izquierda"}
+                                    onChange={this.handleChange}
+                                />
+    Izquierda &nbsp;</label>
+
+
                         </div>
                     </div>
 
@@ -150,8 +171,19 @@ class DatosModal extends Component {
                         <textarea className="textarea" placeholder="descripción corta" name={'description'}
                             value={info.description} onChange={this.handleChange} />
                     </div>
+
+                    <div className="field">
+                        <label className="label has-text-grey-light">Posición / Orden </label>
+                        <div className="control">
+                            <input className="input" name={"order_weight"} type="number"
+                                placeholder="1" value={info.order_weight}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+
                     <div className="field column">
-                        <label className="label required has-text-grey-light">Etiqueta</label>
+                        <label className="label required has-text-grey-light">Nombre de maquina</label>
                         <div className="control">
                             <input className="input is-small" name={"name"} type="text"
                                 placeholder="Nombre del campo" value={info.name} disabled={edit}

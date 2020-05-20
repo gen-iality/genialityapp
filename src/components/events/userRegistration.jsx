@@ -207,16 +207,19 @@ class UserRegistration extends Component {
   // Función que crea los input del componente
   renderForm = () => {
     const { extraFields } = this.state;
+
+
     let formUI = extraFields.map((m, key) => {
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
       let label = m.label;
-      let labelizquierdo = m.labelizquierdo || "";
+      let labelPosition = m.labelPosition;
       let mandatory = m.mandatory;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input  {...props} addonBefore={labelizquierdo} type={type} key={key} name={name} value={value} />;
+      let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? label : ""} type={type} key={key} name={name} value={value} />;
+
 
       if (type === "boolean") {
         input = (
@@ -268,7 +271,7 @@ class UserRegistration extends Component {
       return (
         <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
-            <Form.Item label={label} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+            <Form.Item label={labelPosition != "izquierda" ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}
