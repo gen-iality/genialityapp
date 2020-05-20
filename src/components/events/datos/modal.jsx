@@ -134,7 +134,7 @@ class DatosModal extends Component {
                             </div>
                         </div>
                         {
-                            info.type === 'list' && (
+                            (info.type === 'list' || info.type === 'multiplelist') && (
                                 <div className="control">
                                     <CreatableSelect
                                         components={{ DropdownIndicator: null, }}

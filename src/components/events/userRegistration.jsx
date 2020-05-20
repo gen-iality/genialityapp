@@ -214,12 +214,22 @@ class UserRegistration extends Component {
       let props = m.props || {};
       let name = m.name;
       let label = m.label;
-      let labelPosition = m.labelPosition;
       let mandatory = m.mandatory;
+      let labelPosition = m.labelPosition;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? label : ""} type={type} key={key} name={name} value={value} />;
+      let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? (mandatory ? "* " : "") + label : ""} type={type} key={key} name={name} value={value} />;
 
+
+      if (type === "tituloseccion") {
+        input = (
+          <React.Fragment>
+            <label className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`} >
+              {label}
+            </label>
+          </React.Fragment>
+        );
+      }
 
       if (type === "boolean") {
         input = (
@@ -238,7 +248,7 @@ class UserRegistration extends Component {
         );
       }
 
-      const plainOptions = ['Apple', 'Pear', 'Orange'];
+
       if (type === "multiplelist") {
         console.log(m.options);
         input = (
@@ -271,7 +281,7 @@ class UserRegistration extends Component {
       return (
         <div key={"g" + key} name="field">
           {m.type !== "boolean" && (
-            <Form.Item label={labelPosition != "izquierda" ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+            <Form.Item label={(labelPosition != "izquierda" && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}

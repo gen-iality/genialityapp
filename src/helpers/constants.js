@@ -92,6 +92,7 @@ export const typeInputs = [
   { value: "boolean", label: "Si/No" },
   { value: "file", label: "Archivo" },
   { value: "complex", label: "JSON" },
+  { value: "tituloseccion", label: "Titulo para indicar campos relacionados" },
 ];
 export const toolbarEditor = {
   toolbar: [
