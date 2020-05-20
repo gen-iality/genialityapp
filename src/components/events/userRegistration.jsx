@@ -212,10 +212,11 @@ class UserRegistration extends Component {
       let props = m.props || {};
       let name = m.name;
       let label = m.label;
+      let labelizquierdo = m.labelizquierdo || "";
       let mandatory = m.mandatory;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input {...props} type={type} key={key} name={name} value={value} />;
+      let input = <Input  {...props} addonBefore={labelizquierdo} type={type} key={key} name={name} value={value} />;
 
       if (type === "boolean") {
         input = (
