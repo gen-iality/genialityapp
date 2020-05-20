@@ -87,10 +87,10 @@ class DatosModal extends Component {
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label required has-text-grey-light">Etiqueta a la izquierda</label>
+                        <label className="label has-text-grey-light">Etiqueta a la izquierda</label>
                         <div className="control">
-                            <input className="input" name={"labelizquierda"} type="text"
-                                placeholder="Ej: Celular" value={info.labelizquierda}
+                            <input className="input" name={"labelizquierdo"} type="text"
+                                placeholder="Ej: Celular" value={info.labelizquierdo}
                                 onChange={this.handleChange}
                             />
                         </div>
