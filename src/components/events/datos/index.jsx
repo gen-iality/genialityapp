@@ -29,12 +29,26 @@ class Datos extends Component {
         await this.fetchFields()
     }
 
+    orderFieldsByWeight = (extraFields) => {
+        extraFields = extraFields.sort((a, b) =>
+            (a.order_weight && !b.order_weight) || (a.order_weight && b.order_weight && a.order_weight < b.order_weight)
+                ? -1
+                : 1
+        );
+        return extraFields;
+    };
+
     fetchFields = async () => {
         try {
             const { eventID } = this.props;
             this.eventID = eventID;
             let fields = await EventFieldsApi.getAll(eventID);
+            fields = this.orderFieldsByWeight(fields);
+
             fields = fields.filter(item => item.name !== "names" && item.name !== "email");
+
+
+
             this.setState({ fields, loading: false });
         } catch (e) {
             this.showError(e)
@@ -122,19 +136,19 @@ class Datos extends Component {
                     addAction={this.addField} addTitle={"Agregar dato"}>
                     {this.state.loading ? <Loading /> :
                         <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible", ""]}>
-                            <tr>
-                                <td>Email</td>
-                                <td>Correo</td>
+                            <tr class="has-text-grey-light ">
+                                <td class="has-text-grey-light ">Email</td>
+                                <td class="has-text-grey-light ">Correo</td>
                                 <td>
-                                    <input className="is-checkradio is-primary" type="checkbox" id={"mandEmail"}
+                                    <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
                                         checked={true} disabled={true} />
-                                    <label className="checkbox" htmlFor={"mandEmail"} />
+                                    <label className="checkbox has-text-grey-light" htmlFor={"mandEmail"} />
                                 </td>
                                 <td />
                             </tr>
                             <tr>
-                                <td>Texto</td>
-                                <td>Nombres</td>
+                                <td class="has-text-grey-light ">Texto</td>
+                                <td class="has-text-grey-light ">Nombres</td>
                                 <td>
                                     <input className="is-checkradio is-primary" type="checkbox" id={"mandName"}
                                         checked={true} disabled={true} />
@@ -171,10 +185,12 @@ class Datos extends Component {
                         </EvenTable>
                     }
                 </EventContent>
-                {modal &&
+                {
+                    modal &&
                     <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
                         <DatosModal edit={edit} info={info} action={this.saveField} />
-                    </EventModal>}
+                    </EventModal>
+                }
                 {
                     this.state.deleteModal &&
                     <Dialog modal={this.state.deleteModal} title={'Borrar Dato'}
@@ -183,7 +199,7 @@ class Datos extends Component {
                         message={this.state.message}
                         second={{ title: 'Cancelar', class: '', action: this.closeDelete }} />
                 }
-            </Fragment>
+            </Fragment >
         )
     }
 }

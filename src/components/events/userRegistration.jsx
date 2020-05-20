@@ -4,8 +4,9 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox } from "antd";
 
+const { TextArea } = Input;
 const { Text } = Typography;
 
 const textLeft = {
@@ -16,6 +17,7 @@ const center = {
   margin: "0 auto",
 };
 
+
 // Grid para formulario
 const layout = {
   labelCol: { span: 6 },
@@ -23,7 +25,7 @@ const layout = {
 };
 
 const validateMessages = {
-  required: "${label} es requerido!",
+  required: "Este campo ${label} es obligatorio para poder enviar la información!",
   types: {
     email: "${label} no válido!",
   },
@@ -164,6 +166,7 @@ class UserRegistration extends Component {
   onFinish = async (values) => {
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
+    console.log("values", values);
 
     message.loading({ content: "Registrando Usuario", key });
 
@@ -205,15 +208,29 @@ class UserRegistration extends Component {
   // Función que crea los input del componente
   renderForm = () => {
     const { extraFields } = this.state;
+
+
     let formUI = extraFields.map((m, key) => {
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
       let label = m.label;
       let mandatory = m.mandatory;
+      let labelPosition = m.labelPosition;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input {...props} type={type} key={key} name={name} value={value} />;
+      let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? (mandatory ? "* " : "") + label : ""} type={type} key={key} name={name} value={value} />;
+
+
+      if (type === "tituloseccion") {
+        input = (
+          <React.Fragment>
+            <p className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`} >
+              {label}
+            </p>
+          </React.Fragment>
+        );
+      }
 
       if (type === "boolean") {
         input = (
@@ -225,6 +242,22 @@ class UserRegistration extends Component {
           </React.Fragment>
         );
       }
+
+      if (type === "longtext") {
+        input = (
+          <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />
+        );
+      }
+
+
+      if (type === "multiplelist") {
+        console.log(m.options);
+        input = (
+          <Checkbox.Group options={m.options} onChange={(checkedValues) => { value = JSON.stringify(checkedValues) }} />
+        );
+      }
+
+
       if (type === "list") {
         input = m.options.map((o, key) => {
           return (
@@ -248,11 +281,14 @@ class UserRegistration extends Component {
 
       return (
         <div key={"g" + key} name="field">
-          {m.type !== "boolean" && (
-            <Form.Item label={label} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+          {type == "tituloseccion" && input}
+          {type != "tituloseccion" && m.type !== "boolean" && (
+            <Form.Item label={(labelPosition != "izquierda" && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}
+
+
         </div>
       );
     });
@@ -296,11 +332,13 @@ class UserRegistration extends Component {
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
                   {this.renderForm()}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
-                      Registrarse
-                    </Button>
-                  </Form.Item>
+                  <Row justify="center">
+                    <Form.Item wrapperCol={{ ...center, span: 12 }}>
+                      <Button type="primary" htmlType="submit">
+                        Registrarse
+                      </Button>
+                    </Form.Item>
+                  </Row>
                 </Form>
               </Card>
             ) : (

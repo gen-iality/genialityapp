@@ -77,7 +77,7 @@ class FieldEvent extends Component {
                     </header>
                     <section className="modal-card-body">
                         <div className="field">
-                            <label className="label required has-text-grey-light">Dato</label>
+                            <label className="label required has-text-grey-light">Nombre del dato</label>
                             <div className="control">
                                 <input className="input" name={"label"} type="text"
                                     placeholder="Ej: Celular" value={info.label}
@@ -85,6 +85,16 @@ class FieldEvent extends Component {
                                 />
                             </div>
                         </div>
+                        <div className="field">
+                            <label className="label required has-text-grey-light">Etiqueta a la izquierda</label>
+                            <div className="control">
+                                <input className="input" name={"labelizquierda"} type="text"
+                                    placeholder="Ej: Celular" value={info.labelizquierda}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                        </div>
+
                         <div className="field">
                             <div className="control">
                                 <label className="label required">Tipo de dato</label>

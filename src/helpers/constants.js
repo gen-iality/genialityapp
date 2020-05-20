@@ -83,13 +83,16 @@ export const rolPermissions = {
 };
 export const typeInputs = [
   { value: "text", label: "Texto" },
+  { value: "longtext", label: "Texto Largo" },
   { value: "email", label: "Correo" },
   { value: "number", label: "Numérico" },
   { value: "list", label: "Lista Opciones" },
+  { value: "multiplelist", label: "Selección multiple" },
   { value: "date", label: "Fecha (DD/MM/YYYY)" },
   { value: "boolean", label: "Si/No" },
   { value: "file", label: "Archivo" },
   { value: "complex", label: "JSON" },
+  { value: "tituloseccion", label: "Titulo para indicar campos relacionados" },
 ];
 export const toolbarEditor = {
   toolbar: [
