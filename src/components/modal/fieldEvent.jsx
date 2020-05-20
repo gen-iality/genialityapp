@@ -1,39 +1,39 @@
-import React, {Component} from 'react';
-import {typeInputs} from "../../helpers/constants";
+import React, { Component } from 'react';
+import { typeInputs } from "../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
 
-const initModal = {name:'',mandatory:false,label:'',description:'',type:'',options:[]};
+const initModal = { name: '', mandatory: false, label: '', description: '', type: '', options: [] };
 const html = document.querySelector("html");
 class FieldEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            info:initModal
+            info: initModal
         }
     }
 
     componentDidMount() {
         html.classList.add('is-clipped');
-        if (this.props.edit) this.setState({info:this.props.infoModal});
-        else this.setState({info:initModal})
+        if (this.props.edit) this.setState({ info: this.props.infoModal });
+        else this.setState({ info: initModal })
     }
 
     closeModal = () => {
         html.classList.remove('is-clipped');
-        this.setState({info:initModal}, this.props.closeModal)
+        this.setState({ info: initModal }, this.props.closeModal)
     };
 
     //Cambiar input del campo del evento
     handleChange = (e) => {
-        let {name, value} = e.target;
-        if(name === 'label'){
-            this.setState({info:{...this.state.info,[name]:value,name:toCapitalizeLower(value)}});
-        }else this.setState({info:{...this.state.info,[name]:value}});
+        let { name, value } = e.target;
+        if (name === 'label') {
+            this.setState({ info: { ...this.state.info, [name]: value, name: toCapitalizeLower(value) } });
+        } else this.setState({ info: { ...this.state.info, [name]: value } });
     };
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e) => {
         this.setState(prevState => {
-            return {info: {...this.state.info, mandatory: !prevState.info.mandatory}}
+            return { info: { ...this.state.info, mandatory: !prevState.info.mandatory } }
         })
     };
 
@@ -42,7 +42,7 @@ class FieldEvent extends Component {
         this.setState({ inputValue });
     };
     changeOption = (option) => {
-        this.setState({ info:{...this.state.info,options:option} });
+        this.setState({ info: { ...this.state.info, options: option } });
     };
     handleKeyDown = (event) => {
         const { inputValue } = this.state;
@@ -51,10 +51,10 @@ class FieldEvent extends Component {
         switch (event.keyCode) {
             case 9:
             case 13:
-                this.setState({inputValue: '',info:{...this.state.info,options:[...this.state.info.options,createOption(value)]}});
+                this.setState({ inputValue: '', info: { ...this.state.info, options: [...this.state.info.options, createOption(value)] } });
                 event.preventDefault();
                 break;
-            default: {}
+            default: { }
         }
     };
 
@@ -62,26 +62,26 @@ class FieldEvent extends Component {
     saveField = () => {
         html.classList.remove('is-clipped');
         this.props.saveField(this.state.info);
-        this.setState({info:initModal});
+        this.setState({ info: initModal });
     };
 
     render() {
-        const { inputValue, info} = this.state;
+        const { inputValue, info } = this.state;
         return (
             <div className={`modal ${this.props.modal ? "is-active" : ""}`}>
-                <div className="modal-background"/>
+                <div className="modal-background" />
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">{this.props.edit?'Editar Dato':'Agregar Dato'}</p>
-                        <button className="delete is-large" aria-label="close" onClick={this.closeModal}/>
+                        <p className="modal-card-title">{this.props.edit ? 'Editar Dato' : 'Agregar Dato'}</p>
+                        <button className="delete is-large" aria-label="close" onClick={this.closeModal} />
                     </header>
                     <section className="modal-card-body">
                         <div className="field">
                             <label className="label required has-text-grey-light">Dato</label>
                             <div className="control">
                                 <input className="input" name={"label"} type="text"
-                                       placeholder="Ej: Celular" value={info.label}
-                                       onChange={this.handleChange}
+                                    placeholder="Ej: Celular" value={info.label}
+                                    onChange={this.handleChange}
                                 />
                             </div>
                         </div>
@@ -93,7 +93,7 @@ class FieldEvent extends Component {
                                         <select onChange={this.handleChange} name={'type'} value={info.type}>
                                             <option value={''}>Seleccione...</option>
                                             {
-                                                typeInputs.map((type,key)=>{
+                                                typeInputs.map((type, key) => {
                                                     return <option key={key} value={type.value}>{type.label}</option>
                                                 })
                                             }
@@ -105,14 +105,14 @@ class FieldEvent extends Component {
                                 info.type === 'list' && (
                                     <div className="control">
                                         <CreatableSelect
-                                            components={{DropdownIndicator: null,}}
+                                            components={{ DropdownIndicator: null, }}
                                             inputValue={inputValue}
                                             isClearable
                                             isMulti
                                             menuIsOpen={false}
                                             onChange={this.changeOption}
                                             onInputChange={this.handleInputChange}
-                                            onKeyDown={(e)=>{this.handleKeyDown(e)}}
+                                            onKeyDown={(e) => { this.handleKeyDown(e) }}
                                             placeholder="Escribe la opción y presiona Enter o Tab..."
                                             value={info.options}
                                         />
@@ -122,27 +122,27 @@ class FieldEvent extends Component {
                         </div>
                         <div className="field">
                             <input className="is-checkradio is-primary" id={`mandatoryModal`}
-                                   type="checkbox" name={`mandatory`} checked={info.mandatory}
-                                   onChange={this.changeFieldCheck}/>
+                                type="checkbox" name={`mandatory`} checked={info.mandatory}
+                                onChange={this.changeFieldCheck} />
                             <label htmlFor={`mandatoryModal`}>Obligatorio</label>
                         </div>
                         <div className="field">
                             <label className="label required has-text-grey-light">Descripción</label>
                             <textarea className="textarea" placeholder="descripción corta" name={'description'}
-                                      value={info.description} onChange={this.handleChange}/>
+                                value={info.description} onChange={this.handleChange} />
                         </div>
                         <div className="field column">
                             <label className="label required has-text-grey-light">Etiqueta</label>
                             <div className="control">
                                 <input className="input is-small" name={"name"} type="text"
-                                       placeholder="Nombre del campo" value={info.name}
-                                       onChange={this.handleChange}
+                                    placeholder="Nombre del campo" value={info.name}
+                                    onChange={this.handleChange}
                                 />
                             </div>
                         </div>
                     </section>
                     <footer className="modal-card-foot">
-                        <button className="button is-primary" onClick={this.saveField}>{this.props.edit?'Guardar':'Agregar'}</button>
+                        <button className="button is-primary" onClick={this.saveField}>{this.props.edit ? 'Guardar' : 'Agregar'}</button>
                     </footer>
                 </div>
             </div>
@@ -150,17 +150,17 @@ class FieldEvent extends Component {
     }
 }
 
-const createOption = (label) => ({label, value: label});
+const createOption = (label) => ({ label, value: label });
 
 //Función para convertir una frase en camelCase: "Hello New World" → "helloNewWorld"
-function toCapitalizeLower(str){
+function toCapitalizeLower(str) {
     const splitted = str.split(' ');
     const init = splitted[0].toLowerCase();
-    const end = splitted.slice(1).map(item=>{
+    const end = splitted.slice(1).map(item => {
         item = item.toLowerCase();
         return item.charAt(0).toUpperCase() + item.substr(1);
     });
-    return [init,...end].join('')
+    return [init, ...end].join('')
 }
 
 export default FieldEvent;
