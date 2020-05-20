@@ -14,6 +14,8 @@ class DatosModal extends Component {
         }
     }
 
+
+
     componentDidMount() {
         html.classList.add('is-clipped');
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
