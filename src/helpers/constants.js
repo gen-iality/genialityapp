@@ -83,6 +83,7 @@ export const rolPermissions = {
 };
 export const typeInputs = [
   { value: "text", label: "Texto" },
+  { value: "longtext", label: "Texto Largo" },
   { value: "email", label: "Correo" },
   { value: "number", label: "Numérico" },
   { value: "list", label: "Lista Opciones" },
