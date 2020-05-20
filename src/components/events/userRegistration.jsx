@@ -224,9 +224,9 @@ class UserRegistration extends Component {
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <label className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`} >
+            <p className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`} >
               {label}
-            </label>
+            </p>
           </React.Fragment>
         );
       }
@@ -280,11 +280,14 @@ class UserRegistration extends Component {
 
       return (
         <div key={"g" + key} name="field">
-          {m.type !== "boolean" && (
+          {type == "tituloseccion" && input}
+          {type != "tituloseccion" && m.type !== "boolean" && (
             <Form.Item label={(labelPosition != "izquierda" && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
             </Form.Item>
           )}
+
+
         </div>
       );
     });
