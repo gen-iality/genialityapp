@@ -14,31 +14,28 @@ class DatosModal extends Component {
         }
     }
 
-
-
     componentDidMount() {
         html.classList.add('is-clipped');
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
     }
 
-    genenareFieldNameFromLabel(value) {
-
-        const generatedFieldName = toCapitalizeLower(value).replace(/[^a-z0-9+]+/gi, "").normalize();
-
+    generateFieldNameForLabel(name, value) {
+        const generatedFieldName = toCapitalizeLower(value).normalize('NFD').replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
         console.log("ERROR", generatedFieldName);
-        this.setState({ info: { ...this.state.info, name: generatedFieldName } });
+        this.setState({
+            info: {
+                ...this.state.info, [name]: value, name: generatedFieldName
+            }
+        }, this.validForm);
     }
 
-
     handleChange = (e) => {
-
         let { name, value } = e.target;
         //Generamos el nombre del campo para la base de datos(name) a partir del label solo si el campo se esta creando
         if (name === 'label' && !this.state.info._id) {
-            this.genenareFieldNameFromLabel(value);
+            this.generateFieldNameForLabel(name, value)
         }
-
-        this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
+        else this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
     };
 
     validForm = () => {
@@ -106,14 +103,10 @@ class DatosModal extends Component {
                             />
                         </div>
                     </div>
-                    <div className="field column">
-                        <div className="control">
-                            <input className="input is-small" name={"name"} type="text"
-                                placeholder="Nombre del campo en base de datos" value={info.name} disabled={true}
-                                onChange={this.handleChange}
-                            />
-                        </div>
-                    </div>
+                    <input className="input is-small" name={"name"} type="text"
+                        placeholder="Nombre del campo en base de datos" value={info.name} disabled={true}
+                        onChange={this.handleChange}
+                    />
                     <div className="field">
                         <label className="label has-text-grey-light">Posición Nombre del Campo </label>
                         <div className="">
