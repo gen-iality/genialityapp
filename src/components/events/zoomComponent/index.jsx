@@ -13,9 +13,9 @@ const closeFullScreen = {
 
 const surveyButtons = {
   position: "absolute",
-  minWidth: "95%",
+  minWidth: "50%",
+  maxHeight: "90%",
   top: "37px",
-  left: "7px",
   text: {
     color: "#42A8FC",
   }
@@ -136,9 +136,9 @@ export default class ZoomComponent extends Component {
             </Button>
 
             {/* botón pantalla media */}
-            <Button onClick={this.goMedium}>
+            {/* <Button onClick={this.goMedium}>
               <SwitcherOutlined />
-            </Button>
+            </Button> */}
 
             {/* botón pantalla minimizada */}
             <Button onClick={this.goMinimize}>

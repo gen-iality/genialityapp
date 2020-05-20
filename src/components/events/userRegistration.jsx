@@ -291,7 +291,7 @@ class UserRegistration extends Component {
               <Card title="Formulario de registro" bodyStyle={textLeft}>
                 {/* //Renderiza el formulario */}
                 <Form
-                  {...layout}
+                  layout="vertical"
                   onFinish={this.onFinish}
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
@@ -304,15 +304,15 @@ class UserRegistration extends Component {
                 </Form>
               </Card>
             ) : (
-              <Card>
-                <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
-              </Card>
-            )}
+                <Card>
+                  <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+                </Card>
+              )}
           </Col>
         </>
       ) : (
-        <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
-      );
+          <UserInfoCard currentUser={currentUser} extraFields={extraFields} />
+        );
     return <Spin></Spin>;
   }
 }

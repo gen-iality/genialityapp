@@ -36,6 +36,7 @@ class VirtualConference extends Component {
         }
 
     }
+
     async componentDidMount() {
 
         if (!this.props.event) return;
