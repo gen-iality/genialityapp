@@ -4,8 +4,9 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert } from "antd";
+import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox } from "antd";
 
+const { TextArea } = Input;
 const { Text } = Typography;
 
 const textLeft = {
@@ -164,6 +165,7 @@ class UserRegistration extends Component {
   onFinish = async (values) => {
     let { initialValues, eventUsers } = this.state;
     const key = "registerUserService";
+    console.log("values", values);
 
     message.loading({ content: "Registrando Usuario", key });
 
@@ -225,6 +227,23 @@ class UserRegistration extends Component {
           </React.Fragment>
         );
       }
+
+      if (type === "longtext") {
+        input = (
+          <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />
+        );
+      }
+
+      const plainOptions = ['Apple', 'Pear', 'Orange'];
+      if (type === "multiplelist") {
+        console.log(m.options);
+        input = (
+          <Checkbox.Group options={m.options} onChange={(checkedValues) => { value = JSON.stringify(checkedValues) }} />
+        );
+      }
+
+
+
       if (type === "list") {
         input = m.options.map((o, key) => {
           return (

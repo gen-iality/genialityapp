@@ -87,6 +87,7 @@ export const typeInputs = [
   { value: "email", label: "Correo" },
   { value: "number", label: "Numérico" },
   { value: "list", label: "Lista Opciones" },
+  { value: "multiplelist", label: "Selección multiple" },
   { value: "date", label: "Fecha (DD/MM/YYYY)" },
   { value: "boolean", label: "Si/No" },
   { value: "file", label: "Archivo" },
