@@ -243,7 +243,6 @@ class UserRegistration extends Component {
       }
 
 
-
       if (type === "list") {
         input = m.options.map((o, key) => {
           return (
