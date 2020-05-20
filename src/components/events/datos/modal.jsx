@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { typeInputs } from "../../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
 import { Radio } from "antd";
+import { normalizeUnits } from "moment";
 
 
 const html = document.querySelector("html");
@@ -20,7 +21,8 @@ class DatosModal extends Component {
     }
 
     generateFieldNameForLabel(name, value) {
-        const generatedFieldName = toCapitalizeLower(value).normalize('NFD').replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+        //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
+        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9]+/gi, "")
         console.log("ERROR", generatedFieldName);
         this.setState({
             info: {
