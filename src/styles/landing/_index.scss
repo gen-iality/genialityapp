@@ -3,6 +3,10 @@ section.landing {
     color: $fontColor;
   }
 
+  div:not(.ant-form-item-explain) {
+    color: inherit;
+  }
+
   .ant-btn-primary:not([disabled]) {
     color: white;
   }

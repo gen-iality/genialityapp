@@ -17,6 +17,7 @@ const center = {
   margin: "0 auto",
 };
 
+
 // Grid para formulario
 const layout = {
   labelCol: { span: 6 },
@@ -24,7 +25,7 @@ const layout = {
 };
 
 const validateMessages = {
-  required: "${label} es requerido!",
+  required: "Este campo ${label} es obligatorio para poder enviar la información!",
   types: {
     email: "${label} no válido!",
   },
@@ -331,11 +332,13 @@ class UserRegistration extends Component {
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
                   {this.renderForm()}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
-                      Registrarse
-                    </Button>
-                  </Form.Item>
+                  <Row justify="center">
+                    <Form.Item wrapperCol={{ ...center, span: 12 }}>
+                      <Button type="primary" htmlType="submit">
+                        Registrarse
+                      </Button>
+                    </Form.Item>
+                  </Row>
                 </Form>
               </Card>
             ) : (
