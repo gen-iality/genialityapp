@@ -14,28 +14,37 @@ class DatosModal extends Component {
 
     componentDidMount() {
         html.classList.add('is-clipped');
+        console.log("INFO", this.props.info);
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
     }
 
+    genenareFieldNameFromLabel(value) {
+
+        const generatedFieldName = toCapitalizeLower(value).replace(/[^a-z0-9+]+/gi, "").normalize();
+
+        console.log("ERROR", generatedFieldName);
+        this.setState({ info: { ...this.state.info, name: generatedFieldName } });
+    }
+
+
     handleChange = (e) => {
+
         let { name, value } = e.target;
-        if (name === 'label') {
-            this.setState({
-                info: {
-                    ...this.state.info, [name]: value, name: toCapitalizeLower(value).normalize('NFD')
-                        .replace(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
-                        .normalize()
-                }
-            }, this.validForm);
+        //Generamos el nombre del campo para la base de datos(name) a partir del label solo si el campo se esta creando
+        if (name === 'label' && !this.state.info._id) {
+            this.genenareFieldNameFromLabel(value);
         }
-        else this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
+
+        this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
     };
+
     validForm = () => {
         const { name, label, type, options } = this.state.info;
         let valid = !(name.length > 0 && label.length > 0 && type !== "");
         if (type === "list") valid = !(!valid && options.length > 0);
         this.setState({ valid })
     };
+
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e) => {
         this.setState(prevState => {
