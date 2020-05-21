@@ -87,6 +87,9 @@ export const EventsApi = {
   landingEvent: async (id) => {
     return await Actions.getOne("/api/events/", id, true);
   },
+  hostAvailable: async () => {
+    return await Actions.get("api/events/zoomhost");
+  },
   invitations: async (id) => {
     return await Actions.getOne(`/api/events/${id}/`, "invitations");
   },

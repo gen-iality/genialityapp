@@ -35,6 +35,7 @@ class upload extends Component {
             nameFolder: "",
             matchUrl: ""
         }
+        this.destroy = this.destroy.bind(this)
     }
 
     async componentDidMount() {
@@ -42,11 +43,15 @@ class upload extends Component {
             matchUrl: this.props.matchUrl
         })
 
-        if(this.props.location.state.edit){
-            const {data} = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
-            this.setState({ data })
+        this.getDocuments();
+
+        if (this.props.location.state.edit) {
+            const { data } = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
+            if (data[0]) {
+                this.setState({ rol: data[0].permissionRol, unvisibleUsers: data[0].permissionUser, data })
+            }
         }
-        
+
 
         const folderName = await DocumentsApi.getOne(this.props.event._id, this.props.location.state.edit)
         this.setState({
@@ -66,6 +71,15 @@ class upload extends Component {
         })
         this.options()
         this.optionsRol()
+    }
+
+    async getDocuments() {
+        if (this.props.location.state.edit) {
+            const { data } = await DocumentsApi.getFiles(this.props.event._id, this.props.location.state.edit)
+            if (data[0]) {
+                this.setState({ rol: data[0].permissionRol, unvisibleUsers: data[0].permissionUser, data })
+            }
+        }
     }
 
     optionsRol = () => {
@@ -114,17 +128,11 @@ class upload extends Component {
             const savedData = await DocumentsApi.create(this.props.event._id, data)
             console.log(savedData)
             toast.success("Información Guardada")
-            setTimeout(function () {
-                window.location.href = matchUrl
-            }, 3000);
-
-
+            this.getDocuments();
         } else {
             this.saveNameFolder()
             toast.success("Información Guardada")
-            setTimeout(function () {
-                window.location.href = matchUrl
-            }, 3000);
+            this.getDocuments();
         }
     }
 
@@ -155,6 +163,7 @@ class upload extends Component {
 
         //Se envia a firebase y se pasa la validacion para poder saber el estado del documento
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, this.stateUploadFile, this.Wrong, this.succesUploadFile)
+        this.getDocuments();
     }
 
     saveNameFolder = async () => {
@@ -173,7 +182,9 @@ class upload extends Component {
         })
         this.setState({ file })
         toast.success("Documento Guardado")
-        // console.log(await this.state.file)
+        console.log(await this.state.file)
+        this.submit();
+        this.getDocuments();
     }
     stateUploadFile = (snapshot) => {
         //Se valida el estado del archivo si esta en pausa y esta subiendo
@@ -206,32 +217,32 @@ class upload extends Component {
 
     selectMultiple = (unvisibleUsers) => {
         this.setState({ unvisibleUsers });
-        // console.log(`Option selected:`, unvisibleUsers);
     }
     selectRol = (rol) => {
         this.setState({ rol });
         // console.log(`Option selected:`, rol);
     };
 
-    destroy(name, id, event) {
-        let information = DocumentsApi.deleteOne(event, id);
-        console.log(information);
+    async destroy(name, id, event) {
+        try {
+            let information = await DocumentsApi.deleteOne(event, id);
+            console.log(information);
 
-        const ref = firebase.storage().ref(`documents/${event}/`);
-        var desertRef = ref.child(`${name}`);
-        // console.log(desertRef)
-        // //Delete the file
-        desertRef.delete().then(function () {
-            //El dato se elimina aqui
-        }).catch(function (error) {
-            //Si no muestra el error
-            console.log(error)
-        });
-
-        toast.success("Información Eliminada")
-        setTimeout(function () {
-            window.location.reload()
-        }, 3000);
+            const ref = firebase.storage().ref(`documents/${event}/`);
+            var desertRef = ref.child(`${name}`);
+            // console.log(desertRef)
+            // Delete the file
+            desertRef.delete().then(function () {
+                //El dato se elimina aqui
+            }).catch(function (error) {
+                //Si no muestra el error
+                console.log(error)
+            });
+            toast.success("Información Eliminada")
+            this.getDocuments();
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     render() {
@@ -254,7 +265,7 @@ class upload extends Component {
 
                         <div className="column">
                             <label className="label">Permisos</label><br />
-                            <h4>Seleccione los roles que tendrán acceso a esta carpeta</h4>
+                            <h4>Roles que tendrán acceso a esta carpeta</h4>
                             <Select id="rol"
                                 value={this.state.rol}
                                 isMulti
@@ -263,7 +274,7 @@ class upload extends Component {
                                 onChange={this.selectRol} />
                         </div>
                         <div className="column">
-                            <h4>Seleccione los usuarios que tendrán acceso a esta carpeta</h4>
+                            <h4>Usuarios que tendrán acceso a esta carpeta</h4>
                             <Select
                                 id="selectMultiple"
                                 value={this.state.unvisibleUsers}
@@ -274,7 +285,7 @@ class upload extends Component {
                             />
                         </div>
 
-                        <div style={{float:"right"}}>
+                        <div style={{ float: "right" }}>
                             <div className="file has-name">
                                 <label className="label" className="file-label">
                                     <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
@@ -307,8 +318,8 @@ class upload extends Component {
                                             }
                                         </td>
                                         <td>
-                                            <a style={{marginLeft:"2%"}} href={document.file}>Descargar</a>
-                                            <button onClick={this.destroy.bind(document.publicada, document.name, document._id, this.props.event._id)}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            <a style={{ marginLeft: "2%" }} href={document.file}>Descargar</a>
+                                            <button onClick={() => { this.destroy(document.name, document._id, this.props.event._id) }}><span className="icon"><i className="fas fa-trash-alt" /></span></button>
                                         </td>
                                     </tr>
                                 ))

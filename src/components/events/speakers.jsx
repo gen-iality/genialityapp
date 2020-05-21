@@ -150,27 +150,32 @@ class Speakers extends Component {
               </p>
             </Col>
           </Row>
-
-          {/* Contenedor para descripcion 
+          {
+            infoSpeaker.description_activity === "true" && (
+              <div>
+                {/* Contenedor para descripcion 
                             Se mapea tambien las actividades por Speaker 
                         */}
-          {activityesBySpeaker.map((activities, key) => (
-            <div key={key}>
-              <Card style={{ padding: "24px 40px", top: "50px", marginBottom: "30px" }}>
-                <div>
-                  <p>
-                    <b>
-                      {Moment(activities.datetime_start).format("lll")} -{" "}
-                      {Moment(activities.datetime_end).format("lll")}
-                    </b>
-                  </p>
-                  <p>{activities.name}</p>
-                  <br />
-                  <div dangerouslySetInnerHTML={{ __html: activities.description }} />
-                </div>
-              </Card>
-            </div>
-          ))}
+                {activityesBySpeaker.map((activities, key) => (
+                  <div key={key}>
+                    <Card style={{ padding: "24px 40px", top: "50px", marginBottom: "30px" }}>
+                      <div>
+                        <p>
+                          <b>
+                            {Moment(activities.datetime_start).format("lll")} -{" "}
+                            {Moment(activities.datetime_end).format("lll")}
+                          </b>
+                        </p>
+                        <p>{activities.name}</p>
+                        <br />
+                        <div dangerouslySetInnerHTML={{ __html: activities.description }} />
+                      </div>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            )
+          }
         </Modal>
       </div>
     );
