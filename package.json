@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.0.5",
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/react-fontawesome": "^0.1.9",
     "@kapost/react-component-slider": "^1.0.5",
     "@seatsio/seatsio-react": "^6.0.0",
     "animate.css": "^4.1.0",

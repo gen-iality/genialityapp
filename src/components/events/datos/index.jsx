@@ -9,6 +9,7 @@ import DatosModal from "./modal";
 import Dialog from "../../modal/twoAction";
 import Loading from "../../loaders/loading";
 import { typeInputs } from "../../../helpers/constants";
+import DragDrop from "./dragDrop"
 
 class Datos extends Component {
     constructor(props) {
@@ -136,9 +137,9 @@ class Datos extends Component {
                     addAction={this.addField} addTitle={"Agregar dato"}>
                     {this.state.loading ? <Loading /> :
                         <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible", ""]}>
-                            <tr class="has-text-grey-light ">
-                                <td class="has-text-grey-light ">Email</td>
-                                <td class="has-text-grey-light ">Correo</td>
+                            <tr className="has-text-grey-light ">
+                                <td className="has-text-grey-light ">Email</td>
+                                <td className="has-text-grey-light ">Correo</td>
                                 <td>
                                     <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
                                         checked={true} disabled={true} />
@@ -147,8 +148,8 @@ class Datos extends Component {
                                 <td />
                             </tr>
                             <tr>
-                                <td class="has-text-grey-light ">Texto</td>
-                                <td class="has-text-grey-light ">Nombres</td>
+                                <td className="has-text-grey-light ">Texto</td>
+                                <td className="has-text-grey-light ">Nombres</td>
                                 <td>
                                     <input className="is-checkradio is-primary" type="checkbox" id={"mandName"}
                                         checked={true} disabled={true} />
@@ -184,6 +185,7 @@ class Datos extends Component {
                             })}
                         </EvenTable>
                     }
+                    <DragDrop list={fields} eventId={this.props.eventID} />
                 </EventContent>
                 {
                     modal &&
