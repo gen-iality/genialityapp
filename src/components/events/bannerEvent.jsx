@@ -21,80 +21,82 @@ function capitalize(val) {
 let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText, type_event }) => {
 
     return (
-        <BannerAnim prefixCls="banner-user">
-            <Element
-                prefixCls="banner-user-elem"
-                key="0"
-            >
-                <BgElement
-                    key="bg"
-                    className="bg"
-                    style={{
-                        backgroundImage: `url(${bgImage})`,
+        <>
+            {/* Imagen para el logo o marca del evento la cual solo se ve en mobile */}
+            <div className="container-logoBanner">
+                <img src={bgImage} alt="" />
+            </div>
+            <BannerAnim prefixCls="banner-user">
+                <Element
+                    prefixCls="banner-user-elem"
+                    key="0"
+                >
+                    <BgElement
+                        key="bg"
+                        className="bg"
+                        style={{
+                            backgroundImage: `url(${bgImage})`,
+                        }}
+                    />
 
-                    }}
-                />
 
-                <div className="banner-user-text-container"
-                    style={{
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+                    <div className="banner-user-text-container"
+                        style={{
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
 
-                    }}>
-                    <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
+                        }}>
+                        <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
 
-                        {/* Fecha del evento */}
-                        <div>
-                            {
-                                dateStart === dateEnd ?
-                                    <span>{Moment(dateEnd).format("DD")}{" de "} {capitalize(dateEnd)}</span>
-                                    :
-                                    <div>
-                                        <span>Del {Moment(dateStart).format("DD")}</span>
-                                        <span> al {Moment(dateEnd).format("DD")}{" "} {capitalize(dateEnd)}</span>
-                                    </div>
-                            }
+                            {/* Fecha del evento */}
+                            <div>
+                                {
+                                    dateStart === dateEnd ?
+                                        <span>{Moment(dateEnd).format("DD")}{" de "} {capitalize(dateEnd)}</span>
+                                        :
+                                        <div>
+                                            <span>Del {Moment(dateStart).format("DD")}</span>
+                                            <span> al {Moment(dateEnd).format("DD")}{" "} {capitalize(dateEnd)}</span>
+                                        </div>
+                                }
 
-                        </div>
+                            </div>
 
-                        {/* Nombre del evento */}
-                        <span>{title}</span>
+                            {/* Nombre del evento */}
+                            <span>{title}</span>
 
-                    </TweenOne>
+                        </TweenOne>
 
-                    <TweenOne className="banner-user-text"
-                        animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
-                    >
+                        <TweenOne className="banner-user-text"
+                            animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
+                        >
 
-                        {/* Quien lo organiza */}
-                        <div>
-                            <span>Organizado por: {organizado}</span>
-                        </div>
+                            {/* Quien lo organiza */}
+                            <div>
+                                <span>Organizado por: {organizado}</span>
+                            </div>
 
-                        {/* Lugar del evento */}
-                        <div>
-                            {
-                                console.log(type_event),
-                                type_event === "onlineEvent" ?
-                                    <div>
-                                        <span><LaptopOutlined style={{ marginRight: "2%" }} />Era virtual</span>
-                                    </div>
-                                    :
-                                    <span><EnvironmentOutlined /> {place}</span>
-                            }
+                            {/* Lugar del evento */}
+                            <div>
+                                {
+                                    console.log(type_event),
+                                    type_event === "onlineEvent" ?
+                                        <div>
+                                            <span><LaptopOutlined style={{ marginRight: "2%" }} />Era virtual</span>
+                                        </div>
+                                        :
+                                        <span><EnvironmentOutlined /> {place}</span>
+                                }
 
-                        </div>
-                    </TweenOne>
+                            </div>
+                        </TweenOne>
 
-                </div>
+                    </div>
 
-                {/* Imagen opcional para el logo o marca del evento  */}
-                {/* <div className="container-logoBanner">
-                    <img src="https://storage.googleapis.com/herba-images/evius/events/97XuEjJwHIkAyoAO1PreHOMUKMgFfM6MRmyEB5PS.jpeg" alt="" />
-                </div> */}
-            </Element>
+                </Element>
 
-        </BannerAnim>
+            </BannerAnim>
+        </>
     );
 
 }

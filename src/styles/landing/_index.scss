@@ -424,19 +424,26 @@ section.landing {
 // Estilos del banner
 
 .banner-anim {
-  min-height: 25em !important;
+  min-height: 23em !important;
   max-height: 60em !important;
+  @media only screen and (min-width: 1500px) {
+    min-height: 31em !important;
+  }
+  @media only screen and (min-width: $breakpoint-tablet) and (max-width: 1500px) {
+    min-height: 25em !important;
+  }
 
   .banner-user-elem {
     text-align: left;
     color: #fff;
-    position: absolute !important;
     overflow: hidden;
     padding: 0 6%;
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    @media only screen and (min-width: 500px) {
+      display: flex !important;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
     .bg {
       background-size: cover;
       background-position: right center;
@@ -450,28 +457,14 @@ section.landing {
         background-position: left center;
       }
     }
-    .container-logoBanner {
-      text-align: end;
-      img {
-        max-width: 100%;
-        height: auto;
-      }
-      @media only screen and (max-width: $breakpoint-mobile) {
-        display: none;
-      }
-    }
   }
 
   .banner-user-text-container {
     background-color: rgba(255, 255, 255, 0.829);
-    width: 100%;
+    width: 50%;
 
-    @media only screen and (min-width: $breakpoint-mobile) {
-      width: 60%;
-    }
-
-    @media only screen and (min-width: $breakpoint-tablet) {
-      max-width: 45%;
+    @media only screen and (max-width: 500px) {
+      width: 100%;
     }
   }
 
@@ -493,5 +486,16 @@ section.landing {
     top: 0;
     left: 0;
     overflow: hidden;
+  }
+}
+
+.container-logoBanner {
+  text-align: end;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  @media only screen and (min-width: 500px) {
+    display: none;
   }
 }
