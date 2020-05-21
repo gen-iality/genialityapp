@@ -89,7 +89,7 @@ class DragDrop extends Component {
                     onDragEnd={this.onDragEnd}
                     onDragUpdate={this.onDragUpdate}
                 >
-                    <Title level={4}>Organiza los datos del evento</Title>
+                    <Title level={4}>Organiza los datos de los asistentes</Title>
                     <Droppable droppableId="droppable" type="user_properties">
                         {(provided, snapshot) => (
                             <div
