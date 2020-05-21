@@ -31,8 +31,7 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
                     className="bg"
                     style={{
                         backgroundImage: `url(${bgImage})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
+
                     }}
                 />
 

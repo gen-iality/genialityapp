@@ -424,12 +424,8 @@ section.landing {
 // Estilos del banner
 
 .banner-anim {
-  min-height: 52vh !important;
-  max-height: 60vh !important;
-
-  // .banner-user {
-  //   height: 55vh;
-  // }
+  min-height: 25em !important;
+  max-height: 60em !important;
 
   .banner-user-elem {
     text-align: left;
@@ -441,6 +437,19 @@ section.landing {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    .bg {
+      background-size: cover;
+      background-position: right center;
+      background-repeat: no-repeat;
+      @media only screen and (max-width: $breakpoint-tablet) {
+        background-size: 100vw 80%;
+        background-position: center center;
+      }
+      @media only screen and (max-width: 500px) {
+        background-size: cover;
+        background-position: left center;
+      }
+    }
     .container-logoBanner {
       text-align: end;
       img {
@@ -456,14 +465,13 @@ section.landing {
   .banner-user-text-container {
     background-color: rgba(255, 255, 255, 0.829);
     width: 100%;
-    // top: 16%;
 
     @media only screen and (min-width: $breakpoint-mobile) {
       width: 60%;
     }
 
     @media only screen and (min-width: $breakpoint-tablet) {
-      max-width: 48%;
+      max-width: 45%;
     }
   }
 
