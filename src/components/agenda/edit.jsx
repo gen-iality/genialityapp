@@ -248,12 +248,13 @@ class AgendaEdit extends Component {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
         }
-        if (this.state.host_id) await setHostState(this.state.host_id, false);
+        // if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess("Información guardada");
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
+        console.log(e)
       }
     }
   };
