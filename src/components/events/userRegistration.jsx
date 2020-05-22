@@ -27,7 +27,7 @@ const layout = {
 const validateMessages = {
   required: "Este campo ${label} es obligatorio para completar el registro.",
   types: {
-    email: "${label} no vá¡lido!",
+    email: "${label} no válido!",
   },
 };
 
@@ -338,6 +338,7 @@ class UserRegistration extends Component {
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
                   {this.renderForm()}
+                  <br />
                   <Row justify="center">
                     <Form.Item wrapperCol={{ ...center, span: 12 }}>
                       <Button type="primary" htmlType="submit">
