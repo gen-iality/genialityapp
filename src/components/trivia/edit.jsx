@@ -155,7 +155,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -167,37 +167,7 @@ class triviaEdit extends Component {
   addNewQuestion = () => {
     let { listQuestions, idSurvey } = this.state;
     let uid = this.generateUUID();
-    this.setState({
-      listQuestions: [
-        ...listQuestions,
-        <FormQuestions
-          key={uid}
-          questionId={uid}
-          eventId={this.props.event._id}
-          surveyId={idSurvey}
-          removeQuestion={this.removeQuestion}
-        />,
-      ],
-    });
-  };
-
-  // Funcion para remover el formulario de las preguntas
-  removeQuestion = (item, newQuestion) => {
-    let { listQuestions, question } = this.state;
-    let newArray = listQuestions.filter((question) => question.key != item);
-
-    // Este condicional sirve para actualizar el estado local
-    // Solo se invoca al crear una nueva pregunta y despues se agrega la pregunta creada a la tabla
-    if (newQuestion) {
-      // Se iteran las opciones y se asigna el texto para el tipo de pregunta
-      selectOptions.forEach((option) => {
-        if (newQuestion.type == option.value) newQuestion.type = option.text;
-      });
-
-      question = [...question, newQuestion];
-      this.setState({ question });
-    }
-    this.setState({ listQuestions: newArray });
+    this.setState({ visibleModal: true, currentQuestion: { id: uid } });
   };
 
   // -------------------- Funciones para los servicios -----------------------------------
@@ -225,7 +195,7 @@ class triviaEdit extends Component {
 
     currentQuestion = question.find((infoQuestion) => infoQuestion.id == questionId);
     currentQuestion["questionIndex"] = questionIndex;
-    currentQuestion["questionOptions"] = currentQuestion.choices.length;
+    currentQuestion["questionOptions"] = currentQuestion.choices ? currentQuestion.choices.length : 0;
 
     this.setState({ visibleModal: true, currentQuestion });
   };
@@ -237,7 +207,7 @@ class triviaEdit extends Component {
     }
   };
 
-  closeModal = (info) => {
+  closeModal = (info, state) => {
     let { question } = this.state;
 
     // Condicional que actualiza el estado local
@@ -252,8 +222,20 @@ class triviaEdit extends Component {
         if (data.type == option.value) data.type = option.text;
       });
 
-      updateQuestion.splice(questionIndex, 1, data);
-      this.setState({ question: updateQuestion });
+      switch (state) {
+        case "created":
+          updateQuestion.push(data);
+          this.setState({ question: updateQuestion });
+          break;
+
+        case "updated":
+          updateQuestion.splice(questionIndex, 1, data);
+          this.setState({ question: updateQuestion });
+          break;
+
+        default:
+          break;
+      }
     }
     this.setState({ visibleModal: false, currentQuestion: {}, confirmLoading: false });
   };
@@ -393,12 +375,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-              <div className="column">
-                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                  Guardar
+            <div className="column">
+              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                Guardar
               </button>
-              </div>
-            )}
+            </div>
+          )}
 
           {this.state.idSurvey && (
             <div>
@@ -409,19 +391,7 @@ class triviaEdit extends Component {
                   </Button>
                 </Col>
               </Row>
-              {this.state.listQuestions.map((formQuestion) => (
-                <div key={formQuestion.key}>
-                  <Divider orientation="left">Pregunta</Divider>
-                  <Row>
-                    <Col>
-                      <Button span={6} offset={6} onClick={() => this.removeQuestion(formQuestion.key)}>
-                        Cancelar
-                      </Button>
-                    </Col>
-                  </Row>
-                  {formQuestion}
-                </div>
-              ))}
+
               <Table style={{ marginTop: "5%" }} dataSource={question} columns={columns} />
               <Modal
                 width={700}

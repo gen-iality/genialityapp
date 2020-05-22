@@ -60,10 +60,18 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     const exclude = ({ questionOptions, ...rest }) => rest;
 
+    if (questionIndex === undefined) {
+      return SurveysApi.createQuestion(eventId, surveyId, exclude(values)).then((response) => {
+        form.resetFields();
+        closeModal({ questionIndex, data: exclude(values) }, "created");
+        toast.success("Pregunta creada");
+      });
+    }
+
     SurveysApi.editQuestion(eventId, surveyId, questionIndex, exclude(values))
       .then(() => {
         form.resetFields();
-        closeModal({ questionIndex, data: exclude(values) });
+        closeModal({ questionIndex, data: exclude(values) }, "updated");
         toast.success("pregunta actualizada");
       })
       .catch((err) => toast.error("No se pudo actualizar la pregunta: ", err));
@@ -85,12 +93,26 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
               key={`field${key}${field.name}`}
               name={field.name}
               label={field.label}
-              rules={[{ required: true }]}>
+              rules={[
+                { required: true },
+                {
+                  validator: fieldValidation,
+                },
+              ]}>
               <Input />
             </Form.Item>
           ) : (
             field.name != "questionOptions" && (
-              <Form.Item key={`field${key}`} name={field.name} label={field.label} rules={[{ required: true }]}>
+              <Form.Item
+                key={`field${key}`}
+                name={field.name}
+                label={field.label}
+                rules={[
+                  { required: true },
+                  {
+                    validator: fieldValidation,
+                  },
+                ]}>
                 <Select placeholder="Seleccione una Opcion">
                   {field.selectOptions.map((option, index) =>
                     option.text ? (
