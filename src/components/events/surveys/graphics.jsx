@@ -16,7 +16,7 @@ class Graphics extends Component {
       currentPage: 1,
       dataFrame,
       chart: {},
-      chartCreated: false
+      chartCreated: false,
     };
   }
 
@@ -28,7 +28,7 @@ class Graphics extends Component {
     this.setState({ dataSurvey }, this.mountChart);
   };
 
-  setCurrentPage = page => {
+  setCurrentPage = (page) => {
     this.setState({ currentPage: page }, this.mountChart);
   };
 
@@ -47,7 +47,7 @@ class Graphics extends Component {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
       dataFrame.data.labels = options.choices;
-      dataFrame.data.datasets[0].data = Object.values(answer_count);
+      dataFrame.data.datasets[0].data = Object.values(answer_count || []);
       dataFrame.data.datasets[0].label = options.title;
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
@@ -58,7 +58,7 @@ class Graphics extends Component {
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = options.choices;
-      chart.data.datasets[0].data = Object.values(answer_count);
+      chart.data.datasets[0].data = Object.values(answer_count || []);
       dataFrame.data.datasets[0].label = options.title;
 
       chart.update();
