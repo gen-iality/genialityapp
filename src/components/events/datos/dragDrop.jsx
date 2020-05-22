@@ -20,19 +20,25 @@ class DragDrop extends Component {
         this.submit = this.submit.bind(this);
     }
 
-    async componentDidMount() {
-        const { eventId } = this.props
-        let user_properties
-        user_properties = await EventFieldsApi.getAll(eventId)
-        this.setState({ user_properties })
-
+    componentDidUpdate(prevProps) {
+        if (this.props.list !== prevProps.list) {
+            this.setState({ user_properties: this.props.list })
+        }
     }
+
+    // async componentDidMount() {
+    //     const { eventId } = this.props
+    //     let user_properties
+    //     user_properties = await EventFieldsApi.getAll(eventId)
+    //     this.setState({ user_properties })
+
+    // }
 
     //Funcion para guardar el orden de los datos
     async submit() {
-        console.log(this.state)
-        const info = await Actions.put(`api/events/${this.props.eventId}`, this.state.properties);
-        console.log(info)
+        console.log(this.state.properties)
+        // await Actions.put(`api/events/${this.props.eventId}`, this.state.properties);
+
 
         notification.open({
             message: 'Información salvada',
