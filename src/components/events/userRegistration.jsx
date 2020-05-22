@@ -255,23 +255,7 @@ class UserRegistration extends Component {
       }
 
       if (type === "boolean") {
-        input = (
-          <React.Fragment>
-            <Checkbox key={key} name={name} value={value} >{label}</Checkbox><a onClick={this.showModal}></a>
-
-
-            <Modal
-              title="Basic Modal"
-              visible={this.state.visible}
-              onOk={this.handleOk}
-              onCancel={this.handleCancel}
-            >
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-            </Modal>
-          </React.Fragment>
-        );
+        input = <Checkbox key={key} name={name}>{label}</Checkbox>;
       }
 
 
@@ -315,8 +299,10 @@ class UserRegistration extends Component {
         <div key={"g" + key} name="field">
           {type == "tituloseccion" && input}
           {type != "tituloseccion" && (
-            <Form.Item label={((labelPosition == "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
-              {input}
+            <>
+              <Form.Item label={((labelPosition == "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+                {input}
+              </Form.Item>
               {description && description.length < 500 && (<p>{description}</p>)}
               {description && description.length > 500 &&
                 (<Collapse defaultActiveKey={['0']}>
@@ -324,7 +310,7 @@ class UserRegistration extends Component {
                     <p><pre>{description}</pre></p>
                   </Panel>
                 </Collapse>)}
-            </Form.Item>
+            </>
           )}
         </div>
       );
