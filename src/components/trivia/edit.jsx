@@ -195,7 +195,6 @@ class triviaEdit extends Component {
 
     currentQuestion = question.find((infoQuestion) => infoQuestion.id == questionId);
     currentQuestion["questionIndex"] = questionIndex;
-    currentQuestion["questionOptions"] = currentQuestion.choices ? currentQuestion.choices.length : 0;
 
     this.setState({ visibleModal: true, currentQuestion });
   };
