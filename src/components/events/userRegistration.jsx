@@ -4,7 +4,7 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Collapse, Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox, Modal } from "antd";
+import { Collapse, Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox } from "antd";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Text } = Typography;
@@ -25,9 +25,9 @@ const layout = {
 };
 
 const validateMessages = {
-  required: "Este campo ${label} es obligatorio para poder enviar la información!",
+  required: "Este campo ${label} es obligatorio para completar el registro.",
   types: {
-    email: "${label} no válido!",
+    email: "${label} no vá¡lido!",
   },
 };
 
@@ -94,30 +94,9 @@ class UserRegistration extends Component {
       registeredUser: false,
       submittedForm: false,
       successMessage: null,
-      visible: false,
     };
   }
 
-
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  handleOk = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
-
-  handleCancel = e => {
-    console.log(e);
-    this.setState({
-      visible: false,
-    });
-  };
   // Agrega el nombre del input
 
   addDefaultLabels = (extraFields) => {
@@ -168,7 +147,7 @@ class UserRegistration extends Component {
   };
 
   async componentDidMount() {
-    // Trae la información del evento
+    // Trae la informaciÃ³n del evento
     const event = await EventsApi.getOne(this.props.eventId);
 
     const eventUsers = await UsersApi.getAll(this.props.eventId, "?pageSize=10000");
@@ -226,7 +205,7 @@ class UserRegistration extends Component {
     // console.log("este es el mensaje:", textMessage);
   };
 
-  // Función que crea los input del componente
+  // FunciÃ³n que crea los input del componente
   renderForm = () => {
     const { extraFields } = this.state;
 
@@ -237,8 +216,8 @@ class UserRegistration extends Component {
       let name = m.name;
       let label = m.label;
       let mandatory = m.mandatory;
-      let labelPosition = m.labelPosition;
       let description = m.description;
+      let labelPosition = m.labelPosition;
       let target = name;
       let value = this.state.user[target];
       let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? (mandatory ? "* " : "") + label : ""} type={type} key={key} name={name} value={value} />;
@@ -256,24 +235,9 @@ class UserRegistration extends Component {
 
       if (type === "boolean") {
         input = (
-          <React.Fragment>
-            <Checkbox key={key} name={name} value={value} >{label}</Checkbox><a onClick={this.showModal}></a>
-
-
-            <Modal
-              title="Basic Modal"
-              visible={this.state.visible}
-              onOk={this.handleOk}
-              onCancel={this.handleCancel}
-            >
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-            </Modal>
-          </React.Fragment>
+          <Checkbox key={key} name={name} value={value} onChange={(e) => value = e.target.checked}>{label}</Checkbox>
         );
       }
-
 
       if (type === "longtext") {
         input = (
@@ -315,8 +279,10 @@ class UserRegistration extends Component {
         <div key={"g" + key} name="field">
           {type == "tituloseccion" && input}
           {type != "tituloseccion" && (
-            <Form.Item label={((labelPosition == "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
-              {input}
+            <>
+              <Form.Item label={((labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+                {input}
+              </Form.Item>
               {description && description.length < 500 && (<p>{description}</p>)}
               {description && description.length > 500 &&
                 (<Collapse defaultActiveKey={['0']}>
@@ -324,9 +290,12 @@ class UserRegistration extends Component {
                     <p><pre>{description}</pre></p>
                   </Panel>
                 </Collapse>)}
-            </Form.Item>
-          )}
-        </div>
+            </>
+          )
+          }
+
+
+        </div >
       );
     });
     return formUI;
@@ -369,7 +338,6 @@ class UserRegistration extends Component {
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
                   {this.renderForm()}
-
                   <Row justify="center">
                     <Form.Item wrapperCol={{ ...center, span: 12 }}>
                       <Button type="primary" htmlType="submit">
