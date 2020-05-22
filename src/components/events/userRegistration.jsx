@@ -350,7 +350,6 @@ class UserRegistration extends Component {
                 {/* //Renderiza el formulario */}
                 <Form
                   layout="vertical"
-                  scrollToFirstError={true}
                   onFinish={this.onFinish}
                   validateMessages={validateMessages}
                   initialValues={initialValues}
