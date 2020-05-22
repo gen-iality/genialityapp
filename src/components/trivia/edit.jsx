@@ -152,7 +152,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -230,7 +230,7 @@ class triviaEdit extends Component {
   sendForm = () => {
     this.setState({ confirmLoading: true });
     if (this.formEditRef.current) {
-      this.formEditRef.current.submitWithQuestions();
+      this.formEditRef.current.submit();
     }
   };
 
@@ -377,12 +377,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
               </button>
-            </div>
-          )}
+              </div>
+            )}
 
           {this.state.idSurvey && (
             <div>

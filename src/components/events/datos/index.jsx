@@ -74,8 +74,12 @@ class Datos extends Component {
         }
     };
     //Cambiar obligatorio
-    changeCheck = async (uuid) => {
-        //await EventFieldsApi.editOne({mandatory}, uuid, this.eventID);
+    changeCheck = async (uuid, field) => {
+        let mandatory = field ? false : true
+        const info = await EventFieldsApi.editOne({ mandatory }, uuid, this.eventID);
+        console.log(info)
+        this.fetchFields()
+
         this.setState(prevState => {
             const list = prevState.fields.map(field => {
                 if (field.uuid === uuid) {
@@ -85,6 +89,7 @@ class Datos extends Component {
             });
             return { fields: list }
         })
+        this.fetchFields()
     };
     //Abrir modal para editar dato
     editField = (info) => {
@@ -129,6 +134,14 @@ class Datos extends Component {
         console.log(error.config);
     };
 
+    async toggleChange(id, field) {
+        let visible = field ? false : true
+        console.log(visible, id)
+        const info = await EventFieldsApi.editOne({ visible }, id, this.eventID);
+        console.log(info)
+        this.fetchFields()
+    }
+
     render() {
         const { fields, modal, edit, info } = this.state;
         return (
@@ -164,14 +177,14 @@ class Datos extends Component {
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
                                             type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                            onChange={event => this.changeCheck(field.uuid)} />
+                                            onChange={event => this.changeCheck(field.uuid ? field.uuid : field._id, field.mandatory)} />
                                         <label htmlFor={`mandatory${field.label}`}></label>
                                     </td>
 
                                     <td>
                                         <input className="is-checkradio is-primary" id={`visible${field.label}`}
-                                            type="checkbox" disabled name={`visible`} checked={field.visible}
-                                            onChange={event => this.changeCheck(field.uuid)} />
+                                            type="checkbox" name={`visible`} checked={field.visible}
+                                            onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visible)} />
                                         <label htmlFor={`visible${field.label}`}></label>
                                     </td>
 
