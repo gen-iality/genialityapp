@@ -9,6 +9,7 @@ import DatosModal from "./modal";
 import Dialog from "../../modal/twoAction";
 import Loading from "../../loaders/loading";
 import { typeInputs } from "../../../helpers/constants";
+import DragDrop from "./dragDrop"
 
 class Datos extends Component {
     constructor(props) {
@@ -73,8 +74,12 @@ class Datos extends Component {
         }
     };
     //Cambiar obligatorio
-    changeCheck = async (uuid) => {
-        //await EventFieldsApi.editOne({mandatory}, uuid, this.eventID);
+    changeCheck = async (uuid, field) => {
+        let mandatory = field ? false : true
+        const info = await EventFieldsApi.editOne({ mandatory }, uuid, this.eventID);
+        console.log(info)
+        this.fetchFields()
+
         this.setState(prevState => {
             const list = prevState.fields.map(field => {
                 if (field.uuid === uuid) {
@@ -84,6 +89,7 @@ class Datos extends Component {
             });
             return { fields: list }
         })
+        this.fetchFields()
     };
     //Abrir modal para editar dato
     editField = (info) => {
@@ -128,6 +134,14 @@ class Datos extends Component {
         console.log(error.config);
     };
 
+    async toggleChange(id, field) {
+        let visible = field ? false : true
+        console.log(visible, id)
+        const info = await EventFieldsApi.editOne({ visible }, id, this.eventID);
+        console.log(info)
+        this.fetchFields()
+    }
+
     render() {
         const { fields, modal, edit, info } = this.state;
         return (
@@ -136,9 +150,9 @@ class Datos extends Component {
                     addAction={this.addField} addTitle={"Agregar dato"}>
                     {this.state.loading ? <Loading /> :
                         <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible", ""]}>
-                            <tr class="has-text-grey-light ">
-                                <td class="has-text-grey-light ">Email</td>
-                                <td class="has-text-grey-light ">Correo</td>
+                            <tr className="has-text-grey-light ">
+                                <td className="has-text-grey-light ">Email</td>
+                                <td className="has-text-grey-light ">Correo</td>
                                 <td>
                                     <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
                                         checked={true} disabled={true} />
@@ -147,8 +161,8 @@ class Datos extends Component {
                                 <td />
                             </tr>
                             <tr>
-                                <td class="has-text-grey-light ">Texto</td>
-                                <td class="has-text-grey-light ">Nombres</td>
+                                <td className="has-text-grey-light ">Texto</td>
+                                <td className="has-text-grey-light ">Nombres</td>
                                 <td>
                                     <input className="is-checkradio is-primary" type="checkbox" id={"mandName"}
                                         checked={true} disabled={true} />
@@ -163,14 +177,14 @@ class Datos extends Component {
                                     <td>
                                         <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
                                             type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                            onChange={event => this.changeCheck(field.uuid)} />
+                                            onChange={event => this.changeCheck(field.uuid ? field.uuid : field._id, field.mandatory)} />
                                         <label htmlFor={`mandatory${field.label}`}></label>
                                     </td>
 
                                     <td>
                                         <input className="is-checkradio is-primary" id={`visible${field.label}`}
-                                            type="checkbox" disabled name={`visible`} checked={field.visible}
-                                            onChange={event => this.changeCheck(field.uuid)} />
+                                            type="checkbox" name={`visible`} checked={field.visible}
+                                            onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visible)} />
                                         <label htmlFor={`visible${field.label}`}></label>
                                     </td>
 
@@ -184,6 +198,7 @@ class Datos extends Component {
                             })}
                         </EvenTable>
                     }
+                    <DragDrop list={fields} eventId={this.props.eventID} />
                 </EventContent>
                 {
                     modal &&
