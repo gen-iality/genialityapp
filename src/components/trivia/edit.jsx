@@ -25,6 +25,7 @@ class triviaEdit extends Component {
       publish: "",
       allow_anonymous_answers: "",
       openSurvey: false,
+      allow_gradable_survey: false,
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -62,6 +63,7 @@ class triviaEdit extends Component {
         survey: Update.survey,
         publish: Update.publish,
         openSurvey: Update.open || "false",
+        allow_gradable_survey: Update.allow_gradable_survey || "false",
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
@@ -127,6 +129,7 @@ class triviaEdit extends Component {
       publish: this.state.publish === "true" ? "true" : "false",
       allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
       open: this.state.openSurvey,
+      allow_gradable_survey: this.state.allow_gradable_survey,
       activity_id: this.state.activity_id,
     };
     console.log(data);
@@ -274,6 +277,7 @@ class triviaEdit extends Component {
       confirmLoading,
       currentQuestion,
       allow_anonymous_answers,
+      allow_gradable_survey,
     } = this.state;
     const columns = [
       {
@@ -349,6 +353,18 @@ class triviaEdit extends Component {
               <Switch
                 checked={openSurvey == "true"}
                 onChange={(checked) => this.setState({ openSurvey: checked ? "true" : "false" })}
+              />
+            </div>
+          )}
+
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Encuesta calificable
+              </label>
+              <Switch
+                checked={allow_gradable_survey == "true"}
+                onChange={(checked) => this.setState({ allow_gradable_survey: checked ? "true" : "false" })}
               />
             </div>
           )}
