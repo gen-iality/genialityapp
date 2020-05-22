@@ -4,8 +4,8 @@ import API, { EventsApi, UsersApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
-import { Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox } from "antd";
-
+import { Collapse, Form, Input, Button, Card, Col, Row, Switch, Spin, message, Typography, Result, Alert, Checkbox, Modal } from "antd";
+const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Text } = Typography;
 
@@ -94,9 +94,30 @@ class UserRegistration extends Component {
       registeredUser: false,
       submittedForm: false,
       successMessage: null,
+      visible: false,
     };
   }
 
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
   // Agrega el nombre del input
 
   addDefaultLabels = (extraFields) => {
@@ -217,6 +238,7 @@ class UserRegistration extends Component {
       let label = m.label;
       let mandatory = m.mandatory;
       let labelPosition = m.labelPosition;
+      let description = m.description;
       let target = name;
       let value = this.state.user[target];
       let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? (mandatory ? "* " : "") + label : ""} type={type} key={key} name={name} value={value} />;
@@ -235,13 +257,23 @@ class UserRegistration extends Component {
       if (type === "boolean") {
         input = (
           <React.Fragment>
-            <input name={name} id={name} className="is-checkradio is-primary is-rtl" type="checkbox" checked={value} />
-            <label className={`label has-text-grey-light is-capitalized ${mandatory ? "required" : ""}`} htmlFor={name}>
-              {name}
-            </label>
+            <Checkbox key={key} name={name} value={value} >{label}</Checkbox><a onClick={this.showModal}></a>
+
+
+            <Modal
+              title="Basic Modal"
+              visible={this.state.visible}
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}
+            >
+              <p>Some contents...</p>
+              <p>Some contents...</p>
+              <p>Some contents...</p>
+            </Modal>
           </React.Fragment>
         );
       }
+
 
       if (type === "longtext") {
         input = (
@@ -282,13 +314,18 @@ class UserRegistration extends Component {
       return (
         <div key={"g" + key} name="field">
           {type == "tituloseccion" && input}
-          {type != "tituloseccion" && m.type !== "boolean" && (
-            <Form.Item label={(labelPosition != "izquierda" && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+          {type != "tituloseccion" && (
+            <Form.Item label={((labelPosition == "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
               {input}
+              {description && description.length < 500 && (<p>{description}</p>)}
+              {description && description.length > 500 &&
+                (<Collapse defaultActiveKey={['0']}>
+                  <Panel header="Politica de privacidad, terminos y condiciones" key="1">
+                    <p><pre>{description}</pre></p>
+                  </Panel>
+                </Collapse>)}
             </Form.Item>
           )}
-
-
         </div>
       );
     });
@@ -332,6 +369,7 @@ class UserRegistration extends Component {
                   validateMessages={validateMessages}
                   initialValues={initialValues}>
                   {this.renderForm()}
+
                   <Row justify="center">
                     <Form.Item wrapperCol={{ ...center, span: 12 }}>
                       <Button type="primary" htmlType="submit">
