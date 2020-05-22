@@ -235,7 +235,7 @@ class UserRegistration extends Component {
 
       if (type === "boolean") {
         input = (
-          <Checkbox key={key} name={name} value={value} onChange={(e) => value = e.target.checked}>{label}</Checkbox>
+          <Checkbox key={key} name={name} onChange={(e) => { value = e.target.checked }}>{label}</Checkbox>
         );
       }
 
@@ -280,7 +280,7 @@ class UserRegistration extends Component {
           {type == "tituloseccion" && input}
           {type != "tituloseccion" && (
             <>
-              <Form.Item label={((labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+              <Form.Item valuePropName={(type == "boolean") ? 'checked' : 'value'} label={((labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
                 {input}
               </Form.Item>
               {description && description.length < 500 && (<p>{description}</p>)}
