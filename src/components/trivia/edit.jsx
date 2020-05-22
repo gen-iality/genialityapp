@@ -415,6 +415,7 @@ class triviaEdit extends Component {
                     surveyId={this.state.idSurvey}
                     closeModal={this.closeModal}
                     toggleConfirmLoading={this.toggleConfirmLoading}
+                    gradableSurvey={allow_gradable_survey}
                   />
                 )}
               </Modal>

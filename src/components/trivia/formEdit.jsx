@@ -26,18 +26,21 @@ const validateMessages = {
   },
 };
 
-const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading }, ref) => {
+const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirmLoading, gradableSurvey }, ref) => {
   const [defaultValues, setDefaultValues] = useState({});
   const [questionId, setQuestionId] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [allowGradableSurvey, setAllowGradableSurvey] = useState(false);
   const [value, setValue] = useState(null);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log("valuesQuestion:", valuesQuestion);
+    console.log("valuesQuestion:", valuesQuestion, gradableSurvey);
+    let state = gradableSurvey == "true" ? true : false;
 
     setDefaultValues(valuesQuestion);
+    setAllowGradableSurvey(state);
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
   }, [valuesQuestion]);
@@ -145,7 +148,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
               <div>
                 <Radio.Group
                   onChange={onChange}
-                  disabled={true}
+                  disabled={!allowGradableSurvey}
                   value={value}
                   style={{ display: "block", marginRight: 0 }}>
                   {fields.map((field, index) => (
