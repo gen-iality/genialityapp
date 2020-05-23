@@ -234,6 +234,7 @@ class Agenda extends Component {
     const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey } = this.state;
     return (
       <div>
+
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
@@ -246,6 +247,7 @@ class Agenda extends Component {
             showIframe={showIframe}
           />
         )}
+
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && (
           <div className="container-calendar-section">

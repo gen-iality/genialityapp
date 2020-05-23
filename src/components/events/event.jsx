@@ -15,6 +15,8 @@ import Espacios from "../espacios";
 import Menu from "./shared/menu";
 import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
+import ConfirmacionRegistro from "./registro/confirmacionRegistro";
+
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import TriviaRoutes from "../trivia";
@@ -187,6 +189,10 @@ class Event extends Component {
               {permissions.data.ids.includes(rolPermissions.admin_staff._id) && (
                 <Route path={`${match.url}/staff`} render={() => <AdminRol event={this.state.event} />} />
               )}
+              <Route
+                path={`${match.url}/confirmacion-registro`}
+                render={() => <ConfirmacionRegistro eventID={this.state.event._id} />}
+              />
               <Route
                 path={`${match.url}/tipo-asistentes`}
                 render={() => <TipoAsistentes eventID={this.state.event._id} />}
