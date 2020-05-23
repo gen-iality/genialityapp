@@ -79,7 +79,6 @@ class Datos extends Component {
             let mandatory = !field
             console.log(uuid, mandatory)
             await EventFieldsApi.editOne({ mandatory }, uuid, this.eventID);
-            this.fetchFields()
 
             this.setState(prevState => {
                 const list = prevState.fields.map(field => {
@@ -90,6 +89,8 @@ class Datos extends Component {
                 });
                 return { fields: list }
             })
+
+            this.fetchFields()
         } catch (e) {
             console.log(e)
         }

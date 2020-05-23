@@ -37,7 +37,7 @@ class DragDrop extends Component {
     //Funcion para guardar el orden de los datos
     async submit() {
         console.log(this.state.properties)
-        // await Actions.put(`api/events/${this.props.eventId}`, this.state.properties);
+        await Actions.put(`api/events/${this.props.eventId}`, this.state.properties);
 
 
         notification.open({
