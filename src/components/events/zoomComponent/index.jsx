@@ -3,6 +3,7 @@ import { Button, Card } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
 import SurveyComponent from "../surveys";
+import { firestore } from "../../../helpers/firebase";
 
 const closeFullScreen = {
   position: "absolute",
@@ -36,12 +37,17 @@ export default class ZoomComponent extends Component {
       surveyVisible: false,
       displayName: "",
       email: null,
-      surveyPublish: 0,
-
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
+
+
     let { meetingId, userEntered, activitySurveyList } = this.props;
+
+    // const snapshot = await firestore
+    // .collection(`${event_id}_event_attendees`)
+    // .where("account_id", "==", user_id)
+    // .get();
 
     let displayName = "Anónimo";
     let email = "anonimo@evius.co";
@@ -50,15 +56,11 @@ export default class ZoomComponent extends Component {
       email = userEntered.email || email
     }
 
-    // Filtra el total de las actividades que se encuentran publicas
-    let surveyActive = activitySurveyList.filter(activitySurvey => activitySurvey.publish === "true");
-
     this.setState({
       meeting_id: meetingId,
       userEntered,
       activitySurveyList,
-      displayName, email,
-      surveyPublish: surveyActive.length
+      displayName, email
     });
 
   }
@@ -66,7 +68,8 @@ export default class ZoomComponent extends Component {
 
   componentDidUpdate(prevProps) {
     const { meetingId, userEntered, activitySurveyList } = this.props;
-    if (prevProps.meetingId !== meetingId || prevProps.activitySurveyList !== activitySurveyList) {
+    console.log("activitySurveyList", activitySurveyList);
+    if (prevProps.meetingId !== meetingId || JSON.stringify(prevProps.activitySurveyList) !== JSON.stringify(activitySurveyList)) {
       let displayName = "Anónimo";
       let email = "anonimo@evius.co";
       if (userEntered) {
@@ -115,7 +118,7 @@ export default class ZoomComponent extends Component {
 
   render() {
     const { hideIframe, event } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email, surveyPublish } = this.state;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
@@ -162,7 +165,7 @@ export default class ZoomComponent extends Component {
                   // </Button> */}
                 <Button onClick={this.surveyVisible}>
                   {!surveyVisible ?
-                    <span>Ver <b style={surveyButtons.text}>&nbsp;{surveyPublish}&nbsp;</b> encuesta(s) disponible(s).</span>
+                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuesta(s) disponible(s).</span>
                     :
                     "Ocultar"}
                 </Button>

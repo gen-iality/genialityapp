@@ -7,8 +7,6 @@ import API, { SurveysApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 
 import SurveyList from "./surveyList";
-import SurveyComponent from "./surveyComponent";
-import Graphics from "./graphics";
 import RootPage from "./rootPage";
 
 import { Spin } from "antd";

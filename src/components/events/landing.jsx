@@ -33,7 +33,8 @@ import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
 import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
-
+import { firestore } from "../../helpers/firebase";
+import { FaWheelchair } from "react-icons/fa";
 const { Title } = Typography;
 
 const { SubMenu } = Menu;
@@ -144,7 +145,32 @@ class Landing extends Component {
   async componentDidMount() {
     let user = null;
     let eventUser = null;
+
+    const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
+      searchParams = new URLSearchParams(queryParamsString),
+      status = searchParams.get("status");
+    const id = this.props.match.params.event;
+    console.log(id);
+
+    let publishedSurveys = [];
+    firestore
+      .collection("surveys")
+      .where("isPublished", "==", "true")
+      .where("eventId", "==", id)
+      .onSnapshot((surveySnapShot) => {
+        publishedSurveys = [];
+        surveySnapShot.forEach(function (doc) {
+          publishedSurveys.push({ ...doc.data(), id: doc.id });
+        });
+
+        console.log(publishedSurveys)
+        this.setState({ activitySurvey: publishedSurveys })
+      });
+
     try {
+
+
+
 
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
@@ -152,11 +178,6 @@ class Landing extends Component {
       user = resp.data;
     } catch { }
 
-    const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-      searchParams = new URLSearchParams(queryParamsString),
-      status = searchParams.get("status");
-    const id = this.props.match.params.event;
-    console.log(id);
 
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);

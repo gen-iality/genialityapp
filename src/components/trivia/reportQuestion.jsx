@@ -50,6 +50,7 @@ class ReportQuestion extends Component {
 
   exportReport = () => {
     let { nameQuestion, listOfUserResponse } = this.state;
+    nameQuestion = nameQuestion.substring(0, 30);
     const { match } = this.props;
 
     const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
@@ -73,7 +74,7 @@ class ReportQuestion extends Component {
       <Fragment>
         <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation="right">Reporte</Divider>
-          <Button onClick={this.exportReport}>Exportar</Button>
+          <Button onClick={this.exportReport}>Exportar resultados </Button>
           <Table dataSource={listOfUserResponse} columns={columns} />;
         </EventContent>
       </Fragment>
