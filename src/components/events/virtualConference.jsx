@@ -68,7 +68,7 @@ class VirtualConference extends Component {
 
     render() {
         const { infoAgendaArr, survey } = this.state
-        const { toggleConference, currentUser, usuarioRegistrado } = this.props
+        const { toggleConference, currentUser, usuarioRegistrado, event } = this.props
         return (
             <Fragment>
                 <div>
@@ -89,7 +89,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
+                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)

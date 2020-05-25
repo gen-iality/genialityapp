@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 
-import { List, Button, Card, Col, Tag, Spin } from "antd";
-
+import { List, Button, Card, Col, Tag, Spin, Result } from "antd";
+import { MehOutlined } from '@ant-design/icons';
 export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
+
   const [surveyList, setSurveyList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setSurveyList(jsonData);
-    if (jsonData.length > 0) setLoading(false);
+    if (jsonData) setLoading(false);
     console.log(usuarioRegistrado)
   }, [jsonData]);
 
   return (
     <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
       <Card>
-        <List
+        {(surveyList && surveyList.length == 0) && <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />}
+
+        {(surveyList && surveyList.length > 0) && <List
           dataSource={surveyList}
           renderItem={(survey) =>
             survey.open == "true" ? (
@@ -59,7 +62,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                 </List.Item>
               )
           }
-        />
+        />}
       </Card>
     </Col>
   );

@@ -3,7 +3,6 @@ import { Button, Card } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
 import SurveyComponent from "../surveys";
-import { firestore } from "../../../helpers/firebase";
 
 const closeFullScreen = {
   position: "absolute",
@@ -33,21 +32,16 @@ export default class ZoomComponent extends Component {
       isFull: false,
       isMedium: false,
       isMinimize: false,
-      activitySurveyList: [],
-      surveyVisible: false,
       displayName: "",
       email: null,
+      event: props.event,
+      activity: props.activity,
     };
   }
   async componentDidMount() {
 
 
-    let { meetingId, userEntered, activitySurveyList } = this.props;
-
-    // const snapshot = await firestore
-    // .collection(`${event_id}_event_attendees`)
-    // .where("account_id", "==", user_id)
-    // .get();
+    let { meetingId, userEntered } = this.props;
 
     let displayName = "Anónimo";
     let email = "anonimo@evius.co";
@@ -59,7 +53,6 @@ export default class ZoomComponent extends Component {
     this.setState({
       meeting_id: meetingId,
       userEntered,
-      activitySurveyList,
       displayName, email
     });
 
@@ -67,9 +60,10 @@ export default class ZoomComponent extends Component {
 
 
   componentDidUpdate(prevProps) {
-    const { meetingId, userEntered, activitySurveyList } = this.props;
-    console.log("activitySurveyList", activitySurveyList);
-    if (prevProps.meetingId !== meetingId || JSON.stringify(prevProps.activitySurveyList) !== JSON.stringify(activitySurveyList)) {
+
+    const { meetingId, userEntered } = this.props;
+
+    if (prevProps.meetingId !== meetingId) {
       let displayName = "Anónimo";
       let email = "anonimo@evius.co";
       if (userEntered) {
@@ -77,13 +71,9 @@ export default class ZoomComponent extends Component {
         email = userEntered.email || email
       }
 
-      this.setState({ meeting_id: meetingId, userEntered, activitySurveyList, displayName, email });
+      this.setState({ meeting_id: meetingId, userEntered, displayName, email });
     }
   }
-
-  openSurvey = (currentSurvey) => {
-    console.log("Esta es la encuesta actual:", currentSurvey);
-  };
 
   // Función full screen
   goFull = () => {
@@ -110,15 +100,11 @@ export default class ZoomComponent extends Component {
     });
   };
 
-  surveyVisible = () => {
-    this.setState({
-      surveyVisible: !this.state.surveyVisible
-    });
-  };
+
 
   render() {
-    const { hideIframe, event } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, activitySurveyList, surveyVisible, displayName, email } = this.state;
+    const { toggleConference, event, activity } = this.props;
+    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, displayName, email } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
@@ -138,46 +124,24 @@ export default class ZoomComponent extends Component {
               <FullscreenOutlined />
             </Button>
 
-            {/* botón pantalla media */}
-            {/* <Button onClick={this.goMedium}>
-              <SwitcherOutlined />
-            </Button> */}
-
             {/* botón pantalla minimizada */}
             <Button onClick={this.goMinimize}>
               <LineOutlined />
             </Button>
 
             {/* botón cerrar */}
-            <Button onClick={() => hideIframe(false)}>
+            <Button onClick={() => toggleConference(false)}>
               <span className="icon-close">&#10006;</span>
             </Button>
           </div>
         </div>
 
         <Fullscreen enabled={isFull} onChange={(isFull) => this.setState({ isFull })}>
-          {activitySurveyList && (
-            <div>
-              <div style={surveyButtons}>
-                {/* {activitySurveyList.map((survey, index) => ( 
-                 // <Button key={index} onClick={() => this.openSurvey(survey)}>
-                  //   {survey.survey}
-                  // </Button> */}
-                <Button onClick={this.surveyVisible}>
-                  {!surveyVisible ?
-                    <span>Ver <b style={surveyButtons.text}>&nbsp;{activitySurveyList.length}&nbsp;</b> encuesta(s) disponible(s).</span>
-                    :
-                    "Ocultar"}
-                </Button>
-                {/* ))} */}
-                {surveyVisible && (
-                  <Card>
-                    <SurveyComponent event={event} activitySurveyList={activitySurveyList} />
-                  </Card>
-                )}
-              </div>
+          {
+            <div style={surveyButtons}>
+              <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
             </div>
-          )}
+          }
 
           {isFull === true ? (
             <Button type="primary" danger style={closeFullScreen} onClick={this.closeFull}>

@@ -91,7 +91,7 @@ let agendaActividadDetalle = (props) => {
     setIdSpeaker(idSpeaker);
   }
 
-  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, showIframe, visible } = props;
+  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, toggleConference, visible } = props;
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
@@ -120,11 +120,10 @@ let agendaActividadDetalle = (props) => {
                     type="primary"
                     disabled={currentActivity.meeting_id ? false : true}
                     onClick={() =>
-                      showIframe(
+                      toggleConference(
                         true,
                         currentActivity.meeting_id,
-                        currentUser,
-                        survey.data
+                        currentActivity
                       )
                     }>
                     {currentActivity.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
@@ -212,7 +211,7 @@ let agendaActividadDetalle = (props) => {
                 <p>
                   <b>Encuestas:</b>
                 </p>
-                <SurveyComponent event={event} usuarioRegistrado={usuarioRegistrado} activitySurveyList={survey.data} />
+                <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
               </div>
             </div>
 
@@ -276,11 +275,10 @@ let agendaActividadDetalle = (props) => {
                         type="primary"
                         disabled={currentActivity.meeting_id ? false : true}
                         onClick={() =>
-                          showIframe(
+                          toggleConference(
                             true,
                             currentActivity.meeting_id,
-                            currentUser.names || currentUser.displayName,
-                            survey.data
+                            currentActivity
                           )
                         }>
                         Conferencia en Vivo en anónimo

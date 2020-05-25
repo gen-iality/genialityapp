@@ -74,7 +74,7 @@ class Landing extends Component {
       editorState: "",
       sections: {},
       section: "evento",
-      showIframeZoom: false,
+      toggleConferenceZoom: false,
       meeting_id: null,
       color: "",
       collapsed: false,
@@ -83,7 +83,6 @@ class Landing extends Component {
       headerVisible: "true",
       namesUser: "",
       data: null,
-      activitySurvey: null,
       user: null,
     };
   }
@@ -152,26 +151,8 @@ class Landing extends Component {
     const id = this.props.match.params.event;
     console.log(id);
 
-    let publishedSurveys = [];
-    firestore
-      .collection("surveys")
-      .where("isPublished", "==", "true")
-      .where("eventId", "==", id)
-      .onSnapshot((surveySnapShot) => {
-        publishedSurveys = [];
-        surveySnapShot.forEach(function (doc) {
-          publishedSurveys.push({ ...doc.data(), id: doc.id });
-        });
-
-        console.log(publishedSurveys)
-        this.setState({ activitySurvey: publishedSurveys })
-      });
 
     try {
-
-
-
-
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
@@ -206,7 +187,7 @@ class Landing extends Component {
     this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
 
     const sections = {
-      agenda: <AgendaForm event={event} eventId={event._id} showIframe={this.toggleConference} />,
+      agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
         <TicketsForm
           stages={event.event_stages}
@@ -324,25 +305,31 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, currentUser) => {
-    console.log("ACTIVANDOSE", meeting_id, state, currentUser);
+  toggleConference = (state, meeting_id, activity) => {
+    console.log("ACTIVANDOSE", state, meeting_id);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
-    this.setState({ showIframeZoom: state });
+
+    //Se usa para pasarle al componente de ZOOM la actividad actual que a su vez se la pasa a las SURVEYs
+    if (activity != undefined) {
+      this.setState({ activity });
+    }
+
+    this.setState({ toggleConferenceZoom: state });
   };
 
   render() {
     const {
       event,
+      activity,
       modal,
       modalTicket,
       section,
       sections,
-      showIframeZoom,
+      toggleConferenceZoom,
       meeting_id,
       currentUser,
-      activitySurvey,
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
@@ -363,13 +350,13 @@ class Landing extends Component {
             <React.Fragment>
               <div className="hero-head">
                 {/* Condicion para mostrar el componente de zoom */}
-                {showIframeZoom && (
+                {toggleConferenceZoom && (
                   <ZoomComponent
-                    hideIframe={this.toggleConference}
+                    toggleConference={this.toggleConference}
                     meetingId={meeting_id}
                     userEntered={currentUser}
-                    activitySurveyList={activitySurvey}
                     event={event}
+                    activity={activity}
                   />
                 )}
 
