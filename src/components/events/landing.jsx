@@ -324,10 +324,10 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, currentUser, activitySurvey) => {
-    console.log("ACTIVANDOSE", meeting_id, state, currentUser, activitySurvey);
+  toggleConference = (state, meeting_id, currentUser) => {
+    console.log("ACTIVANDOSE", meeting_id, state, currentUser);
     if (meeting_id != undefined) {
-      this.setState({ meeting_id, activitySurvey });
+      this.setState({ meeting_id });
     }
     this.setState({ showIframeZoom: state });
   };

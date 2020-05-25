@@ -64,7 +64,7 @@ class ReportQuestion extends Component {
     XLSX.utils.book_append_sheet(wb, ws, `${nameQuestion}`);
     const name = `${match.params.id}`;
 
-    XLSX.writeFile(wb, `${name}${Moment().format("DDMMYY")}.xls`);
+    XLSX.writeFile(wb, `${nameQuestion}-${name}${Moment().format("DDMMYY")}.xls`);
   };
 
   goBack = () => this.props.history.goBack();

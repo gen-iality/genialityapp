@@ -30,11 +30,6 @@ class VirtualConference extends Component {
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id)
         this.setState({ infoAgendaArr: filteredAgenda });
-        if (filteredAgenda && filteredAgenda.length > 0) {
-            let survey = await SurveysApi.getByActivity(this.props.event._id, filteredAgenda[0]._id);
-            this.setState({ survey: survey });
-        }
-
     }
 
     async componentDidMount() {
@@ -94,7 +89,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser, survey.data) }}>Entrar a la conferencia </Button>
+                                    <Button type="primary" onClick={() => { toggleConference(true, item.meeting_id, currentUser) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)
