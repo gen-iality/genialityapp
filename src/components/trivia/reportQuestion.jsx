@@ -50,6 +50,7 @@ class ReportQuestion extends Component {
 
   exportReport = () => {
     let { nameQuestion, listOfUserResponse } = this.state;
+    //Sheet names cannot exceed 31 chars
     nameQuestion = nameQuestion.substring(0, 30);
     const { match } = this.props;
 
