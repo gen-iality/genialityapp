@@ -145,7 +145,7 @@ class triviaEdit extends Component {
         );
 
         console.log("Fire:", setDataInFire);
-        message.success({ content: "Datos actualizados", key: "updating" });
+        message.success({ content: setDataInFire.message, key: "updating" });
       })
       .catch((err) => {
         console.log("Hubo un error", err);

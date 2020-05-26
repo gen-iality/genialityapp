@@ -21,14 +21,23 @@ export const createOrUpdateSurvey = (surveyId, status, surveyInfo) => {
         refSurvey
           .doc(surveyId)
           .update({ ...status })
-          .then(() => resolve({ message: "Encuesta actualizada", state: "updated" }));
+          .then(() => resolve({ message: "Encuesta Actualizada", state: "updated" }));
       } else {
         refSurvey
           .doc(surveyId)
           .set({ ...surveyInfo, ...status })
-          .then(() => resolve({ message: "Encuesta creada", state: "created" }));
+          .then(() => resolve({ message: "Encuesta Creada", state: "created" }));
       }
     });
+  });
+};
+
+export const deleteSurvey = (surveyId) => {
+  return new Promise((resolve, reject) => {
+    refSurvey
+      .doc(surveyId)
+      .delete()
+      .then(() => resolve({ message: "Encuesta Eliminada", state: "deleted" }));
   });
 };
 
