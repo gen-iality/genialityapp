@@ -9,6 +9,7 @@ import { Button, Card, Col, Form, Input, Row, Alert } from 'antd';
 import { LikeOutlined, DownloadOutlined } from '@ant-design/icons';
 import withUserEventRegistered from "../shared/withUserEventRegistered";
 import UserRegistration from "../events/userRegistration"
+import { withRouter } from "react-router";
 
 // Estructura de boton para descargar certificados
 
@@ -163,7 +164,7 @@ class CertificadoLanding extends Component {
         const { currentUser } = this.props
         return (
             <>
-                {console.log(dataUser)}
+                {console.log(this.props)}
                 {
                     currentUser._id ?
                         <div>
@@ -247,4 +248,4 @@ class CertificadoLanding extends Component {
     }
 }
 
-export default withUserEventRegistered(CertificadoLanding) 
+export default withRouter(CertificadoLanding) 

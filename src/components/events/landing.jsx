@@ -198,7 +198,7 @@ class Landing extends Component {
         />
       ),
       survey: <SurveyForm event={event} />,
-      certs: <CertificadoLanding event={event} tickets={event.tickets} />,
+      certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} />,
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
