@@ -112,7 +112,7 @@ class triviaEdit extends Component {
     // Esto permite almacenar los estados en firebase
     let setDataInFire = await createOrUpdateSurvey(
       idSurvey,
-      { isPublished: data.publish, isOpened: false },
+      { isPublished: data.publish, isOpened: "false" },
       { eventId: this.props.event._id, name: save.survey, category: "none" }
     );
     console.log("Fire:", setDataInFire);
