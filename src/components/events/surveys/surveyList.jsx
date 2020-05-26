@@ -3,55 +3,45 @@ import React, { useState, useEffect, Fragment } from "react";
 import { List, Button, Card, Col, Tag, Spin, Result, Empty } from "antd";
 import { MehOutlined } from "@ant-design/icons";
 
-const AnonymousList = ({ anonymousSurveyList, showSurvey, usuarioRegistrado }) => {
+const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   return (
     <Fragment>
       {anonymousSurveyList && anonymousSurveyList.length == 0 && (
         <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />
       )}
-      {console.log("anonymousSurveyList:", anonymousSurveyList)}
+      {/* {console.log("anonymousSurveyList:", anonymousSurveyList)} */}
       {anonymousSurveyList && anonymousSurveyList.length > 0 && (
         <List
           dataSource={anonymousSurveyList}
           renderItem={(survey) =>
             survey.open == "true" ? (
-              <Fragment>
-                {survey.allow_anonymous_answers === "true" && !usuarioRegistrado && (
-                  <List.Item key={survey._id}>
-                    <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                    {survey.userHasVoted && (
-                      <div>
-                        <Tag color="success">Respondida</Tag>
-                      </div>
-                    )}
-                    <div>
-                      <Button
-                        type={!survey.userHasVoted ? "primary" : ""}
-                        className={`${
-                          !survey.userHasVoted
-                            ? "animate__animated  animate__pulse animate__slower animate__infinite"
-                            : ""
-                        }`}
-                        onClick={() => showSurvey(survey)}
-                        loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
-                      </Button>
-                    </div>
-                  </List.Item>
+              <List.Item key={survey._id}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                {survey.userHasVoted && (
+                  <div>
+                    <Tag color="success">Respondida</Tag>
+                  </div>
                 )}
-              </Fragment>
+                <div>
+                  <Button
+                    type={!survey.userHasVoted ? "primary" : ""}
+                    className={`${
+                      !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
+                    }`}
+                    onClick={() => showSurvey(survey)}
+                    loading={survey.userHasVoted == undefined}>
+                    {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
+                  </Button>
+                </div>
+              </List.Item>
             ) : (
-              <Fragment>
-                {survey.allow_anonymous_answers === "true" && !usuarioRegistrado && (
-                  <List.Item key={survey._id} actions={[]}>
-                    <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                    <div>
-                      <Tag color="red">Cerrada</Tag>
-                    </div>
-                    <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
-                  </List.Item>
-                )}
-              </Fragment>
+              <List.Item key={survey._id} actions={[]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                <div>
+                  <Tag color="red">Cerrada</Tag>
+                </div>
+                <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
+              </List.Item>
             )
           }
         />
