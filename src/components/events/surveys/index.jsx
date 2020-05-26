@@ -9,7 +9,7 @@ import { firestore } from "../../../helpers/firebase";
 import SurveyList from "./surveyList";
 import RootPage from "./rootPage";
 
-import { Spin, Button } from "antd";
+import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
   position: "absolute",
@@ -256,7 +256,7 @@ class SurveyForm extends Component {
             }
           </Button>
         }
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />}
+        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <Card><SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} /></Card>}
       </div>
     );
   }
