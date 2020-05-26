@@ -27,7 +27,7 @@ const layout = {
 const validateMessages = {
   required: "Este campo ${label} es obligatorio para completar el registro.",
   types: {
-    email: "${label} no vá¡lido!",
+    email: "${label} no válido!",
   },
 };
 
@@ -94,6 +94,7 @@ class UserRegistration extends Component {
       registeredUser: false,
       submittedForm: false,
       successMessage: null,
+      generalFormErrorMessageVisible: false
     };
   }
 
@@ -163,8 +164,15 @@ class UserRegistration extends Component {
     console.log("extraFields", properties);
   }
 
+  showGeneralMessage = () => {
+    this.setState({ generalFormErrorMessageVisible: true })
+    setTimeout(() => { this.setState({ generalFormErrorMessageVisible: false }) }, 3000)
+  }
+
+
   onFinish = async (values) => {
     let { initialValues, eventUsers } = this.state;
+    this.setState({ generalFormErrorMessageVisible: false })
     const key = "registerUserService";
     console.log("values", values);
 
@@ -205,7 +213,10 @@ class UserRegistration extends Component {
     // console.log("este es el mensaje:", textMessage);
   };
 
-  // FunciÃ³n que crea los input del componente
+
+  /**
+   * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
+   */
   renderForm = () => {
     const { extraFields } = this.state;
 
@@ -220,7 +231,7 @@ class UserRegistration extends Component {
       let labelPosition = m.labelPosition;
       let target = name;
       let value = this.state.user[target];
-      let input = <Input  {...props} addonBefore={labelPosition == "izquierda" ? (mandatory ? "* " : "") + label : ""} type={type} key={key} name={name} value={value} />;
+      let input = <Input  {...props} addonBefore={(labelPosition == "izquierda" ? <span><span style={{ color: "red" }}>*  </span>{label}</span> : "")} type={type} key={key} name={name} value={value} />;
 
 
       if (type === "tituloseccion") {
@@ -235,7 +246,7 @@ class UserRegistration extends Component {
 
       if (type === "boolean") {
         input = (
-          <Checkbox key={key} name={name} value={value} onChange={(e) => value = e.target.checked}>{label}</Checkbox>
+          <Checkbox {...props} key={key} name={name}>{(mandatory ? <span><span style={{ color: "red" }}>*  </span>{label}</span> : label)}</Checkbox>
         );
       }
 
@@ -274,20 +285,25 @@ class UserRegistration extends Component {
 
       let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
       rule = type == "email" ? { ...rule, type: "email" } : rule;
+      if (type == "boolean" && mandatory) {
+        let textoError = "Debes llenar este  campo es obligatorio";
+        rule = { validator: (_, value) => value ? Promise.resolve() : Promise.reject(textoError) }
+      }
+
 
       return (
         <div key={"g" + key} name="field">
           {type == "tituloseccion" && input}
           {type != "tituloseccion" && (
             <>
-              <Form.Item label={((labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
+              <Form.Item valuePropName={(type == "boolean") ? 'checked' : 'value'} label={((labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion") ? label : ""} name={name} rules={[rule]} key={"l" + key} htmlFor={key}>
                 {input}
               </Form.Item>
               {description && description.length < 500 && (<p>{description}</p>)}
               {description && description.length > 500 &&
                 (<Collapse defaultActiveKey={['0']}>
                   <Panel header="Politica de privacidad, terminos y condiciones" key="1">
-                    <p><pre>{description}</pre></p>
+                    <pre>{description}</pre>
                   </Panel>
                 </Collapse>)}
             </>
@@ -336,14 +352,28 @@ class UserRegistration extends Component {
                   layout="vertical"
                   onFinish={this.onFinish}
                   validateMessages={validateMessages}
-                  initialValues={initialValues}>
+                  initialValues={initialValues}
+                  onFinishFailed={this.showGeneralMessage}
+                >
+
                   {this.renderForm()}
-                  <Row justify="center">
-                    <Form.Item wrapperCol={{ ...center, span: 12 }}>
-                      <Button type="primary" htmlType="submit">
-                        Registrarse
+                  <br />
+                  <br />
+
+                  <Row gutter={[24, 24]}>
+                    <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                      {this.state.generalFormErrorMessageVisible && (<Alert message="Falto por completar algunos campos. " type="warning" />)}
+                    </Col>
+                  </Row>
+
+                  <Row gutter={[24, 24]}>
+                    <Col span={24} style={{ display: 'inline-flex', justifyContent: 'center' }}>
+                      <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                          Registrarse
                       </Button>
-                    </Form.Item>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </Form>
               </Card>

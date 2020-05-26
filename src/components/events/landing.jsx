@@ -33,7 +33,8 @@ import VirtualConference from "./virtualConference";
 import SurveyNotification from "./surveyNotification";
 import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
-
+import { firestore } from "../../helpers/firebase";
+import { FaWheelchair } from "react-icons/fa";
 const { Title } = Typography;
 
 const { SubMenu } = Menu;
@@ -73,7 +74,7 @@ class Landing extends Component {
       editorState: "",
       sections: {},
       section: "evento",
-      showIframeZoom: false,
+      toggleConferenceZoom: false,
       meeting_id: null,
       color: "",
       collapsed: false,
@@ -82,7 +83,6 @@ class Landing extends Component {
       headerVisible: "true",
       namesUser: "",
       data: null,
-      activitySurvey: null,
       user: null,
     };
   }
@@ -144,19 +144,21 @@ class Landing extends Component {
   async componentDidMount() {
     let user = null;
     let eventUser = null;
-    try {
-
-      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      console.log("respuesta status", resp.status !== 202);
-      if (resp.status !== 200 && resp.status !== 202) return;
-      user = resp.data;
-    } catch { }
 
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
       status = searchParams.get("status");
     const id = this.props.match.params.event;
     console.log(id);
+
+
+    try {
+      const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
+      console.log("respuesta status", resp.status !== 202);
+      if (resp.status !== 200 && resp.status !== 202) return;
+      user = resp.data;
+    } catch { }
+
 
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
@@ -185,7 +187,7 @@ class Landing extends Component {
     this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
 
     const sections = {
-      agenda: <AgendaForm event={event} eventId={event._id} showIframe={this.toggleConference} />,
+      agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
         <TicketsForm
           stages={event.event_stages}
@@ -303,25 +305,31 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, currentUser, activitySurvey) => {
-    console.log("ACTIVANDOSE", meeting_id, state, currentUser, activitySurvey);
+  toggleConference = (state, meeting_id, activity) => {
+    console.log("ACTIVANDOSE", state, meeting_id);
     if (meeting_id != undefined) {
-      this.setState({ meeting_id, activitySurvey });
+      this.setState({ meeting_id });
     }
-    this.setState({ showIframeZoom: state });
+
+    //Se usa para pasarle al componente de ZOOM la actividad actual que a su vez se la pasa a las SURVEYs
+    if (activity != undefined) {
+      this.setState({ activity });
+    }
+
+    this.setState({ toggleConferenceZoom: state });
   };
 
   render() {
     const {
       event,
+      activity,
       modal,
       modalTicket,
       section,
       sections,
-      showIframeZoom,
+      toggleConferenceZoom,
       meeting_id,
       currentUser,
-      activitySurvey,
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color }}>
@@ -342,13 +350,13 @@ class Landing extends Component {
             <React.Fragment>
               <div className="hero-head">
                 {/* Condicion para mostrar el componente de zoom */}
-                {showIframeZoom && (
+                {toggleConferenceZoom && (
                   <ZoomComponent
-                    hideIframe={this.toggleConference}
+                    toggleConference={this.toggleConference}
                     meetingId={meeting_id}
                     userEntered={currentUser}
-                    activitySurveyList={activitySurvey}
                     event={event}
+                    activity={activity}
                   />
                 )}
 

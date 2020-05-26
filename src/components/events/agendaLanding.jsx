@@ -230,10 +230,11 @@ class Agenda extends Component {
   }
 
   render() {
-    const { showIframe } = this.props;
+    const { toggleConference } = this.props;
     const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey } = this.state;
     return (
       <div>
+
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
@@ -243,9 +244,10 @@ class Agenda extends Component {
             survey={survey}
             currentActivity={currentActivity}
             gotoActivityList={this.gotoActivityList}
-            showIframe={showIframe}
+            toggleConference={toggleConference}
           />
         )}
+
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
         {!currentActivity && (
           <div className="container-calendar-section">
@@ -391,7 +393,7 @@ class Agenda extends Component {
 
                                 </p>
                                 {/* Boton de para acceder a la conferencia onClick={() =>
-                                showIframe(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
+                                toggleConference(true, agenda.meeting_id)  disabled={agenda.meeting_id ? false : true}
                               } */}
 
                               </div>

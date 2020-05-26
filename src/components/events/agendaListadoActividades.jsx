@@ -190,7 +190,7 @@ class AgendaListadoActividades extends Component {
   }
 
   render() {
-    const { showIframe } = this.props;
+    const { toggleConference } = this.props;
     const { days, day, nameSpace, spaces, toShow, generalTab } = this.state;
     return (
       <div className="container-calendar-section">
@@ -348,7 +348,7 @@ class AgendaListadoActividades extends Component {
                                 <button
                                   className="button is-success is-outlined is-pulled-right has-margin-top-20"
                                   disabled={agenda.meeting_id ? false : true}
-                                  onClick={() => showIframe(true, agenda.meeting_id)}
+                                  onClick={() => toggleConference(true, agenda.meeting_id, agenda)}
                                 >
                                   Conferencia en Vivo
                                 </button>
