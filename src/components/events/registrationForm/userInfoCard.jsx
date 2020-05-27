@@ -5,25 +5,6 @@ import Form from "./form";
 import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
 const { Text } = Typography;
 
-const TICKETS = [
-  {
-    property: "Tickets",
-    value: "ticket 1",
-  },
-  {
-    property: "Tickets",
-    value: "ticket 2",
-  },
-  {
-    property: "Tickets",
-    value: "ticket 3",
-  },
-  {
-    property: "Tickets",
-    value: "ticket 4",
-  },
-];
-
 export default ({ currentUser, extraFields, eventId }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -77,20 +58,6 @@ export default ({ currentUser, extraFields, eventId }) => {
             </Col>
             <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
               <Text>{field.value}</Text>
-            </Col>
-          </Row>
-        ))}
-
-        {/* Esto solo es para pruebas */}
-        {TICKETS.map((field, key) => (
-          <Row key={`T-${key}`} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
-              <Text strong>{field.property}</Text>
-            </Col>
-            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
-              <Text>
-                <Button onClick={openModal}>Transferir</Button>
-              </Text>
             </Col>
           </Row>
         ))}
