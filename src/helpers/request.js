@@ -151,6 +151,9 @@ export const TicketsApi = {
   getAll: async (token) => {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
   },
+  getByEvent: async (event, token) => {
+    return await Actions.getOne(`/api/me/eventusers/event/${event}/?token=`, token);
+  },
 };
 
 export const EventFieldsApi = {
