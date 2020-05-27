@@ -133,7 +133,7 @@ class TicketInfo extends Component {
                   <Link to={{ pathname: `/landing/${items.id}` }}>
                     <Button> Ir al evento</Button>
                   </Link>,
-                  <Button onClick={() => this.openModal(items.id)}>Transferir</Button>,
+                  //   <Button onClick={() => this.openModal(items.id)}>Transferir</Button>,
                   <Button
                     onClick={() => {
                       this.changeVisible(items);
@@ -186,7 +186,7 @@ class TicketInfo extends Component {
         <DetailTickets item={this.state.item} visible={this.state.visible} />
 
         {/* Modal para realizar transferencia de ticketes */}
-        <Modal
+        {/* <Modal
           width={700}
           title="Transferir Ticket"
           visible={this.state.visibleModal}
@@ -198,7 +198,7 @@ class TicketInfo extends Component {
             </Button>,
           ]}>
           <Form eventId={currentEventId} extraFields={extraFields} />
-        </Modal>
+        </Modal> */}
       </Fragment>
     );
   }
