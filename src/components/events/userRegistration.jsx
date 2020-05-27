@@ -93,7 +93,7 @@ class UserRegistration extends Component {
       return !registeredUser ? (
         <Form initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
       ) : (
-        <UserInforCard currentUser={currentUser} extraFields={extraFields} />
+        <UserInforCard currentUser={currentUser} eventId={eventId} extraFields={extraFields} />
       );
     return <Spin></Spin>;
   }

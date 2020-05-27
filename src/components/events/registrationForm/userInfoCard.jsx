@@ -1,13 +1,35 @@
-// Componente que muestra la informacion del usuario registrado
 import React, { useState, useEffect } from "react";
 
-import { Card, Col, Row, Spin, Typography } from "antd";
+import Form from "./form";
+
+import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
 const { Text } = Typography;
 
-export default ({ currentUser, extraFields }) => {
+const TICKETS = [
+  {
+    property: "Tickets",
+    value: "ticket 1",
+  },
+  {
+    property: "Tickets",
+    value: "ticket 2",
+  },
+  {
+    property: "Tickets",
+    value: "ticket 3",
+  },
+  {
+    property: "Tickets",
+    value: "ticket 4",
+  },
+];
+
+export default ({ currentUser, extraFields, eventId }) => {
   const [infoUser, setInfoUser] = useState({});
   const [loading, setLoading] = useState(true);
-  console.log("currentuser", currentUser.properties, extraFields);
+  const [visibleModal, setVisibleModal] = useState(false);
+
+  //   console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
   const parseObjectToArray = async (info) => {
     let userProperties = new Promise((resolve, reject) => {
@@ -29,6 +51,18 @@ export default ({ currentUser, extraFields }) => {
     setLoading(false);
   };
 
+  const openModal = () => {
+    setVisibleModal(true);
+  };
+
+  const handleOk = (e) => {
+    setVisibleModal(false);
+  };
+
+  const handleCancel = (e) => {
+    setVisibleModal(false);
+  };
+
   useEffect(() => {
     parseObjectToArray(currentUser.properties);
   }, [currentUser]);
@@ -46,6 +80,34 @@ export default ({ currentUser, extraFields }) => {
             </Col>
           </Row>
         ))}
+
+        {/* Esto solo es para pruebas */}
+        {TICKETS.map((field, key) => (
+          <Row key={`T-${key}`} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Text strong>{field.property}</Text>
+            </Col>
+            <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
+              <Text>
+                <Button onClick={openModal}>Transferir</Button>
+              </Text>
+            </Col>
+          </Row>
+        ))}
+
+        <Modal
+          width={700}
+          title="Transferir Ticket"
+          visible={visibleModal}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              Cancelar
+            </Button>,
+          ]}>
+          <Form eventId={eventId} extraFields={extraFields} />
+        </Modal>
       </Card>
     );
 
