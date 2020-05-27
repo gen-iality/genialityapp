@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 
-import API, { EventsApi, UsersApi } from "../../helpers/request";
+import API, { EventsApi, UsersApi, TicketsApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
@@ -53,11 +53,13 @@ class UserRegistration extends Component {
         if (resp.status === 200) {
           const data = resp.data;
 
+          const tickets = await TicketsApi.getByEvent(this.props.eventId, evius_token);
           //   Se valida si el usuario ya se encuentra registrado al evento
           let existUser = eventUsers.find((user) => user.properties.email == data.email);
 
           this.setState({
             currentUser: existUser && existUser,
+            userTickets: tickets && tickets.data,
             loading: false,
             registeredUser: existUser ? true : false,
             initialValues: { names: data.names, email: data.email },
@@ -87,13 +89,18 @@ class UserRegistration extends Component {
   }
 
   render() {
-    let { registeredUser, loading, initialValues, extraFields, currentUser } = this.state;
+    let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets } = this.state;
     const { eventId } = this.props;
     if (!loading)
       return !registeredUser ? (
         <Form initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
       ) : (
-        <UserInforCard currentUser={currentUser} eventId={eventId} extraFields={extraFields} />
+        <UserInforCard
+          currentUser={currentUser}
+          userTickets={userTickets}
+          eventId={eventId}
+          extraFields={extraFields}
+        />
       );
     return <Spin></Spin>;
   }
