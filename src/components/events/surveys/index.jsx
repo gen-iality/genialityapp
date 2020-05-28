@@ -9,7 +9,7 @@ import { firestore } from "../../../helpers/firebase";
 import SurveyList from "./surveyList";
 import RootPage from "./rootPage";
 
-import { Spin, Button } from "antd";
+import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
   position: "absolute",
@@ -17,7 +17,7 @@ const surveyButtons = {
   maxHeight: "90%",
   top: "37px",
   text: {
-    color: "#42A8FC",
+    color: "inherit"
   }
 };
 
@@ -56,7 +56,8 @@ class SurveyForm extends Component {
       loading: true,
       surveyVisible: false,
       availableSurveysBar: props.availableSurveysBar || false,
-      surveyRecentlyChanged: false
+      surveyRecentlyChanged: false,
+      userVote: false,
     };
   }
 
@@ -74,6 +75,8 @@ class SurveyForm extends Component {
   async componentDidMount() {
     let user = await this.getCurrentUser();
     this.setState({ currentUser: user }, this.listenSurveysData);
+
+
   }
 
   componentDidUpdate(prevProps) {
@@ -81,6 +84,12 @@ class SurveyForm extends Component {
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado })
     }
+
+
+
+    //
+
+
   }
 
   /**
@@ -169,7 +178,15 @@ class SurveyForm extends Component {
     let stateSurveys = await votesUserInSurvey;
 
     this.setState({ surveysData: stateSurveys });
+
+    // bucle que verifica si el usuario contesto las encuestas
+    for (const i in stateSurveys) {
+      if (stateSurveys[i].userHasVoted === true) {
+        this.setState({ userVote: true });
+      }
+    }
   };
+
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = () => {
@@ -208,7 +225,7 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, currentUser, openSurvey, usuarioRegistrado } = this.state;
+    let { idSurvey, surveysData, currentUser, openSurvey, usuarioRegistrado, userVote, surveyVisible } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -231,11 +248,15 @@ class SurveyForm extends Component {
     return (
       <div >
 
-        {this.state.availableSurveysBar && <Button className={`${(surveysData && surveysData.length > 0) ? "animate__animated animate__fast animate__pulse  animate__infinite" : ""}`} onClick={this.surveyVisible}>
-          <span>{!this.state.surveyVisible ? "Ver" : "Ocultar"} <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s) disponible(s).</span>
-        </Button>
+        {this.state.availableSurveysBar &&
+          <Button className={` ${(surveysData && !surveyVisible && !userVote && surveysData.length > 0) ? "parpadea" : ""}`} onClick={this.surveyVisible}>
+            {!userVote ?
+              <span>{!surveyVisible ? "Ver" : "Ocultar"} <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s) disponible(s).</span> :
+              <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
+            }
+          </Button>
         }
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />}
+        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <Card><SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} /></Card>}
       </div>
     );
   }
