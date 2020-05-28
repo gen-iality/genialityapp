@@ -1,4 +1,4 @@
-import React, { useState, useEfect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 
 import API, { UsersApi, TicketsApi } from "../../../helpers/request";
 
@@ -27,12 +27,16 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields, eventUserId }) => {
+export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }) => {
   const [user, setUser] = useState({});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
+
+  useEffect(() => {
+    setSubmittedForm(false);
+  }, [eventUserId]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -59,7 +63,13 @@ export default ({ initialValues, eventId, extraFields, eventUserId }) => {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
         console.log("resp:", resp);
         textMessage.content = "Transferencia Realizada";
+        setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
+
+        setSubmittedForm(true);
         message.success(textMessage);
+        setTimeout(() => {
+          closeModal({ status: "sent_transfer", message: "Transferencia Hecha" });
+        }, 4000);
       } catch (err) {
         console.log("Se presento un problema", err);
         textMessage.content = "Error... Intentalo mas tarde";

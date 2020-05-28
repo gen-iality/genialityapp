@@ -10,7 +10,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   const [eventUserList, setEventUserList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [eventUserId, setEventUserId] = useState(null);
+  const [eventUserSelected, setEventUserSelected] = useState({});
 
   //   console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
@@ -49,7 +49,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   };
 
   const openModal = (ticket) => {
-    setEventUserId(ticket);
+    setEventUserSelected(ticket);
     setVisibleModal(true);
   };
 
@@ -59,6 +59,14 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   const handleCancel = (e) => {
     setVisibleModal(false);
+    if (e && e.status === "sent_transfer") {
+      setEventUserList([]);
+      console.log("antes:", eventUserList);
+      eventUserList.splice(eventUserSelected.index, 1);
+      console.log("DESPUES:", eventUserList);
+
+      setEventUserList(eventUserList);
+    }
   };
 
   useEffect(() => {
@@ -81,7 +89,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
                 </Col>
               </Row>
             ))}
-            <Button onClick={() => openModal(item.eventUserId)}>Transferir</Button>
+            <Button onClick={() => openModal({ eventUserId: item.eventUserId, index: indiceArray })}>Transferir</Button>
           </Card>
         ))}
 
@@ -96,7 +104,12 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
               Cancelar
             </Button>,
           ]}>
-          <Form eventId={eventId} extraFields={extraFields} eventUserId={eventUserId} />
+          <Form
+            eventId={eventId}
+            extraFields={extraFields}
+            eventUserId={eventUserSelected.eventUserId}
+            closeModal={handleCancel}
+          />
         </Modal>
       </Card>
     );
