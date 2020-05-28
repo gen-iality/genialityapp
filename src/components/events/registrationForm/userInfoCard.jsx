@@ -39,6 +39,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   const setTicketList = (list) => {
     let tickets = [];
+    console.log(tickets);
     list.forEach(async (ticket, index, arr) => {
       let result = await parseObjectToArray(ticket.properties);
       tickets.push({ ticketId: ticket._id, data: result });
@@ -61,6 +62,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   };
 
   useEffect(() => {
+    console.log("tickets originales:", userTickets);
     setTicketList(userTickets);
   }, [currentUser]);
 
@@ -68,7 +70,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     return (
       <Card>
         {userTicketsInfo.map((ticketObj, indiceArray) => (
-          <Card key={`Card_${indiceArray}`}>
+          <Card key={`Card_${indiceArray}`} title="Entrada">
             {ticketObj.data.map((field, key) => (
               <Row key={key} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>

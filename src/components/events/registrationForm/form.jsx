@@ -47,7 +47,7 @@ export default ({ initialValues, eventId, extraFields, ticketId }) => {
     const key = "registerUserService";
     console.log("values", values);
 
-    message.loading({ content: "Registrando Usuario", key });
+    message.loading({ content: !ticketId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
 
     const snap = { properties: values };
 
@@ -58,8 +58,12 @@ export default ({ initialValues, eventId, extraFields, ticketId }) => {
       try {
         let resp = await TicketsApi.transferToUser(eventId, ticketId, snap);
         console.log("resp:", resp);
+        textMessage.content = "Transferencia Realizada";
+        message.success(textMessage);
       } catch (err) {
         console.log("Se presento un problema", err);
+        textMessage.content = "Error... Intentalo mas tarde";
+        message.error(textMessage);
       }
     } else {
       try {
@@ -79,7 +83,7 @@ export default ({ initialValues, eventId, extraFields, ticketId }) => {
           message.success(textMessage);
         } else {
           textMessage.content = resp;
-
+          // Retorna un mensaje en caso de que ya se encuentre registrado el correo
           setNotLoggedAndRegister(true);
           message.success(textMessage);
         }
