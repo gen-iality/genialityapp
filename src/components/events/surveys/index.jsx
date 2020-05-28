@@ -137,7 +137,7 @@ class SurveyForm extends Component {
         this.setState({ surveyRecentlyChanged: true })
 
         if (surveysData && surveysData.length > 0) {
-          playFrequency(500)
+          //playFrequency(500)
         }
 
         setTimeout(() => { this.setState({ surveyRecentlyChanged: false }) }, 3000)

@@ -531,40 +531,65 @@ class AgendaEdit extends Component {
       <EventContent title="Actividad" closeAction={this.goBack}>
         {loading ? (
           <Loading />
-        ) : (
-            <div className="columns">
-              <div className="column is-8">
-                <div className="field">
-                  <label className="label required">Nombre</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="text"
-                      name={"name"}
-                      value={name}
-                      onChange={this.handleChange}
-                      placeholder="Nombre de la actividad"
-                    />
+        )
+          :
+          (
+            <div>
+              <div className="columns">
+                <div className="column is-8">
+                  <div className="field">
+                    <label className="label required">Nombre</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="text"
+                        name={"name"}
+                        value={name}
+                        onChange={this.handleChange}
+                        placeholder="Nombre de la actividad"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="field">
-                  <label className="label">Subtítulo</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="text"
-                      name={"subtitle"}
-                      value={subtitle}
-                      onChange={this.handleChange}
-                      placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
-                    />
+                  <div className="field">
+                    <label className="label">Subtítulo</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="text"
+                        name={"subtitle"}
+                        value={subtitle}
+                        onChange={this.handleChange}
+                        placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
+                      />
+                    </div>
+                  </div>
+                  <div className="field">
+                    <label className="label">Día</label>
+                    <div className="columns">
+                      {console.log(this.state.days)}
+                      {this.state.days.map((day, key) => {
+                        return (
+                          <div key={key} className="column">
+                            <input
+                              type="radio"
+                              name="date"
+                              id={`radioDay${key}`}
+                              className="is-checkradio"
+                              checked={day === date}
+                              value={day}
+                              onChange={this.handleChange}
+                            />
+                            <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="field">
                   <label className="label">Día</label>
                   <div className="columns">
-                    {console.log(this.state.days)}
                     {this.state.days.map((day, key) => {
                       return (
                         <div key={key} className="column">
@@ -577,202 +602,178 @@ class AgendaEdit extends Component {
                             value={day}
                             onChange={this.handleChange}
                           />
-                          <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
+                          <label htmlFor={`radioDay${key}`}>{day}</label>
                         </div>
                       );
                     })}
                   </div>
                 </div>
-              </div>
-              <div className="field">
-                <label className="label">Día</label>
                 <div className="columns">
-                  {this.state.days.map((day, key) => {
-                    return (
-                      <div key={key} className="column">
-                        <input
-                          type="radio"
-                          name="date"
-                          id={`radioDay${key}`}
-                          className="is-checkradio"
-                          checked={day === date}
-                          value={day}
-                          onChange={this.handleChange}
+                  <div className="column">
+                    <div className="field">
+                      <label className="label">Hora Inicio</label>
+                      <div className="control">
+                        <DateTimePicker
+                          value={hour_start}
+                          dropUp
+                          step={15}
+                          date={false}
+                          onChange={(value) => this.handleDate(value, "hour_start")}
                         />
-                        <label htmlFor={`radioDay${key}`}>{day}</label>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column">
-                  <div className="field">
-                    <label className="label">Hora Inicio</label>
-                    <div className="control">
+                    </div>
+                  </div>
+                  <div className="column">
+                    <div className="field">
+                      <label className="label">Hora Fin</label>
                       <DateTimePicker
-                        value={hour_start}
+                        value={hour_end}
                         dropUp
                         step={15}
                         date={false}
-                        onChange={(value) => this.handleDate(value, "hour_start")}
+                        onChange={(value) => this.handleDate(value, "hour_end")}
                       />
                     </div>
                   </div>
                 </div>
-                <div className="column">
-                  <div className="field">
-                    <label className="label">Hora Fin</label>
-                    <DateTimePicker
-                      value={hour_end}
-                      dropUp
-                      step={15}
-                      date={false}
-                      onChange={(value) => this.handleDate(value, "hour_end")}
+                <label className="label">Conferencista</label>
+                <div className="columns">
+                  <div className="column is-10">
+                    <Select
+                      isClearable
+                      isMulti
+                      styles={creatableStyles}
+                      onChange={this.selectHost}
+                      options={hosts}
+                      value={selectedHosts}
                     />
                   </div>
+                  <div className="column is-2">
+                    <button
+                      onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
+                      className="button">
+                      <FaWhmcs />
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <label className="label">Conferencista</label>
-              <div className="columns">
-                <div className="column is-10">
+                <label className="label required">Espacio</label>
+                <div className="field has-addons">
+                  <div className="control">
+                    <div className="select">
+                      <select name={"space_id"} value={space_id} onChange={this.handleChange}>
+                        <option>Seleccione un lugar/salón ...</option>
+                        {spaces.map((space) => {
+                          return (
+                            <option key={space.value} value={space.value}>
+                              {space.label}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="control">
+                    <Link to={matchUrl.replace("agenda", "espacios")}>
+                      <button className="button">
+                        <FaWhmcs />
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="field">
+                  <label className={`label`}>Clasificar actividad como:</label>
+                  <div className="control">
+                    <input
+                      type="radio"
+                      id={"radioOpen"}
+                      name="access_restriction_type"
+                      checked={access_restriction_type === "OPEN"}
+                      className="is-checkradio"
+                      value={"OPEN"}
+                      onChange={this.handleChange}
+                    />
+                    <label htmlFor={"radioOpen"}>
+                      <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
+                  </label>
+                  </div>
+                  <div className="control">
+                    <input
+                      type="radio"
+                      id={"radioSuggested"}
+                      name="access_restriction_type"
+                      checked={access_restriction_type === "SUGGESTED"}
+                      className="is-checkradio"
+                      value={"SUGGESTED"}
+                      onChange={this.handleChange}
+                    />
+                    <label htmlFor={"radioSuggested"}>
+                      <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
+                  </label>
+                  </div>
+                  <div className="control">
+                    <input
+                      type="radio"
+                      id={"radioExclusive"}
+                      name="access_restriction_type"
+                      checked={access_restriction_type === "EXCLUSIVE"}
+                      className="is-checkradio"
+                      value={"EXCLUSIVE"}
+                      onChange={this.handleChange}
+                    />
+                    <label htmlFor={"radioExclusive"}>
+                      <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
+                  </label>
+                  </div>
+                </div>
+                {access_restriction_type !== "OPEN" && (
+                  <Fragment>
+                    <div style={{ display: "flex" }}>
+                      <label className="label required">Asginar a :</label>
+                      <button className="button is-text is-small" onClick={this.addRoles}>
+                        todos los roles
+                    </button>
+                    </div>
+                    <div className="columns">
+                      <div className="column is-10">
+                        <Select
+                          isClearable
+                          isMulti
+                          styles={creatableStyles}
+                          onChange={this.selectRol}
+                          options={roles}
+                          placeholder={"Seleccione al menos un rol..."}
+                          value={selectedRol}
+                        />
+                      </div>
+                      <div className="column is-2">
+                        <button
+                          onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
+                          className="button">
+                          <FaWhmcs />
+                        </button>
+                      </div>
+                    </div>
+                  </Fragment>
+                )}
+                <div className="field">
+                  <label className="label">Documentos</label>
                   <Select
                     isClearable
                     isMulti
                     styles={creatableStyles}
-                    onChange={this.selectHost}
-                    options={hosts}
-                    value={selectedHosts}
+                    onChange={this.selectDocuments}
+                    options={nameDocuments}
+                    value={selected_document}
                   />
                 </div>
-                <div className="column is-2">
-                  <button
-                    onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
-                    className="button">
-                    <FaWhmcs />
-                  </button>
-                </div>
-              </div>
-              <label className="label required">Espacio</label>
-              <div className="field has-addons">
-                <div className="control">
-                  <div className="select">
-                    <select name={"space_id"} value={space_id} onChange={this.handleChange}>
-                      <option>Seleccione un lugar/salón ...</option>
-                      {spaces.map((space) => {
-                        return (
-                          <option key={space.value} value={space.value}>
-                            {space.label}
-                          </option>
-                        );
-                      })}
-                    </select>
+
+                <div className="field">
+                  <label className="label">Descripción</label>
+                  <div className="control">
+                    <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
                   </div>
                 </div>
-                <div className="control">
-                  <Link to={matchUrl.replace("agenda", "espacios")}>
-                    <button className="button">
-                      <FaWhmcs />
-                    </button>
-                  </Link>
-                </div>
               </div>
-              <div className="field">
-                <label className={`label`}>Clasificar actividad como:</label>
-                <div className="control">
-                  <input
-                    type="radio"
-                    id={"radioOpen"}
-                    name="access_restriction_type"
-                    checked={access_restriction_type === "OPEN"}
-                    className="is-checkradio"
-                    value={"OPEN"}
-                    onChange={this.handleChange}
-                  />
-                  <label htmlFor={"radioOpen"}>
-                    <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
-                  </label>
-                </div>
-                <div className="control">
-                  <input
-                    type="radio"
-                    id={"radioSuggested"}
-                    name="access_restriction_type"
-                    checked={access_restriction_type === "SUGGESTED"}
-                    className="is-checkradio"
-                    value={"SUGGESTED"}
-                    onChange={this.handleChange}
-                  />
-                  <label htmlFor={"radioSuggested"}>
-                    <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
-                  </label>
-                </div>
-                <div className="control">
-                  <input
-                    type="radio"
-                    id={"radioExclusive"}
-                    name="access_restriction_type"
-                    checked={access_restriction_type === "EXCLUSIVE"}
-                    className="is-checkradio"
-                    value={"EXCLUSIVE"}
-                    onChange={this.handleChange}
-                  />
-                  <label htmlFor={"radioExclusive"}>
-                    <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
-                  </label>
-                </div>
-              </div>
-              {access_restriction_type !== "OPEN" && (
-                <Fragment>
-                  <div style={{ display: "flex" }}>
-                    <label className="label required">Asginar a :</label>
-                    <button className="button is-text is-small" onClick={this.addRoles}>
-                      todos los roles
-                    </button>
-                  </div>
-                  <div className="columns">
-                    <div className="column is-10">
-                      <Select
-                        isClearable
-                        isMulti
-                        styles={creatableStyles}
-                        onChange={this.selectRol}
-                        options={roles}
-                        placeholder={"Seleccione al menos un rol..."}
-                        value={selectedRol}
-                      />
-                    </div>
-                    <div className="column is-2">
-                      <button
-                        onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
-                        className="button">
-                        <FaWhmcs />
-                      </button>
-                    </div>
-                  </div>
-                </Fragment>
-              )}
-              <div className="field">
-                <label className="label">Documentos</label>
-                <Select
-                  isClearable
-                  isMulti
-                  styles={creatableStyles}
-                  onChange={this.selectDocuments}
-                  options={nameDocuments}
-                  value={selected_document}
-                />
-              </div>
-
-              <div className="field">
-                <label className="label">Descripción</label>
-                <div className="control">
-                  <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
-                </div>
-              </div>
-
-
-
               <div className="column is-4 general">
                 <div className="field is-grouped">
                   <button className="button is-text" onClick={this.remove}>
