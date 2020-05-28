@@ -15,6 +15,7 @@ import axios from "axios/index"
 import { DateTimePicker } from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
+import DateEvent from "./dateEvent";
 Moment.locale('es');
 
 
@@ -497,6 +498,7 @@ class General extends Component {
                                 </div>
                             </div>
                         </div>
+                        <DateEvent eventId={this.props.event._id} />
                         <div className="field">
                             <div className="columns is-mobile">
                                 <div className="column inner-column">

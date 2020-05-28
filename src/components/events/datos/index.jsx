@@ -75,21 +75,26 @@ class Datos extends Component {
     };
     //Cambiar obligatorio
     changeCheck = async (uuid, field) => {
-        let mandatory = field ? false : true
-        const info = await EventFieldsApi.editOne({ mandatory }, uuid, this.eventID);
-        console.log(info)
-        this.fetchFields()
+        try {
+            let mandatory = !field
+            console.log(uuid, mandatory)
+            await EventFieldsApi.editOne({ mandatory }, uuid, this.eventID);
 
-        this.setState(prevState => {
-            const list = prevState.fields.map(field => {
-                if (field.uuid === uuid) {
-                    field.mandatory = !field.mandatory;
-                    return field
-                } else return field;
-            });
-            return { fields: list }
-        })
-        this.fetchFields()
+            this.setState(prevState => {
+                const list = prevState.fields.map(field => {
+                    if (field.uuid === uuid) {
+                        field.mandatory = !field.mandatory;
+                        return field
+                    } else return field;
+                });
+                return { fields: list }
+            })
+
+            this.fetchFields()
+        } catch (e) {
+            console.log(e)
+        }
+
     };
     //Abrir modal para editar dato
     editField = (info) => {
@@ -135,11 +140,14 @@ class Datos extends Component {
     };
 
     async toggleChange(id, field) {
-        let visible = field ? false : true
-        console.log(visible, id)
-        const info = await EventFieldsApi.editOne({ visible }, id, this.eventID);
-        console.log(info)
-        this.fetchFields()
+        try {
+            let visible = !field
+            console.log(id, visible)
+            await EventFieldsApi.editOne({ visible }, id, this.eventID);
+            this.fetchFields()
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     render() {

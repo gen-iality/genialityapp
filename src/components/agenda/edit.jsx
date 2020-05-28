@@ -82,17 +82,39 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
     let days = [];
-    const init = Moment(event.date_start);
-    const end = Moment(event.date_end);
-    const diff = end.diff(init, "days");
-    //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-    for (let i = 0; i < diff + 1; i++) {
-      days.push(
-        Moment(init)
-          .add(i, "d")
-          .format("YYYY-MM-DD")
-      );
+
+    try {
+      const info = await EventsApi.getOne(event._id)
+      //se valida si no existe dates para dejar la logica 
+      //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
+      if (!info.dates) {
+        const init = Moment(event.date_start);
+        const end = Moment(event.date_end);
+        const diff = end.diff(init, "days");
+        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+        for (let i = 0; i < diff + 1; i++) {
+          days.push(
+            Moment(init)
+              .add(i, "d")
+              .format("YYYY-MM-DD")
+          );
+        }
+        //Si existe dates, entonces envia al array push las fechas del array dates del evento
+      } else {
+        let date = info.dates
+        Date.parse(date)
+
+        for (var i = 0; i < date.length; i++) {
+          days.push(Moment(date[i], ["DD-MM-YYYY"]).format("YYYY-MM-DD"))
+        }
+
+        console.log(days)
+      }
+    } catch (e) {
+      console.log(e)
     }
+
+
     let documents = await DocumentsApi.byEvent(this.props.event._id);
     let hostAvailable = await EventsApi.hostAvailable();
     console.log(hostAvailable);
@@ -138,7 +160,7 @@ class AgendaEdit extends Component {
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
       });
     } else {
-      this.setState({ date: days[0] });
+      this.setState({ days });
     }
 
     const isLoading = { types: false, categories: false };
@@ -245,10 +267,10 @@ class AgendaEdit extends Component {
 
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
         else {
+          console.log(info)
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
         }
-        //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
@@ -380,7 +402,7 @@ class AgendaEdit extends Component {
 
   async removeConference() {
     if (window.confirm("Esta seguro?")) {
-      this.setState({ meeting_id: null }, function() {
+      this.setState({ meeting_id: null }, function () {
         this.submit();
       });
     }
@@ -464,7 +486,7 @@ class AgendaEdit extends Component {
     else if (this.state.access_restriction_type !== "OPEN" && this.state.selectedRol.length <= 0)
       title = "Seleccione un Rol para mostrar la Agenda";
     if (title.length > 0) {
-      sweetAlert.twoButton(title, "warning", false, "OK", () => {});
+      sweetAlert.twoButton(title, "warning", false, "OK", () => { });
       return false;
     } else return true;
   };
@@ -510,33 +532,56 @@ class AgendaEdit extends Component {
         {loading ? (
           <Loading />
         ) : (
-          <div className="columns">
-            <div className="column is-8">
-              <div className="field">
-                <label className="label required">Nombre</label>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    name={"name"}
-                    value={name}
-                    onChange={this.handleChange}
-                    placeholder="Nombre de la actividad"
-                  />
+            <div className="columns">
+              <div className="column is-8">
+                <div className="field">
+                  <label className="label required">Nombre</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      name={"name"}
+                      value={name}
+                      onChange={this.handleChange}
+                      placeholder="Nombre de la actividad"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="field">
-                <label className="label">Subtítulo</label>
-                <div className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    name={"subtitle"}
-                    value={subtitle}
-                    onChange={this.handleChange}
-                    placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
-                  />
+                <div className="field">
+                  <label className="label">Subtítulo</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      name={"subtitle"}
+                      value={subtitle}
+                      onChange={this.handleChange}
+                      placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
+                    />
+                  </div>
+                </div>
+                <div className="field">
+                  <label className="label">Día</label>
+                  <div className="columns">
+                    {console.log(this.state.days)}
+                    {this.state.days.map((day, key) => {
+                      return (
+                        <div key={key} className="column">
+                          <input
+                            type="radio"
+                            name="date"
+                            id={`radioDay${key}`}
+                            className="is-checkradio"
+                            checked={day === date}
+                            value={day}
+                            onChange={this.handleChange}
+                          />
+                          <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="field">
@@ -725,176 +770,179 @@ class AgendaEdit extends Component {
                   <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
                 </div>
               </div>
-            </div>
-            <div className="column is-4 general">
-              <div className="field is-grouped">
-                <button className="button is-text" onClick={this.remove}>
-                  x Eliminar actividad
-                </button>
-                <button onClick={this.submit} className="button is-primary">
-                  Guardar
-                </button>
-              </div>
-              <div className="field is-grouped">
-                <button onClick={this.submit2} className="button is-primary">
-                  Duplicar para traducir
-                </button>
-              </div>
 
-              <div className="section-gray">
-                <div className="field">
-                  <label className="label has-text-grey-light">Imagen</label>
-                  <p>Dimensiones: 1000px x 278px</p>
-                  <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                    <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
-                  </Dropzone>
-                  {image && <img src={image} alt={`activity_${name}`} />}
+
+
+              <div className="column is-4 general">
+                <div className="field is-grouped">
+                  <button className="button is-text" onClick={this.remove}>
+                    x Eliminar actividad
+                </button>
+                  <button onClick={this.submit} className="button is-primary">
+                    Guardar
+                </button>
                 </div>
-                <div className="field">
-                  <label className={`label`}>Capacidad</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="number"
-                      min={0}
-                      name={"capacity"}
-                      value={capacity}
-                      onChange={this.handleChange}
-                      placeholder="Cupo total"
-                    />
-                  </div>
+                <div className="field is-grouped">
+                  <button onClick={this.submit2} className="button is-primary">
+                    Duplicar para traducir
+                </button>
                 </div>
-                <label className="label">Categorías</label>
-                <div className="columns">
-                  <div className="column is-10">
-                    <Creatable
-                      isClearable
-                      styles={catStyles}
-                      onChange={this.selectCategory}
-                      onCreateOption={(value) => this.handleCreate(value, "categories")}
-                      isDisabled={isLoading.categories}
-                      isLoading={isLoading.categories}
-                      isMulti
-                      options={categories}
-                      placeholder={"Sin categoría...."}
-                      value={selectedCategories}
-                    />
+
+                <div className="section-gray">
+                  <div className="field">
+                    <label className="label has-text-grey-light">Imagen</label>
+                    <p>Dimensiones: 1000px x 278px</p>
+                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                      <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
+                    </Dropzone>
+                    {image && <img src={image} alt={`activity_${name}`} />}
                   </div>
-                  <div className="column is-2">
-                    <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
-                      <FaWhmcs />
-                    </button>
+                  <div className="field">
+                    <label className={`label`}>Capacidad</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="number"
+                        min={0}
+                        name={"capacity"}
+                        value={capacity}
+                        onChange={this.handleChange}
+                        placeholder="Cupo total"
+                      />
+                    </div>
                   </div>
-                </div>
-                <label className="label">Tipo de actividad</label>
-                <div className="columns">
-                  <div className="control column is-10">
-                    <Creatable
-                      isClearable
-                      styles={creatableStyles}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      isDisabled={isLoading.types}
-                      isLoading={isLoading.types}
-                      onChange={this.selectType}
-                      onCreateOption={(value) => this.handleCreate(value, "types")}
-                      options={types}
-                      value={selectedType}
-                    />
-                  </div>
-                  <div className="column is-2">
-                    <Link to={`${matchUrl}/tipos`}>
-                      <button className="button">
+                  <label className="label">Categorías</label>
+                  <div className="columns">
+                    <div className="column is-10">
+                      <Creatable
+                        isClearable
+                        styles={catStyles}
+                        onChange={this.selectCategory}
+                        onCreateOption={(value) => this.handleCreate(value, "categories")}
+                        isDisabled={isLoading.categories}
+                        isLoading={isLoading.categories}
+                        isMulti
+                        options={categories}
+                        placeholder={"Sin categoría...."}
+                        value={selectedCategories}
+                      />
+                    </div>
+                    <div className="column is-2">
+                      <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
                         <FaWhmcs />
                       </button>
-                    </Link>
+                    </div>
+                  </div>
+                  <label className="label">Tipo de actividad</label>
+                  <div className="columns">
+                    <div className="control column is-10">
+                      <Creatable
+                        isClearable
+                        styles={creatableStyles}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        isDisabled={isLoading.types}
+                        isLoading={isLoading.types}
+                        onChange={this.selectType}
+                        onCreateOption={(value) => this.handleCreate(value, "types")}
+                        options={types}
+                        value={selectedType}
+                      />
+                    </div>
+                    <div className="column is-2">
+                      <Link to={`${matchUrl}/tipos`}>
+                        <button className="button">
+                          <FaWhmcs />
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
-                {!this.props.location.state.edit && (
-                  <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
-                )}
+                <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
+                  {!this.props.location.state.edit && (
+                    <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
+                  )}
 
-                {this.props.location.state.edit && (
-                  <>
-                    {!this.state.meeting_id && (
-                      <Fragment>
-                        <div className="control">
-                          <div className="select">
-                            <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
-                              <option>Seleccione host</option>
-                              {this.state.hostAvailable.length > 0 &&
-                                this.state.hostAvailable.map((host) => {
-                                  return (
-                                    host.state &&
-                                    host.state === "available" && (
-                                      <option value={host.id} key={host.id}>
-                                        {host.email}
-                                        {console.log(host)}
-                                      </option>
-                                    )
-                                  );
-                                })}
-                            </select>
+                  {this.props.location.state.edit && (
+                    <>
+                      {!this.state.meeting_id && (
+                        <Fragment>
+                          <div className="control">
+                            <div className="select">
+                              <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
+                                <option>Seleccione host</option>
+                                {this.state.hostAvailable.length > 0 &&
+                                  this.state.hostAvailable.map((host) => {
+                                    return (
+                                      host.state &&
+                                      host.state === "available" && (
+                                        <option value={host.id} key={host.id}>
+                                          {host.email}
+                                          {console.log(host)}
+                                        </option>
+                                      )
+                                    );
+                                  })}
+                              </select>
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          {!this.state.creatingConference && (
-                            <button
-                              style={{ marginTop: "2%" }}
-                              className="button is-primary"
-                              disabled={!this.state.host_id}
-                              onClick={this.createConference}>
-                              Crear espacio virtual
-                            </button>
-                          )}
-                          {this.state.creatingConference && <Spin tip="Creando..." />}
-                        </div>
-                      </Fragment>
-                    )}
-
-                    {this.state.meeting_id && (
-                      <div>
-                        <div style={{ marginTop: "2%" }}>
                           <div>
-                            <p>El id de la conferencia virtual es:</p>
-                            <p>{this.state.meeting_id}</p>
+                            {!this.state.creatingConference && (
+                              <button
+                                style={{ marginTop: "2%" }}
+                                className="button is-primary"
+                                disabled={!this.state.host_id}
+                                onClick={this.createConference}>
+                                Crear espacio virtual
+                              </button>
+                            )}
+                            {this.state.creatingConference && <Spin tip="Creando..." />}
+                          </div>
+                        </Fragment>
+                      )}
+
+                      {this.state.meeting_id && (
+                        <div>
+                          <div style={{ marginTop: "2%" }}>
+                            <div>
+                              <p>El id de la conferencia virtual es:</p>
+                              <p>{this.state.meeting_id}</p>
+                            </div>
+
+                            <div key={this.state.key}>
+                              <p>
+                                <b>Accessos</b>
+                              </p>
+                              <hr />
+                              <p>
+                                <a target="_blank" href={start_url}>
+                                  Acceso para hosts
+                              </a>
+                              </p>
+                              <p>
+                                <a target="_blank" href={join_url}>
+                                  Acceso para asistentes
+                              </a>
+                              </p>
+                            </div>
                           </div>
 
-                          <div key={this.state.key}>
-                            <p>
-                              <b>Accessos</b>
-                            </p>
-                            <hr />
-                            <p>
-                              <a target="_blank" href={start_url}>
-                                Acceso para hosts
-                              </a>
-                            </p>
-                            <p>
-                              <a target="_blank" href={join_url}>
-                                Acceso para asistentes
-                              </a>
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          style={{ marginTop: "2%" }}
-                          className="button is-primary"
-                          onClick={this.removeConference}>
-                          Eliminar espacio virtual
+                          <button
+                            style={{ marginTop: "2%" }}
+                            className="button is-primary"
+                            onClick={this.removeConference}>
+                            Eliminar espacio virtual
                         </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </Card>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </Card>
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
       </EventContent>
     );
   }
