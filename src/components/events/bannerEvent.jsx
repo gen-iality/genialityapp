@@ -10,6 +10,15 @@ import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
 const BgElement = Element.BgElement;
 
 function capitalize(val) {
+    val = Moment(val).format("DD MMMM YYYY")
+    return val.toLowerCase()
+        .trim()
+        .split(' ')
+        .map(v => v[0].toUpperCase() + v.substr(1))
+        .join(' ');
+}
+
+function capitalizeMont(val) {
     val = Moment(val).format("MMMM YYYY")
     return val.toLowerCase()
         .trim()
@@ -18,7 +27,7 @@ function capitalize(val) {
         .join(' ');
 }
 
-let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgImageText, type_event }) => {
+let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
 
     return (
         <BannerAnim prefixCls="banner-user">
@@ -47,15 +56,33 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, bgIm
                         {/* Fecha del evento */}
                         <div>
                             {
-                                dateStart === dateEnd ?
-                                    <span>{Moment(dateEnd).format("DD")}{" de "} {capitalize(dateEnd)}</span>
-                                    :
-                                    <div>
-                                        <span>Del {Moment(dateStart).format("DD")}</span>
-                                        <span> al {Moment(dateEnd).format("DD")}{" "} {capitalize(dateEnd)}</span>
-                                    </div>
-                            }
+                                dates ?
+                                    <>
+                                        {
+                                            dates.map((item, key) => (
+                                                <div key={key}>
+                                                    <span style={{ marginRight: "2%" }}>
+                                                        {capitalize(Moment(item, ["DD-MM-YYYY"]).format("DD-MMMM-YYYY"))}
+                                                    </span>
+                                                </div>
 
+                                            ))
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        {
+                                            dateStart === dateEnd ?
+                                                <span>{Moment(dateStart).format("DD")}{" de "} {capitalizeMont(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                :
+                                                <div>
+                                                    <span>Del {Moment(dateStart).format("DD")}</span>
+                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {capitalizeMont(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                </div>
+                                        }
+                                    </>
+
+                            }
                         </div>
 
                         {/* Nombre del evento */}

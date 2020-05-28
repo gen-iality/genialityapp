@@ -379,6 +379,7 @@ class Landing extends Component {
                     }
                     dateStart={event.date_start}
                     dateEnd={event.date_end}
+                    dates={event.dates}
                     type_event={event.type_event}
                   />
                 )}
