@@ -3,8 +3,6 @@ import Moment from "moment";
 import { toast } from "react-toastify";
 import { PageHeader } from "antd"
 
-import SearchComponent from "../../shared/searchTable";
-import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";

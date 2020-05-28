@@ -15,14 +15,14 @@ import Espacios from "../espacios";
 import Menu from "./shared/menu";
 import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
+import ConfirmacionRegistro from "./registro/confirmacionRegistro";
+
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import TriviaRoutes from "../trivia";
 import DocumentsRoutes from "../documents";
 import Speakers from "../speakers";
-import Surveys from "../surveys";
 import MenuLanding from "../menuLanding"
-import Surveysconsultant from "../surveysconsultant";
 import CheckAgenda from "../agenda/checkIn";
 import ReportList from "../agenda/report";
 import ConferenceRoute from "../zoom/index";
@@ -54,7 +54,7 @@ const ConfigurationApp = asyncComponent(() => import("../App/configuration"));
 const NotificationsApp = asyncComponent(() => import("../pushNotifications/index"));
 const Wall = asyncComponent(() => import("../wall/index"));
 const NewsApp = asyncComponent(() => import("../news/news"));
-const SurveysCreate = asyncComponent(() => import("../surveys/index"));
+
 const FAQS = asyncComponent(() => import("../faqs"));
 const Trivia = asyncComponent(() => import("../trivia/trivia"));
 
@@ -190,6 +190,10 @@ class Event extends Component {
                 <Route path={`${match.url}/staff`} render={() => <AdminRol event={this.state.event} />} />
               )}
               <Route
+                path={`${match.url}/confirmacion-registro`}
+                render={() => <ConfirmacionRegistro eventID={this.state.event._id} />}
+              />
+              <Route
                 path={`${match.url}/tipo-asistentes`}
                 render={() => <TipoAsistentes eventID={this.state.event._id} />}
               />
@@ -215,9 +219,7 @@ class Event extends Component {
                 />
               )}
 
-              {permissions.data.ids.includes(rolPermissions._id) && (
-                <Route path={`${match.url}/surveys`} render={() => <SurveysCreate eventId={this.state.event._id} />} />
-              )}
+
 
               {permissions.data.ids.includes(rolPermissions._id) && (
                 <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
@@ -240,11 +242,7 @@ class Event extends Component {
                 render={() => <ReporteCertificados eventId={this.state.event._id} />}
               />
               <Route path={`${match.url}/speakers`} render={() => <Speakers eventID={this.state.event._id} />} />
-              <Route path={`${match.url}/encuestas`} render={() => <Surveys eventID={this.state.event._id} />} />
-              <Route
-                path={`${match.url}/encuestasasesores`}
-                render={() => <Surveysconsultant eventID={this.state.event._id} />}
-              />
+
               <Route path={`${match.url}/styles`} render={() => <Styles eventId={this.state.event._id} />} />
               <Route
                 path={`${match.url}/configurationApp`}
@@ -254,7 +252,6 @@ class Event extends Component {
                 path={`${match.url}/notificationsApp`}
                 render={() => <NotificationsApp eventId={this.state.event._id} />}
               />
-              <Route path={`${match.url}/surveys`} render={() => <SurveysCreate eventId={this.state.event._id} />} />
               <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
               {/* <Route path={`${match.url}/trivia`} render={()=><Trivia eventId={this.state.event._id}/>}/> */}

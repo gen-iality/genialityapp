@@ -134,6 +134,17 @@ class DatosModal extends Component {
                                 />
     Izquierda &nbsp;</label>
 
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="labelPosition"
+                                    value="derecha"
+                                    className="form-check-input"
+                                    checked={info.labelPosition == "derecha"}
+                                    onChange={this.handleChange}
+                                />
+    Derecha &nbsp;</label>
+
 
                         </div>
                     </div>

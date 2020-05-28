@@ -121,6 +121,9 @@ export const UsersApi = {
     query = query ? query : "";
     return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
   },
+  mineTickets: async () => {
+    return await Actions.getAll("/api/me/eventUsers/");
+  },
   getProfile: async (id) => {
     return await Actions.getOne("/api/users/", id);
   },
@@ -130,9 +133,7 @@ export const UsersApi = {
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
   },
-  mineTickets: async () => {
-    return await Actions.getAll("/api/me/eventUsers/");
-  },
+
   mineOrdes: async (id) => {
     return await Actions.getAll(`/api/users/${id}/orders`);
   },
@@ -149,6 +150,9 @@ export const UsersApi = {
 export const TicketsApi = {
   getAll: async (token) => {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
+  },
+  getByEvent: async (event, token) => {
+    return await Actions.getOne(`/api/me/eventusers/event/${event}/?token=`, token);
   },
 };
 

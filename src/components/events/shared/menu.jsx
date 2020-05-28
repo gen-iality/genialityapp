@@ -178,18 +178,24 @@ class MenuConfig extends Component {
               }>
               <Menu.Item key="13">
                 <NavLink onClick={this.handleClick} to={`${url}/datos`}>
-                  Datos de asistentes
+                  Datos/Campos a recolectar de asistentes
                 </NavLink>
               </Menu.Item>
 
               <Menu.Item key="14">
+                <NavLink onClick={this.handleClick} to={`${url}/confirmacion-registro`}>
+                  Confirmación registro
+                </NavLink>
+              </Menu.Item>
+
+              <Menu.Item key="15">
                 <NavLink onClick={this.handleClick} to={`${url}/tipo-asistentes`}>
                   Tipo de asistentes
                 </NavLink>
               </Menu.Item>
 
               {permissions.data.ids.includes(rolPermissions.admin_staff._id) && false && (
-                <Menu.Item key="15">
+                <Menu.Item key="16">
                   <NavLink onClick={this.handleClick} to={`${url}/staff`}>
                     Organizadores
                   </NavLink>
