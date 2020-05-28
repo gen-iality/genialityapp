@@ -770,177 +770,179 @@ class AgendaEdit extends Component {
                   <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
                 </div>
               </div>
-            </div>
-            <div className="column is-4 general">
-              <div className="field is-grouped">
-                <button className="button is-text" onClick={this.remove}>
-                  x Eliminar actividad
-                </button>
-                <button onClick={this.submit} className="button is-primary">
-                  Guardar
-                </button>
-              </div>
-              <div className="field is-grouped">
-                <button onClick={this.submit2} className="button is-primary">
-                  Duplicar para traducir
-                </button>
-              </div>
 
-              <div className="section-gray">
-                <div className="field">
-                  <label className="label has-text-grey-light">Imagen</label>
-                  <p>Dimensiones: 1000px x 278px</p>
-                  <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                    <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
-                  </Dropzone>
-                  {image && <img src={image} alt={`activity_${name}`} />}
+
+
+              <div className="column is-4 general">
+                <div className="field is-grouped">
+                  <button className="button is-text" onClick={this.remove}>
+                    x Eliminar actividad
+                </button>
+                  <button onClick={this.submit} className="button is-primary">
+                    Guardar
+                </button>
                 </div>
-                <div className="field">
-                  <label className={`label`}>Capacidad</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="number"
-                      min={0}
-                      name={"capacity"}
-                      value={capacity}
-                      onChange={this.handleChange}
-                      placeholder="Cupo total"
-                    />
-                  </div>
+                <div className="field is-grouped">
+                  <button onClick={this.submit2} className="button is-primary">
+                    Duplicar para traducir
+                </button>
                 </div>
-                <label className="label">Categorías</label>
-                <div className="columns">
-                  <div className="column is-10">
-                    <Creatable
-                      isClearable
-                      styles={catStyles}
-                      onChange={this.selectCategory}
-                      onCreateOption={(value) => this.handleCreate(value, "categories")}
-                      isDisabled={isLoading.categories}
-                      isLoading={isLoading.categories}
-                      isMulti
-                      options={categories}
-                      placeholder={"Sin categoría...."}
-                      value={selectedCategories}
-                    />
+
+                <div className="section-gray">
+                  <div className="field">
+                    <label className="label has-text-grey-light">Imagen</label>
+                    <p>Dimensiones: 1000px x 278px</p>
+                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                      <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
+                    </Dropzone>
+                    {image && <img src={image} alt={`activity_${name}`} />}
                   </div>
-                  <div className="column is-2">
-                    <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
-                      <FaWhmcs />
-                    </button>
+                  <div className="field">
+                    <label className={`label`}>Capacidad</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="number"
+                        min={0}
+                        name={"capacity"}
+                        value={capacity}
+                        onChange={this.handleChange}
+                        placeholder="Cupo total"
+                      />
+                    </div>
                   </div>
-                </div>
-                <label className="label">Tipo de actividad</label>
-                <div className="columns">
-                  <div className="control column is-10">
-                    <Creatable
-                      isClearable
-                      styles={creatableStyles}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      isDisabled={isLoading.types}
-                      isLoading={isLoading.types}
-                      onChange={this.selectType}
-                      onCreateOption={(value) => this.handleCreate(value, "types")}
-                      options={types}
-                      value={selectedType}
-                    />
-                  </div>
-                  <div className="column is-2">
-                    <Link to={`${matchUrl}/tipos`}>
-                      <button className="button">
+                  <label className="label">Categorías</label>
+                  <div className="columns">
+                    <div className="column is-10">
+                      <Creatable
+                        isClearable
+                        styles={catStyles}
+                        onChange={this.selectCategory}
+                        onCreateOption={(value) => this.handleCreate(value, "categories")}
+                        isDisabled={isLoading.categories}
+                        isLoading={isLoading.categories}
+                        isMulti
+                        options={categories}
+                        placeholder={"Sin categoría...."}
+                        value={selectedCategories}
+                      />
+                    </div>
+                    <div className="column is-2">
+                      <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
                         <FaWhmcs />
                       </button>
-                    </Link>
+                    </div>
+                  </div>
+                  <label className="label">Tipo de actividad</label>
+                  <div className="columns">
+                    <div className="control column is-10">
+                      <Creatable
+                        isClearable
+                        styles={creatableStyles}
+                        className="basic-multi-select"
+                        classNamePrefix="select"
+                        isDisabled={isLoading.types}
+                        isLoading={isLoading.types}
+                        onChange={this.selectType}
+                        onCreateOption={(value) => this.handleCreate(value, "types")}
+                        options={types}
+                        value={selectedType}
+                      />
+                    </div>
+                    <div className="column is-2">
+                      <Link to={`${matchUrl}/tipos`}>
+                        <button className="button">
+                          <FaWhmcs />
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
-                {!this.props.location.state.edit && (
-                  <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
-                )}
+                <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
+                  {!this.props.location.state.edit && (
+                    <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
+                  )}
 
-                {this.props.location.state.edit && (
-                  <>
-                    {!this.state.meeting_id && (
-                      <Fragment>
-                        <div className="control">
-                          <div className="select">
-                            <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
-                              <option>Seleccione host</option>
-                              {this.state.hostAvailable.length > 0 &&
-                                this.state.hostAvailable.map((host) => {
-                                  return (
-                                    host.state &&
-                                    host.state === "available" && (
-                                      <option value={host.id} key={host.id}>
-                                        {host.email}
-                                        {console.log(host)}
-                                      </option>
-                                    )
-                                  );
-                                })}
-                            </select>
+                  {this.props.location.state.edit && (
+                    <>
+                      {!this.state.meeting_id && (
+                        <Fragment>
+                          <div className="control">
+                            <div className="select">
+                              <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
+                                <option>Seleccione host</option>
+                                {this.state.hostAvailable.length > 0 &&
+                                  this.state.hostAvailable.map((host) => {
+                                    return (
+                                      host.state &&
+                                      host.state === "available" && (
+                                        <option value={host.id} key={host.id}>
+                                          {host.email}
+                                          {console.log(host)}
+                                        </option>
+                                      )
+                                    );
+                                  })}
+                              </select>
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          {!this.state.creatingConference && (
-                            <button
-                              style={{ marginTop: "2%" }}
-                              className="button is-primary"
-                              disabled={!this.state.host_id}
-                              onClick={this.createConference}>
-                              Crear espacio virtual
-                            </button>
-                          )}
-                          {this.state.creatingConference && <Spin tip="Creando..." />}
-                        </div>
-                      </Fragment>
-                    )}
-
-                    {this.state.meeting_id && (
-                      <div>
-                        <div style={{ marginTop: "2%" }}>
                           <div>
-                            <p>El id de la conferencia virtual es:</p>
-                            <p>{this.state.meeting_id}</p>
+                            {!this.state.creatingConference && (
+                              <button
+                                style={{ marginTop: "2%" }}
+                                className="button is-primary"
+                                disabled={!this.state.host_id}
+                                onClick={this.createConference}>
+                                Crear espacio virtual
+                              </button>
+                            )}
+                            {this.state.creatingConference && <Spin tip="Creando..." />}
+                          </div>
+                        </Fragment>
+                      )}
+
+                      {this.state.meeting_id && (
+                        <div>
+                          <div style={{ marginTop: "2%" }}>
+                            <div>
+                              <p>El id de la conferencia virtual es:</p>
+                              <p>{this.state.meeting_id}</p>
+                            </div>
+
+                            <div key={this.state.key}>
+                              <p>
+                                <b>Accessos</b>
+                              </p>
+                              <hr />
+                              <p>
+                                <a target="_blank" href={start_url}>
+                                  Acceso para hosts
+                              </a>
+                              </p>
+                              <p>
+                                <a target="_blank" href={join_url}>
+                                  Acceso para asistentes
+                              </a>
+                              </p>
+                            </div>
                           </div>
 
-                          <div key={this.state.key}>
-                            <p>
-                              <b>Accessos</b>
-                            </p>
-                            <hr />
-                            <p>
-                              <a target="_blank" href={start_url}>
-                                Acceso para hosts
-                              </a>
-                            </p>
-                            <p>
-                              <a target="_blank" href={join_url}>
-                                Acceso para asistentes
-                              </a>
-                            </p>
-                          </div>
-                        </div>
-
-                        <button
-                          style={{ marginTop: "2%" }}
-                          className="button is-primary"
-                          onClick={this.removeConference}>
-                          Eliminar espacio virtual
+                          <button
+                            style={{ marginTop: "2%" }}
+                            className="button is-primary"
+                            onClick={this.removeConference}>
+                            Eliminar espacio virtual
                         </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </Card>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </Card>
+              </div>
             </div>
-          </div>
-    )
-  }
+          )
+        }
       </EventContent>
     );
   }
