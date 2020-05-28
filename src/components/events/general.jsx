@@ -15,7 +15,7 @@ import axios from "axios/index"
 import { DateTimePicker } from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
-import DateEvent from "./calendar";
+import DateEvent from "./dateEvent";
 Moment.locale('es');
 
 

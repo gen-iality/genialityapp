@@ -36,7 +36,7 @@ class DateEvent extends Component {
 
     async componentDidMount() {
         const dateEvent = await EventsApi.getOne(this.props.eventId)
-        this.setState({ dateEvent: dateEvent.dates, fields: dateEvent.dates })
+        this.setState({ dateEvent: dateEvent.dates })
     }
 
     remove(date) {
@@ -69,7 +69,7 @@ class DateEvent extends Component {
     render() {
 
         const dateFormat = 'DD-MM-YYYY';
-        const { fields } = this.state;
+        const { dateEvent } = this.state;
         return (
             <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel} onFinish={this.onFinish}>
                 <Form.List name="names">
@@ -111,7 +111,7 @@ class DateEvent extends Component {
                                         style={{ width: '60%' }}
                                     >
                                         <PlusOutlined /> Add field
-                </Button>
+                                    </Button>
                                 </Form.Item>
                             </div>
                         );
