@@ -34,9 +34,12 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
 
+  const [form] = Form.useForm();
+
   useEffect(() => {
     setSubmittedForm(false);
-  }, [eventUserId]);
+    form.resetFields();
+  }, [eventUserId, initialValues]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -198,6 +201,10 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
 
       let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
       rule = type == "email" ? { ...rule, type: "email" } : rule;
+
+      // let hideFields =
+      //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+
       if (type == "boolean" && mandatory) {
         let textoError = "Debes llenar este  campo es obligatorio";
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
@@ -209,6 +216,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           {type != "tituloseccion" && (
             <>
               <Form.Item
+                // style={eventUserId && hideFields}
                 valuePropName={type == "boolean" ? "checked" : "value"}
                 label={(labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion" ? label : ""}
                 name={name}
@@ -253,6 +261,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           <Card title={!eventUserId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
+              form={form}
               layout="vertical"
               onFinish={onFinish}
               validateMessages={validateMessages}

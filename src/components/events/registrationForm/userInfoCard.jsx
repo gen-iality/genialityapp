@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Form from "./form";
+import FormComponent from "./form";
 
 import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
 const { Text } = Typography;
@@ -11,6 +11,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   const [loading, setLoading] = useState(true);
   const [visibleModal, setVisibleModal] = useState(false);
   const [eventUserSelected, setEventUserSelected] = useState({});
+  const [initialValues, setInitialValues] = useState({});
 
   //   console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
@@ -51,6 +52,14 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   const openModal = (ticket) => {
     setEventUserSelected(ticket);
     setVisibleModal(true);
+
+    let eventUserValues = {};
+    ticket.data.forEach((item) => {
+      if (item.key == "names" || item.key == "email") return;
+      eventUserValues = { ...eventUserValues, [item.key]: item.value };
+    });
+    console.log("eventUserValues:", eventUserValues);
+    setInitialValues(eventUserValues);
   };
 
   const handleOk = (e) => {
@@ -89,7 +98,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
                 </Col>
               </Row>
             ))}
-            <Button onClick={() => openModal({ eventUserId: item.eventUserId, index: indiceArray })}>Transferir</Button>
+            <Button onClick={() => openModal({ ...item, index: indiceArray })}>Transferir</Button>
           </Card>
         ))}
 
@@ -104,7 +113,8 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
               Cancelar
             </Button>,
           ]}>
-          <Form
+          <FormComponent
+            initialValues={initialValues}
             eventId={eventId}
             extraFields={extraFields}
             eventUserId={eventUserSelected.eventUserId}
