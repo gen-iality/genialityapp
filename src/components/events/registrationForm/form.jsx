@@ -1,6 +1,6 @@
-import React, { useState, useEfect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 
-import API, { UsersApi } from "../../../helpers/request";
+import API, { UsersApi, TicketsApi } from "../../../helpers/request";
 
 import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result } from "antd";
 const { Panel } = Collapse;
@@ -27,12 +27,16 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields }) => {
+export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }) => {
   const [user, setUser] = useState({});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
+
+  useEffect(() => {
+    setSubmittedForm(false);
+  }, [eventUserId]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -47,38 +51,57 @@ export default ({ initialValues, eventId, extraFields }) => {
     const key = "registerUserService";
     console.log("values", values);
 
-    message.loading({ content: "Registrando Usuario", key });
+    message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
 
     const snap = { properties: values };
 
     let textMessage = {};
     textMessage.key = key;
 
-    try {
-      let resp = await UsersApi.createOne(snap, eventId);
-
-      if (resp.message === "OK") {
-        console.log("RESP", resp);
-        let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
-        textMessage.content = "Usuario " + statusMessage;
-        setSuccessMessage(
-          Object.entries(initialValues).length > 0
-            ? `Fuiste registrado al evento exitosamente`
-            : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
-        );
+    if (eventUserId) {
+      try {
+        let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
+        console.log("resp:", resp);
+        textMessage.content = "Transferencia Realizada";
+        setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
         setSubmittedForm(true);
         message.success(textMessage);
-      } else {
-        textMessage.content = resp;
-
-        setNotLoggedAndRegister(true);
-        message.success(textMessage);
+        setTimeout(() => {
+          closeModal({ status: "sent_transfer", message: "Transferencia Hecha" });
+        }, 4000);
+      } catch (err) {
+        console.log("Se presento un problema", err);
+        textMessage.content = "Error... Intentalo mas tarde";
+        message.error(textMessage);
       }
-    } catch (err) {
-      textMessage.content = "Error... Intentalo mas tarde";
-      textMessage.key = key;
-      message.error(textMessage);
+    } else {
+      try {
+        let resp = await UsersApi.createOne(snap, eventId);
+
+        if (resp.message === "OK") {
+          console.log("RESP", resp);
+          let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          textMessage.content = "Usuario " + statusMessage;
+          setSuccessMessage(
+            Object.entries(initialValues).length > 0
+              ? `Fuiste registrado al evento exitosamente`
+              : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
+          );
+
+          setSubmittedForm(true);
+          message.success(textMessage);
+        } else {
+          textMessage.content = resp;
+          // Retorna un mensaje en caso de que ya se encuentre registrado el correo
+          setNotLoggedAndRegister(true);
+          message.success(textMessage);
+        }
+      } catch (err) {
+        textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.key = key;
+        message.error(textMessage);
+      }
     }
   };
 
@@ -227,7 +250,7 @@ export default ({ initialValues, eventId, extraFields }) => {
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title="Formulario de registro" bodyStyle={textLeft}>
+          <Card title={!eventUserId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               layout="vertical"
