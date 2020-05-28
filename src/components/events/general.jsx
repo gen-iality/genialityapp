@@ -498,7 +498,6 @@ class General extends Component {
                                 </div>
                             </div>
                         </div>
-                        <DateEvent eventId={this.props.event._id} />
                         <div className="field">
                             <div className="columns is-mobile">
                                 <div className="column inner-column">

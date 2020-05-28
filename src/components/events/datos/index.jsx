@@ -206,7 +206,6 @@ class Datos extends Component {
                             })}
                         </EvenTable>
                     }
-                    <DragDrop list={fields} eventId={this.props.eventID} />
                 </EventContent>
                 {
                     modal &&
