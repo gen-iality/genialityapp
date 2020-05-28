@@ -7,10 +7,10 @@ const { Text } = Typography;
 
 export default ({ currentUser, extraFields, eventId, userTickets }) => {
   const [infoUser, setInfoUser] = useState({});
-  const [userTicketsInfo, setUserTicketsInfo] = useState([]);
+  const [eventUserList, setEventUserList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [ticketId, setTicketId] = useState(null);
+  const [eventUserId, setEventUserId] = useState(null);
 
   //   console.log("currentuser", currentUser.properties, extraFields);
   // Se obtiene las propiedades y se asignan a un array con el valor que contenga
@@ -37,19 +37,19 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     });
   };
 
-  const setTicketList = (list) => {
-    let tickets = [];
-    console.log(tickets);
-    list.forEach(async (ticket, index, arr) => {
-      let result = await parseObjectToArray(ticket.properties);
-      tickets.push({ ticketId: ticket._id, data: result });
+  const setEventUsers = (list) => {
+    let eventUsers = [];
+    console.log(eventUsers);
+    list.forEach(async (item, index, arr) => {
+      let result = await parseObjectToArray(item.properties);
+      eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
 
-      if (index == arr.length - 1) setUserTicketsInfo(tickets);
+      if (index == arr.length - 1) setEventUserList(eventUsers);
     });
   };
 
   const openModal = (ticket) => {
-    setTicketId(ticket);
+    setEventUserId(ticket);
     setVisibleModal(true);
   };
 
@@ -63,15 +63,15 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   useEffect(() => {
     console.log("tickets originales:", userTickets);
-    setTicketList(userTickets);
+    setEventUsers(userTickets);
   }, [currentUser]);
 
   if (!loading)
     return (
       <Card>
-        {userTicketsInfo.map((ticketObj, indiceArray) => (
-          <Card key={`Card_${indiceArray}`} title="Entrada">
-            {ticketObj.data.map((field, key) => (
+        {eventUserList.map((item, indiceArray) => (
+          <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
+            {item.data.map((field, key) => (
               <Row key={key} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                 <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
                   <Text strong>{field.property}</Text>
@@ -81,7 +81,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
                 </Col>
               </Row>
             ))}
-            <Button onClick={() => openModal(ticketObj.ticketId)}>Transferir</Button>
+            <Button onClick={() => openModal(item.eventUserId)}>Transferir</Button>
           </Card>
         ))}
 
@@ -96,7 +96,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
               Cancelar
             </Button>,
           ]}>
-          <Form eventId={eventId} extraFields={extraFields} ticketId={ticketId} />
+          <Form eventId={eventId} extraFields={extraFields} eventUserId={eventUserId} />
         </Modal>
       </Card>
     );

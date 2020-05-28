@@ -27,7 +27,7 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields, ticketId }) => {
+export default ({ initialValues, eventId, extraFields, eventUserId }) => {
   const [user, setUser] = useState({});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -47,16 +47,16 @@ export default ({ initialValues, eventId, extraFields, ticketId }) => {
     const key = "registerUserService";
     console.log("values", values);
 
-    message.loading({ content: !ticketId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+    message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
 
     const snap = { properties: values };
 
     let textMessage = {};
     textMessage.key = key;
 
-    if (ticketId) {
+    if (eventUserId) {
       try {
-        let resp = await TicketsApi.transferToUser(eventId, ticketId, snap);
+        let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
         console.log("resp:", resp);
         textMessage.content = "Transferencia Realizada";
         message.success(textMessage);
@@ -240,7 +240,7 @@ export default ({ initialValues, eventId, extraFields, ticketId }) => {
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title={!ticketId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
+          <Card title={!eventUserId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               layout="vertical"
