@@ -51,7 +51,7 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                         backgroundPosition: 'center',
 
                     }}>
-                    <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
+                    <TweenOne className="banner-user-text">
 
                         {/* Fecha del evento */}
                         <div>
@@ -60,12 +60,9 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                                     <>
                                         {
                                             dates.map((item, key) => (
-                                                <div key={key}>
-                                                    <span style={{ marginRight: "2%" }}>
-                                                        {capitalize(Moment(item, ["DD-MM-YYYY"]).format("DD-MMMM-YYYY"))}
-                                                    </span>
-                                                </div>
-
+                                                <span key={key}>
+                                                    {Moment(item, ["DD-MM-YYYY"]).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}
+                                                </span>
                                             ))
                                         }
                                     </>
@@ -84,11 +81,25 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
 
                             }
                         </div>
+                    </TweenOne>
 
+
+
+                    <TweenOne className="banner-user-title" animation={{ y: 30, opacity: 0, type: 'from' }}>
                         {/* Nombre del evento */}
                         <span>{title}</span>
-
                     </TweenOne>
+
+
+
+
+
+
+
+
+
+
+
 
                     <TweenOne className="banner-user-text"
                         animation={{ y: 30, opacity: 0, type: 'from', delay: 100 }}
