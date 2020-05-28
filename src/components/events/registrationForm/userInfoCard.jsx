@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import Form from "./form";
+import FormComponent from "./form";
 
 import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
 const { Text } = Typography;
@@ -104,7 +104,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
               Cancelar
             </Button>,
           ]}>
-          <Form
+          <FormComponent
             eventId={eventId}
             extraFields={extraFields}
             eventUserId={eventUserSelected.eventUserId}
