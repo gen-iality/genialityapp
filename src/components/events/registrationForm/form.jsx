@@ -198,6 +198,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
 
       let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
       rule = type == "email" ? { ...rule, type: "email" } : rule;
+
+      // let hideFields = name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+      let hideFields =
+        mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+
       if (type == "boolean" && mandatory) {
         let textoError = "Debes llenar este  campo es obligatorio";
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
@@ -209,6 +214,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           {type != "tituloseccion" && (
             <>
               <Form.Item
+                style={eventUserId && hideFields}
                 valuePropName={type == "boolean" ? "checked" : "value"}
                 label={(labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion" ? label : ""}
                 name={name}
