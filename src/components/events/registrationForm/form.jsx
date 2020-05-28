@@ -1,6 +1,6 @@
 import React, { useState, useEfect, Fragment } from "react";
 
-import API, { UsersApi } from "../../../helpers/request";
+import API, { UsersApi, TicketsApi } from "../../../helpers/request";
 
 import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result } from "antd";
 const { Panel } = Collapse;
@@ -27,7 +27,7 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields }) => {
+export default ({ initialValues, eventId, extraFields, ticketId }) => {
   const [user, setUser] = useState({});
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -54,31 +54,40 @@ export default ({ initialValues, eventId, extraFields }) => {
     let textMessage = {};
     textMessage.key = key;
 
-    try {
-      let resp = await UsersApi.createOne(snap, eventId);
-
-      if (resp.message === "OK") {
-        console.log("RESP", resp);
-        let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
-        textMessage.content = "Usuario " + statusMessage;
-        setSuccessMessage(
-          Object.entries(initialValues).length > 0
-            ? `Fuiste registrado al evento exitosamente`
-            : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
-        );
-
-        setSubmittedForm(true);
-        message.success(textMessage);
-      } else {
-        textMessage.content = resp;
-
-        setNotLoggedAndRegister(true);
-        message.success(textMessage);
+    if (ticketId) {
+      try {
+        let resp = await TicketsApi.transferToUser(eventId, ticketId, snap);
+        console.log("resp:", resp);
+      } catch (err) {
+        console.log("Se presento un problema", err);
       }
-    } catch (err) {
-      textMessage.content = "Error... Intentalo mas tarde";
-      textMessage.key = key;
-      message.error(textMessage);
+    } else {
+      try {
+        let resp = await UsersApi.createOne(snap, eventId);
+
+        if (resp.message === "OK") {
+          console.log("RESP", resp);
+          let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          textMessage.content = "Usuario " + statusMessage;
+          setSuccessMessage(
+            Object.entries(initialValues).length > 0
+              ? `Fuiste registrado al evento exitosamente`
+              : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
+          );
+
+          setSubmittedForm(true);
+          message.success(textMessage);
+        } else {
+          textMessage.content = resp;
+
+          setNotLoggedAndRegister(true);
+          message.success(textMessage);
+        }
+      } catch (err) {
+        textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.key = key;
+        message.error(textMessage);
+      }
     }
   };
 
@@ -227,7 +236,7 @@ export default ({ initialValues, eventId, extraFields }) => {
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title="Formulario de registro" bodyStyle={textLeft}>
+          <Card title={!ticketId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               layout="vertical"
