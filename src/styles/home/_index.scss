@@ -33,12 +33,12 @@ div.icon-header {
 
 .ant-layout-header {
   background: #fff !important;
-  height: 67px !important;
+  height: 64px !important;
   padding: 0 30px !important;
 }
 
 .main {
-  margin-top: 5%;
+  margin-top: 65px;
 
   .columns {
     margin: 0;
@@ -71,10 +71,6 @@ section.home {
 }
 
 @media only screen and (max-width: $breakpoint-mobile) {
-  .main {
-    padding-top: 3em;
-  }
-
   .media {
     flex-direction: row;
   }

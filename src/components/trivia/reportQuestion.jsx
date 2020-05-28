@@ -50,6 +50,8 @@ class ReportQuestion extends Component {
 
   exportReport = () => {
     let { nameQuestion, listOfUserResponse } = this.state;
+    //Sheet names cannot exceed 31 chars
+    nameQuestion = nameQuestion.substring(0, 30);
     const { match } = this.props;
 
     const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
@@ -62,7 +64,7 @@ class ReportQuestion extends Component {
     XLSX.utils.book_append_sheet(wb, ws, `${nameQuestion}`);
     const name = `${match.params.id}`;
 
-    XLSX.writeFile(wb, `${name}${Moment().format("DDMMYY")}.xls`);
+    XLSX.writeFile(wb, `${nameQuestion}-${name}${Moment().format("DDMMYY")}.xls`);
   };
 
   goBack = () => this.props.history.goBack();
@@ -73,7 +75,7 @@ class ReportQuestion extends Component {
       <Fragment>
         <EventContent title={nameQuestion} closeAction={this.goBack}>
           <Divider orientation="right">Reporte</Divider>
-          <Button onClick={this.exportReport}>Exportar</Button>
+          <Button onClick={this.exportReport}>Exportar resultados </Button>
           <Table dataSource={listOfUserResponse} columns={columns} />;
         </EventContent>
       </Fragment>
