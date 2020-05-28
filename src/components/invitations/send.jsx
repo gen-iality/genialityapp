@@ -22,8 +22,15 @@ class SendRsvp extends Component {
     }
 
     componentDidMount() {
+        let default_header = ' Hola "INVITADO", has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
+
         this.setState({
-            rsvp: { ...this.state.rsvp, subject: this.props.event.name, message: this.props.event.description, image: this.props.event.picture }
+            rsvp: {
+                ...this.state.rsvp, content_header: default_header, subject: this.props.event.name,
+                message: this.props.event.description,
+                image: this.props.event.picture,
+                image_header: this.props.event.picture
+            }
         })
     }
 
@@ -31,26 +38,36 @@ class SendRsvp extends Component {
         const file = files[0];
         if (file) {
             this.setState({ imageFile: file });
-            this.uploadImg()
+            this.uploadImg("imageFile", "image")
         } else {
             this.setState({ errImg: 'Only images files allowed. Please try again :)' });
         }
     };
 
-    uploadImg = () => {
+    changeImgHeader = (files) => {
+        const file = files[0];
+        if (file) {
+            this.setState({ imageFileHeader: file });
+            this.uploadImg("imageFileHeader", "image_header")
+        } else {
+            this.setState({ errImg: 'Only images files allowed. Please try again :)' });
+        }
+    };
+
+    uploadImg = (imageFieldName, imageStateName) => {
         console.log('MAKE THE AXIOS REQUEST');
         let data = new FormData();
         const url = '/api/files/upload',
             self = this;
-        data.append('file', this.state.imageFile);
+        data.append('file', this.state[imageFieldName]);
         Actions.post(url, data)
             .then((image) => {
                 self.setState({
                     rsvp: {
                         ...self.state.rsvp,
-                        image: image
+                        [imageStateName]: image
                     },
-                    imageFile: false
+                    [imageFieldName]: false
                 });
             })
             .catch(e => {
@@ -66,9 +83,14 @@ class SendRsvp extends Component {
         })
     };
 
-    QuillComplement = content => this.setState({
+    QuillComplement2 = content => this.setState({
         rsvp: { ...this.state.rsvp, message: content }
     })
+
+    QuillComplement1 = content => this.setState({
+        rsvp: { ...this.state.rsvp, content_header: content }
+    })
+
 
     async submit() {
         const { event, selection } = this.props;
@@ -79,7 +101,7 @@ class SendRsvp extends Component {
         });
         this.setState({ dataMail: users, disabled: true });
         try {
-            const data = { subject: rsvp.subject, message: rsvp.message, image: rsvp.image, eventUsersIds: users };
+            const data = { content_header: rsvp.content_header, subject: rsvp.subject, message: rsvp.message, image_header: rsvp.image_header, image: rsvp.image, eventUsersIds: users };
             await EventsApi.sendRsvp(data, event._id);
             toast.success(<FormattedMessage id="toast.email_sent" defaultMessage="Ok!" />);
             this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' })
@@ -127,7 +149,7 @@ class SendRsvp extends Component {
                         </div>
                         {/* -- endof email subject */}
 
-                        <div className="column is-10">
+                        {/* <div className="column is-10">
                             <div className="rsvp-title has-text-centered">
                                 <h2 className="rsvp-title-txt">
                                     Hola "INVITADO", has sido invitado a:
@@ -136,7 +158,28 @@ class SendRsvp extends Component {
                                 </h2>
 
                             </div>
+        </div> */}
+                        <div className="column is-10">
+                            <div className="rsvp-pic">
+                                <p className="rsvp-pic-txt">Sube una imagen <br /> <small>(Por defecto será la imagen del banner)</small></p>
+                                <ImageInput picture={this.state.rsvp.image_header} imageFile={this.state.imageFileHeader}
+                                    divClass={'rsvp-pic-img'} content={<img src={this.state.rsvp.image_header} alt={'Imagen Perfil'} />}
+                                    classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFileHeader ? 'is-loading' : ''}`}>Cambiar foto</button>}
+                                    contentZone={<div>Subir foto</div>}
+                                    changeImg={this.changeImgHeader} errImg={this.state.errImg} />
+                            </div>
                         </div>
+
+                        <div className="column is-10">
+                            <div className="field rsvp-desc">
+                                <label className="label">Cabecera del correo <br /> <small></small></label>
+                                <div className="control">
+                                    {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
+                                    <Quill value={this.state.rsvp.content_header} onChange={this.QuillComplement1} name="content_header" />
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div className="column is-10">
                             <div className="columns is-mobile is-multiline is-centered rsvp-date-wrapper">
@@ -237,10 +280,14 @@ class SendRsvp extends Component {
                                 <label className="label">Cuerpo de la invitación <br /> <small>(Por defecto será la descripción del evento)</small></label>
                                 <div className="control">
                                     {/* <textarea className="textarea" value={this.state.rsvp.message} onChange={this.handleChange} name={"message"} /> */}
-                                    <Quill value={this.state.rsvp.message} onChange={this.QuillComplement} name="message" />
+                                    <Quill value={this.state.rsvp.message} onChange={this.QuillComplement2} name="message" />
                                 </div>
                             </div>
                         </div>
+
+
+
+
                         <div className="column is-10">
                             <div className="columns is-centered">
                                 <div className="column has-text-centered">

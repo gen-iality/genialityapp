@@ -47,16 +47,30 @@ class Agenda extends Component {
     this.getCurrentUser();
 
     const { event } = this.props;
-    let days = [];
-    const init = Moment(event.date_start);
-    const end = Moment(event.date_end);
-    const diff = end.diff(init, "days");
-    //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-    for (let i = 0; i < diff + 1; i++) {
-      days.push(Moment(init).add(i, "d"));
-    }
 
-    this.setState({ days, day: days[0] }, this.fetchAgenda);
+    if (!event.dates) {
+      let days = [];
+      const init = Moment(event.date_start);
+      const end = Moment(event.date_end);
+      const diff = end.diff(init, "days");
+      //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+      for (let i = 0; i < diff + 1; i++) {
+        days.push(Moment(init).add(i, "d"));
+      }
+
+      this.setState({ days, day: days[0] }, this.fetchAgenda);
+      //Si existe dates, entonces envia al array push las fechas del array dates del evento
+    } else {
+      const days = []
+      let date = event.dates
+      Date.parse(date)
+
+      for (var i = 0; i < date.length; i++) {
+        days.push(Moment(date[i], ["DD-MM-YYYY"]).format("YYYY-MM-DD"))
+      }
+      this.setState({ days, day: days[0] }, this.fetchAgenda);
+      console.log(days)
+    }
   }
 
   // Funcion para consultar la informacion del actual usuario
@@ -97,6 +111,7 @@ class Agenda extends Component {
   }
 
   filterByDay = (day, agenda) => {
+    console.log(day)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter(a => a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -287,7 +302,7 @@ class Agenda extends Component {
                   {days.map((date, key) => (
                     <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
                       <a className={`${date === day ? " select-day" : " unselect-day"}`}>
-                        <span className="level-item date" >{this.capitalizeDate(date)}</span>
+                        <span className="level-item date" >{this.capitalizeDate(Moment(date, ["YYYY-MM-DD"]).format("MMMM DD"))}</span>
                       </a>
                     </li>
                   ))}

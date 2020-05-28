@@ -6,6 +6,7 @@ import { Actions } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
 import LogOut from "../shared/logOut";
 import { SketchPicker } from "react-color";
+import { Button } from "antd"
 
 class Styles extends Component {
   constructor(props) {
@@ -262,9 +263,9 @@ class Styles extends Component {
                 {this.state.fileMsg && <p className="help is-success">{this.state.fileMsg}</p>}
               </div>
             ))}
-            <button className="button is-primary" onClick={this.submit}>
+            <Button type="primary" onClick={this.submit}>
               Guardar
-            </button>
+            </Button>
           </div>
         </div>
         {timeout && <LogOut />}

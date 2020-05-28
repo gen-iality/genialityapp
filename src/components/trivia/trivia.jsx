@@ -2,10 +2,14 @@ import React, { Component, Fragment } from "react";
 import { Redirect, withRouter, Link } from "react-router-dom";
 import EventContent from "../events/shared/content";
 import { SurveysApi, AgendaApi } from "../../helpers/request";
+import { deleteSurvey } from "./services";
+
 import { sweetAlert } from "../../helpers/utils";
 import EvenTable from "../events/shared/table";
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
+
+import { message } from "antd";
 
 class trivia extends Component {
   constructor(props) {
@@ -45,12 +49,16 @@ class trivia extends Component {
   };
 
   //Funcion para eliminar un dato de la lista
-  async destroy(idTrivia) {
-    const TriviaDestroy = await SurveysApi.deleteOne(this.props.event._id, idTrivia);
-    console.log(TriviaDestroy);
+  destroy(idTrivia) {
+    message.loading({ content: "Eliminando Encuesta", key: "deleting" });
 
-    toast.success("Trivia Eliminada");
-    this.getInformation();
+    SurveysApi.deleteOne(this.props.event._id, idTrivia).then(async (TriviaDestroy) => {
+      console.log(TriviaDestroy);
+      let deleteSurveyInFire = await deleteSurvey(idTrivia);
+      console.log("Fire:", deleteSurveyInFire);
+      message.success({ content: deleteSurveyInFire.message, key: "deleting" });
+      this.getInformation();
+    });
   }
 
   render() {

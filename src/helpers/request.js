@@ -151,6 +151,12 @@ export const TicketsApi = {
   getAll: async (token) => {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
   },
+  getByEvent: async (event, token) => {
+    return await Actions.getOne(`/api/me/eventusers/event/${event}/?token=`, token);
+  },
+  transferToUser: async (event, event_user, data) => {
+    return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
+  },
 };
 
 export const EventFieldsApi = {
@@ -164,6 +170,7 @@ export const EventFieldsApi = {
     return await Actions.post(`/api/events/${event}/userproperties`, data);
   },
   editOne: async (data, id, event) => {
+    console.log(id, event, data);
     return await Actions.edit(`/api/events/${event}/userproperties`, data, id);
   },
   deleteOne: async (id, event) => {

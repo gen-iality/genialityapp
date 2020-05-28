@@ -82,20 +82,42 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
     let days = [];
-    const init = Moment(event.date_start);
-    const end = Moment(event.date_end);
-    const diff = end.diff(init, "days");
-    //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-    for (let i = 0; i < diff + 1; i++) {
-      days.push(
-        Moment(init)
-          .add(i, "d")
-          .format("YYYY-MM-DD")
-      );
+
+    try {
+      const info = await EventsApi.getOne(event._id)
+      //se valida si no existe dates para dejar la logica 
+      //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
+      if (!info.dates) {
+        const init = Moment(event.date_start);
+        const end = Moment(event.date_end);
+        const diff = end.diff(init, "days");
+        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+        for (let i = 0; i < diff + 1; i++) {
+          days.push(
+            Moment(init)
+              .add(i, "d")
+              .format("YYYY-MM-DD")
+          );
+        }
+        //Si existe dates, entonces envia al array push las fechas del array dates del evento
+      } else {
+        let date = info.dates
+        Date.parse(date)
+
+        for (var i = 0; i < date.length; i++) {
+          days.push(Moment(date[i], ["DD-MM-YYYY"]).format("YYYY-MM-DD"))
+        }
+
+        console.log(days)
+      }
+    } catch (e) {
+      console.log(e)
     }
+
+
     let documents = await DocumentsApi.byEvent(this.props.event._id);
     let hostAvailable = await EventsApi.hostAvailable();
-    console.log(hostAvailable)
+    console.log(hostAvailable);
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
@@ -138,7 +160,7 @@ class AgendaEdit extends Component {
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
       });
     } else {
-      this.setState({ date: days[0] });
+      this.setState({ days });
     }
 
     const isLoading = { types: false, categories: false };
@@ -162,7 +184,7 @@ class AgendaEdit extends Component {
   handleChange = (e) => {
     const { name } = e.target;
     const { value } = e.target;
-    console.log(e, e.target)
+    console.log(e, e.target);
     this.setState({ [name]: value, host_id: e.target.value });
   };
   //FN para cambio en campo de fecha
@@ -245,16 +267,17 @@ class AgendaEdit extends Component {
 
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
         else {
+          console.log(info)
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
         }
-        //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
         sweetAlert.showSuccess("Información guardada");
       } catch (e) {
         sweetAlert.showError(handleRequestError(e));
+        console.log(e);
       }
     }
   };
@@ -324,7 +347,7 @@ class AgendaEdit extends Component {
       host_ids,
       type_id,
       has_date,
-      selected_document
+      selected_document,
     };
   };
 
@@ -401,7 +424,7 @@ class AgendaEdit extends Component {
         "Content-type": "application/json",
       },
       data: zoomData,
-      url: ApiEviusZoomServer
+      url: ApiEviusZoomServer,
     };
     let response = null;
 
@@ -409,9 +432,8 @@ class AgendaEdit extends Component {
     try {
       response = await axios(options);
       toast.success("Conferencia Creada");
-      console.log(this.state.host_id)
+      console.log(this.state.host_id);
       let result = await setHostState(this.state.host_id, true);
-
 
       const {
         event,
@@ -429,7 +451,7 @@ class AgendaEdit extends Component {
       if (error.response) {
         response = JSON.stringify(error.response.data);
       }
-      console.log(error)
+      console.log(error);
       this.setState({ creatingConference: false });
     }
     this.setState({ creatingConference: false });
@@ -542,6 +564,7 @@ class AgendaEdit extends Component {
                 <div className="field">
                   <label className="label">Día</label>
                   <div className="columns">
+                    {console.log(this.state.days)}
                     {this.state.days.map((day, key) => {
                       return (
                         <div key={key} className="column">
@@ -554,179 +577,202 @@ class AgendaEdit extends Component {
                             value={day}
                             onChange={this.handleChange}
                           />
-                          <label htmlFor={`radioDay${key}`}>{day}</label>
+                          <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
                         </div>
                       );
                     })}
                   </div>
                 </div>
+              </div>
+              <div className="field">
+                <label className="label">Día</label>
                 <div className="columns">
-                  <div className="column">
-                    <div className="field">
-                      <label className="label">Hora Inicio</label>
-                      <div className="control">
-                        <DateTimePicker
-                          value={hour_start}
-                          dropUp
-                          step={15}
-                          date={false}
-                          onChange={(value) => this.handleDate(value, "hour_start")}
+                  {this.state.days.map((day, key) => {
+                    return (
+                      <div key={key} className="column">
+                        <input
+                          type="radio"
+                          name="date"
+                          id={`radioDay${key}`}
+                          className="is-checkradio"
+                          checked={day === date}
+                          value={day}
+                          onChange={this.handleChange}
                         />
+                        <label htmlFor={`radioDay${key}`}>{day}</label>
                       </div>
-                    </div>
-                  </div>
-                  <div className="column">
-                    <div className="field">
-                      <label className="label">Hora Fin</label>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="columns">
+                <div className="column">
+                  <div className="field">
+                    <label className="label">Hora Inicio</label>
+                    <div className="control">
                       <DateTimePicker
-                        value={hour_end}
+                        value={hour_start}
                         dropUp
                         step={15}
                         date={false}
-                        onChange={(value) => this.handleDate(value, "hour_end")}
+                        onChange={(value) => this.handleDate(value, "hour_start")}
                       />
                     </div>
                   </div>
                 </div>
-                <label className="label">Conferencista</label>
-                <div className="columns">
-                  <div className="column is-10">
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectHost}
-                      options={hosts}
-                      value={selectedHosts}
+                <div className="column">
+                  <div className="field">
+                    <label className="label">Hora Fin</label>
+                    <DateTimePicker
+                      value={hour_end}
+                      dropUp
+                      step={15}
+                      date={false}
+                      onChange={(value) => this.handleDate(value, "hour_end")}
                     />
-                  </div>
-                  <div className="column is-2">
-                    <button
-                      onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
-                      className="button">
-                      <FaWhmcs />
-                    </button>
                   </div>
                 </div>
-                <label className="label required">Espacio</label>
-                <div className="field has-addons">
-                  <div className="control">
-                    <div className="select">
-                      <select name={"space_id"} value={space_id} onChange={this.handleChange}>
-                        <option>Seleccione un lugar/salón ...</option>
-                        {
-                          spaces.map((space) => {
-                            return (
-                              <option key={space.value} value={space.value}>
-                                {space.label}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="control">
-                    <Link to={matchUrl.replace("agenda", "espacios")}>
-                      <button className="button">
-                        <FaWhmcs />
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-                <div className="field">
-                  <label className={`label`}>Clasificar actividad como:</label>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioOpen"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "OPEN"}
-                      className="is-checkradio"
-                      value={"OPEN"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioOpen"}>
-                      <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
-                  </label>
-                  </div>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioSuggested"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "SUGGESTED"}
-                      className="is-checkradio"
-                      value={"SUGGESTED"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioSuggested"}>
-                      <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
-                  </label>
-                  </div>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioExclusive"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "EXCLUSIVE"}
-                      className="is-checkradio"
-                      value={"EXCLUSIVE"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioExclusive"}>
-                      <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
-                  </label>
-                  </div>
-                </div>
-                {access_restriction_type !== "OPEN" && (
-                  <Fragment>
-                    <div style={{ display: "flex" }}>
-                      <label className="label required">Asginar a :</label>
-                      <button className="button is-text is-small" onClick={this.addRoles}>
-                        todos los roles
-                    </button>
-                    </div>
-                    <div className="columns">
-                      <div className="column is-10">
-                        <Select
-                          isClearable
-                          isMulti
-                          styles={creatableStyles}
-                          onChange={this.selectRol}
-                          options={roles}
-                          placeholder={"Seleccione al menos un rol..."}
-                          value={selectedRol}
-                        />
-                      </div>
-                      <div className="column is-2">
-                        <button
-                          onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
-                          className="button">
-                          <FaWhmcs />
-                        </button>
-                      </div>
-                    </div>
-                  </Fragment>
-                )}
-                <div className="field">
-                  <label className="label">Documentos</label>
+              </div>
+              <label className="label">Conferencista</label>
+              <div className="columns">
+                <div className="column is-10">
                   <Select
                     isClearable
                     isMulti
                     styles={creatableStyles}
-                    onChange={this.selectDocuments}
-                    options={nameDocuments}
-                    value={selected_document}
+                    onChange={this.selectHost}
+                    options={hosts}
+                    value={selectedHosts}
                   />
                 </div>
-
-                <div className="field">
-                  <label className="label">Descripción</label>
-                  <div className="control">
-                    <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
-                  </div>
+                <div className="column is-2">
+                  <button
+                    onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
+                    className="button">
+                    <FaWhmcs />
+                  </button>
                 </div>
               </div>
+              <label className="label required">Espacio</label>
+              <div className="field has-addons">
+                <div className="control">
+                  <div className="select">
+                    <select name={"space_id"} value={space_id} onChange={this.handleChange}>
+                      <option>Seleccione un lugar/salón ...</option>
+                      {spaces.map((space) => {
+                        return (
+                          <option key={space.value} value={space.value}>
+                            {space.label}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                </div>
+                <div className="control">
+                  <Link to={matchUrl.replace("agenda", "espacios")}>
+                    <button className="button">
+                      <FaWhmcs />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              <div className="field">
+                <label className={`label`}>Clasificar actividad como:</label>
+                <div className="control">
+                  <input
+                    type="radio"
+                    id={"radioOpen"}
+                    name="access_restriction_type"
+                    checked={access_restriction_type === "OPEN"}
+                    className="is-checkradio"
+                    value={"OPEN"}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor={"radioOpen"}>
+                    <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
+                  </label>
+                </div>
+                <div className="control">
+                  <input
+                    type="radio"
+                    id={"radioSuggested"}
+                    name="access_restriction_type"
+                    checked={access_restriction_type === "SUGGESTED"}
+                    className="is-checkradio"
+                    value={"SUGGESTED"}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor={"radioSuggested"}>
+                    <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
+                  </label>
+                </div>
+                <div className="control">
+                  <input
+                    type="radio"
+                    id={"radioExclusive"}
+                    name="access_restriction_type"
+                    checked={access_restriction_type === "EXCLUSIVE"}
+                    className="is-checkradio"
+                    value={"EXCLUSIVE"}
+                    onChange={this.handleChange}
+                  />
+                  <label htmlFor={"radioExclusive"}>
+                    <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
+                  </label>
+                </div>
+              </div>
+              {access_restriction_type !== "OPEN" && (
+                <Fragment>
+                  <div style={{ display: "flex" }}>
+                    <label className="label required">Asginar a :</label>
+                    <button className="button is-text is-small" onClick={this.addRoles}>
+                      todos los roles
+                    </button>
+                  </div>
+                  <div className="columns">
+                    <div className="column is-10">
+                      <Select
+                        isClearable
+                        isMulti
+                        styles={creatableStyles}
+                        onChange={this.selectRol}
+                        options={roles}
+                        placeholder={"Seleccione al menos un rol..."}
+                        value={selectedRol}
+                      />
+                    </div>
+                    <div className="column is-2">
+                      <button
+                        onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
+                        className="button">
+                        <FaWhmcs />
+                      </button>
+                    </div>
+                  </div>
+                </Fragment>
+              )}
+              <div className="field">
+                <label className="label">Documentos</label>
+                <Select
+                  isClearable
+                  isMulti
+                  styles={creatableStyles}
+                  onChange={this.selectDocuments}
+                  options={nameDocuments}
+                  value={selected_document}
+                />
+              </div>
+
+              <div className="field">
+                <label className="label">Descripción</label>
+                <div className="control">
+                  <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                </div>
+              </div>
+
+
+
               <div className="column is-4 general">
                 <div className="field is-grouped">
                   <button className="button is-text" onClick={this.remove}>
@@ -829,7 +875,8 @@ class AgendaEdit extends Component {
                                 {this.state.hostAvailable.length > 0 &&
                                   this.state.hostAvailable.map((host) => {
                                     return (
-                                      host.state && host.state === "available" && (
+                                      host.state &&
+                                      host.state === "available" && (
                                         <option value={host.id} key={host.id}>
                                           {host.email}
                                           {console.log(host)}
@@ -894,7 +941,8 @@ class AgendaEdit extends Component {
                 </Card>
               </div>
             </div>
-          )}
+          )
+        }
       </EventContent>
     );
   }
