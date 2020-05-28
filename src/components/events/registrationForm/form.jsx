@@ -34,9 +34,12 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
 
+  const [form] = Form.useForm();
+
   useEffect(() => {
     setSubmittedForm(false);
-  }, [eventUserId]);
+    form.resetFields();
+  }, [eventUserId, initialValues]);
 
   const showGeneralMessage = () => {
     setGeneralFormErrorMessageVisible(true);
@@ -258,6 +261,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           <Card title={!eventUserId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
+              form={form}
               layout="vertical"
               onFinish={onFinish}
               validateMessages={validateMessages}
