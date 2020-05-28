@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Redirect, Switch } from "react-router-dom";
+import { Route, Redirect, Switch, Link } from "react-router-dom";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import Loading from "../loaders/loading";
@@ -125,7 +125,9 @@ class Event extends Component {
           <Menu match={match} />
         </Sider>
         <Content className="column event-main">
-          <h3 className="name-event">{this.state.event.name}</h3>
+          <Link to={`/landing/${this.state.event._id}`}>
+            <h2 className="name-event">Ir a {this.state.event.name}</h2>
+          </Link>
           <section className="section event-wrapper">
             <Switch>
               <Route exact path={`${match.url}/`} render={() => <Redirect to={`${match.url}/agenda`} />} />

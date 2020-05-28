@@ -36,7 +36,7 @@ class DateEvent extends Component {
 
     async componentDidMount() {
         const dateEvent = await EventsApi.getOne(this.props.eventId)
-        this.setState({ dateEvent: dateEvent.dates })
+        this.setState({ dateEvent: dateEvent.dates, fields: { names: dateEvent.dates } })
     }
 
     remove(date) {
@@ -59,9 +59,10 @@ class DateEvent extends Component {
         dateEventUnique.sort()
 
         await this.setState({
-            dates: { dates: dateEventUnique.sort() },
+            dates: { dates: dateEventUnique },
             dateEvent: dateEventUnique,
         })
+        console.log(dateEventUnique)
 
         const info = await EventsApi.editOne(await this.state.dates, this.props.eventId)
         console.log(info)
@@ -69,7 +70,7 @@ class DateEvent extends Component {
     render() {
 
         const dateFormat = 'DD-MM-YYYY';
-        const { dateEvent } = this.state;
+        const { dateEvent, fields } = this.state;
         return (
             <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel} onFinish={this.onFinish}>
                 <Form.List name="names">
@@ -88,7 +89,7 @@ class DateEvent extends Component {
                                             validateTrigger={['onChange', 'onBlur']}
                                             noStyle
                                         >
-                                            {console.log(field)}
+                                            {console.log(fields)}
                                             <DatePicker style={{ width: '60%' }} />
                                         </Form.Item>
                                         {fields.length > 1 ? (
