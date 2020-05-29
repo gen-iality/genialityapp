@@ -8,6 +8,8 @@
   min-width: 80%;
   min-height: 100%;
   background-color: white;
+  border: 1px solid rgb(160, 157, 157);
+  border-radius: 3px;
   .ant-btn-header {
     border: none;
     background-color: transparent;
@@ -43,7 +45,8 @@
   background-color: rgb(204, 204, 204);
   display: flex;
   justify-content: space-between;
-  border: 0.8px solid rgb(160, 157, 157);
+  border-bottom: 0.8px solid rgb(160, 157, 157);
+  border-radius: 3px 3px 0px 0px;
   .title-header {
     margin-top: 4px;
     margin-left: 15px;
