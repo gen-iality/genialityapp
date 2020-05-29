@@ -312,7 +312,7 @@ class SendRsvp extends Component {
                                     divClass={'rsvp-pic-img'} content={<img src={this.state.rsvp.image_footer} alt={'Imagen Perfil'} />}
                                     classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFileFooter ? 'is-loading' : ''}`}>Cambiar foto</button>}
                                     contentZone={<div>Subir foto</div>}
-                                    changeImg={this.changeImgHeader} errImg={this.state.errImg} />
+                                    changeImg={this.changeImgFooter} errImg={this.state.errImg} />
                             </div>
                         </div>
 
