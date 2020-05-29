@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import { typeInputs } from "../../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
 import { Radio } from "antd";
-import { normalizeUnits } from "moment";
 
 
 const html = document.querySelector("html");
@@ -20,33 +19,17 @@ class DatosModal extends Component {
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
     }
 
-    generateFieldNameForLabel(name, value) {
-        //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
-        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9]+/gi, "")
-        console.log("ERROR", generatedFieldName);
-        this.setState({
-            info: {
-                ...this.state.info, [name]: value, name: generatedFieldName
-            }
-        }, this.validForm);
-    }
-
     handleChange = (e) => {
         let { name, value } = e.target;
-        //Generamos el nombre del campo para la base de datos(name) a partir del label solo si el campo se esta creando
-        if (name === 'label' && !this.state.info._id) {
-            this.generateFieldNameForLabel(name, value)
-        }
+        if (name === 'label' && !this.props.edit) this.setState({ info: { ...this.state.info, [name]: value, name: toCapitalizeLower(value) } }, this.validForm);
         else this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
     };
-
     validForm = () => {
         const { name, label, type, options } = this.state.info;
         let valid = !(name.length > 0 && label.length > 0 && type !== "");
         if (type === "list") valid = !(!valid && options.length > 0);
         this.setState({ valid })
     };
-
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e) => {
         this.setState(prevState => {
@@ -105,10 +88,6 @@ class DatosModal extends Component {
                             />
                         </div>
                     </div>
-                    <input className="input is-small" name={"name"} type="text"
-                        placeholder="Nombre del campo en base de datos" value={info.name} disabled={true}
-                        onChange={this.handleChange}
-                    />
                     <div className="field">
                         <label className="label has-text-grey-light">Posición Nombre del Campo </label>
                         <div className="">
@@ -134,17 +113,6 @@ class DatosModal extends Component {
                                 />
     Izquierda &nbsp;</label>
 
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="labelPosition"
-                                    value="derecha"
-                                    className="form-check-input"
-                                    checked={info.labelPosition == "derecha"}
-                                    onChange={this.handleChange}
-                                />
-    Derecha &nbsp;</label>
-
 
                         </div>
                     </div>
@@ -166,7 +134,7 @@ class DatosModal extends Component {
                             </div>
                         </div>
                         {
-                            (info.type === 'list' || info.type === 'multiplelist') && (
+                            info.type === 'list' && (
                                 <div className="control">
                                     <CreatableSelect
                                         components={{ DropdownIndicator: null, }}
@@ -214,6 +182,15 @@ class DatosModal extends Component {
                         </div>
                     </div>
 
+                    <div className="field column">
+                        <label className="label required has-text-grey-light">Nombre de maquina</label>
+                        <div className="control">
+                            <input className="input is-small" name={"name"} type="text"
+                                placeholder="Nombre del campo" value={info.name} disabled={edit}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
                 </section>
                 <footer className="modal-card-foot">
                     <button className="button is-primary" onClick={this.saveField} disabled={valid}>{edit ? 'Guardar' : 'Agregar'}</button>
