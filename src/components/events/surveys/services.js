@@ -2,7 +2,7 @@ import { firestore } from "../../../helpers/firebase";
 import { SurveysApi } from "../../../helpers/request";
 
 // Funcion para crear e inicializar la collecion del conteo de las respuestas por preguntas
-const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIndex) => {
+const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
   return new Promise((resolve, reject) => {
     // Se referencia la colleccion a usar
     const ref_quantity = firestore
@@ -10,6 +10,9 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
       .doc(surveyId)
       .collection("answer_count")
       .doc(questionId);
+
+    // Se valida si el voto tiene valor de lo contrario sumara 1
+    let vote = voteValue ? parseInt(voteValue) : 1;
 
     // Se crea un objeto que se asociara a las opciones de las preguntas
     // Y se inicializan con valores en 0, para luego realizar el conteo
@@ -19,9 +22,9 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
 
       // Se valida si se escogio mas de una opcion en la pregunta o no
       if (optionIndex.length > 1) {
-        firstData[idResponse] = optionIndex.includes(i) ? 1 : 0;
+        firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
       } else {
-        firstData[idResponse] = optionIndex == idResponse ? 1 : 0;
+        firstData[idResponse] = optionIndex == idResponse ? vote : 0;
       }
     }
 
@@ -42,9 +45,12 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
 };
 
 // Funcion para realizar conteo de las opciones por pregunta
-const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
-  createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex).then(
+const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteValue) => {
+  createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
     ({ surveyId, message, questionId, optionIndex }) => {
+      // Se valida si el voto tiene valor de lo contrario sumara 1
+      let vote = voteValue ? parseInt(voteValue) : 1;
+
       const shard_ref = firestore
         .collection("surveys")
         .doc(surveyId)
@@ -60,11 +66,11 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
           // Condiciona si tiene mas de una opcion escogida
           if (position.length > 1) {
             position.forEach((element) => {
-              const new_count = doc.data()[element] + 1;
+              const new_count = doc.data()[element] + vote;
               t.update(shard_ref, { [element]: new_count });
             });
           } else {
-            const new_count = doc.data()[position] + 1;
+            const new_count = doc.data()[position] + vote;
             t.update(shard_ref, { [position]: new_count });
           }
 
@@ -78,10 +84,10 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex) => {
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
-    const { responseData, date, uid, email, names } = dataAnswer;
+    const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex } = counter;
 
-    countAnswers(surveyId, questionId, optionQuantity, optionIndex);
+    countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
 
     return new Promise((resolve, reject) => {
       firestore

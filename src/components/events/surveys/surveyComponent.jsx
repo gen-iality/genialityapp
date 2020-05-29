@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader } from "antd"
-
+import { PageHeader } from "antd";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
@@ -116,6 +115,7 @@ class SurveyComponent extends Component {
                   uid: infoUser._id,
                   email: infoUser.email,
                   names: infoUser.names || infoUser.displayName,
+                  voteValue: infoUser.pesovoto,
                 },
                 { optionQuantity, optionIndex }
               )
