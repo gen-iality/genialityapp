@@ -62,10 +62,6 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     setInitialValues(eventUserValues);
   };
 
-  const handleOk = (e) => {
-    setVisibleModal(false);
-  };
-
   const handleCancel = (e) => {
     setVisibleModal(false);
     if (e && e.status === "sent_transfer") {
@@ -102,17 +98,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
           </Card>
         ))}
 
-        <Modal
-          width={700}
-          title="Transferir Ticket"
-          visible={visibleModal}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={[
-            <Button key="back" onClick={handleCancel}>
-              Cancelar
-            </Button>,
-          ]}>
+        <Modal width={700} title="Transferir Ticket" visible={visibleModal} onCancel={handleCancel} footer={null}>
           <FormComponent
             initialValues={initialValues}
             eventId={eventId}
