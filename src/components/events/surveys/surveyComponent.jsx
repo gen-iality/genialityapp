@@ -10,7 +10,8 @@ import { SurveyAnswers } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import * as Survey from "survey-react";
-import "survey-react/survey.css";
+import "survey-react/modern.css";
+Survey.StylesManager.applyTheme("modern");
 
 class SurveyComponent extends Component {
   constructor(props) {

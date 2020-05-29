@@ -103,6 +103,9 @@
 
 .survyCard {
   min-width: 45vw;
+  .ant-card-body {
+    text-align: initial;
+  }
 }
 
 // Estilos para pantalla media

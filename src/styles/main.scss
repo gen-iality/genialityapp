@@ -60,6 +60,16 @@ iframe {
   }
 }
 
+// estilos generales survey
+.sv-container-modern {
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+.sv-container-modern__title {
+  padding-top: 3em !important;
+}
+
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
