@@ -283,7 +283,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Registrarse
+                      {!eventUserId ? "Registrarse" : "Transferir Ticket"}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -292,7 +292,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           </Card>
         ) : (
           <Card>
-            <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+            <Result
+              status="success"
+              title={!eventUserId ? "Has sido registrado exitosamente!" : "Transferencia realizada exitosamente!"}
+              subTitle={successMessage}
+            />
           </Card>
         )}
       </Col>
