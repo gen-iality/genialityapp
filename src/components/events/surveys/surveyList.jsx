@@ -2,6 +2,12 @@ import React, { useState, useEffect, Fragment } from "react";
 
 import { List, Button, Card, Col, Tag, Spin, Result, Empty } from "antd";
 import { MehOutlined } from "@ant-design/icons";
+const headStyle = {
+  fontWeight: 300,
+  textTransform: "uppercase",
+  textAlign: "center",
+  color: "#000"
+}
 
 const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   return (
@@ -61,7 +67,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
   }, [jsonData]);
 
   return (
-    <Card className="survyCard">
+    <Card title="Lista de Encuestas" className="survyCard" headStyle={headStyle}>
       {usuarioRegistrado ? (
         <Fragment>
           {surveyList && surveyList.length == 0 && (
