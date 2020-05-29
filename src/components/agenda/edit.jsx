@@ -82,39 +82,17 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
     let days = [];
-
-    try {
-      const info = await EventsApi.getOne(event._id)
-      //se valida si no existe dates para dejar la logica 
-      //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
-      if (!info.dates) {
-        const init = Moment(event.date_start);
-        const end = Moment(event.date_end);
-        const diff = end.diff(init, "days");
-        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-        for (let i = 0; i < diff + 1; i++) {
-          days.push(
-            Moment(init)
-              .add(i, "d")
-              .format("YYYY-MM-DD")
-          );
-        }
-        //Si existe dates, entonces envia al array push las fechas del array dates del evento
-      } else {
-        let date = info.dates
-        Date.parse(date)
-
-        for (var i = 0; i < date.length; i++) {
-          days.push(Moment(date[i], ["DD-MM-YYYY"]).format("YYYY-MM-DD"))
-        }
-
-        console.log(days)
-      }
-    } catch (e) {
-      console.log(e)
+    const init = Moment(event.date_start);
+    const end = Moment(event.date_end);
+    const diff = end.diff(init, "days");
+    //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+    for (let i = 0; i < diff + 1; i++) {
+      days.push(
+        Moment(init)
+          .add(i, "d")
+          .format("YYYY-MM-DD")
+      );
     }
-
-
     let documents = await DocumentsApi.byEvent(this.props.event._id);
     let hostAvailable = await EventsApi.hostAvailable();
     console.log(hostAvailable);
@@ -160,7 +138,7 @@ class AgendaEdit extends Component {
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
       });
     } else {
-      this.setState({ days });
+      this.setState({ date: days[0] });
     }
 
     const isLoading = { types: false, categories: false };
@@ -267,10 +245,10 @@ class AgendaEdit extends Component {
 
         if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
         else {
-          console.log(info)
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
         }
+        //if (this.state.hostSelected) await setHostState(this.state.hostSelected, false);
         //if (this.state.host_id) await setHostState(this.state.host_id, false);
 
         sweetAlert.hideLoading();
@@ -531,60 +509,34 @@ class AgendaEdit extends Component {
       <EventContent title="Actividad" closeAction={this.goBack}>
         {loading ? (
           <Loading />
-        )
-          :
-          (
-            <div>
-              <div className="columns">
-                <div className="column is-8">
-                  <div className="field">
-                    <label className="label required">Nombre</label>
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="text"
-                        name={"name"}
-                        value={name}
-                        onChange={this.handleChange}
-                        placeholder="Nombre de la actividad"
-                      />
-                    </div>
+        ) : (
+            <div className="columns">
+              <div className="column is-8">
+                <div className="field">
+                  <label className="label required">Nombre</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      name={"name"}
+                      value={name}
+                      onChange={this.handleChange}
+                      placeholder="Nombre de la actividad"
+                    />
                   </div>
+                </div>
 
-                  <div className="field">
-                    <label className="label">Subtítulo</label>
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="text"
-                        name={"subtitle"}
-                        value={subtitle}
-                        onChange={this.handleChange}
-                        placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
-                      />
-                    </div>
-                  </div>
-                  <div className="field">
-                    <label className="label">Día</label>
-                    <div className="columns">
-                      {console.log(this.state.days)}
-                      {this.state.days.map((day, key) => {
-                        return (
-                          <div key={key} className="column">
-                            <input
-                              type="radio"
-                              name="date"
-                              id={`radioDay${key}`}
-                              className="is-checkradio"
-                              checked={day === date}
-                              value={day}
-                              onChange={this.handleChange}
-                            />
-                            <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="field">
+                  <label className="label">Subtítulo</label>
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      name={"subtitle"}
+                      value={subtitle}
+                      onChange={this.handleChange}
+                      placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
+                    />
                   </div>
                 </div>
                 <div className="field">
@@ -942,8 +894,7 @@ class AgendaEdit extends Component {
                 </Card>
               </div>
             </div>
-          )
-        }
+          )}
       </EventContent>
     );
   }

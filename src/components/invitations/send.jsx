@@ -23,13 +23,14 @@ class SendRsvp extends Component {
 
     componentDidMount() {
         let default_header = ' Hola "INVITADO", has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
-
+        console.log("evento", this.props.event);
         this.setState({
             rsvp: {
                 ...this.state.rsvp, content_header: default_header, subject: this.props.event.name,
                 message: this.props.event.description,
                 image: this.props.event.picture,
-                image_header: this.props.event.picture
+                image_header: (this.props.event.styles && this.props.event.styles.banner_image) ? this.props.event.styles.banner_image : this.props.event.picture,
+                image_footer: (this.props.event.styles && this.props.event.styles.event_image) ? this.props.event.styles.event_image : this.props.event.picture,
             }
         })
     }
@@ -49,6 +50,17 @@ class SendRsvp extends Component {
         if (file) {
             this.setState({ imageFileHeader: file });
             this.uploadImg("imageFileHeader", "image_header")
+        } else {
+            this.setState({ errImg: 'Only images files allowed. Please try again :)' });
+        }
+    };
+
+
+    changeImgFooter = (files) => {
+        const file = files[0];
+        if (file) {
+            this.setState({ imageFileFooter: file });
+            this.uploadImg("imageFileFooter", "image_footer")
         } else {
             this.setState({ errImg: 'Only images files allowed. Please try again :)' });
         }
@@ -101,7 +113,15 @@ class SendRsvp extends Component {
         });
         this.setState({ dataMail: users, disabled: true });
         try {
-            const data = { content_header: rsvp.content_header, subject: rsvp.subject, message: rsvp.message, image_header: rsvp.image_header, image: rsvp.image, eventUsersIds: users };
+            const data = {
+                content_header: rsvp.content_header,
+                subject: rsvp.subject,
+                message: rsvp.message,
+                image_header: rsvp.image_header,
+                image_footer: rsvp.image_footer,
+                image: rsvp.image,
+                eventUsersIds: users
+            };
             await EventsApi.sendRsvp(data, event._id);
             toast.success(<FormattedMessage id="toast.email_sent" defaultMessage="Ok!" />);
             this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' })
@@ -285,7 +305,16 @@ class SendRsvp extends Component {
                             </div>
                         </div>
 
-
+                        <div className="column is-10">
+                            <div className="rsvp-pic">
+                                <p className="rsvp-pic-txt">Sube una imagen <br /> <small>(Por defecto será el logo del evento ú  Organizador, la que este disponible)</small></p>
+                                <ImageInput picture={this.state.rsvp.image_footer} imageFile={this.state.imageFileFooter}
+                                    divClass={'rsvp-pic-img'} content={<img src={this.state.rsvp.image_footer} alt={'Imagen Perfil'} />}
+                                    classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFileFooter ? 'is-loading' : ''}`}>Cambiar foto</button>}
+                                    contentZone={<div>Subir foto</div>}
+                                    changeImg={this.changeImgFooter} errImg={this.state.errImg} />
+                            </div>
+                        </div>
 
 
                         <div className="column is-10">

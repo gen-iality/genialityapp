@@ -5,7 +5,7 @@ import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
 
 import UserInforCard from "./registrationForm/userInfoCard";
-import Form from "./registrationForm/form";
+import FormComponent from "./registrationForm/form";
 
 import { Spin } from "antd";
 
@@ -93,7 +93,7 @@ class UserRegistration extends Component {
     const { eventId } = this.props;
     if (!loading)
       return !registeredUser ? (
-        <Form initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
+        <FormComponent initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
       ) : (
         <UserInforCard
           currentUser={currentUser}

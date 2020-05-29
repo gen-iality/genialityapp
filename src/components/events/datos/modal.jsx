@@ -20,24 +20,26 @@ class DatosModal extends Component {
         if (this.props.edit) this.setState({ info: this.props.info }, this.validForm);
     }
 
+
     generateFieldNameForLabel(name, value) {
         //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
         const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9]+/gi, "")
-        console.log("ERROR", generatedFieldName);
-        this.setState({
-            info: {
-                ...this.state.info, [name]: value, name: generatedFieldName
-            }
-        }, this.validForm);
+        return generatedFieldName;
     }
 
     handleChange = (e) => {
         let { name, value } = e.target;
-        //Generamos el nombre del campo para la base de datos(name) a partir del label solo si el campo se esta creando
+
+        let tmpInfo = { ...this.state.info };
+
+        //Generamos el nombre del campo para la base de datos(name) a partir del  label solo si el campo se esta creando
         if (name === 'label' && !this.state.info._id) {
-            this.generateFieldNameForLabel(name, value)
+            tmpInfo["name"] = this.generateFieldNameForLabel(name, value)
         }
-        else this.setState({ info: { ...this.state.info, [name]: value } }, this.validForm);
+        tmpInfo[name] = value;
+
+        this.setState({ info: tmpInfo }, this.validForm);
+
     };
 
     validForm = () => {
@@ -46,7 +48,6 @@ class DatosModal extends Component {
         if (type === "list") valid = !(!valid && options.length > 0);
         this.setState({ valid })
     };
-
     //Cambiar mandatory del campo del evento o lista
     changeFieldCheck = (e) => {
         this.setState(prevState => {
@@ -133,7 +134,6 @@ class DatosModal extends Component {
                                     onChange={this.handleChange}
                                 />
     Izquierda &nbsp;</label>
-
                             <label>
                                 <input
                                     type="radio"
@@ -143,8 +143,7 @@ class DatosModal extends Component {
                                     checked={info.labelPosition == "derecha"}
                                     onChange={this.handleChange}
                                 />
-    Derecha &nbsp;</label>
-
+   Derecha &nbsp;</label>
 
                         </div>
                     </div>
@@ -201,7 +200,7 @@ class DatosModal extends Component {
                     <div className="field">
                         <label className="label has-text-grey-light">Descripción</label>
                         <textarea className="textarea" placeholder="descripción corta" name={'description'}
-                            value={info.description} onChange={this.handleChange} />
+                            value={info.description || ""} onChange={this.handleChange} />
                     </div>
 
                     <div className="field">
@@ -213,6 +212,7 @@ class DatosModal extends Component {
                             />
                         </div>
                     </div>
+
 
                 </section>
                 <footer className="modal-card-foot">
