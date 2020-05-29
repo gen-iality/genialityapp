@@ -78,7 +78,7 @@ class Graphics extends Component {
     if (dataSurvey.questions)
       return (
         <>
-          <Card>
+          <Card className="survyCard">
             <PageHeader
               className="site-page-header"
               onBack={() => showListSurvey()}

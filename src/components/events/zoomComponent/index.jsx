@@ -12,10 +12,6 @@ const closeFullScreen = {
 };
 
 const surveyButtons = {
-  position: "absolute",
-  minWidth: "50%",
-  maxHeight: "90%",
-  top: "37px",
   text: {
     color: "#42A8FC",
   }
@@ -110,6 +106,7 @@ export default class ZoomComponent extends Component {
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
           isMinimize === true ? "minimizeScreen" : ""
           }`}>
+
         <div className="buttons-header">
           <div>
             <div className="title-header">
@@ -120,17 +117,17 @@ export default class ZoomComponent extends Component {
 
           <div>
             {/* botón pantalla completa */}
-            <Button onClick={this.goFull}>
+            <Button className="ant-btn-header" onClick={this.goFull}>
               <FullscreenOutlined />
             </Button>
 
             {/* botón pantalla minimizada */}
-            <Button onClick={this.goMinimize}>
+            <Button className="ant-btn-header" onClick={this.goMinimize}>
               <LineOutlined />
             </Button>
 
             {/* botón cerrar */}
-            <Button onClick={() => toggleConference(false)}>
+            <Button className="ant-btn-header" onClick={() => toggleConference(false)}>
               <span className="icon-close">&#10006;</span>
             </Button>
           </div>
@@ -138,9 +135,7 @@ export default class ZoomComponent extends Component {
 
         <Fullscreen enabled={isFull} onChange={(isFull) => this.setState({ isFull })}>
           {
-            <div style={surveyButtons}>
-              <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
-            </div>
+            <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
 
           {isFull === true ? (

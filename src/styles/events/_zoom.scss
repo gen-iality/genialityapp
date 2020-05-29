@@ -2,13 +2,30 @@
 .content-zoom {
   position: fixed;
   z-index: 3;
-  right: 2%;
-  bottom: 6%;
+  right: 0%;
+  top: 0%;
   height: 85%;
-  min-width: 60%;
-  min-height: 80%;
-  background-color: rgba(134, 134, 134, 0.753);
+  min-width: 80%;
+  min-height: 100%;
+  background-color: white;
   color: red !important;
+  .ant-btn-header {
+    border: none;
+    background-color: transparent;
+    height: auto;
+  }
+
+  // .content-zoom {
+  // position: fixed;
+  // z-index: 3;
+  // right: 2%;
+  // top: 0%;
+  // height: 100%;
+  // max-width: 100%;
+  // min-height: 80%;
+  // background-color: rgba(134, 134, 134, 0.753);
+  // color: red !important;
+  // }
 
   @media only screen and (max-width: $breakpoint-mobile) {
     right: 0;
@@ -49,10 +66,43 @@
   }
 }
 
+// *************** Iframe Zoom *********************//
+.iframe-zoom {
+  min-width: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.button__surveyIframe {
+  @media only screen and (min-width: $breakpoint-mobile) {
+    position: absolute !important;
+    top: 35px;
+    right: 100px;
+  }
+}
+
+.surveyIframe {
+  @media only screen and (max-width: $breakpoint-mobile) {
+    position: absolute;
+    min-width: 50%;
+    max-height: 90%;
+    top: 37px;
+  }
+}
+
 // Estilos para pantalla completa
 .fullscreen {
   width: 100%;
-  height: 100%;
+  height: 95%;
+  display: flex;
+  background-color: white;
+  @media only screen and (max-width: $breakpoint-mobile) {
+    display: block;
+  }
+}
+
+.survyCard {
+  min-width: 45vw;
 }
 
 // Estilos para pantalla media

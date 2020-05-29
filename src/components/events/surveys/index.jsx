@@ -12,10 +12,6 @@ import RootPage from "./rootPage";
 import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
-  position: "absolute",
-  minWidth: "50%",
-  maxHeight: "90%",
-  top: "37px",
   text: {
     color: "inherit"
   }
@@ -64,6 +60,7 @@ class SurveyForm extends Component {
 
   openSurvey = (currentSurvey) => {
     console.log("Esta es la encuesta actual:", currentSurvey);
+
   };
 
   surveyVisible = () => {
@@ -75,21 +72,16 @@ class SurveyForm extends Component {
   async componentDidMount() {
     let user = await this.getCurrentUser();
     this.setState({ currentUser: user }, this.listenSurveysData);
+    this.userVote();
 
 
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado })
     }
-
-
-
-    //
-
-
   }
 
   /**
@@ -172,20 +164,29 @@ class SurveyForm extends Component {
         }
 
         if (surveys.length == arr.length) resolve(surveys);
+
       });
     });
+
+
 
     let stateSurveys = await votesUserInSurvey;
 
     this.setState({ surveysData: stateSurveys });
 
     // bucle que verifica si el usuario contesto las encuestas
-    for (const i in stateSurveys) {
-      if (stateSurveys[i].userHasVoted === true) {
+  };
+
+  userVote = () => {
+    const { surveysData } = this.state
+    for (const i in surveysData) {
+      if (surveysData[i].userHasVoted === true) {
+        this.setState({ userVote: true });
+      } else if (surveysData[i].open === false) {
         this.setState({ userVote: true });
       }
     }
-  };
+  }
 
 
   // Funcion para consultar la informacion del actual usuario
@@ -246,17 +247,17 @@ class SurveyForm extends Component {
 
 
     return (
-      <div >
+      <div className="surveyIframe">
 
         {this.state.availableSurveysBar &&
-          <Button className={` ${(surveysData && !surveyVisible && !userVote && surveysData.length > 0) ? "parpadea" : ""}`} onClick={this.surveyVisible}>
+          <Button className={`button__surveyIframe ${(surveysData && !surveyVisible && !userVote && surveysData.length > 0) ? "parpadea" : ""}`} onClick={this.surveyVisible}>
             {!userVote ?
               <span>{!surveyVisible ? "Ver" : "Ocultar"} <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s) disponible(s).</span> :
               <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
             }
           </Button>
         }
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <Card><SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} /></Card>}
+        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />}
       </div>
     );
   }

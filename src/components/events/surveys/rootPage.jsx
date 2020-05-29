@@ -61,7 +61,7 @@ export default class RootPage extends Component {
       return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
       ) : (
-          <Card>
+          <Card className="survyCard">
             <SurveyComponent
               idSurvey={idSurvey}
               showListSurvey={toggleSurvey}
