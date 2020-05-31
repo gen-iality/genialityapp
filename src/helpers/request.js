@@ -25,23 +25,22 @@ const privateInstancePush = axios.create({
 PRIMERO MIRAMOS  si viene en la URL
 luego miramos si viene en las cookies
 */
-(async function() {
-  let evius_token = null;
-  let dataUrl = parseUrl(document.URL);
-  if (dataUrl && dataUrl.token) {
-    Cookie.set("evius_token", dataUrl.token);
-    evius_token = dataUrl.token;
-  }
 
-  if (!evius_token) {
-    evius_token = await Cookie.get("evius_token");
-  }
+let evius_token = null;
+let dataUrl = parseUrl(document.URL);
+if (dataUrl && dataUrl.token) {
+  Cookie.set("evius_token", dataUrl.token);
+  evius_token = dataUrl.token;
+}
 
-  if (evius_token) {
-    privateInstance.defaults.params = {};
-    privateInstance.defaults.params["evius_token"] = evius_token;
-  }
-})();
+if (!evius_token) {
+  evius_token = Cookie.get("evius_token");
+}
+
+if (evius_token) {
+  privateInstance.defaults.params = {};
+  privateInstance.defaults.params["evius_token"] = evius_token;
+}
 
 /** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
 privateInstance.interceptors.response.use((response) => {
