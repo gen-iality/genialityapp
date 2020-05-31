@@ -44,13 +44,13 @@ class documentsList extends Component {
                         <List.Item
                             //boton de descarga
                             actions={[
-                                <a _target="blank" href={item.file} download>
+                                <a target="_blank" href={item.file} download>
                                     <IconText
                                         text="Descargar"
                                         icon={DownloadOutlined}
 
                                     /></a>,
-                                <a
+                                {/* <a
                                     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
                                     target="_blank"
                                     style={{ wordBreak: "break-word" }}
@@ -60,6 +60,7 @@ class documentsList extends Component {
                                         icon={EyeOutlined}
                                     />
                                 </a>
+                                */}
 
                             ]}
                         >

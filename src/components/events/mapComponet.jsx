@@ -68,7 +68,7 @@ class mapComponent extends Component {
                                                 lng: event.location.Longitude,
                                             }}
                                             defaultZoom={11}>
-                                            <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="My Marker" />
+                                            <AnyReactComponent lat={event.location.Latitude} lng={event.location.Longitude} text="" />
                                         </GoogleMapReact>
                                     </div>
                                 </div>
