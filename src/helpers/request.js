@@ -3,6 +3,7 @@ import { ApiUrl } from "./constants";
 import * as Cookie from "js-cookie";
 import { handleSelect } from "./utils";
 import { firestore } from "./firebase";
+import { parseUrl } from "../helpers/constants";
 
 const publicInstance = axios.create({
   url: ApiUrl,
@@ -19,11 +20,30 @@ const privateInstancePush = axios.create({
   // pushURL: 'https://104.248.125.133:6477/pushNotification',
   withCredentials: false,
 });
-let evius_token = Cookie.get("evius_token");
-if (evius_token) {
-  privateInstance.defaults.params = {};
-  privateInstance.defaults.params["evius_token"] = evius_token;
-}
+
+/* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
+PRIMERO MIRAMOS  si viene en la URL
+luego miramos si viene en las cookies
+*/
+(async function() {
+  let evius_token = null;
+  let dataUrl = parseUrl(document.URL);
+  if (dataUrl && dataUrl.token) {
+    Cookie.set("evius_token", dataUrl.token);
+    evius_token = dataUrl.token;
+  }
+
+  if (!evius_token) {
+    evius_token = await Cookie.get("evius_token");
+  }
+
+  if (evius_token) {
+    privateInstance.defaults.params = {};
+    privateInstance.defaults.params["evius_token"] = evius_token;
+  }
+})();
+
+/** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
