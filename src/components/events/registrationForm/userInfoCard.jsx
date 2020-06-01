@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import FormComponent from "./form";
 
-import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
+import { Card, Col, Row, Spin, Typography, Button, Modal, Result } from "antd";
 const { Text } = Typography;
 
 export default ({ currentUser, extraFields, eventId, userTickets }) => {
@@ -76,11 +76,12 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   useEffect(() => {
     console.log("tickets originales:", userTickets);
+    if (!userTickets || userTickets.length == 0) return setLoading(false);
     setEventUsers(userTickets);
   }, [currentUser]);
 
   if (!loading)
-    return (
+    return eventUserList.length > 0 ? (
       <Card>
         {eventUserList.map((item, indiceArray) => (
           <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
@@ -107,6 +108,10 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
             closeModal={handleCancel}
           />
         </Modal>
+      </Card>
+    ) : (
+      <Card>
+        <Result title="No se han encontrado tickets" />
       </Card>
     );
 
