@@ -112,7 +112,7 @@ class SurveyComponent extends Component {
               });
             } else {
               // Funcion que retorna si la opcion escogida es la respuesta correcta
-              correctAnswer = question.isAnswerCorrect();
+              correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
               // Busca el index de la opcion escogida
               optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
