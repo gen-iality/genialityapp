@@ -52,7 +52,6 @@ class SurveyComponent extends Component {
           questions: [{ ...rest, isRequired: true }],
         };
       });
-
     } else {
       dataSurvey.pages[0] = dataSurvey.pages[0] = { name: `page0`, questions: [] };
       dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
@@ -60,22 +59,12 @@ class SurveyComponent extends Component {
       });
     }
 
-
     // Se excluyen las propiedades
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
 
     console.log("pages", surveyData);
-
-
-
-
-
-
-
-
-
 
     this.setState({ surveyData, idSurvey });
   };
@@ -101,21 +90,20 @@ class SurveyComponent extends Component {
     // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
     let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
 
-    const executeService = (SurveyData, questions, infoUser) => {
+    const executeService = (surveyData, questions, infoUser) => {
       let sendAnswers = 0;
       let responseMessage = null;
       let responseError = null;
       console.log(questions);
       return new Promise((resolve, reject) => {
-
         questions.forEach(async (question) => {
           // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
           let optionIndex = [];
           let optionQuantity = 0;
+          let correctAnswer = false;
 
           //Hack rápido para permitir preguntas tipo texto (abiertas)
           if (question.inputType == "text") {
-
           } else {
             // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
             if (typeof question.value == "object") {
@@ -123,13 +111,16 @@ class SurveyComponent extends Component {
                 optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
               });
             } else {
+              correctAnswer = question.correctAnswer == question.value ? true : false;
               optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
             }
             optionQuantity = question.choices.length;
-
           }
 
-
+          let infoOptionQuestion =
+            surveyData.allow_gradable_survey == "true"
+              ? { optionQuantity, optionIndex, correctAnswer }
+              : { optionQuantity, optionIndex };
 
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos
           // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
@@ -146,7 +137,7 @@ class SurveyComponent extends Component {
                   names: infoUser.names || infoUser.displayName,
                   voteValue: infoUser.pesovoto,
                 },
-                { optionQuantity, optionIndex }
+                infoOptionQuestion
               )
                 .then((result) => {
                   sendAnswers++;
@@ -168,7 +159,7 @@ class SurveyComponent extends Component {
                   date: new Date(),
                   uid: "guest",
                 },
-                { optionQuantity, optionIndex }
+                infoOptionQuestion
               )
                 .then((result) => {
                   sendAnswers++;

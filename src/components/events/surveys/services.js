@@ -85,7 +85,26 @@ export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
-    const { optionQuantity, optionIndex } = counter;
+    const { optionQuantity, optionIndex, correctAnswer } = counter;
+
+    let data = correctAnswer
+      ? {
+          response: responseData,
+          created: date,
+          id_user: uid,
+          user_email: email,
+          user_name: names,
+          id_survey: surveyId,
+          correctAnswer,
+        }
+      : {
+          response: responseData,
+          created: date,
+          id_user: uid,
+          user_email: email,
+          user_name: names,
+          id_survey: surveyId,
+        };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
 
@@ -97,14 +116,7 @@ export const SurveyAnswers = {
         .doc(questionId)
         .collection("responses")
         .doc(uid)
-        .set({
-          response: responseData,
-          created: date,
-          id_user: uid,
-          user_email: email,
-          user_name: names,
-          id_survey: surveyId,
-        })
+        .set(data)
         .then(() => {
           console.log("Document successfully updated!");
           resolve("Las respuestas han sido enviadas");
@@ -118,7 +130,22 @@ export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
-    const { optionQuantity, optionIndex } = counter;
+    const { optionQuantity, optionIndex, correctAnswer } = counter;
+
+    let data = correctAnswer
+      ? {
+          response: responseData,
+          created: date,
+          id_user: uid,
+          id_survey: surveyId,
+          correctAnswer,
+        }
+      : {
+          response: responseData,
+          created: date,
+          id_user: uid,
+          id_survey: surveyId,
+        };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
 
@@ -129,12 +156,7 @@ export const SurveyAnswers = {
         .collection("answers")
         .doc(questionId)
         .collection("responses")
-        .add({
-          response: responseData,
-          created: date,
-          id_user: uid,
-          id_survey: surveyId,
-        })
+        .add(data)
         .then(() => {
           console.log("Document successfully updated!");
           resolve("Las respuestas han sido enviadas");
