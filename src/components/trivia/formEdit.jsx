@@ -66,7 +66,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     values["id"] = questionId;
     if (allowGradableSurvey) {
-      values["correctAnswer"] = values.choices[correctAnswerIndex];
+      values["correctAnswer"] = values.choices && values.choices[correctAnswerIndex];
       values["correctAnswerIndex"] = correctAnswerIndex;
     }
 
