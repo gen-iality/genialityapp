@@ -47,7 +47,7 @@ class TicketsForm extends Component {
       ticket.options =
         stage && (stage.status === "ended" || stage.status === "notstarted")
           ? []
-          : Array.from(Array(parseInt(ticket.max_per_person, 10))).map((e, i) => i + 1);
+          : Array.from(Array(parseInt(ticket.max_per_person, 10) || 1)).map((e, i) => i + 1);
       return ticket;
     });
 
@@ -140,11 +140,11 @@ class TicketsForm extends Component {
         price <= 0
           ? "Gratis"
           : new Intl.NumberFormat("es-CO", {
-              style: "currency",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-              currency: info.currency,
-            }).format(price);
+            style: "currency",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            currency: info.currency,
+          }).format(price);
       return show.push({ name: info.title, quantity: amount, id: info._id, price: cost });
     });
     if (!this.state.auth) localStorage.setItem("info", JSON.stringify({ total, show }));
@@ -445,7 +445,7 @@ function ListadoTiquetes({ ...props }) {
             <div
               className={`column box has-text-weight-bold tab stage ${active === stage.stage_id ? "is-active" : ""} ${
                 "ended" === stage.status ? "is-disabled" : ""
-              }`}
+                }`}
               key={stage.stage_id}
               onClick={(event) => selectStage(stage)}>
               <p>{stage.title}</p>
@@ -484,8 +484,8 @@ function ListadoTiquetes({ ...props }) {
                   {ticket.price === "0"
                     ? "Gratis"
                     : new Intl.NumberFormat("es-CO", { currencyFormatConfig, currency: ticket.currency }).format(
-                        ticket.price
-                      )}
+                      ticket.price
+                    )}
                 </span>
                 {ticket.options.length > 0 && (
                   <div className="select">
