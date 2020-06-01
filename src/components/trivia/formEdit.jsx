@@ -31,7 +31,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   const [questionId, setQuestionId] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false);
-  const [correctAnswer, setCorrectAnswer] = useState(null);
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -44,12 +44,12 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     setAllowGradableSurvey(state);
 
-    setCorrectAnswer(valuesQuestion.correctAnswerIndex);
+    setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
   }, [valuesQuestion]);
 
   const onChange = (e) => {
     // console.log("radio checked", e.target.value);
-    setCorrectAnswer(e.target.value);
+    setCorrectAnswerIndex(e.target.value);
   };
 
   const fieldValidation = (rule, value) => {
@@ -65,8 +65,8 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     console.log("values:", values);
 
     values["id"] = questionId;
-    values["correctAnswer"] = values.choices[correctAnswer];
-    values["correctAnswerIndex"] = correctAnswer;
+    values["correctAnswer"] = values.choices[correctAnswerIndex];
+    values["correctAnswerIndex"] = correctAnswerIndex;
 
     if (values.type.indexOf(" ") > 0) {
       selectOptions.forEach((option) => {
@@ -154,7 +154,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                 <Radio.Group
                   onChange={onChange}
                   disabled={!allowGradableSurvey}
-                  value={correctAnswer}
+                  value={correctAnswerIndex}
                   style={{ display: "block", marginRight: 0 }}>
                   {fields.map((field, index) => (
                     <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
