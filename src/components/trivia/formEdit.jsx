@@ -65,6 +65,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     console.log("values:", values);
 
     values["id"] = questionId;
+    values["correctAnswer"] = values.choices[correctAnswer];
     values["correctAnswerIndex"] = correctAnswer;
 
     if (values.type.indexOf(" ") > 0) {
