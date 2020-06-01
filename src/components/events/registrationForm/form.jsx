@@ -2,6 +2,8 @@ import React, { useState, useEffect, Fragment } from "react";
 
 import API, { UsersApi, TicketsApi } from "../../../helpers/request";
 
+import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
+
 import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result } from "antd";
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -33,10 +35,14 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
+  const [formMessage, setFormMessage] = useState({});
 
   const [form] = Form.useForm();
 
   useEffect(() => {
+    let formType = !eventUserId ? "register" : "transfer";
+    setFormMessage(FormTags(formType));
+
     setSubmittedForm(false);
     form.resetFields();
   }, [eventUserId, initialValues]);
@@ -54,7 +60,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
     const key = "registerUserService";
     console.log("values", values);
 
-    message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+    // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+    message.loading({ content: formMessage.loadingMessage, key }, 10);
 
     const snap = { properties: values };
 
@@ -65,7 +72,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       try {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
         console.log("resp:", resp);
-        textMessage.content = "Transferencia Realizada";
+        // textMessage.content = "Transferencia Realizada";
+        textMessage.content = formMessage.successMessage;
         setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
         setSubmittedForm(true);
@@ -75,7 +83,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
         }, 4000);
       } catch (err) {
         console.log("Se presento un problema", err);
-        textMessage.content = "Error... Intentalo mas tarde";
+        // textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.content = formMessage.errorMessage;
         message.error(textMessage);
       }
     } else {
@@ -84,8 +93,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
 
         if (resp.message === "OK") {
           console.log("RESP", resp);
-          let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
-          textMessage.content = "Usuario " + statusMessage;
+          setSuccessMessageInRegisterForm(resp.status);
+          // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          // textMessage.content = "Usuario " + statusMessage;
+          textMessage.content = "Usuario " + formMessage.successMessage;
+
           setSuccessMessage(
             Object.entries(initialValues).length > 0
               ? `Fuiste registrado al evento exitosamente`
@@ -101,7 +113,9 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           message.success(textMessage);
         }
       } catch (err) {
-        textMessage.content = "Error... Intentalo mas tarde";
+        // textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.content = formMessage.errorMessage;
+
         textMessage.key = key;
         message.error(textMessage);
       }
@@ -258,7 +272,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       <br />
       <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
         {!submittedForm ? (
-          <Card title={!eventUserId ? "Formulario de Registro" : "Transferir Ticket a Usuario"} bodyStyle={textLeft}>
+          <Card title={formMessage.titleModal} bodyStyle={textLeft}>
             {/* //Renderiza el formulario */}
             <Form
               form={form}
@@ -283,7 +297,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Registrarse
+                      {formMessage.formButton}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -292,7 +306,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
           </Card>
         ) : (
           <Card>
-            <Result status="success" title="Has sido registrado exitosamente!" subTitle={successMessage} />
+            <Result status="success" title={formMessage.resultTitle} subTitle={successMessage} />
           </Card>
         )}
       </Col>

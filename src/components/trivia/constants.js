@@ -4,20 +4,20 @@ import { AntSelect, AntInput } from "./antField";
 export const selectOptions = [
   {
     value: "radiogroup",
-    text: "Selección Unica"
+    text: "Selección Unica",
   },
   {
     value: "checkbox",
-    text: "Selección Multiple"
+    text: "Selección Multiple",
   },
   {
     value: "comment",
-    text: "Comentarios"
+    text: "Comentarios",
   },
   {
     value: "text",
-    text: "Texto"
-  }
+    text: "text",
+  },
 ];
 
 // Funcion que filtra los tipos de pregunta para la encuesta
@@ -30,20 +30,20 @@ export const fieldsFormQuestion = [
     label: "Pregunta",
     component: AntInput,
     type: "text",
-    name: "title"
+    name: "title",
   },
   {
     label: "Tipo de Pregunta",
     component: AntSelect,
-    selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup"]),
-    name: "type"
+    selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup", "text"]),
+    name: "type",
   },
   {
     label: "Cantidad de Opciones",
     component: AntSelect,
     selectOptions: [2, 3, 4, 5],
-    name: "questionOptions"
-  }
+    name: "questionOptions",
+  },
 ];
 
 // Funcion que retorna los valores iniciales para los campos de la creacion de la pregunta

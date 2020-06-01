@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader } from "antd"
-
+import { PageHeader } from "antd";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
@@ -28,14 +27,14 @@ class SurveyComponent extends Component {
 
   // Funcion para cargar datos de la encuesta seleccionada
   loadData = async () => {
-    const { idSurvey, eventId } = this.props;
+    const { idSurvey, eventId, singlePage } = this.props;
     let { surveyData } = this.state;
 
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty("question", "id");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-
+    console.log("surveyDat", dataSurvey);
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
 
@@ -46,25 +45,45 @@ class SurveyComponent extends Component {
     // Debido a que se puede setear la pagina de la pregunta
     // Si la pregunta tiene la propiedad 'page'
 
-    // Aqui se itera cada pregunta y se asigna a una pagina
-    dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
-      dataSurvey.pages[index] = {
-        name: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: true }],
-      };
-    });
+    if (!singlePage) {
+      // Aqui se itera cada pregunta y se asigna a una pagina
+      dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
+        dataSurvey.pages[index] = {
+          name: `page${index + 1}`,
+          questions: [{ ...rest, isRequired: true }],
+        };
+      });
+
+    } else {
+      dataSurvey.pages[0] = dataSurvey.pages[0] = { name: `page0`, questions: [] };
+      dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
+        dataSurvey.pages[0].questions.push({ ...rest });
+      });
+    }
+
 
     // Se excluyen las propiedades
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
 
+    console.log("pages", surveyData);
+
+
+
+
+
+
+
+
+
+
     this.setState({ surveyData, idSurvey });
   };
 
   // Funcion para enviar la informacion de las respuestas
   sendDataToServer = (survey) => {
-    const { showListSurvey, eventId, currentUser } = this.props;
+    const { showListSurvey, eventId, currentUser, singlePage } = this.props;
     let { surveyData } = this.state;
 
     validateSurveyCreated(surveyData._id).then((existSurvey) => {
@@ -87,22 +106,31 @@ class SurveyComponent extends Component {
       let sendAnswers = 0;
       let responseMessage = null;
       let responseError = null;
-
+      console.log(questions);
       return new Promise((resolve, reject) => {
+
         questions.forEach(async (question) => {
           // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
           let optionIndex = [];
+          let optionQuantity = 0;
 
-          // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
-          if (typeof question.value == "object") {
-            question.value.forEach((value) => {
-              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
-            });
+          //Hack rápido para permitir preguntas tipo texto (abiertas)
+          if (question.inputType == "text") {
+
           } else {
-            optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+            // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
+            if (typeof question.value == "object") {
+              question.value.forEach((value) => {
+                optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+              });
+            } else {
+              optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+            }
+            optionQuantity = question.choices.length;
+
           }
 
-          let optionQuantity = question.choices.length;
+
 
           // Se envia al servicio el id de la encuesta, de la pregunta y los datos
           // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
@@ -117,6 +145,7 @@ class SurveyComponent extends Component {
                   uid: infoUser._id,
                   email: infoUser.email,
                   names: infoUser.names || infoUser.displayName,
+                  voteValue: infoUser.pesovoto,
                 },
                 { optionQuantity, optionIndex }
               )

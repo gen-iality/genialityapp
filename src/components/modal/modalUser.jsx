@@ -58,7 +58,7 @@ class UserModal extends Component {
 
     handleSubmit = async (e) => {
         const { substractSyncQuantity } = this.props;
-        
+
         e.preventDefault();
         e.stopPropagation();
         const snap = { properties: this.state.user, rol_id: this.state.rol };
@@ -76,13 +76,13 @@ class UserModal extends Component {
                 snap.checked_at = new Date();
             }
             userRef.add(snap)
-            .then((docRef) => {
-                console.log("Document written with ID: ", docRef.id);
-                self.setState({ userId: docRef.id, edit: true });
+                .then((docRef) => {
+                    console.log("Document written with ID: ", docRef.id);
+                    self.setState({ userId: docRef.id, edit: true });
                     message.class = 'msg_success';
                     message.content = 'USER CREATED';
                     toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
-                    
+
                     //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
                     substractSyncQuantity();
                 })
@@ -104,14 +104,14 @@ class UserModal extends Component {
             if (snap.rol_id == undefined || !snap.rol_id || snap.rol_id == "undefined") {
                 snap.rol_id = null;
             }
-            
+
             userRef.doc(this.state.userId).update(snap)
                 .then(() => {
                     console.log("Document successfully updated!");
                     message.class = 'msg_warning';
                     message.content = 'USER UPDATED';
                     toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!" />);
-                    
+
                     //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente 
                     substractSyncQuantity();
                 })
@@ -290,7 +290,7 @@ class UserModal extends Component {
             message.class = 'msg_warning';
             message.content = 'USER DELETED';
             toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!" />);
-            
+
             //Ejecuta la funcion si se realiza la actualizacion en la base de datos correctamente
             substractSyncQuantity();
         })
@@ -348,7 +348,9 @@ class UserModal extends Component {
                             <button className="delete is-large" aria-label="close" onClick={this.props.handleModal} />
                         </header>
                         <section className="modal-card-body">
+                            <><a> Manual | </a><a> Pistola | </a> <a> Cámara </a></>
                             {
+
                                 this.renderForm()
                             }
                             {

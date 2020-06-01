@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import FormComponent from "./form";
 
-import { Card, Col, Row, Spin, Typography, Button, Modal } from "antd";
+import { Card, Col, Row, Spin, Typography, Button, Modal, Result } from "antd";
 const { Text } = Typography;
 
 export default ({ currentUser, extraFields, eventId, userTickets }) => {
@@ -62,10 +62,6 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     setInitialValues(eventUserValues);
   };
 
-  const handleOk = (e) => {
-    setVisibleModal(false);
-  };
-
   const handleCancel = (e) => {
     setVisibleModal(false);
     if (e && e.status === "sent_transfer") {
@@ -80,11 +76,12 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   useEffect(() => {
     console.log("tickets originales:", userTickets);
+    if (!userTickets || userTickets.length == 0) return setLoading(false);
     setEventUsers(userTickets);
   }, [currentUser]);
 
   if (!loading)
-    return (
+    return eventUserList.length > 0 ? (
       <Card>
         {eventUserList.map((item, indiceArray) => (
           <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
@@ -102,17 +99,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
           </Card>
         ))}
 
-        <Modal
-          width={700}
-          title="Transferir Ticket"
-          visible={visibleModal}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={[
-            <Button key="back" onClick={handleCancel}>
-              Cancelar
-            </Button>,
-          ]}>
+        <Modal width={700} title="Transferir Ticket" visible={visibleModal} onCancel={handleCancel} footer={null}>
           <FormComponent
             initialValues={initialValues}
             eventId={eventId}
@@ -121,6 +108,10 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
             closeModal={handleCancel}
           />
         </Modal>
+      </Card>
+    ) : (
+      <Card>
+        <Result title="No se han encontrado tickets" />
       </Card>
     );
 

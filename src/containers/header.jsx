@@ -61,17 +61,25 @@ class Headers extends Component {
 
   async componentDidMount() {
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
-    let evius_token = Cookie.get("evius_token");
+    let evius_token = null;
     let dataUrl = parseUrl(document.URL);
     if (dataUrl && dataUrl.token) {
       Cookie.set("evius_token", dataUrl.token);
       evius_token = dataUrl.token;
     }
     if (!evius_token) {
+      evius_token = await Cookie.get("evius_token");
+    }
+
+    // Si no tenemos token, significa que no tenemos usuario.
+    if (!evius_token) {
       this.setState({ user: false, loader: false });
       return;
     }
 
+
+
+    //Si existe el token consultamos la información del usuario
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
       console.log("respuesta del server", resp);
@@ -90,6 +98,7 @@ class Headers extends Component {
         );
         this.handleMenu(this.props.location);
       } else {
+        //Problemas
         this.setState({ timeout: true, loader: false });
       }
     } catch (error) {

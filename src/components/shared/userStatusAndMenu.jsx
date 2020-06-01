@@ -73,7 +73,7 @@ let userStatusAndMenu = props => {
       <Col style={MenuStyle}>
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
-            {photo ? <Avatar src={photo} /> : <Avatar className="avatar_menu-user">{name && name.charAt(0).toUpperCase()}</Avatar>}
+            {photo ? <Avatar src={photo} /> : <Avatar className="avatar_menu-user">{name && name.charAt(0).toUpperCase()}{name && name.substring(name.indexOf(" ") + 1, name.indexOf(" ") + 2)}</Avatar>}
             <span className="name_menu-user">&nbsp;&nbsp;{name}&nbsp;&nbsp;</span>
           </a>
         </Dropdown>
