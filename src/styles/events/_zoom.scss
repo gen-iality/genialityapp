@@ -105,6 +105,18 @@
 
 .survyCard {
   min-width: 45vw;
+  min-height: 100vh;
+  max-height: 100vh;
+  border: none !important;
+  // background-image: url("../BG-1920x1080px.png") !important;
+  background-size: cover;
+  // * {
+  //   color: white !important;
+  // }
+  .ant-card-body {
+    padding: 15px !important;
+  }
+
   .ant-card-body {
     text-align: initial;
   }
@@ -217,5 +229,14 @@
   60%,
   80% {
     transform: translateX(2%);
+  }
+}
+
+// Provisional, ya que estos estilos deben ir desde el Api
+.survyCard {
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/BG-1920x1080px.png?alt=media&token=aa4421e0-cd6e-473f-b185-ec12efaffe02") !important;
+  background-size: cover !important;
+  * {
+    color: #fff !important;
   }
 }
