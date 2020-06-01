@@ -111,7 +111,10 @@ class SurveyComponent extends Component {
                 optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
               });
             } else {
-              correctAnswer = question.correctAnswer == question.value ? true : false;
+              // Funcion que retorna si la opcion escogida es la respuesta correcta
+              correctAnswer = question.isAnswerCorrect();
+
+              // Busca el index de la opcion escogida
               optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
             }
             optionQuantity = question.choices.length;

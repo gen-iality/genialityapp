@@ -87,24 +87,25 @@ export const SurveyAnswers = {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
-    let data = correctAnswer
-      ? {
-          response: responseData,
-          created: date,
-          id_user: uid,
-          user_email: email,
-          user_name: names,
-          id_survey: surveyId,
-          correctAnswer,
-        }
-      : {
-          response: responseData,
-          created: date,
-          id_user: uid,
-          user_email: email,
-          user_name: names,
-          id_survey: surveyId,
-        };
+    let data =
+      correctAnswer !== undefined
+        ? {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            user_email: email,
+            user_name: names,
+            id_survey: surveyId,
+            correctAnswer,
+          }
+        : {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            user_email: email,
+            user_name: names,
+            id_survey: surveyId,
+          };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
 
@@ -132,20 +133,21 @@ export const SurveyAnswers = {
     const { responseData, date, uid } = dataAnswer;
     const { optionQuantity, optionIndex, correctAnswer } = counter;
 
-    let data = correctAnswer
-      ? {
-          response: responseData,
-          created: date,
-          id_user: uid,
-          id_survey: surveyId,
-          correctAnswer,
-        }
-      : {
-          response: responseData,
-          created: date,
-          id_user: uid,
-          id_survey: surveyId,
-        };
+    let data =
+      correctAnswer !== undefined
+        ? {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            id_survey: surveyId,
+            correctAnswer,
+          }
+        : {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            id_survey: surveyId,
+          };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
 
