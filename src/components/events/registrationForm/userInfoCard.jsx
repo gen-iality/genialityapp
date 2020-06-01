@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import FormComponent from "./form";
 
 import { Card, Col, Row, Spin, Typography, Button, Modal, Result } from "antd";
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 export default ({ currentUser, extraFields, eventId, userTickets }) => {
   const [infoUser, setInfoUser] = useState({});
@@ -43,7 +43,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     console.log(eventUsers);
     list.forEach(async (item, index, arr) => {
       let result = await parseObjectToArray(item.properties);
-      eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
+      if (item.ticket_id) eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
 
       if (index == arr.length - 1) setEventUserList(eventUsers);
     });
@@ -83,6 +83,10 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   if (!loading)
     return eventUserList.length > 0 ? (
       <Card>
+        <Title level={4}>
+          Asigne los 2 cupos de participación que tiene su empresa en cada mentoría, haciendo clic en Transferir y
+          diligencie la información correspondiente
+        </Title>
         {eventUserList.map((item, indiceArray) => (
           <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
             {item.data.map((field, key) => (
