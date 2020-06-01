@@ -65,8 +65,10 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     console.log("values:", values);
 
     values["id"] = questionId;
-    values["correctAnswer"] = values.choices[correctAnswerIndex];
-    values["correctAnswerIndex"] = correctAnswerIndex;
+    if (allowGradableSurvey) {
+      values["correctAnswer"] = values.choices[correctAnswerIndex];
+      values["correctAnswerIndex"] = correctAnswerIndex;
+    }
 
     if (values.type.indexOf(" ") > 0) {
       selectOptions.forEach((option) => {
@@ -118,7 +120,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
               <Input />
             </Form.Item>
           ) : (
-            field.name != "questionOptions" && (
+            field.selectOptions && (
               <Form.Item
                 key={`field${key}`}
                 name={field.name}
