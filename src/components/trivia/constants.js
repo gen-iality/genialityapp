@@ -14,7 +14,7 @@ export const selectOptions = [
   },
   {
     value: "text",
-    text: "text",
+    text: "Texto",
   },
 ];
 
