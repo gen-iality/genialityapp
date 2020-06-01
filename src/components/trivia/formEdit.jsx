@@ -1,11 +1,11 @@
 import React, { Component, useState, useEffect, forwardRef } from "react";
 
-import { fieldsFormQuestion, selectOptions } from "./constants";
+import { fieldsFormQuestion, selectOptions, searchWithMultipleIndex } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
 import { toast } from "react-toastify";
-import { Form, Input, InputNumber, Button, Select, Spin, Radio } from "antd";
+import { Form, Input, InputNumber, Button, Select, Spin, Radio, Checkbox } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -32,6 +32,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   const [questionIndex, setQuestionIndex] = useState(0);
   const [allowGradableSurvey, setAllowGradableSurvey] = useState(false);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(null);
+  const [questionType, setQuestionType] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -42,14 +43,26 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
 
+    let choice = selectOptions.find((option) => option.text == valuesQuestion.type);
+    setQuestionType(choice.value);
+
     setAllowGradableSurvey(state);
 
     setCorrectAnswerIndex(valuesQuestion.correctAnswerIndex);
   }, [valuesQuestion]);
 
-  const onChange = (e) => {
-    // console.log("radio checked", e.target.value);
+  const handleRadio = (e) => {
     setCorrectAnswerIndex(e.target.value);
+  };
+
+  const handleCheckbox = (value) => {
+    console.log("handle checkbox:", value);
+    setCorrectAnswerIndex(value.sort((a, b) => a - b));
+  };
+
+  const handleFunction = (value) => {
+    setQuestionType(value);
+    setCorrectAnswerIndex(value == "radiogroup" ? null : []);
   };
 
   const fieldValidation = (rule, value) => {
@@ -66,8 +79,20 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     values["id"] = questionId;
     if (allowGradableSurvey) {
-      values["correctAnswer"] = values.choices && values.choices[correctAnswerIndex];
-      values["correctAnswerIndex"] = correctAnswerIndex;
+      switch (questionType) {
+        case "radiogroup":
+          values["correctAnswer"] = values.choices && values.choices[correctAnswerIndex];
+          values["correctAnswerIndex"] = correctAnswerIndex;
+          break;
+
+        case "checkbox":
+          values["correctAnswer"] = values.choices && searchWithMultipleIndex(values.choices, correctAnswerIndex);
+          values["correctAnswerIndex"] = correctAnswerIndex;
+          break;
+
+        default:
+          break;
+      }
     }
 
     if (values.type.indexOf(" ") > 0) {
@@ -131,7 +156,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     validator: fieldValidation,
                   },
                 ]}>
-                <Select placeholder="Seleccione una Opcion">
+                <Select placeholder="Seleccione una Opcion" onChange={handleFunction}>
                   {field.selectOptions.map((option, index) =>
                     option.text ? (
                       <Option key={`type${index}`} value={option.value}>
@@ -153,43 +178,85 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
           {(fields, { add, remove }) => {
             return (
               <div>
-                <Radio.Group
-                  onChange={onChange}
-                  disabled={!allowGradableSurvey}
-                  value={correctAnswerIndex}
-                  style={{ display: "block", marginRight: 0 }}>
-                  {fields.map((field, index) => (
-                    <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                      <Radio value={index} style={{ width: "100%" }}>
-                        <Form.Item
-                          {...field}
-                          validateTrigger={["onChange", "onBlur"]}
-                          rules={[
-                            {
-                              required: true,
-                              whitespace: true,
-                              message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                            },
-                            {
-                              validator: fieldValidation,
-                            },
-                          ]}
-                          noStyle>
-                          <Input placeholder="Texto de la Respuesta" style={{ width: "90%" }} />
+                {questionType == "radiogroup" ? (
+                  <Radio.Group
+                    onChange={handleRadio}
+                    disabled={!allowGradableSurvey}
+                    value={correctAnswerIndex}
+                    style={{ display: "block", marginRight: 0 }}>
+                    {fields.map((field, index) => (
+                      <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                        <Radio value={index} style={{ width: "100%" }}>
+                          <Form.Item
+                            {...field}
+                            validateTrigger={["onChange", "onBlur"]}
+                            rules={[
+                              {
+                                required: true,
+                                whitespace: true,
+                                message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                              },
+                              {
+                                validator: fieldValidation,
+                              },
+                            ]}
+                            noStyle>
+                            <Input placeholder="Texto de la Respuesta" style={{ width: "90%" }} />
+                          </Form.Item>
+                          {fields.length > 2 ? (
+                            <MinusCircleOutlined
+                              className="dynamic-delete-button"
+                              style={{ margin: "0 8px" }}
+                              onClick={() => {
+                                remove(field.name);
+                              }}
+                            />
+                          ) : null}
+                        </Radio>
+                      </Form.Item>
+                    ))}
+                  </Radio.Group>
+                ) : (
+                  questionType == "checkbox" && (
+                    <Checkbox.Group
+                      onChange={handleCheckbox}
+                      disabled={!allowGradableSurvey}
+                      value={correctAnswerIndex}
+                      style={{ display: "block", marginRight: 0 }}>
+                      {fields.map((field, index) => (
+                        <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                          <Checkbox value={index} style={{ display: "block", width: "100%" }}>
+                            <Form.Item
+                              {...field}
+                              validateTrigger={["onChange", "onBlur"]}
+                              rules={[
+                                {
+                                  required: true,
+                                  whitespace: true,
+                                  message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                },
+                                {
+                                  validator: fieldValidation,
+                                },
+                              ]}
+                              noStyle>
+                              <Input placeholder="Texto de la Respuesta" style={{ width: "85%" }} />
+                            </Form.Item>
+                            {fields.length > 2 ? (
+                              <MinusCircleOutlined
+                                className="dynamic-delete-button"
+                                style={{ margin: "0 8px" }}
+                                onClick={() => {
+                                  remove(field.name);
+                                }}
+                              />
+                            ) : null}
+                          </Checkbox>
                         </Form.Item>
-                        {fields.length > 2 ? (
-                          <MinusCircleOutlined
-                            className="dynamic-delete-button"
-                            style={{ margin: "0 8px" }}
-                            onClick={() => {
-                              remove(field.name);
-                            }}
-                          />
-                        ) : null}
-                      </Radio>
-                    </Form.Item>
-                  ))}
-                </Radio.Group>
+                      ))}
+                    </Checkbox.Group>
+                  )
+                )}
                 {fields.length < 5 && (
                   <Form.Item>
                     <Button

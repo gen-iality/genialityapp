@@ -44,3 +44,11 @@ export const initValues = () => {
   });
   return valuesFields;
 };
+
+export const searchWithMultipleIndex = (arr, arrIndex) => {
+  let response = [];
+  for (let index = 0; index < arrIndex.length; index++) {
+    response.push(arr[arrIndex[index]]);
+  }
+  return response;
+};
