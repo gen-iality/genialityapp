@@ -67,6 +67,7 @@ export default class RootPage extends Component {
               showListSurvey={toggleSurvey}
               eventId={eventId}
               currentUser={currentUser}
+              singlePage={true}
             />
           </Card>
         );
