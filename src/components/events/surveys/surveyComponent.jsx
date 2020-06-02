@@ -8,6 +8,7 @@ import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers, UserGamification } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
+import GraphicGamification from "./graphicsGamification";
 import * as Survey from "survey-react";
 import "survey-react/survey.css";
 
@@ -196,7 +197,7 @@ class SurveyComponent extends Component {
       message.success({ content: responseMessage });
 
       // Redirecciona a la lista de las encuestas
-      if (this.props.showListSurvey) showListSurvey(null, "reload");
+      // if (this.props.showListSurvey) showListSurvey(null, "reload");
 
       // Actualiza si la respuesta es correcta
       if (correctAnswer === true)
@@ -221,6 +222,7 @@ class SurveyComponent extends Component {
           title=""
           subTitle="Regresar a las encuestas"
         />
+        <GraphicGamification data={this.state.rankingList} />
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );

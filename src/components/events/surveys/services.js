@@ -218,10 +218,14 @@ export const UserGamification = {
     return new Promise((resolve, reject) => {
       firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
         let rankingList = [];
+        let userList = [];
+        let pointsList = [];
         docs.forEach((infoDoc) => {
           rankingList.push(infoDoc.data());
+          userList.push(infoDoc.data().user_name);
+          pointsList.push(infoDoc.data().points);
         });
-        getRankingList(rankingList);
+        getRankingList({ userList, pointsList });
       });
     });
   },
