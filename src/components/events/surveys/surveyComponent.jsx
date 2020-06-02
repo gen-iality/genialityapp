@@ -200,13 +200,12 @@ class SurveyComponent extends Component {
       // if (this.props.showListSurvey) showListSurvey(null, "reload");
 
       // Actualiza si la respuesta es correcta
-      if (correctAnswer === true)
-        UserGamification.registerPoints(eventId, {
-          user_id: currentUser._id,
-          user_name: currentUser.names,
-          user_email: currentUser.email,
-          points: 5,
-        });
+      UserGamification.registerPoints(eventId, {
+        user_id: currentUser._id,
+        user_name: currentUser.names,
+        user_email: currentUser.email,
+        points: correctAnswer ? 5 : 0,
+      });
     });
   };
 
