@@ -60,6 +60,16 @@ iframe {
   }
 }
 
+// Botón de la conferencia en el home
+
+.buttonVirtualConference {
+  height: 70px;
+  span {
+    text-transform: uppercase !important;
+    font-weight: bold;
+  }
+}
+
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
