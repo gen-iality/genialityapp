@@ -100,6 +100,7 @@ class triviaEdit extends Component {
       publish: "false",
       open: "false",
       allow_anonymous_answers: "false",
+      allow_gradable_survey: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
     };
