@@ -102,7 +102,7 @@ class SurveyComponent extends Component {
       let sendAnswers = 0;
       let sucessMessage = null;
       let errorMessage = null;
-      let pointToCorrectAnswer = 0;
+      let rankingPoints = 0;
 
       console.log(questions);
       return new Promise((resolve, reject) => {
@@ -119,7 +119,7 @@ class SurveyComponent extends Component {
             if (typeof question.value == "object") {
               correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
-              if (correctAnswer) pointToCorrectAnswer += 5;
+              if (correctAnswer) rankingPoints += 5;
               question.value.forEach((value) => {
                 optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
               });
@@ -127,7 +127,7 @@ class SurveyComponent extends Component {
               // Funcion que retorna si la opcion escogida es la respuesta correcta
               correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
-              if (correctAnswer) pointToCorrectAnswer += 5;
+              if (correctAnswer) rankingPoints += 5;
               // Busca el index de la opcion escogida
               optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
             }
@@ -189,7 +189,7 @@ class SurveyComponent extends Component {
             }
 
           if (sucessMessage && sendAnswers == questions.length) {
-            await resolve({ responseMessage: sucessMessage, pointToCorrectAnswer });
+            await resolve({ responseMessage: sucessMessage, rankingPoints });
           } else if (errorMessage) {
             await reject({ responseMessage: errorMessage });
           }
@@ -197,7 +197,7 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, currentUser).then(({ responseMessage, pointToCorrectAnswer }) => {
+    executeService(surveyData, questions, currentUser).then(({ responseMessage, rankingPoints }) => {
       message.success({ content: responseMessage });
 
       // Redirecciona a la lista de las encuestas
@@ -208,7 +208,7 @@ class SurveyComponent extends Component {
         user_id: currentUser._id,
         user_name: currentUser.names,
         user_email: currentUser.email,
-        points: pointToCorrectAnswer,
+        points: rankingPoints,
       });
     });
   };
