@@ -11,6 +11,8 @@ import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import { firestore } from "../../helpers/firebase";
+import { Checkbox, notification } from 'antd';
+import { createOrUpdateActivity, getConfiguration } from './services'
 
 import {
   AgendaApi,
@@ -71,9 +73,11 @@ class AgendaEdit extends Component {
       selected_document: [],
       nameDocuments: [],
       hostAvailable: [],
+      availableText: false
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   async componentDidMount() {
@@ -101,7 +105,6 @@ class AgendaEdit extends Component {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
     this.setState({ nameDocuments, hostAvailable });
-
     // getHostList(this.loadHostAvailable);
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
@@ -119,8 +122,9 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-
+      const information = await getConfiguration(this.props.event._id, this.props.location.state.edit)
       this.setState({
+        availableText: information.habilitar_ingreso,
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
@@ -482,6 +486,18 @@ class AgendaEdit extends Component {
 
   goBack = () => this.setState({ redirect: true });
 
+  async onChange(e) {
+    this.setState({ availableText: e.target.checked })
+
+    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.checked)
+    console.log(result)
+
+    notification.open({
+      message: result.message
+    });
+
+  }
+
   render() {
     const {
       loading,
@@ -502,7 +518,7 @@ class AgendaEdit extends Component {
       selectedType,
       selectedCategories,
     } = this.state;
-    const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url } = this.state;
+    const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url, availableText } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
@@ -880,7 +896,11 @@ class AgendaEdit extends Component {
                               </p>
                             </div>
                           </div>
-
+                          <div>
+                            <Checkbox checked={availableText} onChange={this.onChange}>
+                              Espacio virtual {availableText ? "habilitado" : "inhabilitado"}
+                            </Checkbox>
+                          </div>
                           <button
                             style={{ marginTop: "2%" }}
                             className="button is-primary"
