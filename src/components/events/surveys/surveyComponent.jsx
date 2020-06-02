@@ -16,13 +16,20 @@ class SurveyComponent extends Component {
     super(props);
     this.state = {
       surveyData: {},
+      rankingList: [],
     };
   }
 
   componentDidMount() {
+    const { eventId } = this.props;
     console.log("AQUI");
     this.loadData();
+    UserGamification.getListPoints(eventId, this.getRankingList);
   }
+
+  getRankingList = (list) => {
+    this.setState({ rankingList: list });
+  };
 
   // Funcion para cargar datos de la encuesta seleccionada
   loadData = async () => {
