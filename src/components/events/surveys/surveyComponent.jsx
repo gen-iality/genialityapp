@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader } from "antd";
+import { PageHeader, message } from "antd";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers } from "./services";
+import { SurveyAnswers, UserGamification } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import * as Survey from "survey-react";
@@ -186,10 +186,18 @@ class SurveyComponent extends Component {
     };
 
     executeService(surveyData, questions, currentUser).then((result) => {
-      toast.success(result);
+      message.success({ content: result });
+
       if (this.props.showListSurvey) {
         showListSurvey(null, "reload");
       }
+
+      UserGamification.registerPoints(eventId, {
+        user_id: currentUser._id,
+        user_name: currentUser.names,
+        user_email: currentUser.email,
+        points: 5,
+      });
     });
   };
 

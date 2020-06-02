@@ -212,3 +212,60 @@ export const SurveyAnswers = {
     });
   },
 };
+
+export const UserGamification = {
+  // Servicio que obtiene los puntos de un usuario
+  getUserPoints: async (eventId, userId) => {
+    return new Promise((resolve, reject) => {
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            resolve({ message: "Se encontro un registro", status: true, data: doc.data() });
+          }
+          resolve({ message: "No se encontraron registros", status: false });
+        })
+        .catch((err) => {
+          console.log("err:", err);
+          reject({ message: "Ha ocurrido un error", err });
+        });
+    });
+  },
+  // Servicio que registra o actualiza los puntos de un usuario
+  registerPoints: async (eventId, userInfo) => {
+    // Verifica si ya hay un documento que almacene los puntos del usuario, para crearlo o actualizarlo
+    let response = await UserGamification.getUserPoints(eventId, userInfo.user_id);
+    // console.log("response:", response);
+
+    if (!response.status) {
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userInfo.user_id)
+        .set({ ...userInfo, created_at: new Date(), updated_at: new Date() })
+        .then(() => {
+          console.log("Puntos registrados satisfactoriamente");
+        })
+        .catch((err) => {
+          console.log("Ha ocurrido un error", err);
+        });
+    } else {
+      let { points } = userInfo;
+      let { data } = response;
+
+      points += data.points;
+
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userInfo.user_id)
+        .update({ points, updated_at: new Date() })
+        .then(() => {
+          console.log("Puntos registrados satisfactoriamente");
+        })
+        .catch((err) => {
+          console.log("Ha ocurrido un error", err);
+        });
+    }
+  },
+};
