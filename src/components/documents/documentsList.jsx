@@ -41,7 +41,7 @@ class documentsList extends Component {
                     dataSource={data}
                     //se mapean los datos del array data
                     renderItem={item => (
-                        <List.Item
+                        <List.Item key={item._id}
                             //boton de descarga
                             actions={[
                                 <a target="_blank" href={item.file} download>
@@ -50,18 +50,16 @@ class documentsList extends Component {
                                         icon={DownloadOutlined}
 
                                     /></a>,
-                                {/* <a
-                                    href={ApiGoogleDocuments + encodeURIComponent(item.file)}
-                                    target="_blank"
-                                    style={{ wordBreak: "break-word" }}
-                                >
-                                    <IconText
-                                        text="Previsualizar"
-                                        icon={EyeOutlined}
-                                    />
-                                </a>
-                                */}
-
+                                // <a
+                                //     href={ApiGoogleDocuments + encodeURIComponent(item.file)}
+                                //     target="_blank"
+                                //     style={{ wordBreak: "break-word" }}
+                                // >
+                                //     <IconText
+                                //         text="Previsualizar"
+                                //         icon={EyeOutlined}
+                                //     />
+                                // </a>
                             ]}
                         >
                             <List.Item.Meta title={item.title ? item.title : item.name} />
