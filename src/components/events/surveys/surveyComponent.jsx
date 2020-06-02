@@ -92,8 +92,8 @@ class SurveyComponent extends Component {
 
     const executeService = (surveyData, questions, infoUser) => {
       let sendAnswers = 0;
-      let responseMessage = null;
-      let responseError = null;
+      let sucessMessage = null;
+      let errorMessage = null;
       console.log(questions);
       return new Promise((resolve, reject) => {
         questions.forEach(async (question) => {
@@ -146,11 +146,11 @@ class SurveyComponent extends Component {
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = result;
+                  sucessMessage = result;
                 })
                 .catch((err) => {
                   sendAnswers++;
-                  responseError = err;
+                  errorMessage = err;
                 });
             } else {
               // Sirve para controlar si un usuario anonimo ha votado
@@ -168,36 +168,37 @@ class SurveyComponent extends Component {
               )
                 .then((result) => {
                   sendAnswers++;
-                  responseMessage = result;
+                  sucessMessage = result;
                 })
                 .catch((err) => {
                   sendAnswers++;
-                  responseError = err;
+                  errorMessage = err;
                 });
             }
 
-          if (responseMessage && sendAnswers == questions.length) {
-            await resolve(responseMessage);
-          } else if (responseError) {
-            await reject(responseError);
+          if (sucessMessage && sendAnswers == questions.length) {
+            await resolve({ responseMessage: sucessMessage, correctAnswer });
+          } else if (errorMessage) {
+            await reject({ responseMessage: errorMessage });
           }
         });
       });
     };
 
-    executeService(surveyData, questions, currentUser).then((result) => {
-      message.success({ content: result });
+    executeService(surveyData, questions, currentUser).then(({ responseMessage, correctAnswer }) => {
+      message.success({ content: responseMessage });
 
-      if (this.props.showListSurvey) {
-        showListSurvey(null, "reload");
-      }
+      // Redirecciona a la lista de las encuestas
+      if (this.props.showListSurvey) showListSurvey(null, "reload");
 
-      UserGamification.registerPoints(eventId, {
-        user_id: currentUser._id,
-        user_name: currentUser.names,
-        user_email: currentUser.email,
-        points: 5,
-      });
+      // Actualiza si la respuesta es correcta
+      if (correctAnswer === true)
+        UserGamification.registerPoints(eventId, {
+          user_id: currentUser._id,
+          user_name: currentUser.names,
+          user_email: currentUser.email,
+          points: 5,
+        });
     });
   };
 
