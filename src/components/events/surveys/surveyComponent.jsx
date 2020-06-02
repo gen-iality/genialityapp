@@ -107,6 +107,8 @@ class SurveyComponent extends Component {
           } else {
             // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
             if (typeof question.value == "object") {
+              correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+
               question.value.forEach((value) => {
                 optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
               });
