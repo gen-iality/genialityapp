@@ -43,8 +43,10 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
 
-    let choice = selectOptions.find((option) => option.text == valuesQuestion.type);
-    setQuestionType(choice.value);
+    if (valuesQuestion.type) {
+      let choice = selectOptions.find((option) => option.text == valuesQuestion.type);
+      setQuestionType(choice.value);
+    }
 
     setAllowGradableSurvey(state);
 
