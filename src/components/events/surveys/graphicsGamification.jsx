@@ -6,7 +6,7 @@ import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
 import { SurveysApi } from "../../../helpers/request";
-import { dataFrame } from "./frame";
+import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class Graphics extends Component {
     this.state = {
       dataGamification: null,
       currentPage: 1,
-      dataFrame,
+      graphicsFrame,
       chart: {},
       chartCreated: false,
     };
@@ -27,9 +27,9 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { eventId } = this.props;
-    let { dataFrame, chartCreated, chart, dataGamification } = this.state;
+    let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
-
+    let { verticalBar } = graphicsFrame;
     let { userList, pointsList } = dataGamification;
 
     // Se condiciona si el grafico ya fue creado
@@ -37,20 +37,20 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
-      dataFrame.data.labels = userList;
-      dataFrame.data.datasets[0].data = Object.values(pointsList || []);
-      dataFrame.data.datasets[0].label = "Ranking";
+      verticalBar.data.labels = userList;
+      verticalBar.data.datasets[0].data = Object.values(pointsList || []);
+      verticalBar.data.datasets[0].label = "Ranking";
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
-      const chart = new Chart(canvas, dataFrame);
+      const chart = new Chart(canvas, verticalBar);
 
-      this.setState({ dataFrame, chart, chartCreated: true });
+      this.setState({ verticalBar, chart, chartCreated: true });
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = userList;
       chart.data.datasets[0].data = Object.values(pointsList || []);
-      dataFrame.data.datasets[0].label = "Ranking";
+      verticalBar.data.datasets[0].label = "Ranking";
 
       chart.update();
 
@@ -70,7 +70,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataGamification, currentPage, dataFrame, referenceChart } = this.state;
+    let { dataGamification, currentPage, verticalBar, referenceChart } = this.state;
     const { showListSurvey } = this.props;
 
     if (dataGamification !== null)
