@@ -37,6 +37,7 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
+      dataFrame.type = "bar";
       dataFrame.data.labels = userList;
       dataFrame.data.datasets[0].data = Object.values(pointsList || []);
       dataFrame.data.datasets[0].label = "Ranking";
