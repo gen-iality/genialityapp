@@ -5,6 +5,7 @@ import { AgendaApi, SurveysApi } from "../../helpers/request";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
 
+
 class VirtualConference extends Component {
     constructor(props) {
         super(props);
@@ -89,7 +90,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button size="large" type="primary" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar a la conferencia </Button>
+                                    <Button size="large" type="primary" className="buttonVirtualConference" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar a la conferencia </Button>
 
                                 </Card>
                             </div>)

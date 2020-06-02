@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
 import { PageHeader } from "antd";
+import graphicsImage from "../../../graficas.png"
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
@@ -11,6 +12,18 @@ import { validateSurveyCreated } from "../../trivia/services";
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
 Survey.StylesManager.applyTheme("modern");
+
+const surveyStyle = {
+  overFlowX: "hidden",
+  overFlowY: "scroll"
+}
+
+
+const imageGraphics = {
+  display: "block",
+  margin: "0 auto",
+  maxWidth: "100%"
+}
 
 class SurveyComponent extends Component {
   constructor(props) {
@@ -203,13 +216,16 @@ class SurveyComponent extends Component {
     const { showListSurvey } = this.props;
 
     return (
-      <div>
+      <div style={surveyStyle}>
         <PageHeader
           className="site-page-header"
           onBack={() => showListSurvey()}
           title=""
           subTitle="Regresar a las encuestas"
         />
+        {/* Imagen provisional */}
+        <img src={graphicsImage} style={imageGraphics} alt="" />
+        {/* ************* */}
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );

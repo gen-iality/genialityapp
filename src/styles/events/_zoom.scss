@@ -4,7 +4,7 @@
   z-index: 3;
   right: 0%;
   top: 0%;
-  height: 85%;
+  height: 90%;
   min-width: 80%;
   min-height: 100%;
   background-color: white;
@@ -15,18 +15,6 @@
     background-color: transparent;
     height: auto;
   }
-
-  // .content-zoom {
-  // position: fixed;
-  // z-index: 3;
-  // right: 2%;
-  // top: 0%;
-  // height: 100%;
-  // max-width: 100%;
-  // min-height: 80%;
-  // background-color: rgba(134, 134, 134, 0.753);
-  // color: red !important;
-  // }
 
   @media only screen and (max-width: $breakpoint-mobile) {
     right: 0;
@@ -108,11 +96,9 @@
   min-height: 100vh;
   max-height: 100vh;
   border: none !important;
-  // background-image: url("../BG-1920x1080px.png") !important;
   background-size: cover;
-  // * {
-  //   color: white !important;
-  // }
+  overflow-y: scroll;
+
   .ant-card-body {
     padding: 15px !important;
   }
