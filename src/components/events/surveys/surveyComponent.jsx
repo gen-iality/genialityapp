@@ -221,12 +221,14 @@ class SurveyComponent extends Component {
 
     return (
       <div>
-        <PageHeader
-          className="site-page-header"
-          onBack={() => showListSurvey()}
-          title=""
-          subTitle="Regresar a las encuestas"
-        />
+        {showListSurvey && (
+          <PageHeader
+            className="site-page-header"
+            onBack={() => showListSurvey()}
+            title=""
+            subTitle="Regresar a las encuestas"
+          />
+        )}
         {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
