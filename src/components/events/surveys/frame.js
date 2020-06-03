@@ -43,83 +43,6 @@ const colorBars = {
   ],
 };
 
-const configurationOptions = [
-  {
-    responsive: true,
-    animation: {
-      duration: 2000,
-      easing: "easeInOutQuint",
-    },
-    legend: {
-      labels: {
-        fontSize: 16,
-        fontColor: "black",
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-            fontColor: "black",
-            fontStyle: "bold",
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-            fontColor: "black",
-            fontStyle: "bold",
-          },
-        },
-      ],
-    },
-  },
-  {
-    responsive: true,
-    animation: {
-      duration: 2000,
-      easing: "easeInOutQuint",
-    },
-    legend: {
-      labels: {
-        fontSize: 16,
-        fontColor: "white",
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-            fontColor: "white",
-            fontStyle: "bold",
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-            fontColor: "white",
-            fontStyle: "bold",
-          },
-        },
-      ],
-    },
-  },
-];
-
 export const graphicsFrame = {
   horizontalBar: {
     type: "horizontalBar",
@@ -134,7 +57,43 @@ export const graphicsFrame = {
         },
       ],
     },
-    options: configurationOptions[0],
+    options: {
+      responsive: true,
+      animation: {
+        duration: 2000,
+        easing: "easeInOutQuint",
+      },
+      legend: {
+        labels: {
+          fontSize: 16,
+          fontColor: "black",
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+              fontColor: "black",
+              fontStyle: "bold",
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+              fontColor: "black",
+              fontStyle: "bold",
+            },
+          },
+        ],
+      },
+    },
   },
   verticalBar: {
     type: "bar",
@@ -149,6 +108,42 @@ export const graphicsFrame = {
         },
       ],
     },
-    options: configurationOptions[1],
+    options: {
+      responsive: true,
+      animation: {
+        duration: 2000,
+        easing: "easeInOutQuint",
+      },
+      legend: {
+        labels: {
+          fontSize: 16,
+          fontColor: "white",
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+              fontColor: "white",
+              fontStyle: "bold",
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+              fontColor: "white",
+              fontStyle: "bold",
+            },
+          },
+        ],
+      },
+    },
   },
 };
