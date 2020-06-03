@@ -341,11 +341,10 @@ class UsersRsvp extends Component {
   };
 
   exportFile = async () => {
-    const columnsKey = Object.keys(this.state.usersReq[0].properties)
+
+    const columnsKey = Object.keys(this.state.usersReq[0].properties);
     columnsKey.unshift("created_at");
     columnsKey.unshift("updated_at");
-
-
 
     const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
     const ws = XLSX.utils.json_to_sheet(data);
