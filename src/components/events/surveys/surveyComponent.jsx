@@ -18,6 +18,7 @@ class SurveyComponent extends Component {
     this.state = {
       surveyData: {},
       rankingList: [],
+      sentSurveyAnswers: false,
     };
   }
 
@@ -202,6 +203,7 @@ class SurveyComponent extends Component {
 
       // Redirecciona a la lista de las encuestas
       // if (this.props.showListSurvey) showListSurvey(null, "reload");
+      if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
 
       // Solo intenta registrar puntos si la encuesta es calificable
       // Actualiza puntos del usuario
@@ -216,7 +218,7 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData } = this.state;
+    let { surveyData, sentSurveyAnswers } = this.state;
     const { showListSurvey } = this.props;
 
     return (
@@ -224,7 +226,7 @@ class SurveyComponent extends Component {
         {showListSurvey && (
           <PageHeader
             className="site-page-header"
-            onBack={() => showListSurvey()}
+            onBack={() => showListSurvey(sentSurveyAnswers)}
             title=""
             subTitle="Regresar a las encuestas"
           />
