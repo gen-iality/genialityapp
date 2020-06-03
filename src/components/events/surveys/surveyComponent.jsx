@@ -37,7 +37,6 @@ class SurveyComponent extends Component {
 
   componentDidMount() {
     const { eventId } = this.props;
-    console.log("AQUI");
     this.loadData();
     UserGamification.getListPoints(eventId, this.getRankingList);
   }
@@ -61,6 +60,12 @@ class SurveyComponent extends Component {
 
     // Se igual title al valor de survey
     dataSurvey.title = dataSurvey.survey;
+
+    // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
+    dataSurvey.sendResultOnPageNext = true;
+
+    // Esto permite ocultar el boton de devolver en la encuesta
+    dataSurvey.showPrevButton = false;
 
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta
@@ -93,131 +98,104 @@ class SurveyComponent extends Component {
     this.setState({ surveyData, idSurvey });
   };
 
-  // Funcion para enviar la informacion de las respuestas
-  sendDataToServer = (survey) => {
-    const { showListSurvey, eventId, currentUser, singlePage } = this.props;
+  // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
+  executePartialService = (surveyData, question, infoUser) => {
+    let rankingPoints = 0;
+    // console.log(question);
+
+    return new Promise((resolve, reject) => {
+      // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
+      let optionIndex = [];
+      let optionQuantity = 0;
+      let correctAnswer = false;
+
+      //Hack rápido para permitir preguntas tipo texto (abiertas)
+      if (question.inputType == "text") {
+      } else {
+        // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
+        if (typeof question.value == "object") {
+          correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+
+          if (correctAnswer) rankingPoints += 5;
+          question.value.forEach((value) => {
+            optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+          });
+        } else {
+          // Funcion que retorna si la opcion escogida es la respuesta correcta
+          correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+
+          if (correctAnswer) rankingPoints += 5;
+          // Busca el index de la opcion escogida
+          optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+        }
+        optionQuantity = question.choices.length;
+      }
+
+      let infoOptionQuestion =
+        surveyData.allow_gradable_survey == "true"
+          ? { optionQuantity, optionIndex, correctAnswer }
+          : { optionQuantity, optionIndex };
+
+      // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+      // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
+      if (question.value)
+        if (infoUser) {
+          SurveyAnswers.registerWithUID(
+            surveyData._id,
+            question.id,
+            {
+              responseData: question.value,
+              date: new Date(),
+              uid: infoUser._id,
+              email: infoUser.email,
+              names: infoUser.names || infoUser.displayName,
+              voteValue: infoUser.pesovoto,
+            },
+            infoOptionQuestion
+          )
+            .then((result) => {
+              resolve({ responseMessage: result, rankingPoints });
+            })
+            .catch((err) => {
+              reject({ responseMessage: err });
+            });
+        } else {
+          // Sirve para controlar si un usuario anonimo ha votado
+          localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
+
+          SurveyAnswers.registerLikeGuest(
+            surveyData._id,
+            question.id,
+            {
+              responseData: question.value,
+              date: new Date(),
+              uid: "guest",
+            },
+            infoOptionQuestion
+          )
+            .then((result) => {
+              resolve({ responseMessage: result, rankingPoints });
+            })
+            .catch((err) => {
+              reject({ responseMessage: err });
+            });
+        }
+    });
+  };
+
+  // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
+  sendData = (values) => {
+    const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData } = this.state;
 
-    validateSurveyCreated(surveyData._id).then((existSurvey) => {
-      if (!existSurvey) {
-        firestore
-          .collection("surveys")
-          .doc(surveyData._id)
-          .set({
-            eventId: eventId,
-            name: surveyData.title,
-            category: "none",
-          });
-      }
-    });
+    let questionName = Object.keys(values.data);
+    questionName = questionName[questionName.length - 1];
 
-    // Se obtiene las preguntas de la encuesta con la funcion 'getAllQuestions' que provee la libreria
-    let questions = survey.getAllQuestions().filter((surveyInfo) => surveyInfo.id);
-
-    const executeService = (surveyData, questions, infoUser) => {
-      let sendAnswers = 0;
-      let sucessMessage = null;
-      let errorMessage = null;
-      let rankingPoints = 0;
-
-      console.log(questions);
-      return new Promise((resolve, reject) => {
-        questions.forEach(async (question) => {
-          // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
-          let optionIndex = [];
-          let optionQuantity = 0;
-          let correctAnswer = false;
-
-          //Hack rápido para permitir preguntas tipo texto (abiertas)
-          if (question.inputType == "text") {
-          } else {
-            // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
-            if (typeof question.value == "object") {
-              correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
-
-              if (correctAnswer) rankingPoints += 5;
-              question.value.forEach((value) => {
-                optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
-              });
-            } else {
-              // Funcion que retorna si la opcion escogida es la respuesta correcta
-              correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
-
-              if (correctAnswer) rankingPoints += 5;
-              // Busca el index de la opcion escogida
-              optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
-            }
-            optionQuantity = question.choices.length;
-          }
-
-          let infoOptionQuestion =
-            surveyData.allow_gradable_survey == "true"
-              ? { optionQuantity, optionIndex, correctAnswer }
-              : { optionQuantity, optionIndex };
-
-          // Se envia al servicio el id de la encuesta, de la pregunta y los datos
-          // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-          if (question.value)
-            if (infoUser) {
-              await SurveyAnswers.registerWithUID(
-                surveyData._id,
-                question.id,
-                {
-                  responseData: question.value,
-                  date: new Date(),
-                  uid: infoUser._id,
-                  email: infoUser.email,
-                  names: infoUser.names || infoUser.displayName,
-                  voteValue: infoUser.pesovoto,
-                },
-                infoOptionQuestion
-              )
-                .then((result) => {
-                  sendAnswers++;
-                  sucessMessage = result;
-                })
-                .catch((err) => {
-                  sendAnswers++;
-                  errorMessage = err;
-                });
-            } else {
-              // Sirve para controlar si un usuario anonimo ha votado
-              localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
-
-              await SurveyAnswers.registerLikeGuest(
-                surveyData._id,
-                question.id,
-                {
-                  responseData: question.value,
-                  date: new Date(),
-                  uid: "guest",
-                },
-                infoOptionQuestion
-              )
-                .then((result) => {
-                  sendAnswers++;
-                  sucessMessage = result;
-                })
-                .catch((err) => {
-                  sendAnswers++;
-                  errorMessage = err;
-                });
-            }
-
-          if (sucessMessage && sendAnswers == questions.length) {
-            await resolve({ responseMessage: sucessMessage, rankingPoints });
-          } else if (errorMessage) {
-            await reject({ responseMessage: errorMessage });
-          }
-        });
-      });
-    };
-
-    executeService(surveyData, questions, currentUser).then(({ responseMessage, rankingPoints }) => {
+    let question = values.getQuestionByName(questionName, true);
+    this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       message.success({ content: responseMessage });
 
       // Redirecciona a la lista de las encuestas
-      // if (this.props.showListSurvey) showListSurvey(null, "reload");
       if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
 
       // Solo intenta registrar puntos si la encuesta es calificable
@@ -248,10 +226,7 @@ class SurveyComponent extends Component {
         )}
         {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
 
-        {/* Imagen provisional */}
-        {/* <img src={graphicsImage} style={imageGraphics} alt="" /> */}
-        {/* ************* */}
-        <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
+        <Survey.Survey json={surveyData} onComplete={this.sendData} onPartialSend={this.sendData} />
       </div>
     );
   }

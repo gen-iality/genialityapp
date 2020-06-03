@@ -120,7 +120,8 @@ export const SurveyAnswers = {
         .set(data)
         .then(() => {
           console.log("Document successfully updated!");
-          resolve("Las respuestas han sido enviadas");
+          // resolve("Las respuestas han sido enviadas");
+          resolve("El voto ha sido registrado");
         })
         .catch((err) => {
           console.log("Document successfully updated!");
