@@ -203,13 +203,15 @@ class SurveyComponent extends Component {
       // Redirecciona a la lista de las encuestas
       // if (this.props.showListSurvey) showListSurvey(null, "reload");
 
-      // Actualiza si la respuesta es correcta
-      UserGamification.registerPoints(eventId, {
-        user_id: currentUser._id,
-        user_name: currentUser.names,
-        user_email: currentUser.email,
-        points: rankingPoints,
-      });
+      // Solo intenta registrar puntos si la encuesta es calificable
+      // Actualiza puntos del usuario
+      if (surveyData.allow_gradable_survey == "true")
+        UserGamification.registerPoints(eventId, {
+          user_id: currentUser._id,
+          user_name: currentUser.names,
+          user_email: currentUser.email,
+          points: rankingPoints,
+        });
     });
   };
 
