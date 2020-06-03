@@ -225,7 +225,7 @@ class SurveyComponent extends Component {
           title=""
           subTitle="Regresar a las encuestas"
         />
-        <GraphicGamification data={this.state.rankingList} />
+        {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>
     );
