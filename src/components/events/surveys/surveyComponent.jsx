@@ -67,6 +67,9 @@ class SurveyComponent extends Component {
     // Esto permite ocultar el boton de devolver en la encuesta
     dataSurvey.showPrevButton = false;
 
+    // Asigna textos al completar encuesta y al ver la encuesta vacia
+    dataSurvey.completedHtml = "Gracias por completar la encuesta!";
+
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta
     // Si la pregunta tiene la propiedad 'page'
@@ -101,7 +104,7 @@ class SurveyComponent extends Component {
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
   executePartialService = (surveyData, question, infoUser) => {
     let rankingPoints = 0;
-    // console.log(question);
+    console.log(question);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el index de la opcion escogida, y la cantidad de opciones de la pregunta
