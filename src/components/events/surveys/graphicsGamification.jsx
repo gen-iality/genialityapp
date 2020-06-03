@@ -75,11 +75,9 @@ class Graphics extends Component {
 
     if (dataGamification !== null)
       return (
-        <>
-          <Card>
-            <canvas id="chart"></canvas>
-          </Card>
-        </>
+        <Card style={{ backgroundColor: "rgba(227, 227, 227,0.3)" }}>
+          <canvas id="chart"></canvas>
+        </Card>
       );
 
     return <Spin></Spin>;
