@@ -336,11 +336,11 @@ class UsersRsvp extends Component {
     console.log(this.state.selection);
   };
 
-  exportFile = async (pageOfItems) => {
-    const columnsKey = Object.keys(pageOfItems[0].properties)
+  exportFile = async () => {
+    const columnsKey = Object.keys(this.state.usersReq[0].properties)
 
     console.log("aqui");
-    const data = await parseData2Excel(pageOfItems, this.state.columnsKey);
+    const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
