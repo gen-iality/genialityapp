@@ -338,7 +338,7 @@ class UsersRsvp extends Component {
 
   exportFile = async () => {
     const columnsKey = Object.keys(this.state.usersReq[0].properties)
-
+    console.log(this.state.usersReq[0].properties)
     console.log("aqui");
     const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
     const ws = XLSX.utils.json_to_sheet(data);
