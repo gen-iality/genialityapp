@@ -57,6 +57,9 @@ class UsersRsvp extends Component {
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
       console.log("RESP", this.props.eventID, resp);
       const columns = this.props.event.user_properties.map(field => field.label);
+      columns.unshift('created_at');
+      columns.unshift('updated_at');
+
       columns.unshift(
         <div className="field">
           <input
@@ -69,6 +72,7 @@ class UsersRsvp extends Component {
           <label htmlFor={"checkallUser"} />
         </div>
       );
+
       const users = handleUsers(this.props.event.user_properties, resp.data);
       this.setState({
         loading: false,
@@ -338,8 +342,11 @@ class UsersRsvp extends Component {
 
   exportFile = async () => {
     const columnsKey = Object.keys(this.state.usersReq[0].properties)
+    columnsKey.unshift("created_at");
+    columnsKey.unshift("updated_at");
 
-    console.log("aqui");
+
+
     const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
@@ -540,7 +547,15 @@ const handleUsers = (fields, list) => {
     users[key] = {};
     users[key]["id"] = user._id;
     users[key]["properties"] = {};
-    return fields.map(field => (users[key].properties[field.name] = user.properties[field.name]));
+    users[key].properties['created_at'] = user.created_at;
+    users[key].properties['updated_at'] = user.updated_at;
+    fields.map(field => (users[key].properties[field.name] = user.properties[field.name]));
+
+
+
+
+
+    return
   });
   return users;
 };
