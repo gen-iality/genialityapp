@@ -370,7 +370,7 @@ class UsersRsvp extends Component {
               style={{ float: "left", marginTop: "2%", marginLeft: "20%" }}
               onClick={() => this.exportFile(pageOfItems)}
             >
-              Exportar Invitados
+              Exportar
             </button>
           </div>
           {usersReq.length > 0 ? (
