@@ -2,29 +2,28 @@ import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
 import { PageHeader, message } from "antd";
-import graphicsImage from "../../../graficas.png"
-
+import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers, UserGamification } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
+import GraphicGamification from "./graphicsGamification";
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
 Survey.StylesManager.applyTheme("modern");
 
 const surveyStyle = {
   overFlowX: "hidden",
-  overFlowY: "scroll"
-}
-
+  overFlowY: "scroll",
+};
 
 const imageGraphics = {
   display: "block",
   margin: "0 auto",
-  maxWidth: "100%"
-}
+  maxWidth: "100%",
+};
 
 class SurveyComponent extends Component {
   constructor(props) {
@@ -32,6 +31,7 @@ class SurveyComponent extends Component {
     this.state = {
       surveyData: {},
       rankingList: [],
+      sentSurveyAnswers: false,
     };
   }
 
@@ -118,6 +118,8 @@ class SurveyComponent extends Component {
       let sendAnswers = 0;
       let sucessMessage = null;
       let errorMessage = null;
+      let rankingPoints = 0;
+
       console.log(questions);
       return new Promise((resolve, reject) => {
         questions.forEach(async (question) => {
@@ -133,6 +135,7 @@ class SurveyComponent extends Component {
             if (typeof question.value == "object") {
               correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
+              if (correctAnswer) rankingPoints += 5;
               question.value.forEach((value) => {
                 optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
               });
@@ -140,6 +143,7 @@ class SurveyComponent extends Component {
               // Funcion que retorna si la opcion escogida es la respuesta correcta
               correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
+              if (correctAnswer) rankingPoints += 5;
               // Busca el index de la opcion escogida
               optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
             }
@@ -201,7 +205,7 @@ class SurveyComponent extends Component {
             }
 
           if (sucessMessage && sendAnswers == questions.length) {
-            await resolve({ responseMessage: sucessMessage, correctAnswer });
+            await resolve({ responseMessage: sucessMessage, rankingPoints });
           } else if (errorMessage) {
             await reject({ responseMessage: errorMessage });
           }
@@ -209,37 +213,43 @@ class SurveyComponent extends Component {
       });
     };
 
-    executeService(surveyData, questions, currentUser).then(({ responseMessage, correctAnswer }) => {
+    executeService(surveyData, questions, currentUser).then(({ responseMessage, rankingPoints }) => {
       message.success({ content: responseMessage });
 
       // Redirecciona a la lista de las encuestas
-      if (this.props.showListSurvey) showListSurvey(null, "reload");
+      // if (this.props.showListSurvey) showListSurvey(null, "reload");
+      if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
 
-      // Actualiza si la respuesta es correcta
-      if (correctAnswer === true)
+      // Solo intenta registrar puntos si la encuesta es calificable
+      // Actualiza puntos del usuario
+      if (surveyData.allow_gradable_survey == "true")
         UserGamification.registerPoints(eventId, {
           user_id: currentUser._id,
           user_name: currentUser.names,
           user_email: currentUser.email,
-          points: 5,
+          points: rankingPoints,
         });
     });
   };
 
   render() {
-    let { surveyData } = this.state;
+    let { surveyData, sentSurveyAnswers } = this.state;
     const { showListSurvey } = this.props;
 
     return (
       <div style={surveyStyle}>
-        <PageHeader
-          className="site-page-header"
-          onBack={() => showListSurvey()}
-          title=""
-          subTitle="Regresar a las encuestas"
-        />
+        {showListSurvey && (
+          <PageHeader
+            className="site-page-header"
+            onBack={() => showListSurvey(sentSurveyAnswers)}
+            title=""
+            subTitle="Regresar a las encuestas"
+          />
+        )}
+        {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
+
         {/* Imagen provisional */}
-        <img src={graphicsImage} style={imageGraphics} alt="" />
+        {/* <img src={graphicsImage} style={imageGraphics} alt="" /> */}
         {/* ************* */}
         <Survey.Survey json={surveyData} onComplete={this.sendDataToServer} />
       </div>

@@ -13,8 +13,8 @@ import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
   text: {
-    color: "inherit"
-  }
+    color: "inherit",
+  },
 };
 
 function playFrequency(frequency) {
@@ -27,7 +27,7 @@ function playFrequency(frequency) {
   // fill the channel with the desired frequency's data
   var channelData = buffer.getChannelData(0);
   for (var i = 0; i < sampleRate; i++) {
-    channelData[i] = Math.sin(2 * Math.PI * frequency * i / (sampleRate));
+    channelData[i] = Math.sin((2 * Math.PI * frequency * i) / sampleRate);
   }
 
   // create audio source node.
@@ -38,7 +38,6 @@ function playFrequency(frequency) {
   // finally start to play
   source.start(0);
 }
-
 
 class SurveyForm extends Component {
   constructor(props) {
@@ -57,15 +56,13 @@ class SurveyForm extends Component {
     };
   }
 
-
   openSurvey = (currentSurvey) => {
     console.log("Esta es la encuesta actual:", currentSurvey);
-
   };
 
   surveyVisible = () => {
     this.setState({
-      surveyVisible: !this.state.surveyVisible
+      surveyVisible: !this.state.surveyVisible,
     });
   };
 
@@ -73,32 +70,28 @@ class SurveyForm extends Component {
     let user = await this.getCurrentUser();
     this.setState({ currentUser: user }, this.listenSurveysData);
     this.userVote();
-
-
   }
 
   componentDidUpdate(prevProps, prevState) {
     this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
-      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado })
+      this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
     }
   }
 
   /**
-   * Desde firebase monitorea si hubo algún cambio y consulta la nueva 
+   * Desde firebase monitorea si hubo algún cambio y consulta la nueva
    * información desde la base de datos principal
    */
 
   listenSurveysData = async (prevProps) => {
-
     const { event, activity } = this.props;
     if (!prevProps || event !== prevProps.event || activity !== prevProps.activity) {
-
       //Agregamos un listener a firestore para detectar cuando cambia alguna propiedad de las encuestas
       let $query = firestore.collection("surveys");
-      $query = $query.where("isPublished", "==", "true")
+      $query = $query.where("isPublished", "==", "true");
 
-      //Le agregamos el filtro por evento 
+      //Le agregamos el filtro por evento
       if (event && event._id) {
         $query = $query.where("eventId", "==", event._id);
       }
@@ -111,7 +104,7 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
         publishedSurveys = [];
-        surveySnapShot.forEach(function (doc) {
+        surveySnapShot.forEach(function(doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -122,20 +115,21 @@ class SurveyForm extends Component {
 
         //Filtramos si la encuesta esta relacionada a una actividad y estamos en esa actividad
         if (activity && activity._id) {
-          surveysData = surveysData.filter((item) => (item.activity_id == activity._id));
+          surveysData = surveysData.filter((item) => item.activity_id == activity._id);
         }
 
-        surveysData = surveysData.filter((item) => (publishedSurveysIds.indexOf(item._id) != -1));
-        this.setState({ surveyRecentlyChanged: true })
+        surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) != -1);
+        this.setState({ surveyRecentlyChanged: true });
 
         if (surveysData && surveysData.length > 0) {
           //playFrequency(500)
         }
 
-        setTimeout(() => { this.setState({ surveyRecentlyChanged: false }) }, 3000)
+        setTimeout(() => {
+          this.setState({ surveyRecentlyChanged: false });
+        }, 3000);
 
-        this.setState({ surveysData: surveysData }, this.seeIfUserHasVote)
-
+        this.setState({ surveysData: surveysData }, this.seeIfUserHasVote);
       });
     }
   };
@@ -164,11 +158,8 @@ class SurveyForm extends Component {
         }
 
         if (surveys.length == arr.length) resolve(surveys);
-
       });
     });
-
-
 
     let stateSurveys = await votesUserInSurvey;
 
@@ -178,7 +169,7 @@ class SurveyForm extends Component {
   };
 
   userVote = () => {
-    const { surveysData } = this.state
+    const { surveysData } = this.state;
     for (const i in surveysData) {
       if (surveysData[i].userHasVoted === true) {
         this.setState({ userVote: true });
@@ -186,8 +177,7 @@ class SurveyForm extends Component {
         this.setState({ userVote: true });
       }
     }
-  }
-
+  };
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = () => {
@@ -200,7 +190,7 @@ class SurveyForm extends Component {
           const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
           if (resp.status === 200) {
             const data = resp.data;
-            this.setState({ usuarioRegistrado: true })
+            this.setState({ usuarioRegistrado: true });
             // Solo se desea obtener el id del usuario
             resolve(data);
           }
@@ -213,16 +203,15 @@ class SurveyForm extends Component {
     });
   };
 
-
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
-    if (data) {
+    if (typeof data == "boolean" || data == undefined) {
+      this.setState({ idSurvey: null });
+      if (data == true) this.listenSurveysData();
+    } else if (data.hasOwnProperty("_id")) {
       let { _id, open } = data;
       this.setState({ idSurvey: _id, openSurvey: open });
-    } else {
-      this.setState({ idSurvey: null });
     }
-    if (reload) this.listenSurveysData();
   };
 
   render() {
@@ -242,22 +231,30 @@ class SurveyForm extends Component {
 
     if (!surveysData) return <Spin></Spin>;
 
-
-
-
-
     return (
       <div className="surveyIframe">
-
-        {this.state.availableSurveysBar &&
-          <Button className={`button__surveyIframe ${(surveysData && !surveyVisible && !userVote && surveysData.length > 0) ? "parpadea" : ""}`} onClick={this.surveyVisible}>
-            {!userVote ?
-              <span>{!surveyVisible ? "Ver" : "Ocultar"} <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s) disponible(s).</span> :
+        {this.state.availableSurveysBar && (
+          <Button
+            className={`button__surveyIframe ${
+              surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : ""
+            }`}
+            onClick={this.surveyVisible}>
+            {!userVote ? (
+              <span>
+                {!surveyVisible ? "Ver" : "Ocultar"}{" "}
+                <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s)
+                disponible(s).
+              </span>
+            ) : (
               <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-            }
+            )}
           </Button>
-        }
-        {(this.state.surveyVisible || !this.state.availableSurveysBar) && <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />}
+        )}
+        {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
+          <Card>
+            <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />
+          </Card>
+        )}
       </div>
     );
   }

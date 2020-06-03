@@ -214,15 +214,15 @@ export const SurveyAnswers = {
 };
 
 export const UserGamification = {
-  getListPoints: async (eventId, getRankingList) => {
-    return new Promise((resolve, reject) => {
-      firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
-        let rankingList = [];
-        docs.forEach((infoDoc) => {
-          rankingList.push(infoDoc.data());
-        });
-        getRankingList(rankingList);
+  getListPoints: (eventId, getRankingList) => {
+    firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
+      let userList = [];
+      let pointsList = [];
+      docs.forEach((infoDoc) => {
+        userList.push(infoDoc.data().user_name);
+        pointsList.push(infoDoc.data().points);
       });
+      getRankingList({ userList, pointsList });
     });
   },
   // Servicio que obtiene los puntos de un usuario

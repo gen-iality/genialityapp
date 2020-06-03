@@ -6,7 +6,7 @@ import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
 import { SurveysApi } from "../../../helpers/request";
-import { dataFrame } from "./frame";
+import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class Graphics extends Component {
     this.state = {
       dataSurvey: {},
       currentPage: 1,
-      dataFrame,
+      graphicsFrame,
       chart: {},
       chartCreated: false,
     };
@@ -34,7 +34,8 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { idSurvey, eventId } = this.props;
-    let { dataSurvey, currentPage, dataFrame, chartCreated, chart } = this.state;
+    let { dataSurvey, currentPage, graphicsFrame, chartCreated, chart } = this.state;
+    let { horizontalBar } = graphicsFrame;
     let { questions } = dataSurvey;
 
     // Se ejecuta servicio para tener el conteo de las respuestas
@@ -46,20 +47,20 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
-      dataFrame.data.labels = options.choices;
-      dataFrame.data.datasets[0].data = Object.values(answer_count || []);
-      dataFrame.data.datasets[0].label = options.title;
+      horizontalBar.data.labels = options.choices;
+      horizontalBar.data.datasets[0].data = Object.values(answer_count || []);
+      horizontalBar.data.datasets[0].label = options.title;
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
-      const chart = new Chart(canvas, dataFrame);
+      const chart = new Chart(canvas, horizontalBar);
 
-      this.setState({ dataFrame, chart, chartCreated: true });
+      this.setState({ horizontalBar, chart, chartCreated: true });
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = options.choices;
       chart.data.datasets[0].data = Object.values(answer_count || []);
-      dataFrame.data.datasets[0].label = options.title;
+      horizontalBar.data.datasets[0].label = options.title;
 
       chart.update();
 
@@ -72,7 +73,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage, dataFrame, referenceChart } = this.state;
+    let { dataSurvey, currentPage, horizontalBar, referenceChart } = this.state;
     const { showListSurvey } = this.props;
 
     if (dataSurvey.questions)

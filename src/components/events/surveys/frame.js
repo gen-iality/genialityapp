@@ -1,81 +1,110 @@
-export const dataFrame = {
-  type: "horizontalBar",
-  data: {
-    labels: [],
-    datasets: [{
-      label: "My First dataset",
-      labelColor: "black",
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.7)',
-        'rgba(128, 182, 244, 0.7)',
-        'rgba(253, 208, 56, 0.7)',
-        'rgba(54, 162, 235, 0.7)',
-        'rgba(255, 206, 86, 0.7)',
-        'rgba(75, 192, 192, 0.7)',
-        'rgba(153, 102, 255, 0.7)',
-        'rgba(255, 159, 64, 0.7)'
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(128, 182, 244, 1)',
-        'rgba(253, 208, 56, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
-      borderWidth: 2,
-      hoverBackgroundColor: [
-        'rgba(255, 99, 132)',
-        'rgba(128, 182, 244)',
-        'rgba(253, 208, 56)',
-        'rgba(54, 162, 235)',
-        'rgba(255, 206, 86)',
-        'rgba(75, 192, 192)',
-        'rgba(153, 102, 255)',
-        'rgba(255, 159, 64)'
-      ],
+const colorBars = {
+  backgroundColor: [
+    "rgba(255, 99, 132, 0.7)",
+    "rgba(128, 182, 244, 0.7)",
+    "rgba(253, 208, 56, 0.7)",
+    "rgba(54, 162, 235, 0.7)",
+    "rgba(255, 206, 86, 0.7)",
+    "rgba(75, 192, 192, 0.7)",
+    "rgba(153, 102, 255, 0.7)",
+    "rgba(255, 159, 64, 0.7)",
+  ],
+  borderColor: [
+    "rgba(255, 99, 132, 1)",
+    "rgba(128, 182, 244, 1)",
+    "rgba(253, 208, 56, 1)",
+    "rgba(54, 162, 235, 1)",
+    "rgba(255, 206, 86, 1)",
+    "rgba(75, 192, 192, 1)",
+    "rgba(153, 102, 255, 1)",
+    "rgba(255, 159, 64, 1)",
+  ],
+  borderWidth: 2,
+  hoverBackgroundColor: [
+    "rgba(255, 99, 132)",
+    "rgba(128, 182, 244)",
+    "rgba(253, 208, 56)",
+    "rgba(54, 162, 235)",
+    "rgba(255, 206, 86)",
+    "rgba(75, 192, 192)",
+    "rgba(153, 102, 255)",
+    "rgba(255, 159, 64)",
+  ],
 
-      hoverBorderColor: [
-        'rgba(255, 99, 132)',
-        'rgba(128, 182, 244)',
-        'rgba(253, 208, 56)',
-        'rgba(54, 162, 235)',
-        'rgba(255, 206, 86)',
-        'rgba(75, 192, 192)',
-        'rgba(153, 102, 255)',
-        'rgba(255, 159, 64)'
-      ],
-      data: []
-    }]
+  hoverBorderColor: [
+    "rgba(255, 99, 132)",
+    "rgba(128, 182, 244)",
+    "rgba(253, 208, 56)",
+    "rgba(54, 162, 235)",
+    "rgba(255, 206, 86)",
+    "rgba(75, 192, 192)",
+    "rgba(153, 102, 255)",
+    "rgba(255, 159, 64)",
+  ],
+};
+
+const configurationOptions = {
+  responsive: true,
+  animation: {
+    duration: 2000,
+    easing: "easeInOutQuint",
   },
-  options: {
-    responsive: true,
-    animation: {
-      duration: 2000,
-      easing: "easeInOutQuint",
+  legend: {
+    labels: {
+      fontSize: 16,
     },
-    legend: {
-      labels: {
-        fontSize: 16
-      }
-    },
-    scales: {
-      xAxes: [{
+  },
+  scales: {
+    xAxes: [
+      {
         ticks: {
           beginAtZero: true,
           stepSize: 1,
-          fontSize: 14
-        }
-      }],
-      yAxes: [{
+          fontSize: 14,
+        },
+      },
+    ],
+    yAxes: [
+      {
         ticks: {
           beginAtZero: true,
           stepSize: 1,
-          fontSize: 14
-        }
-      }]
-    }
-  }
+          fontSize: 14,
+        },
+      },
+    ],
+  },
+};
+
+export const graphicsFrame = {
+  horizontalBar: {
+    type: "horizontalBar",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Horizontal Bar",
+          labelColor: "black",
+          ...colorBars,
+          data: [],
+        },
+      ],
+    },
+    options: configurationOptions,
+  },
+  verticalBar: {
+    type: "bar",
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: "Vertical Bar",
+          labelColor: "black",
+          ...colorBars,
+          data: [],
+        },
+      ],
+    },
+    options: configurationOptions,
+  },
 };

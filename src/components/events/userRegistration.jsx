@@ -7,7 +7,9 @@ import * as Cookie from "js-cookie";
 import UserInforCard from "./registrationForm/userInfoCard";
 import FormComponent from "./registrationForm/form";
 
-import { Spin } from "antd";
+import SurveyComponent from "./surveys/surveyComponent";
+
+import { Spin, Col } from "antd";
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -58,7 +60,7 @@ class UserRegistration extends Component {
           let existUser = eventUsers.find((user) => user.properties.email == data.email);
 
           this.setState({
-            currentUser: existUser && existUser,
+            currentUser: data,
             userTickets: tickets && tickets.data,
             loading: false,
             registeredUser: existUser ? true : false,
@@ -93,7 +95,17 @@ class UserRegistration extends Component {
     const { eventId } = this.props;
     if (!loading)
       return !registeredUser ? (
-        <FormComponent initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
+        <React.Fragment>
+          <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+            <SurveyComponent
+              idSurvey={`5ed591dacbc54a2c1d787ac2`}
+              eventId={eventId}
+              currentUser={currentUser}
+              singlePage={true}
+            />
+          </Col>
+          <FormComponent initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
+        </React.Fragment>
       ) : (
         <UserInforCard
           currentUser={currentUser}
