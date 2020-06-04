@@ -40,52 +40,25 @@ let agendaActividadDetalle = (props) => {
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
-
       const data = resp.data;
-
       setCurrentUser(data);
 
-      const userRef = firestore
-        .collection(`${id}_event_attendees`)
-        .where("properties.email", "==", data.email)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.empty) {
-            toast.error("Usuario no inscrito a este evento, contacte al administrador");
-            console.log("No matching documents.");
-            return;
-          }
 
-          console.log("USUARIO REGISTRADO.");
 
-          snapshot.forEach((doc) => {
-            var user = firestore.collection(`${id}_event_attendees`).doc(doc.id);
-            console.log(doc.id, "=>", doc.data());
-            user
-              .update({
-                updated_at: new Date(),
-                checked_in: true,
-                checked_at: new Date(),
-              })
-              .then(() => {
-                // Disminuye el contador si la actualizacion en la base de datos se realiza
-                console.log("Document successfully updated!");
-                toast.success("Usuario Chequeado");
-                setUsuarioRegistrado(true);
-              })
-              .catch((error) => {
-                console.error("Error updating document: ", error);
-                toast.error(<FormattedMessage id="toast.error" defaultMessage="Error :(" />);
-              });
-          });
-        })
-        .catch((err) => {
-          console.log("Error getting documents", err);
-        });
+      //      me / eventusers / event / { event_id }
 
-      console.log("data ", data);
+      try {
+        const respuesta = await API.get("api/me/eventusers/event/" + id);
+        console.log("respuesta", respuesta.data.data);
+        if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
+          setUsuarioRegistrado(true);
+        }
+      } catch (e) {
+
+      }
+
     })();
-  }, []);
+  }, [props.match.params.event]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
