@@ -21,15 +21,15 @@ export const createOrUpdateActivity = (activityId, event_id, activityInfo) => {
       if (existSurvey) {
         refActivity
           .doc(event_id)
-          .collection(activityId)
-          .doc("virtualconference")
+          .collection("activities")
+          .doc(activityId)
           .update({ habilitar_ingreso: activityInfo })
           .then(() => resolve({ message: "Configuracion actualizada", state: "updated" }));
       } else {
         refActivity
           .doc(event_id)
-          .collection(activityId)
-          .doc("virtualconference")
+          .collection("activities")
+          .doc(activityId)
           .set({ habilitar_ingreso: activityInfo })
           .then(() => resolve({ message: "Configuracion Creada", state: "created" }));
       }
@@ -41,12 +41,15 @@ export const getConfiguration = (event_id, activityId) => {
   return new Promise((resolve, reject) => {
     refActivity
       .doc(event_id)
-      .collection(activityId)
-      .doc("virtualconference")
+      .collection("activities")
+      .doc(activityId)
       .get()
       .then((result) => {
         if (result.exists) {
           resolve(result.data());
+          console.log(result.data());
+        } else {
+          resolve();
         }
       })
       .catch((err) => {
