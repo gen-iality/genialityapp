@@ -123,8 +123,17 @@ class AgendaEdit extends Component {
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const information = await getConfiguration(this.props.event._id, this.props.location.state.edit)
+      if (information) {
+        this.setState({
+          availableText: information.habilitar_ingreso
+        });
+      } else {
+        this.setState({
+          availableText: false
+        });
+      }
+
       this.setState({
-        availableText: information.habilitar_ingreso,
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
