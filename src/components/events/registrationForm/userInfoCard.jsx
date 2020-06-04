@@ -43,7 +43,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     console.log(eventUsers);
     list.forEach(async (item, index, arr) => {
       let result = await parseObjectToArray(item.properties);
-      if (item.ticket_id) eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
+      eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
 
       if (index == arr.length - 1) setEventUserList(eventUsers);
     });
