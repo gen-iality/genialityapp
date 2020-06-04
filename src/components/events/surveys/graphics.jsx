@@ -86,8 +86,10 @@ class Graphics extends Component {
               title=""
               subTitle="Regresar a las encuestas"
             />
-
-            <canvas id="chart"></canvas>
+            <Card>
+              <canvas id="chart"></canvas>
+            </Card>
+            <br />
             <Pagination
               defaultCurrent={currentPage}
               total={dataSurvey.questions.length * 10}

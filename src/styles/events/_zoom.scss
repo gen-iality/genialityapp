@@ -222,7 +222,12 @@
 .survyCard {
   background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/BG-1920x1080px.png?alt=media&token=aa4421e0-cd6e-473f-b185-ec12efaffe02") !important;
   background-size: cover !important;
-  * {
+  *:not(span) {
     color: #fff !important;
+  }
+  .ant-pagination-item,
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    background-color: transparent !important;
   }
 }

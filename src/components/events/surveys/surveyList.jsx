@@ -88,6 +88,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                     )}
                     <div>
                       <Button
+                        ghost
                         type={!survey.userHasVoted ? "primary" : ""}
                         className={`${
                           !survey.userHasVoted
