@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message } from "antd";
+import { PageHeader, message, notification } from "antd";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 import graphicsImage from "../../../graficas.png";
 
@@ -193,16 +193,14 @@ class SurveyComponent extends Component {
     let { surveyData } = this.state;
 
     let onSuccess = {
-      content: "Has respondido correctamente, ganaste 5 puntos",
-      icon: <SmileOutlined />,
-      className: "custom-class",
-      style: { marginTop: "50%" },
+      message: "Has respondido correctamente",
+      description: "Has ganado 5 puntos respondiendo correctamente la pregunta",
+      placement: "bottomRight",
     };
     let onFailed = {
-      content: "No has ganado puntos",
-      icon: <FrownOutlined />,
-      className: "custom-class",
-      style: { marginTop: "50%" },
+      message: "No has respondido correctamente",
+      description: "Debido a que no respondiste correctamente no ganado puntos",
+      placement: "bottomRight",
     };
 
     let questionName = Object.keys(values.data);
@@ -211,7 +209,7 @@ class SurveyComponent extends Component {
     let question = values.getQuestionByName(questionName, true);
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       // message.success({ content: responseMessage });
-      if (rankingPoints !== undefined) message.success(rankingPoints > 0 ? onSuccess : onFailed);
+      if (rankingPoints !== undefined) notification.info(rankingPoints > 0 ? onSuccess : onFailed);
 
       // Redirecciona a la lista de las encuestas
       if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
