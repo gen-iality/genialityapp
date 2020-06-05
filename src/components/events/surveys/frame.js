@@ -50,7 +50,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: "Horizontal Bar",
+          label: "# de Votos",
           labelColor: "black",
           ...colorBars,
           data: [],
@@ -58,6 +58,10 @@ export const graphicsFrame = {
       ],
     },
     options: {
+      title: {
+        fontSize: 16,
+        display: true,
+      },
       responsive: true,
       animation: {
         duration: 2000,
@@ -65,7 +69,6 @@ export const graphicsFrame = {
       },
       legend: {
         labels: {
-          fontSize: 16,
           fontColor: "black",
         },
       },
@@ -101,7 +104,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: "Vertical Bar",
+          label: "# de Votos",
           labelColor: "black",
           ...colorBars,
           data: [],
@@ -109,6 +112,10 @@ export const graphicsFrame = {
       ],
     },
     options: {
+      title: {
+        fontSize: 16,
+        display: true,
+      },
       responsive: true,
       animation: {
         duration: 2000,
@@ -116,7 +123,6 @@ export const graphicsFrame = {
       },
       legend: {
         labels: {
-          fontSize: 16,
           fontColor: "white",
         },
       },
