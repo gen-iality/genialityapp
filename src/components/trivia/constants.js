@@ -1,5 +1,3 @@
-import { AntSelect, AntInput } from "./antField";
-
 // Lista de los tipos de pregunta posibles para la encuesta
 export const selectOptions = [
   {
@@ -16,7 +14,7 @@ export const selectOptions = [
   },
   {
     value: "text",
-    text: "text",
+    text: "Texto",
   },
 ];
 
@@ -28,21 +26,13 @@ const filterBy = (data, field, exclude) =>
 export const fieldsFormQuestion = [
   {
     label: "Pregunta",
-    component: AntInput,
     type: "text",
     name: "title",
   },
   {
     label: "Tipo de Pregunta",
-    component: AntSelect,
     selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup", "text"]),
     name: "type",
-  },
-  {
-    label: "Cantidad de Opciones",
-    component: AntSelect,
-    selectOptions: [2, 3, 4, 5],
-    name: "questionOptions",
   },
 ];
 
@@ -53,4 +43,12 @@ export const initValues = () => {
     valuesFields[name] = "";
   });
   return valuesFields;
+};
+
+export const searchWithMultipleIndex = (arr, arrIndex) => {
+  let response = [];
+  for (let index = 0; index < arrIndex.length; index++) {
+    response.push(arr[arrIndex[index]]);
+  }
+  return response;
 };

@@ -34,6 +34,22 @@ import getHostList, { setHostState, getAllHost } from "./fireHost";
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
 
+const optionSelect = [
+  {
+    value: "open_meeting_room",
+    label: "Conferencia Abierta"
+  },
+  {
+    value: "closed_meeting_room",
+    label: "Conferencia Suspendida"
+  },
+  {
+    value: "ended_meeting_room",
+    label: "Conferencia Cerrada"
+  }
+]
+
+
 class AgendaEdit extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +89,7 @@ class AgendaEdit extends Component {
       selected_document: [],
       nameDocuments: [],
       hostAvailable: [],
-      availableText: false
+      availableText: ""
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
@@ -123,6 +139,7 @@ class AgendaEdit extends Component {
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const information = await getConfiguration(this.props.event._id, this.props.location.state.edit)
+      console.log(information)
       if (information) {
         this.setState({
           availableText: information.habilitar_ingreso
@@ -496,16 +513,15 @@ class AgendaEdit extends Component {
   goBack = () => this.setState({ redirect: true });
 
   async onChange(e) {
-    this.setState({ availableText: e.target.checked })
+    this.setState({ availableText: e.target.value })
 
-    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.checked)
+    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)
     console.log(result)
 
     notification.open({
       message: result.message
     });
-
-  }
+  };
 
   render() {
     const {
@@ -826,6 +842,9 @@ class AgendaEdit extends Component {
                         options={types}
                         value={selectedType}
                       />
+                      {
+                        console.log(selectedType)
+                      }
                     </div>
                     <div className="column is-2">
                       <Link to={`${matchUrl}/tipos`}>
@@ -906,9 +925,14 @@ class AgendaEdit extends Component {
                             </div>
                           </div>
                           <div>
-                            <Checkbox checked={availableText} onChange={this.onChange}>
-                              Espacio virtual {availableText ? "habilitado" : "inhabilitado"}
-                            </Checkbox>
+                            <label className="label">Estado de videoconferencia</label>
+                            <div className="select">
+                              <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                <option value="open_meeting_room">Conferencia Abierta</option>
+                                <option value="closed_meeting_room">Conferencia Suspendida</option>
+                                <option value="ended_meeting_room">Conferencia Ceradda</option>
+                              </select>
+                            </div>
                           </div>
                           <button
                             style={{ marginTop: "2%" }}

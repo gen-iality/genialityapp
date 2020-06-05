@@ -60,6 +60,83 @@ iframe {
   }
 }
 
+// estilos generales survey
+.sv-container-modern {
+  font-size: inherit !important;
+  font-family: inherit !important;
+}
+
+.sv-container-modern__title {
+  padding-top: 3em !important;
+}
+
+.sv-question__content {
+  margin-top: 2em;
+}
+
+.sv-body__page {
+  margin: 0 !important;
+}
+
+.sv-root-modern .sv-completedpage {
+  background-color: transparent !important;
+}
+
+.ant-pagination {
+  text-align: center;
+}
+
+// PROVISIONAL, YA QUE ESTOS ESTILOS DEBEN VENIR DEL API
+// ESTILOS PARA COMPONENTE SURVE - QUIEN QUIERE SER MILLONARIO
+
+.sv-selectbase .sv-selectbase__item.sv-q-col-1,
+.sv-question__title {
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/pregunta.png?alt=media&token=03485bd0-1f47-4ddf-8b55-fd4d0053491b");
+}
+
+.sv-question__title {
+  font-weight: 500 !important;
+  font-size: 1.2em !important;
+  background-size: 100% 100%;
+  min-height: 3em;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.sv-selectbase .sv-selectbase__item.sv-q-col-1 {
+  max-width: 50%;
+  min-width: 50%;
+  display: inline-block;
+  background-size: 100% 100%;
+  padding-left: 4%;
+  min-height: 2.5em;
+  padding-top: 2px;
+}
+
+.sv-item__control-label {
+  margin-left: 0 !important;
+  font-size: 0.9em;
+  span {
+    margin-left: 0 !important;
+  }
+}
+
+.sv-item__svg {
+  border-color: #ffeded !important;
+  width: 1.3em !important;
+  height: 1.3em !important;
+}
+
+.sv-root-modern .sv-radio--checked .sv-radio__svg {
+  fill: white !important;
+}
+
+.sv-btn {
+  background-color: transparent !important ;
+  border: solid white !important;
+}
+
 // Botón de la conferencia en el home
 
 .buttonVirtualConference {

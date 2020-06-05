@@ -85,7 +85,27 @@ export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid, email, names, voteValue } = dataAnswer;
-    const { optionQuantity, optionIndex } = counter;
+    const { optionQuantity, optionIndex, correctAnswer } = counter;
+
+    let data =
+      correctAnswer !== undefined
+        ? {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            user_email: email,
+            user_name: names,
+            id_survey: surveyId,
+            correctAnswer,
+          }
+        : {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            user_email: email,
+            user_name: names,
+            id_survey: surveyId,
+          };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex, voteValue);
 
@@ -97,17 +117,11 @@ export const SurveyAnswers = {
         .doc(questionId)
         .collection("responses")
         .doc(uid)
-        .set({
-          response: responseData,
-          created: date,
-          id_user: uid,
-          user_email: email,
-          user_name: names,
-          id_survey: surveyId,
-        })
+        .set(data)
         .then(() => {
           console.log("Document successfully updated!");
-          resolve("Las respuestas han sido enviadas");
+          // resolve("Las respuestas han sido enviadas");
+          resolve("El voto ha sido registrado");
         })
         .catch((err) => {
           console.log("Document successfully updated!");
@@ -118,7 +132,23 @@ export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario sin logeo
   registerLikeGuest: async (surveyId, questionId, dataAnswer, counter) => {
     const { responseData, date, uid } = dataAnswer;
-    const { optionQuantity, optionIndex } = counter;
+    const { optionQuantity, optionIndex, correctAnswer } = counter;
+
+    let data =
+      correctAnswer !== undefined
+        ? {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            id_survey: surveyId,
+            correctAnswer,
+          }
+        : {
+            response: responseData,
+            created: date,
+            id_user: uid,
+            id_survey: surveyId,
+          };
 
     countAnswers(surveyId, questionId, optionQuantity, optionIndex);
 
@@ -129,12 +159,7 @@ export const SurveyAnswers = {
         .collection("answers")
         .doc(questionId)
         .collection("responses")
-        .add({
-          response: responseData,
-          created: date,
-          id_user: uid,
-          id_survey: surveyId,
-        })
+        .add(data)
         .then(() => {
           console.log("Document successfully updated!");
           resolve("Las respuestas han sido enviadas");
@@ -186,5 +211,73 @@ export const SurveyAnswers = {
           }
         });
     });
+  },
+};
+
+export const UserGamification = {
+  getListPoints: (eventId, getRankingList) => {
+    firestore.collection(`${eventId}_users_gamification`).onSnapshot((docs) => {
+      let userList = [];
+      let pointsList = [];
+      docs.forEach((infoDoc) => {
+        userList.push(infoDoc.data().user_name);
+        pointsList.push(infoDoc.data().points);
+      });
+      getRankingList({ userList, pointsList });
+    });
+  },
+  // Servicio que obtiene los puntos de un usuario
+  getUserPoints: async (eventId, userId) => {
+    return new Promise((resolve, reject) => {
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            resolve({ message: "Se encontro un registro", status: true, data: doc.data() });
+          }
+          resolve({ message: "No se encontraron registros", status: false });
+        })
+        .catch((err) => {
+          console.log("err:", err);
+          reject({ message: "Ha ocurrido un error", err });
+        });
+    });
+  },
+  // Servicio que registra o actualiza los puntos de un usuario
+  registerPoints: async (eventId, userInfo) => {
+    // Verifica si ya hay un documento que almacene los puntos del usuario, para crearlo o actualizarlo
+    let response = await UserGamification.getUserPoints(eventId, userInfo.user_id);
+    // console.log("response:", response);
+
+    if (!response.status) {
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userInfo.user_id)
+        .set({ ...userInfo, created_at: new Date(), updated_at: new Date() })
+        .then(() => {
+          console.log("Puntos registrados satisfactoriamente");
+        })
+        .catch((err) => {
+          console.log("Ha ocurrido un error", err);
+        });
+    } else {
+      let { points } = userInfo;
+      let { data } = response;
+
+      points += data.points;
+
+      firestore
+        .collection(`${eventId}_users_gamification`)
+        .doc(userInfo.user_id)
+        .update({ points, updated_at: new Date() })
+        .then(() => {
+          console.log("Puntos registrados satisfactoriamente");
+        })
+        .catch((err) => {
+          console.log("Ha ocurrido un error", err);
+        });
+    }
   },
 };

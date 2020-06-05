@@ -12,10 +12,6 @@ import RootPage from "./rootPage";
 import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
-  position: "absolute",
-  minWidth: "50%",
-  maxHeight: "90%",
-  top: "37px",
   text: {
     color: "inherit",
   },
@@ -73,15 +69,14 @@ class SurveyForm extends Component {
   async componentDidMount() {
     let user = await this.getCurrentUser();
     this.setState({ currentUser: user }, this.listenSurveysData);
+    this.userVote();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     this.listenSurveysData(prevProps);
     if (this.props.usuarioRegistrado !== prevProps.usuarioRegistrado) {
       this.setState({ usuarioRegistrado: this.props.usuarioRegistrado });
     }
-
-    //
   }
 
   /**
@@ -109,7 +104,7 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
         publishedSurveys = [];
-        surveySnapShot.forEach(function(doc) {
+        surveySnapShot.forEach(function (doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -171,8 +166,14 @@ class SurveyForm extends Component {
     this.setState({ surveysData: stateSurveys });
 
     // bucle que verifica si el usuario contesto las encuestas
-    for (const i in stateSurveys) {
-      if (stateSurveys[i].userHasVoted === true) {
+  };
+
+  userVote = () => {
+    const { surveysData } = this.state;
+    for (const i in surveysData) {
+      if (surveysData[i].userHasVoted === true) {
+        this.setState({ userVote: true });
+      } else if (surveysData[i].open === false) {
         this.setState({ userVote: true });
       }
     }
@@ -204,13 +205,13 @@ class SurveyForm extends Component {
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
-    if (data) {
+    if (typeof data == "boolean" || data == undefined) {
+      this.setState({ idSurvey: null });
+      if (data == true) this.listenSurveysData();
+    } else if (data.hasOwnProperty("_id")) {
       let { _id, open } = data;
       this.setState({ idSurvey: _id, openSurvey: open });
-    } else {
-      this.setState({ idSurvey: null });
     }
-    if (reload) this.listenSurveysData();
   };
 
   render() {
@@ -245,8 +246,8 @@ class SurveyForm extends Component {
                 </span>
               )
             ) : (
-              <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-            )}
+                <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
+              )}
           </Button>
         )}
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (

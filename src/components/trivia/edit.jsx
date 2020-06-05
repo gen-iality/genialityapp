@@ -10,7 +10,7 @@ import { createOrUpdateSurvey } from "./services";
 import { withRouter } from "react-router-dom";
 
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message } from "antd";
+import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
 import FormQuestions from "./questions";
 import FormQuestionEdit from "./formEdit";
 
@@ -30,6 +30,7 @@ class triviaEdit extends Component {
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
+      points: 0,
       question: [],
       visibleModal: false,
       confirmLoading: false,
@@ -67,6 +68,7 @@ class triviaEdit extends Component {
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
+        points: Update.points ? Update.points : 0
       });
 
       this.getQuestions();
@@ -100,8 +102,10 @@ class triviaEdit extends Component {
       publish: "false",
       open: "false",
       allow_anonymous_answers: "false",
+      allow_gradable_survey: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
+      points: this.state.points ? this.state.points : 0
     };
     console.log(data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -131,6 +135,7 @@ class triviaEdit extends Component {
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
       activity_id: this.state.activity_id,
+      points: this.state.points ? this.state.points : 0
     };
     console.log(data);
 
@@ -155,7 +160,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -246,6 +251,16 @@ class triviaEdit extends Component {
 
   goBack = () => this.props.history.goBack();
 
+  onChange = e => {
+    const { value } = e.target;
+    const reg = /^-?\d*(\.\d*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+      this.setState({ points: value })
+      console.log(value)
+    }
+
+
+  };
   render() {
     const {
       survey,
@@ -350,6 +365,28 @@ class triviaEdit extends Component {
             </div>
           )}
 
+          {
+            allow_gradable_survey && (
+              <div>
+                <label style={{ marginTop: "3%" }} className="label">
+                  Puntaje de pregunta
+              </label>
+                <Tooltip
+                  trigger={['focus']}
+                  placement="topLeft"
+                  overlayClassName="numeric-input"
+                >
+                  <Input
+                    onChange={this.onChange}
+                    maxLength={25}
+                    defaultValue={this.state.points}
+                  />
+                </Tooltip>
+
+              </div>
+            )
+          }
+
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "2%" }} className="label">
@@ -374,12 +411,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
               </button>
-            </div>
-          )}
+              </div>
+            )}
 
           {this.state.idSurvey && (
             <div>
