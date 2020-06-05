@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
 import { PageHeader, message } from "antd";
+import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
@@ -191,12 +192,26 @@ class SurveyComponent extends Component {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData } = this.state;
 
+    let onSuccess = {
+      content: "Has respondido correctamente, ganaste 5 puntos",
+      icon: <SmileOutlined />,
+      className: "custom-class",
+      style: { marginTop: "50%" },
+    };
+    let onFailed = {
+      content: "No has ganado puntos",
+      icon: <FrownOutlined />,
+      className: "custom-class",
+      style: { marginTop: "50%" },
+    };
+
     let questionName = Object.keys(values.data);
     questionName = questionName[questionName.length - 1];
 
     let question = values.getQuestionByName(questionName, true);
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
-      message.success({ content: responseMessage });
+      // message.success({ content: responseMessage });
+      if (rankingPoints !== undefined) message.success(rankingPoints > 0 ? onSuccess : onFailed);
 
       // Redirecciona a la lista de las encuestas
       if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
@@ -211,6 +226,13 @@ class SurveyComponent extends Component {
           points: rankingPoints,
         });
     });
+  };
+
+  // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
+  setFinalMessage = (survey) => {
+    let points = survey.getCorrectedAnswerCount() * 5;
+    let text = `Tienes ${points} puntos`;
+    survey.completedHtml += `<br>${text}`;
   };
 
   render() {
@@ -229,7 +251,12 @@ class SurveyComponent extends Component {
         )}
         {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
 
-        <Survey.Survey json={surveyData} onComplete={this.sendData} onPartialSend={this.sendData} />
+        <Survey.Survey
+          json={surveyData}
+          onComplete={this.sendData}
+          onPartialSend={this.sendData}
+          onCompleting={this.setFinalMessage}
+        />
       </div>
     );
   }
