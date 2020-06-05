@@ -114,6 +114,7 @@ class VirtualConference extends Component {
       }
     }
 
+<<<<<<< HEAD
     return infoAgendaArr;
   }
 
@@ -160,6 +161,51 @@ class VirtualConference extends Component {
       </Fragment>
     );
   }
+=======
+
+    capitalizeDate(val) {
+        val = Moment(val).format("DD MMMM HH:HH")
+        return val.toLowerCase()
+            .trim()
+            .split(' ')
+            .map(v => v[0].toUpperCase() + v.substr(1))
+            .join(' ');
+    }
+
+    render() {
+        const { infoAgendaArr, survey } = this.state
+        const { toggleConference, currentUser, usuarioRegistrado, event } = this.props
+        return (
+            <Fragment>
+                <div>
+                    <Card bordered={true} >
+                        <span>Espacios Virtuales</span>
+                    </Card>
+                    {
+                        infoAgendaArr.map((item, key) => (
+
+                            (<div key={key}>
+                                <Card bordered={true} style={{ marginBottom: "3%" }}>
+                                    <p>{item.name}</p>
+                                    {(item.hosts && item.hosts.length > 0) && false &&
+                                        < div >
+                                            <span style={{ fontWeight: "bold" }}> Conferencistas: </span> {item.hosts.map((item, key) => (<span key={key}> {item.name}, </span>))}
+                                        </div>
+                                    }
+                                    <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
+
+
+                                    <Button size="large" type="primary" className="buttonVirtualConference" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar</Button>
+
+                                </Card>
+                            </div>)
+                        ))
+                    }
+                </div>
+            </Fragment >
+        )
+    }
+>>>>>>> fb017663f325465fdb87191c5972ff6699b40b00
 }
 
 export default WithUserEventRegistered(VirtualConference);
