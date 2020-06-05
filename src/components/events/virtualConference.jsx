@@ -1,10 +1,47 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import { Card, Button, Alert } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
 import { AgendaApi, SurveysApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
+
+const MeetingConferenceButton = ({ activity, toggleConference }) => {
+  const [infoActivity, setInfoActivity] = useState({});
+
+  useEffect(() => {
+    setInfoActivity(activity);
+  }, [activity]);
+
+  switch (infoActivity.habilitar_ingreso) {
+    case "open_meeting_room":
+      return (
+        <Button
+          size="large"
+          type="primary"
+          className="buttonVirtualConference"
+          onClick={() => {
+            toggleConference(true, infoActivity.meeting_id);
+          }}>
+          Entrar a la conferencia
+        </Button>
+      );
+      break;
+
+    case "closed_meeting_room":
+      return <Alert message="El ingreso a la sala se habilitará minutos antes del evento" type="warning" showIcon />;
+      break;
+
+    case "ended_meeting_room":
+      return <Alert message="La conferencia ha terminado" type="info" showIcon />;
+
+      break;
+
+    default:
+      return <Alert message="El ingreso a la sala se habilitará minutos antes del evento" type="warning" showIcon />;
+      break;
+  }
+};
 
 class VirtualConference extends Component {
   constructor(props) {
@@ -115,24 +152,7 @@ class VirtualConference extends Component {
                   {" "}
                   {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}{" "}
                 </p>
-
-                {item.habilitar_ingreso ? (
-                  <Button
-                    size="large"
-                    type="primary"
-                    className="buttonVirtualConference"
-                    onClick={() => {
-                      toggleConference(true, item.meeting_id);
-                    }}>
-                    Entrar a la conferencia{" "}
-                  </Button>
-                ) : (
-                  <Alert
-                    message="El ingreso a la sala se habilitara 15 minutos antes del evento"
-                    type="warning"
-                    showIcon
-                  />
-                )}
+                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
               </Card>
             </div>
           ))}

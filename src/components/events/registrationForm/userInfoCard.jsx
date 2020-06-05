@@ -43,7 +43,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
     console.log(eventUsers);
     list.forEach(async (item, index, arr) => {
       let result = await parseObjectToArray(item.properties);
-      if (item.ticket_id) eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
+      eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
 
       if (index == arr.length - 1) setEventUserList(eventUsers);
     });
@@ -83,10 +83,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   if (!loading)
     return eventUserList.length > 0 ? (
       <Card>
-        <Title level={4}>
-          Asigne los 2 cupos de participación que tiene su empresa en cada mentoría, haciendo clic en Transferir y
-          diligencie la información correspondiente
-        </Title>
+        <Title level={4}>Aquí puedes ver tus entradas. Y si deseas puedes transferirlas a otras personas.</Title>
         {eventUserList.map((item, indiceArray) => (
           <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
             {item.data.map((field, key) => (
