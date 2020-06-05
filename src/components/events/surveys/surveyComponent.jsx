@@ -213,6 +213,13 @@ class SurveyComponent extends Component {
     });
   };
 
+  // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
+  setFinalMessage = (survey) => {
+    let points = survey.getCorrectedAnswerCount() * 5;
+    let text = `Tienes ${points} puntos`;
+    survey.completedHtml += `<br>${text}`;
+  };
+
   render() {
     let { surveyData, sentSurveyAnswers } = this.state;
     const { showListSurvey } = this.props;
@@ -229,7 +236,12 @@ class SurveyComponent extends Component {
         )}
         {this.props.idSurvey !== "5ed591dacbc54a2c1d787ac2" && <GraphicGamification data={this.state.rankingList} />}
 
-        <Survey.Survey json={surveyData} onComplete={this.sendData} onPartialSend={this.sendData} />
+        <Survey.Survey
+          json={surveyData}
+          onComplete={this.sendData}
+          onPartialSend={this.sendData}
+          onCompleting={this.setFinalMessage}
+        />
       </div>
     );
   }
