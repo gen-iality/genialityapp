@@ -1,7 +1,7 @@
 import { firestore } from "../../helpers/firebase";
 import Moment from "moment";
 
-const refActivity = firestore.collection("activities");
+const refActivity = firestore.collection("event");
 
 export const validateActivityCreated = (activityId) => {
   return new Promise((resolve, reject) => {
