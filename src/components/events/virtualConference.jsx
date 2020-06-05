@@ -74,7 +74,7 @@ class VirtualConference extends Component {
             <Fragment>
                 <div>
                     <Card bordered={true} >
-                        <span>Conferencias Virtuales</span>
+                        <span>Espacios Virtuales</span>
                     </Card>
                     {
                         infoAgendaArr.map((item, key) => (
@@ -90,7 +90,7 @@ class VirtualConference extends Component {
                                     <p> {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")} </p>
 
 
-                                    <Button size="large" type="primary" className="buttonVirtualConference" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar a la conferencia </Button>
+                                    <Button size="large" type="primary" className="buttonVirtualConference" onClick={() => { toggleConference(true, item.meeting_id) }}>Entrar</Button>
 
                                 </Card>
                             </div>)
