@@ -104,7 +104,7 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
         publishedSurveys = [];
-        surveySnapShot.forEach(function(doc) {
+        surveySnapShot.forEach(function (doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -232,22 +232,22 @@ class SurveyForm extends Component {
     if (!surveysData) return <Spin></Spin>;
 
     return (
-      <div className="surveyIframe">
+      <div>
         {this.state.availableSurveysBar && (
           <Button
-            className={`button__surveyIframe ${
-              surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : ""
-            }`}
+            className={` ${surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : ""}`}
             onClick={this.surveyVisible}>
             {!userVote ? (
-              <span>
-                {!surveyVisible ? "Ver" : "Ocultar"}{" "}
-                <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s)
-                disponible(s).
-              </span>
+              surveysData.length > 0 && (
+                <span>
+                  {!surveyVisible ? "Ver" : "Ocultar"}{" "}
+                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s)
+                  disponible(s).
+                </span>
+              )
             ) : (
-              <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-            )}
+                <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
+              )}
           </Button>
         )}
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (

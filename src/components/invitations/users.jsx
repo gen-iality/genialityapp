@@ -14,6 +14,8 @@ import EvenTable from "../events/shared/table";
 import Pagination from "../shared/pagination";
 import { sweetAlert } from "../../helpers/utils";
 import ModalAdvise from "./modal"
+import { fieldNameEmailFirst, parseData2Excel } from "../../helpers/utils";
+import XLSX from "xlsx";
 
 class UsersRsvp extends Component {
   constructor(props) {
@@ -47,9 +49,17 @@ class UsersRsvp extends Component {
 
   async componentDidMount() {
     try {
+      const { event } = this.props;
+      const properties = event.user_properties;
+      let columnsKey = fieldNameEmailFirst(properties);
+      this.setState({ columnsKey })
+
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
       console.log("RESP", this.props.eventID, resp);
       const columns = this.props.event.user_properties.map(field => field.label);
+      columns.unshift('created_at');
+      columns.unshift('updated_at');
+
       columns.unshift(
         <div className="field">
           <input
@@ -62,6 +72,7 @@ class UsersRsvp extends Component {
           <label htmlFor={"checkallUser"} />
         </div>
       );
+
       const users = handleUsers(this.props.event.user_properties, resp.data);
       this.setState({
         loading: false,
@@ -91,6 +102,7 @@ class UsersRsvp extends Component {
     if (this.state.actualEvent._id !== event._id) {
       try {
         const resp = await UsersApi.getAll(event._id);
+
         const users = handleUsers(this.props.event.user_properties, resp.data);
         const columns = this.state.columns;
         let index = columns
@@ -328,6 +340,18 @@ class UsersRsvp extends Component {
     console.log(this.state.selection);
   };
 
+  exportFile = async () => {
+
+    const columnsKey = Object.keys(this.state.usersReq[0].properties);
+    columnsKey.unshift("created_at");
+    columnsKey.unshift("updated_at");
+
+    const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
+    XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
+  };
   render() {
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     if (this.state.loading) return <Loading />;
@@ -347,6 +371,14 @@ class UsersRsvp extends Component {
             Enviar comunicación / Correo{" "}
           </button>
           <ModalAdvise visible={this.state.visible} />
+          <div>
+            <button className="button"
+              style={{ float: "left", marginTop: "2%", marginLeft: "20%" }}
+              onClick={() => this.exportFile(pageOfItems)}
+            >
+              Exportar
+            </button>
+          </div>
           {usersReq.length > 0 ? (
             <div>
               <div className="columns">
@@ -514,7 +546,15 @@ const handleUsers = (fields, list) => {
     users[key] = {};
     users[key]["id"] = user._id;
     users[key]["properties"] = {};
-    return fields.map(field => (users[key].properties[field.name] = user.properties[field.name]));
+    users[key].properties['created_at'] = user.created_at;
+    users[key].properties['updated_at'] = user.updated_at;
+    fields.map(field => (users[key].properties[field.name] = user.properties[field.name]));
+
+
+
+
+
+    return
   });
   return users;
 };

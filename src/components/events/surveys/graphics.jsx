@@ -49,7 +49,7 @@ class Graphics extends Component {
       // El nombre de las opciones y el conteo de las opciones
       horizontalBar.data.labels = options.choices;
       horizontalBar.data.datasets[0].data = Object.values(answer_count || []);
-      horizontalBar.data.datasets[0].label = options.title;
+      horizontalBar.options.title.text = options.title;
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
@@ -60,7 +60,7 @@ class Graphics extends Component {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = options.choices;
       chart.data.datasets[0].data = Object.values(answer_count || []);
-      horizontalBar.data.datasets[0].label = options.title;
+      chart.options.title.text = options.title;
 
       chart.update();
 
