@@ -109,9 +109,17 @@ iframe {
   min-width: 50%;
   display: inline-block;
   background-size: 100% 100%;
-  padding-left: 6%;
+  padding-left: 4%;
   min-height: 2.5em;
   padding-top: 2px;
+}
+
+.sv-item__control-label {
+  margin-left: 0 !important;
+  font-size: 0.9em;
+  span {
+    margin-left: 0 !important;
+  }
 }
 
 .sv-item__svg {
