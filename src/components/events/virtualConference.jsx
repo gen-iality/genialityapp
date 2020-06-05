@@ -29,16 +29,16 @@ const MeetingConferenceButton = ({ activity, toggleConference }) => {
             break;
 
         case "closed_meeting_room":
-            return <Alert message="El ingreso a la sala se habilitará minutos antes del evento" type="warning" showIcon />;
+            return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
             break;
 
         case "ended_meeting_room":
-            return <Alert message="La conferencia ha terminado" type="info" showIcon />;
+            return <Alert message="El evento ha terminado" type="info" showIcon />;
 
             break;
 
         default:
-            return <Alert message="El ingreso a la sala se habilitará minutos antes del evento" type="warning" showIcon />;
+            return <Alert message="El ingreso se habilitará minutos antes del evento" type="warning" showIcon />;
             break;
     }
 };
