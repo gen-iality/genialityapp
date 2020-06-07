@@ -99,6 +99,7 @@ class Styles extends Component {
           activeText: info.styles.activeText || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
+          banner_image_email: info.styles.banner_email_image || null,
           menu_image: info.styles.menu_image || null,
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
@@ -108,7 +109,7 @@ class Styles extends Component {
   }
 
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
-  saveEventImage(files, imageFieldName) {
+  async saveEventImage(files, imageFieldName) {
     console.log(files);
     const file = files[0];
     let imageUrl = null;
@@ -132,12 +133,25 @@ class Styles extends Component {
       this.setState({ isLoading: true });
 
       //cuando todaslas promesas de envio de imagenes al servidor se completan
-      axios.all(uploaders).then((data) => {
+      axios.all(uploaders).then(async (data) => {
         let temp = { ...this.state.styles };
         temp[imageFieldName] = imageUrl;
+
+        //Si estamos subiendo el banner_image generamos una más pequena de 600px para usar en los correos
+        if (imageFieldName == "banner_image") {
+          let imageObject = {
+            "banner_image_email": imageUrl,
+            type: "email"
+          }
+          let image_event_name = "banner_image_email";
+          let imageUrl_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
+          temp[image_event_name] = imageUrl_email;
+        }
+
+
+
         this.setState({ styles: temp, isLoading: false });
 
-        console.log("SUCCESSFULL DONE");
         self.setState({
           fileMsg: "Imagen subida con exito",
         });
