@@ -96,14 +96,14 @@ class UserRegistration extends Component {
     if (!loading)
       return !registeredUser ? (
         <React.Fragment>
-          <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+          {/* <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
             <SurveyComponent
               idSurvey={`5ed591dacbc54a2c1d787ac2`}
               eventId={eventId}
               currentUser={currentUser}
               singlePage={true}
             />
-          </Col>
+          </Col> */}
           <FormComponent initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
         </React.Fragment>
       ) : (
