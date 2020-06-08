@@ -68,7 +68,7 @@ class triviaEdit extends Component {
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
-        points: Update.points ? Update.points : 0
+        points: Update.points ? Update.points : 1
       });
 
       this.getQuestions();
