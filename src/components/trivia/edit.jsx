@@ -72,6 +72,7 @@ class triviaEdit extends Component {
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
         points: Update.points ? Update.points : 0,
+        initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, "\n") : null,
       });
 
       this.getQuestions();
@@ -109,6 +110,7 @@ class triviaEdit extends Component {
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
       points: this.state.points ? this.state.points : 0,
+      initialMessage: this.state.initialMessage,
     };
     console.log(data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -139,6 +141,7 @@ class triviaEdit extends Component {
       allow_gradable_survey: this.state.allow_gradable_survey,
       activity_id: this.state.activity_id,
       points: this.state.points ? this.state.points : 0,
+      initialMessage: this.state.initialMessage,
     };
     console.log(data);
 
@@ -396,7 +399,7 @@ class triviaEdit extends Component {
                   <TextArea
                     onChange={this.onChange}
                     autoSize={{ minRows: 2, maxRows: 6 }}
-                    defaultValue={this.state.points}
+                    defaultValue={this.state.initialMessage}
                   />
                 </Tooltip>
               </div>
