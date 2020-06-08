@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification } from "antd";
+import { PageHeader, message, notification, Modal } from "antd";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+
 import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi } from "../../../helpers/request";
@@ -33,6 +34,8 @@ class SurveyComponent extends Component {
       surveyData: {},
       rankingList: [],
       sentSurveyAnswers: false,
+      feedbackMessage: {},
+      feedbackModal: false,
     };
   }
 
@@ -193,14 +196,16 @@ class SurveyComponent extends Component {
     let { surveyData } = this.state;
 
     let onSuccess = {
-      message: "Has respondido correctamente",
-      description: "Has ganado 5 puntos respondiendo correctamente la pregunta",
-      placement: "bottomRight",
+      title: "Has respondido correctamente",
+      content: "Has ganado 5 puntos respondiendo correctamente la pregunta",
+      icon: <SmileOutlined />,
+      centered: true,
     };
     let onFailed = {
-      message: "No has respondido correctamente",
-      description: "Debido a que no respondiste correctamente no ganado puntos",
-      placement: "bottomRight",
+      title: "No has respondido correctamente",
+      content: "Debido a que no respondiste correctamente no has ganado puntos",
+      icon: <FrownOutlined />,
+      centered: true,
     };
 
     let questionName = Object.keys(values.data);
@@ -209,9 +214,19 @@ class SurveyComponent extends Component {
     let question = values.getQuestionByName(questionName, true);
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       // message.success({ content: responseMessage });
-      if (rankingPoints !== undefined) notification.info(rankingPoints > 0 ? onSuccess : onFailed);
+      if (rankingPoints !== undefined) {
+        let secondsToGo = 3;
+        const modal = rankingPoints > 0 ? Modal.success(onSuccess) : Modal.error(onFailed);
+        const timer = setInterval(() => {
+          secondsToGo -= 1;
+        }, 1000);
+        setTimeout(() => {
+          clearInterval(timer);
+          modal.destroy();
+        }, secondsToGo * 1000);
+      }
 
-      // Redirecciona a la lista de las encuestas
+      // Permite asignar un estado para que actualice la lista de las encuestas si el usuario respondio la encuesta
       if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
 
       // Solo intenta registrar puntos si la encuesta es calificable
