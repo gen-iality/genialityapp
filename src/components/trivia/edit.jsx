@@ -32,7 +32,7 @@ class triviaEdit extends Component {
       dataAgenda: [],
       quantityQuestions: 0,
       listQuestions: [],
-      points: 0,
+      points: 1,
       question: [],
       visibleModal: false,
       confirmLoading: false,
@@ -71,7 +71,7 @@ class triviaEdit extends Component {
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
-        points: Update.points ? Update.points : 0,
+        points: Update.points ? Update.points : 1,
         initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, "\n") : null,
       });
 
@@ -109,7 +109,7 @@ class triviaEdit extends Component {
       allow_gradable_survey: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
-      points: this.state.points ? this.state.points : 0,
+      points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
     };
     console.log(data);
@@ -140,7 +140,7 @@ class triviaEdit extends Component {
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
       activity_id: this.state.activity_id,
-      points: this.state.points ? this.state.points : 0,
+      points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
     };
     console.log(data);
