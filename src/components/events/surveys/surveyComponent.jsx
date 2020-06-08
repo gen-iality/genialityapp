@@ -107,6 +107,8 @@ class SurveyComponent extends Component {
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
   executePartialService = (surveyData, question, infoUser) => {
+    // Asigna puntos si la encuesta tiene
+    let surveyPoints = surveyData.points && parseInt(surveyData.points);
     let rankingPoints = 0;
     console.log(question);
 
@@ -123,7 +125,7 @@ class SurveyComponent extends Component {
         if (typeof question.value == "object") {
           correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
-          if (correctAnswer) rankingPoints += 5;
+          if (correctAnswer) rankingPoints += surveyPoints;
           question.value.forEach((value) => {
             optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
           });
@@ -131,7 +133,7 @@ class SurveyComponent extends Component {
           // Funcion que retorna si la opcion escogida es la respuesta correcta
           correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
-          if (correctAnswer) rankingPoints += 5;
+          if (correctAnswer) rankingPoints += surveyPoints;
           // Busca el index de la opcion escogida
           optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
         }
@@ -197,7 +199,7 @@ class SurveyComponent extends Component {
 
     let onSuccess = {
       title: "Has respondido correctamente",
-      content: "Has ganado 5 puntos respondiendo correctamente la pregunta",
+      content: `Has ganado ${surveyData.points} puntos respondiendo correctamente la pregunta`,
       icon: <SmileOutlined />,
       centered: true,
     };
@@ -247,9 +249,12 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey) => {
-    let points = survey.getCorrectedAnswerCount() * 5;
-    let text = `Tienes ${points} puntos`;
-    survey.completedHtml += `<br>${text}`;
+    let { surveyData } = this.state;
+    if (surveyData.allow_gradable_survey == "true") {
+      let points = survey.getCorrectedAnswerCount() * surveyData.points;
+      let text = points > 0 ? `Has obtenido ${points} puntos` : "No has obtenido puntos. Suerte para la próxima";
+      survey.completedHtml += `<br>${text}`;
+    }
   };
 
   render() {
