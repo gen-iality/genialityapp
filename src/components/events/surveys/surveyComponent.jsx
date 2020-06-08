@@ -214,30 +214,34 @@ class SurveyComponent extends Component {
     let question = values.getQuestionByName(questionName, true);
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       // message.success({ content: responseMessage });
-      if (rankingPoints !== undefined) {
-        let secondsToGo = 3;
-        const modal = rankingPoints > 0 ? Modal.success(onSuccess) : Modal.error(onFailed);
-        const timer = setInterval(() => {
-          secondsToGo -= 1;
-        }, 1000);
-        setTimeout(() => {
-          clearInterval(timer);
-          modal.destroy();
-        }, secondsToGo * 1000);
-      }
 
       // Permite asignar un estado para que actualice la lista de las encuestas si el usuario respondio la encuesta
       if (this.props.showListSurvey) this.setState({ sentSurveyAnswers: true });
 
       // Solo intenta registrar puntos si la encuesta es calificable
       // Actualiza puntos del usuario
-      if (surveyData.allow_gradable_survey == "true")
+      if (surveyData.allow_gradable_survey == "true") {
+        // Muestra modal de retroalimentacion
+        if (rankingPoints !== undefined) {
+          let secondsToGo = 3;
+          const modal = rankingPoints > 0 ? Modal.success(onSuccess) : Modal.error(onFailed);
+          const timer = setInterval(() => {
+            secondsToGo -= 1;
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+          }, secondsToGo * 1000);
+        }
+
+        // Ejecuta serivicio para registrar puntos
         UserGamification.registerPoints(eventId, {
           user_id: currentUser._id,
           user_name: currentUser.names,
           user_email: currentUser.email,
           points: rankingPoints,
         });
+      }
     });
   };
 
