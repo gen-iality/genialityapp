@@ -74,6 +74,17 @@ class SurveyComponent extends Component {
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
+    if (dataSurvey.allow_gradable_survey == "true") {
+      dataSurvey.firstPageIsStarted = true;
+      dataSurvey.startSurveyText = "Iniciar Cuestionario";
+
+      let textMessage = dataSurvey.initialMessage.replace(/\n/g, "<br />");
+      dataSurvey["questions"].unshift({
+        type: "html",
+        html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
+      });
+    }
+
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta
     // Si la pregunta tiene la propiedad 'page'
@@ -83,7 +94,7 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: true }],
+        questions: [{ ...rest, isRequired: rest.html ? false : true }],
       };
     });
 
