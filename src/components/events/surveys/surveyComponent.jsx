@@ -36,6 +36,7 @@ class SurveyComponent extends Component {
       sentSurveyAnswers: false,
       feedbackMessage: {},
       feedbackModal: false,
+      questionsAnswered: 0,
     };
   }
 
@@ -83,7 +84,7 @@ class SurveyComponent extends Component {
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = "Iniciar Cuestionario";
 
-      let textMessage = dataSurvey.initialMessage.replace(/\n/g, "<br />");
+      let textMessage = dataSurvey.initialMessage;
       dataSurvey["questions"].unshift({
         type: "html",
         html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
@@ -214,7 +215,7 @@ class SurveyComponent extends Component {
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
-    let { surveyData } = this.state;
+    let { surveyData, questionsAnswered } = this.state;
 
     let onSuccess = {
       title: "Has respondido correctamente",
@@ -230,6 +231,8 @@ class SurveyComponent extends Component {
     };
 
     let questionName = Object.keys(values.data);
+    if (questionsAnswered === questionName.length) return;
+    this.setState({ questionsAnswered: questionName.length });
     questionName = questionName[questionName.length - 1];
 
     let question = values.getQuestionByName(questionName, true);

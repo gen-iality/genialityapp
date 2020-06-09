@@ -8,6 +8,8 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { createOrUpdateSurvey } from "./services";
 
 import { withRouter } from "react-router-dom";
+import ReactQuill from "react-quill";
+import { toolbarEditor } from "../../helpers/constants";
 
 import { toast } from "react-toastify";
 import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
@@ -258,21 +260,14 @@ class triviaEdit extends Component {
   goBack = () => this.props.history.goBack();
 
   onChange = (e) => {
+    // Este es para el editor de texto enriquecido. El mensaje para la pagina principal de la encuesta
+    if (typeof e == "string") return this.setState({ initialMessage: e });
+
+    // Este es para el input de los puntos de la encuesta
     const { value, type } = e.target;
-    switch (type) {
-      case "textarea":
-        this.setState({ initialMessage: value });
-        break;
-
-      case "text":
-        const reg = /^-?\d*(\.\d*)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-          this.setState({ points: value });
-        }
-        break;
-
-      default:
-        break;
+    const reg = /^-?\d*(\.\d*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+      this.setState({ points: value });
     }
   };
   render() {
@@ -394,13 +389,7 @@ class triviaEdit extends Component {
                 <label style={{ marginTop: "3%" }} className="label">
                   Texto de muestra para la pantalla inicial de la encuesta
                 </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <TextArea
-                    onChange={this.onChange}
-                    autoSize={{ minRows: 2, maxRows: 6 }}
-                    defaultValue={this.state.initialMessage}
-                  />
-                </Tooltip>
+                <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
               </div>
             </Fragment>
           )}
