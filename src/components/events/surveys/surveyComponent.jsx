@@ -74,7 +74,7 @@ class SurveyComponent extends Component {
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
-    if (dataSurvey.allow_gradable_survey == "true") {
+    if (dataSurvey.allow_gradable_survey == "true" && dataSurvey.initialMessage) {
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = "Iniciar Cuestionario";
 
@@ -289,7 +289,7 @@ class SurveyComponent extends Component {
             subTitle="Regresar a las encuestas"
           />
         )}
-        {this.props.eventId !== "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
+        {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
 
         <Survey.Survey
           json={surveyData}
