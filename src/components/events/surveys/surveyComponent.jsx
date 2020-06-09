@@ -278,9 +278,10 @@ class SurveyComponent extends Component {
 
   // Funcion que cambia el mensaje por defecto para el contador
   setCounterMessage = (survey, options) => {
-    options.text = `Tiene ${survey.maxTimeToFinish} segundos para responder la encuesta. Has pasado ${
-      survey.timeSpent
-    } segundo${survey.timeSpent > 1 ? "s" : ""} en  la encuesta`;
+    let countDown = Moment.utc((survey.maxTimeToFinish - survey.timeSpent) * 1000).format("mm:ss");
+    let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
+
+    options.text = `Tienes ${timeTotal} para responder la encuesta. Quedan ${countDown}`;
   };
 
   render() {
