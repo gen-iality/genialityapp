@@ -74,7 +74,12 @@ class SurveyComponent extends Component {
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
-    if (dataSurvey.allow_gradable_survey == "true") {
+    if (dataSurvey.allow_gradable_survey == "true" && dataSurvey.initialMessage) {
+      // Permite mostrar el contador y asigna el tiempo limite de la encuesta
+      dataSurvey.showTimerPanel = "top";
+      dataSurvey.maxTimeToFinish = 10;
+
+      // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = "Iniciar Cuestionario";
 
@@ -94,7 +99,7 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: rest.html ? false : true }],
+        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey == "true" ? false : true }],
       };
     });
 
@@ -129,77 +134,80 @@ class SurveyComponent extends Component {
       let optionQuantity = 0;
       let correctAnswer = false;
 
-      //Hack rápido para permitir preguntas tipo texto (abiertas)
-      if (question.inputType == "text") {
-      } else {
-        // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
-        if (typeof question.value == "object") {
-          correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
-
-          if (correctAnswer) rankingPoints += surveyPoints;
-          question.value.forEach((value) => {
-            optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
-          });
+      // Valida si se marco alguna opcion
+      if (question) {
+        //Hack rápido para permitir preguntas tipo texto (abiertas)
+        if (question.inputType == "text") {
         } else {
-          // Funcion que retorna si la opcion escogida es la respuesta correcta
-          correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+          // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
+          if (typeof question.value == "object") {
+            correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
-          if (correctAnswer) rankingPoints += surveyPoints;
-          // Busca el index de la opcion escogida
-          optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+            if (correctAnswer) rankingPoints += surveyPoints;
+            question.value.forEach((value) => {
+              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+            });
+          } else {
+            // Funcion que retorna si la opcion escogida es la respuesta correcta
+            correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+
+            if (correctAnswer) rankingPoints += surveyPoints;
+            // Busca el index de la opcion escogida
+            optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+          }
+          optionQuantity = question.choices.length;
         }
-        optionQuantity = question.choices.length;
+
+        let infoOptionQuestion =
+          surveyData.allow_gradable_survey == "true"
+            ? { optionQuantity, optionIndex, correctAnswer }
+            : { optionQuantity, optionIndex };
+
+        // Se envia al servicio el id de la encuesta, de la pregunta y los datos
+        // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
+        if (question.value)
+          if (infoUser) {
+            SurveyAnswers.registerWithUID(
+              surveyData._id,
+              question.id,
+              {
+                responseData: question.value,
+                date: new Date(),
+                uid: infoUser._id,
+                email: infoUser.email,
+                names: infoUser.names || infoUser.displayName,
+                voteValue: infoUser.pesovoto,
+              },
+              infoOptionQuestion
+            )
+              .then((result) => {
+                resolve({ responseMessage: result, rankingPoints });
+              })
+              .catch((err) => {
+                reject({ responseMessage: err });
+              });
+          } else {
+            // Sirve para controlar si un usuario anonimo ha votado
+            localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
+
+            SurveyAnswers.registerLikeGuest(
+              surveyData._id,
+              question.id,
+              {
+                responseData: question.value,
+                date: new Date(),
+                uid: "guest",
+              },
+              infoOptionQuestion
+            )
+              .then((result) => {
+                resolve({ responseMessage: result, rankingPoints });
+              })
+              .catch((err) => {
+                reject({ responseMessage: err });
+              });
+          }
       }
-
-      let infoOptionQuestion =
-        surveyData.allow_gradable_survey == "true"
-          ? { optionQuantity, optionIndex, correctAnswer }
-          : { optionQuantity, optionIndex };
-
-      // Se envia al servicio el id de la encuesta, de la pregunta y los datos
-      // El ultimo parametro es para ejecutar el servicio de conteo de respuestas
-      if (question.value)
-        if (infoUser) {
-          SurveyAnswers.registerWithUID(
-            surveyData._id,
-            question.id,
-            {
-              responseData: question.value,
-              date: new Date(),
-              uid: infoUser._id,
-              email: infoUser.email,
-              names: infoUser.names || infoUser.displayName,
-              voteValue: infoUser.pesovoto,
-            },
-            infoOptionQuestion
-          )
-            .then((result) => {
-              resolve({ responseMessage: result, rankingPoints });
-            })
-            .catch((err) => {
-              reject({ responseMessage: err });
-            });
-        } else {
-          // Sirve para controlar si un usuario anonimo ha votado
-          localStorage.setItem(`userHasVoted_${surveyData._id}`, true);
-
-          SurveyAnswers.registerLikeGuest(
-            surveyData._id,
-            question.id,
-            {
-              responseData: question.value,
-              date: new Date(),
-              uid: "guest",
-            },
-            infoOptionQuestion
-          )
-            .then((result) => {
-              resolve({ responseMessage: result, rankingPoints });
-            })
-            .catch((err) => {
-              reject({ responseMessage: err });
-            });
-        }
     });
   };
 
@@ -259,13 +267,20 @@ class SurveyComponent extends Component {
   };
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
-  setFinalMessage = (survey) => {
+  setFinalMessage = (survey, options) => {
     let { surveyData } = this.state;
     if (surveyData.allow_gradable_survey == "true") {
       let points = survey.getCorrectedAnswerCount() * surveyData.points;
       let text = points > 0 ? `Has obtenido ${points} puntos` : "No has obtenido puntos. Suerte para la próxima";
       survey.completedHtml += `<br>${text}`;
     }
+  };
+
+  // Funcion que cambia el mensaje por defecto para el contador
+  setCounterMessage = (survey, options) => {
+    options.text = `Tiene ${survey.maxTimeToFinish} segundos para responder la encuesta. Has pasado ${
+      survey.timeSpent
+    } segundo${survey.timeSpent > 1 ? "s" : ""} en  la encuesta`;
   };
 
   render() {
@@ -289,6 +304,7 @@ class SurveyComponent extends Component {
           onComplete={this.sendData}
           onPartialSend={this.sendData}
           onCompleting={this.setFinalMessage}
+          onTimerPanelInfoText={this.setCounterMessage}
         />
       </div>
     );
