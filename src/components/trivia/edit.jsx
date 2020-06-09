@@ -261,8 +261,7 @@ class triviaEdit extends Component {
     const { value, type } = e.target;
     switch (type) {
       case "textarea":
-        let newText = value.replace(/\n/g, "<br />");
-        this.setState({ initialMessage: newText });
+        this.setState({ initialMessage: value });
         break;
 
       case "text":
