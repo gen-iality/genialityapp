@@ -14,6 +14,8 @@ import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, 
 import FormQuestions from "./questions";
 import FormQuestionEdit from "./formEdit";
 
+const { TextArea } = Input;
+
 class triviaEdit extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +38,7 @@ class triviaEdit extends Component {
       confirmLoading: false,
       key: Date.now(),
       currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
+      initialMessage: null,
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -68,7 +71,8 @@ class triviaEdit extends Component {
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
-        points: Update.points ? Update.points : 1
+        points: Update.points ? Update.points : 1,
+        initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, "\n") : null,
       });
 
       this.getQuestions();
@@ -105,7 +109,8 @@ class triviaEdit extends Component {
       allow_gradable_survey: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
-      points: parseInt(this.state.points) ? parseInt(this.state.points) : 1
+      points: this.state.points ? parseInt(this.state.points) : 1,
+      initialMessage: this.state.initialMessage,
     };
     console.log(data);
     // Se envía a la api la data que recogimos antes, Se extrae el id de data y se pasa el id del evento que viene desde props
@@ -135,7 +140,8 @@ class triviaEdit extends Component {
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
       activity_id: this.state.activity_id,
-      points: this.state.points ? this.state.points : 0
+      points: this.state.points ? parseInt(this.state.points) : 1,
+      initialMessage: this.state.initialMessage,
     };
     console.log(data);
 
@@ -160,7 +166,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -251,15 +257,24 @@ class triviaEdit extends Component {
 
   goBack = () => this.props.history.goBack();
 
-  onChange = e => {
-    const { value } = e.target;
-    const reg = /^-?\d*(\.\d*)?$/;
-    if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-      this.setState({ points: value })
-      console.log(value)
+  onChange = (e) => {
+    const { value, type } = e.target;
+    switch (type) {
+      case "textarea":
+        let newText = value.replace(/\n/g, "<br />");
+        this.setState({ initialMessage: newText });
+        break;
+
+      case "text":
+        const reg = /^-?\d*(\.\d*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+          this.setState({ points: value });
+        }
+        break;
+
+      default:
+        break;
     }
-
-
   };
   render() {
     const {
@@ -365,27 +380,31 @@ class triviaEdit extends Component {
             </div>
           )}
 
-          {
-            allow_gradable_survey && (
+          {allow_gradable_survey == "true" && (
+            <Fragment>
               <div>
                 <label style={{ marginTop: "3%" }} className="label">
                   Puntaje de pregunta
-              </label>
-                <Tooltip
-                  trigger={['focus']}
-                  placement="topLeft"
-                  overlayClassName="numeric-input"
-                >
-                  <Input
+                </label>
+                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
+                  <Input onChange={this.onChange} maxLength={25} defaultValue={this.state.points} />
+                </Tooltip>
+              </div>
+
+              <div>
+                <label style={{ marginTop: "3%" }} className="label">
+                  Texto de muestra para la pantalla inicial de la encuesta
+                </label>
+                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
+                  <TextArea
                     onChange={this.onChange}
-                    maxLength={25}
-                    defaultValue={this.state.points}
+                    autoSize={{ minRows: 2, maxRows: 6 }}
+                    defaultValue={this.state.initialMessage}
                   />
                 </Tooltip>
-
               </div>
-            )
-          }
+            </Fragment>
+          )}
 
           {this.state.idSurvey && (
             <div>
@@ -411,12 +430,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-              <div className="column">
-                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                  Guardar
+            <div className="column">
+              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                Guardar
               </button>
-              </div>
-            )}
+            </div>
+          )}
 
           {this.state.idSurvey && (
             <div>

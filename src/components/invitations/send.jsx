@@ -29,7 +29,7 @@ class SendRsvp extends Component {
                 ...this.state.rsvp, content_header: default_header, subject: this.props.event.name,
                 message: this.props.event.description,
                 image: this.props.event.picture,
-                image_header: (this.props.event.styles && this.props.event.styles.banner_image) ? this.props.event.styles.banner_image : this.props.event.picture,
+                image_header: (this.props.event.styles && this.props.event.styles.banner_image_email) ? this.props.event.styles.banner_image_email : ((this.props.event.styles.banner_image) ? (this.props.event.styles.banner_image) : this.props.event.picture),
                 image_footer: (this.props.event.styles && this.props.event.styles.event_image) ? this.props.event.styles.event_image : this.props.event.picture,
             }
         })
