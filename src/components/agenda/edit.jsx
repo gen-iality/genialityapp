@@ -11,7 +11,7 @@ import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
 import { firestore } from "../../helpers/firebase";
-import { Checkbox, notification } from 'antd';
+import { Checkbox, notification, Button } from 'antd';
 import { createOrUpdateActivity, getConfiguration } from './services'
 
 import {
@@ -856,11 +856,10 @@ class AgendaEdit extends Component {
                   </div>
                 </div>
 
-                <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
+                <Card style={{ marginTop: "4%" }} title="Conferencia virtual" extra={this.state.meeting_id && (<Button style={{ marginBottom: "4%" }} type="primary" onClick={this.removeConference}>Eliminar</Button>)}>
                   {!this.props.location.state.edit && (
                     <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
                   )}
-
                   {this.props.location.state.edit && (
                     <>
                       {!this.state.meeting_id && (
@@ -928,19 +927,14 @@ class AgendaEdit extends Component {
                             <label className="label">Estado de videoconferencia</label>
                             <div className="select">
                               <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                <option value="closed_meeting_roomclosed_meeting_room">Conferencia por abrir</option>
+                                <option value="closed_meeting_room">Conferencia por abrir</option>
                                 <option value="open_meeting_room">Conferencia abierta</option>
                                 <option value="ended_meeting_room">Conferencia terminada</option>
                               </select>
                             </div>
                           </div>
-                          <button
-                            style={{ marginTop: "2%" }}
-                            className="button is-primary"
-                            onClick={this.removeConference}>
-                            Eliminar espacio virtual
-                        </button>
                         </div>
+
                       )}
                     </>
                   )}
