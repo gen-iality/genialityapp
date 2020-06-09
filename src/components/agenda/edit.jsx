@@ -89,7 +89,7 @@ class AgendaEdit extends Component {
       selected_document: [],
       nameDocuments: [],
       hostAvailable: [],
-      availableText: ""
+      availableText: "ended_meeting_room"
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
@@ -928,9 +928,9 @@ class AgendaEdit extends Component {
                             <label className="label">Estado de videoconferencia</label>
                             <div className="select">
                               <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                <option value="open_meeting_room">Conferencia Abierta</option>
-                                <option value="closed_meeting_room">Conferencia Suspendida</option>
-                                <option value="ended_meeting_room">Conferencia Ceradda</option>
+                                <option value="closed_meeting_roomclosed_meeting_room">Conferencia por abrir</option>
+                                <option value="open_meeting_room">Conferencia abierta</option>
+                                <option value="ended_meeting_room">Conferencia terminada</option>
                               </select>
                             </div>
                           </div>
