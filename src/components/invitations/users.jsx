@@ -159,7 +159,7 @@ class UsersRsvp extends Component {
   async toggleAll() {
     const selectAll = !this.state.selectAll;
     let selection = [...this.state.selection];
-    const currentRecords = this.state.usersReq;
+    const currentRecords = this.state.users ? this.state.users : this.state.usersReq;
     if (selectAll) {
       this.setState({ loading: true });
       await asyncForEach(currentRecords, async item => {
