@@ -276,22 +276,30 @@ class SurveyComponent extends Component {
             rankingPoints > 0
               ? Modal.success({
                   ...onSuccess,
-                  content: `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                  content: !values.isLastPage
+                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onSuccess.content,
                 })
               : Modal.error({
                   ...onFailed,
-                  content: `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                  content: !values.isLastPage
+                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onFailed.content,
                 });
           const timer = setInterval(() => {
             secondsToGo -= 1;
             rankingPoints > 0
               ? modal.update({
                   ...onSuccess,
-                  content: `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                  content: !values.isLastPage
+                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onSuccess.content,
                 })
               : modal.update({
                   ...onFailed,
-                  content: `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                  content: !values.isLastPage
+                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onFailed.content,
                 });
           }, 1000);
           setTimeout(() => {
