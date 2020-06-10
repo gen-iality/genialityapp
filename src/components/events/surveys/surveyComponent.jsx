@@ -67,6 +67,9 @@ class SurveyComponent extends Component {
     // Se igual title al valor de survey
     dataSurvey.title = dataSurvey.survey;
 
+    // Se muestra una barra de progreso en la parte superior
+    dataSurvey.showProgressBar = "bottom";
+
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
     dataSurvey.sendResultOnPageNext = true;
 

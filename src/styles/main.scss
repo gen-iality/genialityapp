@@ -78,6 +78,12 @@ iframe {
   margin: 0 !important;
 }
 
+.sv-container-modern > .sv-body > div:first-child {
+  margin: 0 auto;
+  text-align: center;
+  font-weight: bold;
+}
+
 .sv-root-modern .sv-completedpage {
   background-color: transparent !important;
 }
