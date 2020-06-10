@@ -220,15 +220,16 @@ class SurveyComponent extends Component {
   sendData = (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData, questionsAnswered } = this.state;
-    let countDown = 0;
+    let countDown = values.isLastPage ? 3 : 0;
 
-    // Evento que se ejecuta al cambiar de pagina
-    values.onCurrentPageChanged.add((sender, options) => {
-      // Se obtiene el tiempo restante para poder usarlo en el modal
-      countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-      // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-      if (countDown > 0) sender.stopTimer();
-    });
+    if (!values.isLastPage)
+      // Evento que se ejecuta al cambiar de pagina
+      values.onCurrentPageChanged.add((sender, options) => {
+        // Se obtiene el tiempo restante para poder usarlo en el modal
+        countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+        // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+        if (countDown > 0) sender.stopTimer();
+      });
 
     let onSuccess = {
       title: "Has respondido correctamente",
