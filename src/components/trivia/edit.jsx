@@ -13,7 +13,7 @@ import { toolbarEditor } from "../../helpers/constants";
 
 import { toast } from "react-toastify";
 import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
-import FormQuestions from "./questions";
+
 import FormQuestionEdit from "./formEdit";
 
 const { TextArea } = Input;
