@@ -269,7 +269,7 @@ class SurveyComponent extends Component {
       if (surveyData.allow_gradable_survey == "true") {
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
-          let secondsToGo = countDown;
+          let secondsToGo = surveyData.allow_gradable_survey == "true" && !surveyData.initialMessage ? 3 : countDown;
 
           // Se evalua si el usuario respondio bien o no la pregunta. Para el mostrar modal respectivo
           const modal =
