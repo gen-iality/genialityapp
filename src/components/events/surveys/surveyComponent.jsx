@@ -43,6 +43,7 @@ class SurveyComponent extends Component {
   componentDidMount() {
     const { eventId } = this.props;
     this.loadData();
+    // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
   }
 
@@ -78,6 +79,8 @@ class SurveyComponent extends Component {
     if (dataSurvey.allow_gradable_survey == "true" && dataSurvey.initialMessage) {
       // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
       dataSurvey.showTimerPanel = "top";
+
+      // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
       dataSurvey.maxTimeToFinishPage = 10;
 
@@ -243,11 +246,17 @@ class SurveyComponent extends Component {
     };
 
     let questionName = Object.keys(values.data);
-    if (questionsAnswered === questionName.length) return;
-    this.setState({ questionsAnswered: questionName.length });
-    questionName = questionName[questionName.length - 1];
 
+    // Validacion para evitar que se registre respuesta de la misma pregunta
+    if (questionsAnswered === questionName.length) return;
+
+    // Se obtiene el numero de preguntas respondidas actualmente
+    this.setState({ questionsAnswered: questionName.length });
+
+    // Permite obtener el nombre de la ultima pregunta respondida y usarlo para consultar informacion de la misma
+    questionName = questionName[questionName.length - 1];
     let question = values.getQuestionByName(questionName, true);
+
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       // message.success({ content: responseMessage });
 
@@ -260,6 +269,8 @@ class SurveyComponent extends Component {
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
           let secondsToGo = countDown;
+
+          // Se evalua si el usuario respondio bien o no la pregunta. Para el mostrar modal respectivo
           const modal =
             rankingPoints > 0
               ? Modal.success({
@@ -313,9 +324,11 @@ class SurveyComponent extends Component {
 
   // Funcion que cambia el mensaje por defecto para el contador
   setCounterMessage = (survey, options) => {
+    // Aqui se obtiene el tiempo limite de la encuesta
     // let countDown = Moment.utc((survey.maxTimeToFinish - survey.timeSpent) * 1000).format("mm:ss");
     // let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
 
+    // Aqui se obtiene el tiempo limite por pregunta
     let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format("mm:ss");
     let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format("mm:ss");
 
