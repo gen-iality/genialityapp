@@ -76,9 +76,10 @@ class SurveyComponent extends Component {
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
     if (dataSurvey.allow_gradable_survey == "true" && dataSurvey.initialMessage) {
-      // Permite mostrar el contador y asigna el tiempo limite de la encuesta
+      // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
       dataSurvey.showTimerPanel = "top";
-      dataSurvey.maxTimeToFinish = 10;
+      // dataSurvey.maxTimeToFinish = 10;
+      dataSurvey.maxTimeToFinishPage = 10;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -216,18 +217,29 @@ class SurveyComponent extends Component {
   sendData = (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData, questionsAnswered } = this.state;
+    let countDown = 0;
+
+    // Evento que se ejecuta al cambiar de pagina
+    values.onCurrentPageChanged.add((sender, options) => {
+      // Se obtiene el tiempo restante para poder usarlo en el modal
+      countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+      // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+      if (countDown > 0) sender.stopTimer();
+    });
 
     let onSuccess = {
       title: "Has respondido correctamente",
       content: `Has ganado ${surveyData.points} puntos respondiendo correctamente la pregunta`,
       icon: <SmileOutlined />,
       centered: true,
+      okButtonProps: { disabled: true },
     };
     let onFailed = {
       title: "No has respondido correctamente",
       content: "Debido a que no respondiste correctamente no has ganado puntos",
       icon: <FrownOutlined />,
       centered: true,
+      okButtonProps: { disabled: true },
     };
 
     let questionName = Object.keys(values.data);
@@ -247,14 +259,34 @@ class SurveyComponent extends Component {
       if (surveyData.allow_gradable_survey == "true") {
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
-          let secondsToGo = 3;
-          const modal = rankingPoints > 0 ? Modal.success(onSuccess) : Modal.error(onFailed);
+          let secondsToGo = countDown;
+          const modal =
+            rankingPoints > 0
+              ? Modal.success({
+                  ...onSuccess,
+                  content: `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                })
+              : Modal.error({
+                  ...onFailed,
+                  content: `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                });
           const timer = setInterval(() => {
             secondsToGo -= 1;
+            rankingPoints > 0
+              ? modal.update({
+                  ...onSuccess,
+                  content: `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                })
+              : modal.update({
+                  ...onFailed,
+                  content: `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+                });
           }, 1000);
           setTimeout(() => {
             clearInterval(timer);
             modal.destroy();
+            // Se inicia el tiempo de nuevo al cerrarse el modal
+            values.startTimer();
           }, secondsToGo * 1000);
         }
 
@@ -281,16 +313,18 @@ class SurveyComponent extends Component {
 
   // Funcion que cambia el mensaje por defecto para el contador
   setCounterMessage = (survey, options) => {
-    let countDown = Moment.utc((survey.maxTimeToFinish - survey.timeSpent) * 1000).format("mm:ss");
-    let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
+    // let countDown = Moment.utc((survey.maxTimeToFinish - survey.timeSpent) * 1000).format("mm:ss");
+    // let timeTotal = Moment.utc(survey.maxTimeToFinish * 1000).format("mm:ss");
 
-    options.text = `Tienes ${timeTotal} para responder la encuesta. Quedan ${countDown}`;
+    let countDown = Moment.utc((survey.maxTimeToFinishPage - survey.currentPage.timeSpent) * 1000).format("mm:ss");
+    let timeTotal = Moment.utc(survey.maxTimeToFinishPage * 1000).format("mm:ss");
+
+    options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
   render() {
     let { surveyData, sentSurveyAnswers } = this.state;
     const { showListSurvey } = this.props;
-
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
