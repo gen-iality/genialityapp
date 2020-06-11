@@ -103,6 +103,22 @@ let agendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
+              
+              {currentActivity.secondvideo && (
+                <div className="column is-centered mediaplayer">
+                  <ReactPlayer
+                    width={"100%"}
+                    style={{
+                      display: "block",
+                      margin: "0 auto",
+                    }}
+                    url={currentActivity.secondvideo}
+                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                    controls
+                  />
+                </div>
+              )}
+
 
               <p className="has-text-left is-size-6-desktop">
                 {usuarioRegistrado && (
