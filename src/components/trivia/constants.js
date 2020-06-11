@@ -36,6 +36,24 @@ export const fieldsFormQuestion = [
   },
 ];
 
+export const fieldsFormQuestionWithPoints = [
+  {
+    label: "Pregunta",
+    type: "text",
+    name: "title",
+  },
+  {
+    label: "Tipo de Pregunta",
+    selectOptions: filterBy(selectOptions, ["checkbox", "radiogroup", "text"]),
+    name: "type",
+  },
+  {
+    label: "Puntos de pregunta",
+    type: "number",
+    name: "points",
+  },
+];
+
 // Funcion que retorna los valores iniciales para los campos de la creacion de la pregunta
 export const initValues = () => {
   let valuesFields = {};

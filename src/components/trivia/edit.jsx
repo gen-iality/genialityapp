@@ -168,7 +168,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -374,26 +374,6 @@ class triviaEdit extends Component {
             </div>
           )}
 
-          {allow_gradable_survey == "true" && (
-            <Fragment>
-              <div>
-                <label style={{ marginTop: "3%" }} className="label">
-                  Puntaje de pregunta
-                </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <Input onChange={this.onChange} maxLength={25} defaultValue={this.state.points} />
-                </Tooltip>
-              </div>
-
-              <div>
-                <label style={{ marginTop: "3%" }} className="label">
-                  Texto de muestra para la pantalla inicial de la encuesta
-                </label>
-                <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
-              </div>
-            </Fragment>
-          )}
-
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "2%" }} className="label">
@@ -418,12 +398,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
               </button>
-            </div>
-          )}
+              </div>
+            )}
 
           {this.state.idSurvey && (
             <div>
