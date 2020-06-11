@@ -254,7 +254,7 @@ class SurveyComponent extends Component {
 
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
       let { totalPoints } = this.state
-      totalPoints += rankingPoints
+      if (rankingPoints !== undefined) totalPoints += rankingPoints
 
       this.setState({ totalPoints })
 
