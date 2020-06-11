@@ -99,7 +99,9 @@
   background-size: cover;
   overflow-y: scroll;
 
-  .ant-card-body {
+  .ant-card-body canvas {
+    /*min-height: 30vh;
+    max-height: 30vh;*/
     padding: 15px !important;
   }
 

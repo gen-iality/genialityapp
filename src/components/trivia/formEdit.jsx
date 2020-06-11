@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect, forwardRef } from "react";
 
-import { fieldsFormQuestion, selectOptions, searchWithMultipleIndex } from "./constants";
+import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
@@ -132,50 +132,99 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
         onFinish={onFinish}
         validateMessages={validateMessages}
         initialValues={defaultValues}>
-        {fieldsFormQuestion.map((field, key) =>
-          field.type ? (
-            <Form.Item
-              key={`field${key}${field.name}`}
-              name={field.name}
-              label={field.label}
-              rules={[
-                { required: true },
-                {
-                  validator: fieldValidation,
-                },
-              ]}>
-              <Input />
-            </Form.Item>
-          ) : (
-            field.selectOptions && (
-              <Form.Item
-                key={`field${key}`}
-                name={field.name}
-                label={field.label}
-                rules={[
-                  { required: true },
-                  {
-                    validator: fieldValidation,
-                  },
-                ]}>
-                <Select placeholder="Seleccione una Opcion" onChange={handleFunction}>
-                  {field.selectOptions.map((option, index) =>
-                    option.text ? (
-                      <Option key={`type${index}`} value={option.value}>
-                        {option.text}
-                      </Option>
-                    ) : (
-                      <Option key={`quantity${index}`} value={option}>
-                        {option}
-                      </Option>
+        {
+          allowGradableSurvey === true ?
+            <div>
+              {fieldsFormQuestionWithPoints.map((field, key) =>
+                field.type ? (
+                  <Form.Item
+                    key={`field${key}${field.name}`}
+                    name={field.name}
+                    label={field.label}
+                    rules={[
+                      { required: true },
+                      {
+                        validator: fieldValidation,
+                      },
+                    ]}>
+                    <Input />
+                  </Form.Item>
+                ) : (
+                    field.selectOptions && (
+                      <Form.Item
+                        key={`field${key}`}
+                        name={field.name}
+                        label={field.label}
+                        rules={[
+                          { required: true },
+                          {
+                            validator: fieldValidation,
+                          },
+                        ]}>
+                        <Select placeholder="Seleccione una Opcion" onChange={handleFunction}>
+                          {field.selectOptions.map((option, index) =>
+                            option.text ? (
+                              <Option key={`type${index}`} value={option.value}>
+                                {option.text}
+                              </Option>
+                            ) : (
+                                <Option key={`quantity${index}`} value={option}>
+                                  {option}
+                                </Option>
+                              )
+                          )}
+                        </Select>
+                      </Form.Item>
                     )
-                  )}
-                </Select>
-              </Form.Item>
-            )
-          )
-        )}
-
+                  )
+              )}
+            </div> :
+            <div>
+              {fieldsFormQuestion.map((field, key) =>
+                field.type ? (
+                  <Form.Item
+                    key={`field${key}${field.name}`}
+                    name={field.name}
+                    label={field.label}
+                    rules={[
+                      { required: true },
+                      {
+                        validator: fieldValidation,
+                      },
+                    ]}>
+                    <Input />
+                  </Form.Item>
+                ) : (
+                    field.selectOptions && (
+                      <Form.Item
+                        key={`field${key}`}
+                        name={field.name}
+                        label={field.label}
+                        rules={[
+                          { required: true },
+                          {
+                            validator: fieldValidation,
+                          },
+                        ]}>
+                        <Select placeholder="Seleccione una Opcion" onChange={handleFunction}>
+                          {field.selectOptions.map((option, index) =>
+                            option.text ? (
+                              <Option key={`type${index}`} value={option.value}>
+                                {option.text}
+                              </Option>
+                            ) : (
+                                <Option key={`quantity${index}`} value={option}>
+                                  {option}
+                                </Option>
+                              )
+                          )}
+                        </Select>
+                      </Form.Item>
+                    )
+                  )
+              )}
+            </div>
+        }
         <Form.List name={`choices`}>
           {(fields, { add, remove }) => {
             return (
@@ -219,46 +268,46 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     ))}
                   </Radio.Group>
                 ) : (
-                  questionType == "checkbox" && (
-                    <Checkbox.Group
-                      onChange={handleCheckbox}
-                      disabled={!allowGradableSurvey}
-                      value={correctAnswerIndex}
-                      style={{ display: "block", marginRight: 0 }}>
-                      {fields.map((field, index) => (
-                        <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
-                          <Checkbox value={index} style={{ display: "block", width: "100%" }}>
-                            <Form.Item
-                              {...field}
-                              validateTrigger={["onChange", "onBlur"]}
-                              rules={[
-                                {
-                                  required: true,
-                                  whitespace: true,
-                                  message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
-                                },
-                                {
-                                  validator: fieldValidation,
-                                },
-                              ]}
-                              noStyle>
-                              <Input placeholder="Texto de la Respuesta" style={{ width: "85%" }} />
-                            </Form.Item>
-                            {fields.length > 2 ? (
-                              <MinusCircleOutlined
-                                className="dynamic-delete-button"
-                                style={{ margin: "0 8px" }}
-                                onClick={() => {
-                                  remove(field.name);
-                                }}
-                              />
-                            ) : null}
-                          </Checkbox>
-                        </Form.Item>
-                      ))}
-                    </Checkbox.Group>
-                  )
-                )}
+                    questionType == "checkbox" && (
+                      <Checkbox.Group
+                        onChange={handleCheckbox}
+                        disabled={!allowGradableSurvey}
+                        value={correctAnswerIndex}
+                        style={{ display: "block", marginRight: 0 }}>
+                        {fields.map((field, index) => (
+                          <Form.Item label={`Respuesta ${index + 1}`} required={false} key={field.key}>
+                            <Checkbox value={index} style={{ display: "block", width: "100%" }}>
+                              <Form.Item
+                                {...field}
+                                validateTrigger={["onChange", "onBlur"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    whitespace: true,
+                                    message: `Por favor ingresa un valor a la respuesta ${index + 1}`,
+                                  },
+                                  {
+                                    validator: fieldValidation,
+                                  },
+                                ]}
+                                noStyle>
+                                <Input placeholder="Texto de la Respuesta" style={{ width: "85%" }} />
+                              </Form.Item>
+                              {fields.length > 2 ? (
+                                <MinusCircleOutlined
+                                  className="dynamic-delete-button"
+                                  style={{ margin: "0 8px" }}
+                                  onClick={() => {
+                                    remove(field.name);
+                                  }}
+                                />
+                              ) : null}
+                            </Checkbox>
+                          </Form.Item>
+                        ))}
+                      </Checkbox.Group>
+                    )
+                  )}
                 {fields.length < 5 && (
                   <Form.Item>
                     <Button
