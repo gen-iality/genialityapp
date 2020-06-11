@@ -374,6 +374,17 @@ class triviaEdit extends Component {
             </div>
           )}
 
+          {allow_gradable_survey == "true" && (
+            <Fragment>
+              <div>
+                <label style={{ marginTop: "3%" }} className="label">
+                  Texto de muestra para la pantalla inicial de la encuesta
+                </label>
+                <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
+              </div>
+            </Fragment>
+          )}
+
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "2%" }} className="label">
