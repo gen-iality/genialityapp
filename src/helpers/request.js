@@ -503,6 +503,9 @@ export const AgendaApi = {
   duplicate: async (event, data, id) => {
     return await Actions.create(`api/events/${event}/duplicateactivitie/${id}`, data);
   },
+  zoomConference: async (event, id, data) => {
+    return await Actions.create(`api/events/${event}/createmeeting/${id}`, data);
+  },
 };
 export const SpeakersApi = {
   byEvent: async (event) => {

@@ -88,7 +88,6 @@ class AgendaEdit extends Component {
       hosts: [],
       selected_document: [],
       nameDocuments: [],
-      hostAvailable: [],
       availableText: "ended_meeting_room"
     };
     this.createConference = this.createConference.bind(this);
@@ -114,15 +113,10 @@ class AgendaEdit extends Component {
       );
     }
     let documents = await DocumentsApi.byEvent(this.props.event._id);
-    let hostAvailable = await EventsApi.hostAvailable();
-    console.log(hostAvailable);
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
-    this.setState({ nameDocuments, hostAvailable });
-    // getHostList(this.loadHostAvailable);
-
     let spaces = await SpacesApi.byEvent(this.props.event._id);
     let hosts = await SpeakersApi.byEvent(this.props.event._id);
 
@@ -139,7 +133,6 @@ class AgendaEdit extends Component {
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
       const information = await getConfiguration(this.props.event._id, this.props.location.state.edit)
-      console.log(information)
       if (information) {
         this.setState({
           availableText: information.habilitar_ingreso
@@ -154,6 +147,8 @@ class AgendaEdit extends Component {
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
+        datetime_start: info.datetime_start
+
       });
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
       const { date, hour_start, hour_end } = handleDate(info);
@@ -183,10 +178,6 @@ class AgendaEdit extends Component {
       isLoading,
     });
   }
-
-  loadHostAvailable = (list) => {
-    this.setState({ hostAvailable: list });
-  };
 
   //FN general para cambio en input
   handleChange = (e) => {
@@ -416,39 +407,31 @@ class AgendaEdit extends Component {
     }
   }
 
-  async createConference(host_id) {
+  async createConference() {
     this.setState({ creatingConference: true });
     const zoomData = {
-      activity_id: this.props.location.state.edit,
+      activity_datetime_start: this.state.datetime_start,
       activity_name: this.state.name,
-      event_id: this.props.event._id,
-      agenda: this.props.event.description,
-      host_id: this.state.host_id,
+      activity_description: this.props.event.description,
     };
-
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      data: zoomData,
-      url: ApiEviusZoomServer,
-    };
-    let response = null;
+    console.log(zoomData)
 
     axios.defaults.timeout = 10000;
     try {
-      response = await axios(options);
-      toast.success("Conferencia Creada");
-      console.log(this.state.host_id);
-      let result = await setHostState(this.state.host_id, true);
+      // const createHost = await AgendaApi.zoomConference(this.props.event._id, this.props.location.state.edit, zoomData)
+      // toast.success("Conferencia Creada");
+      // console.log(createHost);
 
       const {
         event,
         location: { state },
       } = this.props;
       const info = await AgendaApi.getOne(state.edit, this.props.event._id);
+      //  let result = await setHostState(info.zoom_host_id, true);
       this.setState({
+        // zoom_host_id: info.zoom_host_id,
+        // zoom_host_name: info.zoom_host_name,
+        // zoom_host_email: info.zoom_host_name,
         meeting_id: info.meeting_id,
         start_url: info.start_url,
         join_url: info.join_url,
@@ -864,31 +847,11 @@ class AgendaEdit extends Component {
                     <>
                       {!this.state.meeting_id && (
                         <Fragment>
-                          <div className="control">
-                            <div className="select">
-                              <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
-                                <option>Seleccione host</option>
-                                {this.state.hostAvailable.length > 0 &&
-                                  this.state.hostAvailable.map((host) => {
-                                    return (
-                                      host.state &&
-                                      host.state === "available" && (
-                                        <option value={host.id} key={host.id}>
-                                          {host.email}
-                                          {console.log(host)}
-                                        </option>
-                                      )
-                                    );
-                                  })}
-                              </select>
-                            </div>
-                          </div>
                           <div>
                             {!this.state.creatingConference && (
                               <button
                                 style={{ marginTop: "2%" }}
                                 className="button is-primary"
-                                disabled={!this.state.host_id}
                                 onClick={this.createConference}>
                                 Crear espacio virtual
                               </button>

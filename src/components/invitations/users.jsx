@@ -374,7 +374,7 @@ class UsersRsvp extends Component {
           <div>
             <button className="button"
               style={{ float: "left", marginTop: "2%", marginLeft: "20%" }}
-              onClick={() => this.exportFile(pageOfItems)}
+              onClick={() => this.exportFile(users)}
             >
               Exportar
             </button>
