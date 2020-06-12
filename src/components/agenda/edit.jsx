@@ -114,6 +114,7 @@ class AgendaEdit extends Component {
       );
     }
     let documents = await DocumentsApi.byEvent(this.props.event._id);
+    console.log(documents)
     let hostAvailable = await EventsApi.hostAvailable();
     console.log(hostAvailable);
     let nameDocuments = [];
@@ -264,16 +265,28 @@ class AgendaEdit extends Component {
     if (this.validForm()) {
       try {
         const info = this.buildInfo();
-
         sweetAlert.showLoading("Espera (:", "Guardando...");
         const {
           event,
           location: { state },
         } = this.props;
+        const {
+          selected_document
+        } = this.state
         this.setState({ isLoading: true });
         console.log("AGUARDAR", info, state.edit);
 
-        if (state.edit) await AgendaApi.editOne(info, state.edit, event._id);
+        if (state.edit) {
+          const data = {
+            activity_id: state.edit
+          }
+          await AgendaApi.editOne(info, state.edit, event._id);
+
+          for (let i = 0; i < selected_document.length; i++) {
+            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)
+            console.log(documentsUpdate)
+          }
+        }
         else {
           const agenda = await AgendaApi.create(event._id, info);
           this.setState({ deleteID: agenda._id });
