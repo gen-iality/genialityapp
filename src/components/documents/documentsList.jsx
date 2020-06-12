@@ -29,7 +29,7 @@ const columns = [
                         text="Observar"
                         icon={EyeOutlined}
 
-                    /></a>,
+                    /></a>
             </Space>
         ),
     },
