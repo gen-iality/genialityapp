@@ -20,8 +20,6 @@ const columns = [
         key: 'document',
     },
     {
-        title: 'Action',
-        key: 'action',
         render: (item) => (
             <Space size="middle">
                 <a target="_blank" href={item.file} download>
