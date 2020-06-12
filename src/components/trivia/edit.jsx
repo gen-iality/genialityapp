@@ -30,6 +30,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: "",
       openSurvey: false,
       allow_gradable_survey: false,
+      allow_vote_value_per_user: false,
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -70,6 +71,7 @@ class triviaEdit extends Component {
         publish: Update.publish,
         openSurvey: Update.open || "false",
         allow_gradable_survey: Update.allow_gradable_survey || "false",
+        allow_vote_value_per_user: Update.allow_vote_value_per_user || "false",
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
@@ -109,6 +111,7 @@ class triviaEdit extends Component {
       open: "false",
       allow_anonymous_answers: "false",
       allow_gradable_survey: "false",
+      allow_vote_value_per_user: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
@@ -141,6 +144,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
+      allow_vote_value_per_user: this.state.allow_vote_value_per_user,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
@@ -168,7 +172,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -270,6 +274,27 @@ class triviaEdit extends Component {
       this.setState({ points: value });
     }
   };
+
+  toggleSwitch = (variable, state) => {
+    let { allow_gradable_survey, allow_vote_value_per_user } = this.state;
+    switch (variable) {
+      case "allow_gradable_survey":
+        if (state && allow_vote_value_per_user == "true")
+          return this.setState({ allow_gradable_survey: "true", allow_vote_value_per_user: "false" });
+        this.setState({ allow_gradable_survey: state ? "true" : "false" });
+        break;
+
+      case "allow_vote_value_per_user":
+        if (state && allow_gradable_survey == "true")
+          return this.setState({ allow_vote_value_per_user: "true", allow_gradable_survey: "false" });
+        this.setState({ allow_vote_value_per_user: state ? "true" : "false" });
+        break;
+
+      default:
+        break;
+    }
+  };
+
   render() {
     const {
       survey,
@@ -283,6 +308,7 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      allow_vote_value_per_user,
     } = this.state;
     const columns = [
       {
@@ -365,11 +391,23 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
+                Permitir valor del voto por usuario
+              </label>
+              <Switch
+                checked={allow_vote_value_per_user == "true"}
+                onChange={(checked) => this.toggleSwitch("allow_vote_value_per_user", checked)}
+              />
+            </div>
+          )}
+
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
                 Encuesta calificable
               </label>
               <Switch
                 checked={allow_gradable_survey == "true"}
-                onChange={(checked) => this.setState({ allow_gradable_survey: checked ? "true" : "false" })}
+                onChange={(checked) => this.toggleSwitch("allow_gradable_survey", checked)}
               />
             </div>
           )}
@@ -409,12 +447,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-              <div className="column">
-                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                  Guardar
+            <div className="column">
+              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                Guardar
               </button>
-              </div>
-            )}
+            </div>
+          )}
 
           {this.state.idSurvey && (
             <div>
