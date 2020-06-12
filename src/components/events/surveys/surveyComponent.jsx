@@ -4,9 +4,11 @@ import { toast } from "react-toastify";
 import { PageHeader, message, notification, Modal } from "antd";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
+import * as Cookie from "js-cookie";
+
 import graphicsImage from "../../../graficas.png";
 
-import { SurveysApi, AgendaApi } from "../../../helpers/request";
+import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers, UserGamification } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
@@ -38,6 +40,7 @@ class SurveyComponent extends Component {
       feedbackModal: false,
       questionsAnswered: 0,
       totalPoints: 0,
+      eventUsers: {},
     };
   }
 
@@ -46,10 +49,19 @@ class SurveyComponent extends Component {
     this.loadData();
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
+
+    this.getCurrentEvenUser();
   }
 
   getRankingList = (list) => {
     this.setState({ rankingList: list });
+  };
+
+  getCurrentEvenUser = async () => {
+    let evius_token = Cookie.get("evius_token");
+    let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
+
+    this.setState({ eventUsers: response.data });
   };
 
   // Funcion para cargar datos de la encuesta seleccionada
