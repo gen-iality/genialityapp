@@ -83,7 +83,7 @@ class documentsList extends Component {
 
                 {
 
-                    documentDates.length > 0 ?
+                    data[0].activity_id ?
                         <div>
                             <Table dataSource={documentDates} columns={columns} />
                         </div>
