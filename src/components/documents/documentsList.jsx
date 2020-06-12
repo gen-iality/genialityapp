@@ -60,7 +60,6 @@ class documentsList extends Component {
 
     async getDatesFromDocumentList() {
         const { data } = this.state
-        console.log(data)
         const documentDates = []
         for (let i = 0; i < data.length; i++) {
             if (data[i].activity_id) {
@@ -70,23 +69,27 @@ class documentsList extends Component {
                     document: data[i].title ? data[i].title : data[i].name,
                     file: data[i].file
                 })
-                this.setState({ documentDates })
             }
         }
+        this.setState({ documentDates })
+
     }
 
     render() {
         const { documentDates, data } = this.state;
 
         return (
-            <Card style={{ textAlign: "left" }}>
+            <div>
+
                 {
-                    data[0].activity_id ?
+
+                    documentDates.length > 0 ?
                         <div>
                             <Table dataSource={documentDates} columns={columns} />
                         </div>
                         :
-                        <div>
+
+                        <Card style={{ textAlign: "left" }}>
                             <List itemLayout="horizontal"
                                 //Se traen los datos del state 
                                 dataSource={data}
@@ -119,9 +122,10 @@ class documentsList extends Component {
                                     </List.Item>
                                 )}
                             />
-                        </div>
+                        </Card>
                 }
-            </Card>
+            </div>
+
         )
     }
 }
