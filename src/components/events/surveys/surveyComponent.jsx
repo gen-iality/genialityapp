@@ -4,9 +4,11 @@ import { toast } from "react-toastify";
 import { PageHeader, message, notification, Modal } from "antd";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
+import * as Cookie from "js-cookie";
+
 import graphicsImage from "../../../graficas.png";
 
-import { SurveysApi, AgendaApi } from "../../../helpers/request";
+import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 import { SurveyAnswers, UserGamification } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
@@ -37,6 +39,9 @@ class SurveyComponent extends Component {
       feedbackMessage: {},
       feedbackModal: false,
       questionsAnswered: 0,
+      totalPoints: 0,
+      eventUsers: [],
+      voteWeight: 0,
     };
   }
 
@@ -45,10 +50,25 @@ class SurveyComponent extends Component {
     this.loadData();
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
+
+    this.getCurrentEvenUser();
   }
 
   getRankingList = (list) => {
     this.setState({ rankingList: list });
+  };
+
+  getCurrentEvenUser = async () => {
+    let evius_token = Cookie.get("evius_token");
+    let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
+
+    if (response.data.length > 0) {
+      let vote = 0;
+      response.data.forEach((item) => {
+        vote += parseInt(item.properties.pesovoto);
+      });
+      this.setState({ eventUsers: response.data, voteWeight: vote });
+    }
   };
 
   // Funcion para cargar datos de la encuesta seleccionada
@@ -58,6 +78,8 @@ class SurveyComponent extends Component {
 
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty("question", "id");
+
+    Survey.JsonObject.metaData.addProperty("question", "points");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
     console.log("surveyDat", dataSurvey);
@@ -138,8 +160,10 @@ class SurveyComponent extends Component {
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
   executePartialService = (surveyData, question, infoUser) => {
+    let { eventUsers, voteWeight } = this.state;
+
     // Asigna puntos si la encuesta tiene
-    let surveyPoints = surveyData.points && parseInt(surveyData.points);
+    let surveyPoints = question.points && parseInt(question.points);
     let rankingPoints = 0;
     console.log(question);
 
@@ -191,7 +215,7 @@ class SurveyComponent extends Component {
                 uid: infoUser._id,
                 email: infoUser.email,
                 names: infoUser.names || infoUser.displayName,
-                voteValue: infoUser.pesovoto,
+                voteValue: surveyData.allow_vote_value_per_user == "true" && eventUsers.length > 0 && voteWeight,
               },
               infoOptionQuestion
             )
@@ -230,9 +254,11 @@ class SurveyComponent extends Component {
   sendData = (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData, questionsAnswered } = this.state;
-    let countDown = values.isLastPage ? 3 : 0;
 
-    if (!values.isLastPage)
+    let isLastPage = values.isLastPage;
+    let countDown = isLastPage ? 3 : 0;
+
+    if (!isLastPage)
       // Evento que se ejecuta al cambiar de pagina
       values.onCurrentPageChanged.add((sender, options) => {
         // Se obtiene el tiempo restante para poder usarlo en el modal
@@ -240,21 +266,6 @@ class SurveyComponent extends Component {
         // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
         if (countDown > 0) sender.stopTimer();
       });
-
-    let onSuccess = {
-      title: "Has respondido correctamente",
-      content: `Has ganado ${surveyData.points} puntos respondiendo correctamente la pregunta`,
-      icon: <SmileOutlined />,
-      centered: true,
-      okButtonProps: { disabled: true },
-    };
-    let onFailed = {
-      title: "No has respondido correctamente",
-      content: "Debido a que no respondiste correctamente no has ganado puntos",
-      icon: <FrownOutlined />,
-      centered: true,
-      okButtonProps: { disabled: true },
-    };
 
     let questionName = Object.keys(values.data);
 
@@ -269,6 +280,26 @@ class SurveyComponent extends Component {
     let question = values.getQuestionByName(questionName, true);
 
     this.executePartialService(surveyData, question, currentUser).then(({ responseMessage, rankingPoints }) => {
+      let { totalPoints } = this.state;
+      if (rankingPoints !== undefined) totalPoints += rankingPoints;
+
+      this.setState({ totalPoints });
+
+      let onSuccess = {
+        title: "Has respondido correctamente",
+        content: `Has ganado ${question.points} puntos respondiendo correctamente la pregunta`,
+        icon: <SmileOutlined />,
+        centered: true,
+        okButtonProps: { disabled: true },
+      };
+      let onFailed = {
+        title: "No has respondido correctamente",
+        content: "Debido a que no respondiste correctamente no has ganado puntos",
+        icon: <FrownOutlined />,
+        centered: true,
+        okButtonProps: { disabled: true },
+      };
+
       // message.success({ content: responseMessage });
 
       // Permite asignar un estado para que actualice la lista de las encuestas si el usuario respondio la encuesta
@@ -286,13 +317,13 @@ class SurveyComponent extends Component {
             rankingPoints > 0
               ? Modal.success({
                 ...onSuccess,
-                content: !values.isLastPage
+                content: !isLastPage
                   ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
                   : onSuccess.content,
               })
               : Modal.error({
                 ...onFailed,
-                content: !values.isLastPage
+                content: !isLastPage
                   ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
                   : onFailed.content,
               });
@@ -301,13 +332,13 @@ class SurveyComponent extends Component {
             rankingPoints > 0
               ? modal.update({
                 ...onSuccess,
-                content: !values.isLastPage
+                content: !isLastPage
                   ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
                   : onSuccess.content,
               })
               : modal.update({
                 ...onFailed,
-                content: !values.isLastPage
+                content: !isLastPage
                   ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
                   : onFailed.content,
               });
@@ -333,11 +364,18 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
-    let { surveyData } = this.state;
+    let { surveyData, totalPoints } = this.state;
+    let textOnCompleted = survey.completedHtml;
+
+    survey.currentPage.questions.forEach((question) => {
+      let correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
+      if (correctAnswer) totalPoints += parseInt(question.points);
+    });
+
     if (surveyData.allow_gradable_survey == "true") {
-      let points = survey.getCorrectedAnswerCount() * surveyData.points;
-      let text = points > 0 ? `Has obtenido ${points} puntos` : "No has obtenido puntos. Suerte para la próxima";
-      survey.completedHtml += `<br>${text}`;
+      let text =
+        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la próxima";
+      survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
   };
 

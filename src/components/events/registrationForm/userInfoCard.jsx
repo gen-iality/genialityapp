@@ -21,7 +21,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
         let userProperties = [];
 
         for (const key in info) {
-          if (key != "displayName") {
+          if (key != "displayName" && key != "pesovoto") {
             let fieldLabel = "";
             fieldLabel = extraFields.filter((item) => key == item.name);
             fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
@@ -58,7 +58,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
       if (item.key == "names" || item.key == "email") return;
       eventUserValues = { ...eventUserValues, [item.key]: item.value };
     });
-    console.log("eventUserValues:", eventUserValues);
+    // console.log("eventUserValues:", eventUserValues);
     setInitialValues(eventUserValues);
   };
 

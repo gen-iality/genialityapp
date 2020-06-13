@@ -127,6 +127,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
    */
   const renderForm = () => {
     let formUI = extraFields.map((m, key) => {
+      if (m.name == "pesovoto") return;
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
