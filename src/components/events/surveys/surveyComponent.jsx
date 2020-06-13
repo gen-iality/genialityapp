@@ -40,7 +40,8 @@ class SurveyComponent extends Component {
       feedbackModal: false,
       questionsAnswered: 0,
       totalPoints: 0,
-      eventUsers: {},
+      eventUsers: [],
+      voteWeight: 0,
     };
   }
 
@@ -61,7 +62,13 @@ class SurveyComponent extends Component {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
 
-    this.setState({ eventUsers: response.data });
+    if (response.data.length > 0) {
+      let vote = 0;
+      response.data.forEach((item) => {
+        vote += parseInt(item.properties.pesovoto);
+      });
+      this.setState({ eventUsers: response.data, voteWeight: vote });
+    }
   };
 
   // Funcion para cargar datos de la encuesta seleccionada
@@ -146,6 +153,8 @@ class SurveyComponent extends Component {
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
   executePartialService = (surveyData, question, infoUser) => {
+    let { eventUsers, voteWeight } = this.state;
+
     // Asigna puntos si la encuesta tiene
     let surveyPoints = question.points && parseInt(question.points);
     let rankingPoints = 0;
@@ -199,7 +208,7 @@ class SurveyComponent extends Component {
                 uid: infoUser._id,
                 email: infoUser.email,
                 names: infoUser.names || infoUser.displayName,
-                voteValue: infoUser.pesovoto,
+                voteValue: surveyData.allow_vote_value_per_user == "true" && eventUsers.length > 0 && voteWeight,
               },
               infoOptionQuestion
             )
