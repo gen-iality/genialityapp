@@ -8,10 +8,12 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { createOrUpdateSurvey } from "./services";
 
 import { withRouter } from "react-router-dom";
+import ReactQuill from "react-quill";
+import { toolbarEditor } from "../../helpers/constants";
 
 import { toast } from "react-toastify";
 import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
-import FormQuestions from "./questions";
+
 import FormQuestionEdit from "./formEdit";
 
 const { TextArea } = Input;
@@ -166,7 +168,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -258,22 +260,14 @@ class triviaEdit extends Component {
   goBack = () => this.props.history.goBack();
 
   onChange = (e) => {
+    // Este es para el editor de texto enriquecido. El mensaje para la pagina principal de la encuesta
+    if (typeof e == "string") return this.setState({ initialMessage: e });
+
+    // Este es para el input de los puntos de la encuesta
     const { value, type } = e.target;
-    switch (type) {
-      case "textarea":
-        let newText = value.replace(/\n/g, "<br />");
-        this.setState({ initialMessage: newText });
-        break;
-
-      case "text":
-        const reg = /^-?\d*(\.\d*)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-          this.setState({ points: value });
-        }
-        break;
-
-      default:
-        break;
+    const reg = /^-?\d*(\.\d*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+      this.setState({ points: value });
     }
   };
   render() {
@@ -380,32 +374,6 @@ class triviaEdit extends Component {
             </div>
           )}
 
-          {allow_gradable_survey == "true" && (
-            <Fragment>
-              <div>
-                <label style={{ marginTop: "3%" }} className="label">
-                  Puntaje de pregunta
-                </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <Input onChange={this.onChange} maxLength={25} defaultValue={this.state.points} />
-                </Tooltip>
-              </div>
-
-              <div>
-                <label style={{ marginTop: "3%" }} className="label">
-                  Texto de muestra para la pantalla inicial de la encuesta
-                </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <TextArea
-                    onChange={this.onChange}
-                    autoSize={{ minRows: 2, maxRows: 6 }}
-                    defaultValue={this.state.initialMessage}
-                  />
-                </Tooltip>
-              </div>
-            </Fragment>
-          )}
-
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "2%" }} className="label">
@@ -430,12 +398,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
               </button>
-            </div>
-          )}
+              </div>
+            )}
 
           {this.state.idSurvey && (
             <div>
