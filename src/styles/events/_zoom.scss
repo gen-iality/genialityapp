@@ -100,6 +100,21 @@
   overflow-y: scroll;
 
   .ant-card-body {
+    padding: 0 1em;
+  }
+
+  .ant-page-header {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .sv-body__footer {
+    padding: 0;
+  }
+
+  .ant-card-body canvas {
+    /*min-height: 30vh;
+    max-height: 30vh;*/
     padding: 15px !important;
   }
 

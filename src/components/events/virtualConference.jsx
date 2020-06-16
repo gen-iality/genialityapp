@@ -122,16 +122,6 @@ class VirtualConference extends Component {
         return infoAgendaArr;
     }
 
-    capitalizeDate(val) {
-        val = Moment(val).format("DD MMMM HH:HH");
-        return val
-            .toLowerCase()
-            .trim()
-            .split(" ")
-            .map((v) => v[0].toUpperCase() + v.substr(1))
-            .join(" ");
-    }
-
     render() {
         const { infoAgendaArr, survey } = this.state;
         const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
@@ -153,7 +143,6 @@ class VirtualConference extends Component {
                                                 }
 
                                             </div>
-
                                         ))
                                     }
                                     description=

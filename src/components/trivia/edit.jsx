@@ -8,10 +8,12 @@ import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { createOrUpdateSurvey } from "./services";
 
 import { withRouter } from "react-router-dom";
+import ReactQuill from "react-quill";
+import { toolbarEditor } from "../../helpers/constants";
 
 import { toast } from "react-toastify";
 import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
-import FormQuestions from "./questions";
+
 import FormQuestionEdit from "./formEdit";
 
 const { TextArea } = Input;
@@ -28,6 +30,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: "",
       openSurvey: false,
       allow_gradable_survey: false,
+      allow_vote_value_per_user: false,
       activity_id: "",
       dataAgenda: [],
       quantityQuestions: 0,
@@ -68,6 +71,7 @@ class triviaEdit extends Component {
         publish: Update.publish,
         openSurvey: Update.open || "false",
         allow_gradable_survey: Update.allow_gradable_survey || "false",
+        allow_vote_value_per_user: Update.allow_vote_value_per_user || "false",
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
         dataAgenda: dataAgenda.data,
@@ -107,6 +111,7 @@ class triviaEdit extends Component {
       open: "false",
       allow_anonymous_answers: "false",
       allow_gradable_survey: "false",
+      allow_vote_value_per_user: "false",
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
@@ -139,6 +144,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
+      allow_vote_value_per_user: this.state.allow_vote_value_per_user,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
@@ -258,24 +264,37 @@ class triviaEdit extends Component {
   goBack = () => this.props.history.goBack();
 
   onChange = (e) => {
+    // Este es para el editor de texto enriquecido. El mensaje para la pagina principal de la encuesta
+    if (typeof e == "string") return this.setState({ initialMessage: e });
+
+    // Este es para el input de los puntos de la encuesta
     const { value, type } = e.target;
-    switch (type) {
-      case "textarea":
-        let newText = value.replace(/\n/g, "<br />");
-        this.setState({ initialMessage: newText });
+    const reg = /^-?\d*(\.\d*)?$/;
+    if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
+      this.setState({ points: value });
+    }
+  };
+
+  toggleSwitch = (variable, state) => {
+    let { allow_gradable_survey, allow_vote_value_per_user } = this.state;
+    switch (variable) {
+      case "allow_gradable_survey":
+        if (state && allow_vote_value_per_user == "true")
+          return this.setState({ allow_gradable_survey: "true", allow_vote_value_per_user: "false" });
+        this.setState({ allow_gradable_survey: state ? "true" : "false" });
         break;
 
-      case "text":
-        const reg = /^-?\d*(\.\d*)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
-          this.setState({ points: value });
-        }
+      case "allow_vote_value_per_user":
+        if (state && allow_gradable_survey == "true")
+          return this.setState({ allow_vote_value_per_user: "true", allow_gradable_survey: "false" });
+        this.setState({ allow_vote_value_per_user: state ? "true" : "false" });
         break;
 
       default:
         break;
     }
   };
+
   render() {
     const {
       survey,
@@ -289,6 +308,7 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      allow_vote_value_per_user,
     } = this.state;
     const columns = [
       {
@@ -371,11 +391,23 @@ class triviaEdit extends Component {
           {this.state.idSurvey && (
             <div>
               <label style={{ marginTop: "3%" }} className="label">
+                Permitir valor del voto por usuario
+              </label>
+              <Switch
+                checked={allow_vote_value_per_user == "true"}
+                onChange={(checked) => this.toggleSwitch("allow_vote_value_per_user", checked)}
+              />
+            </div>
+          )}
+
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
                 Encuesta calificable
               </label>
               <Switch
                 checked={allow_gradable_survey == "true"}
-                onChange={(checked) => this.setState({ allow_gradable_survey: checked ? "true" : "false" })}
+                onChange={(checked) => this.toggleSwitch("allow_gradable_survey", checked)}
               />
             </div>
           )}
@@ -384,24 +416,9 @@ class triviaEdit extends Component {
             <Fragment>
               <div>
                 <label style={{ marginTop: "3%" }} className="label">
-                  Puntaje de pregunta
-                </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <Input onChange={this.onChange} maxLength={25} defaultValue={this.state.points} />
-                </Tooltip>
-              </div>
-
-              <div>
-                <label style={{ marginTop: "3%" }} className="label">
                   Texto de muestra para la pantalla inicial de la encuesta
                 </label>
-                <Tooltip trigger={["focus"]} placement="topLeft" overlayClassName="numeric-input">
-                  <TextArea
-                    onChange={this.onChange}
-                    autoSize={{ minRows: 2, maxRows: 6 }}
-                    defaultValue={this.state.initialMessage}
-                  />
-                </Tooltip>
+                <ReactQuill value={this.state.initialMessage} modules={toolbarEditor} onChange={this.onChange} />
               </div>
             </Fragment>
           )}

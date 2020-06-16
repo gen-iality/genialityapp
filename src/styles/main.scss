@@ -74,8 +74,22 @@ iframe {
   margin-top: 2em;
 }
 
+.sv-question__content {
+  text-align: center;
+}
+
+.sv-question__content .sv-item {
+  text-align: left;
+}
+
 .sv-body__page {
   margin: 0 !important;
+}
+
+.sv-container-modern > .sv-body > div:first-child {
+  margin: 0 auto;
+  text-align: center;
+  font-weight: bold;
 }
 
 .sv-root-modern .sv-completedpage {
@@ -84,6 +98,9 @@ iframe {
 
 .sv-selectbase__label {
   display: flex;
+  min-height: 5em;
+  align-items: center;
+  justify-content: center;
 }
 
 .ant-pagination {
@@ -92,10 +109,16 @@ iframe {
 
 // PROVISIONAL, YA QUE ESTOS ESTILOS DEBEN VENIR DEL API
 // ESTILOS PARA COMPONENTE SURVE - QUIEN QUIERE SER MILLONARIO
-
+.sv-container-modern__title {
+  display: none !important;
+}
 .sv-selectbase .sv-selectbase__item.sv-q-col-1,
 .sv-question__title {
   background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/pregunta.png?alt=media&token=03485bd0-1f47-4ddf-8b55-fd4d0053491b");
+}
+
+.sv-body__page {
+  margin-top: 2em !important;
 }
 
 .sv-question__title {
@@ -114,7 +137,6 @@ iframe {
   display: inline-block;
   background-size: 100% 100%;
   padding: 2% 6% !important;
-  min-height: 2.5em;
 }
 
 .sv-item__control-label {
