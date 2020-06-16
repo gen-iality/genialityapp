@@ -136,14 +136,20 @@ class VirtualConference extends Component {
                             <Card bordered={true} style={{ marginBottom: "3%" }}>
                                 <Meta
                                     avatar={
-                                        item.hosts.map((host, key) => (
-                                            <div key={key}>
-                                                {
-                                                    <Avatar size={80} src={host.image} />
-                                                }
+                                        item.hosts.length > 0 ? (
+                                            console.log(item),
+                                            item.hosts.map((host, key) => (
+                                                <div key={key}>
+                                                    {
+                                                        <Avatar size={80} src={host.image} />
+                                                    }
 
-                                            </div>
-                                        ))
+                                                </div>
+                                            ))
+                                        ) :
+                                            (
+                                                <Avatar size={80} icon={<UserOutlined />} />
+                                            )
                                     }
                                     description=
                                     {
