@@ -250,8 +250,21 @@ class SurveyComponent extends Component {
     });
   };
 
+  validateIfHasResponse = (survey) => {
+    return new Promise((resolve, reject) => {
+      survey.currentPage.questions.forEach((question) => {
+        console.log(question, question.value);
+        if (question.value === undefined) {
+          resolve({ isUndefined: true });
+        } else {
+          resolve({ isUndefined: false });
+        }
+      });
+    });
+  };
+
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
-  sendData = (values) => {
+  sendData = async (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
     let { surveyData, questionsAnswered } = this.state;
 
@@ -266,6 +279,36 @@ class SurveyComponent extends Component {
         // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
         if (countDown > 0) sender.stopTimer();
       });
+
+    if (surveyData.allow_gradable_survey == "true") {
+      let response = await this.validateIfHasResponse(values);
+      if (response.isUndefined) {
+        return (function() {
+          let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
+
+          const modal = Modal.warning({
+            content: `No has escogido ninguna opcion. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+            centered: true,
+            okButtonProps: { disabled: true },
+          });
+
+          const timer = setInterval(() => {
+            secondsToGo -= 1;
+            modal.update({
+              content: `No has escogido ninguna opcion. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
+              centered: true,
+              okButtonProps: { disabled: true },
+            });
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(timer);
+            modal.destroy();
+            // Se inicia el tiempo de nuevo al cerrarse el modal
+            values.startTimer();
+          }, secondsToGo * 1000);
+        })();
+      }
+    }
 
     let questionName = Object.keys(values.data);
 
@@ -310,38 +353,38 @@ class SurveyComponent extends Component {
       if (surveyData.allow_gradable_survey == "true") {
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
-          let secondsToGo = surveyData.allow_gradable_survey == "true" && !surveyData.initialMessage ? 3 : countDown;
+          let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
           // Se evalua si el usuario respondio bien o no la pregunta. Para el mostrar modal respectivo
           const modal =
             rankingPoints > 0
               ? Modal.success({
-                ...onSuccess,
-                content: !isLastPage
-                  ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                  : onSuccess.content,
-              })
+                  ...onSuccess,
+                  content: !isLastPage
+                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onSuccess.content,
+                })
               : Modal.error({
-                ...onFailed,
-                content: !isLastPage
-                  ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                  : onFailed.content,
-              });
+                  ...onFailed,
+                  content: !isLastPage
+                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onFailed.content,
+                });
           const timer = setInterval(() => {
             secondsToGo -= 1;
             rankingPoints > 0
               ? modal.update({
-                ...onSuccess,
-                content: !isLastPage
-                  ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                  : onSuccess.content,
-              })
+                  ...onSuccess,
+                  content: !isLastPage
+                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onSuccess.content,
+                })
               : modal.update({
-                ...onFailed,
-                content: !isLastPage
-                  ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                  : onFailed.content,
-              });
+                  ...onFailed,
+                  content: !isLastPage
+                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
+                    : onFailed.content,
+                });
           }, 1000);
           setTimeout(() => {
             clearInterval(timer);

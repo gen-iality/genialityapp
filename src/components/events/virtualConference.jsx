@@ -5,6 +5,10 @@ import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
+import { Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
+const { Meta } = Card;
 
 const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
   const [infoActivity, setInfoActivity] = useState({});
@@ -17,17 +21,15 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
     case "open_meeting_room":
       return (
         <>
-
           <Button
             size="large"
             type="primary"
             className="buttonVirtualConference"
             onClick={() => {
-
               toggleConference(true, infoActivity.meeting_id, infoActivity);
             }}>
             Entrar
-        </Button>
+          </Button>
         </>
       );
       break;
@@ -121,16 +123,6 @@ class VirtualConference extends Component {
     return infoAgendaArr;
   }
 
-  capitalizeDate(val) {
-    val = Moment(val).format("DD MMMM HH:HH");
-    return val
-      .toLowerCase()
-      .trim()
-      .split(" ")
-      .map((v) => v[0].toUpperCase() + v.substr(1))
-      .join(" ");
-  }
-
   render() {
     const { infoAgendaArr, survey } = this.state;
     const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
@@ -143,20 +135,28 @@ class VirtualConference extends Component {
           {infoAgendaArr.map((item, key) => (
             <div key={key}>
               <Card bordered={true} style={{ marginBottom: "3%" }}>
-                <p>{item.name}</p>
-                {item.hosts && item.hosts.length > 0 && false && (
-                  <div>
-                    <span style={{ fontWeight: "bold" }}> Conferencistas: </span>{" "}
-                    {item.hosts.map((item, key) => (
-                      <span key={key}> {item.name}, </span>
-                    ))}
-                  </div>
-                )}
-                <p>
-                  {" "}
-                  {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}{" "}
-                </p>
-                <MeetingConferenceButton activity={item} toggleConference={toggleConference} usuarioRegistrado={usuarioRegistrado} />
+                <Meta
+                  avatar={
+                    item.hosts.length > 0 ? (
+                      item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
+                    ) : (
+                      <Avatar size={80} icon={<UserOutlined />} />
+                    )
+                  }
+                  description={
+                    <div key={key}>
+                      {item.hosts &&
+                        item.hosts.length > 0 &&
+                        item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
+                      <p>{item.name}</p>
+                      <p>
+                        {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
+                        {Moment(item.datetime_end).format("h:mm A")}
+                      </p>
+                      <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                    </div>
+                  }
+                />
               </Card>
             </div>
           ))}
