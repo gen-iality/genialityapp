@@ -1,12 +1,12 @@
 import React, { Component, Fragment, useState, useEffect } from "react";
 import { Card, Button, Alert } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
-import { AgendaApi, SurveysApi } from "../../helpers/request";
+import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
 
-const MeetingConferenceButton = ({ activity, toggleConference }) => {
+const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
   const [infoActivity, setInfoActivity] = useState({});
 
   useEffect(() => {
@@ -16,15 +16,19 @@ const MeetingConferenceButton = ({ activity, toggleConference }) => {
   switch (infoActivity.habilitar_ingreso) {
     case "open_meeting_room":
       return (
-        <Button
-          size="large"
-          type="primary"
-          className="buttonVirtualConference"
-          onClick={() => {
-            toggleConference(true, infoActivity.meeting_id, infoActivity);
-          }}>
-          Entrar
+        <>
+
+          <Button
+            size="large"
+            type="primary"
+            className="buttonVirtualConference"
+            onClick={() => {
+
+              toggleConference(true, infoActivity.meeting_id, infoActivity);
+            }}>
+            Entrar
         </Button>
+        </>
       );
       break;
 
@@ -152,7 +156,7 @@ class VirtualConference extends Component {
                   {" "}
                   {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}{" "}
                 </p>
-                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                <MeetingConferenceButton activity={item} toggleConference={toggleConference} usuarioRegistrado={usuarioRegistrado} />
               </Card>
             </div>
           ))}
