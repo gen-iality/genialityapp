@@ -41,7 +41,8 @@ class UsersRsvp extends Component {
       serverError: false,
       dropUser: false,
       dropSend: false,
-      visible: false
+      visible: false,
+      exportUsers: []
     };
     this.checkEvent = this.checkEvent.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
@@ -74,7 +75,9 @@ class UsersRsvp extends Component {
       );
 
       const users = handleUsers(this.props.event.user_properties, resp.data);
+
       this.setState({
+        exportUsers: resp.data,
         loading: false,
         users,
         usersReq: users,
@@ -346,7 +349,8 @@ class UsersRsvp extends Component {
     columnsKey.unshift("created_at");
     columnsKey.unshift("updated_at");
 
-    const data = await parseData2Excel(this.state.usersReq, this.state.columnsKey);
+    const data = await parseData2Excel(this.state.exportUsers, this.state.columnsKey);
+    console.log(data)
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
@@ -444,9 +448,9 @@ class UsersRsvp extends Component {
                   </div>
                 </div>
               </div>
-              {/* <p>
+              <p>
                 Seleccionados: <strong> {this.state.auxArr.length}</strong>
-              </p> */}
+              </p>
               {/* {this.state.auxArr.length > 0 && (
                 <div
                   className={`dropdown ${dropSend ? "is-active" : ""}`}
