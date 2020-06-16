@@ -5,6 +5,11 @@ import { AgendaApi, SurveysApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+
+
+const { Meta } = Card;
 
 const MeetingConferenceButton = ({ activity, toggleConference }) => {
     const [infoActivity, setInfoActivity] = useState({});
@@ -139,20 +144,34 @@ class VirtualConference extends Component {
                     {infoAgendaArr.map((item, key) => (
                         <div key={key}>
                             <Card bordered={true} style={{ marginBottom: "3%" }}>
-                                <p>{item.name}</p>
-                                {item.hosts && item.hosts.length > 0 && false && (
-                                    <div>
-                                        <span style={{ fontWeight: "bold" }}> Conferencistas: </span>{" "}
-                                        {item.hosts.map((item, key) => (
-                                            <span key={key}> {item.name}, </span>
-                                        ))}
-                                    </div>
-                                )}
-                                <p>
-                                    {" "}
-                                    {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}{" "}
-                                </p>
-                                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                                <Meta
+                                    avatar={
+                                        item.hosts.map((host, key) => (
+                                            <div key={key}>
+                                                {
+                                                    <Avatar size={80} src={host.image} />
+                                                }
+
+                                            </div>
+
+                                        ))
+                                    }
+                                    description=
+                                    {
+                                        <div key={key}>
+                                            {item.hosts && item.hosts.length > 0 && (
+                                                item.hosts.map((item, key) => (
+                                                    <p key={key} > {item.name}</p>
+                                                ))
+                                            )}
+                                            <p>{item.name}</p>
+                                            <p>
+                                                {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}
+                                            </p>
+                                            <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                                        </div>
+                                    }
+                                />
                             </Card>
                         </div>
                     ))}
