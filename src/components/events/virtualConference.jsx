@@ -137,7 +137,6 @@ class VirtualConference extends Component {
                                 <Meta
                                     avatar={
                                         item.hosts.length > 0 ? (
-                                            console.log(item),
                                             item.hosts.map((host, key) => (
                                                 <div key={key}>
                                                     {
