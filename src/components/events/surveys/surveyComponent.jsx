@@ -313,9 +313,10 @@ class SurveyComponent extends Component {
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
 
-    // Esta condicion se hace debido a que al final de la encuesta, despues de un tiempo es ocultada
-    if (isLastPage && aux === 0)
-      this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
+    // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
+    if (aux > 0) return;
+
+    if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
     if (!isLastPage)
       // Evento que se ejecuta al cambiar de pagina
