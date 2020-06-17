@@ -250,6 +250,7 @@ class SurveyComponent extends Component {
     });
   };
 
+  // Funcion que valida si la pregunta se respondio
   validateIfHasResponse = (survey) => {
     return new Promise((resolve, reject) => {
       survey.currentPage.questions.forEach((question) => {
@@ -263,6 +264,7 @@ class SurveyComponent extends Component {
     });
   };
 
+  // Funcion que muestra el feedback dependiendo del estado
   showStateMessage = (state, questionPoints) => {
     const objMessage = {
       title: "",
