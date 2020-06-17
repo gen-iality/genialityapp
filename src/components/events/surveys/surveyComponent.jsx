@@ -42,6 +42,8 @@ class SurveyComponent extends Component {
       totalPoints: 0,
       eventUsers: [],
       voteWeight: 0,
+      showMessageOnComplete: false,
+      aux: 0,
     };
   }
 
@@ -107,7 +109,7 @@ class SurveyComponent extends Component {
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 60;
+      dataSurvey.maxTimeToFinishPage = 10;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -306,10 +308,14 @@ class SurveyComponent extends Component {
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
-    let { surveyData, questionsAnswered } = this.state;
+    let { surveyData, questionsAnswered, aux } = this.state;
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
+
+    // Esta condicion se hace debido a que al final de la encuesta, despues de un tiempo es ocultada
+    if (isLastPage && aux === 0)
+      this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
     if (!isLastPage)
       // Evento que se ejecuta al cambiar de pagina
@@ -341,7 +347,7 @@ class SurveyComponent extends Component {
 
         setTimeout(() => {
           clearInterval(timer);
-          this.setState({ feedbackMessage: {} });
+          this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
           values.startTimer();
         }, secondsToGo * 1000);
       }
@@ -393,7 +399,7 @@ class SurveyComponent extends Component {
 
           setTimeout(() => {
             clearInterval(timer);
-            this.setState({ feedbackMessage: {} });
+            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
             values.startTimer();
           }, secondsToGo * 1000);
         }
@@ -440,7 +446,7 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData, sentSurveyAnswers, feedbackMessage } = this.state;
+    let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
     const { showListSurvey } = this.props;
     return (
       <div style={surveyStyle}>
@@ -456,7 +462,7 @@ class SurveyComponent extends Component {
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
-        <div style={{ display: feedbackMessage.hasOwnProperty("title") ? "none" : "block" }}>
+        <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
           <Survey.Survey
             json={surveyData}
             onComplete={this.sendData}
