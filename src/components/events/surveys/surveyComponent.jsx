@@ -275,7 +275,7 @@ class SurveyComponent extends Component {
         return {
           ...objMessage,
           title: "Has respondido correctamente",
-          subTitle: `Has ganado ${questionPoints} puntos respondiendo correctamente la pregunta.`,
+          subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
         };
         break;
 
@@ -290,8 +290,8 @@ class SurveyComponent extends Component {
       case "warning":
         return {
           ...objMessage,
-          title: "No has escogido ninguna opcion",
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opcion.`,
+          title: "No has escogido ninguna opción",
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
         };
         break;
 
