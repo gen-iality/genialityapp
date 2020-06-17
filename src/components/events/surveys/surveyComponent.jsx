@@ -452,9 +452,9 @@ class SurveyComponent extends Component {
         )}
         {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
 
-        {Object.entries(feedbackMessage).length > 0 && <Result {...feedbackMessage} extra={null} />}
+        {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
-        <div style={{ display: Object.entries(feedbackMessage).length > 0 ? "none" : "block" }}>
+        <div style={{ display: feedbackMessage.hasOwnProperty("title") ? "none" : "block" }}>
           <Survey.Survey
             json={surveyData}
             onComplete={this.sendData}
