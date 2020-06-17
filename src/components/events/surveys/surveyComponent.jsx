@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal } from "antd";
+import { PageHeader, message, notification, Modal, Result } from "antd";
 import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
@@ -263,6 +263,44 @@ class SurveyComponent extends Component {
     });
   };
 
+  showStateMessage = (state, questionPoints) => {
+    const objMessage = {
+      title: "",
+      subTitle: "",
+      status: state,
+    };
+
+    switch (state) {
+      case "success":
+        return {
+          ...objMessage,
+          title: "Has respondido correctamente",
+          subTitle: `Has ganado ${questionPoints} puntos respondiendo correctamente la pregunta.`,
+        };
+        break;
+
+      case "error":
+        return {
+          ...objMessage,
+          title: "No has respondido correctamente",
+          subTitle: "Debido a que no respondiste correctamente no has ganado puntos.",
+        };
+        break;
+
+      case "warning":
+        return {
+          ...objMessage,
+          title: "No has escogido ninguna opcion",
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opcion.`,
+        };
+        break;
+
+      default:
+        return { type: state };
+        break;
+    }
+  };
+
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
     const { showListSurvey, eventId, currentUser } = this.props;
@@ -283,30 +321,27 @@ class SurveyComponent extends Component {
     if (surveyData.allow_gradable_survey == "true") {
       let response = await this.validateIfHasResponse(values);
       if (response.isUndefined) {
-        return (function() {
-          let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
+        let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
-          const modal = Modal.warning({
-            content: `No has escogido ninguna opcion. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
-            centered: true,
-            okButtonProps: { disabled: true },
-          });
+        let result = this.showStateMessage("warning");
+        let descriptionFeedback = result.subTitle;
 
-          const timer = setInterval(() => {
-            secondsToGo -= 1;
-            modal.update({
-              content: `No has escogido ninguna opcion. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`,
-              centered: true,
-              okButtonProps: { disabled: true },
-            });
-          }, 1000);
-          setTimeout(() => {
-            clearInterval(timer);
-            modal.destroy();
-            // Se inicia el tiempo de nuevo al cerrarse el modal
-            values.startTimer();
-          }, secondsToGo * 1000);
-        })();
+        result.subTitle = `${descriptionFeedback}
+           Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+        this.setState({ feedbackMessage: result });
+
+        const timer = setInterval(() => {
+          secondsToGo -= 1;
+          result.subTitle = `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+          this.setState({ feedbackMessage: result });
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(timer);
+          this.setState({ feedbackMessage: {} });
+          values.startTimer();
+        }, secondsToGo * 1000);
       }
     }
 
@@ -328,21 +363,6 @@ class SurveyComponent extends Component {
 
       this.setState({ totalPoints });
 
-      let onSuccess = {
-        title: "Has respondido correctamente",
-        content: `Has ganado ${question.points} puntos respondiendo correctamente la pregunta`,
-        icon: <SmileOutlined />,
-        centered: true,
-        okButtonProps: { disabled: true },
-      };
-      let onFailed = {
-        title: "No has respondido correctamente",
-        content: "Debido a que no respondiste correctamente no has ganado puntos",
-        icon: <FrownOutlined />,
-        centered: true,
-        okButtonProps: { disabled: true },
-      };
-
       // message.success({ content: responseMessage });
 
       // Permite asignar un estado para que actualice la lista de las encuestas si el usuario respondio la encuesta
@@ -355,41 +375,23 @@ class SurveyComponent extends Component {
         if (rankingPoints !== undefined) {
           let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
-          // Se evalua si el usuario respondio bien o no la pregunta. Para el mostrar modal respectivo
-          const modal =
-            rankingPoints > 0
-              ? Modal.success({
-                  ...onSuccess,
-                  content: !isLastPage
-                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                    : onSuccess.content,
-                })
-              : Modal.error({
-                  ...onFailed,
-                  content: !isLastPage
-                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                    : onFailed.content,
-                });
+          let typeMessage = rankingPoints > 0 ? "success" : "error";
+          let result = this.showStateMessage(typeMessage, rankingPoints);
+          let descriptionFeedback = result.subTitle;
+
+          result.subTitle = `${descriptionFeedback} Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+          this.setState({ feedbackMessage: result });
+
           const timer = setInterval(() => {
             secondsToGo -= 1;
-            rankingPoints > 0
-              ? modal.update({
-                  ...onSuccess,
-                  content: !isLastPage
-                    ? `${onSuccess.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                    : onSuccess.content,
-                })
-              : modal.update({
-                  ...onFailed,
-                  content: !isLastPage
-                    ? `${onFailed.content}. Espera el tiempo de ${secondsToGo}, para seguir con el cuestionario.`
-                    : onFailed.content,
-                });
+            result.subTitle = `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+            this.setState({ feedbackMessage: result });
           }, 1000);
+
           setTimeout(() => {
             clearInterval(timer);
-            modal.destroy();
-            // Se inicia el tiempo de nuevo al cerrarse el modal
+            this.setState({ feedbackMessage: {} });
             values.startTimer();
           }, secondsToGo * 1000);
         }
@@ -436,7 +438,7 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData, sentSurveyAnswers } = this.state;
+    let { surveyData, sentSurveyAnswers, feedbackMessage } = this.state;
     const { showListSurvey } = this.props;
     return (
       <div style={surveyStyle}>
@@ -450,13 +452,17 @@ class SurveyComponent extends Component {
         )}
         {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
 
-        <Survey.Survey
-          json={surveyData}
-          onComplete={this.sendData}
-          onPartialSend={this.sendData}
-          onCompleting={this.setFinalMessage}
-          onTimerPanelInfoText={this.setCounterMessage}
-        />
+        {Object.entries(feedbackMessage).length > 0 && <Result {...feedbackMessage} extra={null} />}
+
+        <div style={{ display: Object.entries(feedbackMessage).length > 0 ? "none" : "block" }}>
+          <Survey.Survey
+            json={surveyData}
+            onComplete={this.sendData}
+            onPartialSend={this.sendData}
+            onCompleting={this.setFinalMessage}
+            onTimerPanelInfoText={this.setCounterMessage}
+          />
+        </div>
       </div>
     );
   }
