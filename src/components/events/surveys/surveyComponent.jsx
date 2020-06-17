@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
 import { PageHeader, message, notification, Modal, Result } from "antd";
-import { FrownOutlined, SmileOutlined } from "@ant-design/icons";
+import { FrownOutlined, SmileOutlined, MehOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
 
@@ -280,6 +280,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: "Has respondido correctamente",
           subTitle: `Has ganado ${questionPoints} puntos, respondiendo correctamente la pregunta.`,
+          icon: <SmileOutlined />,
         };
         break;
 
@@ -288,6 +289,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: "No has respondido correctamente",
           subTitle: "Debido a que no respondiste correctamente no has ganado puntos.",
+          icon: <FrownOutlined />,
         };
         break;
 
@@ -296,6 +298,7 @@ class SurveyComponent extends Component {
           ...objMessage,
           title: "No has escogido ninguna opción",
           subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
+          icon: <MehOutlined />,
         };
         break;
 
