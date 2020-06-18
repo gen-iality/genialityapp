@@ -406,7 +406,6 @@ class SurveyComponent extends Component {
           />
         )}
         {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
-
         <Survey.Survey
           json={surveyData}
           onComplete={this.sendData}
