@@ -56,7 +56,10 @@ class ListEventUser extends Component {
       quantityUsersSync: 0,
       lastUpdate: new Date(),
       disabledPersistence: false,
+      percent_checked: 0,
+      percent_unchecked: 0
     };
+    this.percentChecked = this.percentChecked.bind(this)
   }
 
   addDefaultLabels = (extraFields) => {
@@ -113,7 +116,7 @@ class ListEventUser extends Component {
             acompanates = 0;
           snapshot.docChanges().forEach((change) => {
             /* change structure: type: "added",doc:doc,oldIndex: -1,newIndex: 0*/
-            console.log("cambios", change);
+            // console.log("cambios", change);
             // Condicional, toma el primer registro que es el mas reciente
             !snapshot.metadata.fromCache && this.setState({ lastUpdate: new Date() });
 
@@ -122,8 +125,8 @@ class ListEventUser extends Component {
             user.rol_name = user.rol_name
               ? user.rol_name
               : user.rol_id
-              ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
-              : "";
+                ? rolesList.find(({ name, _id }) => (_id === user.rol_id ? name : ""))
+                : "";
             user.created_at = typeof user.created_at === "object" ? user.created_at.toDate() : "sinfecha";
             user.updated_at = user.updated_at.toDate ? user.updated_at.toDate() : new Date();
             user.tiquete = listTickets.find((ticket) => ticket._id === user.ticket_id);
@@ -171,6 +174,7 @@ class ListEventUser extends Component {
           this.setState((prevState) => {
             const usersToShow =
               ticket.length <= 0 || stage.length <= 0 ? [...newItems].slice(0, 50) : [...prevState.users];
+            this.percentChecked(newItems)
             return {
               userReq: newItems,
               auxArr: newItems,
@@ -198,6 +202,27 @@ class ListEventUser extends Component {
   componentWillUnmount() {
     this.userListener();
     //this.pilaListener()
+  }
+
+  percentChecked(users) {
+    const usersChecked = []
+    const usersUnchecked = []
+    for (let i = 0; users.length > i; i++) {
+      if (users[i].checked_in === true) {
+        usersChecked.push(users[i])
+      } else {
+        usersUnchecked.push(users[i])
+      }
+    }
+
+
+    let usersCheckedPercent = Math.floor(usersChecked.length * 100) / users.length
+    let usersUncheckedPercent = usersUnchecked.length * 100 / users.length
+
+    let percent_checked = usersCheckedPercent.toPrecision(3);
+    let percent_unchecked = usersUncheckedPercent.toPrecision(3);
+
+    this.setState({ percent_checked, percent_unchecked })
   }
 
   checkInCounter = (user, newItems, oldIndex, checkIn) => {
@@ -348,21 +373,21 @@ class ListEventUser extends Component {
                 <FormattedDate value={item.checked_at.toDate()} /> <FormattedTime value={item.checked_at.toDate()} />
               </p>
             ) : (
-              <div>
-                <input
-                  className="is-checkradio is-primary is-small"
-                  id={"checkinUser" + item._id}
-                  disabled={item.checked_in}
-                  type="checkbox"
-                  name={"checkinUser" + item._id}
-                  checked={item.checked_in}
-                  onChange={(e) => {
-                    this.checkIn(item._id);
-                  }}
-                />
-                <label htmlFor={"checkinUser" + item._id} />
-              </div>
-            )}
+                <div>
+                  <input
+                    className="is-checkradio is-primary is-small"
+                    id={"checkinUser" + item._id}
+                    disabled={item.checked_in}
+                    type="checkbox"
+                    name={"checkinUser" + item._id}
+                    checked={item.checked_in}
+                    onChange={(e) => {
+                      this.checkIn(item._id);
+                    }}
+                  />
+                  <label htmlFor={"checkinUser" + item._id} />
+                </div>
+              )}
           </td>
           {extraFields.slice(0, limit).map((field, key) => {
             let value;
@@ -480,6 +505,8 @@ class ListEventUser extends Component {
       quantityUsersSync,
       lastUpdate,
       disabledPersistence,
+      percent_checked,
+      percent_unchecked
     } = this.state;
     const {
       event: { event_stages },
@@ -495,7 +522,7 @@ class ListEventUser extends Component {
           </div>
 
           <div className="columns checkin-tags-wrapper is-flex-touch">
-            <div className="is-3 column">
+            <div className="is-2 column">
               <div className="tags" style={{ flexWrap: "nowrap" }}>
                 <span className="tag is-primary">{checkIn}</span>
                 <span className="tag is-white">Ingresados</span>
@@ -507,17 +534,25 @@ class ListEventUser extends Component {
                 <span className="tag is-white">Total</span>
               </div>
             </div>
+
+            <div className="is-3 column">
+              <div className="tags" style={{ flexWrap: "nowrap" }}>
+                <span className="tag is-light">{percent_checked}</span>
+                <span className="tag is-white">% Usuarios</span>
+              </div>
+            </div>
+
             <div className="is-3 column">
               <p className="is-size-7">
                 Ultima Sincronización : <FormattedDate value={lastUpdate} /> <FormattedTime value={lastUpdate} />
               </p>
             </div>
             {// localChanges &&
-            quantityUsersSync > 0 && localChanges == "Local" && (
-              <div className="is-4 column">
-                <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
-              </div>
-            )}
+              quantityUsersSync > 0 && localChanges == "Local" && (
+                <div className="is-4 column">
+                  <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
+                </div>
+              )}
           </div>
 
           <div className="columns">
@@ -626,15 +661,15 @@ class ListEventUser extends Component {
                 <h2 className="has-text-centered">Cargando...</h2>
               </Fragment>
             ) : (
-              <div className="table-wrapper">
-                <div className="table-container">
-                  <EvenTable head={["", "Check", ...extraFields.map(({ label }) => label), "Tiquete"]}>
-                    {this.renderRows()}
-                  </EvenTable>
+                <div className="table-wrapper">
+                  <div className="table-container">
+                    <EvenTable head={["", "Check", ...extraFields.map(({ label }) => label), "Tiquete"]}>
+                      {this.renderRows()}
+                    </EvenTable>
+                  </div>
+                  <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
                 </div>
-                <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
-              </div>
-            )}
+              )}
           </div>
         </EventContent>
         {!this.props.loading && editUser && (
@@ -669,13 +704,13 @@ class ListEventUser extends Component {
         {timeout && <ErrorServe errorData={this.state.errorData} />}
       </React.Fragment>
     ) : (
-      <div style={{ margin: "5%", textAlign: "center" }}>
-        <label>
-          Este navegador con este dispositivo no soporta las capacidades necesarias. Por favor utilizar otro navegador o
-          dispositivo.
+        <div style={{ margin: "5%", textAlign: "center" }}>
+          <label>
+            Este navegador con este dispositivo no soporta las capacidades necesarias. Por favor utilizar otro navegador o
+            dispositivo.
         </label>
-      </div>
-    );
+        </div>
+      );
   }
 }
 

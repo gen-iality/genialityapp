@@ -4,7 +4,7 @@ import { EventsApi, UsersApi } from "../../helpers/request";
 import SearchComponent from "../shared/searchTable";
 import { FormattedMessage } from "react-intl";
 import Dialog from "../modal/twoAction";
-import API from "../../helpers/request";
+import API, { TicketsApi } from "../../helpers/request";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddUser from "../modal/addUser";
@@ -16,6 +16,7 @@ import { sweetAlert } from "../../helpers/utils";
 import ModalAdvise from "./modal"
 import { fieldNameEmailFirst, parseData2Excel } from "../../helpers/utils";
 import XLSX from "xlsx";
+import * as Cookie from "js-cookie";
 
 class UsersRsvp extends Component {
   constructor(props) {
@@ -42,7 +43,8 @@ class UsersRsvp extends Component {
       dropUser: false,
       dropSend: false,
       visible: false,
-      exportUsers: []
+      exportUsers: [],
+      tickets: []
     };
     this.checkEvent = this.checkEvent.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
@@ -53,7 +55,7 @@ class UsersRsvp extends Component {
       const { event } = this.props;
       const properties = event.user_properties;
       let columnsKey = fieldNameEmailFirst(properties);
-      this.setState({ columnsKey })
+      this.setState({ columnsKey, tickets: event.tickets })
 
       const resp = await UsersApi.getAll(this.props.eventID, "?pageSize=10000");
       console.log("RESP", this.props.eventID, resp);
@@ -75,7 +77,6 @@ class UsersRsvp extends Component {
       );
 
       const users = handleUsers(this.props.event.user_properties, resp.data);
-
       this.setState({
         exportUsers: resp.data,
         loading: false,
@@ -356,17 +357,42 @@ class UsersRsvp extends Component {
     XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
     XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
   };
+
+  filterByTicket(ticket) {
+    const { usersReq } = this.state
+    const filter = []
+    for (let i = 0; usersReq.length > i; i++) {
+      if (usersReq[i].properties.ticketid) {
+        if (usersReq[i].properties.ticketid === ticket) {
+          filter.push(usersReq[i])
+        } else {
+          console.log("no hay")
+        }
+      } else {
+        if (usersReq[i].properties.ticket_id === ticket) {
+          filter.push(usersReq[i])
+        } else {
+          console.log("no hay")
+        }
+      }
+
+    }
+    console.log(filter)
+    this.setState({ users: filter })
+
+  }
   render() {
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
     if (this.state.loading) return <Loading />;
-    const { users, usersReq, dropUser, dropSend, pageOfItems, columns } = this.state;
+    const { users, usersReq, dropUser, dropSend, pageOfItems, columns, tickets } = this.state;
     return (
       <Fragment>
         <EventContent
           title={"Invitados"}
           description={
-            usersReq.length <= 0 ? "Crear o importar una lista d epersonas que desea invitar a su evento" : ""
+            usersReq.length <= 0 ? "Crear o importar una lista de personas que desea invitar a su evento" : ""
           }>
+
           <button
             className="button"
             style={{ float: "left", marginTop: "2%" }}
@@ -448,9 +474,34 @@ class UsersRsvp extends Component {
                   </div>
                 </div>
               </div>
-              <p>
-                Seleccionados: <strong> {this.state.auxArr.length}</strong>
-              </p>
+              <div className="columns">
+                <div className="column is 6">
+                  <p>
+                    Seleccionados: <strong> {this.state.auxArr.length}</strong>
+                  </p>
+                </div>
+                <div className="column is-6">
+                  <label className="label">Filtrar por ticket</label>
+                  <div className="select">
+                    {
+                      tickets.length > 0 ? (
+                        <select onClick={(e) => this.filterByTicket(e.target.value)} >
+                          <option>Selecciona...</option>
+                          {
+                            tickets.map((ticket, key) => (
+                              <option key={key} value={ticket._id}>
+                                {ticket.title}
+                              </option>
+                            ))
+                          }
+                        </select>
+                      ) : (
+                          <p>No hay ticketes aun</p>
+                        )}
+
+                  </div>
+                </div>
+              </div>
               {/* {this.state.auxArr.length > 0 && (
                 <div
                   className={`dropdown ${dropSend ? "is-active" : ""}`}
@@ -521,18 +572,20 @@ class UsersRsvp extends Component {
             )}
         </EventContent>
 
-        {this.state.addUser && (
-          <AddUser
-            handleModal={this.closeModal}
-            modal={this.state.addUser}
-            eventId={this.props.eventID}
-            value={this.state.selectedUser}
-            addToList={this.addToList}
-            extraFields={this.props.event.user_properties}
-            edit={this.state.edit}
-          />
-        )}
-      </Fragment>
+        {
+          this.state.addUser && (
+            <AddUser
+              handleModal={this.closeModal}
+              modal={this.state.addUser}
+              eventId={this.props.eventID}
+              value={this.state.selectedUser}
+              addToList={this.addToList}
+              extraFields={this.props.event.user_properties}
+              edit={this.state.edit}
+            />
+          )
+        }
+      </Fragment >
     );
   }
 }

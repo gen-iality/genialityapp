@@ -103,10 +103,10 @@ let agendaActividadDetalle = (props) => {
                   />
                 </div>
               )}
-              
+
               {currentActivity.secondvideo && (
                 <div className="column is-centered mediaplayer">
-                <strong>Pt. 2</strong>
+                  <strong>Pt. 2</strong>
                   <ReactPlayer
                     width={"100%"}
                     style={{
