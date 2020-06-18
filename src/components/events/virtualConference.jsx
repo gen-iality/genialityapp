@@ -1,17 +1,16 @@
 import React, { Component, Fragment, useState, useEffect } from "react";
 import { Card, Button, Alert } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
-import { AgendaApi, SurveysApi } from "../../helpers/request";
+import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
-import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-
+import { Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
 
-const MeetingConferenceButton = ({ activity, toggleConference }) => {
+const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
     const [infoActivity, setInfoActivity] = useState({});
 
     useEffect(() => {
@@ -21,15 +20,17 @@ const MeetingConferenceButton = ({ activity, toggleConference }) => {
     switch (infoActivity.habilitar_ingreso) {
         case "open_meeting_room":
             return (
-                <Button
-                    size="large"
-                    type="primary"
-                    className="buttonVirtualConference"
-                    onClick={() => {
-                        toggleConference(true, infoActivity.meeting_id);
-                    }}>
-                    Entrar
-                </Button>
+                <>
+                    <Button
+                        size="large"
+                        type="primary"
+                        className="buttonVirtualConference"
+                        onClick={() => {
+                            toggleConference(true, infoActivity.meeting_id, infoActivity);
+                        }}>
+                        Entrar
+          </Button>
+                </>
             );
             break;
 
@@ -137,30 +138,20 @@ class VirtualConference extends Component {
                                 <Meta
                                     avatar={
                                         item.hosts.length > 0 ? (
-                                            item.hosts.map((host, key) => (
-                                                <div key={key}>
-                                                    {
-                                                        <Avatar size={80} src={host.image} />
-                                                    }
-
-                                                </div>
-                                            ))
-                                        ) :
-                                            (
+                                            item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
+                                        ) : (
                                                 <Avatar size={80} icon={<UserOutlined />} />
                                             )
                                     }
-                                    description=
-                                    {
+                                    description={
                                         <div key={key}>
-                                            {item.hosts && item.hosts.length > 0 && (
-                                                item.hosts.map((item, key) => (
-                                                    <p key={key} > {item.name}</p>
-                                                ))
-                                            )}
+                                            {item.hosts &&
+                                                item.hosts.length > 0 &&
+                                                item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
                                             <p>{item.name}</p>
                                             <p>
-                                                {Moment(item.datetime_start).format("MMMM D h:mm A")} - {Moment(item.datetime_end).format("h:mm A")}
+                                                {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
+                                                {Moment(item.datetime_end).format("h:mm A")}
                                             </p>
                                             <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
                                         </div>

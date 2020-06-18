@@ -75,6 +75,7 @@ export const Actions = {
     if (unsafe) return publicInstance.get(url).then(({ data }) => data);
     return privateInstance.get(url).then(({ data }) => data);
   },
+
   put: (url, data, unsafe) => {
     if (unsafe) return publicInstance.put(url, data).then(({ data }) => data);
     return privateInstance.put(url, data).then(({ data }) => data);
@@ -95,6 +96,13 @@ export const EventsApi = {
       .where("account_id", "==", user_id)
       .get();
     const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
+    return eventUser;
+  },
+  getcurrentUserEventUser: async (event_id) => {
+    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
+    console.log("checkin eventUser", response);
+
+    let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
   getPublic: async (query) => {
@@ -175,6 +183,10 @@ export const TicketsApi = {
   },
   transferToUser: async (event, event_user, data) => {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
+  },
+
+  checkInUser: async (event_user) => {
+    return await Actions.put(`/api/eventUsers/${event_user}/checkin`);
   },
 };
 
