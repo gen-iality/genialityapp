@@ -10,7 +10,7 @@ import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
 import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi } from "../../helpers/request";
+import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
@@ -167,8 +167,8 @@ class Landing extends Component {
 
 
     if (event && user) {
-      eventUser = await EventsApi.getEventUser(user._id, event._id);
-
+      eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+      console.log("checkin eventUser", eventUser, event._id, user._id);
     }
 
     const dateFrom = event.datetime_from.split(" ");
@@ -306,7 +306,7 @@ class Landing extends Component {
   };
 
   toggleConference = (state, meeting_id, activity) => {
-    console.log("ACTIVANDOSE", state, meeting_id);
+    console.log("checkin", state, meeting_id, this.state.eventUser);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
@@ -317,6 +317,14 @@ class Landing extends Component {
     }
 
     this.setState({ toggleConferenceZoom: state });
+
+    if (this.state.eventUser) {
+      //this.state.eventUser.forEach((eventUser) => {
+      TicketsApi.checkInUser(this.state.eventUser._id);
+      //});
+    }
+
+
   };
 
   render() {
