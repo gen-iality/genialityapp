@@ -63,16 +63,6 @@ class SurveyComponent extends Component {
     this.setState({ rankingList: list });
   };
 
-  getCurrentPage = (surveyId) => {
-    firestore
-      .collection("surveys")
-      .doc(surveyId)
-      .onSnapshot((survey) => {
-        let { currentPage } = survey.data();
-        this.setState({ currentPage });
-      });
-  };
-
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
@@ -333,8 +323,10 @@ class SurveyComponent extends Component {
 
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
-    const { showListSurvey, eventId, currentUser } = this.props;
+    const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
     let { surveyData, questionsAnswered, aux } = this.state;
+
+    SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
@@ -371,7 +363,6 @@ class SurveyComponent extends Component {
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
           this.setState({ feedbackMessage: result });
           if (secondsToGo <= 0 && !this.state.freezeGame) {
-            console.log("esta es la pagina actual:", values.currentPageNo);
             clearInterval(timer);
             this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
             console.log("esta es la pagina a usar:", this.state.currentPage);
