@@ -81,6 +81,27 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
   );
 };
 
+export const SurveyPage = {
+  // Obtiene la pagina actual de la encuesta
+  getCurrentPage: (surveyId, self) => {
+    firestore
+      .collection("surveys")
+      .doc(surveyId)
+      .onSnapshot((survey) => {
+        let { currentPage } = survey.data();
+        self.setState({ currentPage });
+      });
+  },
+
+  // Actualiza la pagina actual de la encuesta
+  setCurrentPage: (surveyId, page) => {
+    firestore
+      .collection("surveys")
+      .doc(surveyId)
+      .update({ currentPage: page });
+  },
+};
+
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {

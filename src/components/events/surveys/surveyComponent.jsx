@@ -10,7 +10,7 @@ import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification } from "./services";
+import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import GraphicGamification from "./graphicsGamification";
@@ -42,22 +42,35 @@ class SurveyComponent extends Component {
       totalPoints: 0,
       eventUsers: [],
       voteWeight: 0,
+      freezeGame: false,
       showMessageOnComplete: false,
       aux: 0,
+      currentPage: 0,
     };
   }
 
   componentDidMount() {
-    const { eventId } = this.props;
+    const { eventId, idSurvey } = this.props;
     this.loadData();
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
     this.getCurrentEvenUser();
+    SurveyPage.getCurrentPage(idSurvey, this);
   }
 
   getRankingList = (list) => {
     this.setState({ rankingList: list });
+  };
+
+  getCurrentPage = (surveyId) => {
+    firestore
+      .collection("surveys")
+      .doc(surveyId)
+      .onSnapshot((survey) => {
+        let { currentPage } = survey.data();
+        this.setState({ currentPage });
+      });
   };
 
   getCurrentEvenUser = async () => {
@@ -156,7 +169,17 @@ class SurveyComponent extends Component {
     surveyData = exclude(dataSurvey);
 
     console.log("pages", surveyData);
+    var self = this;
+    firestore
+      .collection("surveys")
+      .doc(idSurvey)
+      .onSnapshot((doc) => {
+        let data = doc.data();
+        let value = data.freezeGame && data.freezeGame;
+        self.setState({ freezeGame: value });
 
+        console.log("Current data: ", data, value);
+      });
     this.setState({ surveyData, idSurvey });
   };
 
@@ -332,7 +355,7 @@ class SurveyComponent extends Component {
 
     if (surveyData.allow_gradable_survey == "true") {
       let response = await this.validateIfHasResponse(values);
-      if (response.isUndefined) {
+      if (response.isUndefined && countDown > 0) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage("warning");
@@ -347,13 +370,15 @@ class SurveyComponent extends Component {
           result.subTitle = `${descriptionFeedback}
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
           this.setState({ feedbackMessage: result });
+          if (secondsToGo <= 0 && !this.state.freezeGame) {
+            console.log("esta es la pagina actual:", values.currentPageNo);
+            clearInterval(timer);
+            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
+            console.log("esta es la pagina a usar:", this.state.currentPage);
+            // values.currentPageNo = this.state.currentPage;
+            values.startTimer();
+          }
         }, 1000);
-
-        setTimeout(() => {
-          clearInterval(timer);
-          this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-          values.startTimer();
-        }, secondsToGo * 1000);
       }
     }
 
@@ -399,13 +424,13 @@ class SurveyComponent extends Component {
             result.subTitle = `${descriptionFeedback}
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
             this.setState({ feedbackMessage: result });
-          }, 1000);
 
-          setTimeout(() => {
-            clearInterval(timer);
-            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-            values.startTimer();
-          }, secondsToGo * 1000);
+            if (secondsToGo <= 0 && !this.state.freezeGame) {
+              clearInterval(timer);
+              this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
+              values.startTimer();
+            }
+          }, 1000);
         }
 
         // Ejecuta serivicio para registrar puntos
