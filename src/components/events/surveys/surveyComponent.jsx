@@ -37,7 +37,6 @@ class SurveyComponent extends Component {
       rankingList: [],
       sentSurveyAnswers: false,
       feedbackMessage: {},
-      feedbackModal: false,
       questionsAnswered: 0,
       totalPoints: 0,
       eventUsers: [],
