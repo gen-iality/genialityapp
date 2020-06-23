@@ -10,7 +10,7 @@ class DatosModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            info: { name: '', mandatory: false, visible: false, label: '', description: '', type: '', options: [] },
+            info: { name: '', mandatory: false, publish: false, visible: false, label: '', description: '', type: '', options: [] },
             valid: true
         }
     }

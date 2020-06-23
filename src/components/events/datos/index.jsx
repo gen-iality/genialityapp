@@ -150,6 +150,17 @@ class Datos extends Component {
         }
     }
 
+    async privatePublic(id, field) {
+        try {
+            let publish = !field
+            console.log(id, publish)
+            await EventFieldsApi.editOne({ publish }, id, this.eventID);
+            this.fetchFields()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     render() {
         const { fields, modal, edit, info } = this.state;
         return (
@@ -157,7 +168,7 @@ class Datos extends Component {
                 <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
                     addAction={this.addField} addTitle={"Agregar dato"}>
                     {this.state.loading ? <Loading /> :
-                        <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible", ""]}>
+                        <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Privado", "Visible", ""]}>
                             <tr className="has-text-grey-light ">
                                 <td className="has-text-grey-light ">Email</td>
                                 <td className="has-text-grey-light ">Correo</td>
@@ -187,6 +198,13 @@ class Datos extends Component {
                                             type="checkbox" name={`mandatory`} checked={field.mandatory}
                                             onChange={event => this.changeCheck(field.uuid ? field.uuid : field._id, field.mandatory)} />
                                         <label htmlFor={`mandatory${field.label}`}></label>
+                                    </td>
+
+                                    <td>
+                                        <input className="is-checkradio is-primary" id={`publish${field.label}`}
+                                            type="checkbox" name={`publish`} checked={field.publish}
+                                            onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.publish)} />
+                                        <label htmlFor={`publish${field.label}`}></label>
                                     </td>
 
                                     <td>
