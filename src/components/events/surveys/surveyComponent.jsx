@@ -29,6 +29,12 @@ const imageGraphics = {
   maxWidth: "100%",
 };
 
+//firestore.collection(`event_activity_attendees/${this.props.event._id}/activities/${this.props.match.params.id}/attendees`);
+
+
+
+
+
 class SurveyComponent extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +48,7 @@ class SurveyComponent extends Component {
       totalPoints: 0,
       eventUsers: [],
       voteWeight: 0,
+      freezeGame: "false",
       showMessageOnComplete: false,
       aux: 0,
     };
@@ -109,7 +116,7 @@ class SurveyComponent extends Component {
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 10;
+      dataSurvey.maxTimeToFinishPage = 60;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -156,7 +163,15 @@ class SurveyComponent extends Component {
     surveyData = exclude(dataSurvey);
 
     console.log("pages", surveyData);
+    var self = this;
+    firestore.collection("surveys").doc("5ee2477d8c9bb1002b74c732")
+      .onSnapshot(function (doc) {
+        let data = doc.data();
+        let value = (data.freezeGame && data.freezeGame == "true") ? true : false;
+        self.setState({ freezeGame: value });
 
+        console.log("Current data: ", data, value);
+      });
     this.setState({ surveyData, idSurvey });
   };
 
@@ -265,7 +280,6 @@ class SurveyComponent extends Component {
       });
     });
   };
-
   // Funcion que muestra el feedback dependiendo del estado
   showStateMessage = (state, questionPoints) => {
     const objMessage = {
@@ -325,9 +339,11 @@ class SurveyComponent extends Component {
       // Evento que se ejecuta al cambiar de pagina
       values.onCurrentPageChanged.add((sender, options) => {
         // Se obtiene el tiempo restante para poder usarlo en el modal
-        countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+        countDown = (values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent);
         // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-        if (countDown > 0) sender.stopTimer();
+        //if (countDown > 0) 
+        sender.stopTimer();
+
       });
 
     if (surveyData.allow_gradable_survey == "true") {
@@ -347,13 +363,12 @@ class SurveyComponent extends Component {
           result.subTitle = `${descriptionFeedback}
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
           this.setState({ feedbackMessage: result });
+          if (secondsToGo <= 0 && !this.state.freezeGame) {
+            clearInterval(timer);
+            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
+            values.startTimer();
+          }
         }, 1000);
-
-        setTimeout(() => {
-          clearInterval(timer);
-          this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-          values.startTimer();
-        }, secondsToGo * 1000);
       }
     }
 
@@ -399,13 +414,20 @@ class SurveyComponent extends Component {
             result.subTitle = `${descriptionFeedback}
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
             this.setState({ feedbackMessage: result });
+
+            if (secondsToGo <= 0 && !this.state.freezeGame) {
+              clearInterval(timer);
+              this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
+              values.startTimer();
+            }
           }, 1000);
 
-          setTimeout(() => {
+          /*setTimeout(() => {
             clearInterval(timer);
             this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
             values.startTimer();
-          }, secondsToGo * 1000);
+          }, secondsToGo * 1000); */
+
         }
 
         // Ejecuta serivicio para registrar puntos

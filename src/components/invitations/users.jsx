@@ -480,6 +480,8 @@ class UsersRsvp extends Component {
                     Seleccionados: <strong> {this.state.auxArr.length}</strong>
                   </p>
                 </div>
+
+                {/*
                 <div className="column is-6">
                   <label className="label">Filtrar por ticket</label>
                   <div className="select">
@@ -498,9 +500,11 @@ class UsersRsvp extends Component {
                       ) : (
                           <p>No hay ticketes aun</p>
                         )}
-
+    
                   </div>
                 </div>
+                */}
+
               </div>
               {/* {this.state.auxArr.length > 0 && (
                 <div
