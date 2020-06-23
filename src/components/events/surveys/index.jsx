@@ -207,8 +207,8 @@ class SurveyForm extends Component {
       this.setState({ selectedSurvey: {} });
       if (data == true) this.listenSurveysData();
     } else if (data.hasOwnProperty("_id")) {
-      let { _id, open, userHasVoted } = data;
-      let selectedSurvey = { idSurvey: _id, openSurvey: open, userHasVoted };
+      let { _id, open, userHasVoted, questions } = data;
+      let selectedSurvey = { _id, open, userHasVoted, questions };
       this.setState({ selectedSurvey });
     }
   };
@@ -217,15 +217,16 @@ class SurveyForm extends Component {
     let { selectedSurvey, surveysData, currentUser, usuarioRegistrado, userVote, surveyVisible } = this.state;
     const { event } = this.props;
 
-    if (selectedSurvey.hasOwnProperty("idSurvey"))
+    if (selectedSurvey.hasOwnProperty("_id"))
       return (
         <RootPage
+          selectedSurvey={selectedSurvey}
           userHasVoted={selectedSurvey.userHasVoted}
-          idSurvey={selectedSurvey.idSurvey}
+          idSurvey={selectedSurvey._id}
           toggleSurvey={this.toggleSurvey}
           eventId={event._id}
           currentUser={currentUser}
-          openSurvey={selectedSurvey.openSurvey}
+          openSurvey={selectedSurvey.open}
         />
       );
 

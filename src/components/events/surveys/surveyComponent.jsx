@@ -447,9 +447,15 @@ class SurveyComponent extends Component {
 
   checkCurrentPage = (survey) => {
     let { currentPage, surveyData } = this.state;
-    if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) {
-      survey.currentPageNo = currentPage;
-    }
+    const { responseCounter } = this.props;
+
+    let { allow_gradable_survey, pages } = surveyData;
+
+    if (responseCounter > 0 && responseCounter < pages.length) survey.currentPageNo = responseCounter;
+
+    // if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) {
+    //   survey.currentPageNo = currentPage;
+    // }
   };
 
   render() {

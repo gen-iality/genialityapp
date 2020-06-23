@@ -210,7 +210,7 @@ export const SurveyAnswers = {
     });
   },
   // Servicio para validar si un usuario ha respondido la encuesta
-  getUserById: async (eventId, survey, userId) => {
+  getUserById: async (eventId, survey, userId, onlyQuantityDocs) => {
     let counterDocuments = 0;
 
     return new Promise((resolve, reject) => {
@@ -225,6 +225,11 @@ export const SurveyAnswers = {
               counterDocuments++;
             }
           });
+
+          if (onlyQuantityDocs) {
+            resolve(counterDocuments);
+          }
+
           if (counterDocuments > 0 && counterDocuments == survey.questions.length) {
             resolve(true);
           } else {
