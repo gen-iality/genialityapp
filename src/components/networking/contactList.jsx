@@ -5,6 +5,7 @@ import { Spin, Alert, Col, Divider, List, Card, Avatar, Row } from "antd";
 import * as Cookie from "js-cookie";
 import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
 import { Networking } from "../../helpers/request";
+import { EventFieldsApi } from "../../helpers/request";
 
 const { Meta } = Card;
 
@@ -12,6 +13,7 @@ export default ({ eventId }) => {
   const [contactsList, setContactsList] = useState([]);
   const [messageService, setMessageService] = useState("");
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [userProperties, setUserProperties] = useState([]);
 
   const getContactList = async () => {
     // Se consulta el id del usuario por el token
@@ -34,10 +36,17 @@ export default ({ eventId }) => {
     setCurrentUserId(response);
   };
 
+  const getProperties = async () => {
+    let properties = await EventFieldsApi.getAll(eventId)
+    setUserProperties(properties)
+  }
+
   useEffect(() => {
     getuserContactList();
     getContactList();
+    getProperties();
   }, [eventId]);
+
 
   if (currentUserId)
     return currentUserId == "guestUser" ? (
@@ -74,10 +83,15 @@ export default ({ eventId }) => {
                 description={[
                   <div>
                     <br />
-                    <p>Rol: {user.properties.rol ? user.properties.rol : "No registra Cargo"}</p>
-                    <p>Ciudad: {user.properties.city ? user.properties.city : "No registra Ciudad"}</p>
-                    <p>Correo: {user.properties.email ? user.properties.email : "No registra Correo"}</p>
-                    <p>Telefono: {user.properties.phone ? user.properties.phone : "No registra Telefono"}</p>
+                    {
+                      userProperties.map((property, key) => (
+                        <div key={key}>
+                          {
+                            <p>{property.label}: {user.properties[property.name]}</p>
+                          }
+                        </div>
+                      ))
+                    }
                   </div>,
                 ]}
               />
@@ -86,10 +100,10 @@ export default ({ eventId }) => {
         ))}
       </div>
     ) : (
-      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
-        <Card>{messageService}</Card>
-      </Col>
-    );
+          <Col xs={24} sm={22} md={18} lg={18} xl={18} style={{ margin: "0 auto" }}>
+            <Card>{messageService}</Card>
+          </Col>
+        );
 
   return <Spin></Spin>;
 };
