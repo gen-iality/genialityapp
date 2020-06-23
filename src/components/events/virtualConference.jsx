@@ -35,7 +35,7 @@ const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado
                         type="primary"
                         className="buttonVirtualConference"
                         onClick={() => {
-                            toggleConference(true, infoActivity.meeting_id, infoActivity);
+                            toggleConference(true, infoActivity.meeting_id_en, infoActivity);
                         }}>
                         Join (English)
                     </Button>)}
