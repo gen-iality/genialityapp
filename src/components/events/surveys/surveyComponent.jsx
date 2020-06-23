@@ -125,10 +125,8 @@ class SurveyComponent extends Component {
     }
 
     // El {page, ...rest} es temporal
-    // Debido a que se puede setear la pagina de la pregunta
-    // Si la pregunta tiene la propiedad 'page'
+    // Debido a que se puede setear la pagina de la pregunta si la pregunta tiene la propiedad 'page'
 
-    //if (!singlePage) {
     // Aqui se itera cada pregunta y se asigna a una pagina
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
@@ -136,21 +134,6 @@ class SurveyComponent extends Component {
         questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey == "true" ? false : true }],
       };
     });
-
-    /*} else {
-      dataSurvey.pages[0] = dataSurvey.pages[0] = { name: `page0`, questions: [] };
-      dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
-        dataSurvey.pages[0].questions.push({ ...rest });
-      });
-    }*/
-
-    /*
-  } else {
-    dataSurvey.pages[0] = dataSurvey.pages[0] = { name: `page0`, questions: [] };
-    dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
-      dataSurvey.pages[0].questions.push({ ...rest });
-    });
-  }*/
 
     // Se excluyen las propiedades
     const exclude = ({ survey, id, questions, ...rest }) => rest;
