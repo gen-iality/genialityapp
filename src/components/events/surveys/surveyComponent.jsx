@@ -396,7 +396,7 @@ class SurveyComponent extends Component {
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
             this.setState({ feedbackMessage: result });
 
-            if (secondsToGo <= 0 && !this.state.freezeGame) {
+            if (secondsToGo <= 0 && values.currentPageNo == this.state.currentPage && !this.state.freezeGame) {
               clearInterval(timer);
               this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
               values.startTimer();
