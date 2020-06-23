@@ -325,7 +325,7 @@ class SurveyComponent extends Component {
     const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
     let { surveyData, questionsAnswered, aux } = this.state;
 
-    SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
+    // SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
@@ -364,8 +364,6 @@ class SurveyComponent extends Component {
           if (secondsToGo <= 0 && !this.state.freezeGame) {
             clearInterval(timer);
             this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-            console.log("esta es la pagina a usar:", this.state.currentPage);
-            // values.currentPageNo = this.state.currentPage;
             values.startTimer();
           }
         }, 1000);
@@ -464,6 +462,13 @@ class SurveyComponent extends Component {
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
+  checkCurrentPage = (survey) => {
+    let { currentPage, surveyData } = this.state;
+    if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) {
+      survey.currentPageNo = currentPage;
+    }
+  };
+
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
     const { showListSurvey } = this.props;
@@ -488,6 +493,7 @@ class SurveyComponent extends Component {
             onPartialSend={this.sendData}
             onCompleting={this.setFinalMessage}
             onTimerPanelInfoText={this.setCounterMessage}
+            onStarted={this.checkCurrentPage}
           />
         </div>
       </div>
