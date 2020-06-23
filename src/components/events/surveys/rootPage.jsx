@@ -37,9 +37,9 @@ export default class RootPage extends Component {
 
   seeIfUserHasVote = async () => {
     let { idSurvey, hasVote, eventId, currentUser } = this.state;
+    const { userHasVoted } = this.props;
 
     if (currentUser) {
-      let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, currentUser._id);
       this.setState({ hasVote: userHasVoted, isLoading: false });
     }
 

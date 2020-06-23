@@ -210,13 +210,13 @@ export const SurveyAnswers = {
     });
   },
   // Servicio para validar si un usuario ha respondido la encuesta
-  getUserById: async (eventId, surveyId, userId) => {
+  getUserById: async (eventId, survey, userId) => {
     let counterDocuments = 0;
 
     return new Promise((resolve, reject) => {
       firestore
         .collectionGroup("responses")
-        .where("id_survey", "==", surveyId)
+        .where("id_survey", "==", survey._id)
         .where("id_user", "==", userId)
         .get()
         .then((result) => {
@@ -225,7 +225,7 @@ export const SurveyAnswers = {
               counterDocuments++;
             }
           });
-          if (counterDocuments > 0) {
+          if (counterDocuments > 0 && counterDocuments == survey.questions.length) {
             resolve(true);
           } else {
             resolve(false);
