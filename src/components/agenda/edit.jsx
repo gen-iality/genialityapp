@@ -155,6 +155,7 @@ class AgendaEdit extends Component {
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
+        video: info.video
       });
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
       const { date, hour_start, hour_end } = handleDate(info);
@@ -392,6 +393,7 @@ class AgendaEdit extends Component {
       selected_document,
       image,
       meeting_id,
+      video
     } = this.state;
     const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
     const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -418,6 +420,7 @@ class AgendaEdit extends Component {
       timeConference: "",
       selected_document,
       meeting_id: meeting_id,
+      video
     };
   };
 
@@ -555,6 +558,7 @@ class AgendaEdit extends Component {
       selectedHosts,
       selectedType,
       selectedCategories,
+      video
     } = this.state;
     const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url, availableText } = this.state;
     const { matchUrl } = this.props;
@@ -641,6 +645,10 @@ class AgendaEdit extends Component {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="field">
+                  <label className="label">Link del video</label>
+                  <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
                 </div>
                 <label className="label">Conferencista</label>
                 <div className="columns">
