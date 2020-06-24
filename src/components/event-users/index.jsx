@@ -499,9 +499,9 @@ class ListEventUser extends Component {
     for (let i = 0; listado.length > i; i++) {
       if (listado[i].checked_in === true) {
         if (listado[i].properties.pesovoto) {
-          totalPesoVoto += parseInt(listado[i].properties.pesovoto)
+          totalPesoVoto += parseFloat(listado[i].properties.pesovoto)
         } else {
-          totalPesoVoto += 1
+          totalPesoVoto += 1.0
         }
       }
     }
