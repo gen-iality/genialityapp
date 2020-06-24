@@ -396,7 +396,7 @@ class SurveyComponent extends Component {
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
             this.setState({ feedbackMessage: result });
 
-            if (secondsToGo <= 0 && values.currentPageNo == this.state.currentPage && !this.state.freezeGame) {
+            if (secondsToGo <= 0 && !this.state.freezeGame) {
               clearInterval(timer);
               this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
               values.startTimer();
@@ -451,11 +451,11 @@ class SurveyComponent extends Component {
 
     let { allow_gradable_survey, pages } = surveyData;
 
-    if (responseCounter > 0 && responseCounter < pages.length) survey.currentPageNo = responseCounter;
+    // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
+    if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) return (survey.currentPageNo = currentPage);
 
-    // if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) {
-    //   survey.currentPageNo = currentPage;
-    // }
+    // Este condicional sirve para remotar la encuesta dependiendo de las respuestas registradas
+    // if (responseCounter > 0 && responseCounter < pages.length) return survey.currentPageNo = responseCounter;
   };
 
   render() {
