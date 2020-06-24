@@ -268,7 +268,8 @@ class SurveyForm extends Component {
               surveysData.length > 0 && (
                 <span>
                   {!surveyVisible ? "Ver" : "Ocultar"}{" "}
-                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s)
+                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b>
+                  {surveyLabel.name && surveyLabel.name.replace(/s$/i, "(s) ")}
                   disponible(s).
                 </span>
               )
