@@ -192,7 +192,7 @@ export const SurveyAnswers = {
     });
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
-  getAnswersQuestion: async (surveyId, questionId, eventId) => {
+  getAnswersQuestion: async (surveyId, questionId, eventId, updateData) => {
     let docs = [];
 
     return new Promise(async (resolve, reject) => {
@@ -205,7 +205,7 @@ export const SurveyAnswers = {
         .collection("answer_count")
         .doc(questionId)
         .onSnapshot((listResponse) => {
-          resolve({ answer_count: listResponse.data(), options });
+          updateData({ answer_count: listResponse.data(), options });
         });
     });
   },

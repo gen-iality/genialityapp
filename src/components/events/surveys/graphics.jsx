@@ -52,15 +52,9 @@ class Graphics extends Component {
     this.setState({ currentPage: page }, this.mountChart);
   };
 
-  mountChart = async () => {
-    const { idSurvey, eventId } = this.props;
-    let { dataSurvey, currentPage, graphicsFrame, chartCreated, chart } = this.state;
+  updateData = ({ options, answer_count }) => {
+    let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar } = graphicsFrame;
-    let { questions } = dataSurvey;
-
-    // Se ejecuta servicio para tener el conteo de las respuestas
-    let response = await SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId);
-    let { options, answer_count } = response;
 
     let formatterTitle = options.title;
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
@@ -89,6 +83,16 @@ class Graphics extends Component {
 
       this.setState({ chart });
     }
+  };
+
+  mountChart = async () => {
+    const { idSurvey, eventId } = this.props;
+    let { dataSurvey, currentPage, graphicsFrame, chartCreated, chart } = this.state;
+    let { horizontalBar } = graphicsFrame;
+    let { questions } = dataSurvey;
+
+    // Se ejecuta servicio para tener el conteo de las respuestas
+    SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData);
   };
 
   componentDidMount() {

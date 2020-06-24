@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result } from "antd";
-import { FrownOutlined, SmileOutlined, MehOutlined } from "@ant-design/icons";
+import { PageHeader, message, notification, Modal, Result, Button } from "antd";
+import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
 
@@ -123,6 +123,8 @@ class SurveyComponent extends Component {
         html: `<div style='width: 90%; margin: 0 auto;'>${textMessage}</div>`,
       });
     }
+
+    if (dataSurvey["questions"] === undefined) return;
 
     // El {page, ...rest} es temporal
     // Debido a que se puede setear la pagina de la pregunta si la pregunta tiene la propiedad 'page'
@@ -464,12 +466,11 @@ class SurveyComponent extends Component {
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
-          <PageHeader
-            className="site-page-header"
-            onBack={() => showListSurvey(sentSurveyAnswers)}
-            title=""
-            subTitle="Regresar a las encuestas"
-          />
+          <div style={{ marginTop: 20 }}>
+            <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
+              <ArrowLeftOutlined /> Volver a las encuestas
+            </Button>
+          </div>
         )}
         {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
 
