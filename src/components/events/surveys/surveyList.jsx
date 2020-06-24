@@ -6,8 +6,8 @@ const headStyle = {
   fontWeight: 300,
   textTransform: "uppercase",
   textAlign: "center",
-  color: "#000"
-}
+  color: "#000",
+};
 
 const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   return (
@@ -33,7 +33,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                     type={!survey.userHasVoted ? "primary" : ""}
                     className={`${
                       !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
-                      }`}
+                    }`}
                     onClick={() => showSurvey(survey)}
                     loading={survey.userHasVoted == undefined}>
                     {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
@@ -41,14 +41,14 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                 </div>
               </List.Item>
             ) : (
-                <List.Item key={survey._id} actions={[]}>
-                  <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                  <div>
-                    <Tag color="red">Cerrada</Tag>
-                  </div>
-                  <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
-                </List.Item>
-              )
+              <List.Item key={survey._id} actions={[]}>
+                <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                <div>
+                  <Tag color="red">Cerrada</Tag>
+                </div>
+                <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
+              </List.Item>
+            )
           }
         />
       )}
@@ -56,7 +56,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   );
 };
 
-export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
+export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
   const [surveyList, setSurveyList] = useState([]);
   const [anonymousSurveyList, setAnonymousSurveyList] = useState([]);
 
@@ -67,7 +67,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
   }, [jsonData]);
 
   return (
-    <Card title="Lista de Encuestas" className="survyCard" headStyle={headStyle}>
+    <Card title={`Lista de ${surveyLabel.name}`} className="survyCard" headStyle={headStyle}>
       {usuarioRegistrado ? (
         <Fragment>
           {surveyList && surveyList.length == 0 && (
@@ -94,7 +94,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                           !survey.userHasVoted
                             ? "animate__animated  animate__pulse animate__slower animate__infinite"
                             : ""
-                          }`}
+                        }`}
                         onClick={() => showSurvey(survey)}
                         loading={survey.userHasVoted == undefined}>
                         {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
@@ -102,25 +102,25 @@ export default ({ jsonData, showSurvey, usuarioRegistrado }) => {
                     </div>
                   </List.Item>
                 ) : (
-                    <List.Item key={survey._id} actions={[]}>
-                      <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
-                      <div>
-                        <Tag color="red">Cerrada</Tag>
-                      </div>
-                      <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
-                    </List.Item>
-                  )
+                  <List.Item key={survey._id} actions={[]}>
+                    <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
+                    <div>
+                      <Tag color="red">Cerrada</Tag>
+                    </div>
+                    <Button onClick={() => showSurvey(survey)}>Ver Resultados</Button>
+                  </List.Item>
+                )
               }
             />
           )}
         </Fragment>
       ) : (
-          <AnonymousList
-            anonymousSurveyList={anonymousSurveyList}
-            showSurvey={showSurvey}
-            usuarioRegistrado={usuarioRegistrado}
-          />
-        )}
+        <AnonymousList
+          anonymousSurveyList={anonymousSurveyList}
+          showSurvey={showSurvey}
+          usuarioRegistrado={usuarioRegistrado}
+        />
+      )}
     </Card>
   );
 };

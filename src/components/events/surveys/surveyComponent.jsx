@@ -31,10 +31,6 @@ const imageGraphics = {
 
 //firestore.collection(`event_activity_attendees/${this.props.event._id}/activities/${this.props.match.params.id}/attendees`);
 
-
-
-
-
 class SurveyComponent extends Component {
   constructor(props) {
     super(props);
@@ -164,10 +160,12 @@ class SurveyComponent extends Component {
 
     console.log("pages", surveyData);
     var self = this;
-    firestore.collection("surveys").doc("5ee2477d8c9bb1002b74c732")
-      .onSnapshot(function (doc) {
+    firestore
+      .collection("surveys")
+      .doc("5ee2477d8c9bb1002b74c732")
+      .onSnapshot(function(doc) {
         let data = doc.data();
-        let value = (data.freezeGame && data.freezeGame == "true") ? true : false;
+        let value = data.freezeGame && data.freezeGame == "true" ? true : false;
         self.setState({ freezeGame: value });
 
         console.log("Current data: ", data, value);
@@ -333,20 +331,19 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
-    if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
-
-    if (!isLastPage)
-      // Evento que se ejecuta al cambiar de pagina
-      values.onCurrentPageChanged.add((sender, options) => {
-        // Se obtiene el tiempo restante para poder usarlo en el modal
-        countDown = (values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent);
-        // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-        //if (countDown > 0) 
-        sender.stopTimer();
-
-      });
-
     if (surveyData.allow_gradable_survey == "true") {
+      if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
+
+      if (!isLastPage)
+        // Evento que se ejecuta al cambiar de pagina
+        values.onCurrentPageChanged.add((sender, options) => {
+          // Se obtiene el tiempo restante para poder usarlo en el modal
+          countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+          // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+          //if (countDown > 0)
+          sender.stopTimer();
+        });
+
       let response = await this.validateIfHasResponse(values);
       if (response.isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
@@ -427,7 +424,6 @@ class SurveyComponent extends Component {
             this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
             values.startTimer();
           }, secondsToGo * 1000); */
-
         }
 
         // Ejecuta serivicio para registrar puntos

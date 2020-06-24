@@ -3,7 +3,7 @@ import { Route, Switch, withRouter, Link } from "react-router-dom";
 import * as Cookie from "js-cookie";
 
 import { SurveyAnswers } from "./services";
-import API, { SurveysApi } from "../../../helpers/request";
+import API, { Actions, SurveysApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 
 import SurveyList from "./surveyList";
@@ -53,6 +53,14 @@ class SurveyForm extends Component {
       availableSurveysBar: props.availableSurveysBar || false,
       surveyRecentlyChanged: false,
       userVote: false,
+      surveyLabel: {},
+      defaultSurveyLabel: {
+        name: "Encuestas",
+        section: "survey",
+        icon: "FileUnknownOutlined",
+        checked: false,
+        permissions: "public",
+      },
     };
   }
 
@@ -70,6 +78,7 @@ class SurveyForm extends Component {
     let user = await this.getCurrentUser();
     this.setState({ currentUser: user }, this.listenSurveysData);
     this.userVote();
+    this.getItemsMenu();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -104,7 +113,7 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
         publishedSurveys = [];
-        surveySnapShot.forEach(function (doc) {
+        surveySnapShot.forEach(function(doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -203,6 +212,15 @@ class SurveyForm extends Component {
     });
   };
 
+  getItemsMenu = async () => {
+    let { defaultSurveyLabel } = this.state;
+    const { event } = this.props;
+    const response = await Actions.getAll(`/api/events/${event._id}`);
+
+    let surveyLabel = response.itemsMenu.survey || defaultSurveyLabel;
+    this.setState({ surveyLabel });
+  };
+
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
     if (typeof data == "boolean" || data == undefined) {
@@ -215,7 +233,16 @@ class SurveyForm extends Component {
   };
 
   render() {
-    let { idSurvey, surveysData, currentUser, openSurvey, usuarioRegistrado, userVote, surveyVisible } = this.state;
+    let {
+      idSurvey,
+      surveysData,
+      currentUser,
+      openSurvey,
+      usuarioRegistrado,
+      userVote,
+      surveyVisible,
+      surveyLabel,
+    } = this.state;
     const { event } = this.props;
 
     if (idSurvey)
@@ -241,18 +268,24 @@ class SurveyForm extends Component {
               surveysData.length > 0 && (
                 <span>
                   {!surveyVisible ? "Ver" : "Ocultar"}{" "}
-                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b> encuesta(s)
+                  <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b>
+                  {surveyLabel.name && surveyLabel.name.replace(/s$/i, "(s) ")}
                   disponible(s).
                 </span>
               )
             ) : (
-                <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-              )}
+              <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
+            )}
           </Button>
         )}
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (
           <Card>
-            <SurveyList jsonData={surveysData} usuarioRegistrado={usuarioRegistrado} showSurvey={this.toggleSurvey} />
+            <SurveyList
+              jsonData={surveysData}
+              usuarioRegistrado={usuarioRegistrado}
+              showSurvey={this.toggleSurvey}
+              surveyLabel={surveyLabel}
+            />
           </Card>
         )}
       </div>
