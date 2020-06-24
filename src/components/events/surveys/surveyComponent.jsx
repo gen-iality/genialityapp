@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result, Button } from "antd";
-import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { PageHeader, message, notification, Modal, Result } from "antd";
+import { FrownOutlined, SmileOutlined, MehOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
 
@@ -29,8 +29,6 @@ const imageGraphics = {
   maxWidth: "100%",
 };
 
-//firestore.collection(`event_activity_attendees/${this.props.event._id}/activities/${this.props.match.params.id}/attendees`);
-
 class SurveyComponent extends Component {
   constructor(props) {
     super(props);
@@ -43,11 +41,7 @@ class SurveyComponent extends Component {
       totalPoints: 0,
       eventUsers: [],
       voteWeight: 0,
-<<<<<<< HEAD
-      freezeGame: "false",
-=======
       freezeGame: false,
->>>>>>> survey
       showMessageOnComplete: false,
       aux: 0,
       currentPage: 0,
@@ -117,7 +111,7 @@ class SurveyComponent extends Component {
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 60;
+      dataSurvey.maxTimeToFinishPage = 10;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -266,6 +260,7 @@ class SurveyComponent extends Component {
       });
     });
   };
+
   // Funcion que muestra el feedback dependiendo del estado
   showStateMessage = (state, questionPoints) => {
     const objMessage = {
@@ -321,19 +316,18 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
+    if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
+
+    if (!isLastPage)
+      // Evento que se ejecuta al cambiar de pagina
+      values.onCurrentPageChanged.add((sender, options) => {
+        // Se obtiene el tiempo restante para poder usarlo en el modal
+        countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+        // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+        if (countDown > 0) sender.stopTimer();
+      });
+
     if (surveyData.allow_gradable_survey == "true") {
-      if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
-
-      if (!isLastPage)
-        // Evento que se ejecuta al cambiar de pagina
-        values.onCurrentPageChanged.add((sender, options) => {
-          // Se obtiene el tiempo restante para poder usarlo en el modal
-          countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-          // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-          //if (countDown > 0)
-          sender.stopTimer();
-        });
-
       let response = await this.validateIfHasResponse(values);
       if (response.isUndefined && countDown > 0) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
@@ -401,21 +395,6 @@ class SurveyComponent extends Component {
             result.subTitle = `${descriptionFeedback}
              Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
             this.setState({ feedbackMessage: result });
-<<<<<<< HEAD
-
-            if (secondsToGo <= 0 && !this.state.freezeGame) {
-              clearInterval(timer);
-              this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-              values.startTimer();
-            }
-          }, 1000);
-
-          /*setTimeout(() => {
-            clearInterval(timer);
-            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-            values.startTimer();
-          }, secondsToGo * 1000); */
-=======
 
             if (secondsToGo <= 0 && values.currentPageNo == this.state.currentPage && !this.state.freezeGame) {
               clearInterval(timer);
@@ -423,7 +402,6 @@ class SurveyComponent extends Component {
               values.startTimer();
             }
           }, 1000);
->>>>>>> survey
         }
 
         // Ejecuta serivicio para registrar puntos
@@ -486,11 +464,12 @@ class SurveyComponent extends Component {
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
-          <div style={{ marginTop: 20 }}>
-            <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a las encuestas
-            </Button>
-          </div>
+          <PageHeader
+            className="site-page-header"
+            onBack={() => showListSurvey(sentSurveyAnswers)}
+            title=""
+            subTitle="Regresar a las encuestas"
+          />
         )}
         {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
 
