@@ -231,6 +231,11 @@ class SurveyForm extends Component {
     }
   };
 
+  pluralToSingular = (char) => {
+    char = char.trim();
+    return `(${char}) `;
+  };
+
   render() {
     let {
       selectedSurvey,
@@ -269,7 +274,7 @@ class SurveyForm extends Component {
                 <span>
                   {!surveyVisible ? "Ver" : "Ocultar"}{" "}
                   <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b>
-                  {surveyLabel.name && surveyLabel.name.replace(/s$/i, "(s) ")}
+                  {surveyLabel.name && surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, this.pluralToSingular)}
                   disponible(s).
                 </span>
               )

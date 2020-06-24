@@ -97,7 +97,9 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
                         }`}
                         onClick={() => showSurvey(survey)}
                         loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
+                        {!survey.userHasVoted
+                          ? `Ir a ${surveyLabel.name ? surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, "") : "Encuesta"}`
+                          : " Ver Resultados"}
                       </Button>
                     </div>
                   </List.Item>
