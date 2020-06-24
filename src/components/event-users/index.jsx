@@ -57,9 +57,11 @@ class ListEventUser extends Component {
       lastUpdate: new Date(),
       disabledPersistence: false,
       percent_checked: 0,
-      percent_unchecked: 0
+      percent_unchecked: 0,
+      totalPesoVoto: 0
     };
     this.percentChecked = this.percentChecked.bind(this)
+    this.sumPesoVoto = this.sumPesoVoto.bind(this)
   }
 
   addDefaultLabels = (extraFields) => {
@@ -175,6 +177,7 @@ class ListEventUser extends Component {
             const usersToShow =
               ticket.length <= 0 || stage.length <= 0 ? [...newItems].slice(0, 50) : [...prevState.users];
             this.percentChecked(newItems)
+            this.sumPesoVoto(newItems);
             return {
               userReq: newItems,
               auxArr: newItems,
@@ -197,6 +200,7 @@ class ListEventUser extends Component {
       const errorData = handleRequestError(error);
       this.setState({ timeout: true, errorData });
     }
+
   }
 
   componentWillUnmount() {
@@ -204,6 +208,8 @@ class ListEventUser extends Component {
     //this.pilaListener()
   }
 
+
+  //Funcion para calcular el porcentaje
   percentChecked(users) {
     const usersChecked = []
     const usersUnchecked = []
@@ -224,7 +230,6 @@ class ListEventUser extends Component {
 
     this.setState({ percent_checked, percent_unchecked })
   }
-
   checkInCounter = (user, newItems, oldIndex, checkIn) => {
     // Condicional para sumar el contador del check in, si presenta cambios la informacion del usuario
     if (user.checked_in && user.checked_in != newItems[oldIndex].checked_in) return checkIn + 1;
@@ -488,6 +493,21 @@ class ListEventUser extends Component {
     this.setState({ typeScanner: "options" });
   };
 
+  sumPesoVoto(listado) {
+    let totalPesoVoto = 0
+
+    for (let i = 0; listado.length > i; i++) {
+      if (listado[i].checked_in === true) {
+        if (listado[i].properties.pesovoto) {
+          totalPesoVoto += parseFloat(listado[i].properties.pesovoto)
+        } else {
+          totalPesoVoto += 1.0
+        }
+      }
+    }
+    this.setState({ totalPesoVoto })
+  }
+
   render() {
     const {
       timeout,
@@ -506,7 +526,7 @@ class ListEventUser extends Component {
       lastUpdate,
       disabledPersistence,
       percent_checked,
-      percent_unchecked
+      totalPesoVoto
     } = this.state;
     const {
       event: { event_stages },
@@ -541,6 +561,20 @@ class ListEventUser extends Component {
                 <span className="tag is-white">% Usuarios</span>
               </div>
             </div>
+            {
+              extraFields.map((item, key) => (
+                item.name === "pesovoto" ? (
+                  <div key={key} className="is-2 column">
+                    <div className="tags" style={{ flexWrap: "nowrap" }}>
+                      <span className="tag is-light">{totalPesoVoto}</span>
+                      <span className="tag is-white">Total Peso Voto</span>
+                    </div>
+                  </div>
+                ) : (
+                    <></>
+                  )
+              ))
+            }
 
             <div className="is-3 column">
               <p className="is-size-7">

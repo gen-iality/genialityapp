@@ -152,9 +152,9 @@ class Datos extends Component {
 
     async privatePublic(id, field) {
         try {
-            let publish = !field
-            console.log(id, publish)
-            await EventFieldsApi.editOne({ publish }, id, this.eventID);
+            let privatePublic = !field
+            console.log(id, privatePublic)
+            await EventFieldsApi.editOne({ privatePublic }, id, this.eventID);
             this.fetchFields()
         } catch (e) {
             console.log(e)
@@ -201,10 +201,10 @@ class Datos extends Component {
                                     </td>
 
                                     <td>
-                                        <input className="is-checkradio is-primary" id={`publish${field.label}`}
-                                            type="checkbox" name={`publish`} checked={field.publish}
-                                            onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.publish)} />
-                                        <label htmlFor={`publish${field.label}`}></label>
+                                        <input className="is-checkradio is-primary" id={`privatePublic${field.label}`}
+                                            type="checkbox" name={`privatePublic`} checked={field.privatePublic}
+                                            onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.privatePublic)} />
+                                        <label htmlFor={`privatePublic${field.label}`}></label>
                                     </td>
 
                                     <td>

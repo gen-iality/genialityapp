@@ -81,6 +81,27 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
   );
 };
 
+export const SurveyPage = {
+  // Obtiene la pagina actual de la encuesta
+  getCurrentPage: (surveyId, self) => {
+    firestore
+      .collection("surveys")
+      .doc(surveyId)
+      .onSnapshot((survey) => {
+        let { currentPage } = survey.data();
+        self.setState({ currentPage });
+      });
+  },
+
+  // Actualiza la pagina actual de la encuesta
+  setCurrentPage: (surveyId, page) => {
+    firestore
+      .collection("surveys")
+      .doc(surveyId)
+      .update({ currentPage: page });
+  },
+};
+
 export const SurveyAnswers = {
   // Servicio para registrar votos para un usuario logeado
   registerWithUID: async (surveyId, questionId, dataAnswer, counter) => {
@@ -189,13 +210,13 @@ export const SurveyAnswers = {
     });
   },
   // Servicio para validar si un usuario ha respondido la encuesta
-  getUserById: async (eventId, surveyId, userId) => {
+  getUserById: async (eventId, survey, userId, onlyQuantityDocs) => {
     let counterDocuments = 0;
 
     return new Promise((resolve, reject) => {
       firestore
         .collectionGroup("responses")
-        .where("id_survey", "==", surveyId)
+        .where("id_survey", "==", survey._id)
         .where("id_user", "==", userId)
         .get()
         .then((result) => {
@@ -204,7 +225,12 @@ export const SurveyAnswers = {
               counterDocuments++;
             }
           });
-          if (counterDocuments > 0) {
+
+          if (onlyQuantityDocs) {
+            resolve(counterDocuments);
+          }
+
+          if (counterDocuments > 0 && counterDocuments == survey.questions.length) {
             resolve(true);
           } else {
             resolve(false);
