@@ -343,8 +343,13 @@ class SurveyComponent extends Component {
 
         const timer = setInterval(() => {
           secondsToGo -= 1;
-          result.subTitle = `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+
+          result.subTitle =
+            secondsToGo > 0
+              ? `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
+              : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
+
           this.setState({ feedbackMessage: result });
           if (secondsToGo <= 0 && !this.state.freezeGame) {
             clearInterval(timer);
@@ -394,8 +399,13 @@ class SurveyComponent extends Component {
 
           const timer = setInterval(() => {
             secondsToGo -= 1;
-            result.subTitle = `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+
+            result.subTitle =
+              secondsToGo > 0
+                ? `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
+                : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
+
             this.setState({ feedbackMessage: result });
 
             if (secondsToGo <= 0 && !this.state.freezeGame) {
