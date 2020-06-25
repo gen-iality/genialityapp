@@ -69,7 +69,7 @@ class SurveyComponent extends Component {
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
-        vote += parseInt(item.properties.pesovoto);
+        vote += parseFloat(item.properties.pesovoto);
       });
       this.setState({ eventUsers: response.data, voteWeight: vote });
     }
