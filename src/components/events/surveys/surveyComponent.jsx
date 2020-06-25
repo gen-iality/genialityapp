@@ -318,19 +318,19 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
-    if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
-
-    if (!isLastPage)
-      // Evento que se ejecuta al cambiar de pagina
-      values.onCurrentPageChanged.add((sender, options) => {
-        // Se obtiene el tiempo restante para poder usarlo en el modal
-        countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-        // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-        // if (countDown > 0)
-        sender.stopTimer();
-      });
-
     if (surveyData.allow_gradable_survey == "true") {
+      if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
+
+      if (!isLastPage)
+        // Evento que se ejecuta al cambiar de pagina
+        values.onCurrentPageChanged.add((sender, options) => {
+          // Se obtiene el tiempo restante para poder usarlo en el modal
+          countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+          // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+          // if (countDown > 0)
+          sender.stopTimer();
+        });
+
       let response = await this.validateIfHasResponse(values);
       if (response.isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
