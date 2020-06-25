@@ -103,7 +103,7 @@ class Graphics extends Component {
 
   render() {
     let { dataSurvey, currentPage, horizontalBar, referenceChart } = this.state;
-    const { showListSurvey } = this.props;
+    const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)
       return (
@@ -111,7 +111,7 @@ class Graphics extends Component {
           <Card className="survyCard">
             <div style={{ marginTop: 20, marginBottom: 20 }}>
               <Button ghost shape="round" onClick={() => showListSurvey()}>
-                <ArrowLeftOutlined /> Volver a las encuestas
+                <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
             </div>
             <Card>

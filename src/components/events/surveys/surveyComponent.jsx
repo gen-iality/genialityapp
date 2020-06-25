@@ -473,13 +473,13 @@ class SurveyComponent extends Component {
 
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
-    const { showListSurvey } = this.props;
+    const { showListSurvey, surveyLabel } = this.props;
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
           <div style={{ marginTop: 20 }}>
             <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a las encuestas
+              <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
             </Button>
           </div>
         )}
