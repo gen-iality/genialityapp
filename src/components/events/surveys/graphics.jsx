@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
-import { Pagination, Spin, Card, PageHeader } from "antd";
+import { Pagination, Spin, Card, PageHeader, Button } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
@@ -107,12 +109,11 @@ class Graphics extends Component {
       return (
         <>
           <Card className="survyCard">
-            <PageHeader
-              className="site-page-header"
-              onBack={() => showListSurvey()}
-              title=""
-              subTitle="Regresar a las encuestas"
-            />
+            <div style={{ marginTop: 20, marginBottom: 20 }}>
+              <Button ghost shape="round" onClick={() => showListSurvey()}>
+                <ArrowLeftOutlined /> Volver a las encuestas
+              </Button>
+            </div>
             <Card>
               <canvas id="chart"></canvas>
             </Card>
