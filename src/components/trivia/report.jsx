@@ -6,7 +6,7 @@ import EventContent from "../events/shared/content";
 import { SurveysApi } from "../../helpers/request";
 import { getTotalVotes } from "./services";
 
-import { Input, List, Card, Button, Spin, Empty, Row, Col } from "antd";
+import { Input, List, Card, Button, Spin, Empty, Row, Col, Modal } from "antd";
 
 class TriviaReport extends Component {
   constructor(props) {
@@ -14,6 +14,7 @@ class TriviaReport extends Component {
     this.state = {
       surveyQuestions: [],
       loading: true,
+      visibleModal: false,
     };
   }
 
@@ -41,6 +42,11 @@ class TriviaReport extends Component {
 
   seeReport = (questionId) => {};
 
+  toggleModal = () => {
+    let { visibleModal } = this.state;
+    this.setState({ visibleModal: !visibleModal });
+  };
+
   componentDidMount() {
     this.loadData();
   }
@@ -59,7 +65,7 @@ class TriviaReport extends Component {
               <Fragment>
                 <Row justify="end" style={{ marginBottom: 10 }}>
                   <Col>
-                    <Button>Votar por usuarios</Button>
+                    <Button onClick={this.toggleModal}>Votar por usuarios</Button>
                   </Col>
                 </Row>
 
@@ -90,6 +96,13 @@ class TriviaReport extends Component {
                     </List.Item>
                   )}
                 />
+                <Modal
+                  title="Basic Modal"
+                  visible={this.state.visibleModal}
+                  onOk={this.toggleModal}
+                  onCancel={this.toggleModal}>
+                  Este es el modal
+                </Modal>
               </Fragment>
             ) : (
               <Empty />
