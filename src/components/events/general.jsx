@@ -70,7 +70,7 @@ class General extends Component {
             });
             const { selectedCategories, selectedOrganizer, selectedType } = handleFields(organizers, types, categories, event);
             this.setState({ categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, loading: false })
-            if (event.dates.length > 0) {
+            if (event.dates) {
                 this.setState({ specificDates: true })
             } else {
                 this.setState({ specificDates: false })
