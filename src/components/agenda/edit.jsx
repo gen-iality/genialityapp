@@ -102,26 +102,46 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
     let days = [];
-    const init = Moment(event.date_start);
-    const end = Moment(event.date_end);
-    const diff = end.diff(init, "days");
-    //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-    for (let i = 0; i < diff + 1; i++) {
-      days.push(
-        Moment(init)
-          .add(i, "d")
-          .format("YYYY-MM-DD")
-      );
+
+    try {
+      const info = await EventsApi.getOne(event._id)
+      //se valida si no existe dates para dejar la logica 
+      //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
+      if (!info.dates) {
+        const init = Moment(event.date_start);
+        const end = Moment(event.date_end);
+        const diff = end.diff(init, "days");
+        //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+        for (let i = 0; i < diff + 1; i++) {
+          days.push(
+            Moment(init)
+              .add(i, "d")
+              .format("YYYY-MM-DD")
+          );
+        }
+        //Si existe dates, entonces envia al array push las fechas del array dates del evento
+      } else {
+        let date = info.dates
+        Date.parse(date)
+
+        for (var i = 0; i < date.length; i++) {
+          days.push(Moment(date[i], ["YYYY-MM-DD"]).format("YYYY-MM-DD"))
+        }
+      }
+    } catch (e) {
+      console.log(e)
     }
+
+
     let documents = await DocumentsApi.byEvent(this.props.event._id);
-    console.log(documents)
     let hostAvailable = await EventsApi.hostAvailable();
-    console.log(hostAvailable);
+    console.log(hostAvailable)
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
     }
     this.setState({ nameDocuments, hostAvailable });
+
     // getHostList(this.loadHostAvailable);
 
     let spaces = await SpacesApi.byEvent(this.props.event._id);
@@ -139,23 +159,11 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
-      const information = await getConfiguration(this.props.event._id, this.props.location.state.edit)
-      console.log(information)
-      if (information) {
-        this.setState({
-          availableText: information.habilitar_ingreso
-        });
-      } else {
-        this.setState({
-          availableText: false
-        });
-      }
 
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
-        video: info.video
       });
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
       const { date, hour_start, hour_end } = handleDate(info);
@@ -170,7 +178,7 @@ class AgendaEdit extends Component {
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
       });
     } else {
-      this.setState({ date: days[0] });
+      this.setState({ days });
     }
 
     const isLoading = { types: false, categories: false };
@@ -600,6 +608,7 @@ class AgendaEdit extends Component {
                 <div className="field">
                   <label className="label">Día</label>
                   <div className="columns">
+                    {console.log(this.state.days)}
                     {this.state.days.map((day, key) => {
                       return (
                         <div key={key} className="column">
@@ -612,7 +621,8 @@ class AgendaEdit extends Component {
                             value={day}
                             onChange={this.handleChange}
                           />
-                          <label htmlFor={`radioDay${key}`}>{day}</label>
+                          {console.log(day)}
+                          <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
                         </div>
                       );
                     })}

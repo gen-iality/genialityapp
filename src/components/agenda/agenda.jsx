@@ -44,11 +44,13 @@ class Agenda extends Component {
                 //days con las fechas del array dates con su respectivo formato
             } else {
                 let date = info.dates
+
                 Date.parse(date)
 
                 for (var i = 0; i < date.length; i++) {
-                    days.push(Moment(date, ["DD-MM-YYYY"]).format("DD-MM-YYYY"))
+                    days.push(Moment(date).format("DD-MM-YYYY"))
                 }
+
                 this.setState({ days: date, day: days[0] }, this.fetchAgenda);
             }
 
@@ -66,9 +68,8 @@ class Agenda extends Component {
 
     //Funcion para filtrar las actividades con base a la fecha de inicio
     filterByDay(day, agenda) {
-        let dayToCompare = Moment(day, ["DD-MM-YYYY"]).format("YYYY-MM-DD")
         const list = agenda.filter(
-            (agenda) => Moment(agenda.datetime_start).format("YYYY-MM-DD") === dayToCompare
+            (agenda) => Moment(agenda.datetime_start, ["YYYY-MM-DD"]).format("YYYY-MM-DD") === Moment(day, ["YYYY-MM-DD"]).format("YYYY-MM-DD"),
         )
         return list
     };
@@ -101,7 +102,7 @@ class Agenda extends Component {
                                     days.map((date, key) => <div onClick={() => this.selectDay(date)} key={key} className={`level-item date ${date === day ? "active" : ""}`}>
                                         <p className="subtitle is-5">
                                             <strong>{
-                                                Moment(date, ["DD-MM-YYYY"]).format("MMMM-DD")
+                                                Moment(date, ["YYYY-MM-DD"]).format("MMMM-DD")
                                             }</strong>
                                         </p>
                                     </div>

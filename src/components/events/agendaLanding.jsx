@@ -66,7 +66,7 @@ class Agenda extends Component {
       Date.parse(date);
 
       for (var i = 0; i < date.length; i++) {
-        days.push(Moment(date[i], ["DD-MM-YYYY"]).format("YYYY-MM-DD"));
+        days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
       console.log(days);
@@ -128,8 +128,8 @@ class Agenda extends Component {
         item.access_restriction_type === "EXCLUSIVE"
           ? "Exclusiva para: "
           : item.access_restriction_type === "SUGGESTED"
-          ? "Sugerida para: "
-          : "Abierta";
+            ? "Sugerida para: "
+            : "Abierta";
       item.roles = item.access_restriction_roles.map(({ name }) => name);
       return item;
     });
@@ -169,8 +169,8 @@ class Agenda extends Component {
         item.access_restriction_type === "EXCLUSIVE"
           ? "Exclusiva para: "
           : item.access_restriction_type === "SUGGESTED"
-          ? "Sugerida para: "
-          : "Abierta";
+            ? "Sugerida para: "
+            : "Abierta";
       item.roles = item.access_restriction_roles.map(({ name }) => name);
       return item;
     });
@@ -198,7 +198,7 @@ class Agenda extends Component {
 
   redirect = () => this.setState({ redirect: true });
 
-  async selected() {}
+  async selected() { }
 
   gotoActivity(activity) {
     this.setState({ currentActivity: activity });
@@ -299,7 +299,7 @@ class Agenda extends Component {
                     <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
                       <a className={`${date === day ? " select-day" : " unselect-day"}`}>
                         <span className="level-item date">
-                          {this.capitalizeDate(Moment(date, ["YYYY-MM-DD"]).format("MMMM DD"))}
+                          {this.capitalizeDate(Moment(date).format("MMMM DD"))}
                         </span>
                       </a>
                     </li>

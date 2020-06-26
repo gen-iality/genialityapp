@@ -61,7 +61,7 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                                         {
                                             dates.map((item, key) => (
                                                 <span key={key}>
-                                                    {Moment(item, ["DD-MM-YYYY"]).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}
+                                                    {Moment(item).format("DD MMMM") + ((dates.length - 1 > key) ? ", " : "")}
                                                 </span>
                                             ))
                                         }
