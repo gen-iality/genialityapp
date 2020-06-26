@@ -6,7 +6,7 @@ import EventContent from "../events/shared/content";
 import { SurveysApi } from "../../helpers/request";
 import { getTotalVotes } from "./services";
 
-import { Input, List, Card, Button, Spin, Empty } from "antd";
+import { Input, List, Card, Button, Spin, Empty, Row, Col, Modal } from "antd";
 
 class TriviaReport extends Component {
   constructor(props) {
@@ -14,6 +14,7 @@ class TriviaReport extends Component {
     this.state = {
       surveyQuestions: [],
       loading: true,
+      visibleModal: false,
     };
   }
 
@@ -41,6 +42,11 @@ class TriviaReport extends Component {
 
   seeReport = (questionId) => {};
 
+  toggleModal = () => {
+    let { visibleModal } = this.state;
+    this.setState({ visibleModal: !visibleModal });
+  };
+
   componentDidMount() {
     this.loadData();
   }
@@ -56,33 +62,48 @@ class TriviaReport extends Component {
         <Fragment>
           <EventContent title="Encuestas" closeAction={this.goBack}>
             {surveyQuestions.length > 0 ? (
-              <List
-                grid={{
-                  gutter: 16,
-                  xs: 1,
-                  sm: 2,
-                  md: 2,
-                  lg: 3,
-                  xl: 3,
-                  xxl: 3,
-                }}
-                dataSource={surveyQuestions}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Link
-                      to={{
-                        pathname: `${this.props.matchUrl}/report/${item.id}`,
-                        state: { titleQuestion: item.title, surveyId: location.state.report },
-                      }}>
-                      <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
-                        {item.quantityResponses == 0
-                          ? "No se ha respondido aun la pregunta"
-                          : `${item.quantityResponses} usuarios han respondido la pregunta`}
-                      </Card>
-                    </Link>
-                  </List.Item>
-                )}
-              />
+              <Fragment>
+                <Row justify="end" style={{ marginBottom: 10 }}>
+                  <Col>
+                    <Button onClick={this.toggleModal}>Votar por usuarios</Button>
+                  </Col>
+                </Row>
+
+                <List
+                  grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 2,
+                    lg: 3,
+                    xl: 3,
+                    xxl: 3,
+                  }}
+                  dataSource={surveyQuestions}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <Link
+                        to={{
+                          pathname: `${this.props.matchUrl}/report/${item.id}`,
+                          state: { titleQuestion: item.title, surveyId: location.state.report },
+                        }}>
+                        <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
+                          {item.quantityResponses == 0
+                            ? "No se ha respondido aun la pregunta"
+                            : `${item.quantityResponses} usuarios han respondido la pregunta`}
+                        </Card>
+                      </Link>
+                    </List.Item>
+                  )}
+                />
+                <Modal
+                  title="Basic Modal"
+                  visible={this.state.visibleModal}
+                  onOk={this.toggleModal}
+                  onCancel={this.toggleModal}>
+                  Este es el modal
+                </Modal>
+              </Fragment>
             ) : (
               <Empty />
             )}

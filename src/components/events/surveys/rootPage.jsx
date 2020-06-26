@@ -37,10 +37,11 @@ export default class RootPage extends Component {
 
   seeIfUserHasVote = async () => {
     let { idSurvey, hasVote, eventId, currentUser } = this.state;
+    const { userHasVoted, selectedSurvey } = this.props;
 
     if (currentUser) {
-      let userHasVoted = await SurveyAnswers.getUserById(eventId, idSurvey, currentUser._id);
-      this.setState({ hasVote: userHasVoted, isLoading: false });
+      let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
+      this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
     }
 
     // Esto solo se ejecuta si no hay algun usuario logeado
@@ -54,20 +55,22 @@ export default class RootPage extends Component {
   };
 
   render() {
-    let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey } = this.state;
-    const { toggleSurvey, openSurvey } = this.props;
+    let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter } = this.state;
+    const { toggleSurvey, openSurvey, surveyLabel } = this.props;
     console.log("id de la encuesta:", idSurvey);
     if (!isLoading)
       return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
-        <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
+        <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
         <Card className="survyCard">
           <SurveyComponent
+            responseCounter={responseCounter}
             idSurvey={idSurvey}
             showListSurvey={toggleSurvey}
             eventId={eventId}
             currentUser={currentUser}
             singlePage={true}
+            surveyLabel={surveyLabel}
           />
         </Card>
       );

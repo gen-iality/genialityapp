@@ -66,6 +66,11 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
     console.log(usuarioRegistrado);
   }, [jsonData]);
 
+  const pluralToSingular = (char, t1, t2) => {
+    if (t1 != undefined) return `${t1}${t2}`;
+    return "";
+  };
+
   return (
     <Card title={`Lista de ${surveyLabel.name}`} className="survyCard" headStyle={headStyle}>
       {usuarioRegistrado ? (
@@ -97,7 +102,13 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
                         }`}
                         onClick={() => showSurvey(survey)}
                         loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
+                        {!survey.userHasVoted
+                          ? `Ir a ${
+                              surveyLabel.name
+                                ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
+                                : "Encuesta"
+                            }`
+                          : " Ver Resultados"}
                       </Button>
                     </div>
                   </List.Item>

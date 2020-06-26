@@ -43,11 +43,9 @@ class SurveyForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      idSurvey: null,
+      selectedSurvey: {},
       surveysData: undefined,
-      hasVote: false,
       currentUser: null,
-      openSurvey: false,
       loading: true,
       surveyVisible: false,
       availableSurveysBar: props.availableSurveysBar || false,
@@ -154,7 +152,7 @@ class SurveyForm extends Component {
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
       surveysData.forEach(async (survey, index, arr) => {
         if (currentUser) {
-          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey._id, currentUser._id);
+          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey, currentUser._id);
           surveys.push({ ...arr[index], userHasVoted });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -224,20 +222,25 @@ class SurveyForm extends Component {
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
     if (typeof data == "boolean" || data == undefined) {
-      this.setState({ idSurvey: null });
+      this.setState({ selectedSurvey: {} });
       if (data == true) this.listenSurveysData();
     } else if (data.hasOwnProperty("_id")) {
-      let { _id, open } = data;
-      this.setState({ idSurvey: _id, openSurvey: open });
+      let { _id, open, userHasVoted, questions } = data;
+      let selectedSurvey = { _id, open, userHasVoted, questions };
+      this.setState({ selectedSurvey });
     }
+  };
+
+  pluralToSingular = (char) => {
+    char = char.trim();
+    return `(${char}) `;
   };
 
   render() {
     let {
-      idSurvey,
+      selectedSurvey,
       surveysData,
       currentUser,
-      openSurvey,
       usuarioRegistrado,
       userVote,
       surveyVisible,
@@ -245,14 +248,17 @@ class SurveyForm extends Component {
     } = this.state;
     const { event } = this.props;
 
-    if (idSurvey)
+    if (selectedSurvey.hasOwnProperty("_id"))
       return (
         <RootPage
-          idSurvey={idSurvey}
+          selectedSurvey={selectedSurvey}
+          userHasVoted={selectedSurvey.userHasVoted}
+          idSurvey={selectedSurvey._id}
           toggleSurvey={this.toggleSurvey}
           eventId={event._id}
           currentUser={currentUser}
-          openSurvey={openSurvey}
+          openSurvey={selectedSurvey.open}
+          surveyLabel={surveyLabel}
         />
       );
 
@@ -269,7 +275,7 @@ class SurveyForm extends Component {
                 <span>
                   {!surveyVisible ? "Ver" : "Ocultar"}{" "}
                   <b style={surveyButtons.text}>&nbsp;{surveysData && surveysData.length}&nbsp;</b>
-                  {surveyLabel.name && surveyLabel.name.replace(/s$/i, "(s) ")}
+                  {surveyLabel.name && surveyLabel.name.replace(/((e)?s)$|(e)?s\s/gi, this.pluralToSingular)}
                   disponible(s).
                 </span>
               )
