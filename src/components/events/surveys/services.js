@@ -12,7 +12,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
       .doc(questionId);
 
     // Se valida si el voto tiene valor de lo contrario sumara 1
-    let vote = voteValue != null || voteValue != undefined ? parseFloat(voteValue) : 1;
+    let vote = typeof voteValue == "number" ? parseFloat(voteValue) : 1;
 
     // Se crea un objeto que se asociara a las opciones de las preguntas
     // Y se inicializan con valores en 0, para luego realizar el conteo
@@ -49,7 +49,7 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
   createAndInitializeCount(surveyId, questionId, optionQuantity, optionIndex, voteValue).then(
     ({ surveyId, message, questionId, optionIndex }) => {
       // Se valida si el voto tiene valor de lo contrario sumara 1
-      let vote = voteValue != null || voteValue != undefined ? parseFloat(voteValue) : 1;
+      let vote = typeof voteValue == "number" ? parseFloat(voteValue) : 1;
 
       const shard_ref = firestore
         .collection("surveys")
