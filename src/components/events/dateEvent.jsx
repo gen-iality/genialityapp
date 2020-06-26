@@ -50,20 +50,23 @@ class DateEvent extends React.Component {
 
         let dates = info.dates
         let date = []
+        if (dates !== undefined) {
+            for (let i = 0; i < dates.length; i++) {
+                let dateUTC = Date.parse(dates[i])
+                var dateUtc = new Date(dateUTC)
+                var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
+                console.log(utc)
 
-        for (let i = 0; i < dates.length; i++) {
-            let dateUTC = Date.parse(dates[i])
-            var dateUtc = new Date(dateUTC)
-            var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
-            console.log(utc)
+                date.push(utc)
+            }
 
-            date.push(utc)
+            this.setState({
+                currentChannel: dates.length,
+                dates: date
+            })
         }
 
-        this.setState({
-            currentChannel: dates.length,
-            dates: date
-        })
+
 
         console.log(await this.state.dates)
     }
