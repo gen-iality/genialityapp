@@ -165,11 +165,14 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-
+    console.log("checkin eventUser externo", event._id, user._id);
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
-      console.log("checkin eventUser", eventUser, event._id, user._id);
+
+      console.log("checkin eventUser interno", eventUser, event._id, user._id);
     }
+
+
 
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
@@ -200,7 +203,7 @@ class Landing extends Component {
         />
       ),
       survey: <SurveyForm event={event} />,
-      certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} />,
+      certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrado={this.state.eventUser} />,
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
