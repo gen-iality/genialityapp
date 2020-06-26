@@ -98,6 +98,7 @@ export const EventsApi = {
     const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
+
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
     console.log("checkin eventUser", response);
@@ -105,6 +106,14 @@ export const EventsApi = {
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
+
+  /* Según un nuevo modelo de los eventUsers un solo usuario puede tener varios eventUsers para un evento */
+  getcurrentUserEventUsers: async (event_id) => {
+    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
+    let eventUsers = response.data ? response.data : null;
+    return eventUsers;
+  },
+
   getPublic: async (query) => {
     return await Actions.getAll(`/api/events${query}`, true);
   },

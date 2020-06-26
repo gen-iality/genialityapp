@@ -144,6 +144,7 @@ class Landing extends Component {
   async componentDidMount() {
     let user = null;
     let eventUser = null;
+    let eventUsers = null;
 
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
       searchParams = new URLSearchParams(queryParamsString),
@@ -168,6 +169,7 @@ class Landing extends Component {
     console.log("checkin eventUser externo", event._id, user._id);
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
+      eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
 
       console.log("checkin eventUser interno", eventUser, event._id, user._id);
     }
@@ -187,7 +189,7 @@ class Landing extends Component {
 
 
 
-    this.setState({ event, eventUser, data: user, currentUser: user, namesUser: namesUser })
+    this.setState({ event, eventUser, eventUsers, data: user, currentUser: user, namesUser: namesUser })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
@@ -203,7 +205,7 @@ class Landing extends Component {
         />
       ),
       survey: <SurveyForm event={event} />,
-      certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrado={this.state.eventUser} />,
+      certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
       speakers: <SpeakersForm eventId={event._id} />,
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
