@@ -258,6 +258,7 @@ class SurveyForm extends Component {
           eventId={event._id}
           currentUser={currentUser}
           openSurvey={selectedSurvey.open}
+          surveyLabel={surveyLabel}
         />
       );
 

@@ -56,11 +56,11 @@ export default class RootPage extends Component {
 
   render() {
     let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter } = this.state;
-    const { toggleSurvey, openSurvey } = this.props;
+    const { toggleSurvey, openSurvey, surveyLabel } = this.props;
     console.log("id de la encuesta:", idSurvey);
     if (!isLoading)
       return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
-        <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} />
+        <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
         <Card className="survyCard">
           <SurveyComponent
@@ -70,6 +70,7 @@ export default class RootPage extends Component {
             eventId={eventId}
             currentUser={currentUser}
             singlePage={true}
+            surveyLabel={surveyLabel}
           />
         </Card>
       );

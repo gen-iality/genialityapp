@@ -85,7 +85,7 @@ class DatosModal extends Component {
         html.classList.remove('is-clipped');
         const info = Object.assign({}, this.state.info);
         info.name = toCapitalizeLower(info.name);
-        if (info.type !== "list") delete info.options;
+        if (info.type !== "list" && info.type !== "multiplelist") delete info.options;
         this.props.action(info);
         const initModal = { name: '', mandatory: false, visible: false, label: '', description: '', type: '', options: [] };
         this.setState({ info: initModal });

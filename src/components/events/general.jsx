@@ -16,6 +16,7 @@ import { DateTimePicker } from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
 import DateEvent from "./dateEvent";
+import { Switch } from 'antd';
 Moment.locale('es');
 
 
@@ -41,8 +42,10 @@ class General extends Component {
             serverError: false,
             loading: true,
             info: {},
-            infoApp: []
+            infoApp: [],
+            specificDates: false
         };
+        this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
     }
@@ -67,6 +70,11 @@ class General extends Component {
             });
             const { selectedCategories, selectedOrganizer, selectedType } = handleFields(organizers, types, categories, event);
             this.setState({ categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, loading: false })
+            if (event.dates) {
+                this.setState({ specificDates: true })
+            } else {
+                this.setState({ specificDates: false })
+            }
         }
         catch (error) {
             // Error
@@ -324,11 +332,15 @@ class General extends Component {
         this.setState({ modal: true });
     };
 
+    specificDates(checked) {
+        this.setState({ specificDates: checked })
+    }
+
     render() {
         if (this.state.loading) return <Loading />;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            valid, timeout, errorData, serverError } = this.state;
+            valid, timeout, errorData, serverError, specificDates } = this.state;
         return (
             <React.Fragment>
                 <div className="columns general">
@@ -469,64 +481,76 @@ class General extends Component {
                                     onChange={this.handleChange} />
                             </div>
                         </div> */}
+                        <div>
+                            <label className="label has-text-grey-light" style={{ marginRight: "3%" }}>Especificar fechas</label>
+                            <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                        </div>
 
-                        <div className="field">
-                            <div className="columns is-mobile">
-                                <div className="column inner-column">
+                        {
+                            specificDates === false ?
+                                <div>
                                     <div className="field">
-                                        <label className="label has-text-grey-light">Fecha Inicio</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.date_start}
-                                                format={'DD/MM/YYYY'}
-                                                time={false}
-                                                onChange={value => this.changeDate(value, "date_start")} />
+                                        <div className="columns is-mobile">
+                                            <div className="column inner-column">
+                                                <div className="field">
+                                                    <label className="label has-text-grey-light">Fecha Inicio</label>
+                                                    <div className="control">
+                                                        <DateTimePicker
+                                                            value={event.date_start}
+                                                            format={'DD/MM/YYYY'}
+                                                            time={false}
+                                                            onChange={value => this.changeDate(value, "date_start")} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="column inner-column">
+                                                <div className="field">
+                                                    <label className="label has-text-grey-light">Hora Inicio</label>
+                                                    <div className="control">
+                                                        <DateTimePicker
+                                                            value={event.hour_start}
+                                                            step={60}
+                                                            date={false}
+                                                            onChange={value => this.changeDate(value, "hour_start")} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="field">
+                                        <div className="columns is-mobile">
+                                            <div className="column inner-column">
+                                                <div className="field">
+                                                    <label className="label has-text-grey-light">Fecha Fin</label>
+                                                    <div className="control">
+                                                        <DateTimePicker
+                                                            value={event.date_end}
+                                                            min={this.minDate}
+                                                            format={'DD/MM/YYYY'}
+                                                            time={false}
+                                                            onChange={value => this.changeDate(value, "date_end")} />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="column inner-column">
+                                                <div className="field">
+                                                    <label className="label has-text-grey-light">Hora Fin</label>
+                                                    <div className="control">
+                                                        <DateTimePicker
+                                                            value={event.hour_end}
+                                                            step={60}
+                                                            date={false}
+                                                            onChange={value => this.changeDate(value, "hour_end")} />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="column inner-column">
-                                    <div className="field">
-                                        <label className="label has-text-grey-light">Hora Inicio</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.hour_start}
-                                                step={60}
-                                                date={false}
-                                                onChange={value => this.changeDate(value, "hour_start")} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="field">
-                            <div className="columns is-mobile">
-                                <div className="column inner-column">
-                                    <div className="field">
-                                        <label className="label has-text-grey-light">Fecha Fin</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.date_end}
-                                                min={this.minDate}
-                                                format={'DD/MM/YYYY'}
-                                                time={false}
-                                                onChange={value => this.changeDate(value, "date_end")} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="column inner-column">
-                                    <div className="field">
-                                        <label className="label has-text-grey-light">Hora Fin</label>
-                                        <div className="control">
-                                            <DateTimePicker
-                                                value={event.hour_end}
-                                                step={60}
-                                                date={false}
-                                                onChange={value => this.changeDate(value, "hour_end")} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                                :
+                                <DateEvent eventId={this.props.event._id} />
+                        }
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">

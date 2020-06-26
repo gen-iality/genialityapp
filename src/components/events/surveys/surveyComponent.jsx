@@ -69,7 +69,7 @@ class SurveyComponent extends Component {
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
-        vote += parseInt(item.properties.pesovoto);
+        vote += parseFloat(item.properties.pesovoto);
       });
       this.setState({ eventUsers: response.data, voteWeight: vote });
     }
@@ -318,20 +318,21 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
-    if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
-
-    if (!isLastPage)
-      // Evento que se ejecuta al cambiar de pagina
-      values.onCurrentPageChanged.add((sender, options) => {
-        // Se obtiene el tiempo restante para poder usarlo en el modal
-        countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
-        // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
-        if (countDown > 0) sender.stopTimer();
-      });
-
     if (surveyData.allow_gradable_survey == "true") {
+      if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
+
+      if (!isLastPage)
+        // Evento que se ejecuta al cambiar de pagina
+        values.onCurrentPageChanged.add((sender, options) => {
+          // Se obtiene el tiempo restante para poder usarlo en el modal
+          countDown = values.maxTimeToFinishPage - options.oldCurrentPage.timeSpent;
+          // Unicamente se detendra el tiempo si el tiempo restante del contador es mayor a 0
+          // if (countDown > 0)
+          sender.stopTimer();
+        });
+
       let response = await this.validateIfHasResponse(values);
-      if (response.isUndefined && countDown > 0) {
+      if (response.isUndefined) {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage("warning");
@@ -343,8 +344,13 @@ class SurveyComponent extends Component {
 
         const timer = setInterval(() => {
           secondsToGo -= 1;
-          result.subTitle = `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+
+          result.subTitle =
+            secondsToGo > 0
+              ? `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
+              : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
+
           this.setState({ feedbackMessage: result });
           if (secondsToGo <= 0 && !this.state.freezeGame) {
             clearInterval(timer);
@@ -394,8 +400,13 @@ class SurveyComponent extends Component {
 
           const timer = setInterval(() => {
             secondsToGo -= 1;
-            result.subTitle = `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
+
+            result.subTitle =
+              secondsToGo > 0
+                ? `${descriptionFeedback}
+             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
+                : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
+
             this.setState({ feedbackMessage: result });
 
             if (secondsToGo <= 0 && !this.state.freezeGame) {
@@ -462,13 +473,13 @@ class SurveyComponent extends Component {
 
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
-    const { showListSurvey } = this.props;
+    const { showListSurvey, surveyLabel } = this.props;
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
           <div style={{ marginTop: 20 }}>
             <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a las encuestas
+              <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
             </Button>
           </div>
         )}

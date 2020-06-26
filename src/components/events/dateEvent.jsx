@@ -1,132 +1,123 @@
-import React, { Component } from "react"
-import { withRouter } from "react-router"
-import moment from 'moment';
+
+import React from 'react'
+import Calendar from 'react-calendar-multiday'
+import { omit } from 'ramda'
+import moment from 'moment'
 import { EventsApi } from "../../helpers/request";
-import { Form, Input, Button, DatePicker } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, notification } from 'antd';
 
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 20 },
-    },
-};
-const formItemLayoutWithOutLabel = {
-    wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-    },
-};
+import DayPicker, { DateUtils } from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
 
-class DateEvent extends Component {
+const container = {
+    width: '375px',
+    float: 'left',
+    marginRight: '50px',
+    marginBottom: '50px',
+    fontFamily: 'system-ui',
+}
+
+const buttonStyle = {
+    border: 'none',
+    fontSize: '.75em',
+    outline: 'none',
+    marginLeft: '10px',
+    cursor: 'pointer',
+}
+
+const reactToChange = (ob) => {
+    console.log(ob)
+}
+
+class DateEvent extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
-            value: moment(new Date()),
-            selectedValue: moment('2017-01-25'),
-            dateEvent: [],
-            dates: []
+            currentChannel: 0,
+            dates: [],
+            properties: {}
         }
-        this.onFinish = this.onFinish.bind(this)
+        this.handleDayClick = this.handleDayClick.bind(this);
+        this.save = this.save.bind(this);
     }
 
-    async componentDidMount() {
-        const dateEvent = await EventsApi.getOne(this.props.eventId)
-        this.setState({ dateEvent: dateEvent.dates, fields: { names: dateEvent.dates } })
+    componentDidMount() {
+        this.getDates()
     }
 
-    remove(date) {
-        console.log(this.state.dateEvent)
-        console.log(date)
-        var i = this.state.dateEvent.indexOf(date);
-        if (i !== -1) {
-            this.state.dateEvent.splice(i, 1);
+    async getDates() {
+        const info = await EventsApi.getOne(this.props.eventId)
+
+        let dates = info.dates
+        let date = []
+        if (dates !== undefined) {
+            for (let i = 0; i < dates.length; i++) {
+                let dateUTC = Date.parse(dates[i])
+                var dateUtc = new Date(dateUTC)
+                var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
+                console.log(utc)
+
+                date.push(utc)
+            }
+
+            this.setState({
+                currentChannel: dates.length,
+                dates: date
+            })
         }
-        console.log(this.state.dateEvent)
+
+
+
+        console.log(await this.state.dates)
     }
 
-    async onFinish(values) {
-        const dateEvent = []
-        for (let i = 0; i < values.names.length; i++) {
-            dateEvent.push(moment(values.names[i]).format("DD-MM-YYYY"));
-        };
+    handleDayClick(day, { selected }) {
+        const { dates } = this.state;
+        if (selected) {
+            const selectedIndex = dates.findIndex(selectedDay =>
+                DateUtils.isSameDay(selectedDay, day)
+            );
+            dates.splice(selectedIndex, 1);
+        } else {
+            dates.push(day);
+        }
 
-        let dateEventUnique = Array.from(new Set(dateEvent))
-        dateEventUnique.sort()
+        dates.sort(function (a, b) {
+            let dateA = new Date(a)
+            let dateB = new Date(b)
+            return dateA - dateB;
+        });
 
-        await this.setState({
-            dates: { dates: dateEventUnique },
-            dateEvent: dateEventUnique,
-        })
-        console.log(dateEventUnique)
+        this.setState({
+            properties: {
+                dates
+            }, dates
+        });
+    }
 
-        const info = await EventsApi.editOne(await this.state.dates, this.props.eventId)
+    async save() {
+        const info = await EventsApi.editOne(this.state.properties, this.props.eventId)
         console.log(info)
-    };
+
+        notification.open({
+            message: 'Datos guardados',
+            description:
+                'Las fechas especificas fueron guardadas',
+        });
+    }
     render() {
-
-        const dateFormat = 'DD-MM-YYYY';
-        const { dateEvent, fields } = this.state;
         return (
-            <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel} onFinish={this.onFinish}>
-                <Form.List name="names">
-                    {(fields, { add, remove }) => {
-                        return (
-                            <div>
-                                {fields.map((field, index) => (
-                                    <Form.Item
-                                        {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                        label={index === 0 ? 'Agregar fecha' : ''}
-                                        required={false}
-                                        key={index}
-                                    >
-                                        <Form.Item
-                                            {...field}
-                                            validateTrigger={['onChange', 'onBlur']}
-                                            noStyle
-                                        >
-                                            {console.log(fields)}
-                                            <DatePicker style={{ width: '60%' }} />
-                                        </Form.Item>
-                                        {fields.length > 1 ? (
-                                            <MinusCircleOutlined
-                                                className="dynamic-delete-button"
-                                                style={{ margin: '0 8px' }}
-                                                onClick={() => {
-                                                    remove(field.name);
-                                                }}
-                                            />
-                                        ) : null}
-                                    </Form.Item>
-                                ))}
-                                <Form.Item>
-                                    <Button
-                                        type="dashed"
-                                        onClick={() => {
-                                            add();
-                                        }}
-                                        style={{ width: '60%' }}
-                                    >
-                                        <PlusOutlined /> Add field
-                                    </Button>
-                                </Form.Item>
-                            </div>
-                        );
-                    }}
-                </Form.List>
-
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
-        );
+            <div>
+                <div style={{ marginTop: "3%" }}>
+                    <DayPicker
+                        selectedDays={this.state.dates}
+                        onDayClick={this.handleDayClick}
+                    />
+                </div>
+                <Button style={{ marginTop: "3%" }} type="primary" onClick={this.save}>Guardar</Button>
+            </div>
+        )
     }
 }
 
-export default withRouter(DateEvent)
+export default (DateEvent)
