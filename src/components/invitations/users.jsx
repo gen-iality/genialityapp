@@ -222,6 +222,7 @@ class UsersRsvp extends Component {
 
   //Check if user exist at selection state
   isChecked = id => {
+
     if (this.state.selection.length > 0) {
       const pos = this.state.selection
         .map(e => {
@@ -444,8 +445,8 @@ class UsersRsvp extends Component {
                   classes={"column is-7"}
                   data={this.state.usersReq}
                   kind={"user"}
+                  event={this.props.event._id}
                   searchResult={this.searchResult}
-
                   clear={this.state.clearSearch}
                 />
                 <div className="column is-2" />
