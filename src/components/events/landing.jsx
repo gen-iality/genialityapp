@@ -166,7 +166,6 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-    console.log("checkin eventUser externo", event._id, user._id);
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
