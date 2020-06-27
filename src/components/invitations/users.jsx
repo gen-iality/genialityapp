@@ -54,6 +54,7 @@ class UsersRsvp extends Component {
     try {
       const { event } = this.props;
       const properties = event.user_properties;
+
       let columnsKey = fieldNameEmailFirst(properties);
       this.setState({ columnsKey, tickets: event.tickets })
 
@@ -481,7 +482,7 @@ class UsersRsvp extends Component {
                   </p>
                 </div>
 
-                {/*
+
                 <div className="column is-6">
                   <label className="label">Filtrar por ticket</label>
                   <div className="select">
@@ -500,10 +501,9 @@ class UsersRsvp extends Component {
                       ) : (
                           <p>No hay ticketes aun</p>
                         )}
-    
+
                   </div>
                 </div>
-                */}
 
               </div>
               {/* {this.state.auxArr.length > 0 && (
