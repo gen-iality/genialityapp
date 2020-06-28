@@ -57,6 +57,7 @@ const NewsApp = asyncComponent(() => import("../news/news"));
 
 const FAQS = asyncComponent(() => import("../faqs"));
 const Trivia = asyncComponent(() => import("../trivia/trivia"));
+const EventsTicket = asyncComponent(() => import("../ticketsEvent/index"));
 
 Moment.locale("es");
 momentLocalizer();
@@ -254,6 +255,7 @@ class Event extends Component {
               />
               <Route path={`${match.url}/news`} render={() => <NewsApp eventId={this.state.event._id} />} />
               <Route path={`${match.url}/faqs`} render={() => <FAQS eventId={this.state.event._id} />} />
+              <Route path={`${match.url}/ticketsEvent`} render={() => <EventsTicket eventId={this.state.event._id} />} />
               {/* <Route path={`${match.url}/trivia`} render={()=><Trivia eventId={this.state.event._id}/>}/> */}
               <Route component={NoMatch} />
             </Switch>

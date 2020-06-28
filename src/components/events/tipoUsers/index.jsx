@@ -1,19 +1,19 @@
-import React, {Component, Fragment} from "react";
+import React, { Component, Fragment } from "react";
 import Moment from "moment";
-import {RolAttApi} from "../../../helpers/request";
+import { RolAttApi } from "../../../helpers/request";
 import EventContent from "../shared/content";
 import EvenTable from "../shared/table";
 import TableAction from "../shared/tableAction";
-import {handleRequestError, sweetAlert} from "../../../helpers/utils";
+import { handleRequestError, sweetAlert } from "../../../helpers/utils";
 
 class TipoAsistentes extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            list:[],
-            id:'',
-            deleteID:'',
-            name:''
+            list: [],
+            id: '',
+            deleteID: '',
+            name: ''
         };
     }
 
@@ -21,20 +21,20 @@ class TipoAsistentes extends Component {
         this.fetchItems()
     }
 
-    fetchItems = async() => {
+    fetchItems = async () => {
         const list = await RolAttApi.byEvent(this.props.eventID);
-        this.setState({list})
+        this.setState({ list })
     }
 
     onChange = (e) => {
-        this.setState({name:e.target.value})
+        this.setState({ name: e.target.value })
     };
 
     newRole = () => {
-        if(!this.state.list.find(({_id})=>_id === "new")) {
+        if (!this.state.list.find(({ _id }) => _id === "new")) {
             this.setState(state => {
-                const list = state.list.concat({name: '', created_at: new Date(), _id: 'new'});
-                return {list: list, id: 'new',};
+                const list = state.list.concat({ name: '', created_at: new Date(), _id: 'new' });
+                return { list: list, id: 'new', };
             });
         }
     };
@@ -42,14 +42,14 @@ class TipoAsistentes extends Component {
     removeNew = () => {
         this.setState(state => {
             const list = state.list.filter(item => item._id !== "new");
-            return {list:list,id:"",name:""};
+            return { list: list, id: "", name: "" };
         });
     };
 
-    saveItem = async()=> {
-        try{
-            if(this.state.id !== 'new') {
-                await RolAttApi.editOne({name: this.state.name}, this.state.id, this.props.eventID);
+    saveItem = async () => {
+        try {
+            if (this.state.id !== 'new') {
+                await RolAttApi.editOne({ name: this.state.name }, this.state.id, this.props.eventID);
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -57,10 +57,10 @@ class TipoAsistentes extends Component {
                             return item;
                         } else return item;
                     });
-                    return {list: list, id: "", name: ""};
+                    return { list: list, id: "", name: "" };
                 });
-            }else{
-                const newRole = await RolAttApi.create({name: this.state.name, event_id:this.props.eventID});
+            } else {
+                const newRole = await RolAttApi.create({ name: this.state.name, event_id: this.props.eventID });
                 this.setState(state => {
                     const list = state.list.map(item => {
                         if (item._id === state.id) {
@@ -70,51 +70,51 @@ class TipoAsistentes extends Component {
                             return item;
                         } else return item;
                     });
-                    return {list: list, id: "", name: ""};
+                    return { list: list, id: "", name: "" };
                 });
             }
-        }catch (e) {
+        } catch (e) {
             console.log(e);
         }
     };
 
-    editItem = (cert) => this.setState({id:cert._id,name:cert.name});
+    editItem = (cert) => this.setState({ id: cert._id, name: cert.name });
 
     removeItem = (deleteID) => {
-        sweetAlert.twoButton(`Está seguro de borrar este tipo de asistente`, "warning", true, "Borrar", async (result)=>{
-            try{
-                if(result.value){
+        sweetAlert.twoButton(`Está seguro de borrar este tipo de asistente`, "warning", true, "Borrar", async (result) => {
+            try {
+                if (result.value) {
                     sweetAlert.showLoading("Espera (:", "Borrando...");
                     await RolAttApi.deleteOne(deleteID, this.props.eventID);
-                    this.setState(state => ({id:"",name:""}));
+                    this.setState(state => ({ id: "", name: "" }));
                     this.fetchItems();
                     sweetAlert.hideLoading();
                 }
-            }catch (e) {
+            } catch (e) {
                 sweetAlert.showError(handleRequestError(e))
             }
         });
     };
 
     render() {
-        const {list, id, name} = this.state;
+        const { list, id, name } = this.state;
         return (
             <Fragment>
                 <EventContent title={"Tipo de asistentes"} description={"Clasifique a los asistentes en categorías personalizadas. Ej: Asistente, conferencista, mesa de honor, etc."}
                     addAction={this.newRole} addTitle={"Nuevo rol"}>
-                    <EvenTable head={["Nombre","Fecha Creación","Acciones"]}>
-                        {list.map((cert,key)=>{
+                    <EvenTable head={["Nombre", "Fecha Creación", "Acciones"]}>
+                        {list.map((cert, key) => {
                             return <tr key={key}>
                                 <td>
                                     {
                                         id === cert._id ?
-                                            <input type="text" value={name} autoFocus onChange={this.onChange}/>:
+                                            <input type="text" value={name} autoFocus onChange={this.onChange} /> :
                                             <p>{cert.name}</p>
                                     }
                                 </td>
                                 <td>{Moment(cert.created_at).format("DD/MM/YYYY")}</td>
                                 <TableAction id={id} object={cert} saveItem={this.saveItem} editItem={this.editItem}
-                                             removeNew={this.removeNew} removeItem={this.removeItem} discardChanges={this.discardChanges}/>
+                                    removeNew={this.removeNew} removeItem={this.removeItem} discardChanges={this.discardChanges} />
                             </tr>
                         })}
                     </EvenTable>

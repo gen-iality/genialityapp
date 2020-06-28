@@ -164,6 +164,12 @@ class MenuConfig extends Component {
                   Habilitar secciones del evento
                 </NavLink>
               </Menu.Item>
+
+              <Menu.Item key="13">
+                <NavLink onClick={this.handleClick} to={`${url}/ticketsEvent`}>
+                  Configuración de tickets
+                </NavLink>
+              </Menu.Item>
             </SubMenu>
 
             {/* Configuración de Asistentes */}

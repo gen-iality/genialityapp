@@ -183,6 +183,21 @@ export const UsersApi = {
   },
 };
 
+export const eventTicketsApi = {
+  getAll: async (eventId) => {
+    return await Actions.getAll(`/api/events/${eventId}/tickets`);
+  },
+  create: async (eventId, data) => {
+    return await Actions.post(`/api/events/${eventId}/tickets`, data);
+  },
+  update: async (eventId, data, id) => {
+    return await Actions.put(`api/events/${eventId}/tickets/${id}`, data);
+  },
+  delete: async (eventId, id) => {
+    return await Actions.delete(`api/events/${eventId}/tickets`, id);
+  },
+};
+
 export const TicketsApi = {
   getAll: async (token) => {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
