@@ -28,8 +28,6 @@ let tickets = (props) => {
             setTickets(ticket = tickets.concat({ title: '', created_at: new Date(), _id: 'new' }))
             setId("new")
             return { tickets: ticket, created_at: new Date(), _id: 'new' }
-        } else {
-            console.log("edit")
         }
     };
 
@@ -66,7 +64,6 @@ let tickets = (props) => {
     //Funcion asincrona para eliminar datos
     async function removeItem(_id) {
         const destroy = await eventTicketsApi.delete(props.eventId, _id)
-        console.log(destroy)
         message.info('Ticket Eliminado');
         getTickets()
     }
@@ -86,15 +83,7 @@ let tickets = (props) => {
                                 }
                             </td>
                             <td>{Moment(ticket.created_at).format("DD/MM/YYYY")}</td>
-                            <TableAction
-                                id={id}
-                                object={ticket}
-                                saveItem={saveItem}
-                                editItem={editItem}
-                                removeNew={removeNew}
-                                removeItem={removeItem}
-                                discardChanges={removeNew}
-                            />
+                            <TableAction id={id} object={ticket} saveItem={saveItem} editItem={editItem} removeNew={removeNew} removeItem={removeItem} discardChanges={removeNew} />
                         </tr>
                     })}
                 </EvenTable>
