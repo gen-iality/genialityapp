@@ -58,7 +58,6 @@ class General extends Component {
                 this.state.info.app_configuration
             ]
         })
-        console.log(this.state.info)
         try {
             const { event } = this.state;
             event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
