@@ -360,18 +360,21 @@ class UsersRsvp extends Component {
   };
 
   filterByTicket(ticket) {
-    const { usersReq } = this.state
+    toString(ticket)
+    console.log(ticket)
+    const { users } = this.state
+    console.log(users)
     const filter = []
-    for (let i = 0; usersReq.length > i; i++) {
-      if (usersReq[i].properties.ticketid) {
-        if (usersReq[i].properties.ticketid === ticket) {
-          filter.push(usersReq[i])
+    for (let i = 0; users.length > i; i++) {
+      if (users[i].properties.ticketid) {
+        if (users[i].properties.ticketid === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }
       } else {
-        if (usersReq[i].properties.ticket_id === ticket) {
-          filter.push(usersReq[i])
+        if (users[i].properties.ticket_id === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }

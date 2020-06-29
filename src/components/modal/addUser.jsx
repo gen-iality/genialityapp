@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { UsersApi } from "../../helpers/request";
+import { UsersApi, eventTicketsApi } from "../../helpers/request";
 import EventModal from "../events/shared/eventModal";
 
 class AddUser extends Component {
@@ -10,17 +10,23 @@ class AddUser extends Component {
             message: {},
             user: {},
             emailError: false,
-            valid: true
+            valid: true,
+            tickets: []
         };
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let user = {};
+
+        const tickets = await eventTicketsApi.getAll(this.props.eventId)
+        if (tickets.length > 0) this.setState({ tickets })
+
         this.props.extraFields
             .map((obj) => (
                 user[obj.name] = ''));
         this.setState({ user, edit: false });
+
     }
 
     async handleSubmit(e) {
@@ -141,12 +147,37 @@ class AddUser extends Component {
         this.setState({ user: {}, valid: true }, this.props.handleModal());
     };
 
+    selectChange = (e) => {
+        let name = e.target.name;
+        let value = e.target.value;
+        this.setState({ [name]: value });
+    };
+
     render() {
+        const { tickets } = this.state
         return (
             <EventModal modal={this.props.modal} title={"Agregar invitado"} closeModal={this.props.handleModal}>
                 <section className="modal-card-body">
                     {
                         Object.keys(this.state.user).length > 0 && this.renderForm()
+                    }
+                    {
+                        tickets.length > 0 &&
+                        <div className="field">
+                            <div className="control control-container">
+                                <label className="label">Tiquete</label>
+                                <div className="select">
+                                    <select onChange={this.onChange} name={'ticketid'}>
+                                        <option value={''}>..Seleccione</option>
+                                        {
+                                            tickets.map((item, key) => {
+                                                return <option key={key} value={item._id}>{item.title}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </section>
                 <footer className="modal-card-foot">

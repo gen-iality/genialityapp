@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { app, firestore } from "../../helpers/firebase";
+import { eventTicketsApi } from "../../helpers/request"
 import { toast } from 'react-toastify';
 import Dialog from "./twoAction";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
@@ -23,13 +24,17 @@ class UserModal extends Component {
             confirmCheck: true,
             valid: true,
             checked_in: false,
+            tickets: []
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const self = this;
         const { rolesList } = this.props;
         self.setState({ rolesList, rol: rolesList.length > 0 ? rolesList[0]._id : "" });
+        const tickets = await eventTicketsApi.getAll(this.props.eventId)
+        if (tickets.length > 0) this.setState({ tickets })
+
         let user = {};
         if (this.props.edit) {
             const { value } = this.props;
@@ -333,7 +338,7 @@ class UserModal extends Component {
     }
 
     render() {
-        const { user, checked_in, ticket_id, rol, rolesList, userId } = this.state;
+        const { user, checked_in, ticket_id, rol, rolesList, userId, tickets } = this.state;
         const { modal } = this.props;
         if (this.state.redirect) return (<Redirect to={{ pathname: this.state.url_redirect }} />);
         return (
@@ -403,7 +408,7 @@ class UserModal extends Component {
                                 </React.Fragment>
                             }
                             {
-                                this.props.tickets.length > 0 &&
+                                tickets.length > 0 &&
                                 <div className="field">
                                     <div className="control control-container">
                                         <label className="label">Tiquete</label>
@@ -411,7 +416,7 @@ class UserModal extends Component {
                                             <select value={ticket_id} onChange={this.selectChange} name={'ticket_id'}>
                                                 <option value={''}>..Seleccione</option>
                                                 {
-                                                    this.props.tickets.map((item, key) => {
+                                                    tickets.map((item, key) => {
                                                         return <option key={key} value={item._id}>{item.title}</option>
                                                     })
                                                 }
