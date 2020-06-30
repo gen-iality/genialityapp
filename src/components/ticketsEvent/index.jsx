@@ -71,9 +71,15 @@ let tickets = (props) => {
     return (
         <Fragment>
             <EventContent title={"Tickets"} addAction={newTicket} addTitle={"Nuevo ticket"}>
-                <EvenTable head={["Nombre", "Fecha Creación", "Acciones"]}>
+                <EvenTable head={["Id", "Nombre", "Fecha Creación", "Acciones"]}>
                     {tickets.map((ticket, key) => {
                         return <tr key={key}>
+                            <td>
+                                {
+                                    ticket._id !== id &&
+                                    <p>{ticket._id}</p>
+                                }
+                            </td>
                             <td>
                                 {
                                     ticket._id !== id ?
