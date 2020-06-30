@@ -223,6 +223,7 @@ class UsersRsvp extends Component {
 
   //Check if user exist at selection state
   isChecked = id => {
+
     if (this.state.selection.length > 0) {
       const pos = this.state.selection
         .map(e => {

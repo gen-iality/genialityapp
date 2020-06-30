@@ -166,7 +166,6 @@ class Landing extends Component {
 
     this.loadDynamicEventStyles(id);
 
-    console.log("checkin eventUser externo", event._id, user._id);
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
@@ -310,7 +309,7 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
-  toggleConference = (state, meeting_id, activity) => {
+  toggleConference = async (state, meeting_id, activity) => {
     console.log("checkin", state, meeting_id, this.state.eventUser);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
@@ -325,7 +324,7 @@ class Landing extends Component {
 
     if (this.state.eventUser) {
       //this.state.eventUser.forEach((eventUser) => {
-      TicketsApi.checkInUser(this.state.eventUser._id);
+      await TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
       //});
     }
 

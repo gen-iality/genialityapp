@@ -4,7 +4,7 @@ import * as Cookie from "js-cookie";
 import { handleSelect } from "./utils";
 import { firestore } from "./firebase";
 import { parseUrl } from "../helpers/constants";
-
+import Moment from "moment";
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -209,8 +209,10 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  checkInUser: async (event_user) => {
-    return await Actions.put(`/api/eventUsers/${event_user}/checkin`);
+  checkInAttendee: async (event_id, eventUser_id) => {
+    //let data = { checkedin_at: new Date().toISOString() };
+    let data = { checkedin_at: Moment().format("YYYY-MM-DD HH:mm:ss") };
+    return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
   },
 };
 
