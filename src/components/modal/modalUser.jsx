@@ -6,6 +6,7 @@ import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import QRCode from 'qrcode.react';
 import { icon } from "../../helpers/constants";
 import { Redirect } from "react-router-dom";
+import { Actions } from "../../helpers/request";
 
 class UserModal extends Component {
     constructor(props) {
@@ -67,13 +68,33 @@ class UserModal extends Component {
         this.setState({ create: true });
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         snap.ticket_id = this.state.ticket_id;
+
+        try {
+            if (!this.state.edit) {
+                if (this.state.confirmCheck) {
+                    snap.checkedin_at = new Date();
+                }
+                await Actions.post(`/api/eventUsers/createUserAndAddtoEvent/${this.props.eventId}`, snap);
+                toast.success(<FormattedMessage id="toast.user_saved" defaultMessage="Ok!" />);
+            } else {
+
+                await Actions.put(`/api/events/${this.props.eventId}/eventusers/${this.state.userId}`, snap);
+                toast.info(<FormattedMessage id="toast.user_edited" defaultMessage="Ok!" />);
+            }
+        } catch (error) {
+            console.error("Error updating document: ", error);
+            message.class = 'msg_danger';
+            message.content = 'User can`t be updated';
+        };
+
+        this.setState({ message, create: false });
+        return;
+
         if (!this.state.edit) {
             snap.updated_at = new Date();
-            snap.checked_in = false;
             snap.created_at = new Date();
             if (this.state.confirmCheck) {
-                snap.checked_in = true;
-                snap.checked_at = new Date();
+                snap.checkedin_at = new Date();
             }
             userRef.add(snap)
                 .then((docRef) => {
@@ -279,12 +300,42 @@ class UserModal extends Component {
         this.setState({ valid: !valid })
     };
 
-    deleteUser = () => {
+    deleteUser = async () => {
         const { substractSyncQuantity } = this.props;
-
-        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
-        const self = this;
         let message = {};
+        let resultado = null;
+        const self = this;
+        const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
+        try {
+
+            let resultado = await Actions.delete(`/api/events/${this.props.eventId}/eventusers`, this.state.userId);
+            console.log("resultado", resultado);
+
+            message = { class: "msg_warning", content: "USER DELETED" }
+            toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!" />);
+        } catch (e) {
+            ///Esta condición se agrego porque algunas veces los datos no se sincronizan
+            //bien de mongo a firebase y terminamos con asistentes que no existen
+            if (e.response && e.response.status == 404) {
+                userRef.doc(this.state.userId).delete();
+                toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!" />);
+            } else {
+                message = { class: "msg_danger", content: e }
+                toast.info(e);
+            }
+
+        } finally {
+            setTimeout(() => {
+                message.class = message.content = '';
+                self.closeModal();
+            }, 500)
+        }
+
+        return;
+
+
+
+
         userRef.doc(this.state.userId).delete().then(function () {
             console.log("Document successfully deleted!");
             message.class = 'msg_warning';
@@ -445,15 +496,17 @@ class UserModal extends Component {
                         }
                     </div>
                     <div style={{ opacity: 0, display: 'none' }}>
-                        <QRCode value={userId} />
+                        {userId && <QRCode value={userId} />}
                     </div>
                     <iframe title={'Print User'} ref="ifrmPrint" style={{ opacity: 0, display: 'none' }} />
                 </div>
+
                 <Dialog modal={this.state.modal} title={'Borrar Usuario'}
                     content={<p>Seguro de borrar este usuario?</p>}
                     first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.deleteUser }}
                     message={this.state.message}
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
+
                 <Dialog modal={this.state.uncheck} title={'Borrar Check In'}
                     content={<p>Seguro de borrar el checkIn de este usuario?</p>}
                     first={{ title: 'Si', class: 'is-warning', action: this.unCheck }}
