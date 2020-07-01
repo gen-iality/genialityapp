@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Link} from "react-router-dom";
+import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 import Importacion from "./importacion";
 import Preview from "./preview";
 import Result from "./result";
@@ -9,25 +9,35 @@ class ImportUsers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            step : 0,
-            list : [],
+            step: 0,
+            list: [],
             toImport: []
         }
     }
 
     handleXls = (list) => {
-        if(list.length>=2) {
+        if (list.length >= 2) {
             this.setState((prevState) => {
-                return {list,step:prevState.step+1}
+                return { list, step: prevState.step + 1 }
             });
         }
     };
 
     importUsers = (users) => {
         const self = this;
+
+        /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
+        users = users.map((column) => {
+            if (column.key == 'ticket_id') { column.used = true; }
+            return column;
+        })
+
+
+        //Quitamos de los usuarios traidos del excel los campos que no se seleccionaron para importar  y luego enviamos 
+        //al componente result que realiza la importación uno a uno usando el api
         Async.waterfall([
             function (cb) {
-                let newUsers =  users.filter((user) => {
+                let newUsers = users.filter((user) => {
                     return user.used;
                 });
                 cb(null, newUsers)
@@ -36,47 +46,46 @@ class ImportUsers extends Component {
                 let long = newUsers[0].list.length;
                 let itemsecondwaterfall = [];
                 let initwaterfallcounter = 0;
-                for(;initwaterfallcounter < long;){
+                for (; initwaterfallcounter < long;) {
                     itemsecondwaterfall[initwaterfallcounter] = {};
-                    initwaterfallcounter ++
+                    initwaterfallcounter++
                 }
-                if(initwaterfallcounter === long){
-                    cb(null,itemsecondwaterfall,newUsers)
+                if (initwaterfallcounter === long) {
+                    cb(null, itemsecondwaterfall, newUsers)
                 }
             },
-            function(items,newUsers,cb){
+            function (items, newUsers, cb) {
                 let len = newUsers.length;
-                for(let i=0;i<items.length;i++){
-                    for(let j=0;j<len;j++){
+                for (let i = 0; i < items.length; i++) {
+                    for (let j = 0; j < len; j++) {
                         items[i][newUsers[j].key] = newUsers[j].list[i];
                     }
                 }
                 cb(items)
             }
-        ],function (result) {
-            console.log(result);
+        ], function (result) {
             self.setState((prevState) => {
-                return {step:prevState.step+1,toImport:result}
+                return { step: prevState.step + 1, toImport: result }
             });
         });
     };
 
     closeModal = () => {
-        this.setState({list:[]});
+        this.setState({ list: [] });
         this.props.handleModal()
     };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.modal !== this.props.modal) {
-            this.setState({modal:nextProps.modal,step:0});
+            this.setState({ modal: nextProps.modal, step: 0 });
         }
     }
 
     render() {
         const layout = [
-            <Importacion handleXls={this.handleXls} extraFields={this.props.extraFields} organization={this.props.organization}/>,
-            <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers} extraFields={this.props.extraFields}/>,
-            <Result list={this.state.toImport} eventId={this.props.eventId} extraFields={this.props.extraFields} organization={this.props.organization}/>];
+            <Importacion handleXls={this.handleXls} extraFields={this.props.extraFields} organization={this.props.organization} />,
+            <Preview list={this.state.list} eventId={this.props.eventId} importUsers={this.importUsers} extraFields={this.props.extraFields} />,
+            <Result list={this.state.toImport} eventId={this.props.eventId} extraFields={this.props.extraFields} organization={this.props.organization} />];
         return (
             <div className={`event-datos modal-import-user`}>
                 <Link to={this.props.matchUrl}><h2 className="title-section">Invitados</h2></Link>

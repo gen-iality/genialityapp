@@ -17,6 +17,14 @@ html {
   cursor: pointer;
 }
 
+.table-striped-rows tr:nth-child(2n) td {
+  background-color: #fbfbfb;
+}
+.table-striped-rows thead > tr > th {
+  background-color: #ccc;
+  font-weight: bold;
+}
+
 a {
   &:hover {
     background-color: transparent !important;
@@ -690,6 +698,8 @@ a {
     font-weight: 700;
     &.is-white {
       color: $grey-light;
+      padding-right: 0.2em;
+      padding-left: 0.7em;
     }
   }
 }
