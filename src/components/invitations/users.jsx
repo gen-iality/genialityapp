@@ -54,6 +54,7 @@ class UsersRsvp extends Component {
     try {
       const { event } = this.props;
       const properties = event.user_properties;
+
       let columnsKey = fieldNameEmailFirst(properties);
       this.setState({ columnsKey, tickets: event.tickets })
 
@@ -222,6 +223,7 @@ class UsersRsvp extends Component {
 
   //Check if user exist at selection state
   isChecked = id => {
+
     if (this.state.selection.length > 0) {
       const pos = this.state.selection
         .map(e => {
@@ -359,18 +361,21 @@ class UsersRsvp extends Component {
   };
 
   filterByTicket(ticket) {
-    const { usersReq } = this.state
+    toString(ticket)
+    console.log(ticket)
+    const { users } = this.state
+    console.log(users)
     const filter = []
-    for (let i = 0; usersReq.length > i; i++) {
-      if (usersReq[i].properties.ticketid) {
-        if (usersReq[i].properties.ticketid === ticket) {
-          filter.push(usersReq[i])
+    for (let i = 0; users.length > i; i++) {
+      if (users[i].properties.ticketid) {
+        if (users[i].properties.ticketid === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }
       } else {
-        if (usersReq[i].properties.ticket_id === ticket) {
-          filter.push(usersReq[i])
+        if (users[i].properties.ticket_id === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }
@@ -401,112 +406,119 @@ class UsersRsvp extends Component {
             Enviar comunicación / Correo{" "}
           </button>
           <ModalAdvise visible={this.state.visible} />
-          <div>
-            <button className="button"
-              style={{ float: "left", marginTop: "2%", marginLeft: "20%" }}
-              onClick={() => this.exportFile(users)}
-            >
-              Exportar
+          {
+            usersReq.length > 0 ? (
+              <div>
+                <button className="button"
+                  style={{ float: "left", marginTop: "2%", marginLeft: "20%" }}
+                  onClick={() => this.exportFile(users)}
+                >
+                  Exportar
             </button>
-          </div>
-          {usersReq.length > 0 ? (
-            <div>
-              <div className="columns">
-                <div className="column is-12">
-                  <div
-                    className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
-                    onClick={this.handleDropUser}>
-                    <div className="dropdown-trigger">
-                      <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
-                        <span>Agregar usuarios</span>
-                        <span className="icon">
-                          <i className="fas fa-angle-down" />
-                        </span>
-                      </button>
-                    </div>
-                    <div className="dropdown-menu" id="dropdown-menu1" role="menu">
-                      <div className="dropdown-content">
+              </div>
+            ) : (
+                <></>
+              )
+          }
 
-                        <a href="#" className="dropdown-item" onClick={this.modalUser}>
-                          Nuevo usuario
+          <div>
+            <div className="columns">
+              <div className="column is-12">
+                <div
+                  className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
+                  onClick={this.handleDropUser}>
+                  <div className="dropdown-trigger">
+                    <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
+                      <span>Agregar usuarios</span>
+                      <span className="icon">
+                        <i className="fas fa-angle-down" />
+                      </span>
+                    </button>
+                  </div>
+                  <div className="dropdown-menu" id="dropdown-menu1" role="menu">
+                    <div className="dropdown-content">
+
+                      <a href="#" className="dropdown-item" onClick={this.modalUser}>
+                        Nuevo usuario
                         </a>
-                        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
-                          Importar usuarios de Excel
+                      <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+                        Importar usuarios de Excel
                         </Link>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="columns">
-                <SearchComponent
-                  classes={"column is-7"}
-                  data={this.state.usersReq}
-                  kind={"user"}
-                  searchResult={this.searchResult}
+            <div className="columns">
+              <SearchComponent
+                classes={"column is-7"}
+                data={this.state.usersReq}
+                kind={"user"}
+                searchResult={this.searchResult}
 
-                  clear={this.state.clearSearch}
-                />
-                <div className="column is-2" />
-                <div className="column">
-                  <div
-                    className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
-                    onClick={this.handleDropUser}>
-                    <div className="dropdown-trigger">
-                      <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
-                        <span>Agregar usuarios</span>
-                        <span className="icon">
-                          <i className="fas fa-angle-down" />
-                        </span>
-                      </button>
-                    </div>
-                    <div className="dropdown-menu" id="dropdown-menu1" role="menu">
-                      <div className="dropdown-content">
-                        <div className="dropdown-item" onClick={this.modalUser}>
-                          <p>Nuevo usuario</p>
-                        </div>
-                        <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
-                          Importar usuarios de Excel
-                        </Link>
+                clear={this.state.clearSearch}
+              />
+              <div className="column is-2" />
+              <div className="column">
+                <div
+                  className={`dropdown is-pulled-right is-right ${dropUser ? "is-active" : ""}`}
+                  onClick={this.handleDropUser}>
+                  <div className="dropdown-trigger">
+                    <button className="button" aria-haspopup aria-controls={"dropdown-menu1"}>
+                      <span>Agregar usuarios</span>
+                      <span className="icon">
+                        <i className="fas fa-angle-down" />
+                      </span>
+                    </button>
+                  </div>
+                  <div className="dropdown-menu" id="dropdown-menu1" role="menu">
+                    <div className="dropdown-content">
+                      <div className="dropdown-item" onClick={this.modalUser}>
+                        <p>Nuevo usuario</p>
                       </div>
+                      <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+                        Importar usuarios de Excel
+                        </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="columns">
-                <div className="column is 6">
-                  <p>
-                    Seleccionados: <strong> {this.state.auxArr.length}</strong>
-                  </p>
-                </div>
+            </div>
+            <div className="columns">
+              <div className="column is 6">
+                <p>
+                  Seleccionados: <strong> {this.state.auxArr.length}</strong>
+                </p>
+              </div>
 
-                {/*
-                <div className="column is-6">
-                  <label className="label">Filtrar por ticket</label>
-                  <div className="select">
-                    {
-                      tickets.length > 0 ? (
-                        <select onClick={(e) => this.filterByTicket(e.target.value)} >
-                          <option>Selecciona...</option>
-                          {
-                            tickets.map((ticket, key) => (
-                              <option key={key} value={ticket._id}>
-                                {ticket.title}
-                              </option>
-                            ))
-                          }
+
+              <div className="column is-6">
+                <label className="label">Filtrar por ticket</label>
+                <div className="select">
+                  {
+                    tickets.length > 0 ? (
+                      <select onClick={(e) => this.filterByTicket(e.target.value)} >
+                        <option>Selecciona...</option>
+                        {
+                          tickets.map((ticket, key) => (
+                            <option key={key} value={ticket._id}>
+                              {ticket.title}
+                            </option>
+                          ))
+                        }
+                      </select>
+                    ) : (
+                        <select>
+                          <option>Sin ticketes</option>
                         </select>
-                      ) : (
-                          <p>No hay ticketes aun</p>
-                        )}
-    
-                  </div>
-                </div>
-                */}
+                      )}
 
+                </div>
               </div>
-              {/* {this.state.auxArr.length > 0 && (
+
+            </div>
+            {/* {this.state.auxArr.length > 0 && (
                 <div
                   className={`dropdown ${dropSend ? "is-active" : ""}`}
                   onClick={this.handleDropSend}
@@ -538,42 +550,36 @@ class UsersRsvp extends Component {
                   </div>
                 </div>
               )} */}
-              <EvenTable head={columns}>
-                {pageOfItems.map(user => (
-                  <tr key={user.id}>
-                    <td>
-                      <div>
-                        <input
-                          className="event-inv-check is-checkradio is-small"
-                          id={"checkinUser" + user.id}
-                          type="checkbox"
-                          name={"checkinUser" + user.id}
-                          checked={this.isChecked(user.id)}
-                          onChange={e => {
-                            this.toggleSelection(user);
-                          }}
-                        />
-                        <label htmlFor={"checkinUser" + user.id} />
-                      </div>
+            <EvenTable head={columns}>
+              {pageOfItems.map(user => (
+                <tr key={user.id}>
+                  <td>
+                    <div>
+                      <input
+                        className="event-inv-check is-checkradio is-small"
+                        id={"checkinUser" + user.id}
+                        type="checkbox"
+                        name={"checkinUser" + user.id}
+                        checked={this.isChecked(user.id)}
+                        onChange={e => {
+                          this.toggleSelection(user);
+                        }}
+                      />
+                      <label htmlFor={"checkinUser" + user.id} />
+                    </div>
+                  </td>
+                  {Object.keys(user.properties).map(prop => (
+                    <td key={prop}>
+                      {parseInt() || typeof user.properties[prop] == "string"
+                        ? user.properties[prop]
+                        : JSON.stringify(user.properties[prop])}
                     </td>
-                    {Object.keys(user.properties).map(prop => (
-                      <td key={prop}>
-                        {parseInt() || typeof user.properties[prop] == "string"
-                          ? user.properties[prop]
-                          : JSON.stringify(user.properties[prop])}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </EvenTable>
-              <Pagination items={users} onChangePage={this.onChangePage} />
-            </div>
-          ) : (
-              <div>
-                <div onClick={this.modalUser}>Nuevo invitado</div>
-                <Link to={`${this.props.matchUrl}/importar-excel`}>Importar usuarios de Excel</Link>
-              </div>
-            )}
+                  ))}
+                </tr>
+              ))}
+            </EvenTable>
+            <Pagination items={users} onChangePage={this.onChangePage} />
+          </div>
         </EventContent>
 
         {

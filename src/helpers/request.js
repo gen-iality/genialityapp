@@ -4,7 +4,7 @@ import * as Cookie from "js-cookie";
 import { handleSelect } from "./utils";
 import { firestore } from "./firebase";
 import { parseUrl } from "../helpers/constants";
-
+import Moment from "moment";
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
@@ -98,6 +98,7 @@ export const EventsApi = {
     const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
   },
+
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
     console.log("checkin eventUser", response);
@@ -105,6 +106,14 @@ export const EventsApi = {
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
   },
+
+  /* Según un nuevo modelo de los eventUsers un solo usuario puede tener varios eventUsers para un evento */
+  getcurrentUserEventUsers: async (event_id) => {
+    let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
+    let eventUsers = response.data ? response.data : null;
+    return eventUsers;
+  },
+
   getPublic: async (query) => {
     return await Actions.getAll(`/api/events${query}`, true);
   },
@@ -174,6 +183,21 @@ export const UsersApi = {
   },
 };
 
+export const eventTicketsApi = {
+  getAll: async (eventId) => {
+    return await Actions.getAll(`/api/events/${eventId}/tickets`);
+  },
+  create: async (eventId, data) => {
+    return await Actions.post(`/api/events/${eventId}/tickets`, data);
+  },
+  update: async (eventId, data, id) => {
+    return await Actions.put(`api/events/${eventId}/tickets/${id}`, data);
+  },
+  delete: async (eventId, id) => {
+    return await Actions.delete(`api/events/${eventId}/tickets`, id);
+  },
+};
+
 export const TicketsApi = {
   getAll: async (token) => {
     return await Actions.getAll(`/api/me/eventUsers/?token=${token}?limit=20`);
@@ -185,8 +209,10 @@ export const TicketsApi = {
     return await Actions.post(`/api/eventusers/${event}/tranfereventuser/${event_user}`, data);
   },
 
-  checkInUser: async (event_user) => {
-    return await Actions.put(`/api/eventUsers/${event_user}/checkin`);
+  checkInAttendee: async (event_id, eventUser_id) => {
+    //let data = { checkedin_at: new Date().toISOString() };
+    let data = { checkedin_at: Moment().format("YYYY-MM-DD HH:mm:ss") };
+    return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
   },
 };
 

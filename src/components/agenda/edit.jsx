@@ -405,11 +405,13 @@ class AgendaEdit extends Component {
     } = this.state;
     const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
     const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
-    const activity_categories_ids = selectedCategories.length > 0 ? selectedCategories.map(({ value }) => value) : [];
+
+    const activity_categories_ids = selectedCategories[0] === undefined ? [] : selectedCategories.map(({ value }) => value);
+
     const access_restriction_rol_ids = access_restriction_type !== "OPEN" ? selectedRol.map(({ value }) => value) : [];
     const host_ids = selectedHosts >= 0 ? [] : selectedHosts.map(({ value }) => value);
 
-    const type_id = selectedType.value;
+    const type_id = selectedType === undefined ? "" : selectedType.value;
     return {
       name,
       subtitle,
@@ -512,14 +514,10 @@ class AgendaEdit extends Component {
   validForm = () => {
     let title = "";
     if (this.state.name.length <= 0) title = "El Nombre es requerido";
-    else if (this.state.space_id <= 0) title = "Selecciona un Espacio";
-    else if (this.state.selectedCategories.length <= 0) title = "Selecciona una Categoría";
-    else if (this.state.selectedType <= 0) title = "Selecciona un tipo de actividad";
-    else if (this.state.access_restriction_type !== "OPEN" && this.state.selectedRol.length <= 0)
-      title = "Seleccione un Rol para mostrar la Agenda";
+
     if (title.length > 0) {
-      sweetAlert.twoButton(title, "warning", false, "OK", () => { });
-      return false;
+      //   sweetAlert.twoButton(title, "warning", false, "OK", () => { });
+      //   return false;
     } else return true;
   };
 
@@ -629,20 +627,20 @@ class AgendaEdit extends Component {
                   </div>
                 </div>
                 <div className="columns">
+
                   <div className="column">
                     <div className="field">
                       <label className="label">Hora Inicio</label>
-                      <div className="control">
-                        <DateTimePicker
-                          value={hour_start}
-                          dropUp
-                          step={15}
-                          date={false}
-                          onChange={(value) => this.handleDate(value, "hour_start")}
-                        />
-                      </div>
+                      <DateTimePicker
+                        value={hour_start}
+                        dropUp
+                        step={15}
+                        date={false}
+                        onChange={(value) => this.handleDate(value, "hour_start")}
+                      />
                     </div>
                   </div>
+
                   <div className="column">
                     <div className="field">
                       <label className="label">Hora Fin</label>
@@ -655,10 +653,6 @@ class AgendaEdit extends Component {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="field">
-                  <label className="label">Link del video</label>
-                  <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
                 </div>
                 <label className="label">Conferencista</label>
                 <div className="columns">
@@ -685,7 +679,7 @@ class AgendaEdit extends Component {
                   <div className="control">
                     <div className="select">
                       <select name={"space_id"} value={space_id} onChange={this.handleChange}>
-                        <option>Seleccione un lugar/salón ...</option>
+                        <option value={""}>Seleccione un lugar/salón ...</option>
                         {spaces.map((space) => {
                           return (
                             <option key={space.value} value={space.value}>
@@ -789,6 +783,11 @@ class AgendaEdit extends Component {
                     options={nameDocuments}
                     value={selected_document}
                   />
+                </div>
+
+                <div className="field">
+                  <label className="label">Link del video</label>
+                  <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
                 </div>
 
                 <div className="field">

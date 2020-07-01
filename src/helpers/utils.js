@@ -70,14 +70,21 @@ export function handleRequestError(error) {
 export function parseData2Excel(data, fields) {
   let info = [];
 
-  fields.unshift({ name: "created_at", type: "text", label: "created_at" });
-  fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
+  // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
+  // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
   console.log("data", data[0], fields);
   data.map((item, key) => {
     info[key] = {};
-    info[key]["checkIn"] = item.checked_in ? "TRUE" : "FALSE";
-    info[key]["Hora checkIn"] = item.checked_at ? item.checked_at.toDate() : "";
+    info[key]["checked"] = item.checked_in ? "TRUE" : "FALSE";
+
+    info[key]["Hora checkIn"] = item.checked_at
+      ? item.checked_at
+        ? item.checked_at.toDate()
+        : ""
+      : item.checkedin_at
+      ? item.checkedin_at.toDate()
+      : "";
     fields.map(({ name, type, label }) => {
       let str;
       switch (type) {
