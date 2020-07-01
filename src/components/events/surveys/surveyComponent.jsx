@@ -112,7 +112,7 @@ class SurveyComponent extends Component {
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 10;
+      dataSurvey.maxTimeToFinishPage = 200;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -309,9 +309,10 @@ class SurveyComponent extends Component {
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
     const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
-    let { surveyData, questionsAnswered, aux } = this.state;
+    let { surveyData, questionsAnswered, aux, currentPage } = this.state;
 
-    // SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
+
+
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
@@ -320,6 +321,11 @@ class SurveyComponent extends Component {
     if (aux > 0) return;
 
     if (surveyData.allow_gradable_survey == "true") {
+      console.log("mi pagina", currentPage, values.currentPageNo)
+      if (!currentPage || currentPage <= values.currentPageNo)
+        SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
+
+
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
       if (!isLastPage)
@@ -459,6 +465,19 @@ class SurveyComponent extends Component {
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
+  onCurrentPageChanged = (survey, o) => {
+    let { surveyData, currentPage } = this.state;
+    let { idSurvey } = this.props;
+    console.log("onCurrentPageChanged", currentPage, "current", survey)
+    if (surveyData.allow_gradable_survey != "true") return;
+    //console.log("mi pagina", currentPage, values.currentPageNo)
+
+    if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
+      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
+
+
+  }
+
   checkCurrentPage = (survey) => {
     let { currentPage, surveyData } = this.state;
     const { responseCounter } = this.props;
@@ -474,6 +493,8 @@ class SurveyComponent extends Component {
 
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
+
+    console.log("surveyData", surveyData);
     const { showListSurvey, surveyLabel } = this.props;
     return (
       <div style={surveyStyle}>
@@ -484,18 +505,20 @@ class SurveyComponent extends Component {
             </Button>
           </div>
         )}
-        {this.props.eventId == "5ed6a74b7e2bc067381ad164" && <GraphicGamification data={this.state.rankingList} />}
+        {surveyData.allow_gradable_survey && < GraphicGamification data={this.state.rankingList} />}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
           <Survey.Survey
+
             json={surveyData}
             onComplete={this.sendData}
             onPartialSend={this.sendData}
             onCompleting={this.setFinalMessage}
             onTimerPanelInfoText={this.setCounterMessage}
             onStarted={this.checkCurrentPage}
+            onCurrentPageChanged={this.onCurrentPageChanged}
           />
         </div>
       </div>

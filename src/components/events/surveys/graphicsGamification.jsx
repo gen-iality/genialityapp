@@ -40,6 +40,21 @@ class Graphics extends Component {
       verticalBar.data.labels = userList;
       verticalBar.data.datasets[0].data = Object.values(pointsList || []);
       verticalBar.data.datasets[0].label = "Ranking";
+      verticalBar.options = {
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: '#FFF',
+              minor: { display: false }
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              fontColor: '#FFF',
+            }
+          }],
+        }
+      }
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
