@@ -805,7 +805,7 @@ class AgendaEdit extends Component {
                     value={selected_document}
                   />
                 </div>
-                <label className="label">Ticket</label>
+                {/* <label className="label">Ticket</label>
                 <div>
                   <Select
                     isClearable
@@ -815,7 +815,7 @@ class AgendaEdit extends Component {
                     options={tickets}
                     value={selectedTickets}
                   />
-                </div>
+                </div> */}
 
                 <div className="field">
                   <label className="label">Link del video</label>
