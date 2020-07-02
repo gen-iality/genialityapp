@@ -24,6 +24,7 @@ import {
   TypesAgendaApi,
   DocumentsApi,
   EventsApi,
+  eventTicketsApi
 } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
@@ -89,11 +90,14 @@ class AgendaEdit extends Component {
       selected_document: [],
       nameDocuments: [],
       hostAvailable: [],
-      availableText: ""
+      availableText: "",
+      tickets: [],
+      selectedTicket: []
     };
     this.createConference = this.createConference.bind(this);
     this.removeConference = this.removeConference.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.selectTickets = this.selectTickets.bind(this)
   }
 
   async componentDidMount() {
@@ -102,9 +106,19 @@ class AgendaEdit extends Component {
       location: { state },
     } = this.props;
     let days = [];
+    const ticketEvent = []
 
     try {
       const info = await EventsApi.getOne(event._id)
+      const tickets = await eventTicketsApi.getAll(event._id)
+      for (i = 0; tickets.length > i; i++) {
+        ticketEvent.push({
+          item: tickets[i],
+          label: tickets[i].title,
+          value: tickets[i]._id
+        })
+      }
+      this.setState({ tickets: ticketEvent })
       //se valida si no existe dates para dejar la logica 
       //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
       if (!info.dates) {
@@ -173,6 +187,7 @@ class AgendaEdit extends Component {
         hour_start,
         hour_end,
         selectedHosts: fieldsSelect(info.host_ids, hosts),
+        selectedTickets: info.selectedTicket ? info.selectedTicket : [],
         selectedRol: fieldsSelect(info.access_restriction_rol_ids, roles),
         selectedType: fieldsSelect(info.type_id, types),
         selectedCategories: fieldsSelect(info.activity_categories_ids, categories),
@@ -401,7 +416,8 @@ class AgendaEdit extends Component {
       selected_document,
       image,
       meeting_id,
-      video
+      video,
+      selectedTicket
     } = this.state;
     const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
     const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -430,7 +446,8 @@ class AgendaEdit extends Component {
       timeConference: "",
       selected_document,
       meeting_id: meeting_id,
-      video
+      video,
+      selectedTicket
     };
   };
 
@@ -545,6 +562,10 @@ class AgendaEdit extends Component {
     });
   };
 
+
+  selectTickets(tickets) {
+    this.setState({ selectedTicket: tickets })
+  }
   render() {
     const {
       loading,
@@ -564,9 +585,9 @@ class AgendaEdit extends Component {
       selectedHosts,
       selectedType,
       selectedCategories,
-      video
+      video,
     } = this.state;
-    const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url, availableText } = this.state;
+    const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url, availableText, tickets, selectedTickets } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
@@ -784,6 +805,17 @@ class AgendaEdit extends Component {
                     value={selected_document}
                   />
                 </div>
+                {/* <label className="label">Ticket</label>
+                <div>
+                  <Select
+                    isClearable
+                    isMulti
+                    styles={creatableStyles}
+                    onChange={this.selectTickets}
+                    options={tickets}
+                    value={selectedTickets}
+                  />
+                </div> */}
 
                 <div className="field">
                   <label className="label">Link del video</label>
