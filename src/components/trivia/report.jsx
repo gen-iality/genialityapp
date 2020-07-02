@@ -6,7 +6,8 @@ import EventContent from "../events/shared/content";
 import { SurveysApi } from "../../helpers/request";
 import { getTotalVotes } from "./services";
 
-import { Input, List, Card, Button, Spin, Empty, Row, Col, Modal } from "antd";
+import { Input, List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from "antd";
+
 
 class TriviaReport extends Component {
   constructor(props) {
@@ -37,10 +38,20 @@ class TriviaReport extends Component {
         let questions = await votes;
         this.setState({ surveyQuestions: questions, loading: false });
       })
-      .catch((err) => {});
+      .catch((err) => {
+        //console.log(err)
+        notification.open({
+          message: 'No se registran respuestas guardadas',
+          description:
+            'No hay respuestas y/o preguntas para realizar el informe',
+        });
+        this.setState({
+          loading: false
+        })
+      });
   };
 
-  seeReport = (questionId) => {};
+  seeReport = (questionId) => { };
 
   toggleModal = () => {
     let { visibleModal } = this.state;
@@ -105,8 +116,8 @@ class TriviaReport extends Component {
                 </Modal>
               </Fragment>
             ) : (
-              <Empty />
-            )}
+                <Empty />
+              )}
           </EventContent>
         </Fragment>
       );
