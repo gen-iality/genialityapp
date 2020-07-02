@@ -76,14 +76,15 @@ export function parseData2Excel(data, fields) {
   console.log("data", data[0], fields);
   data.map((item, key) => {
     info[key] = {};
-    info[key]["checked"] = item.checked_in ? "TRUE" : "FALSE";
+    info[key]["checked"] = item.checkedin_at ? "TRUE" : "FALSE";
 
+    console.log(item.checkedin_at);
     info[key]["Hora checkIn"] = item.checked_at
       ? item.checked_at
         ? item.checked_at.toDate()
         : ""
       : item.checkedin_at
-      ? item.checkedin_at.toDate()
+      ? item.checkedin_at
       : "";
     fields.map(({ name, type, label }) => {
       let str;
