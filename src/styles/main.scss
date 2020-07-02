@@ -116,9 +116,15 @@ iframe {
 .sv-question__title {
   background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/pregunta.png?alt=media&token=03485bd0-1f47-4ddf-8b55-fd4d0053491b");
 }
-
+/*
 .sv-footer {
-  /*margin-top: -57px !important;*/
+  margin-top: -57px !important;
+}
+*/
+
+.sv-btn.sv-footer__next-btn,
+.sv-btn.sv-footer__complete-btn {
+  margin-top: -26px !important;
 }
 
 .sv-body__page {

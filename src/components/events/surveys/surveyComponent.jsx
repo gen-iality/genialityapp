@@ -112,7 +112,7 @@ class SurveyComponent extends Component {
 
       // Temporalmente quemado el tiempo por pregunta. El valor es en segundos
       // dataSurvey.maxTimeToFinish = 10;
-      dataSurvey.maxTimeToFinishPage = 60;
+      dataSurvey.maxTimeToFinishPage = 20;
 
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
@@ -298,6 +298,14 @@ class SurveyComponent extends Component {
           subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
           icon: <MehOutlined />,
         };
+
+      case "waiting":
+        return {
+          ...objMessage,
+          title: "Estamos en una pausa",
+          subTitle: `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`,
+          icon: <MehOutlined />,
+        };
         break;
 
       default:
@@ -311,9 +319,6 @@ class SurveyComponent extends Component {
     const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
     let { surveyData, questionsAnswered, aux, currentPage } = this.state;
 
-
-
-
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
 
@@ -321,10 +326,6 @@ class SurveyComponent extends Component {
     if (aux > 0) return;
 
     if (surveyData.allow_gradable_survey == "true") {
-      console.log("mi pagina", currentPage, values.currentPageNo)
-      if (!currentPage || currentPage <= values.currentPageNo)
-        SurveyPage.setCurrentPage(idSurvey, values.currentPageNo + 1);
-
 
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
@@ -343,28 +344,7 @@ class SurveyComponent extends Component {
         let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
         let result = this.showStateMessage("warning");
-        let descriptionFeedback = result.subTitle;
-
-        result.subTitle = `${descriptionFeedback}
-           Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
-        this.setState({ feedbackMessage: result });
-
-        const timer = setInterval(() => {
-          secondsToGo -= 1;
-
-          result.subTitle =
-            secondsToGo > 0
-              ? `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
-              : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
-
-          this.setState({ feedbackMessage: result });
-          if (secondsToGo <= 0 && !this.state.freezeGame) {
-            clearInterval(timer);
-            this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-            values.startTimer();
-          }
-        }, 1000);
+        this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
       }
     }
 
@@ -394,34 +374,16 @@ class SurveyComponent extends Component {
       // Solo intenta registrar puntos si la encuesta es calificable
       // Actualiza puntos del usuario
       if (surveyData.allow_gradable_survey == "true") {
+
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
           let secondsToGo = !surveyData.initialMessage ? 3 : countDown;
 
           let typeMessage = rankingPoints > 0 ? "success" : "error";
           let result = this.showStateMessage(typeMessage, rankingPoints);
-          let descriptionFeedback = result.subTitle;
 
-          result.subTitle = `${descriptionFeedback} Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`;
-          this.setState({ feedbackMessage: result });
+          this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
 
-          const timer = setInterval(() => {
-            secondsToGo -= 1;
-
-            result.subTitle =
-              secondsToGo > 0
-                ? `${descriptionFeedback}
-             Espera el tiempo indicado para seguir con el cuestionario. ${secondsToGo}`
-                : `El juego se encuentra en pausa. Espera hasta el moderador reanude el juego`;
-
-            this.setState({ feedbackMessage: result });
-
-            if (secondsToGo <= 0 && !this.state.freezeGame) {
-              clearInterval(timer);
-              this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
-              values.startTimer();
-            }
-          }, 1000);
         }
 
         // Ejecuta serivicio para registrar puntos
@@ -434,6 +396,30 @@ class SurveyComponent extends Component {
       }
     });
   };
+
+  setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
+
+    secondsToGo = secondsToGo ? secondsToGo : 0;
+
+    let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
+    let mensaje_congelado = `El juego se encuentra en pausa. Espera hasta que el moderador  reanude el juego`;
+
+    result.subTitle = secondsToGo > 0 ? mensaje_espera : mensaje_congelado;
+    this.setState({ feedbackMessage: result });
+
+    const timer = setInterval(() => {
+      secondsToGo -= 1;
+      result.subTitle = secondsToGo > 0 ? mensaje_espera + " " + secondsToGo : mensaje_congelado;
+      this.setState({ feedbackMessage: result });
+
+      if (secondsToGo <= 0 && !this.state.freezeGame) {
+        clearInterval(timer);
+        this.setState({ feedbackMessage: {}, showMessageOnComplete: false });
+        survey.startTimer();
+      }
+    }, 1000);
+
+  }
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
@@ -472,20 +458,36 @@ class SurveyComponent extends Component {
     if (surveyData.allow_gradable_survey != "true") return;
     //console.log("mi pagina", currentPage, values.currentPageNo)
 
+    /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
+     * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
+     * va a tener el valor de la pregunta más adealantda que se haay contestado.
+     */
     if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
-      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
+      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo + 1);
 
 
   }
 
   checkCurrentPage = (survey) => {
+
     let { currentPage, surveyData } = this.state;
     const { responseCounter } = this.props;
 
     let { allow_gradable_survey, pages } = surveyData;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
-    if (surveyData.allow_gradable_survey == "true" && currentPage !== 0) return (survey.currentPageNo = currentPage);
+    if (surveyData.allow_gradable_survey == "true") {
+
+      if (currentPage !== 0) survey.currentPageNo = currentPage;
+
+      if (this.state.freezeGame) {
+        let result = this.showStateMessage("waiting");
+        this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
+      }
+
+
+
+    }
 
     // Este condicional sirve para remotar la encuesta dependiendo de las respuestas registradas
     // if (responseCounter > 0 && responseCounter < pages.length) return survey.currentPageNo = responseCounter;
@@ -494,7 +496,6 @@ class SurveyComponent extends Component {
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
 
-    console.log("surveyData", surveyData);
     const { showListSurvey, surveyLabel } = this.props;
     return (
       <div style={surveyStyle}>
@@ -511,7 +512,6 @@ class SurveyComponent extends Component {
 
         <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
           <Survey.Survey
-
             json={surveyData}
             onComplete={this.sendData}
             onPartialSend={this.sendData}
