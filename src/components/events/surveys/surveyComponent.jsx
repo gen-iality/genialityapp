@@ -456,11 +456,14 @@ class SurveyComponent extends Component {
     let { idSurvey } = this.props;
     console.log("onCurrentPageChanged", currentPage, "current", survey)
     if (surveyData.allow_gradable_survey != "true") return;
-    //console.log("mi pagina", currentPage, values.currentPageNo)
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
      * va a tener el valor de la pregunta más adealantda que se haay contestado.
+     * 
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la última página si esto pasa vuelve e inicia la encuesta 
+     *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
+     *  la pregunta en la que ya estaba.
      */
     if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
       SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo + 1);
