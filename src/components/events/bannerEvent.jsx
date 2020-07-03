@@ -70,11 +70,11 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                                     <>
                                         {
                                             dateStart === dateEnd ?
-                                                <span>{Moment(dateStart).format("DD")}{" de "} {capitalizeMont(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                 :
                                                 <div>
                                                     <span>Del {Moment(dateStart).format("DD")}</span>
-                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {capitalizeMont(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                 </div>
                                         }
                                     </>
