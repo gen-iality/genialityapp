@@ -52,7 +52,7 @@ export default class ListEventUser extends Component {
     this.setState((prevState) => {
       return {
         userReq: eventUserList,
-        users: eventUserList.slice(0, 100),
+        users: eventUserList,
         changeItem,
         loading: false,
         clearSearch: !prevState.clearSearch,
@@ -192,6 +192,7 @@ export default class ListEventUser extends Component {
                               <Meta
                                 avatar={
                                   <Avatar>
+                                    {console.log(users.properties)}
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
