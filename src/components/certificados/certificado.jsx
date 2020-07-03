@@ -128,7 +128,9 @@ class Certificado extends Component {
                         let value;
                         if (item.tag.includes('event.')) value = event[item.value];
                         else if (item.tag.includes('ticket.')) value = oneUser.ticket ? oneUser.ticket.title : 'Sin Tiquete';
-                        else if (item.tag.includes('rol.')) value = oneUser.rol_id ? this.state.roles.find(rol => rol._id === oneUser.rol_id).name.toUpperCase() : 'Sin Rol';
+                        else if (item.tag.includes('rol.')) {
+                            value = oneUser.rol_id ? this.state.roles.length > 0 && this.state.roles.find(rol => rol._id === oneUser.rol_id).name.toUpperCase() : 'Sin Rol';
+                        }
                         else value = oneUser.properties[item.value];
                         return content = content.replace(`[${item.tag}]`, value)
                     });
