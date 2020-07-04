@@ -310,6 +310,8 @@ class Landing extends Component {
   };
 
   toggleConference = async (state, meeting_id, activity) => {
+
+
     console.log("checkin", state, meeting_id, this.state.eventUser);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
@@ -320,13 +322,20 @@ class Landing extends Component {
       this.setState({ activity });
     }
 
-    this.setState({ toggleConferenceZoom: state });
+
 
     if (this.state.eventUser) {
       //this.state.eventUser.forEach((eventUser) => {
       await TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
       //});
     }
+
+    //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
+    let name = (this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names) ? this.state.eventUser.properties.names : "Anónimo";
+    window.location.href = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+
+    //Esta instrucción activa la conferencia interna en EVIUS
+    //this.setState({ toggleConferenceZoom: state });
 
 
   };
