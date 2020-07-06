@@ -111,7 +111,7 @@ class SurveyForm extends Component {
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
         publishedSurveys = [];
-        surveySnapShot.forEach(function(doc) {
+        surveySnapShot.forEach(function (doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
         });
 
@@ -266,7 +266,7 @@ class SurveyForm extends Component {
 
     return (
       <div>
-        {this.state.availableSurveysBar && (
+        {this.state.availableSurveysBar && (surveysData && surveysData.length > 0) && (
           <Button
             className={` ${surveysData && !surveyVisible && !userVote && surveysData.length > 0 ? "parpadea" : ""}`}
             onClick={this.surveyVisible}>
@@ -280,8 +280,8 @@ class SurveyForm extends Component {
                 </span>
               )
             ) : (
-              <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
-            )}
+                <span>{!surveyVisible ? "Ver" : "Ocultar"} Resultados</span>
+              )}
           </Button>
         )}
         {(this.state.surveyVisible || !this.state.availableSurveysBar) && (

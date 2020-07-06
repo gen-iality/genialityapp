@@ -326,16 +326,16 @@ class Landing extends Component {
 
     if (this.state.eventUser) {
       //this.state.eventUser.forEach((eventUser) => {
-      await TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
+      TicketsApi.checkInAttendee(this.state.event._id, this.state.eventUser._id);
       //});
     }
 
     //Este link activa a zoom externo para  hacer la conferencia fuera de EVIUS
-    let name = (this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names) ? this.state.eventUser.properties.names : "Anónimo";
-    window.location.href = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
+    //let name = (this.state.eventUser && this.state.eventUser.properties && this.state.eventUser.properties.names) ? this.state.eventUser.properties.names : "Anónimo";
+    //window.location.href = 'zoommtg://zoom.us/join?confno=' + meeting_id + '&uname=' + name;
 
     //Esta instrucción activa la conferencia interna en EVIUS
-    //this.setState({ toggleConferenceZoom: state });
+    this.setState({ toggleConferenceZoom: state });
 
 
   };
