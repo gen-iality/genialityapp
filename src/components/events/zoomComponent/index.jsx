@@ -138,36 +138,34 @@ export default class ZoomComponent extends Component {
             <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
 
+          {event.event_platform === "vimeo" ?
+            // VIMEO LIVESTREAMING only chat not interactive
+            <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
+              <iframe
+                src="https://vimeo.com/event/154066/embed/1accf0ff98"
+                frameborder="0"
+                allow="autoplay; fullscreen; camera *;microphone *"
+                allowFullScreen
+                allowUserMedia
+                style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
+              ></iframe>
 
-
-          {/* ZOOOM IFRAME */}
-          {/* <iframe
-            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
-            allow="camera *;microphone *"
-            allowusermedia
-            className="iframe-zoom nuevo">
-            <p>Your browser does not support iframes.</p>
-          </iframe> */}
-
-          {/** VIMEO LIVESTREAMING only chat not interactive */}
-          <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
+              <iframe
+                src="https://vimeo.com/event/154066/chat/1accf0ff98"
+                style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
+                frameborder=""
+              ></iframe>
+            </div>
+            :
+            // ZOOOM IFRAME
             <iframe
-              src="https://vimeo.com/event/154066/embed/1accf0ff98"
-              frameborder="0"
-              allow="autoplay; fullscreen; camera *;microphone *"
-              allowFullScreen
-              allowUserMedia
-              style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
-            ></iframe>
-
-            <iframe
-              src="https://vimeo.com/event/154066/chat/1accf0ff98"
-              style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
-              frameborder=""
-            ></iframe>
-          </div>
-
-
+              src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
+              allow="camera *;microphone *"
+              allowusermedia
+              className="iframe-zoom nuevo">
+              <p>Your browser does not support iframes.</p>
+            </iframe>
+          }
         </Fullscreen>
       </div>
     );

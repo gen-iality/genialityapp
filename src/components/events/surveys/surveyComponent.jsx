@@ -487,9 +487,6 @@ class SurveyComponent extends Component {
         let result = this.showStateMessage("waiting");
         this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
       }
-
-
-
     }
 
     // Este condicional sirve para remotar la encuesta dependiendo de las respuestas registradas
