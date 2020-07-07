@@ -69,7 +69,6 @@ export function handleRequestError(error) {
 
 export function parseData2Excel(data, fields) {
   let info = [];
-
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
@@ -97,6 +96,9 @@ export function parseData2Excel(data, fields) {
           break;
         case "complex":
           str = item.properties[name] ? item.properties[name] : "undefined";
+          break;
+        case "multiplelist":
+          str = Array.isArray(item.properties[name]) ? item.properties[name].join() : item.properties[name];
           break;
         default:
           str = name === "id" ? item["_id"] : item.properties[name] ? item.properties[name] : "undefined";

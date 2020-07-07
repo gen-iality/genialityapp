@@ -234,6 +234,7 @@ class ListEventUser extends Component {
     e.stopPropagation();
     console.log("aqui");
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+    console.log(attendees)
     const data = await parseData2Excel(attendees, this.state.extraFields);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
