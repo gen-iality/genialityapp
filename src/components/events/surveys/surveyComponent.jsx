@@ -45,6 +45,8 @@ class SurveyComponent extends Component {
       showMessageOnComplete: false,
       aux: 0,
       currentPage: 0,
+      timerPausa: null,
+      survey: null
     };
   }
 
@@ -56,6 +58,28 @@ class SurveyComponent extends Component {
 
     this.getCurrentEvenUser();
     SurveyPage.getCurrentPage(idSurvey, this);
+
+
+
+  }
+
+  /**
+   * El quiztiene unos timers para controlar el tiempo por pregunta
+   * aqui detenemos los timers o el quiz sigue avanzando y dana la lógica cambiando
+   * la pregunta en la que deberian ir todos
+   */
+  componentWillUnmount() {
+    console.log("***DESMONTANDO componentWillUnmount");
+    if (this.state.survey) {
+      console.log("***DESMONTANDO componentWillUnmount LIMDIANDO stopTimer");
+      this.state.survey.stopTimer();
+    }
+
+    if (this.state.timerPausa) {
+      console.log("***DESMONTANDO componentWillUnmount LIMDIANDO timerPausa");
+      clearInterval(this.state.timerPausa);
+    }
+
   }
 
   getRankingList = (list) => {
@@ -155,7 +179,10 @@ class SurveyComponent extends Component {
 
         console.log("Current data: ", data, value);
       });
-    this.setState({ surveyData, idSurvey });
+
+    let survey = new Survey.Model(surveyData);
+    this.setState({ surveyData, idSurvey, survey });
+
   };
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
@@ -398,7 +425,7 @@ class SurveyComponent extends Component {
   };
 
   setIntervalToWaitBeforeNextQuestion(survey, result, secondsToGo) {
-
+    console.log("setIntervalToWaitBeforeNextQuestion iniciando");
     secondsToGo = secondsToGo ? secondsToGo : 0;
 
     let mensaje_espera = `${result.subTitle} Espera el tiempo indicado para seguir con el cuestionario.`;
@@ -418,6 +445,9 @@ class SurveyComponent extends Component {
         survey.startTimer();
       }
     }, 1000);
+
+    this.setState({ timerPausa: timer });
+
 
   }
 
@@ -451,10 +481,12 @@ class SurveyComponent extends Component {
     options.text = `Tienes ${timeTotal} para responder la pregunta. Quedan ${countDown}`;
   };
 
+  /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (survey, o) => {
+
     let { surveyData, currentPage } = this.state;
     let { idSurvey } = this.props;
-    console.log("onCurrentPageChanged", currentPage, "current", survey)
+    console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
     if (surveyData.allow_gradable_survey != "true") return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
@@ -466,7 +498,7 @@ class SurveyComponent extends Component {
      *  la pregunta en la que ya estaba.
      */
     if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
-      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo + 1);
+      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
 
 
   }
@@ -475,8 +507,6 @@ class SurveyComponent extends Component {
 
     let { currentPage, surveyData } = this.state;
     const { responseCounter } = this.props;
-
-    let { allow_gradable_survey, pages } = surveyData;
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
     if (surveyData.allow_gradable_survey == "true") {
@@ -489,7 +519,7 @@ class SurveyComponent extends Component {
       }
     }
 
-    // Este condicional sirve para remotar la encuesta dependiendo de las respuestas registradas
+    // Este condicional sirve para retomar la encuesta dependiendo de las respuestas registradas
     // if (responseCounter > 0 && responseCounter < pages.length) return survey.currentPageNo = responseCounter;
   };
 
@@ -511,15 +541,15 @@ class SurveyComponent extends Component {
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-          <Survey.Survey
-            json={surveyData}
+          {(this.state.survey && <Survey.Survey
+            model={this.state.survey}
             onComplete={this.sendData}
             onPartialSend={this.sendData}
             onCompleting={this.setFinalMessage}
             onTimerPanelInfoText={this.setCounterMessage}
             onStarted={this.checkCurrentPage}
             onCurrentPageChanged={this.onCurrentPageChanged}
-          />
+          />)}
         </div>
       </div>
     );
