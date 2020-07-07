@@ -90,7 +90,7 @@ class AgendaEdit extends Component {
       selected_document: [],
       nameDocuments: [],
       hostAvailable: [],
-      availableText: "",
+      availableText: "ended_meeting_room",
       tickets: [],
       selectedTicket: []
     };
@@ -107,7 +107,6 @@ class AgendaEdit extends Component {
     } = this.props;
     let days = [];
     const ticketEvent = []
-
     try {
       const info = await EventsApi.getOne(event._id)
       const tickets = await eventTicketsApi.getAll(event._id)
@@ -173,11 +172,14 @@ class AgendaEdit extends Component {
 
     if (state.edit) {
       const info = await AgendaApi.getOne(state.edit, event._id);
+      const videoConferenceState = await getConfiguration(event._id, state.edit)
+
 
       this.setState({
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
+        availableText: videoConferenceState.habilitar_ingreso
       });
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
       const { date, hour_start, hour_end } = handleDate(info);
@@ -459,7 +461,16 @@ class AgendaEdit extends Component {
     }
   }
 
-  async createConference(host_id) {
+  async createConference() {
+    const { hostAvailable } = this.state
+    const host_name = []
+
+    for (let i = 0; hostAvailable.length > i; i++) {
+      if (this.state.host_id === hostAvailable[i].id) {
+        host_name.push(hostAvailable[i].first_name)
+      }
+    }
+
     this.setState({ creatingConference: true });
     const zoomData = {
       activity_id: this.props.location.state.edit,
@@ -467,7 +478,10 @@ class AgendaEdit extends Component {
       event_id: this.props.event._id,
       agenda: this.props.event.description,
       host_id: this.state.host_id,
+      host_name: host_name[0]
     };
+
+    console.log(zoomData)
 
     const options = {
       method: "POST",
@@ -490,11 +504,13 @@ class AgendaEdit extends Component {
         event,
         location: { state },
       } = this.props;
+
       const info = await AgendaApi.getOne(state.edit, this.props.event._id);
       this.setState({
         meeting_id: info.meeting_id,
         start_url: info.start_url,
         join_url: info.join_url,
+        name_host: info.name_host,
         key: new Date(),
       });
     } catch (error) {
@@ -938,7 +954,6 @@ class AgendaEdit extends Component {
                                       host.state === "available" && (
                                         <option value={host.id} key={host.id}>
                                           {host.email}
-                                          {console.log(host)}
                                         </option>
                                       )
                                     );
@@ -969,6 +984,10 @@ class AgendaEdit extends Component {
                               <p>{this.state.meeting_id}</p>
                             </div>
 
+                            <div>
+                              <p>El host encargado es:</p>
+                              <p>{this.state.name_host}</p>
+                            </div>
                             <div key={this.state.key}>
                               <p>
                                 <b>Accessos</b>
