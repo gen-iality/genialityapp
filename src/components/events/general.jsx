@@ -43,7 +43,7 @@ class General extends Component {
             loading: true,
             info: {},
             infoApp: [],
-            specificDates: false
+            specificDates: false,
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
@@ -248,7 +248,8 @@ class General extends Component {
             banner_image: this.state.banner_image,
             banner_image_link: this.state.banner_image_link,
             adminContenido: event.adminContenido,
-            type_event: event.type_event
+            type_event: event.type_event,
+            event_platform: event.event_platform
         };
 
         console.log(data);
@@ -380,7 +381,7 @@ class General extends Component {
                             <label className="label required">El evento acepta registros o es privado</label>
                             <p>En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido añadidas por un administrador u organizador del evento</p>
                             <div className="select is-primary">
-                                <select name={"allow_register"} value={event.allow_register} defaultValue={event.allow_register} onChange={this.handleChange}>
+                                <select name={"allow_register"} defaultValue={event.allow_register} onChange={this.handleChange}>
                                     <option value={true}>Público</option>
                                     <option value={false}>Privado</option>
                                 </select>
@@ -436,7 +437,7 @@ class General extends Component {
                         <div>
                             <label className="label">Tipo de evento</label>
                             <div className="select is-primary">
-                                <select value={event.type_event} name="type_event" onChange={this.handleChange}>
+                                <select defaultValue={event.type_event} name="type_event" onChange={this.handleChange}>
                                     <option value="">Seleccionar...</option>
                                     <option value="physicalEvent">Evento Fisico</option>
                                     <option value="onlineEvent">Evento Virtual</option>
@@ -444,6 +445,20 @@ class General extends Component {
                             </div>
                         </div>
 
+                        {
+                            event.type_event === "onlineEvent" && (
+                                <div>
+                                    <label className="label">Plataforma Streaming del evento</label>
+                                    <div className="select is-primary">
+                                        <select defaultValue={event.event_platform} name="event_platform" onChange={this.handleChange}>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="zoom">Zoom</option>
+                                            <option value="vimeo">Vimeo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            )
+                        }
 
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>

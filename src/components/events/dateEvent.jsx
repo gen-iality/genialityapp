@@ -25,10 +25,6 @@ const buttonStyle = {
     cursor: 'pointer',
 }
 
-const reactToChange = (ob) => {
-    console.log(ob)
-}
-
 class DateEvent extends React.Component {
     constructor(props) {
         super(props)
@@ -55,7 +51,6 @@ class DateEvent extends React.Component {
                 let dateUTC = Date.parse(dates[i])
                 var dateUtc = new Date(dateUTC)
                 var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
-                console.log(utc)
 
                 date.push(utc)
             }
@@ -65,10 +60,6 @@ class DateEvent extends React.Component {
                 dates: date
             })
         }
-
-
-
-        console.log(await this.state.dates)
     }
 
     handleDayClick(day, { selected }) {
@@ -97,7 +88,6 @@ class DateEvent extends React.Component {
 
     async save() {
         const info = await EventsApi.editOne(this.state.properties, this.props.eventId)
-        console.log(info)
 
         notification.open({
             message: 'Datos guardados',
