@@ -48,6 +48,7 @@
     "react-full-screen": "^0.2.4",
     "react-geosuggest": "^2.8.0",
     "react-google-maps": "^9.4.5",
+    "react-highlight-words": "^0.16.0",
     "react-icons": "^3.7.0",
     "react-images-upload": "^1.2.8",
     "react-intl": "^2.9.0",
