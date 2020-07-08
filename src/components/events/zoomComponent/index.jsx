@@ -138,9 +138,8 @@ export default class ZoomComponent extends Component {
             <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
 
-          {
-            event._id === "5efd0295c9d8313f9a671d53" ?
-              // VIMEO LIVESTREAMING only chat not interactive
+
+          {/* // VIMEO LIVESTREAMING only chat not interactive
               <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
                 <iframe
                   src="https://vimeo.com/event/156201/embed/ea3234a09b"
@@ -156,17 +155,18 @@ export default class ZoomComponent extends Component {
                   style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
                   frameborder=""
                 ></iframe>
-              </div>
-              :
-              // ZOOOM IFRAME
-              <iframe
-                src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
-                allow="camera *;microphone *"
-                allowusermedia
-                className="iframe-zoom nuevo">
-                <p>Your browser does not support iframes.</p>
-              </iframe>
-          }
+              </div> */}
+
+
+          <iframe
+            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
+            allow="autoplay; fullscreen; camera *;microphone *"
+            allowusermedia
+            allowFullScreen
+            className="iframe-zoom nuevo">
+            <p>Your browser does not support iframes.</p>
+          </iframe>
+
 
 
 

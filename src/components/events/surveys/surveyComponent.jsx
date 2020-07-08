@@ -83,6 +83,7 @@ class SurveyComponent extends Component {
   }
 
   getRankingList = (list) => {
+    console.log("ranking", list);
     this.setState({ rankingList: list });
   };
 
@@ -111,6 +112,10 @@ class SurveyComponent extends Component {
     Survey.JsonObject.metaData.addProperty("question", "points");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
+
+
+
+
     console.log("surveyDat", dataSurvey);
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
@@ -158,6 +163,7 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
+        key: `page${index + 1}`,
         questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey == "true" ? false : true }],
       };
     });
@@ -326,7 +332,7 @@ class SurveyComponent extends Component {
           icon: <MehOutlined />,
         };
 
-      case "waiting":
+      case "info":
         return {
           ...objMessage,
           title: "Estamos en una pausa",
@@ -412,7 +418,6 @@ class SurveyComponent extends Component {
           this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
 
         }
-
         // Ejecuta serivicio para registrar puntos
         UserGamification.registerPoints(eventId, {
           user_id: currentUser._id,
@@ -462,8 +467,8 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey == "true") {
-      let text =
-        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la próxima";
+      let text = "";
+      //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la próxima";
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
   };
@@ -505,6 +510,7 @@ class SurveyComponent extends Component {
 
   checkCurrentPage = (survey) => {
 
+
     let { currentPage, surveyData } = this.state;
     const { responseCounter } = this.props;
 
@@ -514,7 +520,8 @@ class SurveyComponent extends Component {
       if (currentPage !== 0) survey.currentPageNo = currentPage;
 
       if (this.state.freezeGame) {
-        let result = this.showStateMessage("waiting");
+        survey.stopTimer();
+        let result = this.showStateMessage("info");
         this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
       }
     }
