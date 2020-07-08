@@ -179,7 +179,6 @@ class AgendaEdit extends Component {
         selected_document: info.selected_document,
         start_url: info.start_url,
         join_url: info.join_url,
-        availableText: videoConferenceState.habilitar_ingreso
       });
       Object.keys(this.state).map((key) => (info[key] ? this.setState({ [key]: info[key] }) : ""));
       const { date, hour_start, hour_end } = handleDate(info);
