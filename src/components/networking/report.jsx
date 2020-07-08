@@ -3,38 +3,10 @@ import { Row, Col, Button, Table, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
-import * as Cookie from "js-cookie";
-import API, { EventsApi, RolAttApi, EventFieldsApi } from "../../helpers/request";
-import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
-
+import { InvitationsApi, UsersApi } from "../../helpers/request";
+import ExportReport from "./exportReport";
 
 const style = { background: '#0092ff', padding: '8px 0' };
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        name: 'Joe Black',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        name: 'Jim Green',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-    },
-    {
-        key: '4',
-        name: 'Jim Red',
-        age: 32,
-        address: 'London No. 2 Lake Park',
-    },
-];
 
 class Report extends Component {
     constructor(props) {
@@ -43,32 +15,29 @@ class Report extends Component {
             searchText: '',
             searchedColumn: '',
             changeItem: false,
+            loading: true
         }
     }
 
     async componentDidMount() {
-        this.loadData();
+        const { event } = this.props
+        let data = []
+        const invitations = []
+        const invitation = await InvitationsApi.getAll(event._id)
+        data = invitation.data
+
+        for (let i = 0; data.length > i; i++) {
+            invitations.push({
+                key: data[i]._id,
+                user_requested: data[i].user_name_requested ? data[i].user_name_requested : "Sin datos",
+                user_name_requesting: data[i].user_name_requesting ? data[i].user_name_requesting : "Sin datos",
+                state: data[i].state ? data[i].state : "",
+                response: data[i].response ? data[i].response : ""
+            })
+        }
+        this.setState({ invitations, loading: false })
     }
 
-    loadData = async () => {
-        let { changeItem } = this.state;
-        const { event } = this.props;
-
-        // Servicio que trae la lista de asistentes excluyendo el usuario logeado
-        let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
-        let asistantData = await EventFieldsApi.getAll(event._id)
-        // console.log("eventUserList:", eventUserList);
-        this.setState((prevState) => {
-            return {
-                userReq: eventUserList,
-                users: eventUserList,
-                changeItem,
-                loading: false,
-                clearSearch: !prevState.clearSearch,
-                asistantData
-            };
-        });
-    };
 
     getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -134,36 +103,54 @@ class Report extends Component {
     };
 
     render() {
+        const { invitations, loading } = this.state;
         const columns = [
             {
-                title: 'Name',
-                dataIndex: 'name',
-                key: 'name',
+                title: 'Usuario',
+                dataIndex: 'user_name_requesting',
+                key: 'user_name_requesting',
                 width: '30%',
-                ...this.getColumnSearchProps('name'),
+                ...this.getColumnSearchProps('user_name_requesting'),
             },
             {
-                title: 'Age',
-                dataIndex: 'age',
-                key: 'age',
+                title: 'Usuario Quien responde',
+                dataIndex: 'user_requested',
+                key: 'user_requested',
                 width: '20%',
-                ...this.getColumnSearchProps('age'),
+                ...this.getColumnSearchProps('user_requested'),
             },
             {
-                title: 'Address',
-                dataIndex: 'address',
-                key: 'address',
-                ...this.getColumnSearchProps('address'),
+                title: 'Estado',
+                dataIndex: 'state',
+                key: 'state',
+                ...this.getColumnSearchProps('state'),
+            },
+            {
+                title: 'Respuesta',
+                dataIndex: 'response',
+                key: 'response',
+                ...this.getColumnSearchProps('response'),
             },
         ];
         return (
             <Fragment>
-                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                    <Col className="gutter-row" span={6}>
-                        <Button>Exportar</Button>
-                    </Col>
-                </Row>
-                <Table columns={columns} dataSource={data} style={{ marginTop: "5%" }} />
+                {loading === false ?
+                    (
+                        <div>
+                            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                                <Col className="gutter-row" span={6}>
+                                    <ExportReport invitations={invitations} />
+                                </Col>
+                            </Row>
+                            <Table columns={columns} dataSource={invitations} style={{ marginTop: "5%" }} />
+                        </div>
+                    )
+                    :
+                    (
+                        <p>Estamos cargando la información por favor espera</p>
+                    )
+                }
+
             </Fragment>
         )
     }

@@ -152,10 +152,20 @@ export const EventsApi = {
     return await Actions.get(`/api/events/${id}/stylestemp`);
   },
 };
+
+export const InvitationsApi = {
+  getAll: async (id) => {
+    return await Actions.getAll(`/api/events/${id}/invitation`);
+  },
+};
+
 export const UsersApi = {
   getAll: async (id, query) => {
     query = query ? query : "";
     return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
+  },
+  getOne: async (event_id, user_id) => {
+    return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
   },
   mineTickets: async () => {
     return await Actions.getAll("/api/me/eventUsers/");
