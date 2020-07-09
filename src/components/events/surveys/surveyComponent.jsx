@@ -58,15 +58,16 @@ class SurveyComponent extends Component {
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
     console.log("CARGADO surveyData");
-    let surveyRealTime = await this.loadSurveyRealTime(idSurvey);
+
+    await this.listenAndUpdateStateSurveyRealTime(idSurvey);
     console.log("CARGADO surveyRealTime");
-    surveyRealTime.currentPage = (surveyRealTime.currentPage) ? surveyRealTime.currentPage : 0;
+
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
     sino se presentar comportamientos raros.
     */
-    self.setState({ surveyData, idSurvey, survey, surveyRealTime, freezeGame: surveyRealTime.freezeGame, currentPage: surveyRealTime.currentPage });
+    self.setState({ surveyData, idSurvey, survey });
 
     console.log("CARGADO todo");
     // Esto permite obtener datos para la grafica de gamificacion
@@ -116,7 +117,7 @@ class SurveyComponent extends Component {
   };
 
 
-  loadSurveyRealTime = async (idSurvey) => {
+  listenAndUpdateStateSurveyRealTime = async (idSurvey) => {
     var self = this;
 
     const promiseA = new Promise((resolve, reject) => {
@@ -125,8 +126,11 @@ class SurveyComponent extends Component {
           .collection("surveys")
           .doc(idSurvey)
           .onSnapshot((doc) => {
-            let data = doc.data();
-            resolve(data);
+            let surveyRealTime = doc.data();
+
+            surveyRealTime.currentPage = (surveyRealTime.currentPage) ? surveyRealTime.currentPage : 0;
+            self.setState({ surveyRealTime, freezeGame: surveyRealTime.freezeGame, currentPage: surveyRealTime.currentPage });
+            resolve(surveyRealTime);
           });
       } catch (e) { reject(e) }
     });

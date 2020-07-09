@@ -121,6 +121,15 @@ class SurveyForm extends Component {
 
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
+
+        console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
+
+        if (surveySnapShot.size == 0) {
+          console.log("surveySnapShotINNER");
+          this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
+          return;
+        }
+        console.log("surveySnapShotFINAL");
         publishedSurveys = [];
         surveySnapShot.forEach(function (doc) {
           publishedSurveys.push({ ...doc.data(), _id: doc.id });
@@ -147,6 +156,8 @@ class SurveyForm extends Component {
           this.setState({ surveyRecentlyChanged: false });
         }, 3000);
 
+
+
         this.setState({ surveysData: surveysData }, this.seeIfUserHasVote);
       });
     }
@@ -161,9 +172,10 @@ class SurveyForm extends Component {
       let surveys = [];
 
       // Se itera surveysData y se ejecuta el servicio que valida las respuestas
+      let userHasVoted = false;
       surveysData.forEach(async (survey, index, arr) => {
         if (currentUser) {
-          let userHasVoted = await SurveyAnswers.getUserById(event._id, survey, currentUser._id);
+          userHasVoted = await SurveyAnswers.getUserById(event._id, survey, currentUser._id);
           surveys.push({ ...arr[index], userHasVoted });
         } else {
           // Esto solo se ejecuta si no hay algun usuario logeado
@@ -177,11 +189,20 @@ class SurveyForm extends Component {
 
         if (surveys.length == arr.length) resolve(surveys);
       });
+
+
+
     });
 
     let stateSurveys = await votesUserInSurvey;
 
+
+
     this.setState({ surveysData: stateSurveys });
+    console.log("stateSurveys", stateSurveys);
+    if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
+      this.toggleSurvey(stateSurveys[0]);
+    }
 
     // bucle que verifica si el usuario contesto las encuestas
   };
