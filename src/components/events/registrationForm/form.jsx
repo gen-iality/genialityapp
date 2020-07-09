@@ -147,8 +147,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 {label}
               </span>
             ) : (
-              ""
-            )
+                ""
+              )
           }
           type={type}
           key={key}
@@ -174,8 +174,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 {label}
               </span>
             ) : (
-              label
-            )}
+                label
+              )}
           </Checkbox>
         );
       }
@@ -233,7 +233,7 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
               <Form.Item
                 // style={eventUserId && hideFields}
                 valuePropName={type == "boolean" ? "checked" : "value"}
-                label={(labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion" ? label : ""}
+                label={(labelPosition != "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition != "arriba" || !labelPosition)}
                 name={name}
                 rules={[rule]}
                 key={"l" + key}
@@ -306,10 +306,10 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
             </Form>
           </Card>
         ) : (
-          <Card>
-            <Result status="success" title={formMessage.resultTitle} subTitle={successMessage} />
-          </Card>
-        )}
+            <Card>
+              <Result status="success" title={formMessage.resultTitle} subTitle={successMessage} />
+            </Card>
+          )}
       </Col>
     </>
   );
