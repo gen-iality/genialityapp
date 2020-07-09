@@ -23,6 +23,7 @@ class Report extends Component {
         const { event } = this.props
         let data = []
         const invitations = []
+        const invitationsToExport = []
         const invitation = await InvitationsApi.getAll(event._id)
         data = invitation.data
 
@@ -34,8 +35,18 @@ class Report extends Component {
                 state: data[i].state ? data[i].state : "",
                 response: data[i].response ? data[i].response : ""
             })
+
+            invitationsToExport.push({
+                key: data[i]._id,
+                user_requested: data[i].user_name_requested ? data[i].user_name_requested : "Sin datos",
+                user_name_requesting: data[i].user_name_requesting ? data[i].user_name_requesting : "Sin datos",
+                state: data[i].state ? data[i].state : "",
+                response: data[i].response ? data[i].response : "",
+                created_at: data[i].created_at,
+                updated_at: data[i].updated_at,
+            })
         }
-        this.setState({ invitations, loading: false })
+        this.setState({ invitations, loading: false, invitationsToExport })
     }
 
 
@@ -103,7 +114,7 @@ class Report extends Component {
     };
 
     render() {
-        const { invitations, loading } = this.state;
+        const { invitations, loading, invitationsToExport } = this.state;
         const columns = [
             {
                 title: 'Usuario',
@@ -139,7 +150,7 @@ class Report extends Component {
                         <div>
                             <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                                 <Col className="gutter-row" span={6}>
-                                    <ExportReport invitations={invitations} />
+                                    <ExportReport invitations={invitationsToExport} />
                                 </Col>
                             </Row>
                             <Table columns={columns} dataSource={invitations} style={{ marginTop: "5%" }} />
