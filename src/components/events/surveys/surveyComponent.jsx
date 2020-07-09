@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result, Button } from "antd";
+import { PageHeader, message, notification, Modal, Result, Button, Spin } from "antd";
 import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
@@ -44,21 +44,35 @@ class SurveyComponent extends Component {
       freezeGame: false,
       showMessageOnComplete: false,
       aux: 0,
-      currentPage: 0,
+      currentPage: null,
+      surveyRealTime: null,
       timerPausa: null,
       survey: null
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    var self = this;
     const { eventId, idSurvey } = this.props;
-    this.loadData();
+    console.log("CARGANDO INICIAL");
+    let surveyData = await this.loadSurvey(eventId, idSurvey);
+    let survey = new Survey.Model(surveyData);
+    console.log("CARGADO surveyData");
+    let surveyRealTime = await this.loadSurveyRealTime(idSurvey);
+    console.log("CARGADO surveyRealTime");
+    surveyRealTime.currentPage = (surveyRealTime.currentPage) ? surveyRealTime.currentPage : 0;
+
+    /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
+    que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
+    sino se presentar comportamientos raros.
+    */
+    self.setState({ surveyData, idSurvey, survey, surveyRealTime, freezeGame: surveyRealTime.freezeGame, currentPage: surveyRealTime.currentPage });
+
+    console.log("CARGADO todo");
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
     this.getCurrentEvenUser();
-    SurveyPage.getCurrentPage(idSurvey, this);
-
 
 
   }
@@ -101,37 +115,49 @@ class SurveyComponent extends Component {
     }
   };
 
+
+  loadSurveyRealTime = async (idSurvey) => {
+    var self = this;
+
+    const promiseA = new Promise((resolve, reject) => {
+      try {
+        firestore
+          .collection("surveys")
+          .doc(idSurvey)
+          .onSnapshot((doc) => {
+            let data = doc.data();
+            resolve(data);
+          });
+      } catch (e) { reject(e) }
+    });
+
+    return promiseA;
+
+
+
+
+  }
   // Funcion para cargar datos de la encuesta seleccionada
-  loadData = async () => {
-    const { idSurvey, eventId, singlePage } = this.props;
+  loadSurvey = async (eventId, idSurvey) => {
+
     let { surveyData } = this.state;
 
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty("question", "id");
-
     Survey.JsonObject.metaData.addProperty("question", "points");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
 
-
-
-
-    console.log("surveyDat", dataSurvey);
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
-
     // Se igual title al valor de survey
     dataSurvey.title = dataSurvey.survey;
-
     // Se muestra una barra de progreso en la parte superior
     dataSurvey.showProgressBar = "bottom";
-
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
     dataSurvey.sendResultOnPageNext = true;
-
     // Esto permite ocultar el boton de devolver en la encuesta
     dataSurvey.showPrevButton = false;
-
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
@@ -146,7 +172,6 @@ class SurveyComponent extends Component {
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = "Iniciar Cuestionario";
-
       let textMessage = dataSurvey.initialMessage;
       dataSurvey["questions"].unshift({
         type: "html",
@@ -172,23 +197,7 @@ class SurveyComponent extends Component {
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
-
-    console.log("pages", surveyData);
-    var self = this;
-    firestore
-      .collection("surveys")
-      .doc(idSurvey)
-      .onSnapshot((doc) => {
-        let data = doc.data();
-        let value = data.freezeGame && data.freezeGame;
-        self.setState({ freezeGame: value });
-
-        console.log("Current data: ", data, value);
-      });
-
-    let survey = new Survey.Model(surveyData);
-    this.setState({ surveyData, idSurvey, survey });
-
+    return surveyData;
   };
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
@@ -531,8 +540,8 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
-
+    let { surveyData, surveyRealTime, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
+    { console.log("CARGADO EN EL RENDER", surveyRealTime); }
     const { showListSurvey, surveyLabel } = this.props;
     return (
       <div style={surveyStyle}>
@@ -548,15 +557,21 @@ class SurveyComponent extends Component {
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-          {(this.state.survey && <Survey.Survey
-            model={this.state.survey}
-            onComplete={this.sendData}
-            onPartialSend={this.sendData}
-            onCompleting={this.setFinalMessage}
-            onTimerPanelInfoText={this.setCounterMessage}
-            onStarted={this.checkCurrentPage}
-            onCurrentPageChanged={this.onCurrentPageChanged}
-          />)}
+          {(!(this.state.survey && this.state.surveyRealTime)) && <Spin tip="Loading..." />}
+          {(this.state.survey && this.state.surveyRealTime &&
+
+            (
+              < Survey.Survey
+                model={this.state.survey}
+                onComplete={this.sendData}
+                onPartialSend={this.sendData}
+                onCompleting={this.setFinalMessage}
+                onTimerPanelInfoText={this.setCounterMessage}
+                onStarted={this.checkCurrentPage}
+                onCurrentPageChanged={this.onCurrentPageChanged}
+              />
+
+            ))}
         </div>
       </div>
     );

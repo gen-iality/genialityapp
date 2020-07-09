@@ -84,13 +84,19 @@ const countAnswers = (surveyId, questionId, optionQuantity, optionIndex, voteVal
 export const SurveyPage = {
   // Obtiene la pagina actual de la encuesta
   getCurrentPage: (surveyId, self) => {
-    firestore
-      .collection("surveys")
-      .doc(surveyId)
-      .onSnapshot((survey) => {
-        let { currentPage } = survey.data();
-        self.setState({ currentPage });
-      });
+    return new Promise((resolve, reject) => {
+      try {
+        firestore
+          .collection("surveys")
+          .doc(surveyId)
+          .onSnapshot((survey) => {
+            let { currentPage } = survey.data();
+            resolve(currentPage);
+          });
+      } catch (e) {
+        reject(e);
+      }
+    });
   },
 
   // Actualiza la pagina actual de la encuesta

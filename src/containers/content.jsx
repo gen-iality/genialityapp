@@ -37,7 +37,7 @@ class ContentContainer extends Component {
                     <Route exact path="/landing/:event" component={Landing} />
 
 
-                    {/* Arreglo temporal mastercard para que tenga una url bonita, evius aún no soporta esto*/}
+                    {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
                     <Route exact path='/mentoriamastercard' render={() => (
                         <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />
                     )} />

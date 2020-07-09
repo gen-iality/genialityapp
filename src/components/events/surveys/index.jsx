@@ -67,9 +67,20 @@ class SurveyForm extends Component {
   };
 
   surveyVisible = () => {
+
+
+    if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
+      this.toggleSurvey(this.state.surveysData[0]);
+    }
+
+
     this.setState({
       surveyVisible: !this.state.surveyVisible,
     });
+
+
+
+
   };
 
   async componentDidMount() {
