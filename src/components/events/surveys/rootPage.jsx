@@ -42,13 +42,13 @@ export default class RootPage extends Component {
     if (currentUser) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
+    } else {
+      // Esto solo se ejecuta si no hay algun usuario logeado
+      const guestUser = new Promise((resolve, reject) => {
+        let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
+        surveyId ? resolve(true) : resolve(false);
+      });
     }
-
-    // Esto solo se ejecuta si no hay algun usuario logeado
-    const guestUser = new Promise((resolve, reject) => {
-      let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
-      surveyId ? resolve(true) : resolve(false);
-    });
 
     let guestVoteInSurvey = await guestUser;
     this.setState({ guestVoteInSurvey, isLoading: false });
