@@ -57,23 +57,23 @@ export default class RootPage extends Component {
   render() {
     let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
-    console.log("id de la encuesta:", idSurvey);
+    console.log("DEBUG error muestra gráfica en firefox:", "idSurvey", "hasVote", hasVote, "guestVoteInSurvey", guestVoteInSurvey, "openSurvey", openSurvey);
     if (!isLoading)
-      return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
+      return (openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
-        <Card className="survyCard">
-          <SurveyComponent
-            responseCounter={responseCounter}
-            idSurvey={idSurvey}
-            showListSurvey={toggleSurvey}
-            eventId={eventId}
-            currentUser={currentUser}
-            singlePage={true}
-            surveyLabel={surveyLabel}
-          />
-        </Card>
-      );
+          <Card className="survyCard">
+            <SurveyComponent
+              responseCounter={responseCounter}
+              idSurvey={idSurvey}
+              showListSurvey={toggleSurvey}
+              eventId={eventId}
+              currentUser={currentUser}
+              singlePage={true}
+              surveyLabel={surveyLabel}
+            />
+          </Card>
+        );
 
     return <Spin></Spin>;
   }
