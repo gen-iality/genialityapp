@@ -4,8 +4,9 @@ import { Bar } from "react-chartjs-2";
 import { Pagination, Spin, Card, PageHeader } from "antd";
 import Chart from "chart.js";
 
-import { SurveyAnswers } from "./services";
+import { SurveyAnswers, Users } from "./services";
 import { SurveysApi } from "../../../helpers/request";
+import { firestore } from "../../../helpers/firebase";
 import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
@@ -17,20 +18,58 @@ class Graphics extends Component {
       graphicsFrame,
       chart: {},
       chartCreated: false,
+      totalPesoVoto: 0,
+      pointsList: []
     };
+    // this.percentPesoVoto = this.percentPesoVoto.bind(this)
+  }
+
+
+  componentDidMount() {
+    this.loadData();
   }
 
   loadData = async () => {
-    const { eventId, data } = this.props;
+    const { data } = this.props;
     this.setState({ dataGamification: data }, this.mountChart);
   };
 
+  //Funcion para calcular el pesovoto del evento, en caso de que exista
+  //Aun no se valida si existe peso voto po lo cual no se llama en nunguna funcion importante
+  percentPesoVoto = async () => {
+    const { eventId } = this.props;
+
+    let totalPesoVoto = 0
+    let pesoVotoCheked = 0
+    let pointsPercent = []
+    let pointsList = []
+    const users = await Users.getUsers(eventId)
+
+    users.forEach(function (a) {
+      if (a.checkedin_at) {
+        pesoVotoCheked += parseInt(a.properties.pesovoto);
+      }
+      totalPesoVoto += parseInt(a.properties.pesovoto);
+    });
+
+    this.props.data.pointsList.forEach(function (b) {
+      pointsPercent.push((b / totalPesoVoto * pesoVotoCheked).toFixed(2))
+    })
+
+    for (let i = 0; pointsPercent.length > i; i++) {
+      const point = parseFloat(pointsPercent[i])
+      pointsList.push(point)
+    }
+
+    if (pointsList.length > 0) this.setState({ pointsList })
+  }
+
   mountChart = async () => {
     const { eventId } = this.props;
-    let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
+    let { graphicsFrame, chartCreated, chart, dataGamification, pointsList } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
     let { verticalBar } = graphicsFrame;
-    let { userList, pointsList } = dataGamification;
+    let { userList } = dataGamification;
 
     // Se condiciona si el grafico ya fue creado
     // En caso de que aun no este creado se crea, de lo contrario se actualizara
@@ -72,10 +111,6 @@ class Graphics extends Component {
       this.setState({ chart });
     }
   };
-
-  componentDidMount() {
-    this.loadData();
-  }
 
   componentDidUpdate(prevProps) {
     const { data } = this.props;

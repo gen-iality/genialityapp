@@ -10,7 +10,7 @@ import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
+import { SurveyAnswers, UserGamification, SurveyPage, Users } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import GraphicGamification from "./graphicsGamification";
@@ -58,9 +58,6 @@ class SurveyComponent extends Component {
 
     this.getCurrentEvenUser();
     SurveyPage.getCurrentPage(idSurvey, this);
-
-
-
   }
 
   /**
@@ -526,7 +523,7 @@ class SurveyComponent extends Component {
   render() {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
 
-    const { showListSurvey, surveyLabel } = this.props;
+    const { showListSurvey, surveyLabel, eventId } = this.props;
     return (
       <div style={surveyStyle}>
         {showListSurvey && (
@@ -536,7 +533,7 @@ class SurveyComponent extends Component {
             </Button>
           </div>
         )}
-        {surveyData.allow_gradable_survey && < GraphicGamification data={this.state.rankingList} />}
+        {surveyData.allow_gradable_survey && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
