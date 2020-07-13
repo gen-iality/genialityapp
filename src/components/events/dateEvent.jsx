@@ -31,7 +31,9 @@ class DateEvent extends React.Component {
         this.state = {
             currentChannel: 0,
             dates: [],
-            properties: {}
+            properties: {},
+            month: 6,
+            year: 2020
         }
         this.handleDayClick = this.handleDayClick.bind(this);
         this.save = this.save.bind(this);
@@ -43,26 +45,27 @@ class DateEvent extends React.Component {
 
     async getDates() {
         const info = await EventsApi.getOne(this.props.eventId)
-
         let dates = info.dates
+
         let date = []
         if (dates !== undefined) {
             for (let i = 0; i < dates.length; i++) {
                 let dateUTC = Date.parse(dates[i])
                 var dateUtc = new Date(dateUTC)
                 var utc = new Date(dateUtc.getTime() + dateUtc.getTimezoneOffset() * 60000);
-
                 date.push(utc)
             }
 
             this.setState({
                 currentChannel: dates.length,
-                dates: date
+                dates: date,
+                month: parseInt(moment(dates[dates.length - 1]).format("M") - 1),
+                year: parseInt(moment(dates[dates.length - 1]).format("YYYY"))
             })
         }
     }
 
-    handleDayClick(day, { selected }) {
+    async handleDayClick(day, { selected }) {
         const { dates } = this.state;
         if (selected) {
             const selectedIndex = dates.findIndex(selectedDay =>
@@ -82,7 +85,7 @@ class DateEvent extends React.Component {
         this.setState({
             properties: {
                 dates
-            }, dates
+            }, dates,
         });
     }
 
@@ -100,6 +103,7 @@ class DateEvent extends React.Component {
             <div>
                 <div style={{ marginTop: "3%" }}>
                     <DayPicker
+                        month={new Date(this.state.year, this.state.month)}
                         selectedDays={this.state.dates}
                         onDayClick={this.handleDayClick}
                     />
