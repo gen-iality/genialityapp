@@ -135,7 +135,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     let newExtraFields = [...extraFieldsOriginal]
     Object.keys(changedField).map((changedkey) => {
       conditionals.map((conditional, key) => {
-        console.log("____________", conditional, changedField, changedkey)
+        console.log(conditional.value == changedField[changedkey])
         if (changedkey === conditional.fieldToValidate) {
           if (conditional.value == changedField[changedkey]) {
             newExtraFields = newExtraFields.filter((field, key) => {
@@ -143,10 +143,11 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               return conditional.fields.indexOf(field.name) == -1
             })
           }
+          setExtraFields(newExtraFields)
         }
       })
     })
-    setExtraFields(newExtraFields)
+
     console.log("ExtraFields", extraFields)
     console.log("Condicionales", conditionals)
   }
