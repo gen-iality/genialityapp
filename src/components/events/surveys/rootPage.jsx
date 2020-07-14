@@ -47,9 +47,10 @@ export default class RootPage extends Component {
       const guestUser = new Promise((resolve, reject) => {
         let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
         surveyId ? resolve(true) : resolve(false);
-        let guestVoteInSurvey = await guestUser;
-        this.setState({ guestVoteInSurvey, isLoading: false });
+
       });
+      let guestVoteInSurvey = await guestUser;
+      this.setState({ guestVoteInSurvey, isLoading: false });
     }
 
 
