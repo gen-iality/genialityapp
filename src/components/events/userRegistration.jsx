@@ -21,6 +21,7 @@ class UserRegistration extends Component {
       registeredUser: false,
       extraFields: [],
       initialValues: {},
+      conditionals: []
     };
   }
 
@@ -68,7 +69,7 @@ class UserRegistration extends Component {
           });
         }
       } catch (error) {
-        const { status } = error.response;
+        console.log(error)
       }
     }
   };
@@ -80,18 +81,19 @@ class UserRegistration extends Component {
     const eventUsers = await UsersApi.getAll(this.props.eventId, "?pageSize=10000");
 
     const properties = event.user_properties;
+    const conditionals = event.fields_conditions ? event.fields_conditions : []
 
     console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
-    this.setState({ extraFields, eventUsers: eventUsers.data }, this.getCurrentUser);
+    this.setState({ extraFields, eventUsers: eventUsers.data, conditionals }, this.getCurrentUser);
     console.log("extraFields", properties);
   }
 
   render() {
-    let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets } = this.state;
+    let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets, conditionals } = this.state;
     const { eventId } = this.props;
     if (!loading)
       return !registeredUser ? (
@@ -104,16 +106,16 @@ class UserRegistration extends Component {
               singlePage={true}
             />
           </Col> */}
-          <FormComponent initialValues={initialValues} eventId={eventId} extraFields={extraFields} />
+          <FormComponent initialValues={initialValues} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals} />
         </React.Fragment>
       ) : (
-        <UserInforCard
-          currentUser={currentUser}
-          userTickets={userTickets}
-          eventId={eventId}
-          extraFields={extraFields}
-        />
-      );
+          <UserInforCard
+            currentUser={currentUser}
+            userTickets={userTickets}
+            eventId={eventId}
+            extraFields={extraFields}
+          />
+        );
     return <Spin></Spin>;
   }
 }

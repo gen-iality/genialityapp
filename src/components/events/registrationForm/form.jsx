@@ -29,8 +29,10 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }) => {
+export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
   const [user, setUser] = useState({});
+  const [extraFields, setExtraFields] = useState(extraFieldsOriginal)
+  const [value, setValue] = useState();
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -38,12 +40,13 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
   const [formMessage, setFormMessage] = useState({});
 
   const [form] = Form.useForm();
+  console.log("Formulario", form, extraFields)
 
   useEffect(() => {
     let formType = !eventUserId ? "register" : "transfer";
     setFormMessage(FormTags(formType));
-
     setSubmittedForm(false);
+    hideConditionalFieldsToDefault();
     form.resetFields();
   }, [eventUserId, initialValues]);
 
@@ -122,12 +125,55 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
     }
   };
 
+  const fieldsChange = (changedField) => {
+    console.log("propiedades de fieldsChange", changedField)
+
+  }
+
+  const valuesChange = (changedField) => {
+    console.log("propiedades de valuesChange", changedField)
+    let newExtraFields = [...extraFieldsOriginal]
+    Object.keys(changedField).map((changedkey) => {
+      conditionals.map((conditional, key) => {
+        console.log("____________", conditional, changedField, changedkey)
+        if (changedkey === conditional.fieldToValidate) {
+          if (conditional.value == changedField[changedkey]) {
+            newExtraFields = newExtraFields.filter((field, key) => {
+              console.log(conditional.fields, field)
+              return conditional.fields.indexOf(field.name) == -1
+            })
+          }
+        }
+      })
+    })
+    setExtraFields(newExtraFields)
+    console.log("ExtraFields", extraFields)
+    console.log("Condicionales", conditionals)
+  }
+
+  const hideConditionalFieldsToDefault = () => {
+    let newExtraFields = [...extraFieldsOriginal]
+
+    conditionals.map((conditional, key) => {
+      newExtraFields = newExtraFields.filter((field, key) => {
+        console.log(conditional.fields, field)
+        return conditional.fields.indexOf(field.name) == -1
+      })
+    })
+
+    setExtraFields(newExtraFields)
+    console.log("ExtraFields", extraFields)
+    console.log("Condicionales", conditionals)
+  }
+
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = () => {
+    console.log("render", extraFields)
+    if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
-      if (m.name == "pesovoto") return;
+      // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
@@ -137,6 +183,17 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       let labelPosition = m.labelPosition;
       let target = name;
       let value = user[target];
+
+      if (conditionals.state === "enabled") {
+        if (label === conditionals.field) {
+          if (value === [conditionals.value]) {
+            label = conditionals.field
+          } else {
+            return
+          }
+        }
+      }
+
       let input = (
         <Input
           {...props}
@@ -185,13 +242,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       }
 
       if (type === "multiplelist") {
-        console.log(m.options);
+
         input = (
           <Checkbox.Group
             options={m.options}
-            onChange={(checkedValues) => {
-              value = JSON.stringify(checkedValues);
-            }}
+            onChange={(checkedValues) => { value = JSON.stringify(checkedValues); }}
           />
         );
       }
@@ -237,7 +292,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 name={name}
                 rules={[rule]}
                 key={"l" + key}
-                htmlFor={key}>
+                htmlFor={key}
+              >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
@@ -281,7 +337,10 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
               onFinish={onFinish}
               validateMessages={validateMessages}
               initialValues={initialValues}
-              onFinishFailed={showGeneralMessage}>
+              onFinishFailed={showGeneralMessage}
+              onFieldsChange={fieldsChange}
+              onValuesChange={valuesChange}
+            >
               {renderForm()}
               <br />
               <br />
