@@ -41,6 +41,9 @@ class ContentContainer extends Component {
                     <Route exact path='/mentoriamastercard' render={() => (
                         <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />
                     )} />
+                    <Route exact path='/conjuntoeltrebol' render={() => (
+                        <Redirect to="/landing/5f0e16a66b0e49031810d6e2" />
+                    )} />
                     <PrivateRoute path="/my_events" component={Events} />
                     <PrivateRoute path="/event/:event" component={Event} />
                     <PrivateRoute path="/create-event" component={NewEvent} />
