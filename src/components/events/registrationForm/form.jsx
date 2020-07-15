@@ -130,24 +130,29 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
   }
 
-  const valuesChange = (changedField) => {
-    console.log("propiedades de valuesChange", changedField)
+  const valuesChange = (changedField, allFields) => {
+    console.log("propiedades de valuesChange", changedField, allFields)
     let newExtraFields = [...extraFieldsOriginal]
-    Object.keys(changedField).map((changedkey) => {
-      conditionals.map((conditional, key) => {
+    hideConditionalFieldsToDefault();
+    conditionals.map((conditional, key) => {
+      let fulfillConditional = true
+      Object.keys(allFields).map((changedkey) => {
         console.log(conditional.value == changedField[changedkey])
         if (changedkey === conditional.fieldToValidate) {
-          if (conditional.value == changedField[changedkey]) {
-            newExtraFields = newExtraFields.filter((field, key) => {
-              console.log(conditional.fields, field)
-              return conditional.fields.indexOf(field.name) == -1
-            })
-          }
-          setExtraFields(newExtraFields)
+
+          fulfillConditional = (conditional.value == changedField[changedkey])
         }
       })
+      if (fulfillConditional) {
+        //Campos ocultados por la condicion
+        newExtraFields = newExtraFields.filter((field, key) => {
+          console.log(conditional.fields, field)
+          return conditional.fields.indexOf(field.name) == -1
+        })
+      }
     })
 
+    setExtraFields(newExtraFields)
     console.log("ExtraFields", extraFields)
     console.log("Condicionales", conditionals)
   }
