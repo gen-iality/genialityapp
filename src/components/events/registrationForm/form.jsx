@@ -4,7 +4,7 @@ import API, { UsersApi, TicketsApi } from "../../../helpers/request";
 
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 
-import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -133,14 +133,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const valuesChange = (changedField, allFields) => {
     console.log("propiedades de valuesChange", changedField, allFields)
     let newExtraFields = [...extraFieldsOriginal]
-    hideConditionalFieldsToDefault();
+
     conditionals.map((conditional, key) => {
       let fulfillConditional = true
       Object.keys(allFields).map((changedkey) => {
-        console.log(conditional.value == changedField[changedkey])
         if (changedkey === conditional.fieldToValidate) {
-
-          fulfillConditional = (conditional.value == changedField[changedkey])
+          console.log("cadena despues de if", changedkey, conditional, changedField[changedkey], allFields)
+          fulfillConditional = (conditional.value == allFields[changedkey])
         }
       })
       if (fulfillConditional) {
@@ -162,7 +161,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     conditionals.map((conditional, key) => {
       newExtraFields = newExtraFields.filter((field, key) => {
-        console.log(conditional.fields, field)
         return conditional.fields.indexOf(field.name) == -1
       })
     })
@@ -223,7 +221,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`}>{label}</p>
+            <Divider />
           </React.Fragment>
         );
       }
