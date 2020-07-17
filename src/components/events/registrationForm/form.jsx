@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Fragment } from "react";
+import { Redirect } from 'react-router-dom';
 
-import API, { UsersApi, TicketsApi } from "../../../helpers/request";
+import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 
-import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -29,8 +30,11 @@ const validateMessages = {
   },
 };
 
-export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }) => {
+export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
   const [user, setUser] = useState({});
+  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
+  const [validateEmail, setValidateEmail] = useState(false);
+  const [value, setValue] = useState();
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -38,12 +42,14 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
   const [formMessage, setFormMessage] = useState({});
 
   const [form] = Form.useForm();
+  console.log("Formulario", form, extraFields)
 
   useEffect(() => {
     let formType = !eventUserId ? "register" : "transfer";
     setFormMessage(FormTags(formType));
-
     setSubmittedForm(false);
+    hideConditionalFieldsToDefault();
+    getEventData(eventId)
     form.resetFields();
   }, [eventUserId, initialValues]);
 
@@ -53,6 +59,16 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       setGeneralFormErrorMessageVisible(false);
     }, 3000);
   };
+
+  //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
+  const getEventData = async (eventId) => {
+    const data = await EventsApi.getOne(eventId)
+    console.log(data)
+    //Para evitar errores se verifica si la variable existe
+    if (data.validateEmail !== undefined) {
+      setValidateEmail(data.validateEmail)
+    }
+  }
 
   const onFinish = async (values) => {
     setGeneralFormErrorMessageVisible(false);
@@ -106,6 +122,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
 
           setSubmittedForm(true);
           message.success(textMessage);
+          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
+          if (validateEmail) {
+            window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+          }
+
         } else {
           textMessage.content = resp;
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
@@ -122,12 +143,59 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
     }
   };
 
+  const fieldsChange = (changedField) => {
+    console.log("propiedades de fieldsChange", changedField)
+
+  }
+
+  const valuesChange = (changedField, allFields) => {
+    console.log("propiedades de valuesChange", changedField, allFields)
+    let newExtraFields = [...extraFieldsOriginal]
+
+    conditionals.map((conditional, key) => {
+      let fulfillConditional = true
+      Object.keys(allFields).map((changedkey) => {
+        if (changedkey === conditional.fieldToValidate) {
+          console.log("cadena despues de if", changedkey, conditional, changedField[changedkey], allFields)
+          fulfillConditional = (conditional.value == allFields[changedkey])
+        }
+      })
+      if (fulfillConditional) {
+        //Campos ocultados por la condicion
+        newExtraFields = newExtraFields.filter((field, key) => {
+          console.log(conditional.fields, field)
+          return conditional.fields.indexOf(field.name) == -1
+        })
+      }
+    })
+
+    setExtraFields(newExtraFields)
+    console.log("ExtraFields", extraFields)
+    console.log("Condicionales", conditionals)
+  }
+
+  const hideConditionalFieldsToDefault = () => {
+    let newExtraFields = [...extraFieldsOriginal]
+
+    conditionals.map((conditional, key) => {
+      newExtraFields = newExtraFields.filter((field, key) => {
+        return conditional.fields.indexOf(field.name) == -1
+      })
+    })
+
+    setExtraFields(newExtraFields)
+    console.log("ExtraFields", extraFields)
+    console.log("Condicionales", conditionals)
+  }
+
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = () => {
+    console.log("render", extraFields)
+    if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
-      if (m.name == "pesovoto") return;
+      // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
@@ -137,6 +205,17 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       let labelPosition = m.labelPosition;
       let target = name;
       let value = user[target];
+
+      if (conditionals.state === "enabled") {
+        if (label === conditionals.field) {
+          if (value === [conditionals.value]) {
+            label = conditionals.field
+          } else {
+            return
+          }
+        }
+      }
+
       let input = (
         <Input
           {...props}
@@ -147,8 +226,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 {label}
               </span>
             ) : (
-              ""
-            )
+                ""
+              )
           }
           type={type}
           key={key}
@@ -160,7 +239,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}>{label}</p>
+            <Divider />
           </React.Fragment>
         );
       }
@@ -174,8 +254,8 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
                 {label}
               </span>
             ) : (
-              label
-            )}
+                label
+              )}
           </Checkbox>
         );
       }
@@ -185,13 +265,11 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
       }
 
       if (type === "multiplelist") {
-        console.log(m.options);
+
         input = (
           <Checkbox.Group
             options={m.options}
-            onChange={(checkedValues) => {
-              value = JSON.stringify(checkedValues);
-            }}
+            onChange={(checkedValues) => { value = JSON.stringify(checkedValues); }}
           />
         );
       }
@@ -233,11 +311,12 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
               <Form.Item
                 // style={eventUserId && hideFields}
                 valuePropName={type == "boolean" ? "checked" : "value"}
-                label={(labelPosition != "arriba" || !labelPosition) && type !== "tituloseccion" ? label : ""}
+                label={(labelPosition != "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition != "arriba" || !labelPosition)}
                 name={name}
                 rules={[rule]}
                 key={"l" + key}
-                htmlFor={key}>
+                htmlFor={key}
+              >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
@@ -281,7 +360,10 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
               onFinish={onFinish}
               validateMessages={validateMessages}
               initialValues={initialValues}
-              onFinishFailed={showGeneralMessage}>
+              onFinishFailed={showGeneralMessage}
+              onFieldsChange={fieldsChange}
+              onValuesChange={valuesChange}
+            >
               {renderForm()}
               <br />
               <br />
@@ -306,10 +388,10 @@ export default ({ initialValues, eventId, extraFields, eventUserId, closeModal }
             </Form>
           </Card>
         ) : (
-          <Card>
-            <Result status="success" title={formMessage.resultTitle} subTitle={successMessage} />
-          </Card>
-        )}
+            <Card>
+              <Result status="success" title={formMessage.resultTitle} subTitle={successMessage} />
+            </Card>
+          )}
       </Col>
     </>
   );

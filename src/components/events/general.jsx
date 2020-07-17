@@ -44,6 +44,7 @@ class General extends Component {
             info: {},
             infoApp: [],
             specificDates: false,
+            dates: []
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
@@ -69,7 +70,7 @@ class General extends Component {
             });
             const { selectedCategories, selectedOrganizer, selectedType } = handleFields(organizers, types, categories, event);
             this.setState({ categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, loading: false })
-            if (event.dates) {
+            if (event.dates && event.dates.length > 0) {
                 this.setState({ specificDates: true })
             } else {
                 this.setState({ specificDates: false })
@@ -332,8 +333,20 @@ class General extends Component {
         this.setState({ modal: true });
     };
 
-    specificDates(checked) {
+    async specificDates(checked) {
         this.setState({ specificDates: checked })
+
+        if (checked === false) {
+            const properties = {
+                dates: {}
+            }
+
+            console.log(properties)
+            const info = await EventsApi.editOne(properties, this.props.eventId)
+            console.log(info)
+        }
+
+
     }
 
     render() {

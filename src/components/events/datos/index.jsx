@@ -9,7 +9,11 @@ import DatosModal from "./modal";
 import Dialog from "../../modal/twoAction";
 import Loading from "../../loaders/loading";
 import { typeInputs } from "../../../helpers/constants";
-import DragDrop from "./dragDrop"
+import DragDrop from "./dragDrop";
+import { Tabs } from 'antd';
+import RelationField from './relationshipFields'
+
+const { TabPane } = Tabs;
 
 class Datos extends Component {
     constructor(props) {
@@ -164,82 +168,89 @@ class Datos extends Component {
     render() {
         const { fields, modal, edit, info } = this.state;
         return (
-            <Fragment>
-                <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
-                    addAction={this.addField} addTitle={"Agregar dato"}>
-                    {this.state.loading ? <Loading /> :
-                        <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Privado", "Visible", ""]}>
-                            <tr className="has-text-grey-light ">
-                                <td className="has-text-grey-light ">Email</td>
-                                <td className="has-text-grey-light ">Correo</td>
-                                <td>
-                                    <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
-                                        checked={true} disabled={true} />
-                                    <label className="checkbox has-text-grey-light" htmlFor={"mandEmail"} />
-                                </td>
-                                <td />
-                            </tr>
-                            <tr>
-                                <td className="has-text-grey-light ">Texto</td>
-                                <td className="has-text-grey-light ">Nombres</td>
-                                <td>
-                                    <input className="is-checkradio is-primary" type="checkbox" id={"mandName"}
-                                        checked={true} disabled={true} />
-                                    <label className="checkbox" htmlFor={"mandName"} />
-                                </td>
-                                <td />
-                            </tr>
-                            {fields.map((field, key) => {
-                                return <tr key={key}>
-                                    <td>{field.label ? field.label : field.label}</td>
-                                    <td>{field.type ? field.type : field.type}</td>
-                                    <td>
-                                        <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
-                                            type="checkbox" name={`mandatory`} checked={field.mandatory}
-                                            onChange={event => this.changeCheck(field.uuid ? field.uuid : field._id, field.mandatory)} />
-                                        <label htmlFor={`mandatory${field.label}`}></label>
-                                    </td>
+            <Tabs defaultActiveKey="1">
+                <TabPane tab="Configuración General" key="1">
+                    <Fragment>
+                        <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
+                            addAction={this.addField} addTitle={"Agregar dato"}>
+                            {this.state.loading ? <Loading /> :
+                                <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Privado", "Visible", ""]}>
+                                    <tr className="has-text-grey-light ">
+                                        <td className="has-text-grey-light ">Email</td>
+                                        <td className="has-text-grey-light ">Correo</td>
+                                        <td>
+                                            <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
+                                                checked={true} disabled={true} />
+                                            <label className="checkbox has-text-grey-light" htmlFor={"mandEmail"} />
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    <tr>
+                                        <td className="has-text-grey-light ">Texto</td>
+                                        <td className="has-text-grey-light ">Nombres</td>
+                                        <td>
+                                            <input className="is-checkradio is-primary" type="checkbox" id={"mandName"}
+                                                checked={true} disabled={true} />
+                                            <label className="checkbox" htmlFor={"mandName"} />
+                                        </td>
+                                        <td />
+                                    </tr>
+                                    {fields.map((field, key) => {
+                                        return <tr key={key}>
+                                            <td>{field.label ? field.label : field.label}</td>
+                                            <td>{field.type ? field.type : field.type}</td>
+                                            <td>
+                                                <input className="is-checkradio is-primary" id={`mandatory${field.label}`}
+                                                    type="checkbox" name={`mandatory`} checked={field.mandatory}
+                                                    onChange={event => this.changeCheck(field.uuid ? field.uuid : field._id, field.mandatory)} />
+                                                <label htmlFor={`mandatory${field.label}`}></label>
+                                            </td>
 
-                                    <td>
-                                        <input className="is-checkradio is-primary" id={`privatePublic${field.label}`}
-                                            type="checkbox" name={`privatePublic`} checked={field.privatePublic}
-                                            onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.privatePublic)} />
-                                        <label htmlFor={`privatePublic${field.label}`}></label>
-                                    </td>
+                                            <td>
+                                                <input className="is-checkradio is-primary" id={`privatePublic${field.label}`}
+                                                    type="checkbox" name={`privatePublic`} checked={field.privatePublic}
+                                                    onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.privatePublic)} />
+                                                <label htmlFor={`privatePublic${field.label}`}></label>
+                                            </td>
 
-                                    <td>
-                                        <input className="is-checkradio is-primary" id={`visible${field.label}`}
-                                            type="checkbox" name={`visible`} checked={field.visible}
-                                            onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visible)} />
-                                        <label htmlFor={`visible${field.label}`}></label>
-                                    </td>
+                                            <td>
+                                                <input className="is-checkradio is-primary" id={`visible${field.label}`}
+                                                    type="checkbox" name={`visible`} checked={field.visible}
+                                                    onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visible)} />
+                                                <label htmlFor={`visible${field.label}`}></label>
+                                            </td>
 
-                                    <td>
-                                        <button onClick={e => this.editField(field)}><span className="icon"><i
-                                            className="fas fa-edit" /></span></button>
-                                        <button onClick={e => this.setState({ deleteModal: field._id })}><span
-                                            className="icon"><i className="fas fa-trash-alt" /></span></button>
-                                    </td>
-                                </tr>
-                            })}
-                        </EvenTable>
-                    }
-                </EventContent>
-                {
-                    modal &&
-                    <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
-                        <DatosModal edit={edit} info={info} action={this.saveField} />
-                    </EventModal>
-                }
-                {
-                    this.state.deleteModal &&
-                    <Dialog modal={this.state.deleteModal} title={'Borrar Dato'}
-                        content={<p>Seguro de borrar este dato?</p>}
-                        first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
-                        message={this.state.message}
-                        second={{ title: 'Cancelar', class: '', action: this.closeDelete }} />
-                }
-            </Fragment >
+                                            <td>
+                                                <button onClick={e => this.editField(field)}><span className="icon"><i
+                                                    className="fas fa-edit" /></span></button>
+                                                <button onClick={e => this.setState({ deleteModal: field._id })}><span
+                                                    className="icon"><i className="fas fa-trash-alt" /></span></button>
+                                            </td>
+                                        </tr>
+                                    })}
+                                </EvenTable>
+                            }
+                        </EventContent>
+                        {
+                            modal &&
+                            <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
+                                <DatosModal edit={edit} info={info} action={this.saveField} />
+                            </EventModal>
+                        }
+                        {
+                            this.state.deleteModal &&
+                            <Dialog modal={this.state.deleteModal} title={'Borrar Dato'}
+                                content={<p>Seguro de borrar este dato?</p>}
+                                first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                                message={this.state.message}
+                                second={{ title: 'Cancelar', class: '', action: this.closeDelete }} />
+                        }
+                    </Fragment >
+                </TabPane>
+                <TabPane tab="Campos Relacionados" key="2">
+                    <RelationField eventId={this.props.eventID} fields={fields} />
+                </TabPane>
+            </Tabs>
         )
     }
 }
