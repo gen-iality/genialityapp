@@ -1,3 +1,4 @@
+import 'chartjs-plugin-datalabels'
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
@@ -41,6 +42,11 @@ class Graphics extends Component {
       verticalBar.data.datasets[0].data = Object.values(pointsList || []);
       verticalBar.data.datasets[0].label = "Ranking";
       verticalBar.options = {
+        plugins: {
+          datalabels: {
+            color: 'black'
+          }
+        },
         scales: {
           yAxes: [{
             ticks: {
