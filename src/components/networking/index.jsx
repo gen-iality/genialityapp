@@ -2,8 +2,9 @@ import React, { Component, Fragment } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Card, Avatar, Alert, Tabs, message } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message } from "antd";
 
+import AppointmentModal from "./appointmentModal";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
@@ -32,6 +33,7 @@ export default class ListEventUser extends Component {
       changeItem: false,
       eventUserId: null,
       currentUserName: null,
+      userIdToMakeAppointment: '',
       asistantData: []
     };
   }
@@ -39,6 +41,10 @@ export default class ListEventUser extends Component {
   componentDidMount() {
     this.getInfoCurrentUser();
     this.loadData();
+  }
+
+  closeAppointmentModal = () => {
+    this.setState({ userIdToMakeAppointment: '' })
   }
 
   loadData = async () => {
@@ -122,13 +128,20 @@ export default class ListEventUser extends Component {
   }
 
   render() {
-    const { userReq, users, pageOfItems, eventUserId, asistantData } = this.state;
+    const { event } = this.props;
+    const { userReq, users, pageOfItems, eventUserId, asistantData, userIdToMakeAppointment } = this.state;
+
     return (
       <React.Fragment>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs>
             <TabPane tab="Asistentes" key="1">
+              <AppointmentModal
+                event={event}
+                userId={userIdToMakeAppointment}
+                closeModal={this.closeAppointmentModal}
+              />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <h1> Busca aquí el usuario.</h1>
 
@@ -173,8 +186,8 @@ export default class ListEventUser extends Component {
                     <div>
                       <div>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {pageOfItems.map((users, key) => (
-                          <Row key={key} justify="center">
+                        {pageOfItems.map((users, userIndex) => (
+                          <Row key={`user-item-${userIndex}`} justify="center">
                             <Card
                               extra={
                                 <a
@@ -202,21 +215,33 @@ export default class ListEventUser extends Component {
                                 description={[
                                   <div>
                                     <br />
-                                    <p>
-                                      Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                    </p>
-                                    <div>
-                                      {
-                                        asistantData.map((data, key) => (
-                                          !data.privatePublic && data.privatePublic !== undefined && (
-                                            <div key={key}>
-                                              <p>{data.label}: {users.properties[data.name]}</p>
-                                            </div>
-                                          )
-
-                                        ))
-                                      }
-                                    </div>
+                                    <Row>
+                                      <Col xs={24}>
+                                        <p>
+                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                        </p>
+                                        <div>
+                                          {
+                                            asistantData.map((data, dataIndex) => (
+                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                </div>
+                                              )
+                                            ))
+                                          }
+                                        </div>
+                                      </Col>
+                                      <Col xs={24}>
+                                        <Button
+                                          onClick={() => {
+                                            this.setState({ userIdToMakeAppointment: users._id })
+                                          }}
+                                        >
+                                          {'Agendar cita'}
+                                        </Button>
+                                      </Col>
+                                    </Row>
                                     <br />
                                   </div>,
                                 ]}

@@ -1,5 +1,6 @@
 //Función para generar UUID
 import Swal from "sweetalert2";
+import moment from "moment";
 import { Actions } from "./request";
 import React from "react";
 
@@ -84,8 +85,8 @@ export function parseData2Excel(data, fields) {
         ? item.checked_at.toDate()
         : ""
       : item.checkedin_at
-      ? item.checkedin_at
-      : "";
+        ? item.checkedin_at
+        : "";
     fields.map(({ name, type, label }) => {
       let str;
       switch (type) {
@@ -138,3 +139,24 @@ export const sweetAlert = {
       cb(result)
     ),
 };
+
+export function getDatesRange(rangeStartDate, rangeEndDate, dateFormat = 'YYYY-MM-DD') {
+  const startDate = moment(rangeStartDate);
+  const endDate = moment(rangeEndDate);
+
+  if (startDate.isValid() && endDate.isValid() && startDate.isBefore(endDate)) {
+    const datesRange = [startDate.format(dateFormat)];
+    let nextDay = startDate.add(1, 'day');
+
+    while (nextDay.isBefore(endDate)) {
+      datesRange.push(nextDay.format(dateFormat));
+      nextDay = nextDay.add(1, 'day');
+    }
+
+    datesRange.push(endDate.format(dateFormat));
+
+    return datesRange;
+  }
+
+  return [];
+}
