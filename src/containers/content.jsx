@@ -35,6 +35,15 @@ class ContentContainer extends Component {
                     <Route exact path="/" component={Home} />
                     <Route exact path="/page/:id" component={HomeProfile} />
                     <Route exact path="/landing/:event" component={Landing} />
+
+
+                    {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
+                    <Route exact path='/mentoriamastercard' render={() => (
+                        <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />
+                    )} />
+                    <Route exact path='/conjuntoeltrebol' render={() => (
+                        <Redirect to="/landing/5f0e16a66b0e49031810d6e2" />
+                    )} />
                     <PrivateRoute path="/my_events" component={Events} />
                     <PrivateRoute path="/event/:event" component={Event} />
                     <PrivateRoute path="/create-event" component={NewEvent} />

@@ -533,7 +533,7 @@ class SurveyComponent extends Component {
             </Button>
           </div>
         )}
-        {surveyData.allow_gradable_survey && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
+        {surveyData.allow_gradable_survey === "true" && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 

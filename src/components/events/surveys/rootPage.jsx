@@ -42,38 +42,40 @@ export default class RootPage extends Component {
     if (currentUser) {
       let responseCounter = await SurveyAnswers.getUserById(eventId, selectedSurvey, currentUser._id, true);
       this.setState({ hasVote: userHasVoted, isLoading: false, responseCounter });
+    } else {
+      // Esto solo se ejecuta si no hay algun usuario logeado
+      const guestUser = new Promise((resolve, reject) => {
+        let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
+        surveyId ? resolve(true) : resolve(false);
+
+      });
+      let guestVoteInSurvey = await guestUser;
+      this.setState({ guestVoteInSurvey, isLoading: false });
     }
 
-    // Esto solo se ejecuta si no hay algun usuario logeado
-    const guestUser = new Promise((resolve, reject) => {
-      let surveyId = localStorage.getItem(`userHasVoted_${idSurvey}`);
-      surveyId ? resolve(true) : resolve(false);
-    });
 
-    let guestVoteInSurvey = await guestUser;
-    this.setState({ guestVoteInSurvey, isLoading: false });
   };
 
   render() {
     let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
-    console.log("id de la encuesta:", idSurvey);
+    console.log("DEBUG error muestra gráfica en firefox:", "idSurvey", "hasVote", hasVote, "guestVoteInSurvey", guestVoteInSurvey, "openSurvey", openSurvey);
     if (!isLoading)
-      return openSurvey == "false" || hasVote || guestVoteInSurvey ? (
+      return (openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
-        <Card className="survyCard">
-          <SurveyComponent
-            responseCounter={responseCounter}
-            idSurvey={idSurvey}
-            showListSurvey={toggleSurvey}
-            eventId={eventId}
-            currentUser={currentUser}
-            singlePage={true}
-            surveyLabel={surveyLabel}
-          />
-        </Card>
-      );
+          <Card className="survyCard">
+            <SurveyComponent
+              responseCounter={responseCounter}
+              idSurvey={idSurvey}
+              showListSurvey={toggleSurvey}
+              eventId={eventId}
+              currentUser={currentUser}
+              singlePage={true}
+              surveyLabel={surveyLabel}
+            />
+          </Card>
+        );
 
     return <Spin></Spin>;
   }
