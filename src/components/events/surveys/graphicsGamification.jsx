@@ -44,7 +44,7 @@ class Graphics extends Component {
       verticalBar.options = {
         plugins: {
           datalabels: {
-            color: 'black'
+            color: '#FFF'
           }
         },
         scales: {
