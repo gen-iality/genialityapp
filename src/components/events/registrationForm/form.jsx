@@ -221,7 +221,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}>{label}</p>
             <Divider />
           </React.Fragment>
         );
