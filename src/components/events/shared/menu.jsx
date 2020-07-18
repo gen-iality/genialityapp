@@ -126,6 +126,12 @@ class MenuConfig extends Component {
                 </NavLink>
               </Menu.Item>
 
+              <Menu.Item key="8">
+                <NavLink onClick={this.handleClick} to={`${url}/reportNetworking`}>
+                  Reporte de Networking
+                </NavLink>
+              </Menu.Item>
+
               {/* <Menu.Item key="9">
                 <NavLink onClick={this.handleClick} to={`${url}/pages`}>
                   Agregar sección

@@ -118,9 +118,17 @@ class AgendaEdit extends Component {
         })
       }
       this.setState({ tickets: ticketEvent })
-      //se valida si no existe dates para dejar la logica 
-      //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
-      if (!info.dates) {
+
+      //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
+      if (info.dates && info.dates.length > 0) {
+        let date = info.dates
+        Date.parse(date)
+
+        for (var i = 0; i < date.length; i++) {
+          days.push(Moment(date[i], ["YYYY-MM-DD"]).format("YYYY-MM-DD"))
+        }
+        //Si no, recibe la fecha inicio y la fecha fin y le da el formato especifico a mostrar
+      } else {
         const init = Moment(event.date_start);
         const end = Moment(event.date_end);
         const diff = end.diff(init, "days");
@@ -131,14 +139,6 @@ class AgendaEdit extends Component {
               .add(i, "d")
               .format("YYYY-MM-DD")
           );
-        }
-        //Si existe dates, entonces envia al array push las fechas del array dates del evento
-      } else {
-        let date = info.dates
-        Date.parse(date)
-
-        for (var i = 0; i < date.length; i++) {
-          days.push(Moment(date[i], ["YYYY-MM-DD"]).format("YYYY-MM-DD"))
         }
       }
     } catch (e) {

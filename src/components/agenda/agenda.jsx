@@ -31,18 +31,18 @@ class Agenda extends Component {
             const info = await EventsApi.getOne(event._id)
             //Se valida si no existe el array dates del evento para dejar la logica 
             //que hace push a las fechas respecto a la diferencia de datetime_start y datetime_end
-            if (!info.dates) {
-                const init = Moment(event.date_start);
-                const end = Moment(event.date_end);
-                const diff = end.diff(init, 'days');
-                //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-                for (let i = 0; i < diff + 1; i++) {
-                    days.push(Moment(init).add(i, 'd'))
-                }
-                this.setState({ days, day: days[0] }, this.fetchAgenda);
-                //Si el array dates del evento existe, envia al estado el array 
-                //days con las fechas del array dates con su respectivo formato
-            } else {
+
+            const init = Moment(event.date_start);
+            const end = Moment(event.date_end);
+            const diff = end.diff(init, 'days');
+            //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
+            for (let i = 0; i < diff + 1; i++) {
+                days.push(Moment(init).add(i, 'd'))
+            }
+            this.setState({ days, day: days[0] }, this.fetchAgenda);
+            //Si el array dates del evento existe, envia al estado el array 
+            //days con las fechas del array dates con su respectivo formato
+            if (info.dates && info.dates.length > 0) {
                 let date = info.dates
 
                 Date.parse(date)

@@ -83,11 +83,14 @@ let agendaActividadDetalle = (props) => {
                 {Moment(currentActivity.datetime_start).format("h:mm a")} -{" "}
                 {Moment(currentActivity.datetime_end).format("h:mm a")}
               </p>
-              {/* Lugar del evento */}
-              <p className="has-text-left is-size-6-desktop">
-                <b>Lugar:</b> {currentActivity.space.name}
-              </p>
-
+              {
+                currentActivity.space && (
+                  /* Lugar del evento */
+                  < p className="has-text-left is-size-6-desktop">
+                    <b>Lugar:</b> {currentActivity.space.name}
+                  </p>
+                )
+              }
 
               {currentActivity.video && (
                 <div className="column is-centered mediaplayer">
@@ -342,7 +345,7 @@ let agendaActividadDetalle = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
