@@ -3,6 +3,8 @@ import { Button, Card } from "antd";
 import Fullscreen from "react-full-screen";
 import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
 import SurveyComponent from "../surveys";
+import axios from "axios";
+import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi } from "../../../helpers/request";
 
 const closeFullScreen = {
   position: "absolute",
@@ -32,43 +34,57 @@ export default class ZoomComponent extends Component {
       email: null,
       event: props.event,
       activity: props.activity,
+      urllogin_bigmarker: null
     };
   }
-  async componentDidMount() {
 
 
+  async setUpUserForConference() {
     let { meetingId, userEntered } = this.props;
 
     let displayName = "Anónimo";
     let email = "anonimo@evius.co";
+
     if (userEntered) {
       displayName = userEntered.displayName || userEntered.names || displayName;
       email = userEntered.email || email
     }
 
-    this.setState({
-      meeting_id: meetingId,
-      userEntered,
-      displayName, email
-    });
+    let urllogin_bigmarker = null;
+    if (this.state.event && this.state.event.event_platform == "bigmarker") {
 
+      console.log("activity", this.props.activity)
+      let data = {
+        id: this.props.activity.bigmaker_meeting_id,
+        attendee_name: displayName,
+        attendee_email: email,
+        exit_uri: "https://evius.co/landing/" + this.state.event._id
+      };
+      const callresult = await API.post(`/api/integration/bigmaker/conferences/enter`, data);
+
+
+      //let callresult = await axios.post(url, data);
+
+      urllogin_bigmarker = callresult.data.enter_uri;
+      console.log("callresult", callresult.data.enter_uri);
+    }
+
+    this.setState({ meeting_id: meetingId, userEntered, displayName, email, urllogin_bigmarker: urllogin_bigmarker });
+  }
+
+  async componentDidMount() {
+    this.setUpUserForConference();
+    console.log("eventzoom", this.state.event)
   }
 
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
 
-    const { meetingId, userEntered } = this.props;
+    if (prevProps.meetingId == this.props.meetingId) { return }
 
-    if (prevProps.meetingId !== meetingId) {
-      let displayName = "Anónimo";
-      let email = "anonimo@evius.co";
-      if (userEntered) {
-        displayName = userEntered.displayName || userEntered.names || displayName;
-        email = userEntered.email || email
-      }
+    this.setUpUserForConference();
 
-      this.setState({ meeting_id: meetingId, userEntered, displayName, email });
-    }
+
   }
 
   // Función full screen
@@ -139,6 +155,32 @@ export default class ZoomComponent extends Component {
           }
 
 
+          {/* ZOOM EVENT PLATFORM */}
+          {(this.state.event && (this.state.event.event_platform == "zoom" || !this.state.event.event_platform)) && (<iframe
+            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
+            allow="autoplay; fullscreen; camera *;microphone *"
+            allowusermedia
+            allowFullScreen
+            className="iframe-zoom nuevo">
+            <p>Your browser does not support iframes.</p>
+          </iframe>)}
+
+          {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/}
+          {(this.state.event && this.state.event.event_platform == "bigmarker" && this.state.urllogin_bigmarker && <iframe
+            id="conference"
+            src={this.state.urllogin_bigmarker} //"https://www.bigmarker.com/conferences/1c3e6af84135/api_attend"
+            frameborder="0"
+            allow="autoplay; fullscreen; camera *;microphone *"
+            allowfullscreen
+            allowusermedia
+            className="iframe-zoom nuevo"
+
+          ></iframe>)}
+
+          {(this.state.event && this.state.event.event_platform == "vimeo") && (
+            <div>VIMEO</div>
+          )}
+
           {/* // VIMEO LIVESTREAMING only chat not interactive
               <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
                 <iframe
@@ -156,19 +198,6 @@ export default class ZoomComponent extends Component {
                   frameborder=""
                 ></iframe>
               </div> */}
-
-
-          <iframe
-            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
-            allow="autoplay; fullscreen; camera *;microphone *"
-            allowusermedia
-            allowFullScreen
-            className="iframe-zoom nuevo">
-            <p>Your browser does not support iframes.</p>
-          </iframe>
-
-
-
 
 
 
