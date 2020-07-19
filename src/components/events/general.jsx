@@ -250,7 +250,7 @@ class General extends Component {
             banner_image_link: this.state.banner_image_link,
             adminContenido: event.adminContenido,
             type_event: event.type_event,
-            event_platform: event.event_platform
+            event_platform: event.event_platform || "zoom"
         };
 
         console.log(data);
@@ -464,9 +464,10 @@ class General extends Component {
                                     <label className="label">Plataforma Streaming del evento</label>
                                     <div className="select is-primary">
                                         <select defaultValue={event.event_platform} name="event_platform" onChange={this.handleChange}>
-                                            <option value="">Seleccionar...</option>
+                                            {/* <option value="">Seleccionar...</option> */}
                                             <option value="zoom">Zoom</option>
                                             <option value="vimeo">Vimeo</option>
+                                            <option value="bigmarker">BigMaker</option>
                                         </select>
                                     </div>
                                 </div>

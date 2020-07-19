@@ -292,8 +292,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
-      let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
-      rule = type == "email" ? { ...rule, type: "email" } : rule;
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
+
+      //esogemos el tipo de validación para email
+      rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };

@@ -193,15 +193,31 @@ class Landing extends Component {
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
-        <TicketsForm
-          stages={event.event_stages}
-          experience={event.is_experience}
-          fees={event.fees}
-          tickets={event.tickets}
-          eventId={event._id}
-          seatsConfig={event.seats_configuration}
-          handleModal={this.handleModal}
-        />
+        <>
+          {(this.state.eventUser && <div className="columns is-centered">
+
+            <VirtualConference
+              event={this.state.event}
+              currentUser={this.state.currentUser}
+              usuarioRegistrado={this.state.eventUser}
+              toggleConference={this.toggleConference}
+            />
+
+          </div>)}
+          <div className="columns is-centered">
+            <TicketsForm
+              stages={event.event_stages}
+              experience={event.is_experience}
+              fees={event.fees}
+              tickets={event.tickets}
+              eventId={event._id}
+              event={this.state.event}
+              seatsConfig={event.seats_configuration}
+              handleModal={this.handleModal}
+            />
+
+          </div>
+        </>
       ),
       survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
