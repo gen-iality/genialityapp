@@ -40,7 +40,7 @@ class SurveyComponent extends Component {
       questionsAnswered: 0,
       totalPoints: 0,
       eventUsers: [],
-      voteWeight: 0,
+      voteWeight: 1,
       freezeGame: false,
       showMessageOnComplete: false,
       aux: 0,
@@ -105,11 +105,11 @@ class SurveyComponent extends Component {
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
 
     if (response.data.length > 0) {
-      let vote = 0;
+      let vote = 1;
       response.data.forEach((item) => {
         if (item.properties.pesovoto) vote += parseFloat(item.properties.pesovoto);
       });
-
+      vote = (vote <= 0) ? 1 : vote;
       this.setState({ eventUsers: response.data, voteWeight: vote });
     }
   };
@@ -363,7 +363,7 @@ class SurveyComponent extends Component {
     let countDown = isLastPage ? 3 : 0;
 
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
-    if (aux > 0) return;
+    //if (aux > 0) return;
 
     if (surveyData.allow_gradable_survey == "true") {
 
@@ -391,7 +391,7 @@ class SurveyComponent extends Component {
     let questionName = Object.keys(values.data);
 
     // Validacion para evitar que se registre respuesta de la misma pregunta
-    if (questionsAnswered === questionName.length) return;
+    //if (questionsAnswered === questionName.length) return;
 
     // Se obtiene el numero de preguntas respondidas actualmente
     this.setState({ questionsAnswered: questionName.length });

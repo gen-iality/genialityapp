@@ -123,8 +123,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           setSubmittedForm(true);
           message.success(textMessage);
           //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
-          if (validateEmail) {
-            window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+          if (resp.data.user.initial_token) {
+            setTimeout(function () {
+              window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+            }, 2000);
           }
 
         } else {
@@ -205,6 +207,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let labelPosition = m.labelPosition;
       let target = name;
       let value = user[target];
+
+      if (m.visible == false) {
+        return (<div></div>);
+      }
 
       if (conditionals.state === "enabled") {
         if (label === conditionals.field) {
