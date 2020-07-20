@@ -33,7 +33,7 @@ export default class ListEventUser extends Component {
       changeItem: false,
       eventUserId: null,
       currentUserName: null,
-      userIdToMakeAppointment: '',
+      eventUserIdToMakeAppointment: '',
       asistantData: []
     };
   }
@@ -44,7 +44,7 @@ export default class ListEventUser extends Component {
   }
 
   closeAppointmentModal = () => {
-    this.setState({ userIdToMakeAppointment: '' })
+    this.setState({ eventUserIdToMakeAppointment: '' })
   }
 
   loadData = async () => {
@@ -129,7 +129,7 @@ export default class ListEventUser extends Component {
 
   render() {
     const { event } = this.props;
-    const { userReq, users, pageOfItems, eventUserId, asistantData, userIdToMakeAppointment } = this.state;
+    const { userReq, users, pageOfItems, eventUserId, asistantData, eventUserIdToMakeAppointment } = this.state;
 
     return (
       <React.Fragment>
@@ -139,7 +139,8 @@ export default class ListEventUser extends Component {
             <TabPane tab="Asistentes" key="1">
               <AppointmentModal
                 event={event}
-                userId={userIdToMakeAppointment}
+                currentEventUserId={eventUserId}
+                targetEventUserId={eventUserIdToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
               />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
@@ -234,8 +235,9 @@ export default class ListEventUser extends Component {
                                       </Col>
                                       <Col xs={24}>
                                         <Button
+                                          type="primary"
                                           onClick={() => {
-                                            this.setState({ userIdToMakeAppointment: users._id })
+                                            this.setState({ eventUserIdToMakeAppointment: users._id })
                                           }}
                                         >
                                           {'Agendar cita'}
