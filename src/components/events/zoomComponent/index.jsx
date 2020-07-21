@@ -200,9 +200,10 @@ export default class ZoomComponent extends Component {
           }
 
           {(this.state.event && this.state.event.event_platform == "vimeo") && (
+
             <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
               <iframe
-                src={"https://vimeo.com/event/" + this.props.activity.vimeo_id + "/embed"}
+                src={"https://vimeo.com/event/176495/embed"}
                 frameborder="0"
                 allow="autoplay; fullscreen; camera *;microphone *"
                 allowFullScreen
@@ -211,7 +212,7 @@ export default class ZoomComponent extends Component {
               ></iframe>
 
               <iframe
-                src={"https://vimeo.com/event/" + this.props.activity.vimeo_id + "/chat"}
+                src={"https://vimeo.com/event/176495/chat"}
                 style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
                 frameborder=""
               ></iframe>
