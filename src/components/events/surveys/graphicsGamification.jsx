@@ -67,10 +67,10 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { eventId } = this.props;
-    let { graphicsFrame, chartCreated, chart, dataGamification, pointsList } = this.state;
+    let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
     let { verticalBar } = graphicsFrame;
-    let { userList } = dataGamification;
+    let { userList, pointsList } = dataGamification;
 
     // Se condiciona si el grafico ya fue creado
     // En caso de que aun no este creado se crea, de lo contrario se actualizara
