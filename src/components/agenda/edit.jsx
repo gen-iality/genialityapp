@@ -61,6 +61,7 @@ class AgendaEdit extends Component {
       isLoading: { types: true, categories: true },
       name: "",
       subtitle: "",
+      bigmaker_meeting_id: null,
       has_date: "",
       description: "",
       hour_start: new Date(),
@@ -357,6 +358,7 @@ class AgendaEdit extends Component {
     const {
       name,
       subtitle,
+      bigmaker_meeting_id,
       has_date,
       hour_start,
       hour_end,
@@ -382,6 +384,7 @@ class AgendaEdit extends Component {
     return {
       name,
       subtitle,
+      bigmaker_meeting_id,
       datetime_start,
       datetime_end,
       space_id,
@@ -403,6 +406,7 @@ class AgendaEdit extends Component {
     const {
       name,
       subtitle,
+      bigmaker_meeting_id,
       has_date,
       hour_start,
       hour_end,
@@ -433,6 +437,7 @@ class AgendaEdit extends Component {
     return {
       name,
       subtitle,
+      bigmaker_meeting_id,
       datetime_start,
       datetime_end,
       space_id,
@@ -587,6 +592,7 @@ class AgendaEdit extends Component {
       loading,
       name,
       subtitle,
+      bigmaker_meeting_id,
       nameDocuments,
       selected_document,
       has_date,
@@ -975,6 +981,21 @@ class AgendaEdit extends Component {
                           </div>
                         </Fragment>
                       )}
+
+                      <div className="field">
+                        <label className="label">bigmaker_meeting_id</label>
+                        <div className="control">
+                          <input
+                            className="input"
+                            type="text"
+                            name={"bigmaker_meeting_id"}
+                            value={bigmaker_meeting_id}
+                            onChange={this.handleChange}
+                            placeholder=""
+                          />
+                        </div>
+                      </div>
+
 
                       {this.state.meeting_id && (
                         <div>
