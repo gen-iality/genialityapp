@@ -296,9 +296,6 @@ function AppointmentModal({
             }
           })
 
-          // TODO: -> delete console.logs
-          console.log('RES ###>>>', agendas)
-          console.log('NEW ###>>>', newTimetable)
           setTimetable(newTimetable)
         })
         .catch((error) => {

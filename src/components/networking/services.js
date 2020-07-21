@@ -1,5 +1,4 @@
-// TODO: -> change andresFirestore to firestore
-import { andresFirestore } from '../../helpers/firebase';
+import { firestore } from '../../helpers/firebase';
 import API, { UsersApi } from '../../helpers/request';
 
 const refUsersRequests = (eventId) => `${eventId}_users_requests`;
@@ -60,7 +59,7 @@ export const userRequest = {
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
   return new Promise((resolve, reject) => {
-    andresFirestore
+    firestore
       .collection('event_agendas')
       .doc(eventId)
       .collection('agendas')
@@ -86,7 +85,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
   return new Promise(async (resolve, reject) => {
     try {
       const existingAgendas = [];
-      const existingAgendaResult = await andresFirestore
+      const existingAgendaResult = await firestore
         .collection('event_agendas')
         .doc(eventId)
         .collection('agendas')
@@ -106,7 +105,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
       if (existingAgendas.length > 0) {
         reject();
       } else {
-        const newAgendaResult = await andresFirestore
+        const newAgendaResult = await firestore
           .collection('event_agendas')
           .doc(eventId)
           .collection('agendas')
@@ -120,6 +119,63 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             timestamp_end: timetableItem.timestamp_end,
           });
         resolve(newAgendaResult.id);
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
+  return new Promise((resolve, reject) => {
+    firestore
+      .collection('event_agendas')
+      .doc(eventId)
+      .collection('agendas')
+      .where('attendees', 'array-contains', currentEventUserId)
+      .where('request_status', '==', 'pending')
+      .get()
+      .then((result) => {
+        const data = [];
+
+        result.docs.forEach((doc) => {
+          const newDataItem = {
+            id: doc.id,
+            ...doc.data(),
+          };
+
+          if (newDataItem.owner_id !== currentEventUserId) {
+            data.push(newDataItem);
+          }
+        });
+
+        resolve(data);
+      })
+      .catch(reject);
+  });
+};
+
+export const acceptOrRejectAgenda = (eventId, agendaId, newStatus) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const existingAgendaResult = await firestore
+        .collection('event_agendas')
+        .doc(eventId)
+        .collection('agendas')
+        .doc(agendaId)
+        .get();
+      const existingAgenda = existingAgendaResult.data();
+
+      if (!existingAgenda || existingAgenda.request_status !== 'pending') {
+        reject();
+      } else {
+        await firestore
+          .collection('event_agendas')
+          .doc(eventId)
+          .collection('agendas')
+          .doc(agendaId)
+          .update({ request_status: newStatus });
+        resolve();
       }
     } catch (error) {
       reject(error);

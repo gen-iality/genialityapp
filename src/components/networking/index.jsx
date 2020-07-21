@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, message } from "antd";
 
 import AppointmentModal from "./appointmentModal";
+import AppointmentRequests from "./appointmentRequests";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
@@ -31,6 +32,7 @@ export default class ListEventUser extends Component {
       clearSearch: false,
       loading: true,
       changeItem: false,
+      activeTab: 'asistentes',
       eventUserId: null,
       currentUserName: null,
       eventUserIdToMakeAppointment: '',
@@ -41,6 +43,10 @@ export default class ListEventUser extends Component {
   componentDidMount() {
     this.getInfoCurrentUser();
     this.loadData();
+  }
+
+  changeActiveTab = (activeTab) => {
+    this.setState({ activeTab })
   }
 
   closeAppointmentModal = () => {
@@ -129,14 +135,22 @@ export default class ListEventUser extends Component {
 
   render() {
     const { event } = this.props;
-    const { userReq, users, pageOfItems, eventUserId, asistantData, eventUserIdToMakeAppointment } = this.state;
+    const {
+      userReq,
+      users,
+      pageOfItems,
+      eventUserId,
+      asistantData,
+      eventUserIdToMakeAppointment,
+      activeTab,
+    } = this.state;
 
     return (
       <React.Fragment>
         <EventContent>
           {/* Componente de busqueda */}
-          <Tabs>
-            <TabPane tab="Asistentes" key="1">
+          <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
+            <TabPane tab="Asistentes" key="asistentes">
               <AppointmentModal
                 event={event}
                 currentEventUserId={eventUserId}
@@ -259,12 +273,22 @@ export default class ListEventUser extends Component {
                   )}
               </div>
             </TabPane>
-            <TabPane tab="Mis Contactos" key="2">
+            <TabPane tab="Mis Contactos" key="mis-contactos">
               <ContactList eventId={this.props.event._id} />
             </TabPane>
 
-            <TabPane tab="Solicitudes" key="3">
+            <TabPane tab="Solicitudes" key="solicitudes">
               <RequestList eventId={this.props.event._id} />
+            </TabPane>
+
+            <TabPane tab="Solicitudes de citas" key="solicitudes-de-citas">
+              {activeTab === 'solicitudes-de-citas' && (
+                <AppointmentRequests
+                  eventId={event._id}
+                  currentEventUserId={eventUserId}
+                  eventUsers={users}
+                />
+              )}
             </TabPane>
           </Tabs>
         </EventContent>
