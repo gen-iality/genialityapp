@@ -40,7 +40,7 @@ class SurveyComponent extends Component {
       questionsAnswered: 0,
       totalPoints: 0,
       eventUsers: [],
-      voteWeight: 1,
+      voteWeight: 0,
       freezeGame: false,
       showMessageOnComplete: false,
       aux: 0,
@@ -78,7 +78,7 @@ class SurveyComponent extends Component {
 
   /**
    * El quiztiene unos timers para controlar el tiempo por pregunta
-   * aqui detenemos los timers o el quiz sigue avanzando y dana la lógica cambiando
+   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃ³gica cambiando
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
@@ -105,11 +105,11 @@ class SurveyComponent extends Component {
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
 
     if (response.data.length > 0) {
-      let vote = 1;
+      let vote = 0;
       response.data.forEach((item) => {
         if (item.properties.pesovoto) vote += parseFloat(item.properties.pesovoto);
       });
-      vote = (vote <= 0) ? 1 : vote;
+
       this.setState({ eventUsers: response.data, voteWeight: vote });
     }
   };
@@ -215,7 +215,7 @@ class SurveyComponent extends Component {
 
       // Valida si se marco alguna opcion
       if (question) {
-        //Hack rápido para permitir preguntas tipo texto (abiertas)
+        //Hack rÃ¡pido para permitir preguntas tipo texto (abiertas)
         if (question.inputType == "text") {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
@@ -334,8 +334,8 @@ class SurveyComponent extends Component {
       case "warning":
         return {
           ...objMessage,
-          title: "No has escogido ninguna opción",
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
+          title: "No has escogido ninguna opciÃ³n",
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃ³n.`,
           icon: <MehOutlined />,
         };
 
@@ -363,7 +363,7 @@ class SurveyComponent extends Component {
     let countDown = isLastPage ? 3 : 0;
 
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
-    //if (aux > 0) return;
+    if (aux > 0) return;
 
     if (surveyData.allow_gradable_survey == "true") {
 
@@ -391,7 +391,7 @@ class SurveyComponent extends Component {
     let questionName = Object.keys(values.data);
 
     // Validacion para evitar que se registre respuesta de la misma pregunta
-    //if (questionsAnswered === questionName.length) return;
+    if (questionsAnswered === questionName.length) return;
 
     // Se obtiene el numero de preguntas respondidas actualmente
     this.setState({ questionsAnswered: questionName.length });
@@ -475,7 +475,7 @@ class SurveyComponent extends Component {
 
     if (surveyData.allow_gradable_survey == "true") {
       let text = "";
-      //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la próxima";
+      //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la prÃ³xima";
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
   };
@@ -503,9 +503,9 @@ class SurveyComponent extends Component {
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
-     * va a tener el valor de la pregunta más adealantda que se haay contestado.
+     * va a tener el valor de la pregunta mÃ¡s adealantda que se haay contestado.
      * 
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la última página si esto pasa vuelve e inicia la encuesta 
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la Ãºltima pÃ¡gina si esto pasa vuelve e inicia la encuesta 
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
