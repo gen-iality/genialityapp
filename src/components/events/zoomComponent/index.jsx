@@ -200,26 +200,27 @@ export default class ZoomComponent extends Component {
           }
 
           {(this.state.event && this.state.event.event_platform == "vimeo") && (
-            <div>VIMEO</div>
+            <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
+              <iframe
+                src={"https://vimeo.com/event/" + this.props.activity.vimeo_id + "/embed"}
+                frameborder="0"
+                allow="autoplay; fullscreen; camera *;microphone *"
+                allowFullScreen
+                allowUserMedia
+                style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
+              ></iframe>
+
+              <iframe
+                src={"https://vimeo.com/event/" + this.props.activity.vimeo_id + "/chat"}
+                style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
+                frameborder=""
+              ></iframe>
+            </div>
           )}
 
-          {/* // VIMEO LIVESTREAMING only chat not interactive
-              <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
-                <iframe
-                  src="https://vimeo.com/event/156201/embed/ea3234a09b"
-                  frameborder="0"
-                  allow="autoplay; fullscreen; camera *;microphone *"
-                  allowFullScreen
-                  allowUserMedia
-                  style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
-                ></iframe>
+          {/* // VIMEO LIVESTREAMING only chat not interactive */}
 
-                <iframe
-                  src="https://vimeo.com/event/156201/chat/ea3234a09b"
-                  style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
-                  frameborder=""
-                ></iframe>
-              </div> */}
+
 
 
 
