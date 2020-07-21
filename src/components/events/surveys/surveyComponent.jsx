@@ -363,7 +363,7 @@ class SurveyComponent extends Component {
     let countDown = isLastPage ? 3 : 0;
 
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
-    //if (aux > 0) return;
+    if (aux > 0) return;
 
     if (surveyData.allow_gradable_survey == "true") {
 
@@ -391,7 +391,7 @@ class SurveyComponent extends Component {
     let questionName = Object.keys(values.data);
 
     // Validacion para evitar que se registre respuesta de la misma pregunta
-    //if (questionsAnswered === questionName.length) return;
+    if (questionsAnswered === questionName.length) return;
 
     // Se obtiene el numero de preguntas respondidas actualmente
     this.setState({ questionsAnswered: questionName.length });
