@@ -16,6 +16,7 @@ import { validateSurveyCreated } from "../../trivia/services";
 import GraphicGamification from "./graphicsGamification";
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
+import tickets from "../../ticketsEvent";
 Survey.StylesManager.applyTheme("modern");
 
 const surveyStyle = {
@@ -47,7 +48,8 @@ class SurveyComponent extends Component {
       currentPage: null,
       surveyRealTime: null,
       timerPausa: null,
-      survey: null
+      survey: null,
+      ticketsEvent: []
     };
   }
 
@@ -542,6 +544,7 @@ class SurveyComponent extends Component {
     { console.log("CARGADO EN EL RENDER", surveyRealTime); }
     const { showListSurvey, surveyLabel } = this.props;
     return (
+      console.log(surveyData),
       <div style={surveyStyle}>
         {showListSurvey && (
           <div style={{ marginTop: 20 }}>

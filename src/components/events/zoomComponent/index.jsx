@@ -166,20 +166,44 @@ export default class ZoomComponent extends Component {
             <SurveyComponent event={event} activity={activity} availableSurveysBar={true} />
           }
 
+          {
+            this.state.event && (this.state.event.event_platform === "zoom") &&
+            (
+              <iframe
+                src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
+                allow="autoplay; fullscreen; camera *;microphone *"
+                allowusermedia
+                allowFullScreen
+                className="iframe-zoom nuevo">
+                <p>Your browser does not support iframes.</p>
+              </iframe>
+            )
+          }
+          {/* // VIMEO LIVESTREAMING only chat not interactive */}
+          {
+            this.state.event && (this.state.event.event_platform === "vimeo") &&
+            (
+              <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
+                <iframe
+                  src={`https://vimeo.com/event/${activity.vimeo_id}/embed/ea3234a09b`}
+                  frameborder="0"
+                  allow="autoplay; fullscreen; camera *;microphone *"
+                  allowFullScreen
+                  allowUserMedia
+                  style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
+                ></iframe>
 
-          {/* ZOOM EVENT PLATFORM */}
-          {(this.state.event && (this.state.event.event_platform == "zoom" || !this.state.event.event_platform)) && (<iframe
-            src={url_conference + meeting_id + `&userName=${displayName}` + `&email=${email}`}
-            allow="autoplay; fullscreen; camera *;microphone *"
-            allowusermedia
-            allowFullScreen
-            className="iframe-zoom nuevo">
-            <p>Your browser does not support iframes.</p>
-          </iframe>)}
-
+                <iframe
+                  src={`https://vimeo.com/event/156201/${activity.vimeo_id}/ea3234a09b`}
+                  style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
+                  frameborder=""
+                ></iframe>
+              </div>
+            )
+          }
 
           {/* style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", margin: 0, padding: 0 }}*/}
-          {(this.state.event && this.state.event.event_platform == "bigmarker") &&
+          {(this.state.event && this.state.event.event_platform === "bigmarker") &&
             <>
 
               {(!this.state.error_bigmarker && !this.state.urllogin_bigmarker) && (<Spin tip="Loading..."></Spin>)}
