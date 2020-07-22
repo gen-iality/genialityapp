@@ -16,6 +16,7 @@ import { validateSurveyCreated } from "../../trivia/services";
 import GraphicGamification from "./graphicsGamification";
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
+import tickets from "../../ticketsEvent";
 Survey.StylesManager.applyTheme("modern");
 
 const surveyStyle = {
@@ -46,7 +47,8 @@ class SurveyComponent extends Component {
       aux: 0,
       currentPage: 0,
       timerPausa: null,
-      survey: null
+      survey: null,
+      ticketsEvent: []
     };
   }
 
@@ -521,33 +523,63 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
+    let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
     return (
+      console.log(surveyData),
       <div style={surveyStyle}>
-        {showListSurvey && (
-          <div style={{ marginTop: 20 }}>
-            <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
-            </Button>
-          </div>
-        )}
+        {
+          showListSurvey && (
+            <div style={{ marginTop: 20 }}>
+              <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
+                <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
+              </Button>
+            </div>
+          )
+        }
         {surveyData.allow_gradable_survey === "true" && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
-        <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-          {(this.state.survey && <Survey.Survey
-            model={this.state.survey}
-            onComplete={this.sendData}
-            onPartialSend={this.sendData}
-            onCompleting={this.setFinalMessage}
-            onTimerPanelInfoText={this.setCounterMessage}
-            onStarted={this.checkCurrentPage}
-            onCurrentPageChanged={this.onCurrentPageChanged}
-          />)}
-        </div>
+        {
+          //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
+          surveyData.allow_anonymous_answers === "true" ? (
+            <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
+              {(this.state.survey && <Survey.Survey
+                model={this.state.survey}
+                onComplete={this.sendData}
+                onPartialSend={this.sendData}
+                onCompleting={this.setFinalMessage}
+                onTimerPanelInfoText={this.setCounterMessage}
+                onStarted={this.checkCurrentPage}
+                onCurrentPageChanged={this.onCurrentPageChanged}
+              />)}
+            </div>
+          ) : (
+              //Si no es verdadera la variable anterior, 
+              //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero 
+              //para poder responder la encuesta
+              eventUsers.map((eventUser) => {
+                return eventUser.ticket && (
+                  eventUser.ticket.allowed_to_vote === "true" && (
+                    <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
+                      {(this.state.survey && <Survey.Survey
+                        model={this.state.survey}
+                        onComplete={this.sendData}
+                        onPartialSend={this.sendData}
+                        onCompleting={this.setFinalMessage}
+                        onTimerPanelInfoText={this.setCounterMessage}
+                        onStarted={this.checkCurrentPage}
+                        onCurrentPageChanged={this.onCurrentPageChanged}
+                      />)}
+                    </div>
+                  )
+                )
+              })
+            )
+        }
+
       </div>
     );
   }
