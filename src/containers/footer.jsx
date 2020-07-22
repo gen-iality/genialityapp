@@ -23,7 +23,7 @@ class Footer extends Component {
                   </Link>
                 </div>
                 <div>
-                  <a href="https://api.evius.co/mundovirtual" className="has-text-grey-light">
+                  <a href="https://nervous-austin-4cb375.netlify.app/" className="has-text-grey-light">
                     Mundo Virtual para Eventos
                   </a>
                 </div>
