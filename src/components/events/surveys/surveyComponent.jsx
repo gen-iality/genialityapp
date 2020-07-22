@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result, Button, Spin } from "antd";
+import { PageHeader, message, notification, Modal, Result, Button } from "antd";
 import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import * as Cookie from "js-cookie";
@@ -10,7 +10,7 @@ import graphicsImage from "../../../graficas.png";
 
 import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
+import { SurveyAnswers, UserGamification, SurveyPage, Users } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import GraphicGamification from "./graphicsGamification";
@@ -45,42 +45,26 @@ class SurveyComponent extends Component {
       freezeGame: false,
       showMessageOnComplete: false,
       aux: 0,
-      currentPage: null,
-      surveyRealTime: null,
+      currentPage: 0,
       timerPausa: null,
       survey: null,
       ticketsEvent: []
     };
   }
 
-  async componentDidMount() {
-    var self = this;
+  componentDidMount() {
     const { eventId, idSurvey } = this.props;
-
-    //console.log("CARGANDO INICIAL");
-    let surveyData = await this.loadSurvey(eventId, idSurvey);
-    let survey = new Survey.Model(surveyData);
-    //console.log("CARGADO surveyData");
-
-    await this.listenAndUpdateStateSurveyRealTime(idSurvey);
-    //console.log("CARGADO surveyRealTime");
-
-    /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
-    que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
-    sino se presentar comportamientos raros.
-    */
-    self.setState({ surveyData, idSurvey, survey });
-
-    console.log("CARGADO todo");
+    this.loadData();
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
     this.getCurrentEvenUser();
+    SurveyPage.getCurrentPage(idSurvey, this);
   }
 
   /**
    * El quiztiene unos timers para controlar el tiempo por pregunta
-   * aqui detenemos los timers o el quiz sigue avanzando y dana la lÃ³gica cambiando
+   * aqui detenemos los timers o el quiz sigue avanzando y dana la lógica cambiando
    * la pregunta en la que deberian ir todos
    */
   componentWillUnmount() {
@@ -98,7 +82,6 @@ class SurveyComponent extends Component {
   }
 
   getRankingList = (list) => {
-    console.log("ranking", list);
     this.setState({ rankingList: list });
   };
 
@@ -116,48 +99,33 @@ class SurveyComponent extends Component {
     }
   };
 
-
-  listenAndUpdateStateSurveyRealTime = async (idSurvey) => {
-    var self = this;
-
-    const promiseA = new Promise((resolve, reject) => {
-      try {
-        firestore
-          .collection("surveys")
-          .doc(idSurvey)
-          .onSnapshot((doc) => {
-            let surveyRealTime = doc.data();
-
-            surveyRealTime.currentPage = (surveyRealTime.currentPage) ? surveyRealTime.currentPage : 0;
-            self.setState({ surveyRealTime, freezeGame: surveyRealTime.freezeGame, currentPage: surveyRealTime.currentPage });
-            resolve(surveyRealTime);
-          });
-      } catch (e) { reject(e) }
-    });
-
-    return promiseA;
-  }
   // Funcion para cargar datos de la encuesta seleccionada
-  loadSurvey = async (eventId, idSurvey) => {
-
+  loadData = async () => {
+    const { idSurvey, eventId, singlePage } = this.props;
     let { surveyData } = this.state;
 
     // Esto permite que el json pueda asignar el id a cada pregunta
     Survey.JsonObject.metaData.addProperty("question", "id");
+
     Survey.JsonObject.metaData.addProperty("question", "points");
 
     let dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-
+    console.log("surveyDat", dataSurvey);
     // Se crea una propiedad para paginar las preguntas
     dataSurvey.pages = [];
+
     // Se igual title al valor de survey
     dataSurvey.title = dataSurvey.survey;
+
     // Se muestra una barra de progreso en la parte superior
     dataSurvey.showProgressBar = "bottom";
+
     // Esto permite que se envie los datos al pasar cada pagina con el evento onPartialSend
     dataSurvey.sendResultOnPageNext = true;
+
     // Esto permite ocultar el boton de devolver en la encuesta
     dataSurvey.showPrevButton = false;
+
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
@@ -172,6 +140,7 @@ class SurveyComponent extends Component {
       // Permite usar la primera pagina como instroduccion
       dataSurvey.firstPageIsStarted = true;
       dataSurvey.startSurveyText = "Iniciar Cuestionario";
+
       let textMessage = dataSurvey.initialMessage;
       dataSurvey["questions"].unshift({
         type: "html",
@@ -188,7 +157,6 @@ class SurveyComponent extends Component {
     dataSurvey["questions"].forEach(({ page, ...rest }, index) => {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
-        key: `page${index + 1}`,
         questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey == "true" ? false : true }],
       };
     });
@@ -197,7 +165,23 @@ class SurveyComponent extends Component {
     const exclude = ({ survey, id, questions, ...rest }) => rest;
 
     surveyData = exclude(dataSurvey);
-    return surveyData;
+
+    console.log("pages", surveyData);
+    var self = this;
+    firestore
+      .collection("surveys")
+      .doc(idSurvey)
+      .onSnapshot((doc) => {
+        let data = doc.data();
+        let value = data.freezeGame && data.freezeGame;
+        self.setState({ freezeGame: value });
+
+        console.log("Current data: ", data, value);
+      });
+
+    let survey = new Survey.Model(surveyData);
+    this.setState({ surveyData, idSurvey, survey });
+
   };
 
   // Funcion que ejecuta el servicio para registar votos ------------------------------------------------------------------
@@ -217,7 +201,7 @@ class SurveyComponent extends Component {
 
       // Valida si se marco alguna opcion
       if (question) {
-        //Hack rÃ¡pido para permitir preguntas tipo texto (abiertas)
+        //Hack rápido para permitir preguntas tipo texto (abiertas)
         if (question.inputType == "text") {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
@@ -336,12 +320,12 @@ class SurveyComponent extends Component {
       case "warning":
         return {
           ...objMessage,
-          title: "No has escogido ninguna opciÃ³n",
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃ³n.`,
+          title: "No has escogido ninguna opción",
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opción.`,
           icon: <MehOutlined />,
         };
 
-      case "info":
+      case "waiting":
         return {
           ...objMessage,
           title: "Estamos en una pausa",
@@ -427,6 +411,7 @@ class SurveyComponent extends Component {
           this.setIntervalToWaitBeforeNextQuestion(values, result, secondsToGo);
 
         }
+
         // Ejecuta serivicio para registrar puntos
         UserGamification.registerPoints(eventId, {
           user_id: currentUser._id,
@@ -476,8 +461,8 @@ class SurveyComponent extends Component {
     });
 
     if (surveyData.allow_gradable_survey == "true") {
-      let text = "";
-      //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la prÃ³xima";
+      let text =
+        totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la próxima";
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
     }
   };
@@ -505,9 +490,9 @@ class SurveyComponent extends Component {
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
-     * va a tener el valor de la pregunta mÃ¡s adealantda que se haay contestado.
+     * va a tener el valor de la pregunta más adealantda que se haay contestado.
      * 
-     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la Ãºltima pÃ¡gina si esto pasa vuelve e inicia la encuesta 
+     *  survey.currentPageNo + 2. toco poner el +2  para que no aplique la logica en la última página si esto pasa vuelve e inicia la encuesta 
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
@@ -519,7 +504,6 @@ class SurveyComponent extends Component {
 
   checkCurrentPage = (survey) => {
 
-
     let { currentPage, surveyData } = this.state;
     const { responseCounter } = this.props;
 
@@ -529,8 +513,7 @@ class SurveyComponent extends Component {
       if (currentPage !== 0) survey.currentPageNo = currentPage;
 
       if (this.state.freezeGame) {
-        survey.stopTimer();
-        let result = this.showStateMessage("info");
+        let result = this.showStateMessage("waiting");
         this.setIntervalToWaitBeforeNextQuestion(survey, result, 0);
       }
     }
@@ -540,29 +523,30 @@ class SurveyComponent extends Component {
   };
 
   render() {
-    let { surveyData, surveyRealTime, sentSurveyAnswers, feedbackMessage, showMessageOnComplete } = this.state;
-    { console.log("CARGADO EN EL RENDER", surveyRealTime); }
-    const { showListSurvey, surveyLabel } = this.props;
+    let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
+
+    const { showListSurvey, surveyLabel, eventId } = this.props;
     return (
       console.log(surveyData),
       <div style={surveyStyle}>
-        {showListSurvey && (
-          <div style={{ marginTop: 20 }}>
-            <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-              <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
-            </Button>
-          </div>
-        )}
-        {surveyData.allow_gradable_survey && < GraphicGamification data={this.state.rankingList} />}
+        {
+          showListSurvey && (
+            <div style={{ marginTop: 20 }}>
+              <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
+                <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
+              </Button>
+            </div>
+          )
+        }
+        {surveyData.allow_gradable_survey === "true" && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
-        <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
-          {(!(this.state.survey && this.state.surveyRealTime)) && <Spin tip="Loading..." />}
-          {(this.state.survey && this.state.surveyRealTime &&
-
-            (
-              < Survey.Survey
+        {
+          //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
+          surveyData.allow_anonymous_answers === "true" ? (
+            <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
+              {(this.state.survey && <Survey.Survey
                 model={this.state.survey}
                 onComplete={this.sendData}
                 onPartialSend={this.sendData}
@@ -570,10 +554,32 @@ class SurveyComponent extends Component {
                 onTimerPanelInfoText={this.setCounterMessage}
                 onStarted={this.checkCurrentPage}
                 onCurrentPageChanged={this.onCurrentPageChanged}
-              />
+              />)}
+            </div>
+          ) : (
+              //Si no es verdadera la variable anterior, 
+              //entonces validará si el ticket del usuario existe para despues validar la variable allowed_to_vote en verdadero 
+              //para poder responder la encuesta
+              eventUsers.map((eventUser) => {
+                return eventUser.ticket && (
+                  eventUser.ticket.allowed_to_vote === "true" && (
+                    <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
+                      {(this.state.survey && <Survey.Survey
+                        model={this.state.survey}
+                        onComplete={this.sendData}
+                        onPartialSend={this.sendData}
+                        onCompleting={this.setFinalMessage}
+                        onTimerPanelInfoText={this.setCounterMessage}
+                        onStarted={this.checkCurrentPage}
+                        onCurrentPageChanged={this.onCurrentPageChanged}
+                      />)}
+                    </div>
+                  )
+                )
+              })
+            )
+        }
 
-            ))}
-        </div>
       </div>
     );
   }
