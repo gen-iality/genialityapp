@@ -546,9 +546,9 @@ class SurveyComponent extends Component {
       <div style={surveyStyle}>
         {
           showListSurvey && (
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 5 }}>
               <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
-                <ArrowLeftOutlined /> Volver a las {surveyLabel ? surveyLabel.name : "encuestas"}
+                <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
             </div>
           )
