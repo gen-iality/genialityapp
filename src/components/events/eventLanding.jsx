@@ -38,39 +38,22 @@ class eventLanding extends Component {
                     {
                         event._id === "5f0622f01ce76d5550058c32" ? (
                             <div>
-                                <div>
-                                    <img src="" style={{ maxWidth: '100%', height: '500px' }} />
-                                    <div className="containerfenalco">
-                                        <Row gutter={[20, 8]}>
-                                            <Col xs={16} sm={16} md={12} lg xl={8}>
-                                                <div className="overlayVende">
-                                                    <h1>VENDE</h1>
-                                                    <h2>Salones de reuniones y citas de negocios</h2>
-                                                    <Row justify="center">
-                                                        <Col span={4}><Button style={{ backgroundColor: '#52c41a', color: 'white' }}>Entrar</Button></Col>
-                                                    </Row>
-                                                </div>
-                                            </Col>
-                                            <Col xs={16} sm={16} md={12} lg xl={8}>
-                                                <div className="overlayConecta">
-                                                    <h1>CONECTA</h1>
-                                                    <h2>Networking y contactos</h2>
-                                                    <Row justify="center">
-                                                        <Col span={4}><Button style={{ backgroundColor: '#52c41a', color: 'white', marginTop: '40px' }}>Entrar</Button></Col>
-                                                    </Row>
-                                                </div>
-                                            </Col>
-                                            <Col xs={16} sm={16} md={12} lg xl={8}>
-                                                <div className="overlayInspira">
-                                                    <h1>INSPIRA</h1>
-                                                    <h2>Coferencias, contenido y conversatorios</h2>
-                                                    <Row justify="center">
-                                                        <Col span={4}><Button style={{ backgroundColor: '#52c41a', color: 'white' }}>Entrar</Button></Col>
-                                                    </Row>
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </div>
+                                <div className="containerfenalco">
+                                    <Row gutter={[6, 16]}>
+                                        <Col xs={16} sm={16} md={6} lg={6} xl={6}>
+                                            <div className="imagen">
+                                                <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                            </div>
+                                        </Col>
+                                        <Col xs={16} sm={16} md={6} lg={6} xl={6}>
+                                            <div className="imagen">
+                                                <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                                            </div>
+                                        </Col>
+                                        <Col xs={16} sm={16} md={6} lg={6} xl={6}>
+                                            <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                                        </Col>
+                                    </Row>
                                 </div>
                             </div>
                         ) :
