@@ -2,8 +2,11 @@ import React, { Component, Fragment } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Col, Table, Card, Avatar, Alert, Tabs, message } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message } from "antd";
 
+import AppointmentModal from "./appointmentModal";
+import MyAgenda from "./myAgenda";
+import AppointmentRequests from "./appointmentRequests";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
@@ -30,8 +33,10 @@ export default class ListEventUser extends Component {
       clearSearch: false,
       loading: true,
       changeItem: false,
+      activeTab: 'asistentes',
       eventUserId: null,
       currentUserName: null,
+      eventUserIdToMakeAppointment: '',
       asistantData: []
     };
   }
@@ -39,6 +44,14 @@ export default class ListEventUser extends Component {
   componentDidMount() {
     this.getInfoCurrentUser();
     this.loadData();
+  }
+
+  changeActiveTab = (activeTab) => {
+    this.setState({ activeTab })
+  }
+
+  closeAppointmentModal = () => {
+    this.setState({ eventUserIdToMakeAppointment: '' })
   }
 
   loadData = async () => {
@@ -122,13 +135,29 @@ export default class ListEventUser extends Component {
   }
 
   render() {
-    const { userReq, users, pageOfItems, eventUserId, asistantData } = this.state;
+    const { event } = this.props;
+    const {
+      userReq,
+      users,
+      pageOfItems,
+      eventUserId,
+      asistantData,
+      eventUserIdToMakeAppointment,
+      activeTab,
+    } = this.state;
+
     return (
       <React.Fragment>
         <EventContent>
           {/* Componente de busqueda */}
-          <Tabs>
-            <TabPane tab="Asistentes" key="1">
+          <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
+            <TabPane tab="Asistentes" key="asistentes">
+              <AppointmentModal
+                event={event}
+                currentEventUserId={eventUserId}
+                targetEventUserId={eventUserIdToMakeAppointment}
+                closeModal={this.closeAppointmentModal}
+              />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <h1> Busca aquí el usuario.</h1>
 
@@ -173,8 +202,8 @@ export default class ListEventUser extends Component {
                     <div>
                       <div>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {pageOfItems.map((users, key) => (
-                          <Row key={key} justify="center">
+                        {pageOfItems.map((users, userIndex) => (
+                          <Row key={`user-item-${userIndex}`} justify="center">
                             <Card
                               extra={
                                 <a
@@ -202,21 +231,34 @@ export default class ListEventUser extends Component {
                                 description={[
                                   <div>
                                     <br />
-                                    <p>
-                                      Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                    </p>
-                                    <div>
-                                      {
-                                        asistantData.map((data, key) => (
-                                          !data.privatePublic && data.privatePublic !== undefined && (
-                                            <div key={key}>
-                                              <p>{data.label}: {users.properties[data.name]}</p>
-                                            </div>
-                                          )
-
-                                        ))
-                                      }
-                                    </div>
+                                    <Row>
+                                      <Col xs={24}>
+                                        <p>
+                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                        </p>
+                                        <div>
+                                          {
+                                            asistantData.map((data, dataIndex) => (
+                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                </div>
+                                              )
+                                            ))
+                                          }
+                                        </div>
+                                      </Col>
+                                      <Col xs={24}>
+                                        <Button
+                                          type="primary"
+                                          onClick={() => {
+                                            this.setState({ eventUserIdToMakeAppointment: users._id })
+                                          }}
+                                        >
+                                          {'Agendar cita'}
+                                        </Button>
+                                      </Col>
+                                    </Row>
                                     <br />
                                   </div>,
                                 ]}
@@ -232,12 +274,32 @@ export default class ListEventUser extends Component {
                   )}
               </div>
             </TabPane>
-            <TabPane tab="Mis Contactos" key="2">
+            <TabPane tab="Mis Contactos" key="mis-contactos">
               <ContactList eventId={this.props.event._id} />
             </TabPane>
 
-            <TabPane tab="Solicitudes" key="3">
+            <TabPane tab="Solicitudes" key="solicitudes">
               <RequestList eventId={this.props.event._id} />
+            </TabPane>
+
+            <TabPane tab="Solicitudes de citas" key="solicitudes-de-citas">
+              {activeTab === 'solicitudes-de-citas' && (
+                <AppointmentRequests
+                  eventId={event._id}
+                  currentEventUserId={eventUserId}
+                  eventUsers={users}
+                />
+              )}
+            </TabPane>
+
+            <TabPane tab="Mi agenda" key="mi-agenda">
+              {activeTab === 'mi-agenda' && (
+                <MyAgenda
+                  event={event}
+                  currentEventUserId={eventUserId}
+                  eventUsers={users}
+                />
+              )}
             </TabPane>
           </Tabs>
         </EventContent>
