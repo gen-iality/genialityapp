@@ -24,7 +24,7 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
     getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
       .then((agendas) => {
         if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
-          const acceptedAgendas = map((agenda) => {
+          const newAcceptedAgendas = map((agenda) => {
             const otherAttendeeId = find(attendeeId => attendeeId !== currentEventUserId, agenda.attendees)
             const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
 
@@ -34,7 +34,7 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
             }
           }, agendas)
 
-          setAcceptedAgendas(acceptedAgendas)
+          setAcceptedAgendas(newAcceptedAgendas)
         }
       })
       .catch((error) => {
