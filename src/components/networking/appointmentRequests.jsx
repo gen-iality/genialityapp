@@ -62,18 +62,18 @@ function AppointmentRequests({
 
   return (
     <div>
-      <Divider>Solicitudes de citas recibidas</Divider>
+      <Divider>{'Solicitudes de citas recibidas'}</Divider>
       {
         pendingAgendas.length > 0
           ? pendingAgendas.map((pendingAgenda) => (
             <RequestCard
-              key={pendingAgenda.id}
+              key={`pending-${pendingAgenda.id}`}
               eventId={eventId}
               data={pendingAgenda}
             />
           ))
           : (
-            <Card>No tiene solicitudes actualmente</Card>
+            <Card>{'No tienes solicitudes actualmente'}</Card>
           )
       }
     </div>
@@ -91,10 +91,7 @@ function RequestCard({ data, eventId }) {
     if (!loading) {
       setLoading(true)
       acceptOrRejectAgenda(eventId, data.id, newStatus)
-        .then((res) => {
-          console.log('RES @>>>', res)
-          setRequestResponse(newStatus)
-        })
+        .then(() => setRequestResponse(newStatus))
         .catch((error) => {
           if (!error) {
             notification.error({
@@ -137,6 +134,12 @@ function RequestCard({ data, eventId }) {
                   <p>
                     {userEmail || "No registra correo"}
                   </p>
+                  {!!data.message && (
+                    <p style={{ paddingRight: '20px' }}>
+                      {'Mensaje: '}
+                      {data.message}
+                    </p>
+                  )}
                 </Col>
                 <Col xs={6}>
                   <div style={{ textTransform: 'capitalize' }}>

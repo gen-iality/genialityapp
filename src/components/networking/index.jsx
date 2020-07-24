@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, message } from "antd";
 
 import AppointmentModal from "./appointmentModal";
+import MyAgenda from "./myAgenda";
 import AppointmentRequests from "./appointmentRequests";
 import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
@@ -285,6 +286,16 @@ export default class ListEventUser extends Component {
               {activeTab === 'solicitudes-de-citas' && (
                 <AppointmentRequests
                   eventId={event._id}
+                  currentEventUserId={eventUserId}
+                  eventUsers={users}
+                />
+              )}
+            </TabPane>
+
+            <TabPane tab="Mi agenda" key="mi-agenda">
+              {activeTab === 'mi-agenda' && (
+                <MyAgenda
+                  event={event}
                   currentEventUserId={eventUserId}
                   eventUsers={users}
                 />
