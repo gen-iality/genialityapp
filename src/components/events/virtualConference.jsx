@@ -140,45 +140,39 @@ class VirtualConference extends Component {
         return (
             <Fragment>
                 {
-                    event ? (
-                        event._id === "5f0622f01ce76d5550058c32" ? (
-                            <></>
-                        ) : (
-                                <div>
-                                    <Card bordered={true}>
-                                        <span>Espacios Virtuales</span>
-                                    </Card>
-                                    {infoAgendaArr.map((item, key) => (
-                                        <div key={key}>
-                                            <Card bordered={true} style={{ marginBottom: "3%" }}>
-                                                <Meta
-                                                    avatar={
-                                                        item.hosts.length > 0 ? (
-                                                            item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
-                                                        ) : (
-                                                                <Avatar size={80} icon={<UserOutlined />} />
-                                                            )
-                                                    }
-                                                    description={
-                                                        <div key={key}>
-                                                            {item.hosts &&
-                                                                item.hosts.length > 0 &&
-                                                                item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
-                                                            <p>{item.name}</p>
-                                                            <p>
-                                                                {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
-                                                                {Moment(item.datetime_end).format("h:mm A")}
-                                                            </p>
-                                                            <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
-                                                        </div>
-                                                    }
-                                                />
-                                            </Card>
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                    ) : ("vacio")
+                    <div>
+                        <Card bordered={true}>
+                            <span>Espacios Virtuales</span>
+                        </Card>
+                        {infoAgendaArr.map((item, key) => (
+                            <div key={key}>
+                                <Card bordered={true} style={{ marginBottom: "3%" }}>
+                                    <Meta
+                                        avatar={
+                                            item.hosts.length > 0 ? (
+                                                item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
+                                            ) : (
+                                                    <Avatar size={80} icon={<UserOutlined />} />
+                                                )
+                                        }
+                                        description={
+                                            <div key={key}>
+                                                {item.hosts &&
+                                                    item.hosts.length > 0 &&
+                                                    item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
+                                                <p>{item.name}</p>
+                                                <p>
+                                                    {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
+                                                    {Moment(item.datetime_end).format("h:mm A")}
+                                                </p>
+                                                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                                            </div>
+                                        }
+                                    />
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
                 }
             </Fragment>
         );

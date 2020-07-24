@@ -124,7 +124,7 @@ export default class ListEventUser extends Component {
   render() {
     const { userReq, users, pageOfItems, eventUserId, asistantData } = this.state;
     return (
-      <React.Fragment>
+      <React.Fragment style={{ width: "86.66667%" }}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs>

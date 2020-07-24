@@ -230,7 +230,7 @@ class Landing extends Component {
       my_agenda: <MyAgenda event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
-          <EventLanding event={event} />
+          <EventLanding event={event} toggleConference={this.toggleConference} />
 
           <div className="column container-map">
 
