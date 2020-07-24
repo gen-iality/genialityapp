@@ -16,7 +16,7 @@ class eventLanding extends Component {
     render() {
         const { event } = this.props
         return (
-            <div className="description-container column is-12">
+            <div className="description-container column is-12" style={{ width: "66.66667%" }}>
                 <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
                     <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
 

@@ -1,16 +1,16 @@
-.invitations{
+.invitations {
   padding: 0.5rem 2.25rem;
-  .tr-item{
+  .tr-item {
     cursor: pointer;
   }
-  section{
-    div.content{
-      div.icon-header{
+  section {
+    div.content {
+      div.icon-header {
         display: inline-block;
       }
-      div.imgRsvp{
+      div.imgRsvp {
         &:after {
-          content: '\A';
+          content: "\A";
           position: absolute;
           width: 100%;
           height: 100%;
@@ -28,7 +28,7 @@
   .checkin-header {
     width: 100%;
   }
-  .filter{
+  .filter {
     width: 100%;
     margin-bottom: 10px;
   }
@@ -59,53 +59,53 @@
         outline: 1px solid $grey-light;
         overflow-x: visible;
         overflow-y: auto;
-        table{
+        table {
           tr:nth-child(even) {
-            background-color: #DFDFDF;
+            background-color: #dfdfdf;
           }
         }
       }
     }
   }
 }
- .column{
-   padding: 0rem 0.75rem;
- }
-.icon-filter{
+.column {
+  padding: 0rem 0.75rem;
+}
+.icon-filter {
   display: none;
   margin-top: -60px;
 }
-.filter-help{
+.filter-help {
   font-weight: 600;
-  color: #00FFBC;
+  color: #00ffbc;
 }
 
-  .container-buttons{
-    display: flex;
-    flex-wrap: wrap;
-  }
+.container-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 @media only screen and (max-width: $breakpoint-mobile) {
-  .buttons-row{
+  .buttons-row {
     padding: 0;
-    .buttons-g{
+    .buttons-g {
       width: 100%;
-      .button-c{
+      .button-c {
         margin: 3px;
         padding: 0;
       }
     }
   }
-  .field{
+  .field {
     width: 100%;
   }
-  .search{
+  .search {
     display: flex;
     flex-direction: row;
     margin-bottom: 5px;
-    margin-left: 58px 
+    margin-left: 58px;
   }
-  .table td{
+  .table td {
     padding: 0;
   }
   .pagination.is-centered .pagination-previous {
@@ -121,7 +121,7 @@
     order: 2;
   }
 
-  .button{
+  .button {
     padding-left: 0.55em;
     padding-right: 0.55em;
     border-radius: 10px;
@@ -142,7 +142,7 @@
       display: flex;
       flex-direction: column-reverse;
     }
-    .filter{
+    .filter {
       order: 3;
       width: 100%;
     }
@@ -155,70 +155,71 @@
       width: 100%;
     }
   }
-  .filter-menu{
+  .filter-menu {
     display: none;
     padding-top: 3%;
   }
-  .icon-filter:hover~.filter-menu{
+  .icon-filter:hover ~ .filter-menu {
     display: block;
   }
-  .filter-menu:hover{
+  .filter-menu:hover {
     display: block;
   }
 }
-.tab-qr{
+.tab-qr {
   overflow: hidden;
   width: 100%;
-  ul{
+  ul {
     width: 100%;
     border: none;
-    a{
+    a {
       margin-right: 5px;
     }
-    .is-active a{
-      border-bottom: #00FFBC solid 5px;
+    .is-active a {
+      border-bottom: #00ffbc solid 5px;
     }
   }
 }
-.qr{
+.qr {
   margin: 0;
-  section{
+  section {
     margin: 0 !important;
   }
 }
 
-.container-options{
+.container-options {
   flex-wrap: wrap;
 }
-.css-vj8t7z{
+.css-vj8t7z {
   border-top-color: transparent !important;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
   border-bottom: 1px solid #b5b5b5 !important;
 }
 
-.css-2o5izw{  border-bottom: 1px solid #b5b5b5 !important;
-  border-color:transparent !important;
-  border-bottom: 1px solid #00FFBC !important;
+.css-2o5izw {
+  border-bottom: 1px solid #b5b5b5 !important;
+  border-color: transparent !important;
+  border-bottom: 1px solid #00ffbc !important;
   box-shadow: 0 0 0 1px transparent !important;
 }
-.css-1492t68{
+.css-1492t68 {
   color: #7a7a7a;
   font-size: 1rem;
   font-weight: 700;
 }
-.css-15k3avv{
+.css-15k3avv {
   border: 2px solid #ccc !important;
   background-color: white !important;
   min-height: 350px !important;
   z-index: 1000 !important;
 }
 
-.is-checkradio[type="radio"] + label::before, 
-.is-checkradio[type="radio"] + label:before, 
-.is-checkradio[type="checkbox"] + label::before, 
-.is-checkradio[type="checkbox"] + label:before{
+.is-checkradio[type="radio"] + label::before,
+.is-checkradio[type="radio"] + label:before,
+.is-checkradio[type="checkbox"] + label::before,
+.is-checkradio[type="checkbox"] + label:before {
   border: 0.1rem solid gray !important;
 }
-@media (min-width: 769px ){
+@media (min-width: 769px) {
 }

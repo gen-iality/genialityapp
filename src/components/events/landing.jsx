@@ -60,7 +60,7 @@ const IconText = ({ icon, text }) => (
 );
 const imageCenter = {
   maxWidth: "100%",
-  minWidth: "100%",
+  minWidth: "66.6667%",
   margin: "0 auto",
   display: "block",
 };
