@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
+import { Redirect } from 'react-router-dom';
 
-import API, { UsersApi, TicketsApi } from "../../../helpers/request";
+import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 
@@ -31,7 +32,8 @@ const validateMessages = {
 
 export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
   const [user, setUser] = useState({});
-  const [extraFields, setExtraFields] = useState(extraFieldsOriginal)
+  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
+  const [validateEmail, setValidateEmail] = useState(false);
   const [value, setValue] = useState();
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -47,6 +49,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     setFormMessage(FormTags(formType));
     setSubmittedForm(false);
     hideConditionalFieldsToDefault();
+    getEventData(eventId)
     form.resetFields();
   }, [eventUserId, initialValues]);
 
@@ -56,6 +59,16 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       setGeneralFormErrorMessageVisible(false);
     }, 3000);
   };
+
+  //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
+  const getEventData = async (eventId) => {
+    const data = await EventsApi.getOne(eventId)
+    console.log(data)
+    //Para evitar errores se verifica si la variable existe
+    if (data.validateEmail !== undefined) {
+      setValidateEmail(data.validateEmail)
+    }
+  }
 
   const onFinish = async (values) => {
     setGeneralFormErrorMessageVisible(false);
@@ -109,6 +122,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
           setSubmittedForm(true);
           message.success(textMessage);
+          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
+          if (resp.data.user.initial_token) {
+            setTimeout(function () {
+              window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+            }, 2000);
+          }
+
         } else {
           textMessage.content = resp;
           // Retorna un mensaje en caso de que ya se encuentre registrado el correo
@@ -188,6 +208,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let target = name;
       let value = user[target];
 
+      if (m.visible == false) {
+        return (<div></div>);
+      }
+
       if (conditionals.state === "enabled") {
         if (label === conditionals.field) {
           if (value === [conditionals.value]) {
@@ -221,7 +245,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey is-capitalized ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}>{label}</p>
             <Divider />
           </React.Fragment>
         );
@@ -274,8 +298,10 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
-      let rule = name == "email" || name == "names" ? { required: true } : { required: mandatory };
-      rule = type == "email" ? { ...rule, type: "email" } : rule;
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
+
+      //esogemos el tipo de validación para email
+      rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };

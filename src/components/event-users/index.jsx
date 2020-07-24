@@ -209,7 +209,7 @@ class ListEventUser extends Component {
           let updatedAttendees = updateAttendees(currentAttendees, snapshot);
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
-          let totalCheckedInWithWeight = Math.round(updatedAttendees.reduce((acc, item) => acc + ((item.checkedin_at && item.pesovoto) ? parseFloat(item.pesovoto) : 0), 0) * 100) / 100;
+          let totalCheckedInWithWeight = Math.round(updatedAttendees.reduce((acc, item) => acc + ((item.checkedin_at) ? parseFloat((item.pesovoto ? item.pesovoto : 1)) : 0), 0) * 100) / 100;
           this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight })
 
           console.log("updatedAttendees", updatedAttendees);
@@ -234,6 +234,7 @@ class ListEventUser extends Component {
     e.stopPropagation();
     console.log("aqui");
     const attendees = [...this.state.users].sort((a, b) => b.created_at - a.created_at);
+    console.log(attendees)
     const data = await parseData2Excel(attendees, this.state.extraFields);
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();

@@ -25,6 +25,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
+import MyAgenda from "../my-agenda/index";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -59,7 +60,7 @@ const IconText = ({ icon, text }) => (
 );
 const imageCenter = {
   maxWidth: "100%",
-  minWidth: "100%",
+  minWidth: "66.6667%",
   margin: "0 auto",
   display: "block",
 };
@@ -193,15 +194,31 @@ class Landing extends Component {
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
-        <TicketsForm
-          stages={event.event_stages}
-          experience={event.is_experience}
-          fees={event.fees}
-          tickets={event.tickets}
-          eventId={event._id}
-          seatsConfig={event.seats_configuration}
-          handleModal={this.handleModal}
-        />
+        <>
+          {(this.state.eventUser && <div className="columns is-centered">
+
+            <VirtualConference
+              event={this.state.event}
+              currentUser={this.state.currentUser}
+              usuarioRegistrado={this.state.eventUser}
+              toggleConference={this.toggleConference}
+            />
+
+          </div>)}
+          <div className="columns is-centered">
+            <TicketsForm
+              stages={event.event_stages}
+              experience={event.is_experience}
+              fees={event.fees}
+              tickets={event.tickets}
+              eventId={event._id}
+              event={this.state.event}
+              seatsConfig={event.seats_configuration}
+              handleModal={this.handleModal}
+            />
+
+          </div>
+        </>
       ),
       survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
@@ -210,6 +227,7 @@ class Landing extends Component {
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} />,
+      my_agenda: <MyAgenda event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
           <EventLanding event={event} />

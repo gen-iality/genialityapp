@@ -1,3 +1,4 @@
+import 'chartjs-plugin-datalabels'
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
@@ -66,10 +67,10 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { eventId } = this.props;
-    let { graphicsFrame, chartCreated, chart, dataGamification, pointsList } = this.state;
+    let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
     let { verticalBar } = graphicsFrame;
-    let { userList } = dataGamification;
+    let { userList, pointsList } = dataGamification;
 
     // Se condiciona si el grafico ya fue creado
     // En caso de que aun no este creado se crea, de lo contrario se actualizara
@@ -80,6 +81,11 @@ class Graphics extends Component {
       verticalBar.data.datasets[0].data = Object.values(pointsList || []);
       verticalBar.data.datasets[0].label = "Ranking";
       verticalBar.options = {
+        plugins: {
+          datalabels: {
+            color: '#FFF'
+          }
+        },
         scales: {
           yAxes: [{
             ticks: {
@@ -125,7 +131,7 @@ class Graphics extends Component {
 
     if (dataGamification !== null)
       return (
-        <Card style={{ backgroundColor: "rgba(227, 227, 227,0.3)" }}>
+        <Card style={{ backgroundColor: "rgba(227, 227, 227,0.3)", marginTop: "2%" }}>
           <canvas id="chart"></canvas>
         </Card>
       );

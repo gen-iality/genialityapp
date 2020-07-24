@@ -147,6 +147,7 @@ iframe {
   display: inline-block;
   background-size: 100% 100%;
   padding: 2% 6% !important;
+  min-height: 115px;
 }
 
 .sv-item__control-label {
@@ -222,3 +223,4 @@ iframe {
 @import "./certificados/editor";
 @import "./certificados/points";
 @import "./agenda/agenda";
+@import "./landing/landing";

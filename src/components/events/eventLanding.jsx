@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom"
 import { Card } from "antd";
 import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
+import { Row, Col, Button } from 'antd';
+import NetworkingForm from "../networking";
 
 class eventLanding extends Component {
     constructor(props) {
@@ -15,9 +17,12 @@ class eventLanding extends Component {
     render() {
         const { event } = this.props
         return (
-            <div className="description-container column is-8">
+            <div className="description-container column is-12" style={{ width: "80.66667%" }}>
                 <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
-                    <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
+                    {
+                        event._id === "5f0622f01ce76d5550058c32" ? <></> : <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
+                    }
+
 
                     {event.video && (
                         <div className="column is-centered mediaplayer">
@@ -34,12 +39,34 @@ class eventLanding extends Component {
                         </div>
                     )}
 
-                    {(event.description && typeof event.description === "string") && (
-                        <div>
-                            <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
-                        </div>
-                    )}
-
+                    {
+                        event._id === "5f0622f01ce76d5550058c32" ? (
+                            <div>
+                                <div className="containerfenalco">
+                                    <Row gutter={[8, 16]}>
+                                        <Col xs={16} sm={16} md={6} lg={8} xl={8}>
+                                            <div className="imagen">
+                                                <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                            </div>
+                                        </Col>
+                                        <Col xs={16} sm={16} md={6} lg={8} xl={8}>
+                                            <div className="imagen">
+                                                <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                                            </div>
+                                        </Col>
+                                        <Col xs={16} sm={16} md={6} lg={8} xl={8}>
+                                            <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </div>
+                        ) :
+                            (event.description && typeof event.description === "string") && (
+                                <div>
+                                    <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
+                                </div>
+                            )
+                    }
                 </Card>
             </div>
         )

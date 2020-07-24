@@ -17,6 +17,7 @@
     "bulma-extensions": "^4.0.1",
     "bulma-spacing": "^1.0.2",
     "chart.js": "^2.9.3",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "core-js": "^2.6.11",
     "firebase": "^7.7.0",
     "firebase-admin": "^8.10.0",
@@ -86,8 +87,7 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build",
-    "preinstall": "node -e 'if(!/yarn\\.js$/.test(process.env.npm_execpath))throw new Error(\"Use yarn\")'"
+    "styleguide:build": "styleguidist build"
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
