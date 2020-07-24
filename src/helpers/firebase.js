@@ -11,11 +11,11 @@ const config = {
   storageBucket: "eviusauth.appspot.com",
   messagingSenderId: "400499146867",
 };
+
 app.initializeApp(config);
 
 const firestore = app.firestore();
 const fireStorage = app.storage();
-console.log("fireStorage", fireStorage);
 
 firestore.settings({
   cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
@@ -29,6 +29,9 @@ firestore
     console.log(err);
     window.eviusFailedPersistenceEnabling = true;
   });
+
 const auth = app.auth();
+
 window.firebase = app;
+
 export { app, auth, firestore, fireStorage };

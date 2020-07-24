@@ -223,11 +223,11 @@ class Landing extends Component {
       survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
       speakers: <SpeakersForm eventId={event._id} />,
-      wall: <WallForm event={event} eventId={event._id} />,
+      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
-      networking: <NetworkingForm event={event} eventId={event._id} />,
-      my_agenda: <MyAgenda event={event} eventId={event._id} />,
+      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       evento: (
         <div className="columns is-centered">
           <EventLanding event={event} toggleConference={this.toggleConference} />

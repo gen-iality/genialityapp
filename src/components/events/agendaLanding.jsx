@@ -249,7 +249,7 @@ class Agenda extends Component {
     const { toggleConference } = this.props;
     const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey } = this.state;
     return (
-      <div style={{ width: "56.66667%" }}>
+      <div>
         {currentActivity && (
           <AgendaActividadDetalle
             visible={this.state.visible}
