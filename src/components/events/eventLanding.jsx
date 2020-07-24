@@ -10,8 +10,19 @@ class eventLanding extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            onClick: false
         }
+        this.onClick = this.onClick.bind(this)
+    }
+
+    componentDidUpdate() {
+        if (this.state.onClick !== this.state.onClick) {
+            return <NetworkingForm event={this.props.event} eventId={this.props.event._id} />
+        }
+    }
+
+    onClick() {
+        this.setState({ onClick: true })
     }
 
     render() {
@@ -51,7 +62,7 @@ class eventLanding extends Component {
                                         </Col>
                                         <Col xs={16} sm={16} md={6} lg={8} xl={8}>
                                             <div className="imagen">
-                                                <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                                                <img onClick={this.onClick} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
                                             </div>
                                         </Col>
                                         <Col xs={16} sm={16} md={6} lg={8} xl={8}>
