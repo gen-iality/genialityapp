@@ -91,6 +91,8 @@
   },
   "devDependencies": {
     "case-sensitive-paths-webpack-plugin": "^2.1.2",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "react-styleguidist": "^7.3.0"
   },
   "browserslist": [

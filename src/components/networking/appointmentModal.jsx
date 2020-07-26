@@ -286,7 +286,7 @@ function AppointmentModal({
 
                 const newTimetableItem = {
                   ...timetableItem,
-                  id: !!occupiedAgenda ? occupiedAgenda.id : null,
+                  id: occupiedAgenda ? occupiedAgenda.id : null,
                   status: !!occupiedAgenda &&
                     (
                       occupiedAgenda.request_status === 'accepted' ||
@@ -316,7 +316,7 @@ function AppointmentModal({
         })
         .finally(() => setLoading(false))
     }
-  }, [reloadFlag, event.timetable, event._id, targetEventUserId, currentEventUserId])
+  }, [reloadFlag, event, currentEventUserId, targetEventUserId])
 
   return (
     <Modal
