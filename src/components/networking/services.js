@@ -83,49 +83,48 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
 };
 
 export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEventUserId, timetableItem, message }) => {
-  return new Promise((resolve, reject) => {
-    firestore
-      .collection('event_agendas')
-      .doc(eventId)
-      .collection('agendas')
-      .where('attendees', 'array-contains', targetEventUserId)
-      .where('timestamp_start', '==', timetableItem.timestamp_start)
-      .where('timestamp_end', '==', timetableItem.timestamp_end)
-      .where('request_status', '==', 'accepted')
-      .get()
-      .then((existingAgendaResult) => {
-        const existingAgendas = [];
+  return new Promise(async (resolve, reject) => {
+    try {
+      const existingAgendas = [];
+      const existingAgendaResult = await firestore
+        .collection('event_agendas')
+        .doc(eventId)
+        .collection('agendas')
+        .where('attendees', 'array-contains', targetEventUserId)
+        .where('timestamp_start', '==', timetableItem.timestamp_start)
+        .where('timestamp_end', '==', timetableItem.timestamp_end)
+        .where('request_status', '==', 'accepted')
+        .get();
 
-        existingAgendaResult.docs.forEach((doc) => {
-          existingAgendas.push({
-            id: doc.id,
-            ...doc.data(),
-          });
+      existingAgendaResult.docs.forEach((doc) => {
+        existingAgendas.push({
+          id: doc.id,
+          ...doc.data(),
         });
+      });
 
-        if (existingAgendas.length > 0) {
-          reject();
-        } else {
-          firestore
-            .collection('event_agendas')
-            .doc(eventId)
-            .collection('agendas')
-            .add({
-              name: '',
-              attendees: [currentEventUserId, targetEventUserId],
-              owner_id: currentEventUserId,
-              request_status: 'pending',
-              type: 'meeting',
-              timestamp_start: timetableItem.timestamp_start,
-              timestamp_end: timetableItem.timestamp_end,
-              message,
-            })
-            .then((newAgendaResult) => {
-              resolve(newAgendaResult.id);
-            });
-        }
-      })
-      .catch(reject);
+      if (existingAgendas.length > 0) {
+        reject();
+      } else {
+        const newAgendaResult = await firestore
+          .collection('event_agendas')
+          .doc(eventId)
+          .collection('agendas')
+          .add({
+            name: '',
+            attendees: [currentEventUserId, targetEventUserId],
+            owner_id: currentEventUserId,
+            request_status: 'pending',
+            type: 'meeting',
+            timestamp_start: timetableItem.timestamp_start,
+            timestamp_end: timetableItem.timestamp_end,
+            message,
+          });
+        resolve(newAgendaResult.id);
+      }
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
@@ -160,30 +159,30 @@ export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
 };
 
 export const acceptOrRejectAgenda = (eventId, agendaId, newStatus) => {
-  return new Promise((resolve, reject) => {
-    firestore
-      .collection('event_agendas')
-      .doc(eventId)
-      .collection('agendas')
-      .doc(agendaId)
-      .get()
-      .then((existingAgendaResult) => {
-        const existingAgenda = existingAgendaResult.data();
+  return new Promise(async (resolve, reject) => {
+    try {
+      const existingAgendaResult = await firestore
+        .collection('event_agendas')
+        .doc(eventId)
+        .collection('agendas')
+        .doc(agendaId)
+        .get();
+      const existingAgenda = existingAgendaResult.data();
 
-        if (!existingAgenda || existingAgenda.request_status !== 'pending') {
-          reject();
-        } else {
-          firestore
-            .collection('event_agendas')
-            .doc(eventId)
-            .collection('agendas')
-            .doc(agendaId)
-            .update({ request_status: newStatus })
-            .then(() => resolve())
-            .catch(reject);
-        }
-      })
-      .catch(reject);
+      if (!existingAgenda || existingAgenda.request_status !== 'pending') {
+        reject();
+      } else {
+        await firestore
+          .collection('event_agendas')
+          .doc(eventId)
+          .collection('agendas')
+          .doc(agendaId)
+          .update({ request_status: newStatus });
+        resolve();
+      }
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 

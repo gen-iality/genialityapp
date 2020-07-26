@@ -1,15 +1,15 @@
-import app from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
+import app from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/storage';
 
 const config = {
-  apiKey: "AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc",
-  authDomain: "eviusauth.firebaseapp.com",
-  databaseURL: "https://eviusauth.firebaseio.com",
-  projectId: "eviusauth",
-  storageBucket: "eviusauth.appspot.com",
-  messagingSenderId: "400499146867",
+  apiKey: 'AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc',
+  authDomain: 'eviusauth.firebaseapp.com',
+  databaseURL: 'https://eviusauth.firebaseio.com',
+  projectId: 'eviusauth',
+  storageBucket: 'eviusauth.appspot.com',
+  messagingSenderId: '400499146867',
 };
 
 app.initializeApp(config);
@@ -26,7 +26,7 @@ firestore
     window.eviusFailedPersistenceEnabling = false;
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
     window.eviusFailedPersistenceEnabling = true;
   });
 
