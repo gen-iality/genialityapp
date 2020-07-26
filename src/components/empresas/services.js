@@ -10,6 +10,22 @@ function dataMapper(doc) {
   };
 }
 
+export const createEventDefaultStandTypes = (eventId) => {
+  const defaultStandTypes = ['Oro', 'Plata', 'Bronce'];
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await firestore
+        .collection('event_companies')
+        .doc(eventId)
+        .set({ stand_types: defaultStandTypes }, { merge: true });
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 export const getEventCompanies = (eventId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -40,6 +56,7 @@ export const getEventCompaniesStandTypes = (eventId) => {
       if (isNonEmptyArray(standTypes)) {
         resolve(standTypes);
       } else {
+        createEventDefaultStandTypes(eventId);
         reject();
       }
     } catch (error) {
@@ -71,7 +88,7 @@ export const getEventCompany = (eventId, companyId) => {
 };
 
 export const createEventCompany = (eventId, data) => {
-  const { company_name, stand_type, enabled } = data;
+  const { name, stand_type, visible } = data;
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -80,9 +97,9 @@ export const createEventCompany = (eventId, data) => {
         .doc(eventId)
         .collection('companies')
         .add({
-          company_name,
+          name,
           stand_type,
-          enabled,
+          visible,
         });
       resolve(newCompany.id);
     } catch (error) {
@@ -92,7 +109,7 @@ export const createEventCompany = (eventId, data) => {
 };
 
 export const updateEventCompany = (eventId, companyId, data) => {
-  const { company_name, stand_type, enabled } = data;
+  const { name, stand_type, visible } = data;
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -102,9 +119,9 @@ export const updateEventCompany = (eventId, companyId, data) => {
         .collection('companies')
         .doc(companyId)
         .update({
-          company_name,
+          name,
           stand_type,
-          enabled,
+          visible,
         });
       resolve();
     } catch (error) {

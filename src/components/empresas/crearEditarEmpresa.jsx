@@ -1,37 +1,30 @@
 import { CaretLeftOutlined } from '@ant-design/icons'
-import { Button, Input, notification, Select, Switch, Typography } from 'antd'
-import { ErrorMessage, Form, Formik } from 'formik'
+import { Button, Col, notification, Row, Typography } from 'antd'
+import { Field, Form, Formik } from 'formik'
 import { apply } from 'ramda'
 import React, { useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import * as yup from 'yup'
 
+import InputField from '../formFields/InputField'
+import SelectField from '../formFields/SelectField'
+import SwitchField from '../formFields/SwitchField'
 import Loading from '../loaders/loading'
 import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues'
-import useGetEventCompaniesStandTypes from './customHooks/useGetEventCompaniesStandTypes'
+import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions'
 import { createEventCompany, updateEventCompany } from './services'
 
-const { Option } = Select
 const { Title } = Typography
 
-const fieldItemStyle = { marginBottom: '30px' }
 const validationSchema = yup.object().shape({
-  company_name: yup.string().required().max(100),
+  name: yup.string().required().max(100),
   stand_type: yup.string().required(),
-  enabled: yup.boolean().required(),
+  visible: yup.boolean().required(),
 })
-
-function standTypesOptionsMapper(standType, index) {
-  const key = `sto-${standType}-${index}`
-
-  return (
-    <Option key={key} value={standType}>{standType}</Option>
-  )
-}
 
 function CrearEditarEmpresa({ event, match, history }) {
   const { companyId } = match.params
-  const [standTypes, loadingStandTypes] = useGetEventCompaniesStandTypes(event._id)
+  const [standTypesOptions, loadingStandTypes] = useGetEventCompaniesStandTypesOptions(event._id)
   const [initialValues, loadingInitialValues] = useGetCompanyInitialValues(event._id, companyId)
 
   const handleSubmit = useCallback((values, { setSubmitting }) => {
@@ -69,59 +62,51 @@ function CrearEditarEmpresa({ event, match, history }) {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, values, setFieldValue, setFieldTouched }) => {
+          {({ isSubmitting }) => {
             return (
               <Form>
-                <div style={{ width: '600px', margin: '0 auto' }}>
-                  <div style={fieldItemStyle}>
-                    <Input
-                      placeholder={'Nombre empresa'}
-                      value={values.company_name}
-                      onChange={(evt) => setFieldValue('company_name', evt.target.value)}
-                      onBlur={() => setFieldTouched('company_name')}
+                <Row justify="center">
+                  <Col xs={20}>
+                    <Field
+                      name="name"
+                      component={InputField}
+                      label="Nombre empresa"
+                      placeholder="Nombre empresa"
+                      required={true}
                     />
-                    <ErrorMessage name="company_name" />
-                  </div>
 
-                  <div style={fieldItemStyle}>
-                    <Select
-                      placeholder={'Tipo de stand'}
-                      value={values.stand_type}
-                      onChange={(newValue) => setFieldValue('stand_type', newValue)}
-                      onBlur={() => setFieldTouched('stand_type')}
-                      style={{ width: '100%' }}
-                    >
-                      {standTypes.map(standTypesOptionsMapper)}
-                    </Select>
-                    <ErrorMessage name="stand_type" />
-                  </div>
-
-                  <div style={fieldItemStyle}>
-                    <Switch
-                      checked={values.enabled}
-                      onChange={(newValue) => setFieldValue('enabled', newValue)}
-                      style={{ marginRight: '10px' }}
+                    <Field
+                      name="stand_type"
+                      component={SelectField}
+                      label="Tipo de stand"
+                      placeholder="Tipo de stand"
+                      required={true}
+                      options={standTypesOptions}
                     />
-                    {'Activar'}
-                    <ErrorMessage name="enabled" />
-                  </div>
 
-                  <div>
-                    <Link to={`/event/${event._id}/empresas`}>
-                      <Button
-                        disabled={isSubmitting}
-                        loading={isSubmitting}
-                        icon={<CaretLeftOutlined />}
-                        style={{ marginRight: '20px' }}
-                      >
-                        {'Volver'}
+                    <Field
+                      name="visible"
+                      component={SwitchField}
+                      label="Visible"
+                    />
+
+                    <div>
+                      <Link to={`/event/${event._id}/empresas`}>
+                        <Button
+                          disabled={isSubmitting}
+                          loading={isSubmitting}
+                          icon={<CaretLeftOutlined />}
+                          style={{ marginRight: '20px' }}
+                        >
+                          {'Volver'}
+                        </Button>
+                      </Link>
+                      <Button type="primary" htmlType="submit" disabled={isSubmitting} loading={isSubmitting}>
+                        {'Guardar'}
                       </Button>
-                    </Link>
-                    <Button type="primary" htmlType="submit" disabled={isSubmitting} loading={isSubmitting}>
-                      {'Guardar'}
-                    </Button>
-                  </div>
-                </div>
+                    </div>
+                  </Col>
+                </Row>
               </Form>
             )
           }}

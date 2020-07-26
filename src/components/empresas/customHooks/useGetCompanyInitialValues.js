@@ -5,9 +5,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { getEventCompany } from '../services';
 
 const defaultInitialValues = {
-  company_name: '',
+  name: '',
   stand_type: undefined,
-  enabled: false,
+  visible: false,
 };
 
 function useGetCompanyInitialValues(eventId, companyId) {

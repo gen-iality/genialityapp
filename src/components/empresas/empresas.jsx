@@ -18,7 +18,7 @@ function Empresas({ event, match }) {
     return [
       {
         title: 'Nombre',
-        dataIndex: 'company_name',
+        dataIndex: 'name',
         render(companyName, record) {
           return (
             <Link
@@ -35,12 +35,12 @@ function Empresas({ event, match }) {
         dataIndex: 'stand_type'
       },
       {
-        title: 'Estado',
-        dataIndex: 'enabled',
-        render(enabled) {
-          return enabled
-            ? <Tag color="green">{'Activada'}</Tag>
-            : <Tag color="red">{'Desactivada'}</Tag>
+        title: 'Visible',
+        dataIndex: 'visible',
+        render(visible) {
+          return visible
+            ? <Tag color="green">{'Visible'}</Tag>
+            : <Tag color="red">{'Oculto'}</Tag>
         }
       },
     ]

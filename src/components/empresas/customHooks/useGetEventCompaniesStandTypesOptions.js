@@ -1,10 +1,18 @@
 import { notification } from 'antd';
+import { map } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 import { useCallback, useEffect, useState } from 'react';
 
 import { getEventCompaniesStandTypes } from '../services';
 
-function useGetEventCompaniesStandTypes(eventId) {
+function stringToOptionMapper(value) {
+  return {
+    value,
+    label: value,
+  };
+}
+
+function useGetEventCompaniesStandTypesOptions(eventId) {
   const [data, setData] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
   const [reloadFlag, setReloadFlag] = useState(true);
@@ -20,7 +28,8 @@ function useGetEventCompaniesStandTypes(eventId) {
     getEventCompaniesStandTypes(eventId)
       .then((res) => {
         if (isNonEmptyArray(res)) {
-          setData(res);
+          const options = map(stringToOptionMapper, res);
+          setData(options);
         }
       })
       .catch((error) => {
@@ -37,4 +46,4 @@ function useGetEventCompaniesStandTypes(eventId) {
   return [data, loadingData, reloadData];
 }
 
-export default useGetEventCompaniesStandTypes;
+export default useGetEventCompaniesStandTypesOptions;
