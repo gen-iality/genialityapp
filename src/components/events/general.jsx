@@ -478,7 +478,7 @@ class General extends Component {
                         <div>
                             <label className="label">Robapagina de inicio</label>
                             <div className="select is-primary">
-                                <select defaultValue={event.loader_page ? event.loader_page : false} name="loader_page" onChange={this.handleChange}>
+                                <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
                                     <option value={true}>No</option>
                                     <option value={false}>Si</option>
                                 </select>
@@ -650,7 +650,7 @@ class General extends Component {
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
 
                 {this.state.fileMsgBanner && (<p className="help is-success">{this.state.fileMsgBanner}</p>)}
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
