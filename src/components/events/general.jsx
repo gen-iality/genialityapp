@@ -250,7 +250,8 @@ class General extends Component {
             banner_image_link: this.state.banner_image_link,
             adminContenido: event.adminContenido,
             type_event: event.type_event,
-            event_platform: event.event_platform || "zoom"
+            event_platform: event.event_platform || "zoom",
+            loader_page: event.loader_page || false
         };
 
         console.log(data);
@@ -473,6 +474,16 @@ class General extends Component {
                                 </div>
                             )
                         }
+
+                        <div>
+                            <label className="label">Robapagina de inicio</label>
+                            <div className="select is-primary">
+                                <select defaultValue={event.loader_page ? event.loader_page : false} name="loader_page" onChange={this.handleChange}>
+                                    <option value={true}>No</option>
+                                    <option value={false}>Si</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
