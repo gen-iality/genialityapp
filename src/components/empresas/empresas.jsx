@@ -31,7 +31,7 @@ function Empresas({ event, match }) {
         }
       },
       {
-        title: 'Tipo',
+        title: 'Tipo de stand',
         dataIndex: 'stand_type'
       },
       {

@@ -16,36 +16,39 @@ function optionsMapper(option, index) {
 }
 
 const { Option } = Select
-const formikProps = ['form', 'field', 'meta']
-const formItemProps = ['label', 'required']
-const notProps = [...formikProps, ...formItemProps, 'options', 'children']
+const FORMIK_PROPS_KEYS = ['form', 'field', 'meta']
+const FORM_ITEM_PROPS_KEYS = ['label', 'required']
+const NOT_PROPS_KEYS = [...FORMIK_PROPS_KEYS, ...FORM_ITEM_PROPS_KEYS, 'options', 'children']
 
 function SelectField(rawProps) {
-  const props = omit(notProps, rawProps)
-  const _formik = pick(formikProps, rawProps)
-  const _formItem = pick(formItemProps, rawProps)
+  const props = omit(NOT_PROPS_KEYS, rawProps)
+  const formikProps = pick(FORMIK_PROPS_KEYS, rawProps)
+  const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps)
   const { children, options } = rawProps
 
-  const fieldError = getIn(_formik.form.touched, _formik.field.name) && getIn(_formik.form.errors, _formik.field.name)
+  const fieldError = (
+    getIn(formikProps.form.touched, formikProps.field.name) &&
+    getIn(formikProps.form.errors, formikProps.field.name)
+  )
 
   const handleChange = useCallback((newValue) => {
-    _formik.form.setFieldValue(_formik.field.name, newValue)
-  }, [_formik.field.name, _formik.form])
+    formikProps.form.setFieldValue(formikProps.field.name, newValue)
+  }, [formikProps.field.name, formikProps.form])
 
   const handleBlur = useCallback(() => {
-    _formik.form.setFieldTouched(_formik.field.name, true)
-  }, [_formik.field.name, _formik.form])
+    formikProps.form.setFieldTouched(formikProps.field.name, true)
+  }, [formikProps.field.name, formikProps.form])
 
   return (
     <FormItem
-      label={_formItem.label}
-      required={_formItem.required}
+      label={formItemProps.label}
+      required={formItemProps.required}
       help={fieldError}
       validateStatus={fieldError ? "error" : undefined}
     >
       <Select
         {...props}
-        {..._formik.field}
+        {...formikProps.field}
         onBlur={handleBlur}
         onChange={handleChange}
       >

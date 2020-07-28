@@ -1,14 +1,9 @@
 import { notification } from 'antd';
-import { keys, pick } from 'ramda';
+import { mergeDeepRight, pick } from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
 
 import { getEventCompany } from '../services';
-
-const defaultInitialValues = {
-  name: '',
-  stand_type: undefined,
-  visible: false,
-};
+import { defaultInitialValues, companyFormKeys } from '../crearEditarEmpresa';
 
 function useGetCompanyInitialValues(eventId, companyId) {
   const [data, setData] = useState(defaultInitialValues);
@@ -25,8 +20,8 @@ function useGetCompanyInitialValues(eventId, companyId) {
 
       getEventCompany(eventId, companyId)
         .then((res) => {
-          const formKeys = keys(defaultInitialValues);
-          const newInitialValues = pick(formKeys, res);
+          const resValues = pick(companyFormKeys, res);
+          const newInitialValues = mergeDeepRight(defaultInitialValues, resValues);
 
           setData(newInitialValues);
         })

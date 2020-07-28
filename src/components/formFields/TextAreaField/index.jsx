@@ -1,15 +1,16 @@
-import { Switch } from 'antd'
+import { Input } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
 import { getIn } from 'formik'
 import { concat, omit, pick } from 'ramda'
-import React, { useCallback } from 'react'
+import React from 'react'
+
+const { TextArea } = Input
 
 const FORMIK_PROPS_KEYS = ['form', 'field', 'meta']
 const FORM_ITEM_PROPS_KEYS = ['label', 'required']
 const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS)
-const switchStyle = { marginRight: '10px' }
 
-function SwitchField(rawProps) {
+function TextAreaField(rawProps) {
   const props = omit(NOT_PROPS_KEYS, rawProps)
   const formikProps = pick(FORMIK_PROPS_KEYS, rawProps)
   const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps)
@@ -19,14 +20,6 @@ function SwitchField(rawProps) {
     getIn(formikProps.form.errors, formikProps.field.name)
   )
 
-  const handleChange = useCallback((newValue) => {
-    formikProps.form.setFieldValue(formikProps.field.name, newValue)
-  }, [formikProps.field.name, formikProps.form])
-
-  const handleBlur = useCallback(() => {
-    formikProps.form.setFieldTouched(formikProps.field.name, true)
-  }, [formikProps.field.name, formikProps.form])
-
   return (
     <FormItem
       label={formItemProps.label}
@@ -34,16 +27,12 @@ function SwitchField(rawProps) {
       help={fieldError}
       validateStatus={fieldError ? "error" : undefined}
     >
-      <Switch
-        style={switchStyle}
+      <TextArea
         {...props}
-        name={formikProps.field.name}
-        checked={formikProps.field.value}
-        onBlur={handleBlur}
-        onChange={handleChange}
+        {...formikProps.field}
       />
     </FormItem>
   )
 }
 
-export default SwitchField
+export default TextAreaField

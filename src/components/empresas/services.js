@@ -1,7 +1,8 @@
-import { map, path } from 'ramda';
+import { map, path, pick } from 'ramda';
 import { isNonEmptyArray } from 'ramda-adjunct';
 
 import { firestore } from '../../helpers/firebase';
+import { companyFormKeys } from './crearEditarEmpresa';
 
 function dataMapper(doc) {
   return {
@@ -88,7 +89,7 @@ export const getEventCompany = (eventId, companyId) => {
 };
 
 export const createEventCompany = (eventId, data) => {
-  const { name, stand_type, visible } = data;
+  const payload = pick(companyFormKeys, data);
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -96,11 +97,7 @@ export const createEventCompany = (eventId, data) => {
         .collection('event_companies')
         .doc(eventId)
         .collection('companies')
-        .add({
-          name,
-          stand_type,
-          visible,
-        });
+        .add(payload);
       resolve(newCompany.id);
     } catch (error) {
       reject(error);
@@ -109,7 +106,7 @@ export const createEventCompany = (eventId, data) => {
 };
 
 export const updateEventCompany = (eventId, companyId, data) => {
-  const { name, stand_type, visible } = data;
+  const payload = pick(companyFormKeys, data);
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -118,11 +115,7 @@ export const updateEventCompany = (eventId, companyId, data) => {
         .doc(eventId)
         .collection('companies')
         .doc(companyId)
-        .update({
-          name,
-          stand_type,
-          visible,
-        });
+        .update(payload);
       resolve();
     } catch (error) {
       reject(error);

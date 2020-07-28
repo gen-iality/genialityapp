@@ -4,27 +4,30 @@ import { getIn } from 'formik'
 import { concat, omit, pick } from 'ramda'
 import React from 'react'
 
-const formikProps = ['form', 'field', 'meta']
-const formItemProps = ['label', 'required']
-const notProps = concat(formikProps, formItemProps)
+const FORMIK_PROPS_KEYS = ['form', 'field', 'meta']
+const FORM_ITEM_PROPS_KEYS = ['label', 'required']
+const NOT_PROPS_KEYS = concat(FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS)
 
 function InputField(rawProps) {
-  const props = omit(notProps, rawProps)
-  const _formik = pick(formikProps, rawProps)
-  const _formItem = pick(formItemProps, rawProps)
+  const props = omit(NOT_PROPS_KEYS, rawProps)
+  const formikProps = pick(FORMIK_PROPS_KEYS, rawProps)
+  const formItemProps = pick(FORM_ITEM_PROPS_KEYS, rawProps)
 
-  const fieldError = getIn(_formik.form.touched, _formik.field.name) && getIn(_formik.form.errors, _formik.field.name)
+  const fieldError = (
+    getIn(formikProps.form.touched, formikProps.field.name) &&
+    getIn(formikProps.form.errors, formikProps.field.name)
+  )
 
   return (
     <FormItem
-      label={_formItem.label}
-      required={_formItem.required}
+      label={formItemProps.label}
+      required={formItemProps.required}
       help={fieldError}
       validateStatus={fieldError ? "error" : undefined}
     >
       <Input
         {...props}
-        {..._formik.field}
+        {...formikProps.field}
       />
     </FormItem>
   )
