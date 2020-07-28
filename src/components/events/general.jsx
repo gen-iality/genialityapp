@@ -253,7 +253,7 @@ class General extends Component {
             adminContenido: event.adminContenido,
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
-            loader_page: event.loader_page || "",
+            loader_page: event.loader_page || "no",
             data_loader_page: this.state.data_loader_page || ""
         };
 
