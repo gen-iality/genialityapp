@@ -44,11 +44,13 @@ class General extends Component {
             info: {},
             infoApp: [],
             specificDates: false,
-            dates: []
+            dates: [],
+            data_loader_page: ""
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
+        this.getDataReactQuill = this.getDataReactQuill.bind(this)
     }
 
     async componentDidMount() {
@@ -250,7 +252,9 @@ class General extends Component {
             banner_image_link: this.state.banner_image_link,
             adminContenido: event.adminContenido,
             type_event: event.type_event,
-            event_platform: event.event_platform || "zoom"
+            event_platform: event.event_platform || "zoom",
+            loader_page: event.loader_page || "no",
+            data_loader_page: this.state.data_loader_page || ""
         };
 
         console.log(data);
@@ -347,6 +351,11 @@ class General extends Component {
         }
 
 
+    }
+
+    getDataReactQuill(data) {
+        console.log(data)
+        this.setState({ data_loader_page: data })
     }
 
     render() {
@@ -473,6 +482,31 @@ class General extends Component {
                                 </div>
                             )
                         }
+
+                        <div>
+                            <label className="label">Introduccion de inicio ?</label>
+                            <div className="select is-primary">
+                                <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
+                                    <option value="no">No</option>
+                                    <option value="text">Video</option>
+                                    <option value="code">Texto/ Codigo/ Imagen</option>
+                                </select>
+                            </div>
+                            {
+                                event.loader_page === "text" && (
+                                    <div style={{ marginTop: "5%" }}>
+                                        <label className="label">Link de youtube</label>
+                                        <p>https://www.youtube.com/watch?v=DcnfSnfq_is</p><label className="label">Copiar y pegar DcnfSnfq_is</label>
+                                        <input defaultValue={event.data_loader_page} type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
+                                    </div>
+                                )
+                            }
+                            {
+                                event.loader_page === "code" && (
+                                    <ReactQuill defaultValue={event.data_loader_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
+                                )
+                            }
+                        </div>
 
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
@@ -639,7 +673,7 @@ class General extends Component {
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
 
                 {this.state.fileMsgBanner && (<p className="help is-success">{this.state.fileMsgBanner}</p>)}
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 }
