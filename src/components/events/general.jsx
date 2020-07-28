@@ -253,7 +253,7 @@ class General extends Component {
             adminContenido: event.adminContenido,
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
-            loader_page: event.loader_page || "",
+            loader_page: event.loader_page || "no",
             data_loader_page: this.state.data_loader_page || ""
         };
 
@@ -487,7 +487,7 @@ class General extends Component {
                             <label className="label">Introduccion de inicio ?</label>
                             <div className="select is-primary">
                                 <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
-                                    <option value="">...Select</option>
+                                    <option value="no">No</option>
                                     <option value="text">Video</option>
                                     <option value="code">Texto/ Codigo/ Imagen</option>
                                 </select>
