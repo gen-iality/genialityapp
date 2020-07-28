@@ -50,6 +50,7 @@ class General extends Component {
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
+        this.getDataReactQuill = this.getDataReactQuill.bind(this)
     }
 
     async componentDidMount() {
@@ -495,13 +496,14 @@ class General extends Component {
                                 event.loader_page === "text" && (
                                     <div style={{ marginTop: "5%" }}>
                                         <label className="label">Link de youtube</label>
+                                        <p>https://www.youtube.com/watch?v=JsbqTHift_8</p><label className="label">Copiar y pegar JsbqTHift_8</label>
                                         <input type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
                                     </div>
                                 )
                             }
                             {
                                 event.loader_page === "code" && (
-                                    <ReactQuill style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
+                                    <ReactQuill defaultValue={event.data_loader_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
                                 )
                             }
                         </div>
