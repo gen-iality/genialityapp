@@ -104,6 +104,13 @@ class MenuEvent extends Component {
           icon: "BookOutlined",
           checked: false,
           permissions: "public"
+        },
+        companies: {
+          name: "Empresas",
+          section: "companies",
+          icon: "WechatOutlined",
+          checked: false,
+          permissions: "public"
         }
       },
     }
