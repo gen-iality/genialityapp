@@ -1,0 +1,15 @@
+@import '~antd/dist/antd.css';
+div {
+  height: 100%;
+  background-image:url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  animation-name: animacionImagenes;
+  animation-duration: 3s;
+  animation-delay: 1s;
+}
+@keyframes animacionImagenes{
+   0%   { background-image:url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55"); opacity: 0.9}
+   50%   { background-image:url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55"); opacity: 0.3}
+   100%  { background-image:url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55");}
+}
