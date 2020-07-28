@@ -44,7 +44,8 @@ class General extends Component {
             info: {},
             infoApp: [],
             specificDates: false,
-            dates: []
+            dates: [],
+            data_loader_page: ""
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
@@ -251,7 +252,8 @@ class General extends Component {
             adminContenido: event.adminContenido,
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
-            loader_page: event.loader_page || false
+            loader_page: event.loader_page || "",
+            data_loader_page: this.state.data_loader_page || ""
         };
 
         console.log(data);
@@ -348,6 +350,11 @@ class General extends Component {
         }
 
 
+    }
+
+    getDataReactQuill(data) {
+        console.log(data)
+        this.setState({ data_loader_page: data })
     }
 
     render() {
@@ -476,13 +483,27 @@ class General extends Component {
                         }
 
                         <div>
-                            <label className="label">Robapagina de inicio</label>
+                            <label className="label">Introduccion de inicio ?</label>
                             <div className="select is-primary">
                                 <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
-                                    <option value={true}>No</option>
-                                    <option value={false}>Si</option>
+                                    <option value="">...Select</option>
+                                    <option value="text">Video</option>
+                                    <option value="code">Texto/ Codigo/ Imagen</option>
                                 </select>
                             </div>
+                            {
+                                event.loader_page === "text" && (
+                                    <div style={{ marginTop: "5%" }}>
+                                        <label className="label">Link de youtube</label>
+                                        <input type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
+                                    </div>
+                                )
+                            }
+                            {
+                                event.loader_page === "code" && (
+                                    <ReactQuill style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
+                                )
+                            }
                         </div>
 
                         <div className="field">
