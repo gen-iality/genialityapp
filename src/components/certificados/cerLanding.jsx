@@ -102,7 +102,7 @@ class CertificadoLanding extends Component {
                 });
                 //Para generar el certificado el usuario tiene que estar checkqueado !!checked_in
                 //if(!dataUser.checked_in) this.setState({message:'Usuario no checkeado'});
-                console.log(dataUser)
+                console.log("Datos de usuario", dataUser)
                 this.setState({ dataUser })
             } else {
                 this.setState({ message: 'No se encontraron certificados para este documento' })
@@ -165,8 +165,8 @@ class CertificadoLanding extends Component {
     render() {
         const { dataUser } = this.state;
         const { currentUser, usuarioRegistrados } = this.props
-        { console.log("usuarioRegistrados", usuarioRegistrados) }
-        const checkedInUsers = (usuarioRegistrados && usuarioRegistrados.length) ? usuarioRegistrados.filter(eventUser => eventUser.checked_in) : [];
+        { console.log("usuarioRegistrados", usuarioRegistrados, "usuario Recurrente", currentUser) }
+        const checkedInUsers = (usuarioRegistrados && usuarioRegistrados.length) ? usuarioRegistrados.filter(eventUser => eventUser.checkedin_at) : [];
 
         return (
             <>
@@ -182,7 +182,7 @@ class CertificadoLanding extends Component {
                                         <div>
                                             <br />
                                             {/* Nombre de evento */}
-                                            <p>{user.ticket}</p>
+                                            <p>{console.log(user.ticket)}</p>
 
                                             {/* Importacion del boton para descargar certificado */}
                                             <IconText

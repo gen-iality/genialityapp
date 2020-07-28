@@ -130,7 +130,7 @@ class MenuEvent extends Component {
   }
 
   async componentDidUpdate() {
-    console.log("user", this.props.user);
+    console.log("user data", this.props.user);
     if (this.props.user && !this.state.user) {
       this.setState({ user: this.props.user })
     }
