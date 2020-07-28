@@ -404,31 +404,35 @@ class Landing extends Component {
                 {/* <SurveyNotification /> */}
 
                 {this.state.headerVisible && (
-                  <BannerEvent
-                    bgImage={
-                      event.styles && event.styles.banner_image
-                        ? event.styles.banner_image
-                        : event.picture
-                          ? event.picture
-                          : "https://bulma.io/images/placeholders/1280x960.png"
-                    }
-                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                    title={event.name}
-                    organizado={
-                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                      </Link>
-                    }
-                    place={
-                      <span>
-                        {event.venue} {event.location.FormattedAddress}
-                      </span>
-                    }
-                    dateStart={event.date_start}
-                    dateEnd={event.date_end}
-                    dates={event.dates}
-                    type_event={event.type_event}
-                  />
+                  event._id === "5f0b95ca34c8116f9b21ebd6" ? (
+                    <></>
+                  ) : (
+                      <BannerEvent
+                        bgImage={
+                          event.styles && event.styles.banner_image
+                            ? event.styles.banner_image
+                            : event.picture
+                              ? event.picture
+                              : "https://bulma.io/images/placeholders/1280x960.png"
+                        }
+                        bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                        title={event.name}
+                        organizado={
+                          <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                            {event.organizer.name ? event.organizer.name : event.organizer.email}
+                          </Link>
+                        }
+                        place={
+                          <span>
+                            {event.venue} {event.location.FormattedAddress}
+                          </span>
+                        }
+                        dateStart={event.date_start}
+                        dateEnd={event.date_end}
+                        dates={event.dates}
+                        type_event={event.type_event}
+                      />
+                    )
                 )}
               </div>
 
