@@ -496,7 +496,7 @@ class General extends Component {
                                 event.loader_page === "text" && (
                                     <div style={{ marginTop: "5%" }}>
                                         <label className="label">Link de youtube</label>
-                                        <p>https://www.youtube.com/watch?v=JsbqTHift_8</p><label className="label">Copiar y pegar JsbqTHift_8</label>
+                                        <p>https://www.youtube.com/watch?v=DcnfSnfq_is</p><label className="label">Copiar y pegar DcnfSnfq_is</label>
                                         <input type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
                                     </div>
                                 )
