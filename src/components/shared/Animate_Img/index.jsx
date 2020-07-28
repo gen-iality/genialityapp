@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
-import './index';
+import './index.scss';
 
 class AnimateImg extends React.Component {
 	constructor(props) {
@@ -22,10 +22,10 @@ class AnimateImg extends React.Component {
 		return (
 			<>
 				{event.loader_page === "code" && (
-					<div className="container">
+					<div className="container_imgLoading">
 						<div dangerouslySetInnerHTML={{ __html: event.data_loader_page }} />
 						<Row justify="center">
-							<Col span={2}>
+							<Col>
 								<Link to={`/landing/${eventId}`}>
 									<Button className="button">Entrar</Button>
 								</Link>
@@ -34,7 +34,7 @@ class AnimateImg extends React.Component {
 					</div>
 				)}
 				{event.loader_page === "text" && (
-					<div className="container" >
+					<div className="container_imgLoading" >
 						<iframe
 							width="100%"
 							height="100%"
@@ -45,7 +45,7 @@ class AnimateImg extends React.Component {
 						>
 						</iframe>
 						<Row justify="center">
-							<Col span={2}>
+							<Col>
 								<Link to={`/landing/${eventId}`}>
 									<Button className="button">Entrar</Button>
 								</Link>

@@ -1,40 +1,41 @@
 @import "~antd/dist/antd.css";
-img {
-  background-size: cover;
-  background-repeat: no-repeat;
-  animation-name: animacionImagenes;
-  animation-duration: 3s;
-  animation-delay: 1s;
-}
-@keyframes animacionImagenes {
-  0% {
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55");
-    opacity: 0.9;
+.container_imgLoading{
+  img {
+    margin-top: -55px;
+    height: 100%;
+    width: 100%;
+    margin-bottom: -69px;
+    animation-name: animacionImagenes;
+    animation-duration: 3s;
+    animation-delay: 1s;
   }
-  50% {
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55");
-    opacity: 0.5;
+  @keyframes animacionImagenes {
+    0% {
+      opacity: 0.1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0.9;
+    }
   }
-  100% {
-    background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/FONDO_AFUERA_FINAL.png?alt=media&token=29f90cd7-f6b8-4439-9027-7827262ecf55");
+  .ant-btn {
+    top: -177px;
+    background-color: rgba(0, 0, 0, 0.12);
+    color: white;
+    font-size: 34px;
+    width: 217px;
+    height: 69px;
   }
-}
-
-.ant-btn {
-  top: -275px;
-  background-color: rgba(0, 0, 0, 0.12);
-  color: white;
-  font-size: 34px;
-  width: 217px;
-  height: 69px;
-}
-.ant-btn:hover {
-  background: rgba(0, 0, 0, 0.07);
-  color: #ffffff;
-  box-shadow: 0 10px 25px -2px #f5f5f5;
-  border: white;
-}
-
-iframe {
-  height: 500px;
+  .ant-btn:hover {
+    background: rgba(0, 0, 0, 0.07);
+    color: #ffffff;
+    box-shadow: 0 10px 25px -2px #f5f5f5;
+    border: white;
+  }
+  
+  iframe {
+    height: 1000px;
+  }
 }
