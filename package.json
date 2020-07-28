@@ -81,7 +81,7 @@
     "survey-react": "^1.5.18",
     "sweetalert2": "^8.17.6",
     "xlsx": "^0.13.5",
-    "yup": "^0.29.1"
+    "yup": "^0.29.2"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",

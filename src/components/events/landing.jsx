@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgenda from "../my-agenda/index";
+import Companies from "./companies/index";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -228,6 +229,7 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      companies: <Companies event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
           <EventLanding event={event} toggleConference={this.toggleConference} />
