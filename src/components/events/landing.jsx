@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgenda from "../my-agenda/index";
+import Companies from "./companies/index";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -223,14 +224,15 @@ class Landing extends Component {
       survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
       speakers: <SpeakersForm eventId={event._id} />,
-      wall: <WallForm event={event} eventId={event._id} />,
+      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
-      networking: <NetworkingForm event={event} eventId={event._id} />,
-      my_agenda: <MyAgenda event={event} eventId={event._id} />,
+      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      companies: <Companies event={event} eventId={event._id} />,
       evento: (
         <div className="columns is-centered">
-          <EventLanding event={event} />
+          <EventLanding event={event} toggleConference={this.toggleConference} />
 
           <div className="column container-map">
 
@@ -404,31 +406,33 @@ class Landing extends Component {
                 {/* <SurveyNotification /> */}
 
                 {this.state.headerVisible && (
-                  <BannerEvent
-                    bgImage={
-                      event.styles && event.styles.banner_image
-                        ? event.styles.banner_image
-                        : event.picture
-                          ? event.picture
-                          : "https://bulma.io/images/placeholders/1280x960.png"
-                    }
-                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                    title={event.name}
-                    organizado={
-                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                      </Link>
-                    }
-                    place={
-                      <span>
-                        {event.venue} {event.location.FormattedAddress}
-                      </span>
-                    }
-                    dateStart={event.date_start}
-                    dateEnd={event.date_end}
-                    dates={event.dates}
-                    type_event={event.type_event}
-                  />
+                  event.show_banner === "true" && (
+                    <BannerEvent
+                      bgImage={
+                        event.styles && event.styles.banner_image
+                          ? event.styles.banner_image
+                          : event.picture
+                            ? event.picture
+                            : "https://bulma.io/images/placeholders/1280x960.png"
+                      }
+                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                      title={event.name}
+                      organizado={
+                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                          {event.organizer.name ? event.organizer.name : event.organizer.email}
+                        </Link>
+                      }
+                      place={
+                        <span>
+                          {event.venue} {event.location.FormattedAddress}
+                        </span>
+                      }
+                      dateStart={event.date_start}
+                      dateEnd={event.date_end}
+                      dates={event.dates}
+                      type_event={event.type_event}
+                    />
+                  )
                 )}
               </div>
 

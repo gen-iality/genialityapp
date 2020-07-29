@@ -104,6 +104,13 @@ class MenuEvent extends Component {
           icon: "BookOutlined",
           checked: false,
           permissions: "public"
+        },
+        companies: {
+          name: "Empresas",
+          section: "companies",
+          icon: "WechatOutlined",
+          checked: false,
+          permissions: "public"
         }
       },
     }
@@ -123,7 +130,7 @@ class MenuEvent extends Component {
   }
 
   async componentDidUpdate() {
-    console.log("user", this.props.user);
+    console.log("user data", this.props.user);
     if (this.props.user && !this.state.user) {
       this.setState({ user: this.props.user })
     }
