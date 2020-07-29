@@ -254,7 +254,8 @@ class General extends Component {
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
             loader_page: event.loader_page || "no",
-            data_loader_page: this.state.data_loader_page || ""
+            data_loader_page: this.state.data_loader_page || "",
+            show_banner: event.show_banner || true
         };
 
         console.log(data);
@@ -482,7 +483,16 @@ class General extends Component {
                                 </div>
                             )
                         }
+                        <div>
+                            <label className="label">Mostrar banner informativo</label>
+                            <div className="select is-primary">
+                                <select defaultValue={event.show_banner} name="show_banner" onChange={this.handleChange}>
+                                    <option value={true}>Si</option>
+                                    <option value={false}>No</option>
 
+                                </select>
+                            </div>
+                        </div>
                         <div>
                             <label className="label">Introduccion de inicio ?</label>
                             <div className="select is-primary">
