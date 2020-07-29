@@ -200,13 +200,14 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div>
-                      <div>
+                      <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Row key={`user-item-${userIndex}`} justify="center">
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Card
                               extra={
                                 <a
+                                  style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
@@ -216,6 +217,8 @@ export default class ListEventUser extends Component {
                                   Enviar Solicitud
                               </a>
                               }
+                              hoverable={8}
+                              headStyle={{ backgroundColor: "rgb(8 157 78)", color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
@@ -234,14 +237,14 @@ export default class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <p>
-                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                          <b>correo : </b> {users.properties.email ? users.properties.email : "No registra Correo"}
                                         </p>
                                         <div>
                                           {
                                             asistantData.map((data, dataIndex) => (
                                               !data.privatePublic && data.privatePublic !== undefined && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                  <p><b>{data.label}:</b> {users.properties[data.name]}</p>
                                                 </div>
                                               )
                                             ))
@@ -250,7 +253,8 @@ export default class ListEventUser extends Component {
                                       </Col>
                                       <Col xs={24}>
                                         <Button
-                                          type="primary"
+
+                                          style={{ backgroundColor: "#363636", color: "white" }}
                                           onClick={() => {
                                             this.setState({ eventUserIdToMakeAppointment: users._id })
                                           }}
@@ -264,9 +268,9 @@ export default class ListEventUser extends Component {
                                 ]}
                               />
                             </Card>
-                          </Row>
+                          </Col>
                         ))}
-                      </div>
+                      </Row>
 
                       {/* Paginacion para mostrar datos de una manera mas ordenada */}
                       <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
