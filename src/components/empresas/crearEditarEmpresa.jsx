@@ -8,6 +8,7 @@ import * as yup from 'yup'
 
 import InputField from '../formFields/InputField'
 import FileField from '../formFields/FileField'
+import ImageField from '../formFields/ImageField'
 import SelectField from '../formFields/SelectField'
 import RichTextComponentField from '../formFields/RichTextComponentField'
 import SwitchField from '../formFields/SwitchField'
@@ -80,6 +81,7 @@ export const defaultInitialValues = {
   times_and_venues: '',
   contact_info: { description: '', image: '' },
   services: [ { description: '', image: '' } ],
+  brochure: undefined,
   webpage: '',
   social_networks: [{ network: null, url: '' }]
 };
@@ -139,13 +141,12 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       maxLength={ NAME_MAX_LENGTH }
                       required
                     />
-                    <FileField
+                    <ImageField
                       name="stand_image"
                       label="Imagen principal"
                       placeholder=""
                       required
                     />
-
                     <RichTextComponentField
                       name="description"
                       label="Descripción"
@@ -250,6 +251,22 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       options={ standTypesOptions }
                       required
                     />
+
+                    <Field
+                      name="brochure"
+                      component={ InputField }
+                      label="B"
+                      placeholder="Url página web"
+                      required
+                    />
+
+                    <FileField
+                      name="brochure"
+                      label="Brochure"
+                      placeholder=""
+                      required
+                    />
+
 
                     <Field
                       name="webpage"

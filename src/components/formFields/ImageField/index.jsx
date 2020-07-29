@@ -4,8 +4,8 @@ import FormItem from 'antd/es/form/FormItem'
 import { getIn } from 'formik'
 import { concat, omit, pick } from 'ramda'
 import { Field } from 'formik'
-import FileInput from "../../shared/fileInput";
-import axios from "axios/index";
+import ImageInput from "../../shared/imageInput";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { Actions } from "../../../helpers/request";
 import { FormattedMessage } from "react-intl";
@@ -14,7 +14,7 @@ const FORMIK_PROPS_KEYS = [ 'form', 'field', 'meta' ]
 const FORM_ITEM_PROPS_KEYS = [ 'label', 'required' ]
 const NOT_PROPS_KEYS = concat( FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS )
 
-function FileField ( rawProps ) {
+function ImageField ( rawProps ) {
 
   const [ picture, setPicture ] = useState( null );
 
@@ -44,7 +44,7 @@ function FileField ( rawProps ) {
     return undefined
   } )
   let saveEventImage = ( form, field, files, imageFieldName ) => {
-    console.log( "itentando subir" );
+
 
     const file = files[ 0 ];
     let imageUrl = null;
@@ -116,7 +116,7 @@ function FileField ( rawProps ) {
             <Input
               value={ field.value }
             />
-            <FileInput
+            <ImageInput
               picture={ field.value }
               width={ ancho }
               height={ alto }
@@ -134,4 +134,4 @@ function FileField ( rawProps ) {
   )
 }
 
-export default FileField
+export default ImageField
