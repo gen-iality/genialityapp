@@ -1,6 +1,6 @@
-import { CaretLeftOutlined } from '@ant-design/icons'
+import { CaretLeftOutlined, DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Col, Form, notification, Row, Typography } from 'antd'
-import { Field, Formik } from 'formik'
+import { Field, FieldArray, Formik } from 'formik'
 import { apply, keys } from 'ramda'
 import React, { useCallback } from 'react'
 import { Link } from 'react-router-dom'
@@ -29,6 +29,8 @@ const NAME_MAX_LENGTH = 100
 const DESCRIPTION_MAX_LENGTH = 500
 const TIMES_AND_VENUES_MAX_LENGTH = 100
 const URL_MAX_LENGTH = 500
+const SERVICE_DESCRIPTION_MAX_LENGTH = 30
+const SERVICES_LIMIT = 4
 
 const validationSchema = yup.object().shape( {
   name: yup.string()
@@ -40,8 +42,8 @@ const validationSchema = yup.object().shape( {
     .max( 4 )
     .of(
       yup.object().shape( {
-        description: yup.string().max( 30 ),
-        image: yup.string().url( URL_MAX_LENGTH )
+        description: yup.string(),
+        image: yup.string().url().required()
       } )
     ),
   webpage: yup.string()
@@ -72,7 +74,7 @@ export const defaultInitialValues = {
   visible: false,
   description: '',
   times_and_venues: '',
-  services: [],
+  services: [ { description: '', image: '' } ],
   webpage: '',
   linkedin: '',
   facebook: '',
@@ -121,7 +123,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
           validationSchema={ validationSchema }
           onSubmit={ onSubmit }
         >
-          { ( { isSubmitting, handleSubmit, handleReset } ) => {
+          { ( { isSubmitting, values, handleSubmit, handleReset } ) => {
             return (
               <Form onReset={ handleReset } onSubmitCapture={ handleSubmit } { ...formLayout }>
                 <Row justify="start">
@@ -153,6 +155,75 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       label="Información de sedes y horarios"
                       maxLength={ TIMES_AND_VENUES_MAX_LENGTH }
                       required
+                    />
+
+                    <FieldArray
+                      name="services"
+                      render={ ( arrayHelpers ) => {
+                        return !!values.services && values.services.length > 0
+                          ? (
+                            <>
+                              { values.services.map( ( _service, serviceIndex ) => (
+                                <div key={ `serivice-item-${ serviceIndex }` }>
+                                  <RichTextComponentField
+                                    name={ `services[${ serviceIndex }].description` }
+                                    label={ `Descripción servicio ${ serviceIndex + 1 }` }
+                                    maxLength={ SERVICE_DESCRIPTION_MAX_LENGTH }
+                                    required
+                                  />
+
+                                  <Field
+                                    name={ `services[${ serviceIndex }].image` }
+                                    component={ InputField }
+                                    label={ `Imagen servicio ${ serviceIndex + 1 }` }
+                                    placeholder="Url imagen"
+                                    maxLength={ URL_MAX_LENGTH }
+                                    required
+                                  />
+
+                                  <Form.Item { ...buttonsLayout }>
+                                    { values.services.length > 1 && (
+                                      <Button
+                                        type="danger"
+                                        icon={ <DeleteOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.remove( serviceIndex )
+                                        } }
+                                        style={ { marginRight: '20px' } }
+                                      >
+                                        { 'Eliminar servicio' }
+                                      </Button>
+                                    ) }
+                                    { values.services.length < SERVICES_LIMIT && serviceIndex === values.services.length - 1 && (
+                                      <Button
+                                        type="primary"
+                                        icon={ <PlusCircleOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.push( { description: '', image: '' } )
+                                        } }
+                                      >
+                                        { 'Agregar servicio' }
+                                      </Button>
+                                    ) }
+                                  </Form.Item>
+                                </div>
+                              ) ) }
+                            </>
+                          ) : (
+                            <Form.Item { ...buttonsLayout }>
+                              <Button
+                                type="primary"
+                                icon={ <PlusCircleOutlined /> }
+                                onClick={ () => {
+                                  arrayHelpers.push( { description: '', image: '' } )
+                                } }
+                              >
+                                { 'Agregar servicio' }
+                              </Button>
+                            </Form.Item>
+                          )
+                      }
+                      }
                     />
 
                     <Field
