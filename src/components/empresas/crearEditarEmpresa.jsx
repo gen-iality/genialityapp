@@ -46,6 +46,11 @@ const validationSchema = yup.object().shape( {
     image: yup.string(),
     description: yup.string(),
   }),
+  advisor: yup.object().shape({
+    image: yup.string().url(),
+    name: yup.string(),
+    number: yup.string(),
+  }),
   services: yup.array()
     .max( SERVICES_LIMIT )
     .of(
@@ -80,6 +85,7 @@ export const defaultInitialValues = {
   description: '',
   times_and_venues: '',
   contact_info: { description: '', image: '' },
+  advisor: { name: '', image: '', number: '' },
   services: [ { description: '', image: '' } ],
   brochure: undefined,
   webpage: '',
@@ -345,6 +351,28 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                           )
                       }
                       }
+                    />
+
+                    <Field
+                      name="advisor.name"
+                      component={ InputField }
+                      label="Nombre del contacto advisor"
+                      placeholder="Nombre del contacto advisor"
+                    />
+
+                    <Field
+                      name="advisor.number"
+                      component={ InputField }
+                      label="Número de contacto advisor"
+                      placeholder="Número de contacto advisor"
+                    />
+
+                    <Field
+                      name="advisor.image"
+                      component={ InputField }
+                      label="Imagen del contacto advisor"
+                      placeholder="Url imagen"
+                      maxLength={ URL_MAX_LENGTH }
                     />
 
                     <Field

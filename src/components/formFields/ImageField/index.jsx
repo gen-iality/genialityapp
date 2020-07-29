@@ -40,9 +40,6 @@ function ImageField ( rawProps ) {
   } )
   //funciones para cargar imagenes y enviar un popup para avisar al usuario que la imagen ya cargo o cambiar la imagen
 
-  const validate = useCallback( () => {
-    return undefined
-  } )
   let saveEventImage = ( form, field, files, imageFieldName ) => {
 
 
@@ -101,7 +98,6 @@ function ImageField ( rawProps ) {
   return (
     <Field
       name={ name }
-      validate={ validate }
     >
       { ( { field, form, meta } ) => {
         const fieldError = meta.touched && meta.error
