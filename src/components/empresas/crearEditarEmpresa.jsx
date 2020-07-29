@@ -39,8 +39,7 @@ const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
 
 const validationSchema = yup.object().shape( {
   name: yup.string()
-    .max( NAME_MAX_LENGTH )
-    .required(),
+    .max( NAME_MAX_LENGTH ),
   description: yup.string(),
   stand_image: yup.string(),
   times_and_venues: yup.string(),
@@ -63,15 +62,17 @@ const validationSchema = yup.object().shape( {
     ),
   webpage: yup.string()
     .url()
-    .max( URL_MAX_LENGTH )
-    .required(),
+    .max( URL_MAX_LENGTH ),
+  video_url: yup.string()
+    .url()
+    .max( URL_MAX_LENGTH ),
   linkedin: yup.string()
     .url()
     .max( URL_MAX_LENGTH ),
   social_networks: yup.array().max(SOCIAL_NETWORKS_LIMIT).of(
     yup.object().shape({
-      network: yup.string().required(),
-      url: yup.string().url().required()
+      network: yup.string(),
+      url: yup.string().url()
     })
   ),
   gallery: yup.array().max(GALLERY_LIMIT).of(
@@ -79,10 +80,8 @@ const validationSchema = yup.object().shape( {
       image: yup.string().url()
     })
   ),
-  stand_type: yup.string()
-    .required(),
-  visible: yup.boolean()
-    .required(),
+  stand_type: yup.string(),
+  visible: yup.boolean(),
 } )
 export const defaultInitialValues = {
   name: '',
@@ -154,12 +153,18 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       label="Nombre empresa"
                       placeholder="Nombre empresa"
                       maxLength={ NAME_MAX_LENGTH }
-                      required
                     />
+
+                    <Field
+                      name="video_url"
+                      component={ InputField }
+                      label="Video principal"
+                      placeholder="Url video"
+                    />
+
                     <ImageField
                       name="stand_image"
                       label="Imagen principal"
-                      required
                     />
                     <RichTextComponentField
                       name="description"
@@ -260,14 +265,12 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       label="Tipo de stand"
                       placeholder="Tipo de stand"
                       options={ standTypesOptions }
-                      required
                     />
 
                     <FileField
                       name="brochure"
                       label="Brochure"
                       placeholder=""
-                      required
                     />
 
                     <Field
@@ -275,7 +278,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       component={ InputField }
                       label="Página web"
                       placeholder="Url página web"
-                      required
                     />
 
                     <FieldArray
@@ -292,7 +294,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                     label={ `Red social ${ socialNetworkIndex + 1 }` }
                                     placeholder="Red social"
                                     options={ socialNetworksOptions }
-                                    required
                                   />
 
                                   <Field
@@ -301,7 +302,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                     label={ `Url red social ${ socialNetworkIndex + 1 }` }
                                     placeholder="Url red social"
                                     maxLength={ URL_MAX_LENGTH }
-                                    required
                                   />
 
                                   <Form.Item { ...buttonsLayout }>
@@ -382,7 +382,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                   <ImageField
                                     name={ `gallery[${ galleryIndex }].image` }
                                     label={ `Imagen galería ${ galleryIndex + 1 }` }
-                                    required
                                   />
 
                                   <Form.Item { ...buttonsLayout }>
