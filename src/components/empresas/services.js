@@ -7,7 +7,7 @@ import { companyFormKeys } from './crearEditarEmpresa';
 function dataMapper(doc) {
   return {
     ...doc.data(),
-    id: doc.id
+    id: doc.id,
   };
 }
 
@@ -20,6 +20,22 @@ export const createEventDefaultStandTypes = (eventId) => {
         .collection('event_companies')
         .doc(eventId)
         .set({ stand_types: defaultStandTypes }, { merge: true });
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const createEventDefaultSocialNetworks = (eventId) => {
+  const defaultSocialNetworks = ['facebook', 'twitter', 'instagram', 'linkedin'];
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await firestore
+        .collection('event_companies')
+        .doc(eventId)
+        .set({ social_networks: defaultSocialNetworks }, { merge: true });
       resolve();
     } catch (error) {
       reject(error);
@@ -58,6 +74,28 @@ export const getEventCompaniesStandTypes = (eventId) => {
         resolve(standTypes);
       } else {
         createEventDefaultStandTypes(eventId);
+        reject();
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getEventCompaniesSocialNetworks = (eventId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await firestore
+        .collection('event_companies')
+        .doc(eventId)
+        .get();
+      const eventCompaniesDoc = result.data();
+      const socialNetworks = path(['social_networks'], eventCompaniesDoc);
+
+      if (isNonEmptyArray(socialNetworks)) {
+        resolve(socialNetworks);
+      } else {
+        createEventDefaultSocialNetworks(eventId);
         reject();
       }
     } catch (error) {
@@ -106,7 +144,6 @@ export const createEventCompany = (eventId, data) => {
 };
 
 export const updateEventCompany = (eventId, companyId, data) => {
-  console.log('debug', data, companyFormKeys);
   const payload = pick(companyFormKeys, data);
 
   return new Promise(async (resolve, reject) => {

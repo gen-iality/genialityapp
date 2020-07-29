@@ -14,6 +14,7 @@ import SwitchField from '../formFields/SwitchField'
 import Loading from '../loaders/loading'
 import useGetCompanyInitialValues from './customHooks/useGetCompanyInitialValues'
 import useGetEventCompaniesStandTypesOptions from './customHooks/useGetEventCompaniesStandTypesOptions'
+import useGetEventCompaniesSocialNetworksOptions from './customHooks/useGetEventCompaniesSocialNetworksOptions'
 import { createEventCompany, updateEventCompany } from './services'
 
 const { Title } = Typography
@@ -31,6 +32,8 @@ const TIMES_AND_VENUES_MAX_LENGTH = 100
 const URL_MAX_LENGTH = 500
 const SERVICE_DESCRIPTION_MAX_LENGTH = 30
 const SERVICES_LIMIT = 4
+const SOCIAL_NETWORKS_LIMIT = 4
+const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
 
 const validationSchema = yup.object().shape( {
   name: yup.string()
@@ -38,8 +41,12 @@ const validationSchema = yup.object().shape( {
     .required(),
   description: yup.string(),
   times_and_venues: yup.string(),
+  contact_info: yup.object().shape({
+    image: yup.string(),
+    description: yup.string(),
+  }),
   services: yup.array()
-    .max( 4 )
+    .max( SERVICES_LIMIT )
     .of(
       yup.object().shape( {
         description: yup.string(),
@@ -53,15 +60,12 @@ const validationSchema = yup.object().shape( {
   linkedin: yup.string()
     .url()
     .max( URL_MAX_LENGTH ),
-  facebook: yup.string()
-    .url()
-    .max( URL_MAX_LENGTH ),
-  instagram: yup.string()
-    .url()
-    .max( URL_MAX_LENGTH ),
-  twitter: yup.string()
-    .url()
-    .max( URL_MAX_LENGTH ),
+  social_networks: yup.array().max(SOCIAL_NETWORKS_LIMIT).of(
+    yup.object().shape({
+      network: yup.string().required(),
+      url: yup.string().url().required()
+    })
+  ),
   stand_type: yup.string()
     .required(),
   visible: yup.boolean()
@@ -74,18 +78,17 @@ export const defaultInitialValues = {
   visible: false,
   description: '',
   times_and_venues: '',
+  contact_info: { description: '', image: '' },
   services: [ { description: '', image: '' } ],
   webpage: '',
-  linkedin: '',
-  facebook: '',
-  instagram: '',
-  twitter: '',
+  social_networks: [{ network: null, url: '' }]
 };
 export const companyFormKeys = keys( defaultInitialValues )
 
 function CrearEditarEmpresa ( { event, match, history } ) {
   const { companyId } = match.params
   const [ standTypesOptions, loadingStandTypes ] = useGetEventCompaniesStandTypesOptions( event._id )
+  const [ socialNetworksOptions, loadingSocialNetworks ] = useGetEventCompaniesSocialNetworksOptions( event._id )
   const [ initialValues, loadingInitialValues ] = useGetCompanyInitialValues( event._id, companyId )
 
   const onSubmit = useCallback( ( values, { setSubmitting } ) => {
@@ -109,7 +112,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
       } )
   }, [ history, event._id, companyId ] )
 
-  if ( loadingStandTypes || loadingInitialValues ) {
+  if ( loadingStandTypes || loadingSocialNetworks || loadingInitialValues ) {
     return <Loading />
   }
 
@@ -147,14 +150,27 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       name="description"
                       label="Descripción"
                       maxLength={ DESCRIPTION_MAX_LENGTH }
-                      required
                     />
 
                     <RichTextComponentField
                       name="times_and_venues"
                       label="Información de sedes y horarios"
                       maxLength={ TIMES_AND_VENUES_MAX_LENGTH }
+                    />
+
+                    <Field
+                      name="contact_info.image"
+                      component={ InputField }
+                      label="Imagen de información de contacto"
+                      placeholder="Url imagen"
+                      maxLength={ URL_MAX_LENGTH }
                       required
+                    />
+
+                    <RichTextComponentField
+                      name="contact_info.description"
+                      label="Descripción de información de contacto"
+                      maxLength={CONTACT_INFO_DESCRIPTION_MAX_LENGTH}
                     />
 
                     <FieldArray
@@ -164,7 +180,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                           ? (
                             <>
                               { values.services.map( ( _service, serviceIndex ) => (
-                                <div key={ `serivice-item-${ serviceIndex }` }>
+                                <div key={ `service-item-${ serviceIndex }` }>
                                   <RichTextComponentField
                                     name={ `services[${ serviceIndex }].description` }
                                     label={ `Descripción servicio ${ serviceIndex + 1 }` }
@@ -191,7 +207,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                         } }
                                         style={ { marginRight: '20px' } }
                                       >
-                                        { 'Eliminar servicio' }
+                                        { 'Eliminar' }
                                       </Button>
                                     ) }
                                     { values.services.length < SERVICES_LIMIT && serviceIndex === values.services.length - 1 && (
@@ -243,32 +259,75 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       required
                     />
 
-                    <Field
-                      name="linkedin"
-                      component={ InputField }
-                      label="Linkedin"
-                      placeholder="Url linkedin"
-                    />
+                    <FieldArray
+                      name="social_networks"
+                      render={ ( arrayHelpers ) => {
+                        return !!values.social_networks && values.social_networks.length > 0
+                          ? (
+                            <>
+                              { values.social_networks.map( ( _sn, socialNetworkIndex ) => (
+                                <div key={ `social-network-item-${ socialNetworkIndex }` }>
+                                  <Field
+                                    name={`social_networks[${ socialNetworkIndex }].network`}
+                                    component={ SelectField }
+                                    label={ `Red social ${ socialNetworkIndex + 1 }` }
+                                    placeholder="Red social"
+                                    options={ socialNetworksOptions }
+                                    required
+                                  />
 
-                    <Field
-                      name="facebook"
-                      component={ InputField }
-                      label="Facebook"
-                      placeholder="Url facebook"
-                    />
+                                  <Field
+                                    name={ `social_networks[${ socialNetworkIndex }].url` }
+                                    component={ InputField }
+                                    label={ `Url red social ${ socialNetworkIndex + 1 }` }
+                                    placeholder="Url red social"
+                                    maxLength={ URL_MAX_LENGTH }
+                                    required
+                                  />
 
-                    <Field
-                      name="instagram"
-                      component={ InputField }
-                      label="Instagram"
-                      placeholder="Url instagram"
-                    />
-
-                    <Field
-                      name="twitter"
-                      component={ InputField }
-                      label="Twitter"
-                      placeholder="Url twitter"
+                                  <Form.Item { ...buttonsLayout }>
+                                    { values.social_networks.length > 1 && (
+                                      <Button
+                                        type="danger"
+                                        icon={ <DeleteOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.remove( socialNetworkIndex )
+                                        } }
+                                        style={ { marginRight: '20px' } }
+                                      >
+                                        { 'Eliminar' }
+                                      </Button>
+                                    ) }
+                                    { values.social_networks.length < SOCIAL_NETWORKS_LIMIT && socialNetworkIndex === values.social_networks.length - 1 && (
+                                      <Button
+                                        type="primary"
+                                        icon={ <PlusCircleOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.push( { description: '', image: '' } )
+                                        } }
+                                      >
+                                        { 'Agregar red social' }
+                                      </Button>
+                                    ) }
+                                  </Form.Item>
+                                </div>
+                              ) ) }
+                            </>
+                          ) : (
+                            <Form.Item { ...buttonsLayout }>
+                              <Button
+                                type="primary"
+                                icon={ <PlusCircleOutlined /> }
+                                onClick={ () => {
+                                  arrayHelpers.push( { description: '', image: '' } )
+                                } }
+                              >
+                                { 'Agregar red social' }
+                              </Button>
+                            </Form.Item>
+                          )
+                      }
+                      }
                     />
 
                     <Field
