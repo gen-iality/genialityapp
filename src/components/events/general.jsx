@@ -484,7 +484,7 @@ class General extends Component {
                             )
                         }
                         <div>
-                            <label>Mostrar banner informativo</label>
+                            <label className="label">Mostrar banner informativo</label>
                             <div className="select is-primary">
                                 <select defaultValue={event.show_banner} name="show_banner" onChange={this.handleChange}>
                                     <option value={true}>Si</option>
