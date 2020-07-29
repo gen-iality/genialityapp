@@ -57,6 +57,7 @@ class General extends Component {
 
     async componentDidMount() {
         const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
+        console.log("informacion del evento", info)
         this.setState({ info })
         this.setState({
             infoApp: [
@@ -257,7 +258,7 @@ class General extends Component {
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
             loader_page: event.loader_page || "no",
-            data_loader_page: this.state.data_loader_page || "",
+            data_loader_page: this.state.data_loader_page,
             initial_page: event.initial_page || "",
             show_banner: event.show_banner || true
         };

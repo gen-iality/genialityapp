@@ -17,7 +17,7 @@ class MySection extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.eventId !== prevProps.eventId) {
+        if (this.props.event !== prevProps.event) {
             this.setState({
                 eventId: this.props.eventId,
                 event: this.props.event
@@ -25,11 +25,15 @@ class MySection extends Component {
         }
     }
 
+    createMarkup(html) {
+        return { __html: html };
+    }
+
     render() {
         const { event } = this.state
         return (
             <Fragment>
-                <div dangerouslySetInnerHTML={{ __html: event.initial_page }} />
+                <div dangerouslySetInnerHTML={this.createMarkup(event.initial_page)} />
             </Fragment>
         )
     }
