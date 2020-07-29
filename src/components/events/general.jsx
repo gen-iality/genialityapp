@@ -67,7 +67,8 @@ class General extends Component {
         })
         try {
             const { event } = this.state;
-            event.picture = (typeof event.picture === 'object') ? event.picture[0] : event.picture;
+            console.log(event.picture)
+            // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
@@ -94,7 +95,7 @@ class General extends Component {
                 if (error.request) console.log(error.request);
                 this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } })
             }
-            console.log(error.config);
+            console.log(error);
         }
     }
 
