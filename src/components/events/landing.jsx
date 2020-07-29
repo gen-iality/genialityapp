@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgenda from "../my-agenda/index";
+import MySection from "./newSection/index"
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -228,8 +229,9 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_section: <MySection event={event} eventId={event._id} />,
       evento: (
-        <div className="columns is-centered">
+        <div className="columns is-centered" style={{ height: "900px" }}>
           <EventLanding event={event} toggleConference={this.toggleConference} />
 
           <div className="column container-map">
@@ -371,7 +373,7 @@ class Landing extends Component {
       currentUser,
     } = this.state;
     return (
-      <section className="section landing" style={{ backgroundColor: this.state.color }}>
+      <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
         {this.state.showConfirm && (
           <div className="notification is-success">
             <button
@@ -404,35 +406,33 @@ class Landing extends Component {
                 {/* <SurveyNotification /> */}
 
                 {this.state.headerVisible && (
-                  event._id === "5f0b95ca34c8116f9b21ebd6" ? (
-                    <></>
-                  ) : (
-                      <BannerEvent
-                        bgImage={
-                          event.styles && event.styles.banner_image
-                            ? event.styles.banner_image
-                            : event.picture
-                              ? event.picture
-                              : "https://bulma.io/images/placeholders/1280x960.png"
-                        }
-                        bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                        title={event.name}
-                        organizado={
-                          <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                            {event.organizer.name ? event.organizer.name : event.organizer.email}
-                          </Link>
-                        }
-                        place={
-                          <span>
-                            {event.venue} {event.location.FormattedAddress}
-                          </span>
-                        }
-                        dateStart={event.date_start}
-                        dateEnd={event.date_end}
-                        dates={event.dates}
-                        type_event={event.type_event}
-                      />
-                    )
+                  event.show_banner === "true" && (
+                    <BannerEvent
+                      bgImage={
+                        event.styles && event.styles.banner_image
+                          ? event.styles.banner_image
+                          : event.picture
+                            ? event.picture
+                            : "https://bulma.io/images/placeholders/1280x960.png"
+                      }
+                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                      title={event.name}
+                      organizado={
+                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                          {event.organizer.name ? event.organizer.name : event.organizer.email}
+                        </Link>
+                      }
+                      place={
+                        <span>
+                          {event.venue} {event.location.FormattedAddress}
+                        </span>
+                      }
+                      dateStart={event.date_start}
+                      dateEnd={event.date_end}
+                      dates={event.dates}
+                      type_event={event.type_event}
+                    />
+                  )
                 )}
               </div>
 

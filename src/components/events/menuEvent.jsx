@@ -104,7 +104,14 @@ class MenuEvent extends Component {
           icon: "BookOutlined",
           checked: false,
           permissions: "public"
-        }
+        },
+        my_section: {
+          name: "Seccion Personalizada",
+          section: "my_section",
+          icon: "EnterOutlined",
+          checked: false,
+          permissions: "public"
+        },
       },
     }
     this.obtainUserFirebase = this.obtainUserFirebase.bind(this)

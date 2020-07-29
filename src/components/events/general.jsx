@@ -16,7 +16,7 @@ import { DateTimePicker } from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
 import DateEvent from "./dateEvent";
-import { Switch } from 'antd';
+import { Switch, Checkbox } from 'antd';
 Moment.locale('es');
 
 
@@ -45,12 +45,14 @@ class General extends Component {
             infoApp: [],
             specificDates: false,
             dates: [],
-            data_loader_page: ""
+            data_loader_page: "",
+            checked: false
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
         this.deleteEvent = this.deleteEvent.bind(this);
         this.getDataReactQuill = this.getDataReactQuill.bind(this)
+        this.getInitialPage = this.getInitialPage.bind(this)
     }
 
     async componentDidMount() {
@@ -59,7 +61,8 @@ class General extends Component {
         this.setState({
             infoApp: [
                 this.state.info.app_configuration
-            ]
+            ],
+            checked: info.initial_page ? true : false
         })
         try {
             const { event } = this.state;
@@ -254,7 +257,9 @@ class General extends Component {
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
             loader_page: event.loader_page || "no",
-            data_loader_page: this.state.data_loader_page || ""
+            data_loader_page: this.state.data_loader_page || "",
+            initial_page: event.initial_page || "",
+            show_banner: event.show_banner || true
         };
 
         console.log(data);
@@ -358,11 +363,21 @@ class General extends Component {
         this.setState({ data_loader_page: data })
     }
 
+    getInitialPage(data) {
+        this.setState({ event: { ...this.state.event, initial_page: data } })
+    }
+
+    onChangeCheck = e => {
+        this.setState({
+            checked: e.target.checked,
+        });
+    };
+
     render() {
         if (this.state.loading) return <Loading />;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            valid, timeout, errorData, serverError, specificDates } = this.state;
+            valid, timeout, errorData, serverError, specificDates, checked } = this.state;
         return (
             <React.Fragment>
                 <div className="columns general">
@@ -482,7 +497,16 @@ class General extends Component {
                                 </div>
                             )
                         }
+                        <div>
+                            <label className="label">Mostrar banner informativo</label>
+                            <div className="select is-primary">
+                                <select defaultValue={event.show_banner} name="show_banner" onChange={this.handleChange}>
+                                    <option value={true}>Si</option>
+                                    <option value={false}>No</option>
 
+                                </select>
+                            </div>
+                        </div>
                         <div>
                             <label className="label">Introduccion de inicio ?</label>
                             <div className="select is-primary">
@@ -495,8 +519,7 @@ class General extends Component {
                             {
                                 event.loader_page === "text" && (
                                     <div style={{ marginTop: "5%" }}>
-                                        <label className="label">Link de youtube</label>
-                                        <p>https://www.youtube.com/watch?v=DcnfSnfq_is</p><label className="label">Copiar y pegar DcnfSnfq_is</label>
+                                        <label className="label">Link de video</label>
                                         <input defaultValue={event.data_loader_page} type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
                                     </div>
                                 )
@@ -613,6 +636,17 @@ class General extends Component {
                                 :
                                 <DateEvent eventId={this.props.event._id} />
                         }
+                        <div className="field">
+                            <Checkbox
+                                checked={checked}
+                                onChange={this.onChangeCheck}
+                            >
+                                Codificación de pagina de personalizada
+                            </Checkbox>
+                            <div hidden={!checked}>
+                                <ReactQuill defaultValue={event.initial_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getInitialPage} />
+                            </div>
+                        </div>
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">
