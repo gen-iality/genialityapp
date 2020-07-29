@@ -34,6 +34,7 @@ const URL_MAX_LENGTH = 500
 const SERVICE_DESCRIPTION_MAX_LENGTH = 30
 const SERVICES_LIMIT = 4
 const SOCIAL_NETWORKS_LIMIT = 4
+const GALLERY_LIMIT = 30
 const CONTACT_INFO_DESCRIPTION_MAX_LENGTH = 2000
 
 const validationSchema = yup.object().shape( {
@@ -41,6 +42,7 @@ const validationSchema = yup.object().shape( {
     .max( NAME_MAX_LENGTH )
     .required(),
   description: yup.string(),
+  stand_image: yup.string(),
   times_and_venues: yup.string(),
   contact_info: yup.object().shape({
     image: yup.string(),
@@ -56,7 +58,7 @@ const validationSchema = yup.object().shape( {
     .of(
       yup.object().shape( {
         description: yup.string(),
-        image: yup.string().url().required()
+        image: yup.string().url()
       } )
     ),
   webpage: yup.string()
@@ -70,6 +72,11 @@ const validationSchema = yup.object().shape( {
     yup.object().shape({
       network: yup.string().required(),
       url: yup.string().url().required()
+    })
+  ),
+  gallery: yup.array().max(GALLERY_LIMIT).of(
+    yup.object().shape({
+      image: yup.string().url()
     })
   ),
   stand_type: yup.string()
@@ -89,7 +96,8 @@ export const defaultInitialValues = {
   services: [ { description: '', image: '' } ],
   brochure: undefined,
   webpage: '',
-  social_networks: [{ network: null, url: '' }]
+  social_networks: [{ network: undefined, url: '' }],
+  gallery: [{ image: '' }],
 };
 export const companyFormKeys = keys( defaultInitialValues )
 
@@ -134,7 +142,8 @@ function CrearEditarEmpresa ( { event, match, history } ) {
           validationSchema={ validationSchema }
           onSubmit={ onSubmit }
         >
-          { ( { isSubmitting, values, handleSubmit, handleReset } ) => {
+          { ( { isSubmitting, errors, values, handleSubmit, handleReset } ) => {
+            console.error(errors)
             return (
               <Form onReset={ handleReset } onSubmitCapture={ handleSubmit } { ...formLayout }>
                 <Row justify="start">
@@ -150,7 +159,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                     <ImageField
                       name="stand_image"
                       label="Imagen principal"
-                      placeholder=""
                       required
                     />
                     <RichTextComponentField
@@ -171,7 +179,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       label="Imagen de información de contacto"
                       placeholder="Url imagen"
                       maxLength={ URL_MAX_LENGTH }
-                      required
                     />
 
                     <RichTextComponentField
@@ -192,7 +199,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                     name={ `services[${ serviceIndex }].description` }
                                     label={ `Descripción servicio ${ serviceIndex + 1 }` }
                                     maxLength={ SERVICE_DESCRIPTION_MAX_LENGTH }
-                                    required
                                   />
 
                                   <Field
@@ -201,7 +207,6 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                     label={ `Imagen servicio ${ serviceIndex + 1 }` }
                                     placeholder="Url imagen"
                                     maxLength={ URL_MAX_LENGTH }
-                                    required
                                   />
 
                                   <Form.Item { ...buttonsLayout }>
@@ -258,21 +263,12 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       required
                     />
 
-                    <Field
-                      name="brochure"
-                      component={ InputField }
-                      label="B"
-                      placeholder="Url página web"
-                      required
-                    />
-
                     <FileField
                       name="brochure"
                       label="Brochure"
                       placeholder=""
                       required
                     />
-
 
                     <Field
                       name="webpage"
@@ -326,7 +322,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                         type="primary"
                                         icon={ <PlusCircleOutlined /> }
                                         onClick={ () => {
-                                          arrayHelpers.push( { description: '', image: '' } )
+                                          arrayHelpers.push( { url: '', network: undefined } )
                                         } }
                                       >
                                         { 'Agregar red social' }
@@ -342,7 +338,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                 type="primary"
                                 icon={ <PlusCircleOutlined /> }
                                 onClick={ () => {
-                                  arrayHelpers.push( { description: '', image: '' } )
+                                  arrayHelpers.push( { url: '', network: undefined } )
                                 } }
                               >
                                 { 'Agregar red social' }
@@ -373,6 +369,65 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       label="Imagen del contacto advisor"
                       placeholder="Url imagen"
                       maxLength={ URL_MAX_LENGTH }
+                    />
+
+                    <FieldArray
+                      name="gallery"
+                      render={ ( arrayHelpers ) => {
+                        return !!values.gallery && values.gallery.length > 0
+                          ? (
+                            <>
+                              { values.gallery.map( ( _sn, galleryIndex ) => (
+                                <div key={ `social-network-item-${ galleryIndex }` }>
+                                  <ImageField
+                                    name={ `gallery[${ galleryIndex }].image` }
+                                    label={ `Imagen galería ${ galleryIndex + 1 }` }
+                                    required
+                                  />
+
+                                  <Form.Item { ...buttonsLayout }>
+                                    { values.gallery.length > 1 && (
+                                      <Button
+                                        type="danger"
+                                        icon={ <DeleteOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.remove( galleryIndex )
+                                        } }
+                                        style={ { marginRight: '20px' } }
+                                      >
+                                        { 'Eliminar' }
+                                      </Button>
+                                    ) }
+                                    { values.gallery.length < GALLERY_LIMIT && galleryIndex === values.gallery.length - 1 && (
+                                      <Button
+                                        type="primary"
+                                        icon={ <PlusCircleOutlined /> }
+                                        onClick={ () => {
+                                          arrayHelpers.push( { image: '' } )
+                                        } }
+                                      >
+                                        { 'Agregar imagen' }
+                                      </Button>
+                                    ) }
+                                  </Form.Item>
+                                </div>
+                              ) ) }
+                            </>
+                          ) : (
+                            <Form.Item { ...buttonsLayout }>
+                              <Button
+                                type="primary"
+                                icon={ <PlusCircleOutlined /> }
+                                onClick={ () => {
+                                  arrayHelpers.push( { image: '' } )
+                                } }
+                              >
+                                { 'Agregar imagen' }
+                              </Button>
+                            </Form.Item>
+                          )
+                      }
+                      }
                     />
 
                     <Field
