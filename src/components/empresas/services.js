@@ -7,7 +7,7 @@ import { companyFormKeys } from './crearEditarEmpresa';
 function dataMapper(doc) {
   return {
     ...doc.data(),
-    id: doc.id,
+    id: doc.id
   };
 }
 
@@ -106,6 +106,7 @@ export const createEventCompany = (eventId, data) => {
 };
 
 export const updateEventCompany = (eventId, companyId, data) => {
+  console.log('debug', data, companyFormKeys);
   const payload = pick(companyFormKeys, data);
 
   return new Promise(async (resolve, reject) => {
