@@ -406,7 +406,7 @@ class Landing extends Component {
                 {/* <SurveyNotification /> */}
 
                 {this.state.headerVisible && (
-                  event.show_banner && (
+                  event.show_banner === "true" && (
                     <BannerEvent
                       bgImage={
                         event.styles && event.styles.banner_image
