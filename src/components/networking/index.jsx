@@ -64,7 +64,7 @@ export default class ListEventUser extends Component {
 
 
     let meproperties = this.state.eventUser.properties;
-    let matches = eventUserList.filter( asistente => ( asistente.properties.sector && meproperties.priorizarsectoresdeinteres && ( meproperties.priorizarsectoresdeinteres.match( new RegExp( asistente.properties.sector, 'gi' ) ) || asistente.properties.sector.match( new RegExp( meproperties.priorizarsectoresdeinteres, 'gi' ) ) ) ) )
+    let matches = eventUserList.filter( asistente => ( asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && ( meproperties.priorizarsectoresdeinteres.match( new RegExp( asistente.properties.sector, 'gi' ) ) || asistente.properties.sector.match( new RegExp( meproperties.priorizarsectoresdeinteres, 'gi' ) ) ) ) )
 
     console.log( "eventUserList:", matches, eventUserList, this.state.eventUser.properties );
 
