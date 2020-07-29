@@ -13,7 +13,12 @@ import 'swiper/components/scrollbar/scrollbar.scss';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
-const facebookIcon = 'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2Fsocial%20icon.png?alt=media&token=eaa001e0-ea2d-444d-9070-6e6b6f6f4e22'
+const snIcons = {
+  facebook: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/facebook.png?alt=media&token=ab9b51b3-bd25-4b0a-a046-70bb631154ce',
+  twitter: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/twitter.png?alt=media&token=a0e430a7-21e7-4e7c-b929-c5b930718ab2',
+  instagram: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/instagram.png?alt=media&token=adc0030a-716f-4621-9c9c-a82a2cad616f',
+  linkedin: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/linkedin.png?alt=media&token=3ea4f05c-0071-481c-a992-0bcbfc10ef78',
+}
 
 class Exhibitor extends Component {
   constructor(props) {
@@ -106,7 +111,7 @@ class Exhibitor extends Component {
               rel="noreferrer"
               key={`social-network-${index}`}
             >
-              <img src={facebookIcon} alt={item.network} />
+              <img src={snIcons[item.network]} alt={item.network} />
             </a>
           ))}
         </div>
