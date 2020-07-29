@@ -17,12 +17,12 @@ import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
 import DateEvent from "./dateEvent";
 import { Switch, Checkbox } from 'antd';
-Moment.locale('es');
+Moment.locale( 'es' );
 
 
 class General extends Component {
-    constructor(props) {
-        super(props);
+    constructor( props ) {
+        super( props );
         this.state = {
             event: this.props.event,
             optionForm: [],
@@ -48,195 +48,195 @@ class General extends Component {
             data_loader_page: "",
             checked: false
         };
-        this.specificDates = this.specificDates.bind(this);
-        this.submit = this.submit.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
-        this.getDataReactQuill = this.getDataReactQuill.bind(this)
-        this.getInitialPage = this.getInitialPage.bind(this)
+        this.specificDates = this.specificDates.bind( this );
+        this.submit = this.submit.bind( this );
+        this.deleteEvent = this.deleteEvent.bind( this );
+        this.getDataReactQuill = this.getDataReactQuill.bind( this )
+        this.getInitialPage = this.getInitialPage.bind( this )
     }
 
-    async componentDidMount() {
-        const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
-        console.log("informacion del evento", info)
-        this.setState({ info })
-        this.setState({
+    async componentDidMount () {
+        const info = await Actions.getAll( `/api/events/${ this.props.eventId }` );
+        console.log( "informacion del evento", info )
+        this.setState( { info } )
+        this.setState( {
             infoApp: [
                 this.state.info.app_configuration
             ],
             checked: info.initial_page ? true : false
-        })
+        } )
         try {
             const { event } = this.state;
-            console.log(event.picture)
+            console.log( event.picture )
             // event.picture = (typeof event.picture === 'object') ? event.picture[0] : "";
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
-            organizers = organizers.map(item => {
+            organizers = organizers.map( item => {
                 return { value: item.id, label: item.name }
-            });
-            const { selectedCategories, selectedOrganizer, selectedType } = handleFields(organizers, types, categories, event);
-            this.setState({ categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, loading: false })
-            if (event.dates && event.dates.length > 0) {
-                this.setState({ specificDates: true })
+            } );
+            const { selectedCategories, selectedOrganizer, selectedType } = handleFields( organizers, types, categories, event );
+            this.setState( { categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, loading: false } )
+            if ( event.dates && event.dates.length > 0 ) {
+                this.setState( { specificDates: true } )
             } else {
-                this.setState({ specificDates: false })
+                this.setState( { specificDates: false } )
             }
         }
-        catch (error) {
+        catch ( error ) {
             // Error
-            if (error.response) {
-                console.log(error.response);
+            if ( error.response ) {
+                console.log( error.response );
                 const { status } = error.response;
-                if (status === 401) this.setState({ timeout: true, loader: false });
-                else this.setState({ serverError: true, loader: false })
+                if ( status === 401 ) this.setState( { timeout: true, loader: false } );
+                else this.setState( { serverError: true, loader: false } )
             } else {
-                console.log('Error', error.message);
-                if (error.request) console.log(error.request);
-                this.setState({ serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify(error) } })
+                console.log( 'Error', error.message );
+                if ( error.request ) console.log( error.request );
+                this.setState( { serverError: true, loader: false, errorData: { status: 400, message: JSON.stringify( error ) } } )
             }
-            console.log(error);
+            console.log( error );
         }
     }
 
     //*********** FUNCIONES DEL FORMULARIO
     //Cambio en los input
-    handleChange = (e) => {
+    handleChange = ( e ) => {
         const { name, value } = e.target;
-        this.setState({ event: { ...this.state.event, [name]: value } }, this.valid)
+        this.setState( { event: { ...this.state.event, [ name ]: value } }, this.valid )
     };
     //Validación
     valid = () => {
         const error = {};
         const { event, selectedOrganizer, selectedType, selectedCategories } = this.state;
-        const valid = (event.name.length > 0 && event.venue.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length > 0);
-        this.setState({ valid: !valid, error })
+        const valid = ( event.name.length > 0 && event.venue.length > 0 && !!selectedOrganizer && !!selectedType && selectedCategories.length > 0 );
+        this.setState( { valid: !valid, error } )
     };
     //Cambio descripción
-    chgTxt = content => this.setState({ event: { ...this.state.event, description: content } });
+    chgTxt = content => this.setState( { event: { ...this.state.event, description: content } } );
     //Funciones para manejar el cambio en listas desplegables
-    selectCategory = (selectedCategories) => {
-        this.setState({ selectedCategories }, this.valid);
+    selectCategory = ( selectedCategories ) => {
+        this.setState( { selectedCategories }, this.valid );
     };
 
-    selectOrganizer = (selectedOrganizer) => {
-        if (!selectedOrganizer.value) selectedOrganizer = undefined;
-        this.setState({ selectedOrganizer }, this.valid);
+    selectOrganizer = ( selectedOrganizer ) => {
+        if ( !selectedOrganizer.value ) selectedOrganizer = undefined;
+        this.setState( { selectedOrganizer }, this.valid );
     };
-    selectType = (selectedType) => {
-        if (!selectedType.value) selectedType = undefined;
-        this.setState({ selectedType }, this.valid);
+    selectType = ( selectedType ) => {
+        if ( !selectedType.value ) selectedType = undefined;
+        this.setState( { selectedType }, this.valid );
     };
     //Cambio en los input de fechas
-    changeDate = (value, name) => {
+    changeDate = ( value, name ) => {
         let { event: { date_end } } = this.state;
-        if (name === 'date_start') {
-            const diff = Moment(value).diff(Moment(date_end), 'days');
-            if (diff >= 0) date_end = Moment(date_end).add(diff, 'days').toDate();
-            this.setState({ minDate: value, event: { ...this.state.event, date_end: date_end, date_start: value } });
-        } else this.setState({ event: { ...this.state.event, [name]: value } })
+        if ( name === 'date_start' ) {
+            const diff = Moment( value ).diff( Moment( date_end ), 'days' );
+            if ( diff >= 0 ) date_end = Moment( date_end ).add( diff, 'days' ).toDate();
+            this.setState( { minDate: value, event: { ...this.state.event, date_end: date_end, date_start: value } } );
+        } else this.setState( { event: { ...this.state.event, [ name ]: value } } )
     };
     //Cambio en el input de imagen
-    changeImg = (files) => {
-        console.log(files);
-        const file = files[0];
+    changeImg = ( files ) => {
+        console.log( files );
+        const file = files[ 0 ];
         const url = '/api/files/upload', path = [], self = this;
-        if (file) {
-            this.setState({
+        if ( file ) {
+            this.setState( {
                 imageFile: file,
                 event: { ...this.state.event, picture: null }
-            });
+            } );
 
             //envia el archivo de imagen como POST al API    
-            const uploaders = files.map(file => {
+            const uploaders = files.map( file => {
                 let data = new FormData();
-                data.append('file', file);
-                return Actions.post(url, data).then((image) => {
-                    console.log(image);
-                    if (image) path.push(image);
-                });
-            });
+                data.append( 'file', file );
+                return Actions.post( url, data ).then( ( image ) => {
+                    console.log( image );
+                    if ( image ) path.push( image );
+                } );
+            } );
 
             //cuando todaslas promesas de envio de imagenes al servidor se completan
-            axios.all(uploaders).then((data) => {
-                console.log(path);
-                console.log('SUCCESSFULL DONE');
-                self.setState({
+            axios.all( uploaders ).then( ( data ) => {
+                console.log( path );
+                console.log( 'SUCCESSFULL DONE' );
+                self.setState( {
                     event: {
                         ...self.state.event,
-                        picture: path[0]
+                        picture: path[ 0 ]
                     }, fileMsg: 'Imagen subida con exito', imageFile: null, path
-                });
+                } );
 
-                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!" />);
-            });
+                toast.success( <FormattedMessage id="toast.img" defaultMessage="Ok!" /> );
+            } );
         }
         else {
-            this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+            this.setState( { errImg: 'Solo se permiten imágenes. Intentalo de nuevo' } );
         }
     };
 
-    banner_image = (files) => {
-        console.log(files);
+    banner_image = ( files ) => {
+        console.log( files );
         const file = files;
         const url = '/api/files/upload', banner_image = [], self = this;
-        if (file) {
-            this.setState({
+        if ( file ) {
+            this.setState( {
                 imageFileBannerImage: file,
                 event: { ...this.state.event, bannerImage: null }
-            });
+            } );
 
             //envia el archivo de imagen como POST al API    
-            const uploaders = files.map(file => {
+            const uploaders = files.map( file => {
                 let data = new FormData();
-                data.append('file', file);
-                return Actions.post(url, data).then((image) => {
-                    console.log(image);
-                    if (image) banner_image.push(image);
-                });
-            });
+                data.append( 'file', file );
+                return Actions.post( url, data ).then( ( image ) => {
+                    console.log( image );
+                    if ( image ) banner_image.push( image );
+                } );
+            } );
 
             //cuando todaslas promesas de envio de imagenes al servidor se completan
-            axios.all(uploaders).then((data) => {
-                console.log(this.banner_image);
-                console.log('SUCCESSFULL DONE');
-                self.setState({
+            axios.all( uploaders ).then( ( data ) => {
+                console.log( this.banner_image );
+                console.log( 'SUCCESSFULL DONE' );
+                self.setState( {
                     event: {
                         ...self.state.event,
                         bannerImage: banner_image
                     }, fileMsgBanner: 'Imagen subida con exito', imageFileBannerImage: null, banner_image
-                });
+                } );
 
-                toast.success(<FormattedMessage id="toast.img" defaultMessage="Ok!" />);
-            });
+                toast.success( <FormattedMessage id="toast.img" defaultMessage="Ok!" /> );
+            } );
         }
         else {
-            this.setState({ errImg: 'Solo se permiten imágenes. Intentalo de nuevo' });
+            this.setState( { errImg: 'Solo se permiten imágenes. Intentalo de nuevo' } );
         }
     };
     //*********** FIN FUNCIONES DEL FORMULARIO
 
     //Envío de datos
-    async submit(e) {
+    async submit ( e ) {
         e.preventDefault();
         e.stopPropagation();
         const { event, path } = this.state;
         const self = this;
         //this.setState({loading:true});
-        const hour_start = Moment(event.hour_start).format('HH:mm');
-        const date_start = Moment(event.date_start).format('YYYY-MM-DD');
-        const hour_end = Moment(event.hour_end).format('HH:mm');
-        const date_end = Moment(event.date_end).format('YYYY-MM-DD');
-        const datetime_from = Moment(date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm');
-        const datetime_to = Moment(date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm');
-        const categories = this.state.selectedCategories.map(item => {
+        const hour_start = Moment( event.hour_start ).format( 'HH:mm' );
+        const date_start = Moment( event.date_start ).format( 'YYYY-MM-DD' );
+        const hour_end = Moment( event.hour_end ).format( 'HH:mm' );
+        const date_end = Moment( event.date_end ).format( 'YYYY-MM-DD' );
+        const datetime_from = Moment( date_start + ' ' + hour_start, 'YYYY-MM-DD HH:mm' );
+        const datetime_to = Moment( date_end + ' ' + hour_end, 'YYYY-MM-DD HH:mm' );
+        const categories = this.state.selectedCategories.map( item => {
             return item.value
-        });
+        } );
 
         const data = {
             name: event.name,
-            datetime_from: datetime_from.format('YYYY-MM-DD HH:mm:ss'),
-            datetime_to: datetime_to.format('YYYY-MM-DD HH:mm:ss'),
+            datetime_from: datetime_from.format( 'YYYY-MM-DD HH:mm:ss' ),
+            datetime_to: datetime_to.format( 'YYYY-MM-DD HH:mm:ss' ),
             picture: path.length > 1 ? path : event.picture,
             video: event.video || null,
             venue: event.venue,
@@ -259,124 +259,124 @@ class General extends Component {
             type_event: event.type_event,
             event_platform: event.event_platform || "zoom",
             loader_page: event.loader_page || "no",
-            data_loader_page: this.state.data_loader_page,
             initial_page: event.initial_page || "",
+            data_loader_page: this.state.data_loader_page || "",
             show_banner: event.show_banner || true
         };
 
-        console.log(data);
+        console.log( data );
 
         try {
-            console.log(data)
-            if (event._id) {
-                const info = await EventsApi.editOne(data, event._id);
-                console.log(info)
-                this.props.updateEvent(info);
-                self.setState({ loading: false });
-                toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />)
+            console.log( data )
+            if ( event._id ) {
+                const info = await EventsApi.editOne( data, event._id );
+                console.log( info )
+                this.props.updateEvent( info );
+                self.setState( { loading: false } );
+                toast.success( <FormattedMessage id="toast.success" defaultMessage="Ok!" /> )
             }
             else {
-                const result = await Actions.create('/api/events', data);
-                this.setState({ loading: false });
-                if (result._id) {
-                    window.location.replace(`${BaseUrl}/event/${result._id}`);
+                const result = await Actions.create( '/api/events', data );
+                this.setState( { loading: false } );
+                if ( result._id ) {
+                    window.location.replace( `${ BaseUrl }/event/${ result._id }` );
                 } else {
-                    toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
-                    this.setState({ msg: 'Cant Create', create: false })
+                    toast.warn( <FormattedMessage id="toast.warning" defaultMessage="Idk" /> );
+                    this.setState( { msg: 'Cant Create', create: false } )
                 }
             }
         }
 
-        catch (error) {
-            toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
-            if (error.response) {
-                console.log(error.response);
+        catch ( error ) {
+            toast.error( <FormattedMessage id="toast.error" defaultMessage="Sry :(" /> );
+            if ( error.response ) {
+                console.log( error.response );
                 const { status, data } = error.response;
-                console.log('STATUS', status, status === 401);
-                if (status === 401) this.setState({ timeout: true, loader: false });
-                else this.setState({ serverError: true, loader: false, errorData: data })
+                console.log( 'STATUS', status, status === 401 );
+                if ( status === 401 ) this.setState( { timeout: true, loader: false } );
+                else this.setState( { serverError: true, loader: false, errorData: data } )
             } else {
                 let errorData = error.message;
-                console.log('Error', error.message);
-                if (error.request) {
-                    console.log(error.request);
+                console.log( 'Error', error.message );
+                if ( error.request ) {
+                    console.log( error.request );
                     errorData = error.request
                 };
                 errorData.status = 708;
-                this.setState({ serverError: true, loader: false, errorData })
+                this.setState( { serverError: true, loader: false, errorData } )
             }
-            console.log(error.config);
+            console.log( error.config );
         }
     }
     //Delete event
-    async deleteEvent() {
-        this.setState({ isLoading: 'Cargando....' });
+    async deleteEvent () {
+        this.setState( { isLoading: 'Cargando....' } );
         try {
-            const result = await EventsApi.deleteOne(this.state.event._id);
-            console.log(result);
-            this.setState({ message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' }, isLoading: false });
-            setTimeout(() => {
-                this.setState({ message: {}, modal: false });
-                window.location.replace(`${BaseUrl}/`);
-            }, 500)
+            const result = await EventsApi.deleteOne( this.state.event._id );
+            console.log( result );
+            this.setState( { message: { ...this.state.message, class: 'msg_success', content: 'Evento borrado' }, isLoading: false } );
+            setTimeout( () => {
+                this.setState( { message: {}, modal: false } );
+                window.location.replace( `${ BaseUrl }/` );
+            }, 500 )
         }
-        catch (error) {
-            if (error.response) {
-                console.log(error.response);
-                this.setState({ message: { ...this.state.message, class: 'msg_error', content: JSON.stringify(error.response) }, isLoading: false })
+        catch ( error ) {
+            if ( error.response ) {
+                console.log( error.response );
+                this.setState( { message: { ...this.state.message, class: 'msg_error', content: JSON.stringify( error.response ) }, isLoading: false } )
             }
-            else if (error.request) {
-                console.log(error.request);
-                this.setState({ serverError: true, errorData: { message: error.request, status: 708 } });
+            else if ( error.request ) {
+                console.log( error.request );
+                this.setState( { serverError: true, errorData: { message: error.request, status: 708 } } );
             }
             else {
-                console.log('Error', error.message);
-                this.setState({ serverError: true, errorData: { message: error.message, status: 708 } });
+                console.log( 'Error', error.message );
+                this.setState( { serverError: true, errorData: { message: error.message, status: 708 } } );
             }
         }
     }
     closeModal = () => {
-        this.setState({ modal: false, message: {} })
+        this.setState( { modal: false, message: {} } )
     };
-    modalEvent = (e) => {
+    modalEvent = ( e ) => {
         e.preventDefault();
         e.stopPropagation();
-        this.setState({ modal: true });
+        this.setState( { modal: true } );
     };
 
-    async specificDates(checked) {
-        this.setState({ specificDates: checked })
+    async specificDates ( checked ) {
+        this.setState( { specificDates: checked } )
 
-        if (checked === false) {
+        if ( checked === false ) {
             const properties = {
                 dates: {}
             }
 
-            console.log(properties)
-            const info = await EventsApi.editOne(properties, this.props.eventId)
-            console.log(info)
+            console.log( properties )
+            const info = await EventsApi.editOne( properties, this.props.eventId )
+            console.log( info )
         }
 
 
     }
 
-    getDataReactQuill(data) {
-        console.log(data)
-        this.setState({ data_loader_page: data })
+    getDataReactQuill ( data ) {
+        console.log( data )
+        this.setState( { data_loader_page: data } )
     }
 
-    getInitialPage(data) {
-        this.setState({ event: { ...this.state.event, initial_page: data } })
+    getInitialPage ( data ) {
+        this.setState( { event: { ...this.state.event, initial_page: data } } )
     }
 
     onChangeCheck = e => {
-        this.setState({
+        this.setState( {
             checked: e.target.checked,
-        });
+        } );
     };
 
-    render() {
-        if (this.state.loading) return <Loading />;
+    render () {
+        if ( this.state.loading ) return <Loading />;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
             valid, timeout, errorData, serverError, specificDates, checked } = this.state;
@@ -388,9 +388,9 @@ class General extends Component {
                         <div className="field">
                             <label className="label required has-text-grey-light">Nombre</label>
                             <div className="control">
-                                <input className="input" name={"name"} type="text"
-                                    placeholder="Nombre del evento" value={event.name}
-                                    onChange={this.handleChange}
+                                <input className="input" name={ "name" } type="text"
+                                    placeholder="Nombre del evento" value={ event.name }
+                                    onChange={ this.handleChange }
                                 />
                             </div>
                         </div>
@@ -420,9 +420,9 @@ class General extends Component {
                             <label className="label required">El evento acepta registros o es privado</label>
                             <p>En un evento privado no se aceptan registros externos, la personas que asisten al evento han sido añadidas por un administrador u organizador del evento</p>
                             <div className="select is-primary">
-                                <select name={"allow_register"} defaultValue={event.allow_register} onChange={this.handleChange}>
-                                    <option value={true}>Público</option>
-                                    <option value={false}>Privado</option>
+                                <select name={ "allow_register" } defaultValue={ event.allow_register } onChange={ this.handleChange }>
+                                    <option value={ true }>Público</option>
+                                    <option value={ false }>Privado</option>
                                 </select>
                             </div>
                         </div>
@@ -455,18 +455,18 @@ class General extends Component {
                                 <div className="field">
                                     <label className="label">Que modulo desea observar en el inicio</label>
                                     <div className="select is-primary">
-                                        <select name="homeSelectedScreen" value={event.homeSelectedScreen} onChange={this.handleChange}>
-                                            <option value={null}>Banner de inicio</option>
-                                            <option value={event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : ''}>{event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : ''}>{event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : ''}>{event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.name : ''}>{event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : ''}>{event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : ''}>{event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : ''}>{event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : ''}>{event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : ''}>{event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title : 'Favor Seleccionar items del menu para la '}</option>
-                                            <option value={event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : ''}>{event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title : 'Favor Seleccionar items del menu para la '}</option>
+                                        <select name="homeSelectedScreen" value={ event.homeSelectedScreen } onChange={ this.handleChange }>
+                                            <option value={ null }>Banner de inicio</option>
+                                            <option value={ event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.name : '' }>{ event.app_configuration.ProfileScreen ? event.app_configuration.ProfileScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.name : '' }>{ event.app_configuration.CalendarScreen ? event.app_configuration.CalendarScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.name : '' }>{ event.app_configuration.NewsScreen ? event.app_configuration.NewsScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.name : '' }>{ event.app_configuration.EventPlaceScreen ? event.app_configuration.EventPlaceScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.name : '' }>{ event.app_configuration.SpeakerScreen ? event.app_configuration.SpeakerScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.name : '' }>{ event.app_configuration.SurveyScreen ? event.app_configuration.SurveyScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.name : '' }>{ event.app_configuration.DocumentsScreen ? event.app_configuration.DocumentsScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.WallScreen ? event.app_configuration.WallScreen.name : '' }>{ event.app_configuration.WallScreen ? event.app_configuration.WallScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.WebScreen ? event.app_configuration.WebScreen.name : '' }>{ event.app_configuration.WebScreen ? event.app_configuration.WebScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
+                                            <option value={ event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.name : '' }>{ event.app_configuration.FaqsScreen ? event.app_configuration.FaqsScreen.title : 'Favor Seleccionar items del menu para la ' }</option>
                                         </select>
                                     </div>
                                 </div>
@@ -476,7 +476,7 @@ class General extends Component {
                         <div>
                             <label className="label">Tipo de evento</label>
                             <div className="select is-primary">
-                                <select defaultValue={event.type_event} name="type_event" onChange={this.handleChange}>
+                                <select defaultValue={ event.type_event } name="type_event" onChange={ this.handleChange }>
                                     <option value="">Seleccionar...</option>
                                     <option value="physicalEvent">Evento Fisico</option>
                                     <option value="onlineEvent">Evento Virtual</option>
@@ -489,8 +489,8 @@ class General extends Component {
                                 <div>
                                     <label className="label">Plataforma Streaming del evento</label>
                                     <div className="select is-primary">
-                                        <select defaultValue={event.event_platform} name="event_platform" onChange={this.handleChange}>
-                                            {/* <option value="">Seleccionar...</option> */}
+                                        <select defaultValue={ event.event_platform } name="event_platform" onChange={ this.handleChange }>
+                                            {/* <option value="">Seleccionar...</option> */ }
                                             <option value="zoom">Zoom</option>
                                             <option value="vimeo">Vimeo</option>
                                             <option value="bigmarker">BigMaker</option>
@@ -502,9 +502,9 @@ class General extends Component {
                         <div>
                             <label className="label">Mostrar banner informativo</label>
                             <div className="select is-primary">
-                                <select defaultValue={event.show_banner} name="show_banner" onChange={this.handleChange}>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
+                                <select defaultValue={ event.show_banner } name="show_banner" onChange={ this.handleChange }>
+                                    <option value={ true }>Si</option>
+                                    <option value={ false }>No</option>
 
                                 </select>
                             </div>
@@ -512,7 +512,7 @@ class General extends Component {
                         <div>
                             <label className="label">Introduccion de inicio ?</label>
                             <div className="select is-primary">
-                                <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
+                                <select defaultValue={ event.loader_page } name="loader_page" onChange={ this.handleChange }>
                                     <option value="no">No</option>
                                     <option value="text">Video</option>
                                     <option value="code">Texto/ Codigo/ Imagen</option>
@@ -520,15 +520,15 @@ class General extends Component {
                             </div>
                             {
                                 event.loader_page === "text" && (
-                                    <div style={{ marginTop: "5%" }}>
+                                    <div style={ { marginTop: "5%" } }>
                                         <label className="label">Link de video</label>
-                                        <input defaultValue={event.data_loader_page} type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
+                                        <input defaultValue={ event.data_loader_page } type="text" className="input" onChange={ ( e ) => this.setState( { data_loader_page: e.target.value } ) } />
                                     </div>
                                 )
                             }
                             {
                                 event.loader_page === "code" && (
-                                    <ReactQuill defaultValue={event.data_loader_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
+                                    <ReactQuill defaultValue={ event.data_loader_page } style={ { marginTop: "5%" } } modules={ toolbarEditor } onChange={ this.getDataReactQuill } />
                                 )
                             }
                         </div>
@@ -536,18 +536,18 @@ class General extends Component {
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
                             <div className="control">
-                                <input className="input" name={"address"} type="text"
-                                    placeholder="¿Cuál es la dirección del evento?" value={event.address}
-                                    onChange={this.handleChange} />
+                                <input className="input" name={ "address" } type="text"
+                                    placeholder="¿Cuál es la dirección del evento?" value={ event.address }
+                                    onChange={ this.handleChange } />
                             </div>
                         </div>
 
                         <div className="field">
                             <label className="label required has-text-grey-light">Lugar</label>
                             <div className="control">
-                                <input className="input" name={"venue"} type="text"
-                                    placeholder="Nombre del lugar del evento" value={event.venue}
-                                    onChange={this.handleChange} />
+                                <input className="input" name={ "venue" } type="text"
+                                    placeholder="Nombre del lugar del evento" value={ event.venue }
+                                    onChange={ this.handleChange } />
                             </div>
                         </div>
 
@@ -569,8 +569,8 @@ class General extends Component {
                             </div>
                         </div> */}
                         <div>
-                            <label className="label has-text-grey-light" style={{ marginRight: "3%" }}>Especificar fechas</label>
-                            <Switch defaultChecked onChange={this.specificDates} checked={specificDates} />
+                            <label className="label has-text-grey-light" style={ { marginRight: "3%" } }>Especificar fechas</label>
+                            <Switch defaultChecked onChange={ this.specificDates } checked={ specificDates } />
                         </div>
 
                         {
@@ -583,10 +583,10 @@ class General extends Component {
                                                     <label className="label has-text-grey-light">Fecha Inicio</label>
                                                     <div className="control">
                                                         <DateTimePicker
-                                                            value={event.date_start}
-                                                            format={'DD/MM/YYYY'}
-                                                            time={false}
-                                                            onChange={value => this.changeDate(value, "date_start")} />
+                                                            value={ event.date_start }
+                                                            format={ 'DD/MM/YYYY' }
+                                                            time={ false }
+                                                            onChange={ value => this.changeDate( value, "date_start" ) } />
                                                     </div>
                                                 </div>
                                             </div>
@@ -595,10 +595,10 @@ class General extends Component {
                                                     <label className="label has-text-grey-light">Hora Inicio</label>
                                                     <div className="control">
                                                         <DateTimePicker
-                                                            value={event.hour_start}
-                                                            step={60}
-                                                            date={false}
-                                                            onChange={value => this.changeDate(value, "hour_start")} />
+                                                            value={ event.hour_start }
+                                                            step={ 60 }
+                                                            date={ false }
+                                                            onChange={ value => this.changeDate( value, "hour_start" ) } />
                                                     </div>
                                                 </div>
                                             </div>
@@ -611,11 +611,11 @@ class General extends Component {
                                                     <label className="label has-text-grey-light">Fecha Fin</label>
                                                     <div className="control">
                                                         <DateTimePicker
-                                                            value={event.date_end}
-                                                            min={this.minDate}
-                                                            format={'DD/MM/YYYY'}
-                                                            time={false}
-                                                            onChange={value => this.changeDate(value, "date_end")} />
+                                                            value={ event.date_end }
+                                                            min={ this.minDate }
+                                                            format={ 'DD/MM/YYYY' }
+                                                            time={ false }
+                                                            onChange={ value => this.changeDate( value, "date_end" ) } />
                                                     </div>
                                                 </div>
                                             </div>
@@ -624,10 +624,10 @@ class General extends Component {
                                                     <label className="label has-text-grey-light">Hora Fin</label>
                                                     <div className="control">
                                                         <DateTimePicker
-                                                            value={event.hour_end}
-                                                            step={60}
-                                                            date={false}
-                                                            onChange={value => this.changeDate(value, "hour_end")} />
+                                                            value={ event.hour_end }
+                                                            step={ 60 }
+                                                            date={ false }
+                                                            onChange={ value => this.changeDate( value, "hour_end" ) } />
                                                     </div>
                                                 </div>
                                             </div>
@@ -636,100 +636,100 @@ class General extends Component {
                                 </div>
 
                                 :
-                                <DateEvent eventId={this.props.event._id} />
+                                <DateEvent eventId={ this.props.event._id } />
                         }
                         <div className="field">
                             <Checkbox
-                                checked={checked}
-                                onChange={this.onChangeCheck}
+                                checked={ checked }
+                                onChange={ this.onChangeCheck }
                             >
                                 Codificación de pagina de personalizada
                             </Checkbox>
-                            <div hidden={!checked}>
-                                <ReactQuill defaultValue={event.initial_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getInitialPage} />
+                            <div hidden={ !checked }>
+                                <ReactQuill defaultValue={ event.initial_page } style={ { marginTop: "5%" } } modules={ toolbarEditor } onChange={ this.getInitialPage } />
                             </div>
                         </div>
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">
-                                <ReactQuill value={event.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                                <ReactQuill value={ event.description } modules={ toolbarEditor } onChange={ this.chgTxt } />
                             </div>
                         </div>
                     </div>
                     <div className="column is-4">
                         <div className="field is-grouped">
-                            {event._id && <button className="button is-text" onClick={this.modalEvent}>x Eliminar evento</button>}
-                            <button onClick={this.submit} className={`${this.state.loading ? 'is-loading' : ''}button is-primary`} disabled={valid}>Guardar</button>
+                            { event._id && <button className="button is-text" onClick={ this.modalEvent }>x Eliminar evento</button> }
+                            <button onClick={ this.submit } className={ `${ this.state.loading ? 'is-loading' : '' }button is-primary` } disabled={ valid }>Guardar</button>
                         </div>
                         <div className="section-gray">
                             <div className="field">
                                 <label className="label">Evento</label>
                                 <div className="control toggle-switch has-text-centered">
-                                    <input type="radio" id="choice1" name="visibility" checked={event.visibility === "PUBLIC"} value="PUBLIC" onChange={this.handleChange} />
+                                    <input type="radio" id="choice1" name="visibility" checked={ event.visibility === "PUBLIC" } value="PUBLIC" onChange={ this.handleChange } />
                                     <label htmlFor="choice1">Público</label>
-                                    <input type="radio" id="choice2" name="visibility" checked={event.visibility === "ORGANIZATION"} value="ORGANIZATION" onChange={this.handleChange} />
+                                    <input type="radio" id="choice2" name="visibility" checked={ event.visibility === "ORGANIZATION" } value="ORGANIZATION" onChange={ this.handleChange } />
                                     <label htmlFor="choice2">Privado</label>
-                                    <div id="flap"><span className="content">{event.visibility === "PUBLIC" ? "Público" : "Privado"}</span></div>
+                                    <div id="flap"><span className="content">{ event.visibility === "PUBLIC" ? "Público" : "Privado" }</span></div>
                                 </div>
                             </div>
-                            <SelectInput name={'Organizado por:'} isMulti={false} selectedOptions={selectedOrganizer} selectOption={this.selectOrganizer} options={organizers} required={true} />
+                            <SelectInput name={ 'Organizado por:' } isMulti={ false } selectedOptions={ selectedOrganizer } selectOption={ this.selectOrganizer } options={ organizers } required={ true } />
                             <div className="field picture">
                                 <label className="label has-text-grey-light">Imagen General (para el listado) </label>
                                 <div className="control">
-                                    <ImageInput picture={event.picture} imageFile={this.state.imageFile}
-                                        divClass={'drop-img'} content={<img src={event.picture} alt={'Imagen Perfil'} />}
-                                        classDrop={'dropzone'} contentDrop={<button onClick={(e) => { e.preventDefault() }} className={`button is-primary is-inverted is-outlined ${this.state.imageFile ? 'is-loading' : ''}`}>Cambiar foto</button>}
-                                        contentZone={<div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div>}
-                                        changeImg={this.changeImg} errImg={this.state.errImg}
-                                        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10 }} />
+                                    <ImageInput picture={ event.picture } imageFile={ this.state.imageFile }
+                                        divClass={ 'drop-img' } content={ <img src={ event.picture } alt={ 'Imagen Perfil' } /> }
+                                        classDrop={ 'dropzone' } contentDrop={ <button onClick={ ( e ) => { e.preventDefault() } } className={ `button is-primary is-inverted is-outlined ${ this.state.imageFile ? 'is-loading' : '' }` }>Cambiar foto</button> }
+                                        contentZone={ <div className="has-text-grey has-text-weight-bold has-text-centered"><span>Subir foto</span><br /><small>(Tamaño recomendado: 1280px x 960px)</small></div> }
+                                        changeImg={ this.changeImg } errImg={ this.state.errImg }
+                                        style={ { cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', height: 250, width: '100%', borderWidth: 2, borderColor: '#b5b5b5', borderStyle: 'dashed', borderRadius: 10 } } />
                                 </div>
-                                {this.state.fileMsg && (<p className="help is-success">{this.state.fileMsg}</p>)}
+                                { this.state.fileMsg && ( <p className="help is-success">{ this.state.fileMsg }</p> ) }
                             </div>
                             <div className="field">
                                 <label className="label has-text-grey-light">Video</label>
                                 <div className="control">
-                                    <input className="input" name={"video"} type="text"
-                                        placeholder="¿El evento tiene video promocional?" value={event.video}
-                                        onChange={this.handleChange} />
+                                    <input className="input" name={ "video" } type="text"
+                                        placeholder="¿El evento tiene video promocional?" value={ event.video }
+                                        onChange={ this.handleChange } />
                                 </div>
                             </div>
 
 
-                            <SelectInput name={'Categorías:'} isMulti={true} max_options={2} selectedOptions={selectedCategories} selectOption={this.selectCategory} options={categories} required={true} />
-                            <SelectInput name={'Tipo'} isMulti={false} selectedOptions={selectedType} selectOption={this.selectType} options={types} required={true} />
+                            <SelectInput name={ 'Categorías:' } isMulti={ true } max_options={ 2 } selectedOptions={ selectedCategories } selectOption={ this.selectCategory } options={ categories } required={ true } />
+                            <SelectInput name={ 'Tipo' } isMulti={ false } selectedOptions={ selectedType } selectOption={ this.selectType } options={ types } required={ true } />
                         </div>
                     </div>
                 </div>
-                {timeout && (<LogOut />)}
-                {serverError && (<ErrorServe errorData={errorData} />)}
-                <Dialog modal={this.state.modal} title={'Borrar Evento'}
-                    content={<p>¿Estas seguro de eliminar este evento?</p>}
-                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.deleteEvent }}
-                    message={this.state.message} isLoading={this.state.isLoading}
-                    second={{ title: 'Cancelar', class: '', action: this.closeModal }} />
+                { timeout && ( <LogOut /> ) }
+                { serverError && ( <ErrorServe errorData={ errorData } /> ) }
+                <Dialog modal={ this.state.modal } title={ 'Borrar Evento' }
+                    content={ <p>¿Estas seguro de eliminar este evento?</p> }
+                    first={ { title: 'Borrar', class: 'is-dark has-text-danger', action: this.deleteEvent } }
+                    message={ this.state.message } isLoading={ this.state.isLoading }
+                    second={ { title: 'Cancelar', class: '', action: this.closeModal } } />
 
-                {this.state.fileMsgBanner && (<p className="help is-success">{this.state.fileMsgBanner}</p>)}
+                { this.state.fileMsgBanner && ( <p className="help is-success">{ this.state.fileMsgBanner }</p> ) }
             </React.Fragment >
         );
     }
 }
 
 //Función para organizar las opciones de las listas desplegables (Organizado,Tipo,Categoría)
-function handleFields(organizers, types, categories, event) {
+function handleFields ( organizers, types, categories, event ) {
     let selectedCategories = [];
     let selectedType = {};
     const { category_ids, organizer_id, event_type_id } = event;
-    if (category_ids) {
-        categories.map(item => {
-            let pos = category_ids.indexOf(item.value);
-            return (pos >= 0) ? selectedCategories.push(item) : ''
-        });
+    if ( category_ids ) {
+        categories.map( item => {
+            let pos = category_ids.indexOf( item.value );
+            return ( pos >= 0 ) ? selectedCategories.push( item ) : ''
+        } );
     }
-    const pos = organizers.map((e) => { return e.value; }).indexOf(organizer_id);
-    const selectedOrganizer = organizers[pos];
-    if (event_type_id) {
-        const pos = types.map((e) => { return e.value; }).indexOf(event_type_id);
-        selectedType = types[pos];
+    const pos = organizers.map( ( e ) => { return e.value; } ).indexOf( organizer_id );
+    const selectedOrganizer = organizers[ pos ];
+    if ( event_type_id ) {
+        const pos = types.map( ( e ) => { return e.value; } ).indexOf( event_type_id );
+        selectedType = types[ pos ];
     } else selectedType = undefined;
     return { selectedOrganizer, selectedCategories, selectedType }
 }

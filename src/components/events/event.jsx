@@ -19,6 +19,7 @@ import ConfirmacionRegistro from "./registro/confirmacionRegistro";
 
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
+import EmpresasRoutes from "../empresas";
 import TriviaRoutes from "../trivia";
 import DocumentsRoutes from "../documents";
 import Speakers from "../speakers";
@@ -147,6 +148,9 @@ class Event extends Component {
               />
               <Route path={`${match.url}/datos`} render={() => <Datos eventID={this.state.event._id} />} />
               <Route path={`${match.url}/agenda`} render={() => <AgendaRoutes event={this.state.event} />} />
+              <Route path={`${match.url}/empresas`}>
+                <EmpresasRoutes event={this.state.event} />
+              </Route>
               <Route path={`${match.url}/trivia`} render={() => <TriviaRoutes event={this.state.event} />} />
               <Route path={`${match.url}/documents`} render={() => <DocumentsRoutes event={this.state.event} />} />
               <Route path={`${match.url}/conference`} render={() => <ConferenceRoute event={this.state.event} />} />

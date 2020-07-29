@@ -121,7 +121,7 @@ function RequestCard({ data, eventId }) {
         <Meta
           avatar={
             <Avatar>
-              {!!userName
+              {userName
                 ? userName.charAt(0).toUpperCase()
                 : userName}
             </Avatar>

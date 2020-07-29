@@ -19,8 +19,8 @@ const stylesMenuItems = {
   backgroundColor: "transparent"
 }
 class MenuEvent extends Component {
-  constructor(props) {
-    super(props);
+  constructor( props ) {
+    super( props );
     this.state = {
       itemsMenu: {},
       user: null,
@@ -112,88 +112,95 @@ class MenuEvent extends Component {
           checked: false,
           permissions: "public"
         },
+        companies: {
+          name: "Empresas",
+          section: "companies",
+          icon: "WechatOutlined",
+          checked: false,
+          permissions: "public"
+        }
       },
     }
-    this.obtainUserFirebase = this.obtainUserFirebase.bind(this)
+    this.obtainUserFirebase = this.obtainUserFirebase.bind( this )
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     // console.log(this.props)
     // const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
     // const menuEvent = event.itemsMenu || {};
     // console.log("MENU LANDING", menuEvent);
     // this.setState({ itemsMenu: menuEvent })
-    if (this.props.user) {
-      this.setState({ user: this.props.user })
+    if ( this.props.user ) {
+      this.setState( { user: this.props.user } )
     }
     this.obtainUserFirebase()
   }
 
-  async componentDidUpdate() {
-    console.log("user", this.props.user);
-    if (this.props.user && !this.state.user) {
-      this.setState({ user: this.props.user })
+  async componentDidUpdate () {
+    console.log( "user data", this.props.user );
+    if ( this.props.user && !this.state.user ) {
+      this.setState( { user: this.props.user } )
     }
   }
-  async obtainUserFirebase() {
+  async obtainUserFirebase () {
     //Se trae el api que contiene el menu
-    const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
+    const event = await Actions.getAll( `/api/events/${ this.props.eventId }` )
 
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
     let items = event.itemsMenu || this.state.menuDefault
 
-    console.log("items", items, this.props.user);
-    this.setState({ itemsMenu: items })
+    console.log( "items", items, this.props.user );
+    this.setState( { itemsMenu: items } )
 
 
     //Cargar por defecto la primera opcion habilitada del MENU
-    let secciones = Object.keys(items);
-    if (secciones && secciones.length >= 0) {
-      let defaultSeccion = items[secciones[0]].section;
-      this.state.showSection(defaultSeccion)
+    let secciones = Object.keys( items );
+    if ( secciones && secciones.length >= 0 ) {
+      let defaultSeccion = items[ secciones[ 0 ] ].section;
+      this.state.showSection( defaultSeccion )
     }
 
 
   }
 
   //Funcion que carga los items publicos del menu
-  publicItems(event) {
+  publicItems ( event ) {
     let items = event.itemsMenu || {}
     let itemsMenu = []
 
-    for (const prop in items) {
-      if (items[prop].permissions === "public") {
-        console.log(itemsMenu)
-        itemsMenu.push(items[prop])
-        this.setState({ itemsMenu })
+    for ( const prop in items ) {
+      if ( items[ prop ].permissions === "public" ) {
+        console.log( itemsMenu )
+        itemsMenu.push( items[ prop ] )
+        this.setState( { itemsMenu } )
       }
     }
   }
   //let collapsed = props.collapsed;
 
-  render() {
+  render () {
     const { itemsMenu } = this.state
     return (
       <Menu
         mode="inline"
         // theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={ [ "1" ] }
         // defaultOpenKeys={['sub1']}
-        style={stylesMenuItems}>
-        {Object.keys(itemsMenu).map((key, i) => {
-          if ((itemsMenu[key] && itemsMenu[key].permissions == "assistants") && !this.state.user) { return null }
-          let IconoComponente = iconComponents[itemsMenu[key].icon];
+        style={ stylesMenuItems }>
+        { Object.keys( itemsMenu ).map( ( key, i ) => {
+          if ( ( itemsMenu[ key ] && itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null }
+          let IconoComponente = iconComponents[ itemsMenu[ key ].icon ];
           return (
-            <Menu.Item key={itemsMenu[key].section} onClick={e => this.state.showSection(itemsMenu[key].section)}>
+            <Menu.Item key={ itemsMenu[ key ].section } onClick={ e => this.state.showSection( itemsMenu[ key ].section ) }>
               <IconoComponente />
-              <span> {itemsMenu[key].name}</span>
+              <span> { itemsMenu[ key ].name }</span>
             </Menu.Item>
           );
-        })}
+        } ) }
       </Menu>
     );
   }
 
 };
 
-export default WithLoading(MenuEvent);
+export default WithLoading( MenuEvent );
