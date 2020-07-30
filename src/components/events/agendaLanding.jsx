@@ -48,7 +48,7 @@ class Agenda extends Component {
 
     const { event } = this.props;
 
-    if (!event.dates) {
+    if (!event.dates || event.dates.length === 0) {
       let days = [];
       const init = Moment(event.date_start);
       const end = Moment(event.date_end);
@@ -111,7 +111,8 @@ class Agenda extends Component {
   }
 
   filterByDay = (day, agenda) => {
-    console.log(day);
+    console.log("dia---", day);
+    console.log("agenda-----", agenda)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => a.datetime_start.includes(day.format("YYYY-MM-DD")))
