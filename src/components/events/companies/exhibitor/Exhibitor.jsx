@@ -85,9 +85,6 @@ class Exhibitor extends Component {
 
   render() {
     const { goBack, data } = this.props
-
-    console.log('Stand data', data)
-
     const advisorName = pathOr('', ['advisor', 'name'], data)
     const advisorNumber = pathOr('', ['advisor', 'number'], data)
     const advisorImage = pathOr('', ['advisor', 'image'], data)
