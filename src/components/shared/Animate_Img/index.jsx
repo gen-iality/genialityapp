@@ -39,7 +39,8 @@ class AnimateImg extends React.Component {
                         <ReactPlayer
                             width="100%"
                             height="100%"
-                            url={`${event.data_loader_page}`}
+                            url={`
+                            ${event.data_loader_page}`}
                             playing="true"
                         />
                         <Row justify="center">
