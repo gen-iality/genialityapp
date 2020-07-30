@@ -92,6 +92,7 @@ export const defaultInitialValues = {
   services: [ { description: '', image: '' } ],
   brochure: "",
   webpage: '',
+  video_url: "",
   social_networks: [ { network: "", url: '' } ],
   gallery: [ { image: '' } ],
 };
