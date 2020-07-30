@@ -140,7 +140,7 @@ class Exhibitor extends Component {
             </div>
           )}
 
-          {isNonEmptyArray(gallery) && (
+          { standType === 'Oro' && isNonEmptyArray(gallery) && (
             <div className="main-stand-navigation-item" onClick={this.handleShowGallery}>
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_perm_media_24px.png" alt="" />
@@ -167,7 +167,7 @@ class Exhibitor extends Component {
             </a>
           )}
 
-          {!!webpage && (
+          { standType === 'Oro' && !!webpage && (
             <a href={webpage} target="_blank" rel="noreferrer" className="main-stand-navigation-item">
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_public_24px.png" alt="" />

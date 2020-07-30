@@ -101,6 +101,7 @@ a.main-stand-chat:hover {
   height: 50px;
   border-radius: 50px;
   overflow: hidden;
+  background-color: #fff;
 }
 
 .main-stand-chat .chat-message {
