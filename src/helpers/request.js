@@ -54,6 +54,11 @@ privateInstance.interceptors.response.use((response) => {
   return response;
 });
 
+export const fireStoreApi = {
+  createOrUpdate: (eventId, activityId) => {
+    return firestore.collection(`event_activity_attendees/${eventId}/activities/${activityId}/attendees`);
+  },
+};
 export const Actions = {
   create: (url, data, unsafe) => {
     if (unsafe) return publicInstance.post(url, data).then(({ data }) => data);

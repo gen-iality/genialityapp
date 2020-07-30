@@ -10,7 +10,7 @@ import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
 import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi } from "../../helpers/request";
+import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi, fireStoreApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
@@ -334,7 +334,7 @@ class Landing extends Component {
   addUser = (activity) => {
 
 
-    const agendaRef = firestore.collection(`event_activity_attendees/${this.state.event._id}/activities/${activity._id}/attendees`);
+    const agendaRef = fireStoreApi.createOrUpdate(this.state.event._id, activity._id)
     agendaRef.add({
       activity_id: activity._id,
       attendee_id: this.state.eventUser._id,
