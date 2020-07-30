@@ -88,7 +88,7 @@ class Company extends Component {
                     <img src={company.list_image} alt="" />
                   </div>
                   <div className='iso-exhibitor-list-item-description'>
-                    <span></span> {company.name} {company.stand_type}
+                    <span></span> {company.name}
                   </div>
                 </button>
               )
