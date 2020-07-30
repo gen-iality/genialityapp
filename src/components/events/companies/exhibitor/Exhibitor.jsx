@@ -10,14 +10,15 @@ import 'swiper/swiper.scss';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/scrollbar/scrollbar.scss';
+import ReactPlayer from 'react-player'
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const snIcons = {
-  facebook: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/facebook.png?alt=media&token=ab9b51b3-bd25-4b0a-a046-70bb631154ce',
-  twitter: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/twitter.png?alt=media&token=a0e430a7-21e7-4e7c-b929-c5b930718ab2',
-  instagram: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/instagram.png?alt=media&token=adc0030a-716f-4621-9c9c-a82a2cad616f',
-  linkedin: 'https://firebasestorage.googleapis.com/v0/b/mocion-agenda.appspot.com/o/linkedin.png?alt=media&token=3ea4f05c-0071-481c-a992-0bcbfc10ef78',
+  facebook: '/exhibitors/icons/facebook.svg',
+  twitter: '/exhibitors/icons/twitter.svg',
+  instagram: '/exhibitors/icons/instagram.svg',
+  linkedin: '/exhibitors/icons/linkedin.svg',
 }
 
 class Exhibitor extends Component {
@@ -31,6 +32,8 @@ class Exhibitor extends Component {
     this.handleHideServices = this.handleHideServices.bind(this)
     this.handleShowInfo = this.handleShowInfo.bind(this)
     this.handleHideInfo = this.handleHideInfo.bind(this)
+    this.handleShowVideo = this.handleShowVideo.bind(this)
+    this.handleHideVideo = this.handleHideVideo.bind(this)
     this.state = {
       showGallery: false,
       showDocuments: false,
@@ -72,9 +75,16 @@ class Exhibitor extends Component {
     this.setState({ showInfo: false })
   }
 
+  handleShowVideo() {
+    this.setState({ showVideo: true })
+  }
+
+  handleHideVideo() {
+    this.setState({ showVideo: false })
+  }
+
   render() {
     const { goBack, data } = this.props
-
     const advisorName = pathOr('', ['advisor', 'name'], data)
     const advisorNumber = pathOr('', ['advisor', 'number'], data)
     const advisorImage = pathOr('', ['advisor', 'image'], data)
@@ -86,9 +96,11 @@ class Exhibitor extends Component {
     const brochure = pathOr('', ['brochure'], data)
     const webpage = pathOr('', ['webpage'], data)
     const standImage = pathOr('', ['stand_image'], data)
+    const standType = pathOr('', ['stand_type'], data) // Oro, Plata,
+    const videoUrl = pathOr('https://www.youtube.com/watch?v=ysz5S6PUM-U', ['stand_video'], data)
 
     return (
-      <div className="main-stand">
+      <div className={`main-stand main-stand-${standType}`}>
         <button
           type="button"
           className="main-stand-goback"
@@ -125,7 +137,7 @@ class Exhibitor extends Component {
             </div>
           )}
 
-          {isNonEmptyArray(gallery) && (
+          { standType === 'Oro' && isNonEmptyArray(gallery) && (
             <div className="main-stand-navigation-item" onClick={this.handleShowGallery}>
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_perm_media_24px.png" alt="" />
@@ -152,7 +164,7 @@ class Exhibitor extends Component {
             </a>
           )}
 
-          {!!webpage && (
+          { standType === 'Oro' && !!webpage && (
             <a href={webpage} target="_blank" rel="noreferrer" className="main-stand-navigation-item">
               <div className="main-stand-navigation-item-icon">
                 <img src="/exhibitors/icons/ic_public_24px.png" alt="" />
@@ -164,9 +176,7 @@ class Exhibitor extends Component {
         {!!advisorNumber && (
           <a className="main-stand-chat"
             href={"https://api.whatsapp.com/send?phone=" + advisorNumber} target="_blank" rel="noreferrer">
-            {!!advisorImage && (
-              <img className="chat-image" src={advisorImage} alt="" />
-            )}
+            <img className="chat-image" src={!!advisorImage ? advisorImage : `/exhibitors/person.png`} alt="" />
             <div className="chat-message">
               Hola soy {advisorName}, <br />
               Te puedo ayudar en algo?
@@ -176,6 +186,7 @@ class Exhibitor extends Component {
         <div className="main-stand-module">
           <div className="main-stand-module-wrap">
             <img className="stand-image" src={standImage} alt="stand picture" />
+            <div className="main-stand-play-btn" onClick={this.handleShowVideo} />
           </div>
         </div>
 
@@ -294,6 +305,17 @@ class Exhibitor extends Component {
             </div>
           </div>
         </div>
+
+        <div className={`main-stand-modal main-stand-modal-video ${this.state.showVideo ? 'active' : ''}`}>
+          <div className="main-stand-modal-overlay" onClick={this.handleHideVideo} />
+          <div className="main-stand-modal-close-window" onClick={this.handleHideVideo}>
+            <img src="/exhibitors/icons/ic_close_24px.png" alt="" />
+          </div>
+          <div className="main-stand-modal-video-wrap">
+            <ReactPlayer url={videoUrl} />
+          </div>
+        </div>
+
       </div>
     )
   }
