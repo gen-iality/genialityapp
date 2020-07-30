@@ -39,12 +39,11 @@ class AnimateImg extends React.Component {
                         <ReactPlayer
                             width="100%"
                             height="100%"
-                            url={`
-                            ${event.data_loader_page}`}
+                            url={event.data_loader_page}
                             playing="true"
                         />
                         <Row justify="center">
-                            <Col>
+                            <Col justify="center">
                                 <Link to={`/landing/${eventId}`}>
                                     <Button className="button">Entrar</Button>
                                 </Link>
@@ -52,25 +51,6 @@ class AnimateImg extends React.Component {
                         </Row>
                     </div>
                 )}
-                {
-                    event.loader_page.length <= 0 && (
-                        <div className="container_imgLoading" >
-                            <ReactPlayer
-                                width="100%"
-                                height="100%"
-                                url={`${event.data_loader_page}`}
-                                playing="true"
-                            />
-                            <Row justify="center">
-                                <Col>
-                                    <Link to={`/landing/${eventId}`}>
-                                        <Button className="button">Entrar</Button>
-                                    </Link>
-                                </Col>
-                            </Row>
-                        </div>
-                    )
-                }
             </>
         );
     }

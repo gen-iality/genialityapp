@@ -8,6 +8,7 @@
     animation-name: animacionImagenes;
     animation-duration: 3s;
     animation-delay: 1s;
+    position: relative;
   }
   @keyframes animacionImagenes {
     0% {
@@ -21,12 +22,14 @@
     }
   }
   .ant-btn {
-    top: -187px;
+    position: fixed;
+    top: 700px;
     background-color: rgba(0, 0, 0, 0.12);
     color: white;
     font-size: 34px;
     width: 217px;
     height: 69px;
+    margin-left: -98px;
   }
   .ant-btn:hover {
     background: rgba(0, 0, 0, 0.07);
@@ -35,7 +38,7 @@
     border: white;
   } 
   iframe {
-    height: 900px;
+    height: auto;
   }
   .cortina{
     background-color: white;

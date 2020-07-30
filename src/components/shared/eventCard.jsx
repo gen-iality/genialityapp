@@ -9,7 +9,7 @@ class EventCard extends Component {
         return (
             <div className={size}>
                 {
-                    event.loader_page && event.loader_page !== "no" ? (
+                    event.loader_page && event.loader_page !== "no" && event.data_loader_page !== null ? (
                         <Link to={{ pathname: `/transition/${event._id}`, state: { eventId: event._id, event: event } }} >
                             <div className="card">
                                 <div className="card-image">
