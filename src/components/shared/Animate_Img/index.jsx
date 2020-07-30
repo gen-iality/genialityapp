@@ -42,10 +42,8 @@ class AnimateImg extends React.Component {
                             playing="true"
                         />
                         <Row justify="center">
-                            <Col justify="center">
-                                <Link to={`/landing/${eventId}`}>
-                                    <Button className="button">Entrar</Button>
-                                </Link>
+                            <Col>
+                                <Button className="button" onClick={showLanding}>Entrar</Button>
                             </Col>
                         </Row>
                     </div>
