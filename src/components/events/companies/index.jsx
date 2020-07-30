@@ -76,8 +76,7 @@ class Company extends Component {
         </button>
         <div className='iso-exhibitor-list'>
           <div className='iso-exhibitor-list-wrap'>
-            {isNonEmptyArray(companies) && companies.map((company) => {
-              console.log('company', company)
+            {isNonEmptyArray(companies) && companies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1).map((company) => {
               return (
                 <button
                   key={`list-item-${company.id}`}
@@ -89,7 +88,7 @@ class Company extends Component {
                     <img src={company.list_image} alt="" />
                   </div>
                   <div className='iso-exhibitor-list-item-description'>
-                    <span></span> {company.name}
+                    <span></span> {company.name} {company.stand_type}
                   </div>
                 </button>
               )

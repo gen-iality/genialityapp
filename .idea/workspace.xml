@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1c94529-0c3e-4cf4-8820-03e967ebea83" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/events/companies/Exhibitors.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/Exhibitors.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/events/companies/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/index.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -29,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/events/companies/index.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="71" column="14" lean-forward="true" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
+            <state relative-caret-position="519">
+              <caret line="81" column="49" lean-forward="true" selection-start-line="81" selection-start-column="49" selection-end-line="81" selection-end-column="49" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -58,7 +56,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="838" />
@@ -149,18 +147,18 @@
       <workItem from="1596052804656" duration="1474000" />
       <workItem from="1596055693741" duration="138000" />
       <workItem from="1596056075838" duration="1379000" />
-      <workItem from="1596100727106" duration="9201000" />
+      <workItem from="1596100727106" duration="10346000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12192000" />
+    <option name="totallyTimeSpent" value="13337000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -219,8 +217,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/events/companies/index.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="71" column="14" lean-forward="true" selection-start-line="71" selection-start-column="14" selection-end-line="71" selection-end-column="14" />
+        <state relative-caret-position="519">
+          <caret line="81" column="49" lean-forward="true" selection-start-line="81" selection-start-column="49" selection-end-line="81" selection-end-column="49" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
