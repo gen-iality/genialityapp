@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1c94529-0c3e-4cf4-8820-03e967ebea83" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/components/events/companies/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,11 +17,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/events/companies/index.jsx">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="520">
-              <caret line="90" column="48" selection-start-line="90" selection-start-column="48" selection-end-line="90" selection-end-column="48" />
+            <state relative-caret-position="330">
+              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="151">
+              <caret line="296" column="48" lean-forward="true" selection-start-line="296" selection-start-column="48" selection-end-line="296" selection-end-column="48" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -40,10 +51,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css" />
-        <option value="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" />
         <option value="$PROJECT_DIR$/src/components/events/companies/Exhibitors.css" />
         <option value="$PROJECT_DIR$/src/components/events/companies/index.jsx" />
+        <option value="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css" />
+        <option value="$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx" />
       </list>
     </option>
   </component>
@@ -91,6 +102,15 @@
               <item name="events" type="462c0819:PsiDirectoryNode" />
               <item name="companies" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="eviusco" type="b2602c69:ProjectViewProjectNode" />
+              <item name="eviusco" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="events" type="462c0819:PsiDirectoryNode" />
+              <item name="companies" type="462c0819:PsiDirectoryNode" />
+              <item name="exhibitor" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -129,18 +149,17 @@
       <workItem from="1596052804656" duration="1474000" />
       <workItem from="1596055693741" duration="138000" />
       <workItem from="1596056075838" duration="1379000" />
-      <workItem from="1596100727106" duration="10541000" />
+      <workItem from="1596100727106" duration="11932000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13532000" />
+    <option name="totallyTimeSpent" value="14923000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17829457" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -154,7 +173,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.39638555" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.39638555" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -173,23 +192,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="95" column="28" lean-forward="true" selection-start-line="95" selection-start-column="28" selection-end-line="95" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="102" column="60" lean-forward="true" selection-start-line="102" selection-start-column="60" selection-end-line="102" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/events/companies/Exhibitors.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
@@ -199,8 +201,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/events/companies/index.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="90" column="48" selection-start-line="90" selection-start-column="48" selection-end-line="90" selection-end-column="48" />
+        <state relative-caret-position="1035">
+          <caret line="69" column="24" lean-forward="true" selection-start-line="69" selection-start-column="24" selection-end-line="69" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/events/companies/exhibitor/Exhibitor.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="296" column="48" lean-forward="true" selection-start-line="296" selection-start-column="48" selection-end-line="296" selection-end-column="48" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>

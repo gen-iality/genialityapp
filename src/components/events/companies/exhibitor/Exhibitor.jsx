@@ -294,7 +294,6 @@ class Exhibitor extends Component {
                   </div>
                 )}
                 <div className="main-stand-contact-info-info">
-                  <div className="main-stand-contact-info-title">Contáctenos</div>
                   {!!contactInfoDescription && (
                     <div className="main-stand-contact-info-description">
                       <div>{htmlParser(contactInfoDescription)}</div>

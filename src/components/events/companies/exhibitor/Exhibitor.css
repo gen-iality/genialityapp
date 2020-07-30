@@ -8,6 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: #101010;
   background-image: url('/exhibitors/bg_stand.png');
   background-position: center bottom;
   -webkit-background-size: cover;
