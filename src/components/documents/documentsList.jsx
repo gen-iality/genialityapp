@@ -47,11 +47,15 @@ class documentsList extends Component {
 
     constructor(props) {
         super(props);
-        console.log("INNERPROPS", props);
         this.state = {
             data: props.data || [],
-            documentDates: []
+            documentDates: [],
+            loading: true
         };
+    }
+
+    removeLoader = () => {
+      this.setState({ loading: false })
     }
 
     componentDidMount() {
@@ -71,12 +75,12 @@ class documentsList extends Component {
                 })
             }
         }
-        this.setState({ documentDates })
+        this.setState({ documentDates }, this.removeLoader)
 
     }
 
     render() {
-        const { documentDates, data } = this.state;
+        const { documentDates, data, loading } = this.state;
 
         return (
             <div>
@@ -85,13 +89,13 @@ class documentsList extends Component {
 
                     data[0].activity_id ?
                         <div>
-                            <Table dataSource={documentDates} columns={columns} />
+                            <Table dataSource={documentDates} columns={columns} loading={loading} />
                         </div>
                         :
 
                         <Card style={{ textAlign: "left" }}>
                             <List itemLayout="horizontal"
-                                //Se traen los datos del state 
+                                //Se traen los datos del state
                                 dataSource={data}
                                 //se mapean los datos del array data
                                 renderItem={item => (
