@@ -3,25 +3,79 @@
 }
 
 .main-stand {
-  height: var(--main-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #101010;
   background-image: url('/exhibitors/bg_stand.png');
   background-position: center bottom;
   -webkit-background-size: cover;
   background-size: cover;
+  z-index: 5;
+}
+
+.main-stand.main-stand-Oro .main-stand-play-btn {
+  top: 25%;
+  left: 50%;
+}
+
+.main-stand-play-btn {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 41%;
+  right: 29.5%;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.5);
+  background-image: url('/exhibitors/icons/play.svg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% auto;
+  cursor: pointer;
+}
+
+.main-stand-modal.main-stand-modal-video.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-stand-modal.main-stand-modal-video.active .main-stand-modal-close-window {
+  position: fixed;
+  top: 2rem;
+  right: 1.5rem;
+  z-index: 5;
+}
+
+.main-stand-modal-video-wrap {
+  position: relative;
+  z-index: 5;
+  padding: 0 1rem;
+}
+
+.main-stand-modal-video-wrap > div {
   position: relative;
 }
 
+.main-stand-modal-video-wrap iframe {
+  height: 100%;
+}
+
 .main-stand-goback {
+  position: absolute;
   display: flex;
+  align-items: center;
+  top: 2rem;
+  left: 2rem;
   color: white !important;
   cursor: pointer;
   text-decoration: none;
-
   background-color: transparent !important;
   border: none;
   outline: none;
-  padding-top: 18px;
-  margin-left: 20px;
+  z-index: 2;
 }
 
 .main-stand-chat {
@@ -35,6 +89,7 @@
   box-shadow: 0 3px 20px rgba(56, 67, 100, 0.75);
   /* txt */
   text-decoration: none;
+  text-align: left;
 }
 
 a.main-stand-chat:hover {
@@ -47,6 +102,7 @@ a.main-stand-chat:hover {
   height: 50px;
   border-radius: 50px;
   overflow: hidden;
+  background-color: #fff;
 }
 
 .main-stand-chat .chat-message {
@@ -256,6 +312,7 @@ a.main-stand-chat:hover {
 }
 
 .main-stand-contact-info {
+  text-align: left;
   color: white !important;
 }
 
@@ -273,6 +330,10 @@ a.main-stand-chat:hover {
 .main-stand-contact-info-description {
   padding: 0 2rem;
   white-space: pre-line;
+}
+
+.main-stand-contact-info-description span {
+  color: white !important;
 }
 
 /**
@@ -325,13 +386,16 @@ a.main-stand-chat:hover {
   align-items: center;
 }
 
+.main-stand-social-networks {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  z-index: 5;
+}
+
 .main-stand-social-networks-item {
   width: 30px;
   transition: opacity 0.3s ease-in;
-}
-
-.main-stand-social-networks-item:hover {
-  opacity: 0.75;
 }
 
 .main-stand-social-networks img {
@@ -392,40 +456,67 @@ a.main-stand-chat:hover {
     display: block;
     margin-left: 10px;
   }
+
+  .main-stand-social-networks {
+    right: 5vw;
+    top: 2rem;
+  }
+
+  .main-stand-social-networks-item {
+    display: block;
+    margin-left: 10px;
+  }
+
+  .main-stand-social-networks-item:hover {
+    opacity: 0.35;
+  }
 }
 
 /**
  * Mobile
  */
 @media (max-width: 768px) {
-  .main-stand {
+  .main-stand-module {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding-top: 2rem;
   }
 
   .main-stand-module-wrap {
+    position: relative;
+    width: 900px;
+  }
+
+  .stand-image {
     width: 100%;
-    height: 80vh;
-    overflow-x: scroll;
-    overflow-y: hidden;
+    height: auto;
   }
 
   .main-stand-goback {
     left: 1rem;
   }
 
-  .stand-image {
-    height: 100%;
-    width: auto;
+  .main-stand-chat {
+    right: 1rem;
+    bottom: 5rem;
+    padding: 0.2rem;
   }
 
-  .main-stand-chat {
-    width: 75%;
-    left: 50%;
-    bottom: 6rem;
-    transform: translate(-50%, 0);
+  .main-stand-chat:before {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 1.8px;
+    top: 1.8px;
+    width: 11px;
+    height: 11px;
+    background-color: red;
+    border-radius: 50%;
   }
 
   .main-stand-chat .chat-message {
-    font-size: 12px;
+    display: none;
+    visibility: hidden;
   }
 
   .main-stand-navigation-item {
@@ -441,5 +532,13 @@ a.main-stand-chat:hover {
     display: block;
     width: 27px;
     margin-left: 10px;
+  }
+
+  .main-stand-modal-video-wrap {
+    width: 100%;
+  }
+
+  .main-stand-modal-video-wrap > div {
+    width: 100% !important;
   }
 }

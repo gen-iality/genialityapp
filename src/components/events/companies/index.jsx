@@ -1,5 +1,5 @@
 import { notification } from 'antd'
-import { isNonEmptyArray } from 'ramda-adjunct'
+import {isFunction, isNonEmptyArray} from 'ramda-adjunct'
 import React, { Component } from "react"
 
 import CompanyStand from './exhibitor/Exhibitor'
@@ -61,9 +61,22 @@ class Company extends Component {
 
     return (
       <div className='main-exhibitor-list'>
+        <button
+            type="button"
+            className="main-stand-goback"
+            onClick={() => {
+              // Todo: Integrar metodo para volver a la vista anterior
+              /*if (isFunction(goBack)) {
+                goBack()
+              }*/
+            }}
+        >
+          <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
+          Regresar
+        </button>
         <div className='iso-exhibitor-list'>
           <div className='iso-exhibitor-list-wrap'>
-            {isNonEmptyArray(companies) && companies.map((company) => {
+            {isNonEmptyArray(companies) && companies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1).map((company) => {
               return (
                 <button
                   key={`list-item-${company.id}`}
@@ -72,7 +85,7 @@ class Company extends Component {
                   onClick={() => this.showListItem(company)}
                 >
                   <div className='iso-exhibitor-list-item-image'>
-                    <img src={standImage} alt='' />
+                    <img src={company.list_image} alt="" />
                   </div>
                   <div className='iso-exhibitor-list-item-description'>
                     <span></span> {company.name}

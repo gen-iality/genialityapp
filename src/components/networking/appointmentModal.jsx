@@ -11,7 +11,7 @@ const { Option } = Select;
 
 // TODO: -> eliminar fakeEventTimetable
 const fakeEventTimetable = {
-  '2020-07-06': [
+  '2020-08-06': [
     {
       timestamp_start: '2020-07-06T15:00:00Z',
       timestamp_end: '2020-07-06T15:30:00Z',
@@ -81,7 +81,7 @@ const fakeEventTimetable = {
       timestamp_end: '2020-07-06T23:30:00Z',
     }
   ],
-  '2020-07-07': [
+  '2020-08-07': [
     {
       timestamp_start: '2020-07-07T15:00:00Z',
       timestamp_end: '2020-07-07T15:30:00Z',
@@ -151,7 +151,7 @@ const fakeEventTimetable = {
       timestamp_end: '2020-07-07T23:30:00Z',
     }
   ],
-  '2020-07-08': [
+  '2020-08-08': [
     {
       timestamp_start: '2020-07-08T15:00:00Z',
       timestamp_end: '2020-07-08T15:30:00Z',

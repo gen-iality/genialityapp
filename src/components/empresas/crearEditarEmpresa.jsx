@@ -43,21 +43,21 @@ const validationSchema = yup.object().shape( {
   description: yup.string(),
   stand_image: yup.string(),
   times_and_venues: yup.string(),
-  contact_info: yup.object().shape({
-    image: yup.string(),
+  contact_info: yup.object().shape( {
+    //image: yup.string(),
     description: yup.string(),
-  }),
-  advisor: yup.object().shape({
-    image: yup.string().url(),
+  } ),
+  advisor: yup.object().shape( {
+    //image: yup.string().url(),
     name: yup.string(),
     number: yup.string(),
-  }),
+  } ),
   services: yup.array()
     .max( SERVICES_LIMIT )
     .of(
       yup.object().shape( {
         description: yup.string(),
-        image: yup.string().url()
+        //image: yup.string().url()
       } )
     ),
   webpage: yup.string()
@@ -69,34 +69,32 @@ const validationSchema = yup.object().shape( {
   linkedin: yup.string()
     .url()
     .max( URL_MAX_LENGTH ),
-  social_networks: yup.array().max(SOCIAL_NETWORKS_LIMIT).of(
-    yup.object().shape({
+  social_networks: yup.array().max( SOCIAL_NETWORKS_LIMIT ).of(
+    yup.object().shape( {
       network: yup.string(),
       url: yup.string().url()
-    })
+    } )
   ),
-  gallery: yup.array().max(GALLERY_LIMIT).of(
-    yup.object().shape({
-      image: yup.string().url()
-    })
-  ),
+
   stand_type: yup.string(),
   visible: yup.boolean(),
 } )
 export const defaultInitialValues = {
   name: '',
-  stand_type: undefined,
-  stand_image: undefined,
+  stand_type: "",
+  stand_image: "",
+  list_image: "",
   visible: false,
   description: '',
   times_and_venues: '',
   contact_info: { description: '', image: '' },
   advisor: { name: '', image: '', number: '' },
   services: [ { description: '', image: '' } ],
-  brochure: undefined,
+  brochure: "",
   webpage: '',
-  social_networks: [{ network: undefined, url: '' }],
-  gallery: [{ image: '' }],
+  video_url: "",
+  social_networks: [ { network: "", url: '' } ],
+  gallery: [ { image: '' } ],
 };
 export const companyFormKeys = keys( defaultInitialValues )
 
@@ -142,7 +140,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
           onSubmit={ onSubmit }
         >
           { ( { isSubmitting, errors, values, handleSubmit, handleReset } ) => {
-            console.error(errors)
+            console.error( errors )
             return (
               <Form onReset={ handleReset } onSubmitCapture={ handleSubmit } { ...formLayout }>
                 <Row justify="start">
@@ -166,6 +164,12 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       name="stand_image"
                       label="Imagen principal"
                     />
+
+                    <ImageField
+                      name="list_image"
+                      label="Imagen Para listado"
+                    />
+
                     <RichTextComponentField
                       name="description"
                       label="Descripción"
@@ -178,18 +182,19 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       maxLength={ TIMES_AND_VENUES_MAX_LENGTH }
                     />
 
-                    <Field
+                    <ImageField
                       name="contact_info.image"
-                      component={ InputField }
                       label="Imagen de información de contacto"
                       placeholder="Url imagen"
                       maxLength={ URL_MAX_LENGTH }
                     />
 
+
+
                     <RichTextComponentField
                       name="contact_info.description"
                       label="Descripción de información de contacto"
-                      maxLength={CONTACT_INFO_DESCRIPTION_MAX_LENGTH}
+                      maxLength={ CONTACT_INFO_DESCRIPTION_MAX_LENGTH }
                     />
 
                     <FieldArray
@@ -206,13 +211,14 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                                     maxLength={ SERVICE_DESCRIPTION_MAX_LENGTH }
                                   />
 
-                                  <Field
+                                  <ImageField
                                     name={ `services[${ serviceIndex }].image` }
-                                    component={ InputField }
+
                                     label={ `Imagen servicio ${ serviceIndex + 1 }` }
                                     placeholder="Url imagen"
                                     maxLength={ URL_MAX_LENGTH }
                                   />
+
 
                                   <Form.Item { ...buttonsLayout }>
                                     { values.services.length > 1 && (
@@ -289,7 +295,7 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                               { values.social_networks.map( ( _sn, socialNetworkIndex ) => (
                                 <div key={ `social-network-item-${ socialNetworkIndex }` }>
                                   <Field
-                                    name={`social_networks[${ socialNetworkIndex }].network`}
+                                    name={ `social_networks[${ socialNetworkIndex }].network` }
                                     component={ SelectField }
                                     label={ `Red social ${ socialNetworkIndex + 1 }` }
                                     placeholder="Red social"
@@ -363,9 +369,8 @@ function CrearEditarEmpresa ( { event, match, history } ) {
                       placeholder="Número de contacto advisor"
                     />
 
-                    <Field
+                    <ImageField
                       name="advisor.image"
-                      component={ InputField }
                       label="Imagen del contacto advisor"
                       placeholder="Url imagen"
                       maxLength={ URL_MAX_LENGTH }

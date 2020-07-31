@@ -559,7 +559,6 @@ class SurveyComponent extends Component {
 
         {
           //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-          console.log("informacion de surveyData", surveyData),
           surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true" ? (
             <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
               {(this.state.survey && <Survey.Survey

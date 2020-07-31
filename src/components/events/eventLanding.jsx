@@ -26,6 +26,10 @@ class eventLanding extends Component {
         this.setState({ onPage: value })
     }
 
+    onClick() {
+        this.setState({ onClick: true })
+    }
+
     render() {
         const { event } = this.props
         if (this.state.onPage === "networking") {
@@ -66,7 +70,7 @@ class eventLanding extends Component {
                                         <Row gutter={[8, 16]}>
                                             <Col xs={16} sm={16} md={6} lg={8} xl={8}>
                                                 <div className="imagen">
-                                                    <img src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                                    <img onClick={() => this.onChangePage("networking")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                                                 </div>
                                             </Col>
                                             <Col xs={16} sm={16} md={6} lg={8} xl={8}>
