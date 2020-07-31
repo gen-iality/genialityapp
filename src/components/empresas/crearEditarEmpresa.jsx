@@ -153,6 +153,12 @@ function CrearEditarEmpresa({ event, match, history }) {
                       placeholder="Nombre empresa"
                       maxLength={NAME_MAX_LENGTH}
                     />
+                    <Field
+                      name="visitors_space_id"
+                      component={InputField}
+                      label="Visitors space id"
+                      placeholder="Visitors space id"
+                    />
 
                     <Field
                       name="video_url"
@@ -160,12 +166,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                       label="Video principal"
                       placeholder="Url video"
                     />
-                    <Field
-                      name="visitors_space_id"
-                      component={InputField}
-                      label="Visitors space id"
-                      placeholder="Visitors space id"
-                    />
+                    
 
                     <ImageField
                       name="stand_image"
