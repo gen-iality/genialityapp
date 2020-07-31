@@ -150,17 +150,22 @@ class VirtualConference extends Component {
 
                                 <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
                                     <p>
-                        { Moment( item.datetime_start ).format( "D MMMM " )} <span>&nbsp;&nbsp;&nbsp;</span>  { Moment( item.datetime_start ).format( "h:mm A" ) } {" - "}
+                        { Moment( item.datetime_start ).format( "D " )}<span>&nbsp;de&nbsp;</span>
+                        { item.datetime_start && ((Moment( item.datetime_start ).format( "MMMM" )).charAt(0).toUpperCase())} 
+                        { item.datetime_start && ((Moment( item.datetime_start ).format( "MMMM" )).slice(1))} 
+                        
+                        <span>&nbsp;&nbsp;&nbsp;</span>  
+                        { Moment( item.datetime_start ).format( "h:mm A" ) } {" - "}
                                         { Moment( item.datetime_end ).format( "h:mm A" ) }
                                     </p>
                                     
 
-                                    <div style={ { "display": "flex", "flex-direction": "row" } }>
+                                    <div style={ { "display": "flex", "flex-direction": "row","justify-content":"center" } }>
                                         { item.hosts.map( ( host, key ) => {
                                             return (
-                                                <div key={ key }>
+                                                <div style={{margin:"5px 10px"}} key={ key }>
                                                     <Avatar size={ 80 } src={ host.image } />
-                                                    <div style={ { maxWidth: "30%" } }>{ host.name }</div>
+                                                    <div >{ host.name }</div>
                                                 </div>
 
                                             )
