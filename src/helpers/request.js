@@ -57,6 +57,7 @@ privateInstance.interceptors.response.use((response) => {
 export const fireStoreApi = {
   createOrUpdate: (eventId, activityId, eventUser) => {
     let agendaRef = firestore.collection(`event_activity_attendees/${eventId}/activities/${activityId}/attendees`);
+    console.log('alerta', eventId, activityId, eventUser);
     return agendaRef.add({
       activity_id: activityId,
       attendee_id: eventUser._id,

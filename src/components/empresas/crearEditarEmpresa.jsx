@@ -219,6 +219,13 @@ function CrearEditarEmpresa({ event, match, history }) {
                                     placeholder="Url imagen"
                                     maxLength={URL_MAX_LENGTH}
                                   />
+                                  <Field
+                                    name="visitors_space_id"
+                                    component={InputField}
+                                    label="Visitors space id"
+                                    placeholder="Visitors space id"
+                                  />
+
 
                                   <Form.Item {...buttonsLayout}>
                                     {values.services.length > 1 && (
@@ -433,12 +440,7 @@ function CrearEditarEmpresa({ event, match, history }) {
                       }
                       }
                     />
-                    <Field
-                      name="visitors_space_id"
-                      component={InputField}
-                      label="Visitors space id"
-                      placeholder="Visitors space id"
-                    />
+
                     <Field
                       name="visible"
                       component={SwitchField}
