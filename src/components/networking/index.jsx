@@ -208,15 +208,14 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div className="container">
-                      <Row gutter={[24, 16]}>
+                    <div>
+                      <div>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                        {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12}>
+                        {matches.map((users, userIndex) => (
+                          <Row key={`user-item-${userIndex}`} justify="center">
                             <Card
                               extra={
                                 <a
-                                  style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
@@ -226,8 +225,6 @@ export default class ListEventUser extends Component {
                                   Enviar Solicitud
                               </a>
                               }
-                              hoverable={8}
-                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
@@ -246,14 +243,14 @@ export default class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <p>
-                                          <b>correo : </b> {users.properties.email ? users.properties.email : "No registra Correo"}
+                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
                                         </p>
                                         <div>
                                           {
                                             asistantData.map((data, dataIndex) => (
                                               !data.privatePublic && data.privatePublic !== undefined && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p><b>{data.label}:</b> {users.properties[data.name]}</p>
+                                                  <p>{data.label}: {users.properties[data.name]}</p>
                                                 </div>
                                               )
                                             ))
@@ -262,8 +259,7 @@ export default class ListEventUser extends Component {
                                       </Col>
                                       <Col xs={24}>
                                         <Button
-
-                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          type="primary"
                                           onClick={() => {
                                             this.setState({ eventUserIdToMakeAppointment: users._id })
                                           }}
@@ -277,9 +273,9 @@ export default class ListEventUser extends Component {
                                 ]}
                               />
                             </Card>
-                          </Col>
+                          </Row>
                         ))}
-                      </Row>
+                      </div>
 
                     </div>
                   )}
@@ -336,7 +332,7 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div className="container">
+                    <div>
                       <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
@@ -355,7 +351,7 @@ export default class ListEventUser extends Component {
                               </a>
                               }
                               hoverable={8}
-                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
+                              headStyle={{ backgroundColor: "rgb(8 157 78)", color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
