@@ -1,24 +1,23 @@
 import { notification } from 'antd'
-import { isNonEmptyArray } from 'ramda-adjunct'
+import { isFunction, isNonEmptyArray } from 'ramda-adjunct'
 import React, { Component } from "react"
+import { toast } from "react-toastify"
+import { handleRequestError } from "../../../helpers/utils"
+import API, { fireStoreApi } from "../../../helpers/request"
 
 import CompanyStand from './exhibitor/Exhibitor'
 import { getEventCompanies } from "../../empresas/services"
 import './Exhibitors.css';
 
-const standImage =
-  'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FScreen%20Shot%202020-07-10%20at%203.54.51%20PM%20(1).png?alt=media&token=31afe6c9-f35a-4423-9f7b-ef8eaed2a6b6';
-
 class Company extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      standsListTopScroll: 0,
       companies: [],
-      companyItem: {},
-      showItem: false
+      shownCompanyIndex: -1,
     }
-    this.showList = this.showList.bind(this)
-    this.showListItem = this.showListItem.bind(this)
+    this.standsListRef = React.createRef();
   }
 
   componentDidMount() {
@@ -26,7 +25,9 @@ class Company extends Component {
 
     if (eventId) {
       getEventCompanies(eventId)
-        .then((companies) => {
+        .then((rawCompanies) => {
+          const companies = rawCompanies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1)
+
           this.setState({ companies })
         })
         .catch((error) => {
@@ -44,35 +45,110 @@ class Company extends Component {
     }
   }
 
-  showListItem(companyItem) {
-    this.setState({ companyItem, showItem: true })
+  setStandsListScrollToLastPosition = () => {
+    if (this.standsListRef.current) {
+      this.standsListRef.current.scrollTop = this.state.standsListTopScroll
+    }
   }
 
-  showList() {
-    this.setState({ showItem: false });
+  showListItem = (companyIndex) => {
+    this.setState({ shownCompanyIndex: companyIndex })
+    const { eventId, eventUser } = this.props
+    const { companies } = this.state
+    let companyItem = companies[companyIndex]
+
+    if (eventUser && eventUser._id && companyItem.visitors_space_id) {
+      fireStoreApi.createOrUpdate(eventId, companyItem.visitors_space_id, eventUser)
+        .then(() => {
+          toast.success("Asistente agregado a actividad");
+          this.setState({ qrData: {}, })
+        })
+        .catch(error => {
+          console.error("Error updating document: ", error);
+          toast.error(handleRequestError(error));
+        });
+    }
+  }
+
+  showList = () => {
+    this.setState({ shownCompanyIndex: -1 }, this.setStandsListScrollToLastPosition);
+  }
+
+  onScrollStandsList = () => {
+    if (this.standsListRef.current) {
+      const standsListTopScroll = this.standsListRef.current.scrollTop
+      this.setState({ standsListTopScroll })
+    }
+  }
+
+  showPreviousCompany = () => {
+    const { companies, shownCompanyIndex } = this.state
+
+    if (shownCompanyIndex >= 0 && companies.length > 0) {
+      const lastCompanyIndex = companies.length - 1
+      const previousCompanyIndex = shownCompanyIndex - 1
+      const validPreviousIndex = companies[previousCompanyIndex]
+        ? previousCompanyIndex
+        : lastCompanyIndex
+
+      this.setState({ shownCompanyIndex: validPreviousIndex })
+    }
+  }
+
+  showNextCompany = () => {
+    const { companies, shownCompanyIndex } = this.state
+
+    if (shownCompanyIndex >= 0 && companies.length > 0) {
+      const nextCompanyIndex = shownCompanyIndex + 1
+      const validNextIndex = companies[nextCompanyIndex]
+        ? nextCompanyIndex
+        : 0
+      this.setState({ shownCompanyIndex: validNextIndex })
+    }
   }
 
   render() {
-    const { companies, showItem, companyItem } = this.state
+    const { goBack } = this.props
+    const { companies, shownCompanyIndex } = this.state
 
-    if (showItem) {
-      return <CompanyStand data={companyItem} goBack={this.showList} />
+    if (shownCompanyIndex >= 0 && companies[shownCompanyIndex]) {
+      return (
+        <CompanyStand
+          data={companies[shownCompanyIndex]}
+          goBack={this.showList}
+          showPrevious={this.showPreviousCompany}
+          showNext={this.showNextCompany}
+        />
+      )
     }
 
     return (
       <div className='main-exhibitor-list'>
-        <div className='iso-exhibitor-list'>
+        <button
+          type="button"
+          className="main-stand-goback"
+          onClick={() => {
+            if (isFunction(goBack)) {
+              this.showList()
+              goBack()
+            }
+          }}
+        >
+          <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
+          Regresar
+        </button>
+        <div className='iso-exhibitor-list' ref={this.standsListRef} onScroll={this.onScrollStandsList}>
           <div className='iso-exhibitor-list-wrap'>
-            {isNonEmptyArray(companies) && companies.map((company) => {
+            {isNonEmptyArray(companies) && companies.map((company, companyIndex) => {
               return (
                 <button
                   key={`list-item-${company.id}`}
                   type="button"
                   className='iso-exhibitor-list-item'
-                  onClick={() => this.showListItem(company)}
+                  onClick={() => this.showListItem(companyIndex)}
                 >
                   <div className='iso-exhibitor-list-item-image'>
-                    <img src={standImage} alt='' />
+                    <img src={company.list_image} alt="" />
                   </div>
                   <div className='iso-exhibitor-list-item-description'>
                     <span></span> {company.name}

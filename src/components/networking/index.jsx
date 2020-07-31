@@ -64,7 +64,7 @@ export default class ListEventUser extends Component {
 
 
     let meproperties = this.state.eventUser.properties;
-    let matches = eventUserList.filter(asistente => (asistente.properties.sector && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+    let matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
 
     console.log("eventUserList:", matches, eventUserList, this.state.eventUser.properties);
 
@@ -209,77 +209,72 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div>
-                      <div className="container">
-                        <Row gutter={[24, 16]}>
-                          {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
-                          {matches.map((users, userIndex) => (
-                            <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12}>
-                              <Card
-                                extra={
-                                  <a
-                                    style={{ color: "white" }}
-                                    onClick={() => {
-                                      this.SendFriendship({
-                                        eventUserIdReceiver: users._id,
-                                        userName: users.properties.names || users.properties.email,
-                                      });
-                                    }}>
-                                    Enviar Solicitud
+                      <div>
+                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                        {matches.map((users, userIndex) => (
+                          <Row key={`user-item-${userIndex}`} justify="center">
+                            <Card
+                              extra={
+                                <a
+                                  onClick={() => {
+                                    this.SendFriendship({
+                                      eventUserIdReceiver: users._id,
+                                      userName: users.properties.names || users.properties.email,
+                                    });
+                                  }}>
+                                  Enviar Solicitud
                               </a>
+                              }
+                              style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                              bordered={true}>
+                              <Meta
+                                avatar={
+                                  <Avatar>
+                                    {console.log(users.properties)}
+                                    {users.properties.names
+                                      ? users.properties.names.charAt(0).toUpperCase()
+                                      : users.properties.names}
+                                  </Avatar>
                                 }
-                                hoverable={8}
-                                headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
-                                style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                                bordered={true}>
-                                <Meta
-                                  avatar={
-                                    <Avatar>
-                                      {console.log(users.properties)}
-                                      {users.properties.names
-                                        ? users.properties.names.charAt(0).toUpperCase()
-                                        : users.properties.names}
-                                    </Avatar>
-                                  }
-                                  title={users.properties.names ? users.properties.names : "No registra Nombre"}
-                                  description={[
-                                    <div>
-                                      <br />
-                                      <Row>
-                                        <Col xs={24}>
-                                          <p>
-                                            Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                          </p>
-                                          <div>
-                                            {
-                                              asistantData.map((data, dataIndex) => (
-                                                !data.privatePublic && data.privatePublic !== undefined && (
-                                                  <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                    <p>{data.label}: {users.properties[data.name]}</p>
-                                                  </div>
-                                                )
-                                              ))
-                                            }
-                                          </div>
-                                        </Col>
-                                        <Col xs={24}>
-                                          <Button
-                                            style={{ backgroundColor: "#363636", color: "white" }}
-                                            onClick={() => {
-                                              this.setState({ eventUserIdToMakeAppointment: users._id })
-                                            }}
-                                          >
-                                            {'Agendar cita'}
-                                          </Button>
-                                        </Col>
-                                      </Row>
-                                      <br />
-                                    </div>,
-                                  ]}
-                                />
-                              </Card>
-                            </Col>
-                          ))}
-                        </Row>
+                                title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                                description={[
+                                  <div>
+                                    <br />
+                                    <Row>
+                                      <Col xs={24}>
+                                        <p>
+                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                        </p>
+                                        <div>
+                                          {
+                                            asistantData.map((data, dataIndex) => (
+                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                </div>
+                                              )
+                                            ))
+                                          }
+                                        </div>
+                                      </Col>
+                                      <Col xs={24}>
+                                        <Button
+                                          type="primary"
+                                          onClick={() => {
+                                            this.setState({ eventUserIdToMakeAppointment: users._id })
+                                          }}
+                                        >
+                                          {'Agendar cita'}
+                                        </Button>
+                                      </Col>
+                                    </Row>
+                                    <br />
+                                  </div>,
+                                ]}
+                              />
+                            </Card>
+                          </Row>
+                        ))}
                       </div>
 
                     </div>
@@ -337,11 +332,11 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div className="container">
-                      <Row gutter={[24, 16]}>
+                    <div>
+                      <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12}>
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Card
                               extra={
                                 <a
@@ -356,7 +351,7 @@ export default class ListEventUser extends Component {
                               </a>
                               }
                               hoverable={8}
-                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
+                              headStyle={{ backgroundColor: "rgb(8 157 78)", color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
