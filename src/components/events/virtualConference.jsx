@@ -142,17 +142,18 @@ class VirtualConference extends Component {
                 {
                     <div>
                         <Card bordered={ true }>
-                            <span>Espacios Virtuales</span>
+                            <span>Salas</span>
                         </Card>
                         { infoAgendaArr.map( ( item, key ) => (
                             <div key={ key }>
                                 <Card bordered={ true } style={ { marginBottom: "3%" } }>
+
+                                <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
                                     <p>
-                                        { Moment( item.datetime_start ).format( "MMMM D h:mm A" ) } -{ " " }
+                        { Moment( item.datetime_start ).format( "MMMM D h:mm A" ) }{"  / "}
                                         { Moment( item.datetime_end ).format( "h:mm A" ) }
                                     </p>
-                                    <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
-
+                                    
 
                                     <div style={ { "display": "flex", "flex-direction": "row" } }>
                                         { item.hosts.map( ( host, key ) => {
