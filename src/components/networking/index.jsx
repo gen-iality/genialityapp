@@ -351,7 +351,7 @@ export default class ListEventUser extends Component {
                               </a>
                               }
                               hoverable={8}
-                              headStyle={{ backgroundColor: "rgb(8 157 78)", color: "white" }}
+                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
