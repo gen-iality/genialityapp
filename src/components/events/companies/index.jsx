@@ -1,5 +1,5 @@
 import { notification } from 'antd'
-import {isFunction, isNonEmptyArray} from 'ramda-adjunct'
+import { isFunction, isNonEmptyArray } from 'ramda-adjunct'
 import React, { Component } from "react"
 
 import CompanyStand from './exhibitor/Exhibitor'
@@ -53,6 +53,7 @@ class Company extends Component {
   }
 
   render() {
+    const { goBack } = this.props
     const { companies, showItem, companyItem } = this.state
 
     if (showItem) {
@@ -65,10 +66,10 @@ class Company extends Component {
             type="button"
             className="main-stand-goback"
             onClick={() => {
-              // Todo: Integrar metodo para volver a la vista anterior
-              /*if (isFunction(goBack)) {
+              if (isFunction(goBack)) {
+                this.showList()
                 goBack()
-              }*/
+              }
             }}
         >
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />

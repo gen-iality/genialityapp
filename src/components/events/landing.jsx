@@ -128,6 +128,10 @@ class Landing extends Component {
     } );
   };
 
+  showEvent = () => {
+    this.setState({ section: 'evento' })
+  }
+
   /* Carga  dinamicamente los colores base para el evento */
   async loadDynamicEventStyles ( eventId ) {
     const eventStyles = await EventsApi.getStyles( eventId );
@@ -232,7 +236,7 @@ class Landing extends Component {
       networking: <NetworkingForm event={ event } eventId={ event._id } toggleConference={ this.toggleConference } />,
       my_agenda: <MyAgenda event={ event } eventId={ event._id } toggleConference={ this.toggleConference } />,
       my_section: <MySection event={ event } eventId={ event._id } />,
-      companies: <Companies event={ event } eventId={ event._id } />,
+      companies: <Companies event={ event } eventId={ event._id } goBack={this.showEvent} />,
       evento: (
         <div className="columns is-centered" style={ { height: "900px" } }>
           <EventLanding event={ event } toggleConference={ this.toggleConference } />
