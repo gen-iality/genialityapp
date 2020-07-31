@@ -5,7 +5,9 @@ import React, { Component } from "react"
 import CompanyStand from './exhibitor/Exhibitor'
 import { getEventCompanies } from "../../empresas/services"
 import './Exhibitors.css';
-
+import { toast } from "react-toastify"
+import { handleRequestError } from "../../../helpers/utils"
+import API, { fireStoreApi } from "../../../helpers/request"
 const standImage =
   'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FScreen%20Shot%202020-07-10%20at%203.54.51%20PM%20(1).png?alt=media&token=31afe6c9-f35a-4423-9f7b-ef8eaed2a6b6';
 
@@ -45,11 +47,25 @@ class Company extends Component {
   }
 
   showListItem(companyItem) {
+    const { eventId, eventUser } = this.props
+    if (eventUser && eventUser._id && companyItem.activity_id) {
+      fireStoreApi.createOrUpdate(eventId, companyItem.activity_id, eventUser)
+        .then(() => {
+          toast.success("Asistente agregado a actividad");
+          this.setState({ qrData: {}, })
+        })
+        .catch(error => {
+          console.error("Error updating document: ", error);
+          toast.error(handleRequestError(error));
+        });
+    }
     this.setState({ companyItem, showItem: true })
+
   }
 
   showList() {
     this.setState({ showItem: false });
+
   }
 
   render() {

@@ -10,7 +10,7 @@ import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
 import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
 //custom
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi } from "../../helpers/request";
+import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi, fireStoreApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
@@ -38,6 +38,10 @@ import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
 import { firestore } from "../../helpers/firebase";
 import { FaWheelchair } from "react-icons/fa";
+
+import { toast } from "react-toastify";
+import { handleRequestError } from "../../helpers/utils";
+
 import Robapagina from "../shared/Animate_Img/index"
 const { Title } = Typography;
 
@@ -227,13 +231,13 @@ class Landing extends Component {
       survey: <SurveyForm event={event} />,
       certs: <CertificadoLanding event={event} tickets={event.tickets} currentUser={this.state.currentUser} usuarioRegistrados={this.state.eventUsers} />,
       speakers: <SpeakersForm eventId={event._id} />,
-      wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
-      companies: <Companies event={event} eventId={event._id} />,
+      companies: <Companies event={event} eventId={event._id} eventUser={eventUser} />,
       evento: (
         <div className="columns is-centered" style={{ height: "900px" }}>
           <EventLanding event={event} toggleConference={this.toggleConference} />
@@ -333,10 +337,27 @@ class Landing extends Component {
     console.log(this.state.section);
   };
 
+  addUser = (activity) => {
+    let activity_id = activity._id
+    let eventUser = this.state.eventUser
+    let event_id = this.state.event._id
+
+    fireStoreApi.createOrUpdate(event_id, activity_id, eventUser)
+      .then(() => {
+        toast.success("Asistente agregado a actividad");
+        this.setState({ qrData: {}, })
+      })
+      .catch(error => {
+        console.error("Error updating document: ", error);
+        toast.error(handleRequestError(error));
+      });
+
+  };
+
   toggleConference = async (state, meeting_id, activity) => {
 
 
-    console.log("checkin", state, meeting_id, this.state.eventUser);
+    console.log("checkin", state, meeting_id, this.state.eventUser, activity);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
@@ -344,6 +365,7 @@ class Landing extends Component {
     //Se usa para pasarle al componente de ZOOM la actividad actual que a su vez se la pasa a las SURVEYs
     if (activity != undefined) {
       this.setState({ activity });
+      this.addUser(activity);
     }
 
     if (this.state.eventUser) {
