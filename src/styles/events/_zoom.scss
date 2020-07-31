@@ -38,7 +38,7 @@
   .title-header {
     margin-top: 4px;
     margin-left: 15px;
-    color: black;
+    color: rgb(190, 13, 13);
     .icon-live {
       color: red;
       padding-bottom: 3px;
@@ -101,6 +101,8 @@
 
   .ant-card-body {
     padding: 0 1em;
+    width: 80%;
+    margin-left: 78px;
   }
 
   .ant-page-header {
@@ -147,7 +149,7 @@
   -webkit-animation-duration: 2.5s;
   -webkit-animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;
-  background-color: #1890ff !important;
+  background-color: #31d871 !important;
   transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
   box-shadow: 4px 4px 15px rgba(24, 144, 255, 0.5) !important;
   color: white !important;
@@ -235,10 +237,10 @@
 
 // Provisional, ya que estos estilos deben ir desde el api
 .survyCard {
-  background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/BG-1920x1080px.png?alt=media&token=aa4421e0-cd6e-473f-b185-ec12efaffe02") !important;
+  background-image: url("") !important;
   background-size: cover !important;
   *:not(span) {
-    color: #fff !important;
+    color: rgb(0, 0, 0) !important;
   }
   .ant-pagination-item,
   .ant-pagination-prev .ant-pagination-item-link,

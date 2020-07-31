@@ -1,11 +1,13 @@
 import React, { Component } from "react"
 import { FaqsApi } from "../../helpers/request"
 import { Collapse, Col } from 'antd'
+import { Background } from "react-parallax";
 
 const { Panel } = Collapse
 
 const faqs = {
-    textAlign: "left"
+    textAlign: "left",
+    fontWeight: 500
 };
 
 const center = {
@@ -41,10 +43,10 @@ class Faqs extends Component {
                 xl={18}
                 style={center}
             >
-                <Collapse style={faqs} defaultActiveKey={['0']}>
+                <Collapse className="collapse_question" style={faqs} defaultActiveKey={['0']}>
                     {
                         faqsData.map((faqs, key) => (
-                            <Panel key={key} header={faqs.title} >
+                            <Panel key={key} header={faqs.title}>
                                 <div dangerouslySetInnerHTML={{ __html: faqs.content }} />
                             </Panel>
                         ))
