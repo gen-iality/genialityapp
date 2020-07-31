@@ -81,7 +81,7 @@ class Landing extends Component {
       toggleConferenceZoom: false,
       meeting_id: null,
       color: "",
-      collapsed: false,
+      collapsed: true,
       visible: false,
       placement: "left",
       headerVisible: "true",
