@@ -84,6 +84,12 @@ class MenuConfig extends Component {
                 </NavLink>
               </Menu.Item>
 
+              <Menu.Item key="empresas">
+                <NavLink onClick={this.handleClick} to={`${url}/empresas`}>
+                  {'Empresas'}
+                </NavLink>
+              </Menu.Item>
+
               <Menu.Item key="2">
                 <NavLink onClick={this.handleClick} to={`${url}/speakers`}>
                   Conferencistas
@@ -313,7 +319,7 @@ class MenuConfig extends Component {
             )}
 
             {/* Sección para gestion de entradas */}
-            {/* 
+            {/*
             <SubMenu
               key="sub7"
               title={

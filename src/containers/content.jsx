@@ -9,6 +9,7 @@ import asyncComponent from "./AsyncComponent";
 const Home = asyncComponent(() => import("../components/home"));
 const HomeProfile = asyncComponent(() => import("../components/home/profile"));
 const Landing = asyncComponent(() => import("../components/events/landing"));
+const Transition = asyncComponent(() => import("../components/shared/Animate_Img/index"))
 const Events = asyncComponent(() => import("../components/events"));
 const NewEvent = asyncComponent(() => import("../components/events/newEvent"));
 const Organization = asyncComponent(() => import("../components/organization"));
@@ -63,6 +64,7 @@ class ContentContainer extends Component {
                     <Route exact path="/faqs" component={Faqs} />
                     <Route exact path="/singintest" component={SinginTest} />
                     <Route exact path="/api/generatorQr/:id" component={QRedirect} />
+                    <Route exact path="/transition/:event" component={Transition} />
                 </Switch>
             </main>
         );

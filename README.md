@@ -10,7 +10,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Requirements
 
-- Node >= 6 on your local development machine
+- NodeJS LTS Dubnium v10.x.x `(recommended 10.22.0)` on your local development machine
 
 ### How to...?
 

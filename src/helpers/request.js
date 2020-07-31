@@ -1,14 +1,14 @@
-import axios from "axios";
-import { ApiUrl } from "./constants";
-import * as Cookie from "js-cookie";
-import { handleSelect } from "./utils";
-import { firestore } from "./firebase";
-import { parseUrl } from "../helpers/constants";
-import Moment from "moment";
+import axios from 'axios';
+import { ApiUrl } from './constants';
+import * as Cookie from 'js-cookie';
+import { handleSelect } from './utils';
+import { firestore } from './firebase';
+import { parseUrl } from '../helpers/constants';
+import Moment from 'moment';
 const publicInstance = axios.create({
   url: ApiUrl,
   baseURL: ApiUrl,
-  pushURL: "https://104.248.125.133:6477/pushNotification",
+  pushURL: 'https://104.248.125.133:6477/pushNotification',
 });
 const privateInstance = axios.create({
   url: ApiUrl,
@@ -29,34 +29,43 @@ luego miramos si viene en las cookies
 let evius_token = null;
 let dataUrl = parseUrl(document.URL);
 if (dataUrl && dataUrl.token) {
-  Cookie.set("evius_token", dataUrl.token);
+  Cookie.set('evius_token', dataUrl.token);
   evius_token = dataUrl.token;
 }
 
 if (!evius_token) {
-  evius_token = Cookie.get("evius_token");
+  evius_token = Cookie.get('evius_token');
 }
 
 if (evius_token) {
   privateInstance.defaults.params = {};
-  privateInstance.defaults.params["evius_token"] = evius_token;
+  privateInstance.defaults.params['evius_token'] = evius_token;
 }
 
 /** ACTUALIZAMOS EL BEARER TOKEN SI SE VENCIO Y NOS VIENE UN NUEVO TOKEN EN EL HEADER */
 privateInstance.interceptors.response.use((response) => {
   const { headers } = response;
   if (headers.new_token) {
-    console.log("Se acab� la moneda");
-    Cookie.set("evius_token", headers.new_token);
+    console.log('Se acab� la moneda');
+    Cookie.set('evius_token', headers.new_token);
     privateInstance.defaults.params = {};
-    privateInstance.defaults.params["evius_token"] = headers.new_token;
+    privateInstance.defaults.params['evius_token'] = headers.new_token;
   }
   return response;
 });
 
 export const fireStoreApi = {
-  createOrUpdate: (eventId, activityId) => {
-    return firestore.collection(`event_activity_attendees/${eventId}/activities/${activityId}/attendees`);
+  createOrUpdate: (eventId, activityId, eventUser) => {
+    let agendaRef = firestore.collection(`event_activity_attendees/${eventId}/activities/${activityId}/attendees`);
+    return agendaRef.add({
+      activity_id: activityId,
+      attendee_id: eventUser._id,
+      created_at: new Date(),
+      properties: eventUser.properties,
+      updated_at: new Date(),
+      checked_in: true,
+      checked_at: new Date(),
+    });
   },
 };
 export const Actions = {
@@ -98,7 +107,7 @@ export const EventsApi = {
   getEventUser: async (user_id, event_id) => {
     const snapshot = await firestore
       .collection(`${event_id}_event_attendees`)
-      .where("account_id", "==", user_id)
+      .where('account_id', '==', user_id)
       .get();
     const eventUser = !snapshot.empty ? snapshot.docs[0].data() : null;
     return eventUser;
@@ -106,7 +115,7 @@ export const EventsApi = {
 
   getcurrentUserEventUser: async (event_id) => {
     let response = await Actions.getAll(`/api/me/eventusers/event/${event_id}`, false);
-    console.log("checkin eventUser", response);
+    console.log('checkin eventUser', response);
 
     let eventUser = response.data && response.data[0] ? response.data[0] : null;
     return eventUser;
@@ -126,13 +135,13 @@ export const EventsApi = {
     return await Actions.getAll(`/api/eventsbeforetoday${query}`, true);
   },
   landingEvent: async (id) => {
-    return await Actions.getOne("/api/events/", id, true);
+    return await Actions.getOne('/api/events/', id, true);
   },
   hostAvailable: async () => {
-    return await Actions.get("api/events/zoomhost");
+    return await Actions.get('api/events/zoomhost');
   },
   invitations: async (id) => {
-    return await Actions.getOne(`/api/events/${id}/`, "invitations");
+    return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendInvitation: async (eventId, data) => {
     return await Actions.post(`/api/events/${eventId}/invitation`, data);
@@ -141,17 +150,17 @@ export const EventsApi = {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
   },
   mine: async () => {
-    const events = await Actions.getAll("/api/me/contributors/events");
+    const events = await Actions.getAll('/api/me/contributors/events');
     return events;
   },
   getOne: async (id) => {
-    return await Actions.getOne("/api/events/", id);
+    return await Actions.getOne('/api/events/', id);
   },
   editOne: async (data, id) => {
-    return await Actions.edit("/api/events", data, id);
+    return await Actions.edit('/api/events', data, id);
   },
   deleteOne: async (id) => {
-    return await Actions.delete("/api/events/", id);
+    return await Actions.delete('/api/events/', id);
   },
   getStyles: async (id) => {
     return await Actions.get(`/api/events/${id}/stylestemp`);
@@ -166,20 +175,20 @@ export const InvitationsApi = {
 
 export const UsersApi = {
   getAll: async (id, query) => {
-    query = query ? query : "";
+    query = query ? query : '';
     return await Actions.getAll(`/api/events/${id}/eventUsers${query}`);
   },
   getOne: async (event_id, user_id) => {
     return await Actions.getAll(`api/events/${event_id}/eventusers/${user_id}`);
   },
   mineTickets: async () => {
-    return await Actions.getAll("/api/me/eventUsers/");
+    return await Actions.getAll('/api/me/eventUsers/');
   },
   getProfile: async (id) => {
-    return await Actions.getOne("/api/users/", id);
+    return await Actions.getOne('/api/users/', id);
   },
   editProfile: async (data, id) => {
-    return await Actions.edit("/api/users", data, id);
+    return await Actions.edit('/api/users', data, id);
   },
   findByEmail: async (email) => {
     return await Actions.getOne(`api/users/findByEmail/`, email);
@@ -226,7 +235,7 @@ export const TicketsApi = {
 
   checkInAttendee: async (event_id, eventUser_id) => {
     //let data = { checkedin_at: new Date().toISOString() };
-    let data = { checkedin_at: Moment().format("YYYY-MM-DD HH:mm:ss") };
+    let data = { checkedin_at: Moment().format('YYYY-MM-DD HH:mm:ss') };
     return await Actions.put(`/api/events/${event_id}/eventusers/${eventUser_id}`, data);
   },
 };
@@ -309,32 +318,32 @@ export const DocumentsApi = {
 
 export const CategoriesApi = {
   getAll: async () => {
-    const resp = await Actions.getAll("api/categories");
+    const resp = await Actions.getAll('api/categories');
     return handleSelect(resp.data);
   },
 };
 export const TypesApi = {
   getAll: async () => {
-    const resp = await Actions.getAll("api/eventTypes");
+    const resp = await Actions.getAll('api/eventTypes');
     return handleSelect(resp.data);
   },
 };
 export const OrganizationApi = {
   mine: async () => {
-    const resp = await Actions.getAll("api/me/organizations");
+    const resp = await Actions.getAll('api/me/organizations');
     let data = resp.data.map((item) => {
       return { id: item._id, name: item.name };
     });
     return data;
   },
   getOne: async (id) => {
-    return await Actions.getOne("/api/organizations/", id);
+    return await Actions.getOne('/api/organizations/', id);
   },
   editOne: async (data, id) => {
-    return await Actions.edit("/api/organizations", data, id);
+    return await Actions.edit('/api/organizations', data, id);
   },
   events: async (id) => {
-    return await Actions.getOne(`/api/organizations/${id}/`, "events");
+    return await Actions.getOne(`/api/organizations/${id}/`, 'events');
   },
   getUsers: async (id) => {
     return await Actions.get(`/api/organizations/${id}/users`);
@@ -357,10 +366,10 @@ export const BadgeApi = {
     return await Actions.post(`/api/escarapelas`, data);
   },
   edit: async (data, id) => {
-    return await Actions.edit("/api/escarapelas/", data, id);
+    return await Actions.edit('/api/escarapelas/', data, id);
   },
   get: async (id) => {
-    return await Actions.getOne("/api/escarapelas/", id);
+    return await Actions.getOne('/api/escarapelas/', id);
   },
 };
 export const HelperApi = {
@@ -388,13 +397,13 @@ export const CertsApi = {
     return await Actions.get(`api/certificate/`, id);
   },
   generate: async (content, image) => {
-    return await Actions.get(`api/pdfcertificate?content=` + content + "&image=" + image + "&download=1");
+    return await Actions.get(`api/pdfcertificate?content=` + content + '&image=' + image + '&download=1');
   },
   editOne: async (data, id) => {
-    return await Actions.edit("/api/certificates", data, id);
+    return await Actions.edit('/api/certificates', data, id);
   },
   deleteOne: async (id) => {
-    return await Actions.delete("/api/certificates", id);
+    return await Actions.delete('/api/certificates', id);
   },
   create: async (data) => {
     return await Actions.create(`api/certificates`, data);
@@ -402,12 +411,12 @@ export const CertsApi = {
   generateCert: async (body) => {
     return new Promise((resolve, reject) => {
       privateInstance
-        .post("/api/generatecertificate?download=1", body, {
-          responseType: "blob",
+        .post('/api/generatecertificate?download=1', body, {
+          responseType: 'blob',
         })
         .then((response) => {
           resolve({
-            type: response.headers["content-type"],
+            type: response.headers['content-type'],
             blob: response.data,
           });
         });

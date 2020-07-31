@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgenda from "../my-agenda/index";
+import Companies from "./companies/index";
 import WallForm from "../wall/index";
 import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
@@ -230,8 +231,10 @@ class Landing extends Component {
       wall: <WallForm event={event} eventId={event._id} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
-      networking: <NetworkingForm event={event} eventId={event._id} />,
-      my_agenda: <MyAgenda event={event} eventId={event._id} />,
+      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      companies: <Companies event={event} eventId={event._id} eventUser={eventUser} />,
+
       evento: (
         <div className="columns is-centered">
           <EventLanding event={event} />
@@ -332,18 +335,11 @@ class Landing extends Component {
   };
 
   addUser = (activity) => {
+    let activity_id = activity._id
+    let eventUser = this.state.eventUser
+    let event_id = this.state.event._id
 
-
-    const agendaRef = fireStoreApi.createOrUpdate(this.state.event._id, activity._id)
-    agendaRef.add({
-      activity_id: activity._id,
-      attendee_id: this.state.eventUser._id,
-      created_at: new Date(),
-      properties: this.state.eventUser.properties,
-      updated_at: new Date(),
-      checked_in: true,
-      checked_at: new Date()
-    })
+    fireStoreApi.createOrUpdate(event_id, activity_id, eventUser)
       .then(() => {
         toast.success("Asistente agregado a actividad");
         this.setState({ qrData: {}, })
@@ -433,31 +429,33 @@ class Landing extends Component {
                 {/* <SurveyNotification /> */}
 
                 {this.state.headerVisible && (
-                  <BannerEvent
-                    bgImage={
-                      event.styles && event.styles.banner_image
-                        ? event.styles.banner_image
-                        : event.picture
-                          ? event.picture
-                          : "https://bulma.io/images/placeholders/1280x960.png"
-                    }
-                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                    title={event.name}
-                    organizado={
-                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                        {event.organizer.name ? event.organizer.name : event.organizer.email}
-                      </Link>
-                    }
-                    place={
-                      <span>
-                        {event.venue} {event.location.FormattedAddress}
-                      </span>
-                    }
-                    dateStart={event.date_start}
-                    dateEnd={event.date_end}
-                    dates={event.dates}
-                    type_event={event.type_event}
-                  />
+                  event.show_banner === "true" && (
+                    <BannerEvent
+                      bgImage={
+                        event.styles && event.styles.banner_image
+                          ? event.styles.banner_image
+                          : event.picture
+                            ? event.picture
+                            : "https://bulma.io/images/placeholders/1280x960.png"
+                      }
+                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                      title={event.name}
+                      organizado={
+                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                          {event.organizer.name ? event.organizer.name : event.organizer.email}
+                        </Link>
+                      }
+                      place={
+                        <span>
+                          {event.venue} {event.location.FormattedAddress}
+                        </span>
+                      }
+                      dateStart={event.date_start}
+                      dateEnd={event.date_end}
+                      dates={event.dates}
+                      type_event={event.type_event}
+                    />
+                  )
                 )}
               </div>
 
