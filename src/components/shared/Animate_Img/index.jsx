@@ -39,7 +39,7 @@ class AnimateImg extends React.Component {
                         <ReactPlayer
                             width="100%"
                             height="100%"
-                            url={'https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-29%20at%204.52.29%20PM.mp4?alt=media&token=f95f2492-20a8-4cb3-a199-aa094381fc4f'}
+                            url={event.data_loader_page}
                             playing="true"
                         />
 

@@ -1,6 +1,9 @@
 import { notification } from 'antd'
 import { isFunction, isNonEmptyArray } from 'ramda-adjunct'
 import React, { Component } from "react"
+import { toast } from "react-toastify"
+import { handleRequestError } from "../../../helpers/utils"
+import API, { fireStoreApi } from "../../../helpers/request"
 
 import CompanyStand from './exhibitor/Exhibitor'
 import { getEventCompanies } from "../../empresas/services"
@@ -50,6 +53,21 @@ class Company extends Component {
 
   showListItem = (companyIndex) => {
     this.setState({ shownCompanyIndex: companyIndex })
+    const { eventId, eventUser } = this.props
+    const { companies } = this.state
+    let companyItem = companies[companyIndex]
+
+    if (eventUser && eventUser._id && companyItem.visitors_space_id) {
+      fireStoreApi.createOrUpdate(eventId, companyItem.visitors_space_id, eventUser)
+        .then(() => {
+          toast.success("Asistente agregado a actividad");
+          this.setState({ qrData: {}, })
+        })
+        .catch(error => {
+          console.error("Error updating document: ", error);
+          toast.error(handleRequestError(error));
+        });
+    }
   }
 
   showList = () => {
@@ -107,14 +125,14 @@ class Company extends Component {
     return (
       <div className='main-exhibitor-list'>
         <button
-            type="button"
-            className="main-stand-goback"
-            onClick={() => {
-              if (isFunction(goBack)) {
-                this.showList()
-                goBack()
-              }
-            }}
+          type="button"
+          className="main-stand-goback"
+          onClick={() => {
+            if (isFunction(goBack)) {
+              this.showList()
+              goBack()
+            }
+          }}
         >
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
