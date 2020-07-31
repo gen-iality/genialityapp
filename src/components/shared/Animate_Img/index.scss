@@ -1,5 +1,5 @@
-@import "~antd/dist/antd.css";
-.container_imgLoading{
+@import '~antd/dist/antd.css';
+.container_imgLoading {
   img {
     margin-top: -55px;
     height: 100%;
@@ -23,8 +23,13 @@
   }
   .ant-btn {
     position: fixed;
+<<<<<<< HEAD
     top: 700px;
     background-color: rgba(0, 0, 0, 0.30);
+=======
+    top: 400px;
+    background-color: rgba(0, 0, 0, 0.12);
+>>>>>>> da88a2d376e41cfadf1c77643eb3ff4bb42697d0
     color: white;
     font-size: 34px;
     width: 217px;
@@ -36,11 +41,11 @@
     color: #ffffff;
     box-shadow: 0 10px 25px -2px #f5f5f5;
     border: white;
-  } 
+  }
   iframe {
     height: 900px;
   }
-  .cortina{
+  .cortina {
     background-color: white;
     animation-name: animacionCortina;
     animation-duration: 2s;
@@ -60,10 +65,7 @@
       height: 300px;
     }
     100% {
-      height:0px;
+      height: 0px;
     }
   }
 }
-
-
-
