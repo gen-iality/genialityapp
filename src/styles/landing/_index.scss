@@ -1,4 +1,9 @@
 section.landing {
+  padding: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+
   *:not(span) {
     color: $fontColor;
   }
@@ -10,8 +15,6 @@ section.landing {
   .ant-btn-primary:not([disabled]) {
     color: white;
   }
-
-  padding: 0;
 
   .container-nombre {
     display: block;
