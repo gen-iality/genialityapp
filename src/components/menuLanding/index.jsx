@@ -100,7 +100,7 @@ class menuLanding extends Component {
                 companies: {
                     name: "Empresas",
                     section: "companies",
-                    icon: "WechatOutlined",
+                    icon: "ApartmentOutlined",
                     checked: false,
                     permissions: "public"
                 }
@@ -210,4 +210,4 @@ class menuLanding extends Component {
     }
 }
 
-export default menuLanding  
+export default menuLanding

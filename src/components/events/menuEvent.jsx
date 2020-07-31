@@ -115,7 +115,7 @@ class MenuEvent extends Component {
         companies: {
           name: "Empresas",
           section: "companies",
-          icon: "WechatOutlined",
+          icon: "ApartmentOutlined", // ApartmentOutlined
           checked: false,
           permissions: "public"
         }
@@ -146,7 +146,7 @@ class MenuEvent extends Component {
     //Se trae el api que contiene el menu
     const event = await Actions.getAll( `/api/events/${ this.props.eventId }` )
 
-    //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio 
+    //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio
     let items = event.itemsMenu || this.state.menuDefault
 
     console.log( "items", items, this.props.user );
