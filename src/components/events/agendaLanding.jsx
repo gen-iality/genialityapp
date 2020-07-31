@@ -47,6 +47,7 @@ class Agenda extends Component {
     this.getCurrentUser();
 
     const { event } = this.props;
+    console.log("datos del evento", event)
 
     if (!event.dates || event.dates.length === 0) {
       let days = [];
