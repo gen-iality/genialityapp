@@ -1,24 +1,23 @@
 import React, { Component, Fragment, useState, useEffect } from "react";
-import { Card, Button, Alert, Row, Col } from "antd";
+import { Card, Button, Alert } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
 import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import TimeStamp from "react-timestamp";
 import Moment from "moment";
-import { Avatar, Col, Row } from "antd";
+import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { Background } from "react-parallax";
 
 const { Meta } = Card;
 
-const MeetingConferenceButton = ( { activity, toggleConference, usuarioRegistrado } ) => {
-    const [ infoActivity, setInfoActivity ] = useState( {} );
+const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
+    const [infoActivity, setInfoActivity] = useState({});
 
-    useEffect( () => {
-        setInfoActivity( activity );
-    }, [ activity ] );
+    useEffect(() => {
+        setInfoActivity(activity);
+    }, [activity]);
 
-    switch ( infoActivity.habilitar_ingreso ) {
+    switch (infoActivity.habilitar_ingreso) {
         case "open_meeting_room":
             return (
                 <>
@@ -26,20 +25,20 @@ const MeetingConferenceButton = ( { activity, toggleConference, usuarioRegistrad
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
-                        onClick={ () => {
-                            toggleConference( true, infoActivity.meeting_id, infoActivity );
-                        } }>
-                        { infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar" }
+                        onClick={() => {
+                            toggleConference(true, infoActivity.meeting_id, infoActivity);
+                        }}>
+                        {infoActivity.meeting_id_en ? "Entrar (Español)" : "Entrar"}
                     </Button>
-                    { infoActivity.meeting_id_en && ( <Button
+                    {infoActivity.meeting_id_en && (<Button
                         size="large"
                         type="primary"
                         className="buttonVirtualConference"
-                        onClick={ () => {
-                            toggleConference( true, infoActivity.meeting_id_en, infoActivity );
-                        } }>
+                        onClick={() => {
+                            toggleConference(true, infoActivity.meeting_id_en, infoActivity);
+                        }}>
                         Join (English)
-                    </Button> ) }
+                    </Button>)}
 
 
                 </>
@@ -62,8 +61,8 @@ const MeetingConferenceButton = ( { activity, toggleConference, usuarioRegistrad
 };
 
 class VirtualConference extends Component {
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
         console.log(
             "INNER event",
             this.props.event,
@@ -82,144 +81,97 @@ class VirtualConference extends Component {
         };
     }
 
-    async componentDidUpdate () {
+    async componentDidUpdate() {
         let { infoAgendaArr } = this.state;
         //Si aún no ha cargado el evento no podemos hacer nada más
-        if ( !this.props.event ) return;
+        if (!this.props.event) return;
 
         //Si ya cargamos la agenda no hay que volverla a cargar o quedamos en un ciclo infinito
-        if ( this.state.infoAgendaArr && this.state.infoAgendaArr.length ) return;
-        console.log( "actualizando componente" );
-        let filteredAgenda = await this.filterVirtualActivities( this.props.event._id );
-        this.setState( { infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom );
+        if (this.state.infoAgendaArr && this.state.infoAgendaArr.length) return;
+        console.log("actualizando componente");
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+        this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
     }
 
     listeningStateMeetingRoom = () => {
         let { infoAgendaArr } = this.state;
-        infoAgendaArr.forEach( ( activity, index, arr ) => {
+        infoAgendaArr.forEach((activity, index, arr) => {
             firestore
-                .collection( "events" )
-                .doc( this.props.event._id )
-                .collection( "activities" )
-                .doc( activity._id )
-                .onSnapshot( ( infoActivity ) => {
-                    if ( !infoActivity.exists ) return;
-                    console.log( "infoActivity:", infoActivity );
+                .collection("events")
+                .doc(this.props.event._id)
+                .collection("activities")
+                .doc(activity._id)
+                .onSnapshot((infoActivity) => {
+                    if (!infoActivity.exists) return;
+                    console.log("infoActivity:", infoActivity);
                     let { habilitar_ingreso } = infoActivity.data();
-                    let updatedActivityInfo = { ...arr[ index ], habilitar_ingreso };
+                    let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
-                    arr[ index ] = updatedActivityInfo;
-                    this.setState( { infoAgendaArr: arr } );
-                } );
-        } );
+                    arr[index] = updatedActivityInfo;
+                    this.setState({ infoAgendaArr: arr });
+                });
+        });
     };
 
-    async componentDidMount () {
-        if ( !this.props.event ) return;
+    async componentDidMount() {
+        if (!this.props.event) return;
 
-        let filteredAgenda = await this.filterVirtualActivities( this.props.event._id );
-        this.setState( { infoAgendaArr: filteredAgenda } );
+        let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
+        this.setState({ infoAgendaArr: filteredAgenda });
     }
 
-    async filterVirtualActivities ( event_id ) {
+    async filterVirtualActivities(event_id) {
         let infoAgendaArr = [];
-        if ( !event_id ) return infoAgendaArr;
-        const infoAgenda = await AgendaApi.byEvent( event_id );
+        if (!event_id) return infoAgendaArr;
+        const infoAgenda = await AgendaApi.byEvent(event_id);
 
-        for ( const prop in infoAgenda.data ) {
-            if ( infoAgenda.data[ prop ].meeting_id ) {
-                infoAgendaArr.push( infoAgenda.data[ prop ] );
+        for (const prop in infoAgenda.data) {
+            if (infoAgenda.data[prop].meeting_id) {
+                infoAgendaArr.push(infoAgenda.data[prop]);
             }
         }
 
         return infoAgendaArr;
     }
 
-    render () {
+    render() {
         const { infoAgendaArr, survey } = this.state;
         const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
         return (
             <Fragment>
                 {
                     <div>
-<<<<<<< HEAD
                         <Card bordered={true}>
-                            <span>Espac</span>
+                            <span>Espacios Virtuales</span>
                         </Card>
                         {infoAgendaArr.map((item, key) => (
                             <div key={key}>
-                                <Card bordered={true} style={{ marginBottom: "3%" }} bodyStyle={{ backgroundImage: "linear-gradient(to left, #f5f5f5 89%, rgb(255 0 0) 60%)" }}>
-                                    <Row justify="center">
-                                        <Col span={24}>
-                                            <Meta
-                                                description={
-                                                    <div key={key}>
-                                                        <p style={{ color: "red", fontWeight: 600 }}>
-                                                            {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
-                                                            {Moment(item.datetime_end).format("h:mm A")}
-                                                        </p>
-                                                        {item.hosts &&
-                                                            item.hosts.length > 0 &&
-                                                            item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
-                                                        <p>{item.name}</p>
-                                                    </div>
-                                                }
-                                            />
-                                        </Col>
-                                        <Col span={24}>
-                                            <Meta
-                                                avatar={
-                                                    item.hosts.length > 0 ? (
-                                                        item.hosts.map((host, key) => <Row><Col span={2} key={key}>{<Avatar size={80} src={host.image} />}</Col></Row>)
-                                                    ) : (
-                                                            <Avatar.Group><Avatar size={80} icon={<UserOutlined />} /></Avatar.Group>
-                                                        )
-                                                }
-                                            />
-                                        </Col>
-                                        <Col span={24}>
-                                            <Meta
-                                                description={
-                                                    <div key={key}>
-                                                        <MeetingConferenceButton style={{ Background: "red" }} activity={item} toggleConference={toggleConference} />
-                                                    </div>
-                                                }
-                                            />
-                                        </Col>
-                                    </Row>
-=======
-                        <Card bordered={ true }>
-                            <span>Espacios Virtuales</span>
-                        </Card>
-                        { infoAgendaArr.map( ( item, key ) => (
-                            <div key={ key }>
-                                <Card bordered={ true } style={ { marginBottom: "3%" } }>
-                                    <p>
-                                        { Moment( item.datetime_start ).format( "MMMM D h:mm A" ) } -{ " " }
-                                        { Moment( item.datetime_end ).format( "h:mm A" ) }
-                                    </p>
-                                    <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
-
-
-                                    <div style={ { "display": "flex", "flex-direction": "row" } }>
-                                        { item.hosts.map( ( host, key ) => {
-                                            return (
-                                                <div key={ key }>
-                                                    <Avatar size={ 80 } src={ host.image } />
-                                                    <div style={ { maxWidth: "30%" } }>{ host.name }</div>
-                                                </div>
-
-                                            )
+                                <Card bordered={true} style={{ marginBottom: "3%" }}>
+                                    <Meta
+                                        avatar={
+                                            item.hosts.length > 0 ? (
+                                                item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
+                                            ) : (
+                                                    <Avatar size={80} icon={<UserOutlined />} />
+                                                )
                                         }
-
-                                        )
+                                        description={
+                                            <div key={key}>
+                                                {item.hosts &&
+                                                    item.hosts.length > 0 &&
+                                                    item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
+                                                <p>{item.name}</p>
+                                                <p>
+                                                    {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
+                                                    {Moment(item.datetime_end).format("h:mm A")}
+                                                </p>
+                                                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
+                                            </div>
                                         }
-                                    </div>
-
->>>>>>> da88a2d376e41cfadf1c77643eb3ff4bb42697d0
+                                    />
                                 </Card>
                             </div>
-                        ) ) }
+                        ))}
                     </div>
                 }
             </Fragment>
@@ -227,4 +179,4 @@ class VirtualConference extends Component {
     }
 }
 
-export default WithUserEventRegistered( VirtualConference );
+export default WithUserEventRegistered(VirtualConference);
