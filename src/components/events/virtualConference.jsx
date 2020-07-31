@@ -1,5 +1,5 @@
 import React, { Component, Fragment, useState, useEffect } from "react";
-import { Card, Button, Alert } from "antd";
+import { Card, Button, Alert, Row, Col } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
 import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
@@ -7,6 +7,7 @@ import TimeStamp from "react-timestamp";
 import Moment from "moment";
 import { Avatar } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { Background } from "react-parallax";
 
 const { Meta } = Card;
 
@@ -142,33 +143,49 @@ class VirtualConference extends Component {
                 {
                     <div>
                         <Card bordered={true}>
-                            <span>Espacios Virtuales</span>
+                            <span>Espac</span>
                         </Card>
                         {infoAgendaArr.map((item, key) => (
                             <div key={key}>
-                                <Card bordered={true} style={{ marginBottom: "3%" }}>
-                                    <Meta
-                                        avatar={
-                                            item.hosts.length > 0 ? (
-                                                item.hosts.map((host, key) => <div key={key}>{<Avatar size={80} src={host.image} />}</div>)
-                                            ) : (
-                                                    <Avatar size={80} icon={<UserOutlined />} />
-                                                )
-                                        }
-                                        description={
-                                            <div key={key}>
-                                                {item.hosts &&
-                                                    item.hosts.length > 0 &&
-                                                    item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
-                                                <p>{item.name}</p>
-                                                <p>
-                                                    {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
-                                                    {Moment(item.datetime_end).format("h:mm A")}
-                                                </p>
-                                                <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
-                                            </div>
-                                        }
-                                    />
+                                <Card bordered={true} style={{ marginBottom: "3%" }} bodyStyle={{ backgroundImage: "linear-gradient(to left, #f5f5f5 89%, rgb(255 0 0) 60%)" }}>
+                                    <Row justify="center">
+                                        <Col span={24}>
+                                            <Meta
+                                                description={
+                                                    <div key={key}>
+                                                        <p style={{ color: "red", fontWeight: 600 }}>
+                                                            {Moment(item.datetime_start).format("MMMM D h:mm A")} -{" "}
+                                                            {Moment(item.datetime_end).format("h:mm A")}
+                                                        </p>
+                                                        {item.hosts &&
+                                                            item.hosts.length > 0 &&
+                                                            item.hosts.map((item, key) => <p key={key}> {item.name}</p>)}
+                                                        <p>{item.name}</p>
+                                                    </div>
+                                                }
+                                            />
+                                        </Col>
+                                        <Col span={24}>
+                                            <Meta
+                                                avatar={
+                                                    item.hosts.length > 0 ? (
+                                                        item.hosts.map((host, key) => <Row><Col span={2} key={key}>{<Avatar size={80} src={host.image} />}</Col></Row>)
+                                                    ) : (
+                                                            <Avatar.Group><Avatar size={80} icon={<UserOutlined />} /></Avatar.Group>
+                                                        )
+                                                }
+                                            />
+                                        </Col>
+                                        <Col span={24}>
+                                            <Meta
+                                                description={
+                                                    <div key={key}>
+                                                        <MeetingConferenceButton style={{ Background: "red" }} activity={item} toggleConference={toggleConference} />
+                                                    </div>
+                                                }
+                                            />
+                                        </Col>
+                                    </Row>
                                 </Card>
                             </div>
                         ))}
