@@ -5,6 +5,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
+import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
@@ -241,9 +242,30 @@ class Landing extends Component {
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       evento: (
-        <div className="columns is-centered" style={{ height: "900px" }}>
-          <EventLanding event={event} toggleConference={this.toggleConference} />
 
+        <div className="columns is-centered" style={{ height: "900px" }}>
+          { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
+            <EventLanding event={ event } toggleConference={ this.toggleConference } />
+          }
+          { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
+
+            <div className="description-container column is-12 is-centered mediaplayer" style={ { width: "66.66667%" } }>
+                        
+                                <ReactPlayer
+                                    
+                                    style={{
+                                        display: "block",
+                                        margin: "0 auto",
+                                        marginLeft:"10%",
+                                    }}
+                                    url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                                    controls
+                                />
+                                   
+
+            </div>
+          }
           <div className="column container-map">
             <VirtualConference
               event={this.state.event}
