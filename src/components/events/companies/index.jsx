@@ -6,19 +6,16 @@ import CompanyStand from './exhibitor/Exhibitor'
 import { getEventCompanies } from "../../empresas/services"
 import './Exhibitors.css';
 
-const standImage =
-  'https://firebasestorage.googleapis.com/v0/b/hey-48c29.appspot.com/o/events%2FScreen%20Shot%202020-07-10%20at%203.54.51%20PM%20(1).png?alt=media&token=31afe6c9-f35a-4423-9f7b-ef8eaed2a6b6';
-
 class Company extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      standsListTopScroll: 0,
       companies: [],
       companyItem: {},
       showItem: false
     }
-    this.showList = this.showList.bind(this)
-    this.showListItem = this.showListItem.bind(this)
+    this.standsListRef = React.createRef();
   }
 
   componentDidMount() {
@@ -44,12 +41,25 @@ class Company extends Component {
     }
   }
 
-  showListItem(companyItem) {
+  setStandsListScrollToLastPosition = () => {
+    if (this.standsListRef.current) {
+      this.standsListRef.current.scrollTop = this.state.standsListTopScroll
+    }
+  }
+
+  showListItem = (companyItem) => {
     this.setState({ companyItem, showItem: true })
   }
 
-  showList() {
-    this.setState({ showItem: false });
+  showList = () => {
+    this.setState({ showItem: false }, this.setStandsListScrollToLastPosition);
+  }
+
+  onScrollStandsList = () => {
+    if (this.standsListRef.current) {
+      const standsListTopScroll = this.standsListRef.current.scrollTop
+      this.setState({ standsListTopScroll })
+    }
   }
 
   render() {
@@ -75,7 +85,7 @@ class Company extends Component {
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
-        <div className='iso-exhibitor-list'>
+        <div className='iso-exhibitor-list' ref={this.standsListRef} onScroll={this.onScrollStandsList}>
           <div className='iso-exhibitor-list-wrap'>
             {isNonEmptyArray(companies) && companies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1).map((company) => {
               return (
