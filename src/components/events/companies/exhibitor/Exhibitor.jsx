@@ -314,7 +314,6 @@ class Exhibitor extends Component {
             <ReactPlayer url={videoUrl} />
           </div>
         </div>
-
       </div>
     )
   }
