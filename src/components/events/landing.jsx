@@ -242,7 +242,6 @@ class Landing extends Component {
           <EventLanding event={ event } toggleConference={ this.toggleConference } />
 
           <div className="column container-map">
-
             <VirtualConference
               event={ this.state.event }
               currentUser={ this.state.currentUser }

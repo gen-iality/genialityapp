@@ -114,12 +114,12 @@ class Agenda extends Component {
     console.log(day);
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
-      .filter((a) => a.datetime_start.includes(day.format("YYYY-MM-DD")))
-      .sort(
-        (a, b) =>
-          Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
-          Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
-      );
+    .filter((a) => a.datetime_start.includes(day.format("YYYY-MM-DD")))
+    .sort(
+      (a, b) =>
+        Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
+        Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
+    );
     this.setState({ listDay: list });
 
     //Se mapea la lista para poder retornar los datos ya filtrados
