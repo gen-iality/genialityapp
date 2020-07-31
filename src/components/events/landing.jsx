@@ -241,9 +241,15 @@ class Landing extends Component {
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       evento: (
-        <div className="columns is-centered" style={{ height: "900px" }}>
-          <EventLanding event={event} toggleConference={this.toggleConference} />
 
+        <div className="columns is-centered" style={{ height: "900px" }}>
+          { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
+            <EventLanding event={ event } toggleConference={ this.toggleConference } />
+          }
+          { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
+
+            <div className="description-container column is-12" style={ { width: "66.66667%" } }></div>
+          }
           <div className="column container-map">
             <VirtualConference
               event={this.state.event}
