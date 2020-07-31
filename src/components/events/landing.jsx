@@ -246,7 +246,7 @@ class Landing extends Component {
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       evento: (
 
-        <div className="columns is-centered" style={{ height: "900px" }}>
+        <div className="columns is-centered" style={{ miHeight: "600px" }}>
           { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
             <EventLanding event={ event } toggleConference={ this.toggleConference } />
           }
