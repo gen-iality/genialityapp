@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import htmlParser from 'html-react-parser'
 import { pathOr } from 'ramda'
-import { isFunction, isNonEmptyArray } from 'ramda-adjunct'
+import { isNonEmptyArray } from 'ramda-adjunct'
 import React, { Component } from 'react';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -34,13 +34,33 @@ class Exhibitor extends Component {
     this.handleHideInfo = this.handleHideInfo.bind( this )
     this.handleShowVideo = this.handleShowVideo.bind( this )
     this.handleHideVideo = this.handleHideVideo.bind( this )
+    this.handleHideStandImage = this.handleHideStandImage.bind( this )
+    this.handleShowStandImage = this.handleShowStandImage.bind( this )
     this.state = {
+      showStandImage: true,
       showGallery: false,
       showDocuments: false,
       showServices: false,
       showInfo: false,
       showVideo: false,
     }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { data } = this.props
+    const standImage = pathOr( '', [ 'stand_image' ], data )
+
+    if (prevProps.data !== data && standImage) {
+      this.handleShowStandImage()
+    }
+  }
+
+  handleHideStandImage () {
+    this.setState( { showStandImage: false } )
+  }
+
+  handleShowStandImage () {
+    this.setState( { showStandImage: true } )
   }
 
   handleShowGallery () {
@@ -85,6 +105,7 @@ class Exhibitor extends Component {
 
   render () {
     const { goBack, showPrevious, showNext, data } = this.props
+    const { showStandImage } = this.state
     const advisorName = pathOr( '', [ 'advisor', 'name' ], data )
     const advisorNumber = pathOr( '', [ 'advisor', 'number' ], data )
     const advisorImage = pathOr( '', [ 'advisor', 'image' ], data )
@@ -109,8 +130,24 @@ class Exhibitor extends Component {
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
-        <button type="button" className="main-stand-go-button go-previous" onClick={showPrevious}>{'Anterior'}</button>
-        <button type="button" className="main-stand-go-button go-next" onClick={showNext}>{'Siguiente'}</button>
+        {showStandImage && (
+          <button
+            type="button"
+            className="main-stand-go-button go-previous"
+            onClick={() => [this.handleHideStandImage(), showPrevious()]}
+          >
+              {'Anterior'}
+          </button>
+        )}
+        {showStandImage && (
+          <button
+            type="button"
+            className="main-stand-go-button go-next"
+            onClick={() => [this.handleHideStandImage(), showNext()]}
+          >
+            {'Siguiente'}
+          </button>
+        )}
         <div className="main-stand-social-networks">
           { isNonEmptyArray( socialNetworks ) && socialNetworks.map( ( item, index ) => (
             <a
@@ -174,7 +211,7 @@ class Exhibitor extends Component {
         { !!advisorNumber && (
           <a className="main-stand-chat"
             href={ "https://api.whatsapp.com/send?phone=" + advisorNumber } target="_blank" rel="noreferrer">
-            <img className="chat-image" src={ !!advisorImage ? advisorImage : `/exhibitors/person.png` } alt="" />
+            <img className="chat-image" src={ advisorImage ? advisorImage : `/exhibitors/person.png` } alt="" />
             <div className="chat-message">
               Hola soy { advisorName }, <br />
               Te puedo ayudar en algo?
@@ -182,10 +219,12 @@ class Exhibitor extends Component {
           </a>
         ) }
         <div className="main-stand-module">
-          <div className="main-stand-module-wrap">
-            <img className="stand-image" src={ standImage } alt="stand picture" />
-            <div className="main-stand-play-btn" onClick={ this.handleShowVideo } />
-          </div>
+          {showStandImage && (
+            <div className="main-stand-module-wrap">
+              <img className="stand-image" src={ standImage } alt="stand picture" />
+              <div className="main-stand-play-btn" onClick={ this.handleShowVideo } />
+            </div>
+          )}
         </div>
 
         { isNonEmptyArray( gallery ) && (
