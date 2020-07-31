@@ -84,7 +84,7 @@ class Exhibitor extends Component {
   }
 
   render () {
-    const { goBack, data } = this.props
+    const { goBack, showPrevious, showNext, data } = this.props
     const advisorName = pathOr( '', [ 'advisor', 'name' ], data )
     const advisorNumber = pathOr( '', [ 'advisor', 'number' ], data )
     const advisorImage = pathOr( '', [ 'advisor', 'image' ], data )
@@ -104,15 +104,13 @@ class Exhibitor extends Component {
         <button
           type="button"
           className="main-stand-goback"
-          onClick={ () => {
-            if ( isFunction( goBack ) ) {
-              goBack()
-            }
-          } }
+          onClick={goBack}
         >
           <img src="/exhibitors/icons/baseline_arrow_back_white_18dp.png" alt="" />
           Regresar
         </button>
+        <button type="button" className="main-stand-go-button go-previous" onClick={showPrevious}>{'Anterior'}</button>
+        <button type="button" className="main-stand-go-button go-next" onClick={showNext}>{'Siguiente'}</button>
         <div className="main-stand-social-networks">
           { isNonEmptyArray( socialNetworks ) && socialNetworks.map( ( item, index ) => (
             <a

@@ -12,8 +12,7 @@ class Company extends Component {
     this.state = {
       standsListTopScroll: 0,
       companies: [],
-      companyItem: {},
-      showItem: false
+      shownCompanyIndex: -1,
     }
     this.standsListRef = React.createRef();
   }
@@ -23,7 +22,9 @@ class Company extends Component {
 
     if (eventId) {
       getEventCompanies(eventId)
-        .then((companies) => {
+        .then((rawCompanies) => {
+          const companies = rawCompanies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1)
+
           this.setState({ companies })
         })
         .catch((error) => {
@@ -47,12 +48,12 @@ class Company extends Component {
     }
   }
 
-  showListItem = (companyItem) => {
-    this.setState({ companyItem, showItem: true })
+  showListItem = (companyIndex) => {
+    this.setState({ shownCompanyIndex: companyIndex })
   }
 
   showList = () => {
-    this.setState({ showItem: false }, this.setStandsListScrollToLastPosition);
+    this.setState({ shownCompanyIndex: -1 }, this.setStandsListScrollToLastPosition);
   }
 
   onScrollStandsList = () => {
@@ -62,12 +63,45 @@ class Company extends Component {
     }
   }
 
+  showPreviousCompany = () => {
+    const { companies, shownCompanyIndex } = this.state
+
+    if (shownCompanyIndex >= 0 && companies.length > 0) {
+      const lastCompanyIndex = companies.length - 1
+      const previousCompanyIndex = shownCompanyIndex - 1
+      const validPreviousIndex = companies[previousCompanyIndex]
+        ? previousCompanyIndex
+        : lastCompanyIndex
+
+      this.setState({ shownCompanyIndex: validPreviousIndex })
+    }
+  }
+
+  showNextCompany = () => {
+    const { companies, shownCompanyIndex } = this.state
+
+    if (shownCompanyIndex >= 0 && companies.length > 0) {
+      const nextCompanyIndex = shownCompanyIndex + 1
+      const validNextIndex = companies[nextCompanyIndex]
+        ? nextCompanyIndex
+        : 0
+      this.setState({ shownCompanyIndex: validNextIndex })
+    }
+  }
+
   render() {
     const { goBack } = this.props
-    const { companies, showItem, companyItem } = this.state
+    const { companies, shownCompanyIndex } = this.state
 
-    if (showItem) {
-      return <CompanyStand data={companyItem} goBack={this.showList} />
+    if (shownCompanyIndex >= 0 && companies[shownCompanyIndex]) {
+      return (
+        <CompanyStand
+          data={companies[shownCompanyIndex]}
+          goBack={this.showList}
+          showPrevious={this.showPreviousCompany}
+          showNext={this.showNextCompany}
+        />
+      )
     }
 
     return (
@@ -87,13 +121,13 @@ class Company extends Component {
         </button>
         <div className='iso-exhibitor-list' ref={this.standsListRef} onScroll={this.onScrollStandsList}>
           <div className='iso-exhibitor-list-wrap'>
-            {isNonEmptyArray(companies) && companies.sort((a, b) => (a.stand_type > b.stand_type) ? 1 : (a.stand_type === b.stand_type) ? ((a.name > b.name) ? 1 : -1) : -1).map((company) => {
+            {isNonEmptyArray(companies) && companies.map((company, companyIndex) => {
               return (
                 <button
                   key={`list-item-${company.id}`}
                   type="button"
                   className='iso-exhibitor-list-item'
-                  onClick={() => this.showListItem(company)}
+                  onClick={() => this.showListItem(companyIndex)}
                 >
                   <div className='iso-exhibitor-list-item-image'>
                     <img src={company.list_image} alt="" />
