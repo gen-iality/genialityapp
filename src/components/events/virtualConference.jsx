@@ -150,7 +150,7 @@ class VirtualConference extends Component {
 
                                 <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
                                     <p>
-                        { Moment( item.datetime_start ).format( "MMMM D h:mm A" ) }{"  / "}
+                        { Moment( item.datetime_start ).format( "D MMMM " )} <span>&nbsp;&nbsp;&nbsp;</span>  { Moment( item.datetime_start ).format( "h:mm A" ) } {" - "}
                                         { Moment( item.datetime_end ).format( "h:mm A" ) }
                                     </p>
                                     
