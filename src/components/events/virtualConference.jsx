@@ -169,6 +169,7 @@ class VirtualConference extends Component {
                                         )
                                         }
                                     </div>
+                                    <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
 
                                 </Card>
                             </div>
