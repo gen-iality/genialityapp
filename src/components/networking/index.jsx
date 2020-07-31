@@ -37,12 +37,13 @@ export default class ListEventUser extends Component {
       eventUserId: null,
       currentUserName: null,
       eventUserIdToMakeAppointment: '',
-      asistantData: []
+      asistantData: [],
+      matches: []
     };
   }
 
-  componentDidMount() {
-    this.getInfoCurrentUser();
+  async componentDidMount() {
+    await this.getInfoCurrentUser();
     this.loadData();
   }
 
@@ -60,8 +61,18 @@ export default class ListEventUser extends Component {
 
     // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
+
+
+    let meproperties = this.state.eventUser.properties;
+    let matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+
+    console.log("eventUserList:", matches, eventUserList, this.state.eventUser.properties);
+
+    //properties.sector
+    //this.state.eventUser
+
     let asistantData = await EventFieldsApi.getAll(event._id)
-    // console.log("eventUserList:", eventUserList);
+
     this.setState((prevState) => {
       return {
         userReq: eventUserList,
@@ -69,22 +80,26 @@ export default class ListEventUser extends Component {
         changeItem,
         loading: false,
         clearSearch: !prevState.clearSearch,
-        asistantData
+        asistantData,
+        matches
       };
     });
   };
 
   // Funcion que trae el eventUserId del usuario actual
-  getInfoCurrentUser = () => {
+  getInfoCurrentUser = async () => {
     const { event } = this.props;
     let currentUser = Cookie.get("evius_token");
 
     if (currentUser) {
-      getCurrentUser(currentUser).then(async (user) => {
-        const eventUser = await getCurrentEventUser(event._id, user._id);
+      let user = await getCurrentUser(currentUser);
+      const eventUser = await getCurrentEventUser(event._id, user._id);
 
-        this.setState({ eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
-      });
+      // Servicio que trae la lista de asistentes excluyendo el usuario logeado
+      //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
+
+      this.setState({ eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
+
     }
   };
 
@@ -144,6 +159,7 @@ export default class ListEventUser extends Component {
       asistantData,
       eventUserIdToMakeAppointment,
       activeTab,
+      matches
     } = this.state;
 
     return (
@@ -151,7 +167,128 @@ export default class ListEventUser extends Component {
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
-            <TabPane tab="Asistentes" key="asistentes">
+
+            <TabPane tab="Sugeridos" key="sugeridos">
+              <AppointmentModal
+                event={event}
+                currentEventUserId={eventUserId}
+                targetEventUserId={eventUserIdToMakeAppointment}
+                closeModal={this.closeAppointmentModal}
+              />
+              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                <h1> Busca aquí tus contactos sugeridos.</h1>
+
+              </Col>
+              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                <Alert
+                  message="Información Adicicional"
+                  description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
+                  type="info"
+                  closable
+                />
+              </Col>
+              {!this.state.loading && !eventUserId && (
+                <div>
+                  <br />
+                  <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                    <Alert
+                      message="Solicitudes"
+                      description="Para enviar solicitudes desbes estar suscrito al evento"
+                      type="info"
+                      closable
+                    />
+                  </Col>
+                </div>
+              )}
+
+              <div style={{ marginTop: 10 }}>
+                {this.state.loading ? (
+                  <Fragment>
+                    <Loading />
+                    <h2 className="has-text-centered">Cargando...</h2>
+                  </Fragment>
+                ) : (
+                    <div className="container">
+                      <Row gutter={[24, 16]}>
+                        {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
+                        {pageOfItems.map((users, userIndex) => (
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12}>
+                            <Card
+                              extra={
+                                <a
+                                  style={{ color: "white" }}
+                                  onClick={() => {
+                                    this.SendFriendship({
+                                      eventUserIdReceiver: users._id,
+                                      userName: users.properties.names || users.properties.email,
+                                    });
+                                  }}>
+                                  Enviar Solicitud
+                              </a>
+                              }
+                              hoverable={8}
+                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
+                              style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                              bordered={true}>
+                              <Meta
+                                avatar={
+                                  <Avatar>
+                                    {console.log(users.properties)}
+                                    {users.properties.names
+                                      ? users.properties.names.charAt(0).toUpperCase()
+                                      : users.properties.names}
+                                  </Avatar>
+                                }
+                                title={users.properties.names ? users.properties.names : "No registra Nombre"}
+                                description={[
+                                  <div>
+                                    <br />
+                                    <Row>
+                                      <Col xs={24}>
+                                        <p>
+                                          <b>correo : </b> {users.properties.email ? users.properties.email : "No registra Correo"}
+                                        </p>
+                                        <div>
+                                          {
+                                            asistantData.map((data, dataIndex) => (
+                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                                <div key={`public-field-${userIndex}-${dataIndex}`}>
+                                                  <p><b>{data.label}:</b> {users.properties[data.name]}</p>
+                                                </div>
+                                              )
+                                            ))
+                                          }
+                                        </div>
+                                      </Col>
+                                      <Col xs={24}>
+                                        <Button
+
+                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          onClick={() => {
+                                            this.setState({ eventUserIdToMakeAppointment: users._id })
+                                          }}
+                                        >
+                                          {'Agendar cita'}
+                                        </Button>
+                                      </Col>
+                                    </Row>
+                                    <br />
+                                  </div>,
+                                ]}
+                              />
+                            </Card>
+                          </Col>
+                        ))}
+                      </Row>
+
+                    </div>
+                  )}
+              </div>
+            </TabPane>
+
+
+
+            <TabPane tab="Todos los Asistentes" key="asistentes">
               <AppointmentModal
                 event={event}
                 currentEventUserId={eventUserId}
@@ -199,14 +336,15 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div>
-                      <div>
+                    <div className="container">
+                      <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Row key={`user-item-${userIndex}`} justify="center">
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Card
                               extra={
                                 <a
+                                  style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
@@ -216,6 +354,8 @@ export default class ListEventUser extends Component {
                                   Enviar Solicitud
                               </a>
                               }
+                              hoverable={8}
+                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
@@ -234,14 +374,14 @@ export default class ListEventUser extends Component {
                                     <Row>
                                       <Col xs={24}>
                                         <p>
-                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
+                                          <b>correo : </b> {users.properties.email ? users.properties.email : "No registra Correo"}
                                         </p>
                                         <div>
                                           {
                                             asistantData.map((data, dataIndex) => (
                                               !data.privatePublic && data.privatePublic !== undefined && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                  <p><b>{data.label}:</b> {users.properties[data.name]}</p>
                                                 </div>
                                               )
                                             ))
@@ -250,7 +390,8 @@ export default class ListEventUser extends Component {
                                       </Col>
                                       <Col xs={24}>
                                         <Button
-                                          type="primary"
+
+                                          style={{ backgroundColor: "#363636", color: "white" }}
                                           onClick={() => {
                                             this.setState({ eventUserIdToMakeAppointment: users._id })
                                           }}
@@ -264,9 +405,9 @@ export default class ListEventUser extends Component {
                                 ]}
                               />
                             </Card>
-                          </Row>
+                          </Col>
                         ))}
-                      </div>
+                      </Row>
 
                       {/* Paginacion para mostrar datos de una manera mas ordenada */}
                       <Pagination items={users} change={this.state.changeItem} onChangePage={this.onChangePage} />
@@ -274,6 +415,9 @@ export default class ListEventUser extends Component {
                   )}
               </div>
             </TabPane>
+
+
+
             <TabPane tab="Mis Contactos" key="mis-contactos">
               <ContactList eventId={this.props.event._id} />
             </TabPane>
