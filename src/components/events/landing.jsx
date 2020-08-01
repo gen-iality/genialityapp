@@ -275,9 +275,10 @@ class Landing extends Component {
             {
               // Todo: Poner link a listado de empresas
             }
-            <Link to="/exhibitors" className="the-lobby-exhibitors-btn">
+            {/*<Link to="/5f0b95ca34c8116f9b21ebd6/exhibitors" className="the-lobby-exhibitors-btn">
               <img src="/lobby/BOTON_STANDS.png" alt=""/>
             </Link>
+          */}
           </div>
           }
           <div className={`column container-map`}>
