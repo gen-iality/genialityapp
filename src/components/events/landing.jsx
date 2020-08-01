@@ -275,12 +275,14 @@ class Landing extends Component {
             {
               // Todo: Poner link a listado de empresas
             }
-            {/*<Link to="/5f0b95ca34c8116f9b21ebd6/exhibitors" className="the-lobby-exhibitors-btn">
+            {/*
+            <Button onClick={this.showSection('companies')} className="the-lobby-exhibitors-btn">
               <img src="/lobby/BOTON_STANDS.png" alt=""/>
-            </Link>
-          */}
+            </Button>
+            */}
           </div>
           }
+
           <div className={`column container-map`}>
             <VirtualConference
               event={this.state.event}
