@@ -87,7 +87,7 @@ iframe {
   margin: 0 !important;
 }
 
-.sv-container-modern > .sv-body > div:first-child {
+.svxw-container-modern > .sv-body > div:first-child {
   margin: 0 auto;
   text-align: center;
   font-weight: bold;
@@ -108,80 +108,8 @@ iframe {
   text-align: center;
 }
 
-// PROVISIONAL, YA QUE ESTOS ESTILOS DEBEN VENIR DEL API
-// ESTILOS PARA COMPONENTE SURVE - QUIEN QUIERE SER MILLONARIO
-.sv-container-modern__title {
-  display: none !important;
-}
-.sv-selectbase .sv-selectbase__item.sv-q-col-1,
-.sv-question__title {
-  background-image: url("https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/pregunta.png?alt=media&token=03485bd0-1f47-4ddf-8b55-fd4d0053491b");
-}
-/*
-.sv-footer {
-  margin-top: -57px !important;
-}
-*/
 
-.sv-btn.sv-footer__next-btn,
-.sv-btn.sv-footer__complete-btn {
-  margin-top: -26px !important;
-}
-
-.sv-body__page {
-  margin-top: 2em !important;
-}
-
-.sv-question__title {
-  font-weight: 500 !important;
-  font-size: 1.2em !important;
-  background-size: 100% 100%;
-  min-height: 3em;
-  padding: 3% 8% !important;
-  text-align: center;
-  line-height: normal !important;
-}
-
-.sv-selectbase .sv-selectbase__item.sv-q-col-1 {
-  max-width: 50%;
-  min-width: 50%;
-  display: inline-block;
-  background-size: 100% 100%;
-  padding: 2% 6% !important;
-  min-height: 115px;
-}
-
-.sv-item__control-label {
-  font-size: 0.9em;
-  padding: 2px;
-}
-
-.sv-item__decorator {
-  border: none !important;
-  height: 25px !important;
-}
-
-.sv-item__svg {
-  border-color: #ffeded !important;
-  width: 1.3em !important;
-  height: 1.3em !important;
-}
-
-.sv-root-modern .sv-radio--checked .sv-radio__svg {
-  fill: white !important;
-}
-
-.sv-btn {
-  background-color: transparent !important ;
-  border: solid white !important;
-  margin-bottom: 2% !important;
-}
-
-.sv-progress {
-  margin-bottom: 3% !important;
-}
 // Botón de la conferencia en el home
-
 .buttonVirtualConference {
   height: 70px;
   span {

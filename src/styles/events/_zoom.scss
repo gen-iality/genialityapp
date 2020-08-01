@@ -93,17 +93,7 @@
 
 .survyCard {
   min-width: 45vw;
-  /*min-height: 100vh;*/
-  max-height: 100vh;
-  border: none !important;
-  background-size: cover;
   overflow-y: scroll;
-
-  .ant-card-body {
-    padding: 0 1em;
-    width: 80%;
-    margin-left: 78px;
-  }
 
   .ant-page-header {
     padding: 0 !important;
@@ -232,19 +222,5 @@
   60%,
   80% {
     transform: translateX(2%);
-  }
-}
-
-// Provisional, ya que estos estilos deben ir desde el api
-.survyCard {
-  background-image: url("") !important;
-  background-size: cover !important;
-  *:not(span) {
-    color: rgb(0, 0, 0) !important;
-  }
-  .ant-pagination-item,
-  .ant-pagination-prev .ant-pagination-item-link,
-  .ant-pagination-next .ant-pagination-item-link {
-    background-color: transparent !important;
   }
 }
