@@ -1,3 +1,4 @@
+import 'chartjs-plugin-datalabels';
 import React, { Component } from "react";
 
 import { Bar } from "react-chartjs-2";
@@ -69,6 +70,28 @@ class Graphics extends Component {
       horizontalBar.data.labels = options.choices;
       horizontalBar.data.datasets[0].data = Object.values(answer_count || []);
       horizontalBar.options.title.text = formatterTitle;
+
+
+      horizontalBar.options = {
+        plugins: {
+          datalabels: {
+            color: '#777'
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: '#777',
+              minor: { display: false }
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              fontColor: '#777',
+            }
+          }],
+        }
+      }      
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
