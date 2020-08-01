@@ -9,6 +9,30 @@
  * Desktop
  */
 @media (min-width: 768px) {
+  .main-exhibitor-list .scroll-down {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    bottom: 2rem;
+    right: 2rem;
+    font-size: 10px;
+  }
+
+  .main-exhibitor-list .scroll-down-label {
+    margin-right: 5px;
+    text-align: right;
+    color: white !important;
+  }
+
+  .main-exhibitor-list .scroll-down-image {
+    width: 36px;
+  }
+
+  .main-exhibitor-list .scroll-down img {
+    width: 100%;
+    height: auto;
+  }
+
   .main-exhibitor-list {
     position: fixed;
     top: 0;
@@ -85,8 +109,7 @@
  * Mobile
  */
 @media (max-width: 768px) {
-  .iso-exhibitor-list {
-  }
+  .main-exhibitor-list .scroll-down { display: none; }
 
   .iso-exhibitor-list-item {
     display: block;

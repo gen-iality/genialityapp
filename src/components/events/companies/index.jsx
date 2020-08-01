@@ -158,6 +158,12 @@ class Company extends Component {
             })}
           </div>
         </div>
+        <div className="scroll-down">
+          <div className="scroll-down-label">Haz scroll para ver<br/>todos los stands</div>
+          <div className="scroll-down-image">
+            <img src="/exhibitors/scdown.gif"/>
+          </div>
+        </div>
       </div>
     )
   }
