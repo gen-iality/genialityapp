@@ -83,19 +83,19 @@ class Graphics extends Component {
       verticalBar.options = {
         plugins: {
           datalabels: {
-            color: '#FFF'
+            color: '#777'
           }
         },
         scales: {
           yAxes: [{
             ticks: {
-              fontColor: '#FFF',
+              fontColor: '#777',
               minor: { display: false }
             }
           }],
           xAxes: [{
             ticks: {
-              fontColor: '#FFF',
+              fontColor: '#777',
             }
           }],
         }
