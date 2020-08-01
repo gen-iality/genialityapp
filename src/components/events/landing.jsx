@@ -272,6 +272,12 @@ class Landing extends Component {
                 </div>
               </div>
             </div>
+            {
+              // Todo: Poner link a listado de empresas
+            }
+            <Link to="/exhibitors" className="the-lobby-exhibitors-btn">
+              <img src="/lobby/BOTON_STANDS.png" alt=""/>
+            </Link>
           </div>
           }
           <div className={`column container-map`}>
@@ -596,7 +602,7 @@ class Landing extends Component {
                     </>
                   )}
               </div>
-              < div className={`modal ${modal ? "is-active" : ""}`}>
+              <div className={`modal ${modal ? "is-active" : ""}`}>
                 <div className="modal-background"></div>
                 <div className="modal-content">
                   <div id="firebaseui-auth-container" />

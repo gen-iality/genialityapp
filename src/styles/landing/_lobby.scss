@@ -197,22 +197,6 @@
   bottom: 0;
 }
 
-.the-lobby-exhibitors-btn {
-  display: block;
-  position: fixed;
-  width: 80px;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%, 0);
-  cursor: pointer;
-  transition: transform 0.3s ease-in;
-}
-
-.the-lobby-exhibitors-btn img {
-  width: 100%;
-  height: auto;
-}
-
 /**
  * Desktop
  */
@@ -259,6 +243,22 @@
 
   .the-lobby-events-list-item-speaker-name {
     padding-top: 1rem;
+  }
+
+  .the-lobby-exhibitors-btn {
+    display: block;
+    position: fixed;
+    width: 80px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    cursor: pointer;
+    transition: transform 0.3s ease-in;
+  }
+
+  .the-lobby-exhibitors-btn img {
+    width: 100%;
+    height: auto;
   }
 
   .the-lobby-exhibitors-btn:hover {
