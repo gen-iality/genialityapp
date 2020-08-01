@@ -94,7 +94,7 @@
 .survyCard {
   min-width: 45vw;
   //Algunas veces la cantidad de preguntas es muy larga y se salen las preguntas de la pantalla
-  overflow:scroll;
+  overflow-y: scroll;
 
   .ant-page-header {
     padding: 0 !important;
