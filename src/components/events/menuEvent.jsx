@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import WithLoading from "./../shared/withLoading";
 import { Link, withRouter } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Layout, Menu,Spin, Result,Card  } from "antd";
 import { firestore } from "../../helpers/firebase";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
@@ -22,6 +22,7 @@ class MenuEvent extends Component {
   constructor( props ) {
     super( props );
     this.state = {
+      loading:false,
       itemsMenu: {},
       user: null,
       showSection: this.props.showSection,
@@ -133,7 +134,12 @@ class MenuEvent extends Component {
     if ( this.props.user ) {
       this.setState( { user: this.props.user } )
     }
-    this.obtainUserFirebase()
+
+    this.setState({ loading:true});
+    await this.obtainUserFirebase();
+
+    this.setState({ loading:false});
+
   }
 
   async componentDidUpdate () {
@@ -179,7 +185,7 @@ class MenuEvent extends Component {
   //let collapsed = props.collapsed;
 
   render () {
-    const { itemsMenu } = this.state
+    const { itemsMenu,loading } = this.state
     return (
       <Menu
         mode="inline"
@@ -187,6 +193,13 @@ class MenuEvent extends Component {
         defaultSelectedKeys={ [ "1" ] }
         // defaultOpenKeys={['sub1']}
         style={ stylesMenuItems }>
+
+        { loading &&(
+          <div className="columns is-centered">
+              <Spin tip="Cargando Menú..."></Spin>
+         </div>
+        )}
+
         { Object.keys( itemsMenu ).map( ( key, i ) => {
           if ( ( itemsMenu[ key ] && itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null }
           let IconoComponente = iconComponents[ itemsMenu[ key ].icon ];

@@ -15,11 +15,12 @@ class AnimateImg extends React.Component {
 
     componentDidMount() {
         console.log(this.props)
-        this.setState({ eventId: this.props.location.state.eventId, event: this.props.location.state.event })
+        this.setState({ eventId: this.props.eventId, event: this.props.event })
     }
 
     render() {
         const { eventId, event } = this.state
+        const { showLanding } = this.props
         return (
             <>
                 {event.loader_page === "code" && (
@@ -27,9 +28,7 @@ class AnimateImg extends React.Component {
                         <div dangerouslySetInnerHTML={{ __html: event.data_loader_page }} />
                         <Row justify="center">
                             <Col>
-                                <Link to={`/landing/${eventId}`}>
-                                    <Button className="button">Entrar</Button>
-                                </Link>
+                                <Button onClick={showLanding} className="button">Entrar</Button>
                             </Col>
                         </Row>
                     </div>
@@ -42,12 +41,9 @@ class AnimateImg extends React.Component {
                             url={event.data_loader_page}
                             playing="true"
                         />
-
                         <Row justify="center">
                             <Col>
-                                <Link to={`/landing/${eventId}`}>
-                                    <Button className="button">Entrar</Button>
-                                </Link>
+                                <Button className="button" onClick={showLanding}>Entrar</Button>
                             </Col>
                         </Row>
                     </div>

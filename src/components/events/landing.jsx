@@ -5,6 +5,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
+import ReactPlayer from "react-player";
 import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { List, Avatar, Typography } from "antd";
@@ -38,8 +39,9 @@ import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
 import { firestore } from "../../helpers/firebase";
 import { FaWheelchair } from "react-icons/fa";
-import { toast } from "react-toastify"
-import { handleRequestError } from "../../helpers/utils"
+import { toast } from "react-toastify";
+import { handleRequestError } from "../../helpers/utils";
+import Robapagina from "../shared/Animate_Img/index"
 
 const { Title } = Typography;
 
@@ -91,7 +93,9 @@ class Landing extends Component {
       namesUser: "",
       data: null,
       user: null,
+      loader_page: false
     };
+    this.showLanding = this.showLanding.bind(this)
   }
 
   toggle = () => {
@@ -199,7 +203,7 @@ class Landing extends Component {
 
 
 
-    this.setState({ event, eventUser, eventUsers, data: user, currentUser: user, namesUser: namesUser })
+    this.setState({ event, eventUser, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.data_loader_page && event.loader_page !== "no" ? true : false })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
@@ -241,9 +245,30 @@ class Landing extends Component {
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       evento: (
-        <div className="columns is-centered" style={{ height: "900px" }}>
-          <EventLanding event={event} toggleConference={this.toggleConference} />
 
+        <div className="columns is-centered" style={{ miHeight: "600px" }}>
+          { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
+            <EventLanding event={ event } toggleConference={ this.toggleConference } />
+          }
+          { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
+
+            <div className="description-container column is-12 is-centered mediaplayer" style={ { width: "66.66667%" } }>
+                        
+                                <ReactPlayer
+                                    
+                                    style={{
+                                        display: "block",
+                                        margin: "0 auto",
+                                        marginLeft:"10%",
+                                    }}
+                                    url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                                    controls
+                                />
+                                   
+
+            </div>
+          }
           <div className="column container-map">
             <VirtualConference
               event={this.state.event}
@@ -384,6 +409,10 @@ class Landing extends Component {
 
 
   };
+  showLanding() {
+    console.log("entra")
+    this.setState({ loader_page: false })
+  }
 
   render() {
     const {
@@ -396,6 +425,7 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
+      loader_page
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
@@ -429,111 +459,143 @@ class Landing extends Component {
                 {/* ESTO ES UNA PRUEBA PARA LA ENCUESTA EN VIVO */}
 
                 {/* <SurveyNotification /> */}
+                {loader_page ? (
+                  <Robapagina event={event} eventId={event._id} showLanding={this.showLanding} />
+                ) : (
+                    <>
+                      {
+                        event.show_banner && event.show_banner === "true" ? (
+                          <BannerEvent
+                            bgImage={
+                              event.styles && event.styles.banner_image
+                                ? event.styles.banner_image
+                                : event.picture
+                                  ? event.picture
+                                  : "https://bulma.io/images/placeholders/1280x960.png"
+                            }
+                            bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                            title={event.name}
+                            organizado={
+                              <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                {event.organizer.name ? event.organizer.name : event.organizer.email}
+                              </Link>
+                            }
+                            place={
+                              <span>
+                                {event.venue} {event.location.FormattedAddress}
+                              </span>
+                            }
+                            dateStart={event.date_start}
+                            dateEnd={event.date_end}
+                            dates={event.dates}
+                            type_event={event.type_event}
+                          />
+                        ) : (
+                            <div>
+                              {
+                                event.show_banner === undefined && this.state.headerVisible && (
+                                  <BannerEvent
+                                    bgImage={
+                                      event.styles && event.styles.banner_image
+                                        ? event.styles.banner_image
+                                        : event.picture
+                                          ? event.picture
+                                          : "https://bulma.io/images/placeholders/1280x960.png"
+                                    }
+                                    bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
+                                    title={event.name}
+                                    organizado={
+                                      <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
+                                        {event.organizer.name ? event.organizer.name : event.organizer.email}
+                                      </Link>
+                                    }
+                                    place={
+                                      <span>
+                                        {event.venue} {event.location.FormattedAddress}
+                                      </span>
+                                    }
+                                    dateStart={event.date_start}
+                                    dateEnd={event.date_end}
+                                    dates={event.dates}
+                                    type_event={event.type_event}
+                                  />
+                                )
+                              }
+                            </div>
+                          )
+                      }
+                      < Content >
+                        <Layout className="site-layout">
+                          {/*Aqui empieza el menu para dispositivos >  */}
+                          <div className="hiddenMenu_Landing">
+                            <Sider
+                              className="containerMenu_Landing"
+                              style={{
+                                backgroundColor:
+                                  event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
+                              }}
+                              trigger={null}
+                              collapsible
+                              collapsed={this.state.collapsed}
+                              width={250}>
+                              <div className="items-menu_Landing ">
+                                {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                                <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                              </div>
+                            </Sider>
+                          </div>
+                          {/*Aqui termina el menu para dispositivos >  */}
 
-                {this.state.headerVisible && (
-                  event.show_banner === "true" && (
-                    <BannerEvent
-                      bgImage={
-                        event.styles && event.styles.banner_image
-                          ? event.styles.banner_image
-                          : event.picture
-                            ? event.picture
-                            : "https://bulma.io/images/placeholders/1280x960.png"
-                      }
-                      bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
-                      title={event.name}
-                      organizado={
-                        <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
-                          {event.organizer.name ? event.organizer.name : event.organizer.email}
-                        </Link>
-                      }
-                      place={
-                        <span>
-                          {event.venue} {event.location.FormattedAddress}
-                        </span>
-                      }
-                      dateStart={event.date_start}
-                      dateEnd={event.date_end}
-                      dates={event.dates}
-                      type_event={event.type_event}
-                    />
-                  )
-                )}
+                          <Layout className="site-layout">
+                            <Content className="site-layout-background">
+                              {/* Boton que abre el menu para dispositivos > tablet  */}
+                              <div className="hiddenMenu_Landing">
+                                <Button onClick={this.toggle}>
+                                  {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
+                                    className: "trigger",
+                                    onClick: this.toggle,
+                                  })}
+                                </Button>
+                              </div>
+
+                              {/*Aqui empieza el menu para dispositivos < tablet*/}
+
+                              <div className="hiddenMenuMobile_Landing">
+                                <Button block style={drawerButton} onClick={this.showDrawer}>
+                                  <MenuOutlined style={{ fontSize: "15px" }} />
+                                  <div>Menu</div>
+                                </Button>
+                              </div>
+
+                              <Drawer
+                                title={event.name}
+                                placement={this.state.placement}
+                                closable={true}
+                                onClose={this.onClose}
+                                visible={this.state.visible}
+                                maskClosable={true}
+                                bodyStyle={{
+                                  padding: "0px",
+                                  backgroundColor:
+                                    event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
+                                }}>
+                                {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                                <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                              </Drawer>
+
+                              {/* Contenedor donde se mapea la información de cada seccion */}
+
+                              <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
+                                {sections[section]}
+                              </div>
+                            </Content>
+                          </Layout>
+                        </Layout>
+                      </Content>
+                    </>
+                  )}
               </div>
-
-              {/* Menú secciones del landing */}
-              <Content>
-                <Layout className="site-layout">
-                  {/*Aqui empieza el menu para dispositivos >  */}
-                  <div className="hiddenMenu_Landing">
-                    <Sider
-                      className="containerMenu_Landing"
-                      style={{
-                        backgroundColor:
-                          event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
-                      }}
-                      trigger={null}
-                      collapsible
-                      collapsed={this.state.collapsed}
-                      width={250}>
-                      <div className="items-menu_Landing ">
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </div>
-                    </Sider>
-                  </div>
-                  {/*Aqui termina el menu para dispositivos >  */}
-
-                  <Layout className="site-layout">
-                    <Content className="site-layout-background">
-                      {/* Boton que abre el menu para dispositivos > tablet  */}
-                      <div className="hiddenMenu_Landing">
-                        <Button onClick={this.toggle}>
-                          {React.createElement(this.state.collapsed ? RightOutlined : LeftOutlined, {
-                            className: "trigger",
-                            onClick: this.toggle,
-                          })}
-                        </Button>
-                      </div>
-
-                      {/*Aqui empieza el menu para dispositivos < tablet*/}
-
-                      <div className="hiddenMenuMobile_Landing">
-                        <Button block style={drawerButton} onClick={this.showDrawer}>
-                          <MenuOutlined style={{ fontSize: "15px" }} />
-                          <div>Menu</div>
-                        </Button>
-                      </div>
-
-                      <Drawer
-                        title={event.name}
-                        placement={this.state.placement}
-                        closable={true}
-                        onClose={this.onClose}
-                        visible={this.state.visible}
-                        maskClosable={true}
-                        bodyStyle={{
-                          padding: "0px",
-                          backgroundColor:
-                            event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
-                        }}>
-                        {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                        <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
-                      </Drawer>
-
-                      {/* Contenedor donde se mapea la información de cada seccion */}
-
-                      <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                        {sections[section]}
-                      </div>
-                    </Content>
-                  </Layout>
-                </Layout>
-              </Content>
-
-              {/* Final del menú  */}
-
-              <div className={`modal ${modal ? "is-active" : ""}`}>
+              < div className={`modal ${modal ? "is-active" : ""}`}>
                 <div className="modal-background"></div>
                 <div className="modal-content">
                   <div id="firebaseui-auth-container" />
@@ -559,8 +621,9 @@ class Landing extends Component {
                 }}
                 second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
-            </React.Fragment>
-          )}
+            </React.Fragment >
+          )
+        }
       </section>
     );
   }

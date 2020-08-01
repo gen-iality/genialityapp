@@ -9,7 +9,7 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Space } from "antd";
+import { Button, Card, Row, Col, Space, Spin, Result } from "antd";
 import { DesktopOutlined } from "@ant-design/icons";
 
 class Agenda extends Component {
@@ -33,6 +33,7 @@ class Agenda extends Component {
       redirect: false,
       disabled: false,
       generalTab: true,
+      loading:false,
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -41,10 +42,14 @@ class Agenda extends Component {
 
   async componentDidMount() {
     //Se carga esta funcion para cargar los datos
-    this.fetchAgenda();
+
+    this.setState({ loading:true});
+    await this.fetchAgenda();
 
     // Se obtiene informacion del usuario actual
     this.getCurrentUser();
+
+    this.setState({ loading:false});
 
     const { event } = this.props;
     console.log("datos del evento", event)
@@ -70,7 +75,7 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
-      console.log(days);
+      
     }
   }
 
@@ -116,7 +121,7 @@ class Agenda extends Component {
     console.log("agenda-----", agenda)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
-    .filter((a) => a.datetime_start.includes(day.format("YYYY-MM-DD")))
+    .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
     .sort(
       (a, b) =>
         Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
@@ -249,7 +254,7 @@ class Agenda extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey } = this.state;
+    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey,loading } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -266,9 +271,18 @@ class Agenda extends Component {
         )}
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
-        {!currentActivity && (
+        {!currentActivity && loading &&(
           <div className="container-calendar-section">
-            {/* input donde se iteran los espacios del evento */}
+          <div className="columns is-centered">
+           <Card >
+              <Spin tip="Cargando..."></Spin>
+         </Card>
+         </div>
+         </div>
+        )}
+
+        {!currentActivity && !loading && (
+          <div className="container-calendar-section">
             <div className="columns is-centered">
               <div className="container-calendar is-three-fifths">
                 {spaces && spaces.length > 1 && (

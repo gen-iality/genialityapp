@@ -13,214 +13,38 @@ const { Option } = Select;
 const fakeEventTimetable = {
   '2020-08-06': [
     {
-      timestamp_start: '2020-08-06T15:00:00Z',
-      timestamp_end: '2020-08-06T15:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T15:30:00Z',
-      timestamp_end: '2020-08-06T16:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T16:00:00Z',
-      timestamp_end: '2020-08-06T16:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T16:30:00Z',
-      timestamp_end: '2020-08-06T17:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T17:00:00Z',
-      timestamp_end: '2020-08-06T17:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T17:30:00Z',
-      timestamp_end: '2020-08-06T18:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T18:00:00Z',
-      timestamp_end: '2020-08-06T18:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T18:30:00Z',
-      timestamp_end: '2020-08-06T19:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T19:00:00Z',
-      timestamp_end: '2020-08-06T19:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T19:30:00Z',
-      timestamp_end: '2020-08-06T20:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T20:00:00Z',
-      timestamp_end: '2020-08-06T20:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T20:30:00Z',
-      timestamp_end: '2020-08-06T21:00:00Z',
-    },
-    {
       timestamp_start: '2020-08-06T21:00:00Z',
+      timestamp_end: '2020-08-06T21:15:00Z',
+    },
+    {
+      timestamp_start: '2020-08-06T21:15:00Z',
       timestamp_end: '2020-08-06T21:30:00Z',
     },
     {
       timestamp_start: '2020-08-06T21:30:00Z',
+      timestamp_end: '2020-08-06T21:45:00Z',
+    },
+    {
+      timestamp_start: '2020-08-06T21:45:00Z',
       timestamp_end: '2020-08-06T22:00:00Z',
     },
     {
       timestamp_start: '2020-08-06T22:00:00Z',
+      timestamp_end: '2020-08-06T22:15:00Z',
+    },
+    {
+      timestamp_start: '2020-08-06T22:15:00Z',
       timestamp_end: '2020-08-06T22:30:00Z',
     },
     {
       timestamp_start: '2020-08-06T22:30:00Z',
+      timestamp_end: '2020-08-06T22:45:00Z',
+    },
+    {
+      timestamp_start: '2020-08-06T22:45:00Z',
       timestamp_end: '2020-08-06T23:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-06T23:00:00Z',
-      timestamp_end: '2020-08-06T23:30:00Z',
     }
-  ],
-  '2020-08-07': [
-    {
-      timestamp_start: '2020-08-07T15:00:00Z',
-      timestamp_end: '2020-08-07T15:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T15:30:00Z',
-      timestamp_end: '2020-08-07T16:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T16:00:00Z',
-      timestamp_end: '2020-08-07T16:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T16:30:00Z',
-      timestamp_end: '2020-08-07T17:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T17:00:00Z',
-      timestamp_end: '2020-08-07T17:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T17:30:00Z',
-      timestamp_end: '2020-08-07T18:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T18:00:00Z',
-      timestamp_end: '2020-08-07T18:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T18:30:00Z',
-      timestamp_end: '2020-08-07T19:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T19:00:00Z',
-      timestamp_end: '2020-08-07T19:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T19:30:00Z',
-      timestamp_end: '2020-08-07T20:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T20:00:00Z',
-      timestamp_end: '2020-08-07T20:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T20:30:00Z',
-      timestamp_end: '2020-08-07T21:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T21:00:00Z',
-      timestamp_end: '2020-08-07T21:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T21:30:00Z',
-      timestamp_end: '2020-08-07T22:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T22:00:00Z',
-      timestamp_end: '2020-08-07T22:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T22:30:00Z',
-      timestamp_end: '2020-08-07T23:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-07T23:00:00Z',
-      timestamp_end: '2020-08-07T23:30:00Z',
-    }
-  ],
-  '2020-08-08': [
-    {
-      timestamp_start: '2020-08-08T15:00:00Z',
-      timestamp_end: '2020-08-08T15:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T15:30:00Z',
-      timestamp_end: '2020-08-08T16:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T16:00:00Z',
-      timestamp_end: '2020-08-08T16:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T16:30:00Z',
-      timestamp_end: '2020-08-08T17:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T17:00:00Z',
-      timestamp_end: '2020-08-08T17:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T17:30:00Z',
-      timestamp_end: '2020-08-08T18:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T18:00:00Z',
-      timestamp_end: '2020-08-08T18:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T18:30:00Z',
-      timestamp_end: '2020-08-08T19:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T19:00:00Z',
-      timestamp_end: '2020-08-08T19:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T19:30:00Z',
-      timestamp_end: '2020-08-08T20:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T20:00:00Z',
-      timestamp_end: '2020-08-08T20:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T20:30:00Z',
-      timestamp_end: '2020-08-08T21:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T21:00:00Z',
-      timestamp_end: '2020-08-08T21:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T21:30:00Z',
-      timestamp_end: '2020-08-08T22:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T22:00:00Z',
-      timestamp_end: '2020-08-08T22:30:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T22:30:00Z',
-      timestamp_end: '2020-08-08T23:00:00Z',
-    },
-    {
-      timestamp_start: '2020-08-08T23:00:00Z',
-      timestamp_end: '2020-08-08T23:30:00Z',
-    }
-  ],
+  ]
 }
 
 const { TextArea } = Input
