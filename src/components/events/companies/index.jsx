@@ -33,8 +33,8 @@ class Company extends Component {
         .catch((error) => {
           console.error(error)
           notification.error({
-            message: 'Error',
-            description: 'Ha ocurrido un error obteniendo las empresas'
+            message: `Error '${eventId}'`,
+            description: `Ha ocurrido un error obteniendo las empresas: ${error}`
           })
         })
     } else {
