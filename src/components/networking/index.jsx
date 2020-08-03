@@ -210,9 +210,11 @@ export default class ListEventUser extends Component {
                 ) : (
                     <div>
                       <div>
+                        <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
-                          <Row key={`user-item-${userIndex}`} justify="center">
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
+                          
                             <Card
                               extra={
                                 <a
@@ -225,6 +227,8 @@ export default class ListEventUser extends Component {
                                   Enviar Solicitud
                               </a>
                               }
+                              hoverable={8}
+                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
                               bordered={true}>
                               <Meta
@@ -273,8 +277,9 @@ export default class ListEventUser extends Component {
                                 ]}
                               />
                             </Card>
-                          </Row>
+                          </Col>
                         ))}
+                        </Row>
                       </div>
 
                     </div>

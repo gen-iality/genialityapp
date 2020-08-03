@@ -40,14 +40,14 @@ class eventLanding extends Component {
                 </>
             )
         } else if (this.state.onPage === "event") {
-            return (
-                <div className="description-container column is-12" style={{ width: "66.66667%" }}>
-                    <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
+            return ( 
+            <Row > 
+                <div style={{marginRight: 12, marginBottom:12}}>
+                   <Col sm={24} md={24} lg={24} xl={24}>               
+                      <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
                         {
                             event._id === "5f0622f01ce76d5550058c32" ? <></> : <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
                         }
-
-
                         {event.video && (
                             <div className="column is-centered mediaplayer">
                                 <ReactPlayer
@@ -91,8 +91,11 @@ class eventLanding extends Component {
                                     </div>
                                 )
                         }
-                    </Card>
+                      </Card>               
+                   </Col>
                 </div>
+            </Row>
+                
             )
         } else if (this.state.onPage === "agenda") {
             return (
