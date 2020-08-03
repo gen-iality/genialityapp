@@ -269,6 +269,17 @@ export default class ListEventUser extends Component {
                                         >
                                           {'Agendar cita'}
                                         </Button>
+                                        <Button
+                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          onClick={() => {
+                                          this.SendFriendship({
+                                          eventUserIdReceiver: users._id,
+                                          userName: users.properties.names || users.properties.email,
+                                          });
+                                          }}
+                                          >
+                                          {'Enviar solicitud'}
+                                        </Button>
                                       </Col>
                                     </Row>
                                     <br />
