@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message,notification } from "antd";
+import { SmileOutlined } from '@ant-design/icons';
 
 import AppointmentModal from "./appointmentModal";
 import MyAgenda from "./myAgenda";
@@ -137,7 +138,16 @@ export default class ListEventUser extends Component {
         try {
           const response = await EventsApi.sendInvitation(this.props.event._id, data);
           console.log("Esta es la respuesta:", response);
-          message.success("Solicitud enviada");
+          notification.open({
+            message: 'Solicitud enviada',
+            description:
+              'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
+            icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+            duration:30
+          });
+
+     
+        
         } catch (err) {
           let { data } = err.response;
           message.warning(data.message);

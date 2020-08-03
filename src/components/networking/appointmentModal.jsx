@@ -3,6 +3,7 @@ import moment from "moment";
 import { find, keys, pathOr, whereEq } from "ramda";
 import { isNonEmptyArray } from "ramda-adjunct";
 import React, { useEffect, useMemo, useState } from "react";
+import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from "../../helpers/utils";
 import { createAgendaToEventUser, getAgendasFromEventUser } from "./services";
@@ -74,6 +75,15 @@ function AppointmentModal ( {
 
   const reloadData = () => {
     setReloadFlag( !reloadFlag )
+    notification.open({
+      message: 'Solicitud enviada',
+      description:
+        'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
+      icon: <SmileOutlined style={{ color: '#108ee9' }} />,
+      duration:30
+    });
+
+
   }
 
   const resetModal = () => {
@@ -158,7 +168,7 @@ function AppointmentModal ( {
   return (
     <Modal
       visible={ !!targetEventUserId }
-      title={ 'Agendar citam' }
+      title={ 'Agendar cita' }
       footer={ null }
       onCancel={ resetModal }
     >
