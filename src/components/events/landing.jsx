@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
+import MyAgendaIndepend from "../networking/myAgendaIndepend"
 import MyAgenda from "../my-agenda/index";
 import MySection from "./newSection/index"
 import Companies from "./companies/index";
@@ -244,28 +245,29 @@ class Landing extends Component {
       my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
+      interviews: <MyAgendaIndepend event={event} />,
       evento: (
 
         <div className="columns is-centered" style={{ miHeight: "600px" }}>
-          { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
-            <EventLanding event={ event } toggleConference={ this.toggleConference } />
+          {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
+            <EventLanding event={event} toggleConference={this.toggleConference} />
           }
-          { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
+          {(this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6") &&
 
-            <div className="description-container column is-12 is-centered mediaplayer" style={ { width: "66.66667%" } }>
-                        
-                                <ReactPlayer
-                                    
-                                    style={{
-                                        display: "block",
-                                        margin: "0 auto",
-                                        marginLeft:"10%",
-                                    }}
-                                    url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
-                                    //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                                    controls
-                                />
-                                   
+            <div className="description-container column is-12 is-centered mediaplayer" style={{ width: "66.66667%" }}>
+
+              <ReactPlayer
+
+                style={{
+                  display: "block",
+                  margin: "0 auto",
+                  marginLeft: "10%",
+                }}
+                url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                controls
+              />
+
 
             </div>
           }

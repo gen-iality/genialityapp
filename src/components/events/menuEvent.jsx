@@ -119,6 +119,13 @@ class MenuEvent extends Component {
           icon: "WechatOutlined",
           checked: false,
           permissions: "public"
+        },
+        interviews: {
+          name: "Vende / Mi agenda",
+          section: "interviews",
+          icon: "UserOutlined",
+          checked: false,
+          permissions: "public"
         }
       },
     }
