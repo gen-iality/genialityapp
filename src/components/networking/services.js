@@ -1,7 +1,7 @@
 import { sortBy, prop } from 'ramda';
 
 import { firestore } from '../../helpers/firebase';
-import API, { UsersApi } from '../../helpers/request';
+import API, { UsersApi, EventsApi } from '../../helpers/request';
 
 const refUsersList = (eventId) => `${eventId}_event_attendees`;
 
@@ -120,6 +120,19 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             timestamp_end: timetableItem.timestamp_end,
             message,
           });
+          let data = {
+            "id_user_requested":targetEventUserId,
+            "id_user_requesting":currentEventUserId,
+            "user_name_requesting":"Juan Carlos",
+            "event_id":eventId,
+            "state":"send",
+            "request_type":"meeting"
+          } 
+
+         EventsApi.sendMeetingRequest(eventId, data);
+         
+        
+          
         resolve(newAgendaResult.id);
       }
     } catch (error) {

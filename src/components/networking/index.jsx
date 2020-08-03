@@ -61,12 +61,12 @@ export default class ListEventUser extends Component {
 
     // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
-
-
-    let meproperties = this.state.eventUser.properties;
-    let matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
-
-    console.log("eventUserList:", matches, eventUserList, this.state.eventUser.properties);
+    let matches = [];
+    if (this.state.eventUser) {
+      let meproperties = this.state.eventUser.properties;
+      matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
+    }
+    console.log("eventUserList:", matches, eventUserList, this.state.eventUser);
 
     //properties.sector
     //this.state.eventUser
