@@ -124,7 +124,7 @@ class Event extends Component {
     if (timeout) return <LogOut />;
     return (
       <Layout className="columns">
-        <Sider className={`column menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
+        <Sider className={` menu event-aside is-hidden-touch ${!showMenu ? "is-hidden" : ""}`}>
           <Menu match={match} />
         </Sider>
         <Content className="column event-main">
