@@ -31,9 +31,6 @@ export const getCurrentEventUser = (eventId, userId) => {
   return new Promise(async (resolve, reject) => {
     const users = await UsersApi.getAll(eventId, '?pageSize=10000');
 
-    console.log('informacion del usuario registrado', users);
-    console.log('id de usuario registrado', userId);
-
     let currentEventUser = filterList(users.data, userId);
     console.log('servicio de validacion de registro de usuario', currentEventUser);
     if (currentEventUser) resolve(currentEventUser);
