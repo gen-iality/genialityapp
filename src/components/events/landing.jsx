@@ -282,12 +282,7 @@ class Landing extends Component {
             */}
           </div>
           }
-<<<<<<< HEAD
           <Col sm={24} md={8} lg ={6} xl={6}>
-=======
-
-          <div className={`column container-map`}>
->>>>>>> d11321b3631bff3ee87e2865896213330bbf8825
             <VirtualConference
               event={this.state.event}
               currentUser={this.state.currentUser}

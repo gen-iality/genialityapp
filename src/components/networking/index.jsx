@@ -209,7 +209,7 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div>
-                      <div>
+                      <div className="container">
                         <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
@@ -336,7 +336,7 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div>
+                    <div className="container">
                       <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
@@ -344,15 +344,14 @@ export default class ListEventUser extends Component {
                             <Card
                               extra={
                                 <a
-                                  style={{ color: "white" }}
+                                 /* style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
                                       userName: users.properties.names || users.properties.email,
                                     });
-                                  }}>
-                                  Enviar Solicitud
-                              </a>
+                                  }}*/>
+                              </a>                             
                               }
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
@@ -397,6 +396,17 @@ export default class ListEventUser extends Component {
                                           }}
                                         >
                                           {'Agendar cita'}
+                                        </Button>
+                                        <Button
+                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          onClick={() => {
+                                          this.SendFriendship({
+                                          eventUserIdReceiver: users._id,
+                                          userName: users.properties.names || users.properties.email,
+                                          });
+                                          }}
+                                          >
+                                          {'Enviar solicitud'}
                                         </Button>
                                       </Col>
                                     </Row>
