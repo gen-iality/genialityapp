@@ -432,7 +432,7 @@ export default class ListEventUser extends Component {
               <ContactList eventId={this.props.event._id} />
             </TabPane>
 
-            <TabPane tab="Solicitudes de Contactos" key="solicitudes">
+            <TabPane tab="Solicitudes de Contacto" key="solicitudes">
               <RequestList eventId={this.props.event._id} />
             </TabPane>
 
