@@ -123,7 +123,6 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             timestamp_end: timetableItem.timestamp_end,
             message,
           });
-<<<<<<< HEAD
           let data = {
             "id_user_requested":targetEventUserId,
             "id_user_requesting":currentEventUserId,
@@ -138,19 +137,6 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
          
         
           
-=======
-        let data = {
-          id_user_requested: targetEventUserId,
-          id_user_requesting: currentEventUserId,
-          user_name_requesting: 'Juan Carlos',
-          event_id: eventId,
-          state: 'send',
-          request_type: 'meeting',
-        };
-
-        EventsApi.sendMeetingRequest(eventId, data);
-
->>>>>>> ffd83ac79ce927397cb6df213e8057802018bf68
         resolve(newAgendaResult.id);
       }
     } catch (error) {
