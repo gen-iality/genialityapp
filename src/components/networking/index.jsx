@@ -93,8 +93,9 @@ export default class ListEventUser extends Component {
 
     if (currentUser) {
       let user = await getCurrentUser(currentUser);
+     
       const eventUser = await getCurrentEventUser(event._id, user._id);
-
+      console.log("usuarios user",user, eventUser);
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
 
@@ -176,7 +177,7 @@ export default class ListEventUser extends Component {
                 closeModal={this.closeAppointmentModal}
               />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <h1> Busca aquí tus contactos sugeridos.</h1>
+                <h1> Encuentra aquí tus contactos sugeridos, basados en la información de registro al evento.</h1>
 
               </Col>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
@@ -233,7 +234,6 @@ export default class ListEventUser extends Component {
                               <Meta
                                 avatar={
                                   <Avatar>
-                                    {console.log(users.properties)}
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
@@ -245,13 +245,10 @@ export default class ListEventUser extends Component {
                                     <br />
                                     <Row>
                                       <Col xs={24}>
-                                        <p>
-                                          Correo: {users.properties.email ? users.properties.email : "No registra Correo"}
-                                        </p>
                                         <div>
                                           {
                                             asistantData.map((data, dataIndex) => (
-                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                              !data.privatePublic && data.privatePublic !== undefined && users.properties[data.name] && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
                                                   <p>{data.label}: {users.properties[data.name]}</p>
                                                 </div>
@@ -296,7 +293,7 @@ export default class ListEventUser extends Component {
                 closeModal={this.closeAppointmentModal}
               />
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <h1> Busca aquí el usuario.</h1>
+                              <h1> Busca aquí las personas que deseas contactar.</h1>
 
                 <SearchComponent
                   placeholder={""}
@@ -372,13 +369,10 @@ export default class ListEventUser extends Component {
                                     <br />
                                     <Row>
                                       <Col xs={24}>
-                                        <p>
-                                          <b>correo : </b> {users.properties.email ? users.properties.email : "No registra Correo"}
-                                        </p>
                                         <div>
                                           {
                                             asistantData.map((data, dataIndex) => (
-                                              !data.privatePublic && data.privatePublic !== undefined && (
+                                              !data.privatePublic && data.privatePublic !== undefined && users.properties[data.name] && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
                                                   <p><b>{data.label}:</b> {users.properties[data.name]}</p>
                                                 </div>

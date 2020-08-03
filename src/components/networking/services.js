@@ -126,7 +126,8 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             "user_name_requesting":"Juan Carlos",
             "event_id":eventId,
             "state":"send",
-            "request_type":"meeting"
+            "request_type":"meeting",
+            "start_time": new Date(timetableItem.timestamp_start).toLocaleTimeString()
           } 
 
          EventsApi.sendMeetingRequest(eventId, data);
