@@ -213,8 +213,7 @@ export default class ListEventUser extends Component {
                         <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
-                          
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>                        
                             <Card
                               extra={
                                 <a
