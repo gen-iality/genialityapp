@@ -137,6 +137,7 @@ class VirtualConference extends Component {
     render() {
         const { infoAgendaArr, survey } = this.state;
         const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
+        if (! infoAgendaArr || infoAgendaArr.length <=0) return null;
         return (
             <Fragment>
                 {
