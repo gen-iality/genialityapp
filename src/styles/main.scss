@@ -32,8 +32,10 @@ body {
 }
 
 .ant-layout {
+  display: -ms-flexbox;
   display: flex;
   -ms-flex: auto;
+  
   flex: auto;
   -ms-flex-direction: column;
   flex-direction: column;
