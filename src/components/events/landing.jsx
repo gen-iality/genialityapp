@@ -284,8 +284,7 @@ class Landing extends Component {
             */}
           </div>
           }
-
-          <div className={`column container-map`}>
+          <Col sm={24} md={8} lg ={6} xl={6}>
             <VirtualConference
               event={this.state.event}
               currentUser={this.state.currentUser}
@@ -293,7 +292,7 @@ class Landing extends Component {
               toggleConference={this.toggleConference}
             />
             <MapComponent event={event} />
-          </div>
+          </Col>
         </div>
       ),
     };
