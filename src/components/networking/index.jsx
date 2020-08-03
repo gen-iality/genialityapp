@@ -95,7 +95,7 @@ export default class ListEventUser extends Component {
       let user = await getCurrentUser(currentUser);
      
       const eventUser = await getCurrentEventUser(event._id, user._id);
-      
+
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
 
@@ -146,7 +146,7 @@ export default class ListEventUser extends Component {
         message.warning("No es posible enviar solicitudes. No se encuentra suscrito al evento");
       }
     } else {
-      message.warning("Para enviar la solicitud es necesario iniciar sesiÃ³n");
+      message.warning("Para enviar la solicitud es necesario iniciar sesión");
     }
   }
 
@@ -211,10 +211,10 @@ export default class ListEventUser extends Component {
                 ) : (
                     <div>
                       <div className="container">
-                        <Row glutter={[12,12]}>
+                        <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">                        
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>                        
                             <Card
                               extra={
                                 <a
@@ -224,7 +224,7 @@ export default class ListEventUser extends Component {
                                       userName: users.properties.names || users.properties.email,
                                     });
                                   }}>
-                                  Enviar Solicitud
+                                  
                               </a>
                               }
                               hoverable={8}
@@ -265,17 +265,6 @@ export default class ListEventUser extends Component {
                                           }}
                                         >
                                           {'Agendar cita'}
-                                        </Button>
-                                        <Button
-                                          style={{ backgroundColor: "#363636", color: "white" }}
-                                          onClick={() => {
-                                          this.SendFriendship({
-                                          eventUserIdReceiver: users._id,
-                                          userName: users.properties.names || users.properties.email,
-                                          });
-                                          }}
-                                          >
-                                          {'Enviar solicitud'}
                                         </Button>
                                       </Col>
                                     </Row>
@@ -345,34 +334,21 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div className="container">
-                      <Row glunter={[12,12]}>
+                      <Row>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
                             <Card
                               extra={
                                 <a
-                                 style={{ color: "white" }}
+                                 /* style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
                                       userName: users.properties.names || users.properties.email,
                                     });
-                                  }}> enviar solicitud
-                               </a>                             
-                              }
-                              Agendar={
-                                <Button
-                                          style={{ backgroundColor: "#363636", color: "white" }}
-                                          onClick={() => {
-                                          this.SendFriendship({
-                                          eventUserIdReceiver: users._id,
-                                          userName: users.properties.names || users.properties.email,
-                                          });
-                                          }}
-                                          >
-                                          {'Enviar solicitud'}
-                                        </Button>                           
+                                  }}*/>
+                              </a>                             
                               }
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
