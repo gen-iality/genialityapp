@@ -351,7 +351,7 @@ export default class ListEventUser extends Component {
                       <Row gutter={[16]} justify="center">
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12} >
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={16} >
                             <Card
                               extra={
                                 <a

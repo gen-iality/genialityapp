@@ -243,6 +243,7 @@ let agendaActividadDetalle = (props) => {
                               <List.Item.Meta
                                 avatar={
                                   <Avatar
+                                    size={80}
                                     src={
                                       item.image
                                         ? item.image
