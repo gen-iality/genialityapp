@@ -3,7 +3,7 @@ import Moment from "moment";
 import * as Cookie from "js-cookie";
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
-import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi } from "../../helpers/request";
+import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
@@ -33,7 +33,9 @@ class Agenda extends Component {
       redirect: false,
       disabled: false,
       generalTab: true,
-      loading:false,
+      loading: false,
+      showButtonSurvey: false,
+      showButtonDocuments: false
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -41,18 +43,26 @@ class Agenda extends Component {
   }
 
   async componentDidMount() {
-    //Se carga esta funcion para cargar los datos
-
-    this.setState({ loading:true});
+    //Se carga esta funcion para cargar los datos    
+    this.setState({ loading: true });
     await this.fetchAgenda();
 
     // Se obtiene informacion del usuario actual
     this.getCurrentUser();
 
-    this.setState({ loading:false});
+    this.setState({ loading: false });
 
     const { event } = this.props;
-    console.log("datos del evento", event)
+
+    let surveysData = await SurveysApi.getAll(event._id);
+    let documentsData = await DocumentsApi.getAll(event._id)    
+
+    if (surveysData.data.length >= 1) {
+      this.setState({ showButtonSurvey: true })
+    }
+    if (documentsData.data.length >= 1) {
+      this.setState({ showButtonDocuments: true })
+    }
 
     if (!event.dates || event.dates.length === 0) {
       let days = [];
@@ -75,7 +85,7 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
-      
+
     }
   }
 
@@ -121,12 +131,12 @@ class Agenda extends Component {
     console.log("agenda-----", agenda)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
-    .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
-    .sort(
-      (a, b) =>
-        Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
-        Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
-    );
+      .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
+      .sort(
+        (a, b) =>
+          Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
+          Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
+      );
     this.setState({ listDay: list });
 
     //Se mapea la lista para poder retornar los datos ya filtrados
@@ -254,7 +264,7 @@ class Agenda extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey,loading } = this.state;
+    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -271,14 +281,14 @@ class Agenda extends Component {
         )}
 
         {/* FINALIZA EL DETALLE DE LA AGENDA */}
-        {!currentActivity && loading &&(
+        {!currentActivity && loading && (
           <div className="container-calendar-section">
-          <div className="columns is-centered">
-           <Card >
-              <Spin tip="Cargando..."></Spin>
-         </Card>
-         </div>
-         </div>
+            <div className="columns is-centered">
+              <Card >
+                <Spin tip="Cargando..."></Spin>
+              </Card>
+            </div>
+          </div>
         )}
 
         {!currentActivity && !loading && (
@@ -351,12 +361,20 @@ class Agenda extends Component {
                               <Button type="primary" className="space-align-block">
                                 Detalle del Evento
                               </Button>
-                              <Button type="primary" className="space-align-block">
-                                Documentos
-                              </Button>
-                              <Button type="primary" className="space-align-block">
-                                Encuestas
-                              </Button>
+                              {
+                                showButtonDocuments && (
+                                  <Button type="primary" className="space-align-block">
+                                    Documentos
+                                  </Button>
+                                )
+                              }
+                              {
+                                showButtonSurvey && (
+                                  <Button type="primary" className="space-align-block">
+                                    Encuestas
+                                  </Button>
+                                )
+                              }
                             </div>
                           </Row>
                         </Col>

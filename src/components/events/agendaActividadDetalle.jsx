@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import * as Cookie from "js-cookie";
-import API, { OrganizationApi, EventsApi, SpeakersApi } from "../../helpers/request";
+import API, { OrganizationApi, EventsApi, SpeakersApi, SurveysApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
 import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
@@ -23,6 +23,7 @@ let agendaActividadDetalle = (props) => {
   let [event, setEvent] = useState(false);
   let [modalVisible, setModalVisible] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
+  let [showSurvey, setShowSurvey] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -43,13 +44,17 @@ let agendaActividadDetalle = (props) => {
       const data = resp.data;
       setCurrentUser(data);
 
-
-
       //      me / eventusers / event / { event_id }
 
       try {
         const respuesta = await API.get("api/me/eventusers/event/" + id);
         console.log("respuesta", respuesta.data.data);
+        let surveysData = await SurveysApi.getAll(event._id);
+
+        if (surveysData.data.length >= 1) {
+          setShowSurvey(true)
+        }
+
         if (respuesta.data && respuesta.data.data && respuesta.data.data.length) {
           setUsuarioRegistrado(true);
         }
@@ -217,12 +222,16 @@ let agendaActividadDetalle = (props) => {
             <hr />
             <hr />
             <div>
-              <div style={{}} className="has-text-left is-size-6-desktop">
-                <p>
-                  <b>Encuestas:</b>
-                </p>
-                <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
-              </div>
+              {
+                showSurvey && (
+                  <div style={{}} className="has-text-left is-size-6-desktop">
+                    <p>
+                      <b>Encuestas:</b>
+                    </p>
+                    <SurveyComponent event={event} activity={currentActivity} usuarioRegistrado={usuarioRegistrado} />
+                  </div>
+                )
+              }
             </div>
 
             {currentActivity.hosts.length === 0 ? (
@@ -243,6 +252,7 @@ let agendaActividadDetalle = (props) => {
                               <List.Item.Meta
                                 avatar={
                                   <Avatar
+                                    size={80}
                                     src={
                                       item.image
                                         ? item.image
