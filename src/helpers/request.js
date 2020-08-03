@@ -145,11 +145,11 @@ export const EventsApi = {
     return await Actions.getOne(`/api/events/${id}/`, 'invitations');
   },
   sendMeetingRequest: async (eventId, data) => {
-    return await Actions.post(`/api/events/${eventId}/invitation`, data);
+    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify`, data);
   },
   
   sendInvitation: async (eventId, data) => {
-    return await Actions.post(`/api/events/${eventId}/meetingrequest/notify`, data);
+    return await Actions.post(`/api/events/${eventId}/invitation`, data);
   },
   sendRsvp: async (data, id) => {
     return await Actions.post(`/api/rsvp/sendeventrsvp/${id}`, data);
