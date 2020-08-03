@@ -160,7 +160,7 @@ class VirtualConference extends Component {
                                     </p>
                                     
 
-                                    <div style={ { "display": "flex", "flex-direction": "row","justify-content":"center" } }>
+                                    <div style={ { "display": "flex", "flexDirection": "row","justifyContent":"center" } }>
                                         { item.hosts.map( ( host, key ) => {
                                             return (
                                                 <div style={{margin:"5px 10px"}} key={ key }>
