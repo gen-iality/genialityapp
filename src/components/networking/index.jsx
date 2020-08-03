@@ -94,7 +94,8 @@ export default class ListEventUser extends Component {
     if (currentUser) {
       let user = await getCurrentUser(currentUser);
       const eventUser = await getCurrentEventUser(event._id, user._id);
-
+      // console.log("dato eventUser", eventUser)
+      // console.log("dato user", user)
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
 
@@ -115,7 +116,7 @@ export default class ListEventUser extends Component {
   async SendFriendship({ eventUserIdReceiver, userName }) {
     let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
-
+   
     message.loading("Enviando solicitud");
     if (currentUser) {
       // Se valida si el usuario esta suscrito al evento
