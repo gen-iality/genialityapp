@@ -406,7 +406,7 @@ export default class ListEventUser extends Component {
                                           });
                                           }}
                                           >
-                                          {'Enviar solicitud'}
+                                          {'Enviar solicitud de Contacto'}
                                         </Button>
                                       </Col>
                                     </Row>
@@ -432,7 +432,7 @@ export default class ListEventUser extends Component {
               <ContactList eventId={this.props.event._id} />
             </TabPane>
 
-            <TabPane tab="Solicitudes" key="solicitudes">
+            <TabPane tab="Solicitudes de Contactos" key="solicitudes">
               <RequestList eventId={this.props.event._id} />
             </TabPane>
 
