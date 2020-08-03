@@ -93,17 +93,8 @@
 
 .survyCard {
   min-width: 45vw;
-  /*min-height: 100vh;*/
-  max-height: 100vh;
-  border: none !important;
-  background-size: cover;
+  //Algunas veces la cantidad de preguntas es muy larga y se salen las preguntas de la pantalla
   overflow-y: scroll;
-
-  .ant-card-body {
-    padding: 0 1em;
-    width: 80%;
-    margin-left: 78px;
-  }
 
   .ant-page-header {
     padding: 0 !important;
@@ -115,8 +106,6 @@
   }
 
   .ant-card-body canvas {
-    /*min-height: 30vh;
-    max-height: 30vh;*/
     padding: 15px !important;
   }
 
@@ -152,7 +141,7 @@
   background-color: #31d871 !important;
   transition: transform ease-in 0.1s, box-shadow ease-in 0.25s;
   box-shadow: 4px 4px 15px rgba(24, 144, 255, 0.5) !important;
-  color: white !important;
+  color: black !important;
   border-radius: 0 !important;
   &:hover {
     color: white !important;
@@ -232,19 +221,5 @@
   60%,
   80% {
     transform: translateX(2%);
-  }
-}
-
-// Provisional, ya que estos estilos deben ir desde el api
-.survyCard {
-  background-image: url("") !important;
-  background-size: cover !important;
-  *:not(span) {
-    color: rgb(0, 0, 0) !important;
-  }
-  .ant-pagination-item,
-  .ant-pagination-prev .ant-pagination-item-link,
-  .ant-pagination-next .ant-pagination-item-link {
-    background-color: transparent !important;
   }
 }

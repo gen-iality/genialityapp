@@ -334,8 +334,8 @@ class SurveyComponent extends Component {
       case "warning":
         return {
           ...objMessage,
-          title: "No has escogido ninguna opciÃƒÂ³n",
-          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciÃƒÂ³n.`,
+          title: "No has escogido ninguna opción",
+          subTitle: `No has ganado ningun punto debido a que no marcaste ninguna opciónn.`,
           icon: <MehOutlined />,
         };
 

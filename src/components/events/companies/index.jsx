@@ -33,8 +33,8 @@ class Company extends Component {
         .catch((error) => {
           console.error(error)
           notification.error({
-            message: 'Error',
-            description: 'Ha ocurrido un error obteniendo las empresas'
+            message: `Error '${eventId}'`,
+            description: `Ha ocurrido un error obteniendo las empresas: ${error}`
           })
         })
     } else {
@@ -156,6 +156,12 @@ class Company extends Component {
                 </button>
               )
             })}
+          </div>
+        </div>
+        <div className="scroll-down">
+          <div className="scroll-down-label">Haz scroll para ver<br/>todos los stands</div>
+          <div className="scroll-down-image">
+            <img src="/exhibitors/scdown.gif"/>
           </div>
         </div>
       </div>
