@@ -211,10 +211,10 @@ export default class ListEventUser extends Component {
                 ) : (
                     <div>
                       <div className="container">
-                        <Row>
+                        <Row glutter={[12,12]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>                        
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">                        
                             <Card
                               extra={
                                 <a
@@ -265,6 +265,17 @@ export default class ListEventUser extends Component {
                                           }}
                                         >
                                           {'Agendar cita'}
+                                        </Button>
+                                        <Button
+                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          onClick={() => {
+                                          this.SendFriendship({
+                                          eventUserIdReceiver: users._id,
+                                          userName: users.properties.names || users.properties.email,
+                                          });
+                                          }}
+                                          >
+                                          {'Enviar solicitud'}
                                         </Button>
                                       </Col>
                                     </Row>
@@ -334,21 +345,34 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div className="container">
-                      <Row>
+                      <Row glunter={[12,12]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={12} xl={12}>
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">
                             <Card
                               extra={
                                 <a
-                                 /* style={{ color: "white" }}
+                                 style={{ color: "white" }}
                                   onClick={() => {
                                     this.SendFriendship({
                                       eventUserIdReceiver: users._id,
                                       userName: users.properties.names || users.properties.email,
                                     });
-                                  }}*/>
-                              </a>                             
+                                  }}> enviar solicitud
+                               </a>                             
+                              }
+                              Agendar={
+                                <Button
+                                          style={{ backgroundColor: "#363636", color: "white" }}
+                                          onClick={() => {
+                                          this.SendFriendship({
+                                          eventUserIdReceiver: users._id,
+                                          userName: users.properties.names || users.properties.email,
+                                          });
+                                          }}
+                                          >
+                                          {'Enviar solicitud'}
+                                        </Button>                           
                               }
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
