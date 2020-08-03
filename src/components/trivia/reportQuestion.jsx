@@ -8,6 +8,7 @@ import { getAnswersByQuestion } from "./services";
 import EventContent from "../events/shared/content";
 
 import { Table, Divider, Button } from "antd";
+import { isArray } from "core-js/fn/array";
 
 const columns = [
   {
@@ -56,11 +57,15 @@ class ReportQuestion extends Component {
 
     const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
 
-    let data = listOfUserResponse.map((item) => exclude(item));
+    let data = listOfUserResponse.map((item) => exclude(item));    
 
+    for (let i = 0; data.length > i; i++) {
+      if (Array.isArray(data[i].response)) {
+        data[i].response = data[i].response.toString()
+      }
+    }
     const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-
+    const wb = XLSX.utils.book_new();    
     XLSX.utils.book_append_sheet(wb, ws, `${nameQuestion}`);
     const name = `${match.params.id}`;
 
