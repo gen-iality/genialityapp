@@ -5,7 +5,7 @@ import API, { UsersApi, EventsApi } from '../../helpers/request';
 
 const refUsersList = (eventId) => `${eventId}_event_attendees`;
 
-const filterList = (list, currentUser) => list.find((item) => item.account_id == currentUser);
+const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
 // Funcion para consultar la informacion del actual usuario -------------------------------------------
 export const getCurrentUser = (token) => {
@@ -15,7 +15,9 @@ export const getCurrentUser = (token) => {
     } else {
       try {
         const resp = await API.get(`/auth/currentUser?evius_token=${token}`);
-        if (resp.status === 200) resolve(resp.data);
+        if (resp.status === 200) {
+          resolve(resp.data);
+        }
       } catch (error) {
         const { status } = error.response;
         console.log('STATUS', status, status === 401);
@@ -28,8 +30,9 @@ export const getCurrentUser = (token) => {
 export const getCurrentEventUser = (eventId, userId) => {
   return new Promise(async (resolve, reject) => {
     const users = await UsersApi.getAll(eventId, '?pageSize=10000');
-    let currentEventUser = filterList(users.data, userId);
 
+    let currentEventUser = filterList(users.data, userId);
+    console.log('servicio de validacion de registro de usuario', currentEventUser);
     if (currentEventUser) resolve(currentEventUser);
     resolve(false);
   });
@@ -120,6 +123,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             timestamp_end: timetableItem.timestamp_end,
             message,
           });
+<<<<<<< HEAD
           let data = {
             "id_user_requested":targetEventUserId,
             "id_user_requesting":currentEventUserId,
@@ -134,6 +138,19 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
          
         
           
+=======
+        let data = {
+          id_user_requested: targetEventUserId,
+          id_user_requesting: currentEventUserId,
+          user_name_requesting: 'Juan Carlos',
+          event_id: eventId,
+          state: 'send',
+          request_type: 'meeting',
+        };
+
+        EventsApi.sendMeetingRequest(eventId, data);
+
+>>>>>>> ffd83ac79ce927397cb6df213e8057802018bf68
         resolve(newAgendaResult.id);
       }
     } catch (error) {

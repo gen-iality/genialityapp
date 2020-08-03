@@ -95,7 +95,7 @@ export default class ListEventUser extends Component {
       let user = await getCurrentUser(currentUser);
      
       const eventUser = await getCurrentEventUser(event._id, user._id);
-      console.log("usuarios user",user, eventUser);
+      
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
 
@@ -116,7 +116,7 @@ export default class ListEventUser extends Component {
   async SendFriendship({ eventUserIdReceiver, userName }) {
     let { eventUserId, currentUserName } = this.state;
     let currentUser = Cookie.get("evius_token");
-
+   
     message.loading("Enviando solicitud");
     if (currentUser) {
       // Se valida si el usuario esta suscrito al evento
@@ -194,7 +194,7 @@ export default class ListEventUser extends Component {
                   <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                     <Alert
                       message="Solicitudes"
-                      description="Para enviar solicitudes desbes estar suscrito al evento"
+                      description="Para enviar solicitudes debes estar suscrito al evento"
                       type="info"
                       closable
                     />
@@ -318,7 +318,7 @@ export default class ListEventUser extends Component {
                   <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                     <Alert
                       message="Solicitudes"
-                      description="Para enviar solicitudes desbes estar suscrito al evento"
+                      description="Para enviar solicitudes debes estar suscrito al evento"
                       type="info"
                       closable
                     />
@@ -400,7 +400,7 @@ export default class ListEventUser extends Component {
                                           });
                                           }}
                                           >
-                                          {'Enviar solicitud'}
+                                          {'Enviar solicitud de Contacto'}
                                         </Button>
                                       </Col>
                                     </Row>
@@ -426,7 +426,7 @@ export default class ListEventUser extends Component {
               <ContactList eventId={this.props.event._id} />
             </TabPane>
 
-            <TabPane tab="Solicitudes" key="solicitudes">
+            <TabPane tab="Solicitudes de Contacto" key="solicitudes">
               <RequestList eventId={this.props.event._id} />
             </TabPane>
 
