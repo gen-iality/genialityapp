@@ -57,8 +57,7 @@ class ReportQuestion extends Component {
 
     const exclude = ({ created, id_survey, id_user, _id, ...rest }) => rest;
 
-    let data = listOfUserResponse.map((item) => exclude(item));
-    console.log(data)
+    let data = listOfUserResponse.map((item) => exclude(item));    
 
     for (let i = 0; data.length > i; i++) {
       if (Array.isArray(data[i].response)) {
