@@ -209,11 +209,11 @@ export default class ListEventUser extends Component {
                   </Fragment>
                 ) : (
                     <div>
-                      <div className="container">
-                        <Row glutter={[12,12]}>
+                      <div className="container" justify="center">
+                        <Row gutter={[20,20]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {matches.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">                        
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={18} xl={18} style={{marginRight:12}}>                        
                             <Card
                               extra={
                                 <a
@@ -347,11 +347,11 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div className="container">
-                      <Row glunter={[12,12]}>
+                    <div>
+                      <Row gutter={[16]} justify="center">
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={16} xl={12} jusjustify="center">
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12} >
                             <Card
                               extra={
                                 <a
