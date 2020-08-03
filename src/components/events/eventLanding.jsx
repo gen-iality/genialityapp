@@ -6,6 +6,9 @@ import ReactPlayer from "react-player";
 import { Row, Col, Button } from 'antd';
 import NetworkingForm from "../networking";
 import AgendaForm from "./agendaLanding";
+import MyAgenda from "../networking/myAgenda"
+import { getCurrentUser, getCurrentEventUser, userRequest } from "../networking/services";
+import * as Cookie from "js-cookie";
 
 class eventLanding extends Component {
     constructor(props) {
@@ -17,7 +20,19 @@ class eventLanding extends Component {
         this.onChangePage = this.onChangePage.bind(this)
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const { event } = this.props
+        let currentUser = Cookie.get("evius_token");
+
+        if (currentUser) {
+            let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
+            let user = await getCurrentUser(currentUser);
+            const eventUser = await getCurrentEventUser(event._id, user._id);
+
+            this.setState({ users: eventUserList, eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
+        } else {
+            this.setState({ onPage: "event" })
+        }
         this.setState({ onPage: "event" })
     }
 
@@ -32,6 +47,7 @@ class eventLanding extends Component {
 
     render() {
         const { event } = this.props
+        const { eventUserId, users } = this.state
         if (this.state.onPage === "networking") {
             return (
                 <>
@@ -70,7 +86,7 @@ class eventLanding extends Component {
                                         <Row gutter={[8, 16]}>
                                             <Col xs={16} sm={16} md={6} lg={8} xl={8}>
                                                 <div className="imagen">
-                                                    <img onClick={() => this.onChangePage("networking")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                                    <img onClick={() => this.onChangePage("interview")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                                                 </div>
                                             </Col>
                                             <Col xs={16} sm={16} md={6} lg={8} xl={8}>
@@ -103,6 +119,17 @@ class eventLanding extends Component {
                     <Button style={{ marginTop: "2%", marginRight: "2%" }} onClick={() => this.setState({ onPage: "event" })}> Regresar </Button>
                     <AgendaForm event={event} eventId={event._id} toggleConference={this.props.toggleConference} />
                 </>)
+        } else if (this.state.onPage === "interview") {
+            return (
+                <>
+                    <Button style={{ marginTop: "2%", marginRight: "2%" }} onClick={() => this.setState({ onPage: "event" })}> Regresar </Button>
+                    <MyAgenda
+                        event={event}
+                        currentEventUserId={eventUserId}
+                        eventUsers={users}
+                    />
+                </>
+            )
         }
     }
 }

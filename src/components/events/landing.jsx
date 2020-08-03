@@ -26,6 +26,7 @@ import DocumentsForm from "../documents/front/documentsLanding";
 
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
+import MyAgendaIndepend from "../networking/myAgendaIndepend"
 import MyAgenda from "../my-agenda/index";
 import MySection from "./newSection/index"
 import Companies from "./companies/index";
@@ -244,11 +245,12 @@ class Landing extends Component {
       my_agenda: <MyAgenda event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
+      interviews: <MyAgendaIndepend event={event} />,
       evento: (
 
         <div className="columns is-centered" style={{ miHeight: "600px" }}>
-          { ( this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6" ) &&
-            <EventLanding event={ event } toggleConference={ this.toggleConference } />
+          {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
+            <EventLanding event={event} toggleConference={this.toggleConference} />
           }
           { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
           <div className="the-lobby-video-column">

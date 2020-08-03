@@ -9,8 +9,8 @@ const { Option } = Select;
 const { Meta } = Card;
 
 class menuLanding extends Component {
-    constructor( props ) {
-        super( props );
+    constructor(props) {
+        super(props);
         this.state = {
             menu: {
                 evento: {
@@ -103,95 +103,101 @@ class menuLanding extends Component {
                     icon: "ApartmentOutlined",
                     checked: false,
                     permissions: "public"
+                },interviews: {
+                    name: "Vende / Mi agenda",
+                    section: "interviews",
+                    icon: "UserOutlined",
+                    checked: false,
+                    permissions: "public"
                 }
             },
             values: {},
             itemsMenu: {},
             keySelect: Date.now()
         }
-        this.submit = this.submit.bind( this )
+        this.submit = this.submit.bind(this)
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         const menuBase = this.state.menu
-        const menuLanding = await Actions.getAll( `/api/events/${ this.props.event._id }` )
+        const menuLanding = await Actions.getAll(`/api/events/${this.props.event._id}`)
 
-        for ( const prop in menuBase ) {
-            for ( const prop1 in menuLanding.itemsMenu ) {
-                if ( prop1 === prop ) {
-                    this.mapActiveItemsToAvailable( prop )
-                    this.changeNameMenu( prop, menuLanding.itemsMenu[ prop1 ].name )
-                    this.changePermissions( prop, menuLanding.itemsMenu[ prop1 ].permissions )
+        for (const prop in menuBase) {
+            for (const prop1 in menuLanding.itemsMenu) {
+                if (prop1 === prop) {
+                    this.mapActiveItemsToAvailable(prop)
+                    this.changeNameMenu(prop, menuLanding.itemsMenu[prop1].name)
+                    this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions)
                 }
             }
         }
     }
 
-    async submit () {
+    async submit() {
         const itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }
-        console.log( itemsMenu )
-        await Actions.put( `api/events/${ this.props.event._id }`, itemsMenu );
-        toast.success( "Información guardada" )
+        console.log(itemsMenu)
+        await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
+        toast.success("Información guardada")
     }
 
-    async mapActiveItemsToAvailable ( key ) {
+    async mapActiveItemsToAvailable(key) {
         let menuBase = { ...this.state.menu }
         let itemsMenuDB = { ...this.state.itemsMenu }
-        menuBase[ key ].checked = !menuBase[ key ].checked
+        menuBase[key].checked = !menuBase[key].checked
 
-        if ( menuBase[ key ].checked ) {
-            itemsMenuDB[ key ] = menuBase[ key ]
+        if (menuBase[key].checked) {
+            itemsMenuDB[key] = menuBase[key]
         } else {
-            delete itemsMenuDB[ key ]
+            delete itemsMenuDB[key]
         }
-        this.setState( { itemsMenu: itemsMenuDB, values: menuBase } )
+        this.setState({ itemsMenu: itemsMenuDB, values: menuBase })
     };
 
-    changeNameMenu ( key, name ) {
+    changeNameMenu(key, name) {
         let itemsMenuDB = { ...this.state.itemsMenu }
-        if ( name === "" ) {
-            itemsMenuDB[ key ].name = itemsMenuDB[ key ].name
+        if (name === "") {
+            itemsMenuDB[key].name = itemsMenuDB[key].name
         } else {
-            itemsMenuDB[ key ].name = name
+            itemsMenuDB[key].name = name
         }
-        this.setState( { itemsMenu: itemsMenuDB } )
+        this.setState({ itemsMenu: itemsMenuDB })
     }
 
-    changePermissions ( key, access ) {
-        console.log( key, access )
+    changePermissions(key, access) {
+        console.log(key, access)
         let itemsMenuDB = { ...this.state.itemsMenu }
-        itemsMenuDB[ key ].permissions = access
-        this.setState( { itemsMenu: itemsMenuDB, keySelect: Date.now() } )
+        itemsMenuDB[key].permissions = access
+        this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() })
     }
-    render () {
+    render() {
         return (
             <Fragment>
-                <Title level={ 3 }>Habilitar secciones del evento</Title>
+                <Title level={3}>Habilitar secciones del evento</Title>
                 <h3>(Podrás guardar la configuración de tu menú en la parte inferior)</h3>
-                <Row gutter={ 16 }>
+                <Row gutter={16}>
                     {
-                        Object.keys( this.state.menu ).map( ( key ) => {
+                        Object.keys(this.state.menu).map((key) => {
                             return (
-                                <div key={ key }>
-                                    <Col style={ { marginTop: "3%" } } span={ 8 }>
+                                <div key={key}>
+                                    <Col style={{ marginTop: "3%" }} span={8}>
                                         <Card
-                                            title={ <Title level={ 4 }>{ this.state.menu[ key ].name }</Title> }
-                                            bordered={ true }
+                                            title={<Title level={4}>{this.state.menu[key].name}</Title>}
+                                            bordered={true}
                                             //extra={<Checkbox disabled checked={this.state.menu[key].checked} />}
-                                            style={ { width: 300, marginTop: "2%" } }>
+                                            style={{ width: 300, marginTop: "2%" }}>
 
-                                            <div style={ { marginBottom: "3%" } }>
-                                                <Button onClick={ ( e ) => { this.mapActiveItemsToAvailable( key ) } }>{ this.state.menu[ key ].checked === true ? "Deshabilitar" : "Habilitar" }</Button>
+                                            <div style={{ marginBottom: "3%" }}>
+                                                <Button onClick={(e) => { this.mapActiveItemsToAvailable(key) }}>{this.state.menu[key].checked === true ? "Deshabilitar" : "Habilitar"}</Button>
                                             </div>
 
 
-                                            <div style={ { marginTop: "4%" } }>
+                                            <div style={{ marginTop: "4%" }}>
                                                 <label>Cambiar nombre de la sección</label>
-                                                <Input disabled={ this.state.menu[ key ].checked === true ? false : true } onChange={ ( e ) => { this.changeNameMenu( key, e.target.value ) } } placeholder={ this.state.menu[ key ].name } />
+                                                <Input disabled={this.state.menu[key].checked === true ? false : true} onChange={(e) => { this.changeNameMenu(key, e.target.value) }} placeholder={this.state.menu[key].name} />
                                             </div>
-                                            <div style={ { marginTop: "4%" } }>
+                                            <div style={{ marginTop: "4%" }}>
                                                 <label>Permisos para la sección</label>
-                                                <Select key={ this.state.keySelect } disabled={ this.state.menu[ key ].checked === true ? false : true } defaultValue={ this.state.menu[ key ].permissions } style={ { width: 200 } } onChange={ ( e ) => { this.changePermissions( key, e ) } }>
+                                                <Select key={this.state.keySelect} disabled={this.state.menu[key].checked === true ? false : true} defaultValue={this.state.menu[key].permissions} style={{ width: 200 }} onChange={(e) => { this.changePermissions(key, e) }}>
                                                     <Option value="public">Abierto para todos</Option>
                                                     <Option value="assistants">Usuarios inscritos al evento</Option>
                                                 </Select>
@@ -200,10 +206,10 @@ class menuLanding extends Component {
                                     </Col>
                                 </div>
                             )
-                        } ) }
+                        })}
                 </Row>
                 <Row>
-                    <Button style={ { marginTop: "1%" } } type="primary" size="large" onClick={ this.submit }>Guardar</Button>
+                    <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
                 </Row>
             </Fragment >
         )
