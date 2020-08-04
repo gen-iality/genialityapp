@@ -9,7 +9,7 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Space, Spin, Result } from "antd";
+import { Button, Card, Row, Col, Space, Spin, Result, Avatar } from "antd";
 import { DesktopOutlined } from "@ant-design/icons";
 
 class Agenda extends Component {
@@ -352,8 +352,14 @@ class Agenda extends Component {
                           </p>
                           <p className="text-align-card">
                             <b>Conferencista: </b>
+                            <br/>
+                            <br/>
                             {item.hosts.map((speaker, key) => (
-                              <span key={key}>{speaker.name}, &nbsp;</span>
+                              <span key={key} style={{ fontSize:17, fontWeight:500}}>
+                                <Avatar
+                                  size={30}
+                                  src={speaker.image
+                                }/> {speaker.name}, &nbsp;</span>
                             ))}
                           </p>
                           <Row className="text-align-card">

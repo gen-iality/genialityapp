@@ -209,7 +209,7 @@ let agendaActividadDetalle = (props) => {
             />
 
             <Row>
-              <Col span={24}>
+             <Col span={24}>
                 <AttendeeNotAllowedCheck
                   event={event}
                   currentUser={currentUser}
