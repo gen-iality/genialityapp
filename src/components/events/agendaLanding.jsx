@@ -3,13 +3,14 @@ import Moment from "moment";
 import * as Cookie from "js-cookie";
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
-import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
+import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi, SpeakersApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
 import { Button, Card, Row, Col, Space, Spin, Result } from "antd";
+import { List, Avatar } from 'antd';
 import { DesktopOutlined } from "@ant-design/icons";
 
 class Agenda extends Component {
@@ -264,7 +265,7 @@ class Agenda extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments, Speakers} = this.state;
     return (
       <div>
         {currentActivity && (
@@ -352,9 +353,30 @@ class Agenda extends Component {
                           </p>
                           <p className="text-align-card">
                             <b>Conferencista: </b>
-                            {item.hosts.map((speaker, key) => (
-                              <span key={key}>{speaker.name}, &nbsp;</span>
-                            ))}
+                            <Card style={{ textAlign: "left" }}>
+                              <List
+                                itemLayout="horizontal"
+                                dataSource={item.hosts}
+                                renderItem={(item) => (
+                                  <List.Item>
+                                    <List.Item.Meta
+                                      avatar={
+                                        <Avatar
+                                          size={30}
+                                          src={
+                                            item.image
+                                              ? item.image
+                                              : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                          }
+                                        />
+                                      }
+                                      title={<strong>{item.name}</strong>}
+                                      description={item.profession}
+                                    />
+                                  </List.Item>
+                                )}
+                              />
+                            </Card>                        
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
