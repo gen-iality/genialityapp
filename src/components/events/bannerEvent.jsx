@@ -30,10 +30,11 @@ function capitalizeMont(val) {
 let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
 
     return (
-        <BannerAnim prefixCls="banner-user">
+        <BannerAnim prefixCls="banner-user" style={{overflow:"visible"}}>
             <Element
                 prefixCls="banner-user-elem"
                 key="0"
+                style={{overflow:"visible"}}
             >
                 <BgElement
                     key="bg"

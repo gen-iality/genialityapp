@@ -636,7 +636,7 @@ class Landing extends Component {
               />
               {
                 show_banner_footer && (
-                  <footer style={{background:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fbeautiful%2Bplant%2Bimage%2Bnature&psig=AOvVaw3J0I6lwxbIQdkbymRIMGzW&ust=1596638545715000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOjX5ZzkgesCFQAAAAAdAAAAABAD"}}>
+                  <footer style={{backgroundImage:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fbeautiful%2Bplant%2Bimage%2Bnature&psig=AOvVaw3J0I6lwxbIQdkbymRIMGzW&ust=1596638545715000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOjX5ZzkgesCFQAAAAAdAAAAABAD"}}>
                     
                   </footer>
                 )
