@@ -636,9 +636,9 @@ class Landing extends Component {
               />
               {
                 show_banner_footer && (
-                  <footer style={{background:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fbeautiful%2Bplant%2Bimage%2Bnature&psig=AOvVaw3J0I6lwxbIQdkbymRIMGzW&ust=1596638545715000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOjX5ZzkgesCFQAAAAAdAAAAABAD"}}>
-                    
-                  </footer>
+                  <div style={{textAlign:"center"}}>
+                    <img src={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/footer-meet.png?alt=media&token=2bda06ca-87f8-4010-bcee-b834fd8eb85c"} />
+                  </div>
                 )
               }
 
