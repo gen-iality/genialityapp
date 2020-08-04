@@ -360,6 +360,26 @@ class UsersRsvp extends Component {
     XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
   };
 
+
+  filterBytipoAsistente(tipoAsistente){
+
+    const { users } = this.state
+    if (!tipoAsistente){
+      this.setState({ users: users }) 
+      return;  
+    }
+    const filter = []
+    for (let i = 0; users.length > i; i++) {
+      if (users[i].properties.asistecomo) {
+        if (users[i].properties.asistecomo === tipoAsistente) {
+          filter.push(users[i])
+        } 
+      }
+
+    }
+    this.setState({ users: filter })    
+  }
+
   filterByTicket(ticket) {
     toString(ticket)
     console.log(ticket)
@@ -516,7 +536,20 @@ class UsersRsvp extends Component {
 
                 </div>
               </div>
+              <div className="column is-6">
+                <label className="label">Filtrar por tipo de tipoAsistente</label>
+                <div className="select">
+                  {
 
+                      <select onChange={(e) => this.filterBytipoAsistente(e.target.value)} >
+                        <option value="">Selecciona...</option>
+                        <option value="Persona">Persona</option>
+                        <option value="Empresa">Empresa</option>
+                      </select>
+}
+
+                </div>
+              </div>
             </div>
             {/* {this.state.auxArr.length > 0 && (
                 <div
