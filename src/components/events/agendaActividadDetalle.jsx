@@ -209,7 +209,7 @@ let agendaActividadDetalle = (props) => {
             />
 
             <Row>
-              <Col span={24}>
+             <Col span={24}>
                 <AttendeeNotAllowedCheck
                   event={event}
                   currentUser={currentUser}
@@ -252,6 +252,7 @@ let agendaActividadDetalle = (props) => {
                               <List.Item.Meta
                                 avatar={
                                   <Avatar
+                                    size={80}
                                     src={
                                       item.image
                                         ? item.image
