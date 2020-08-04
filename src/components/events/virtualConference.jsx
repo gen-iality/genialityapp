@@ -81,16 +81,20 @@ class VirtualConference extends Component {
         };
     }
 
-    async componentDidUpdate() {
+    async componentDidUpdate(prevProps, prevState) {
         let { infoAgendaArr } = this.state;
         //Si aún no ha cargado el evento no podemos hacer nada más
         if (!this.props.event) return;
 
-        //Si ya cargamos la agenda no hay que volverla a cargar o quedamos en un ciclo infinito
-        if (this.state.infoAgendaArr && this.state.infoAgendaArr.length) return;
-        console.log("actualizando componente");
+        //Revisamos el evento ha cambiado
+        if ( this.props.event._id == prevProps.event._id) return;
+
+
+        console.log("componentDidUpdate virtualConference filteredAgenda ");
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
         this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
+
+        console.log("componentDidUpdate virtualConference filteredAgenda cargada");
     }
 
     listeningStateMeetingRoom = () => {
