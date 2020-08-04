@@ -588,16 +588,6 @@ class UsersRsvp extends Component {
                 <tr key={user.id}>
                   <td>
                     <div>
-                      <input
-                        className="event-inv-check is-checkradio is-small"
-                        id={"checkinUser" + user.id}
-                        type="checkbox"
-                        name={"checkinUser" + user.id}
-                        checked={this.isChecked(user.id)}
-                        onChange={e => {
-                          this.toggleSelection(user);
-                        }}
-                      />
                       <label htmlFor={"checkinUser" + user.id} />
                     </div>
                   </td>
