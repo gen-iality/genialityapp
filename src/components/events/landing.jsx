@@ -94,7 +94,8 @@ class Landing extends Component {
       namesUser: "",
       data: null,
       user: null,
-      loader_page: false
+      loader_page: false,
+      show_banner_footer: false
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -204,7 +205,7 @@ class Landing extends Component {
 
 
 
-    this.setState({ event, eventUser, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.data_loader_page && event.loader_page !== "no" ? true : false })
+    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.data_loader_page && event.loader_page !== "no" ? true : false })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
@@ -250,41 +251,41 @@ class Landing extends Component {
 
         <div className="columns is-centered" style={{ miHeight: "600px" }}>
           {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
-            <EventLanding event={event} toggleConference={this.toggleConference} />
+            <EventLanding event={event} toggleConference={this.toggleConference} showSection={this.showSection} />
           }
-          { ( this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6" ) &&
-          <div className="the-lobby-video-column">
-            <div className="the-lobby-video">
-              <div className="the-lobby-video-wrap-holder">
-                <div className="the-lobby-video-holder">
-                  <img src="/lobby/TIRA_PANTALLA.png" alt=""/>
+          {(this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6") &&
+            <div className="the-lobby-video-column">
+              <div className="the-lobby-video">
+                <div className="the-lobby-video-wrap-holder">
+                  <div className="the-lobby-video-holder">
+                    <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                  </div>
+                  <div className="the-lobby-video-holder">
+                    <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                  </div>
                 </div>
-                <div className="the-lobby-video-holder">
-                  <img src="/lobby/TIRA_PANTALLA.png" alt=""/>
-                </div>
-              </div>
-              <div className="the-lobby-video-wrap">
-                <div className="the-lobby-video-container">
-                  <ReactPlayer
+                <div className="the-lobby-video-wrap">
+                  <div className="the-lobby-video-container">
+                    <ReactPlayer
 
                       url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
                       //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                       controls
-                  />
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            {
-              // Todo: Poner link a listado de empresas
-            }
-            {/*
+              {
+                // Todo: Poner link a listado de empresas
+              }
+              {/*
             <Button onClick={this.showSection('companies')} className="the-lobby-exhibitors-btn">
               <img src="/lobby/BOTON_STANDS.png" alt=""/>
             </Button>
             */}
-          </div>
+            </div>
           }
-          <Col sm={24} md={8} lg ={6} xl={6}>
+          <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
               event={this.state.event}
               currentUser={this.state.currentUser}
@@ -436,7 +437,8 @@ class Landing extends Component {
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page
+      loader_page,
+      show_banner_footer
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
@@ -632,6 +634,14 @@ class Landing extends Component {
                 }}
                 second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
+              {
+                show_banner_footer && (
+                  <footer style={{background:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fes%2Fsearch%2Fbeautiful%2Bplant%2Bimage%2Bnature&psig=AOvVaw3J0I6lwxbIQdkbymRIMGzW&ust=1596638545715000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOjX5ZzkgesCFQAAAAAdAAAAABAD"}}>
+                    
+                  </footer>
+                )
+              }
+
             </React.Fragment >
           )
         }
