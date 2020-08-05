@@ -2,7 +2,7 @@ import React from "react";
 
 export default function EvenTable({...props}) {
     return (
-        <table className="table">
+        <table>
             {props.head&&
                 <thead>
                 <tr>

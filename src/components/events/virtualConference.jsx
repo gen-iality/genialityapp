@@ -160,11 +160,11 @@ class VirtualConference extends Component {
                                     </p>
                                     
 
-                                    <div style={ { "display": "flex", "flexDirection": "row","justifyContent":"center" } }>
+                                    <div className="Virtual-Conferences">
                                         { item.hosts.map( ( host, key ) => {
                                             return (
-                                                <div style={{margin:"5px 10px"}} key={ key }>
-                                                    <Avatar size={ 80 } src={ host.image } />
+                                                <div style={{margin:"13px 14px"}} key={ key }>
+                                                    <Avatar size={80} src={ host.image } />
                                                     <div >{ host.name }</div>
                                                 </div>
 
