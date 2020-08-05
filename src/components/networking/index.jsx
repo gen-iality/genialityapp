@@ -219,7 +219,7 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div>
+                    <div className="card-Networking">
                       <div className="container" justify="center">
                         <Row gutter={[20,20]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
@@ -343,11 +343,11 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div>
-                      <Row gutter={[16]} justify="center">
+                    <div className="container" >
+                      <Row gutter={[12,24]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
-                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={16} >
+                          <Col key={`user-item-${userIndex}`} xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
                             <Card
                               extra={
                                 <a

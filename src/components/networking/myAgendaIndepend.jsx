@@ -30,7 +30,7 @@ class AgendaIndepent extends Component {
         const { event } = this.props
         const { eventUserId, users } = this.state
         return (
-            <Fragment>
+            <Fragment>            
                 <MyAgenda
                     event={event}
                     currentEventUserId={eventUserId}

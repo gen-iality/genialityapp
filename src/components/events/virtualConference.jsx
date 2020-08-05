@@ -81,16 +81,20 @@ class VirtualConference extends Component {
         };
     }
 
-    async componentDidUpdate() {
+    async componentDidUpdate(prevProps) {
         let { infoAgendaArr } = this.state;
+
+        //Cargamos solamente los espacios virtuales de la agenda
+        
         //Si aún no ha cargado el evento no podemos hacer nada más
         if (!this.props.event) return;
 
-        //Si ya cargamos la agenda no hay que volverla a cargar o quedamos en un ciclo infinito
-        if (this.state.infoAgendaArr && this.state.infoAgendaArr.length) return;
-        console.log("actualizando componente");
+        //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
+        if (prevProps.event &&  this.props.event._id == prevProps.event._id) return;
+
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
         this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
+
     }
 
     listeningStateMeetingRoom = () => {
@@ -115,7 +119,7 @@ class VirtualConference extends Component {
 
     async componentDidMount() {
         if (!this.props.event) return;
-
+        console.log("componentDidUpdate el componente se monto");
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
         this.setState({ infoAgendaArr: filteredAgenda });
     }

@@ -83,7 +83,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
   if (!loading)
     return eventUserList.length > 0 ? (
       <Card>
-        <Title level={4}>Aquí puedes ver tus entradas. Y si deseas puedes transferirlas a otras personas.</Title>
+        <Title level={3}>Aquí puedes ver tus entradas, la información que ingresaste al momento de registro, Y si deseas transferir la entrada a otra persona (s).</Title>
         {eventUserList.map((item, indiceArray) => (
           <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
             {item.data.map((field, key) => (
