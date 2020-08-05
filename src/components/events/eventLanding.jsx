@@ -79,16 +79,16 @@ class eventLanding extends Component {
                                             <Row gutter={[8, 16]}>
                                                 <Col xs={16} sm={12} md={12} lg={12} xl={8}>
                                                     <div className="imagen">
-                                                        <img onClick={() => this.onChangePage("interviews")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                                        <img onClick={() => this.onChangePage("interviews")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                                                     </div>
                                                 </Col>
                                                 <Col xs={16} sm={12} md={12} lg={12} xl={8}>
                                                     <div className="imagen">
-                                                        <img onClick={() => this.onChangePage("networking")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                                                        <img onClick={() => this.onChangePage("networking")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
                                                     </div>
                                                 </Col>
                                                 <Col xs={16} sm={12} md={12} lg={12} xl={8}>
-                                                    <img onClick={() => this.onChangePage("agenda")} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                                                    <img onClick={() => this.onChangePage("agenda")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
                                                 </Col>
                                             </Row>
                                         </div>
