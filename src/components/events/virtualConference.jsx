@@ -87,9 +87,12 @@ class VirtualConference extends Component {
         if (!this.props.event) return;
 
         //Revisamos el evento ha cambiado
-        if ( this.props.event._id == prevProps.event._id) return;
-
-
+        try{
+            if (this.props.event._id == prevProps.event._id) return;
+        }catch(e){
+            return;
+        }
+            
         console.log("componentDidUpdate virtualConference filteredAgenda ");
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
         this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
@@ -141,40 +144,40 @@ class VirtualConference extends Component {
     render() {
         const { infoAgendaArr, survey } = this.state;
         const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
-        if (! infoAgendaArr || infoAgendaArr.length <=0) return null;
+        if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
         return (
             <Fragment>
                 {
                     <div>
-                        <Card bordered={ true }>
+                        <Card bordered={true}>
                             <span>Salas</span>
                         </Card>
-                        { infoAgendaArr.map( ( item, key ) => (
-                            <div key={ key }>
-                                <Card bordered={ true } style={ { marginBottom: "3%" } }>
+                        {infoAgendaArr.map((item, key) => (
+                            <div key={key}>
+                                <Card bordered={true} style={{ marginBottom: "3%" }}>
 
-                                <h1 style={ { fontSize: "120%", fontWeight: "Bold" } }>{ item.name }</h1>
+                                    <h1 style={{ fontSize: "120%", fontWeight: "Bold" }}>{item.name}</h1>
                                     <p>
-                        { Moment( item.datetime_start ).format( "D " )}<span>&nbsp;de&nbsp;</span>
-                        { item.datetime_start && ((Moment( item.datetime_start ).format( "MMMM" )).charAt(0).toUpperCase())} 
-                        { item.datetime_start && ((Moment( item.datetime_start ).format( "MMMM" )).slice(1))} 
-                        
-                        <span>&nbsp;&nbsp;&nbsp;</span>  
-                        { Moment( item.datetime_start ).format( "h:mm A" ) } {" - "}
-                                        { Moment( item.datetime_end ).format( "h:mm A" ) }
-                                    </p>
-                                    
+                                        {Moment(item.datetime_start).format("D ")}<span>&nbsp;de&nbsp;</span>
+                                        {item.datetime_start && ((Moment(item.datetime_start).format("MMMM")).charAt(0).toUpperCase())}
+                                        {item.datetime_start && ((Moment(item.datetime_start).format("MMMM")).slice(1))}
 
-                                    <div style={ { "display": "flex", "flexDirection": "row","justifyContent":"center" } }>
-                                        { item.hosts.map( ( host, key ) => {
+                                        <span>&nbsp;&nbsp;&nbsp;</span>
+                                        {Moment(item.datetime_start).format("h:mm A")} {" - "}
+                                        {Moment(item.datetime_end).format("h:mm A")}
+                                    </p>
+
+
+                                    <div style={{ "display": "flex", "flexDirection": "row", "justifyContent": "center" }}>
+                                        {item.hosts.map((host, key) => {
                                             return (
-                                                <div style={{margin:"5px 10px"}} key={ key }>
-                                                    <Avatar size={ 80 } src={ host.image } />
-                                                    <div >{ host.name }</div>
+                                                <div style={{ margin: "5px 10px" }} key={key}>
+                                                    <Avatar size={80} src={host.image} />
+                                                    <div >{host.name}</div>
                                                 </div>
 
                                             )
-                                        } ) }
+                                        })}
                                     </div>
                                     <MeetingConferenceButton activity={item} toggleConference={toggleConference} />
 
