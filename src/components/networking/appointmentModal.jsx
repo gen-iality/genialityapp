@@ -1,6 +1,6 @@
 import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from "antd";
 import moment from "moment";
-import { find, keys, pathOr, whereEq } from "ramda";
+import { find, filter, keys, pathOr, propEq, whereEq } from "ramda";
 import { isNonEmptyArray } from "ramda-adjunct";
 import React, { useEffect, useState } from "react";
 import { SmileOutlined } from '@ant-design/icons';
@@ -93,10 +93,6 @@ function AppointmentModal ( {
   }
 
   useEffect( () => {
-    console.log('$$$ targetEventUserId >', targetEventUserId)
-    console.log('$$$ currentEventUserId >', currentEventUserId)
-    console.log('$$$ event._id >', event._id)
-
     if ( !(event._id && targetEventUserId && currentEventUserId ) ) { return }
 
     const loadData = async () => {
@@ -112,12 +108,10 @@ function AppointmentModal ( {
         const eventTimetable = pathOr( fakeEventTimetable, [ 'timetable' ], event ) // TODO: -> cambiar fakeEventTimetable por {}
         const dates = keys( eventTimetable )
 
-        console.log('############### agendas >>>', agendas)
-
         dates.forEach( ( date ) => {
           if ( isNonEmptyArray( eventTimetable[ date ] ) ) {
             eventTimetable[ date ].forEach( ( timetableItem ) => {
-              const occupiedAgenda = find(
+              const occupiedAgendas = filter(
                 whereEq( {
                   timestamp_start: timetableItem.timestamp_start,
                   timestamp_end: timetableItem.timestamp_end
@@ -125,10 +119,15 @@ function AppointmentModal ( {
                 agendas
               )
 
-              if (occupiedAgenda) {
-                console.log('--- occupied >>>', occupiedAgenda)
-                console.log('--- timetableItem >>>', timetableItem)
-              }
+              const occupiedAgendaFromMe = find(
+                propEq('owner_id', currentEventUserId),
+                occupiedAgendas
+              )
+              const occupiedAcceptedAgenda = find(
+                propEq('request_status', 'accepted'),
+                occupiedAgendas
+              )
+              const occupiedAgenda = occupiedAgendaFromMe || occupiedAcceptedAgenda
 
               const newTimetableItem = {
                 ...timetableItem,
@@ -281,10 +280,7 @@ function AppointmentModal ( {
                                     timetableItem,
                                     message: agendaMessage
                                   } )
-                                    .then((agendaId) => {
-                                      console.log('@@@ NEW agendaId >>>', agendaId)
-                                      reloadData()
-                                    })
+                                    .then(reloadData)
                                     .catch( ( error ) => {
                                       console.error( error )
                                       if ( !error ) {
