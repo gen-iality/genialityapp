@@ -19,6 +19,7 @@ function AppointmentRequests({
   eventUsers
 }) {
   const [loading, setLoading] = useState(true)
+  const [fetching, setFetching] = useState(false)
   const [pendingAgendas, setPendingAgendas] = useState([])
 
   useEffect(() => {
@@ -69,7 +70,10 @@ function AppointmentRequests({
             <RequestCard
               key={`pending-${pendingAgenda.id}`}
               eventId={eventId}
+              currentEventUserId={currentEventUserId}
               data={pendingAgenda}
+              fetching={fetching}
+              setFetching={setFetching}
             />
           ))
           : (
@@ -80,23 +84,27 @@ function AppointmentRequests({
   )
 }
 
-function RequestCard({ data, eventId }) {
-  const [loading, setLoading] = useState(false)
+function RequestCard({ data, eventId, currentEventUserId, fetching, setFetching }) {
   const [requestResponse, setRequestResponse] = useState('')
   const { ownerEventUser } = data
   const userName = pathOr('', ['properties', 'names'], ownerEventUser)
   const userEmail = pathOr('', ['properties', 'email'], ownerEventUser)
 
   const changeAgendaStatus = (newStatus) => {
-    if (!loading) {
-      setLoading(true)
-      acceptOrRejectAgenda(eventId, data.id, newStatus)
+    if (!fetching) {
+      setFetching(true)
+      acceptOrRejectAgenda(eventId, currentEventUserId, data, newStatus)
         .then(() => setRequestResponse(newStatus))
         .catch((error) => {
           if (!error) {
             notification.error({
               message: 'Solicitud no encontrada',
               description: 'La solicitud no existe o no esta en estado pendiente'
+            })
+          } else if (error === 'HOURS_NOT_AVAILABLE') {
+            notification.error({
+              message: 'Horario agendado',
+              description: 'Ya tienes agendada esta hora'
             })
           } else {
             notification.error({
@@ -105,7 +113,7 @@ function RequestCard({ data, eventId }) {
             })
           }
         })
-        .finally(() => setLoading(false))
+        .finally(() => setFetching(false))
     }
   }
 
@@ -157,16 +165,16 @@ function RequestCard({ data, eventId }) {
                 <Row>
                   <Button
                     style={{ marginRight: '10px' }}
-                    disabled={loading}
-                    loading={loading}
+                    disabled={fetching}
+                    loading={fetching}
                     onClick={() => changeAgendaStatus('rejected')}
                   >
                     {'Rechazar'}
                   </Button>
                   <Button
                     type="primary"
-                    disabled={loading}
-                    loading={loading}
+                    disabled={fetching}
+                    loading={fetching}
                     onClick={() => changeAgendaStatus('accepted')}
                   >
                     {'Aceptar'}

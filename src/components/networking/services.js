@@ -174,7 +174,11 @@ export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
   });
 };
 
-export const acceptOrRejectAgenda = (eventId, agendaId, newStatus) => {
+export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newStatus) => {
+  const agendaId = agenda.id
+  const timestampStart = agenda.timestamp_start
+  const timestampEnd = agenda.timestamp_end
+
   return new Promise(async (resolve, reject) => {
     try {
       const existingAgendaResult = await firestore
@@ -183,10 +187,33 @@ export const acceptOrRejectAgenda = (eventId, agendaId, newStatus) => {
         .collection('agendas')
         .doc(agendaId)
         .get();
+      const acceptedAgendasAtSameTimeResult = await firestore
+        .collection('event_agendas')
+        .doc(eventId)
+        .collection('agendas')
+        .where('attendees', 'array-contains', currentEventUserId)
+        .where('request_status', '==', 'accepted')
+        .where('timestamp_start', '==', timestampStart)
+        .where('timestamp_end', '==', timestampEnd)
+        .get();
+      const acceptedAgendasAtSameTime = []
       const existingAgenda = existingAgendaResult.data();
+
+      acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
+        const newDataItem = {
+          id: doc.id,
+          ...doc.data(),
+        };
+
+        if (newDataItem.owner_id !== currentEventUserId) {
+          acceptedAgendasAtSameTime.push(newDataItem);
+        }
+      });
 
       if (!existingAgenda || existingAgenda.request_status !== 'pending') {
         reject();
+      } else if (newStatus === 'accepted' && acceptedAgendasAtSameTime.length > 0) {
+        reject('HOURS_NOT_AVAILABLE');
       } else {
         await firestore
           .collection('event_agendas')
