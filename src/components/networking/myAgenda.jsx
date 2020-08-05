@@ -1,6 +1,6 @@
 import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd'
 import moment from 'moment'
-import { find, map, pathOr, propEq } from 'ramda'
+import { find, map, mergeRight, path, pathOr, propEq } from 'ramda'
 import { isNonEmptyArray } from 'ramda-adjunct'
 import React, { useEffect, useMemo, useState } from 'react'
 
@@ -20,21 +20,29 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
   }, [event.date_start, event.date_end]);
 
   useEffect(() => {
-    if (event._id && currentEventUserId) {
+    if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
       setLoading(true)
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
-          if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
+          if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
-              const otherAttendeeId = find(attendeeId => attendeeId !== currentEventUserId, agenda.attendees)
-              const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
+              const agendaAttendees = path(['attendees'], agenda)
+              const otherAttendeeId = isNonEmptyArray(agendaAttendees)
+                ? find(attendeeId => attendeeId !== currentEventUserId, agendaAttendees)
+                : null
 
-              return {
-                ...agenda,
-                otherEventUser
+              if (otherAttendeeId) {
+                const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
+                return mergeRight(agenda, { otherEventUser })
+              } else {
+                return agenda
               }
             }, agendas)
 
+            console.log(`#### currentEventUserId >>> '${currentEventUserId}'`)
+            console.log('#### agendas >>>', agendas)
+            console.log('#### newAcceptedAgendas >>>', newAcceptedAgendas)
+            console.log('#### eventUsers >>>', eventUsers)
             setAcceptedAgendas(newAcceptedAgendas)
           }
         })
@@ -99,9 +107,8 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
 function AcceptedCard({ data, eventId }) {
   const [loading, setLoading] = useState(false)
   const [deleted, setDeleted] = useState(false)
-  const { otherEventUser } = data
-  const userName = pathOr('', ['properties', 'names'], otherEventUser)
-  const userEmail = pathOr('', ['properties', 'email'], otherEventUser)
+  const userName = pathOr('', ['otherEventUser', 'properties', 'names'], data)
+  const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data)
 
   const deleteThisAgenda = () => {
     if (!loading) {
