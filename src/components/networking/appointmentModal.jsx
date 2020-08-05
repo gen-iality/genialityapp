@@ -1,8 +1,8 @@
 import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from "antd";
 import moment from "moment";
-import { find, keys, pathOr, whereEq } from "ramda";
+import { find, filter, keys, pathOr, propEq, whereEq } from "ramda";
 import { isNonEmptyArray } from "ramda-adjunct";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from "../../helpers/utils";
@@ -62,10 +62,7 @@ function AppointmentModal ( {
   targetEventUserId,
   closeModal,
 } ) {
-  const eventDatesRange = useMemo( () => {
-    return getDatesRange( event.date_start, event.date_end );
-  }, [ event.date_start, event.date_end ] );
-
+  const eventDatesRange = getDatesRange( event.date_start, event.date_end )
   const [ openAgenda, setOpenAgenda ] = useState( '' )
   const [ agendaMessage, setAgendaMessage ] = useState( '' )
   const [ timetable, setTimetable ] = useState( {} )
@@ -96,20 +93,16 @@ function AppointmentModal ( {
   }
 
   useEffect( () => {
-    console.log( "usuarios hook useEffect", "target",targetEventUserId, "current",currentEventUserId );
-    
-    if ( !( targetEventUserId && currentEventUserId ) ) { return }
+    if ( !(event._id && targetEventUserId && currentEventUserId ) ) { return }
 
-    let loadData = async () => {
+    const loadData = async () => {
       setLoading( true )
       setTimetable( {} )
       setAgendaMessage( '' )
       setOpenAgenda( '' )
 
       try {
-       
-        let agendas = await getAgendasFromEventUser( event._id, targetEventUserId );
-
+        const agendas = await getAgendasFromEventUser( event._id, targetEventUserId );
 
         const newTimetable = {}
         const eventTimetable = pathOr( fakeEventTimetable, [ 'timetable' ], event ) // TODO: -> cambiar fakeEventTimetable por {}
@@ -118,13 +111,23 @@ function AppointmentModal ( {
         dates.forEach( ( date ) => {
           if ( isNonEmptyArray( eventTimetable[ date ] ) ) {
             eventTimetable[ date ].forEach( ( timetableItem ) => {
-              const occupiedAgenda = find(
+              const occupiedAgendas = filter(
                 whereEq( {
                   timestamp_start: timetableItem.timestamp_start,
                   timestamp_end: timetableItem.timestamp_end
                 } ),
                 agendas
               )
+
+              const occupiedAgendaFromMe = find(
+                propEq('owner_id', currentEventUserId),
+                occupiedAgendas
+              )
+              const occupiedAcceptedAgenda = find(
+                propEq('request_status', 'accepted'),
+                occupiedAgendas
+              )
+              const occupiedAgenda = occupiedAgendaFromMe || occupiedAcceptedAgenda
 
               const newTimetableItem = {
                 ...timetableItem,
@@ -157,12 +160,11 @@ function AppointmentModal ( {
         } )
       }
       finally {
-        setLoading( false ) 
+        setLoading( false )
       }
-
     }
-    loadData();
 
+    loadData();
   }, [ reloadFlag, event, currentEventUserId, targetEventUserId ] )
 
   return (
@@ -278,7 +280,7 @@ function AppointmentModal ( {
                                     timetableItem,
                                     message: agendaMessage
                                   } )
-                                    .then( reloadData )
+                                    .then(reloadData)
                                     .catch( ( error ) => {
                                       console.error( error )
                                       if ( !error ) {
