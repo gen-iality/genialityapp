@@ -61,16 +61,19 @@ export default ({ eventId }) => {
     ) : contactsList.length > 0 ? (
       <div>
         {contactsList.map((user, key) => (
+          console.log("datos de usuario", user),
           <Row key={key} justify="center">
             <Card
-              // extra={
-              //   <a
-              //     onClick={() => {
-              //       console.log("Informacion del contacto");
-              //     }}>
-              //     Ver contacto
-              //   </a>
-              // }
+              extra={
+                user.properties.numerodecelular !== null && (
+                  <a href={"https://api.whatsapp.com/send?phone=57" + user.properties.numerodecelular} target="_blank" rel="noreferrer">
+                    <div >
+                      Hola soy {user.properties.names}, <br />
+                    Escribeme por WhatsApp
+                  </div>
+                  </a>
+                )
+              }
               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
               bordered={true}>
               <Meta

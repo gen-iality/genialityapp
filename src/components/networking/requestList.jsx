@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as Cookie from "js-cookie";
-import { Networking } from "../../helpers/request";
+import { Networking, UsersApi } from "../../helpers/request";
 import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
@@ -122,7 +122,10 @@ export default ({ eventId }) => {
         setCurrentUserId(user._id);
 
         // Solo se obtendran las invitaciones que no tengan respuesta
-        if (data.length > 0) setRequestListReceived(data.filter((item) => !item.response));
+        if (data.length > 0) {
+          setRequestListReceived(data.filter((item) => !item.response))
+          insertNameRequested(data);
+        };
       });
 
       // Servicio que trae las invitaciones / solicitudes enviadas
@@ -133,6 +136,31 @@ export default ({ eventId }) => {
       });
     });
   };
+
+  //Funcion para insertar dentro de requestListReceivedNew el nombre de quien envia la solicitud de contacto
+  const insertNameRequested = async (requestListReceived) => {
+    //Se crea un nuevo array
+    let requestListReceivedNew = []    
+    //Se itera el array que llega para obtener los datos
+    for (let i = 0; i < requestListReceived.length; i++) {
+      //dentro del for se consulta la api para obtener el usuario      
+      let dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested)
+      //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
+      requestListReceivedNew.push({
+        created_at: requestListReceived[i].created_at,
+        eventId: requestListReceived[i].event_id,
+        id_user_requested: requestListReceived[i].id_user_requested,
+        user_name_requested: dataUser.properties.names,
+        id_user_requesting: requestListReceived[i].id_user_requesting,
+        state: requestListReceived[i].state,
+        updated_at: requestListReceived[i].updated_at,
+        user_name_requesting: requestListReceived[i].id_user_requesting,
+        _id: requestListReceived[i]._id
+      })      
+    }
+    //se envia a setRequestListReceived para no romper la demas logica
+    setRequestListReceived(requestListReceivedNew)
+  }
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
   const sendResponseToInvitation = (requestId, state) => {
@@ -163,12 +191,12 @@ export default ({ eventId }) => {
         />
       </Col>
     ) : (
-      <div>
-        <Divider>Solicitudes Recibidas</Divider>
-        <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
-        <Divider>Solicitudes Enviadas</Divider>
-        <InvitacionListSent list={requestListSent} />
-      </div>
-    );
+        <div>
+          <Divider>Solicitudes Recibidas</Divider>
+          <InvitacionListReceived list={requestListReceived} sendResponseToInvitation={sendResponseToInvitation} />
+          <Divider>Solicitudes Enviadas</Divider>
+          <InvitacionListSent list={requestListSent} />
+        </div>
+      );
   return <Spin></Spin>;
 };
