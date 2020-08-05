@@ -123,6 +123,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             timestamp_end: timetableItem.timestamp_end,
             message,
           });
+          // enviamos notificaciones por correo
           let data = {
             "id_user_requested":targetEventUserId,
             "id_user_requesting":currentEventUserId,
@@ -131,12 +132,10 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             "state":"send",
             "request_type":"meeting",
             "start_time": new Date(timetableItem.timestamp_start).toLocaleTimeString()
-          } 
+          }
 
          EventsApi.sendMeetingRequest(eventId, data);
-         
-        
-          
+
         resolve(newAgendaResult.id);
       }
     } catch (error) {

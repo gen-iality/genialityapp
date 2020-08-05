@@ -2,7 +2,7 @@ import { Button, Col, Input, List, Modal, notification, Row, Select, Spin } from
 import moment from "moment";
 import { find, keys, pathOr, whereEq } from "ramda";
 import { isNonEmptyArray } from "ramda-adjunct";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SmileOutlined } from '@ant-design/icons';
 
 import { getDatesRange } from "../../helpers/utils";
@@ -62,10 +62,7 @@ function AppointmentModal ( {
   targetEventUserId,
   closeModal,
 } ) {
-  const eventDatesRange = useMemo( () => {
-    return getDatesRange( event.date_start, event.date_end );
-  }, [ event.date_start, event.date_end ] );
-
+  const eventDatesRange = getDatesRange( event.date_start, event.date_end )
   const [ openAgenda, setOpenAgenda ] = useState( '' )
   const [ agendaMessage, setAgendaMessage ] = useState( '' )
   const [ timetable, setTimetable ] = useState( {} )
@@ -96,24 +93,26 @@ function AppointmentModal ( {
   }
 
   useEffect( () => {
-    console.log( "usuarios hook useEffect", "target",targetEventUserId, "current",currentEventUserId );
-    
-    if ( !( targetEventUserId && currentEventUserId ) ) { return }
+    console.warn('$$$ targetEventUserId >', targetEventUserId)
+    console.warn('$$$ currentEventUserId >', currentEventUserId)
+    console.warn('$$$ event._id >', event._id)
 
-    let loadData = async () => {
+    if ( !(event._id && targetEventUserId && currentEventUserId ) ) { return }
+
+    const loadData = async () => {
       setLoading( true )
       setTimetable( {} )
       setAgendaMessage( '' )
       setOpenAgenda( '' )
 
       try {
-       
-        let agendas = await getAgendasFromEventUser( event._id, targetEventUserId );
-
+        const agendas = await getAgendasFromEventUser( event._id, targetEventUserId );
 
         const newTimetable = {}
         const eventTimetable = pathOr( fakeEventTimetable, [ 'timetable' ], event ) // TODO: -> cambiar fakeEventTimetable por {}
         const dates = keys( eventTimetable )
+
+        console.warn('############### agendas >>>', agendas)
 
         dates.forEach( ( date ) => {
           if ( isNonEmptyArray( eventTimetable[ date ] ) ) {
@@ -125,6 +124,11 @@ function AppointmentModal ( {
                 } ),
                 agendas
               )
+
+              if (occupiedAgenda) {
+                console.warn('--- occupied >>>', occupiedAgenda)
+                console.warn('--- timetableItem >>>', timetableItem)
+              }
 
               const newTimetableItem = {
                 ...timetableItem,
@@ -157,12 +161,11 @@ function AppointmentModal ( {
         } )
       }
       finally {
-        setLoading( false ) 
+        setLoading( false )
       }
-
     }
-    loadData();
 
+    loadData();
   }, [ reloadFlag, event, currentEventUserId, targetEventUserId ] )
 
   return (
@@ -278,7 +281,10 @@ function AppointmentModal ( {
                                     timetableItem,
                                     message: agendaMessage
                                   } )
-                                    .then( reloadData )
+                                    .then((agendaId) => {
+                                      console.warn('@@@ NEW agendaId >>>', agendaId)
+                                      reloadData()
+                                    })
                                     .catch( ( error ) => {
                                       console.error( error )
                                       if ( !error ) {
