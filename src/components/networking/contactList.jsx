@@ -90,7 +90,7 @@ export default ({ eventId }) => {
                       userProperties.map((property, key) => (
                         <div key={key}>
                           {
-                            <p>{property.label}: {user.properties[property.name]}</p>
+                            <p><b>{property.label}:</b> {user.properties[property.name]}</p>
                           }
                         </div>
                       ))
