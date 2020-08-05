@@ -20,11 +20,11 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
   }, [event.date_start, event.date_end]);
 
   useEffect(() => {
-    if (event._id && currentEventUserId) {
+    if (event._id && currentEventUserId && isNonEmptyArray(eventUsers)) {
       setLoading(true)
       getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
         .then((agendas) => {
-          if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
+          if (isNonEmptyArray(agendas)) {
             const newAcceptedAgendas = map((agenda) => {
               const agendaAttendees = path(['attendees'], agenda)
               const otherAttendeeId = isNonEmptyArray(agendaAttendees)
