@@ -104,14 +104,14 @@ export function parseData2Excel(data, fields) {
         default:
           str = name === 'id' ? item['_id'] : item.properties[name] ? item.properties[name] : 'undefined';
       }
-      if (typeof str === 'string') str = str.toUpperCase();
+      if (typeof str === 'string' && typeof str !== undefined) console.log(str = str.toUpperCase());      
       if (type === 'complex' && str) {
         Object.keys(str).map((prop) => {
           return (info[key][prop] = Array.isArray(str[prop]) ? str[prop].join() : str[prop]);
         });
       } else return (info[key][label] = str);
     });
-    if (item.rol) info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.toUpperCase();
+    if (item.rol)  info[key]['rol'] = item.rol.label ? item.rol.label.toUpperCase() : item.rol.name.toUpperCase();
     info[key]['Tipo asistente'] = item.rol_name ? item.rol_name : '';
     info[key]['Actualizado'] = item.updated_at;
     info[key]['Creado'] = item.created_at;
