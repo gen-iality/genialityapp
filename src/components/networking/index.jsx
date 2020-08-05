@@ -141,7 +141,7 @@ export default class ListEventUser extends Component {
           notification.open({
             message: 'Solicitud enviada',
             description:
-              'Le llegará un correo a la persona notificandole la solicitud, quien la aceptara o recharaza  y le llegará un correo de vuelta confirmando la respuesta',
+              'Le llegará un correo a la persona notificandole la solicitud, quién la aceptara o recharaza. Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto.',
             icon: <SmileOutlined style={{ color: '#108ee9' }} />,
             duration:30
           });
@@ -191,9 +191,10 @@ export default class ListEventUser extends Component {
 
               </Col>
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <Alert
+              <Alert
                   message="Información Adicicional"
-                  description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
+                  description="Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
+                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto."
                   type="info"
                   closable
                 />
@@ -317,7 +318,8 @@ export default class ListEventUser extends Component {
               <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
                 <Alert
                   message="Información Adicicional"
-                  description="La informacion de cada usuario es privada. Para poder verla es necesario enviar una solicitud como amigo"
+                  description="Solo puedes ver una cantidad de información pública limitada de cada asistente, para ver toda la información de otro asistente debes realizar una solicitud de contacto
+                  se le informara al asistente quien aceptara o recharaza la solicitud, Una vez la haya aceptado te llegará un correo confirmando y podrás regresar a esta misma sección en mis contactos a ver la información completa del nuevo contacto."
                   type="info"
                   closable
                 />
