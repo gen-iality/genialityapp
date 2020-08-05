@@ -145,21 +145,25 @@ export default ({ eventId }) => {
     for (let i = 0; i < requestListReceived.length; i++) {
       //dentro del for se consulta la api para obtener el usuario      
       let dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested)
+      // se realiza un if para validar que no se encuentre el campo response para insertar los datos resultantes
+      if(!requestListReceived[i].response){
       //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
-      requestListReceivedNew.push({
-        created_at: requestListReceived[i].created_at,
-        eventId: requestListReceived[i].event_id,
-        id_user_requested: requestListReceived[i].id_user_requested,
-        user_name_requested: dataUser.properties.names,
-        id_user_requesting: requestListReceived[i].id_user_requesting,
-        state: requestListReceived[i].state,
-        updated_at: requestListReceived[i].updated_at,
-        user_name_requesting: requestListReceived[i].id_user_requesting,
-        _id: requestListReceived[i]._id
-      })      
+        requestListReceivedNew.push({
+          created_at: requestListReceived[i].created_at,
+          eventId: requestListReceived[i].event_id,
+          id_user_requested: requestListReceived[i].id_user_requested,
+          user_name_requested: dataUser.properties.names,          
+          id_user_requesting: requestListReceived[i].id_user_requesting,
+          state: requestListReceived[i].state,
+          updated_at: requestListReceived[i].updated_at,
+          user_name_requesting: requestListReceived[i].id_user_requesting,
+          _id: requestListReceived[i]._id
+        })      
+      }      
     }
+    console.log(requestListReceivedNew)
     //se envia a setRequestListReceived para no romper la demas logica
-    setRequestListReceived(requestListReceivedNew)
+    setRequestListReceived(requestListReceivedNew)    
   }
 
   // Funcion para aceptar o rechazar una invitacion o solicitud
