@@ -145,8 +145,9 @@ export default ({ eventId }) => {
     for (let i = 0; i < requestListReceived.length; i++) {
       //dentro del for se consulta la api para obtener el usuario      
       let dataUser = await UsersApi.getOne(eventId, requestListReceived[i].id_user_requested)
-      //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
+      // se realiza un if para validar que no se encuentre el campo response para insertar los datos resultantes
       if(!requestListReceived[i].response){
+      //se insertan los datos obtenidos del array que se esta iterando y se inserta el nombre del usuario
         requestListReceivedNew.push({
           created_at: requestListReceived[i].created_at,
           eventId: requestListReceived[i].event_id,
