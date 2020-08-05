@@ -42,6 +42,7 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
             console.log(`#### currentEventUserId >>> '${currentEventUserId}'`)
             console.log('#### agendas >>>', agendas)
             console.log('#### newAcceptedAgendas >>>', newAcceptedAgendas)
+            console.log('#### eventUsers >>>', eventUsers)
             setAcceptedAgendas(newAcceptedAgendas)
           }
         })
