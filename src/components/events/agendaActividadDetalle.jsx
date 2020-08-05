@@ -147,7 +147,7 @@ let agendaActividadDetalle = (props) => {
               </p>
 
               {/* Nombre del evento */}
-              <span className="card-header-title has-text-left"></span>
+              
               {/* {currentActivity.meeting_video && (
                 <ReactPlayer
                   style={{
@@ -237,13 +237,13 @@ let agendaActividadDetalle = (props) => {
             {currentActivity.hosts.length === 0 ? (
               <div></div>
             ) : (
-                <div>
+                <div className="List-conferencistas">
                   <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                     <p>
                       <b>Conferencistas:</b>
                     </p>
                     <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
-                      <Card style={{ textAlign: "left" }}>
+                      <Card style={{ textAlign: "left", paddingBottom:17}}>
                         <List
                           itemLayout="horizontal"
                           dataSource={currentActivity.hosts}
@@ -263,7 +263,7 @@ let agendaActividadDetalle = (props) => {
                                 title={<strong>{item.name}</strong>}
                                 description={item.profession}
                               />
-                              <Button onClick={() => getSpeakers(item._id)}>Ver detalle</Button>
+                              <div className="btn-list-confencista"><Button className="button_lista"onClick={() => getSpeakers(item._id)}>Ver detalle</Button></div> 
                             </List.Item>
                           )}
                         />

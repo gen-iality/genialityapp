@@ -149,3 +149,10 @@
     }
   }
 }
+.btn-list-confencista{
+  @media only screen and (max-width: $breakpoint-mobile) {
+    position: absolute;
+    top: 97px;
+    left: -14px;
+  }
+}
