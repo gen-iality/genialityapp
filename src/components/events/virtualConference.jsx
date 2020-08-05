@@ -164,13 +164,12 @@ class VirtualConference extends Component {
                                         {Moment(item.datetime_end).format("h:mm A")}
                                     </p>
 
-
-                                    <div style={{ "display": "flex", "flexDirection": "row", "justifyContent": "center" }}>
-                                        {item.hosts.map((host, key) => {
+                                    <div className="Virtual-Conferences">
+                                        { item.hosts.map( ( host, key ) => {
                                             return (
-                                                <div style={{ margin: "5px 10px" }} key={key}>
-                                                    <Avatar size={80} src={host.image} />
-                                                    <div >{host.name}</div>
+                                                <div style={{margin:"13px 14px"}} key={ key }>
+                                                    <Avatar size={80} src={ host.image } />
+                                                    <div >{ host.name }</div>
                                                 </div>
 
                                             )

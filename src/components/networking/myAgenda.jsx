@@ -20,31 +20,33 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
   }, [event.date_start, event.date_end]);
 
   useEffect(() => {
-    setLoading(true)
-    getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
-      .then((agendas) => {
-        if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
-          const newAcceptedAgendas = map((agenda) => {
-            const otherAttendeeId = find(attendeeId => attendeeId !== currentEventUserId, agenda.attendees)
-            const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
+    if (event._id && currentEventUserId) {
+      setLoading(true)
+      getAcceptedAgendasFromEventUser(event._id, currentEventUserId)
+        .then((agendas) => {
+          if (isNonEmptyArray(agendas) && isNonEmptyArray(eventUsers)) {
+            const newAcceptedAgendas = map((agenda) => {
+              const otherAttendeeId = find(attendeeId => attendeeId !== currentEventUserId, agenda.attendees)
+              const otherEventUser = find(propEq('_id', otherAttendeeId), eventUsers)
 
-            return {
-              ...agenda,
-              otherEventUser
-            }
-          }, agendas)
+              return {
+                ...agenda,
+                otherEventUser
+              }
+            }, agendas)
 
-          setAcceptedAgendas(newAcceptedAgendas)
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-        notification.error({
-          message: 'Error',
-          description: 'Obteniendo las citas del usuario'
+            setAcceptedAgendas(newAcceptedAgendas)
+          }
         })
-      })
-      .finally(() => setLoading(false))
+        .catch((error) => {
+          console.error(error)
+          notification.error({
+            message: 'Error',
+            description: 'Obteniendo las citas del usuario'
+          })
+        })
+        .finally(() => setLoading(false))
+    }
   }, [event._id, currentEventUserId, eventUsers])
 
   if (loading) {
