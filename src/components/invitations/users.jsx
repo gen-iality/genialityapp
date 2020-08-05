@@ -583,13 +583,12 @@ class UsersRsvp extends Component {
                   </div>
                 </div>
               )} */}
+            <div className="table-invite-asistente">
             <EvenTable head={columns}>
               {pageOfItems.map(user => (
                 <tr key={user.id}>
                   <td>
-                    <div>
-                      <label htmlFor={"checkinUser" + user.id} />
-                    </div>
+                  {"checkinUser" + user.id} 
                   </td>
                   {Object.keys(user.properties).map(prop => (
                     <td key={prop}>
@@ -601,6 +600,7 @@ class UsersRsvp extends Component {
                 </tr>
               ))}
             </EvenTable>
+            </div>
             <Pagination items={users} onChangePage={this.onChangePage} />
           </div>
         </EventContent>
