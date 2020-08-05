@@ -93,9 +93,9 @@ function AppointmentModal ( {
   }
 
   useEffect( () => {
-    console.warn('$$$ targetEventUserId >', targetEventUserId)
-    console.warn('$$$ currentEventUserId >', currentEventUserId)
-    console.warn('$$$ event._id >', event._id)
+    console.log('$$$ targetEventUserId >', targetEventUserId)
+    console.log('$$$ currentEventUserId >', currentEventUserId)
+    console.log('$$$ event._id >', event._id)
 
     if ( !(event._id && targetEventUserId && currentEventUserId ) ) { return }
 
@@ -112,7 +112,7 @@ function AppointmentModal ( {
         const eventTimetable = pathOr( fakeEventTimetable, [ 'timetable' ], event ) // TODO: -> cambiar fakeEventTimetable por {}
         const dates = keys( eventTimetable )
 
-        console.warn('############### agendas >>>', agendas)
+        console.log('############### agendas >>>', agendas)
 
         dates.forEach( ( date ) => {
           if ( isNonEmptyArray( eventTimetable[ date ] ) ) {
@@ -126,8 +126,8 @@ function AppointmentModal ( {
               )
 
               if (occupiedAgenda) {
-                console.warn('--- occupied >>>', occupiedAgenda)
-                console.warn('--- timetableItem >>>', timetableItem)
+                console.log('--- occupied >>>', occupiedAgenda)
+                console.log('--- timetableItem >>>', timetableItem)
               }
 
               const newTimetableItem = {
@@ -282,7 +282,7 @@ function AppointmentModal ( {
                                     message: agendaMessage
                                   } )
                                     .then((agendaId) => {
-                                      console.warn('@@@ NEW agendaId >>>', agendaId)
+                                      console.log('@@@ NEW agendaId >>>', agendaId)
                                       reloadData()
                                     })
                                     .catch( ( error ) => {
