@@ -389,7 +389,7 @@ export default class ListEventUser extends Component {
                                 avatar={
                                   <Avatar>
                                     {
-                                      console.log(users.destacado && users.destacado == true ? "asistendestacado" : "perro muerto")
+                                      console.log(users)
                                     }
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
