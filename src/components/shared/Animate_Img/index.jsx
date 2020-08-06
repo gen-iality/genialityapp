@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
-import {PlayCircleOutlined} from '@ant-design/icons'
+import { PlayCircleOutlined } from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -13,6 +13,7 @@ class AnimateImg extends React.Component {
             event: {},
             autoplay: false
         }
+        this.autoplayVideo = this.autoplayVideo.bind(this)
     }
 
     componentDidMount() {
@@ -20,6 +21,10 @@ class AnimateImg extends React.Component {
         this.setState({ eventId: this.props.eventId, event: this.props.event })
     }
 
+
+    autoplayVideo(){        
+        this.setState({autoplay: !this.state.autoplay})
+    }
     render() {
         const { eventId, event, autoplay } = this.state
         const { showLanding } = this.props
@@ -48,9 +53,9 @@ class AnimateImg extends React.Component {
                                 <Button className="button" onClick={showLanding}>Entrar</Button>
                             </Col>
                             <Col span={4}>
-                                <PlayCircleOutlined className="button" onClick={()=>this.setState({autoplay:true})}/>
+                                <Button className="button" onClick={this.autoplayVideo}>{autoplay ? "Pause": "Play"}</Button>                                
                             </Col>
-                        </Row>                        
+                        </Row>
                     </div>
                 )}
             </>
