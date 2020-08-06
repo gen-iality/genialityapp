@@ -13,6 +13,7 @@ class AnimateImg extends React.Component {
             event: {},
             autoplay: false
         }
+        this.autoplayVideo = this.autoplayVideo.bind(this)
     }
 
     componentDidMount() {
@@ -20,6 +21,10 @@ class AnimateImg extends React.Component {
         this.setState({ eventId: this.props.eventId, event: this.props.event })
     }
 
+
+    autoplayVideo(){        
+        this.setState({autoplay: !this.state.autoplay})
+    }
     render() {
         const { eventId, event, autoplay } = this.state
         const { showLanding } = this.props
