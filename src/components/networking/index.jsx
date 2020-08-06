@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, message,notification } from "antd";
 import { SmileOutlined } from '@ant-design/icons';
@@ -15,7 +14,7 @@ import EventContent from "../events/shared/content";
 
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi, EventFieldsApi } from "../../helpers/request";
-import { firestore } from "../../helpers/firebase";
+
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 
 import ContactList from "./contactList";
@@ -62,15 +61,34 @@ export default class ListEventUser extends Component {
 
     // Servicio que trae la lista de asistentes excluyendo el usuario logeado
     let eventUserList = await userRequest.getEventUserList(event._id, Cookie.get("evius_token"));
+
+    /** Inicia destacados
+     * Búscamos usuarios destacados para colocarlos de primeros en la lista(destacados), tiene varios usos cómo publicitarios
+     * estos tienen una propiedad llamada destacados, en un futuro debemos poner esto cómo un rol de asistente para facilitar 
+     * la administración por el momento este valor se esta quemando directamente en la base de datos
+     */
+    let destacados = [];
+    destacados = eventUserList.filter(asistente => (asistente.destacado && asistente.destacado == true))
+     
+    if (destacados && destacados.length>=0){
+      eventUserList  = [...destacados, ...eventUserList]
+    }
+    //Finaliza destacados
+
+    //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
     let matches = [];
     if (this.state.eventUser) {
       let meproperties = this.state.eventUser.properties;
       matches = eventUserList.filter(asistente => (asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && (meproperties.priorizarsectoresdeinteres.match(new RegExp(asistente.properties.sector, 'gi')) || asistente.properties.sector.match(new RegExp(meproperties.priorizarsectoresdeinteres, 'gi')))))
     }
-    console.log("eventUserList:", matches, eventUserList, this.state.eventUser);
 
-    //properties.sector
-    //this.state.eventUser
+    console.log("eventUserList: Matched", matches, eventUserList, this.state.eventUser);
+
+
+    
+
+
+
 
     let asistantData = await EventFieldsApi.getAll(event._id)
 
@@ -99,7 +117,6 @@ export default class ListEventUser extends Component {
 
       // Servicio que trae la lista de asistentes excluyendo el usuario logeado
       //let eventUserList = await userRequest.getEventUserList( event._id, Cookie.get( "evius_token" ) );
-
       this.setState({ eventUser, eventUserId: eventUser._id, currentUserName: eventUser.names || eventUser.email });
 
     }
@@ -241,6 +258,7 @@ export default class ListEventUser extends Component {
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                              class={(users.destacado && users.destacado == true)?"asistentedestacado":""}
                               bordered={true}>
                               <Meta
                                 avatar={
@@ -365,6 +383,7 @@ export default class ListEventUser extends Component {
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
+                              class={(users.destacado && users.destacado == true)?"asistentedestacado":""}
                               bordered={true}>
                               <Meta
                                 avatar={
