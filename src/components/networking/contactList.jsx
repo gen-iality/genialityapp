@@ -88,11 +88,13 @@ export default ({ eventId }) => {
                     <br />
                     {
                       userProperties.map((property, key) => (
-                        <div key={key}>
-                          {
-                            <p><b>{property.label}:</b> {user.properties[property.name]}</p>
-                          }
-                        </div>
+                        user.properties[property.name] !== undefined && (
+                          <div key={key}>
+                            {
+                              <p><strong>{property.label}</strong>: {user.properties[property.name]}</p>
+                            }
+                          </div>
+                        )
                       ))
                     }
                   </div>,
