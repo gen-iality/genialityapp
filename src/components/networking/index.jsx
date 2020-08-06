@@ -383,12 +383,14 @@ export default class ListEventUser extends Component {
                               hoverable={8}
                               headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                              class={(users.destacado && users.destacado == true)?"asistentedestacado":""}
+                              className={(users.destacado && users.destacado == true)?"asistentedestacado":""}
                               bordered={true}>
                               <Meta
                                 avatar={
                                   <Avatar>
-                                    {console.log(users.properties)}
+                                    {
+                                      console.log(users.destacado && users.destacado == true ? "asistendestacado" : "perro muerto")
+                                    }
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
