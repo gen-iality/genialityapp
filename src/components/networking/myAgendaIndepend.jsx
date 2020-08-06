@@ -41,6 +41,7 @@ class AgendaIndepent extends Component {
                                 eventUser={eventUser}
                                 currentEventUserId={eventUserId}
                                 eventUsers={users}
+                                {...this.props}
                             />
                         )
                 }
