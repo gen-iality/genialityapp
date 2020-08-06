@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
+import {PlayCircleOutlined} from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -9,7 +10,8 @@ class AnimateImg extends React.Component {
         super(props);
         this.state = {
             eventId: "",
-            event: {}
+            event: {},
+            autoplay: false
         }
     }
 
@@ -19,7 +21,7 @@ class AnimateImg extends React.Component {
     }
 
     render() {
-        const { eventId, event } = this.state
+        const { eventId, event, autoplay } = this.state
         const { showLanding } = this.props
         return (
             <>
@@ -39,13 +41,16 @@ class AnimateImg extends React.Component {
                             width="100%"
                             height="100%"
                             url={event.data_loader_page}
-                            playing="true"
+                            playing={autoplay}
                         />
                         <Row justify="center">
-                            <Col>
+                            <Col span={4}>
                                 <Button className="button" onClick={showLanding}>Entrar</Button>
                             </Col>
-                        </Row>
+                            <Col span={4}>
+                                <PlayCircleOutlined className="button" onClick={()=>this.setState({autoplay:true})}/>
+                            </Col>
+                        </Row>                        
                     </div>
                 )}
             </>
