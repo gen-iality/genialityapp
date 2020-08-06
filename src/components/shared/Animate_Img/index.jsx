@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
+import {PlayCircleTwoTone, PauseOutlined} from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -9,8 +10,10 @@ class AnimateImg extends React.Component {
         super(props);
         this.state = {
             eventId: "",
-            event: {}
+            event: {},
+            autoplay: false
         }
+        this.autoplayVideo = this.autoplayVideo.bind(this)
     }
 
     componentDidMount() {
@@ -18,8 +21,12 @@ class AnimateImg extends React.Component {
         this.setState({ eventId: this.props.eventId, event: this.props.event })
     }
 
+
+    autoplayVideo(){        
+        this.setState({autoplay: !this.state.autoplay})
+    }
     render() {
-        const { eventId, event } = this.state
+        const { eventId, event, autoplay } = this.state
         const { showLanding } = this.props
         return (
             <>
@@ -39,13 +46,24 @@ class AnimateImg extends React.Component {
                             width="100%"
                             height="100%"
                             url={event.data_loader_page}
-                            playing="true"
+                            playing={autoplay}
                         />
+                        <Row justify="center">     
+                        {
+                            autoplay ? (
+                                <PauseOutlined twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/>                                
+                            ):(
+                                <PlayCircleTwoTone twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/> 
+                            )
+                           
+                        }
+                           
+                        </Row> 
                         <Row justify="center">
-                            <Col>
+                            <Col >
                                 <Button className="button" onClick={showLanding}>Entrar</Button>
                             </Col>
-                        </Row>
+                        </Row>                        
                     </div>
                 )}
             </>

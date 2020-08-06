@@ -387,10 +387,7 @@ export default class ListEventUser extends Component {
                               bordered={true}>
                               <Meta
                                 avatar={
-                                  <Avatar>
-                                    {
-                                      console.log(users)
-                                    }
+                                  <Avatar>                                    
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
