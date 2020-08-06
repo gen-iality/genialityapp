@@ -261,7 +261,7 @@ export default class ListEventUser extends Component {
                                             asistantData.map((data, dataIndex) => (
                                               !data.privatePublic && data.privatePublic !== undefined && users.properties[data.name] && (
                                                 <div key={`public-field-${userIndex}-${dataIndex}`}>
-                                                  <p>{data.label}: {users.properties[data.name]}</p>
+                                                  <p><b>{data.label}:</b> {users.properties[data.name]}</p>
                                                 </div>
                                               )
                                             ))
