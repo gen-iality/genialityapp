@@ -27,8 +27,10 @@ function capitalizeMont(val) {
         .join(' ');
 }
 
-let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
 
+
+let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
+  
     return (
         <BannerAnim prefixCls="banner-user" style={{overflow:"visible"}}>
             <Element
@@ -43,9 +45,9 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                         backgroundImage: `url(${bgImage})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                    }}
-                    
+                    }}                    
                 />
+                <a href={bgImage} className="Imagen-quemada"></a>
                    
                 <div className="banner-user-text-container"
                     style={{

@@ -468,6 +468,22 @@ section.landing {
         background-position: left center;
       }
     }
+    .Imagen-quemada{
+      display: none;
+    }
+    @media only screen and (max-width: $breakpoint-mobile) {
+      a[href="https://storage.googleapis.com/herba-images/evius/events/1MBunMee2DK2VXju54dGrizvUKU0zZHp12UEpAlW.png"]{
+        background-image: url(https://lh3.googleusercontent.com/-VJWR433StX8/XyskarLY2JI/AAAAAAAAAFM/6SogQ1Gj2mMeajYX6uARMvqzvUEDu1CuwCK8BGAsYHg/s0/Mesa-de-trabajo-33.png);
+        width: 100%;
+        height: 350px;
+        background-size: cover;
+        position: absolute;
+        top:0px;
+        left: 0px;
+        pointer-events:none ;
+        display: unset !important;
+      }
+    }
   }
 
   .banner-user-text-container {
@@ -500,6 +516,7 @@ section.landing {
     left: 0;
     overflow: visible;
   }
+
 }
 
 .container-logoBanner {
