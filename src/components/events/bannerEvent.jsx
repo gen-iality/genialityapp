@@ -44,8 +44,9 @@ let bannerEvent = ({ bgImage, title, organizado, place, dateStart, dateEnd, date
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                     }}
+                    
                 />
-
+                   
                 <div className="banner-user-text-container"
                     style={{
                         backgroundSize: 'cover',

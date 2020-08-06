@@ -345,7 +345,7 @@ export default class ListEventUser extends Component {
                     <h2 className="has-text-centered">Cargando...</h2>
                   </Fragment>
                 ) : (
-                    <div className="container" >
+                    <div className="container card-Sugeridos" >
                       <Row gutter={[12,24]}>
                         {/* Mapeo de datos en card, Se utiliza Row y Col de antd para agregar columnas */}
                         {pageOfItems.map((users, userIndex) => (
@@ -395,7 +395,6 @@ export default class ListEventUser extends Component {
                                       </Col>
                                       <Col xs={24}>
                                         <Button
-
                                           style={{ backgroundColor: "#363636", color: "white" }}
                                           onClick={() => {
                                             this.setState({ eventUserIdToMakeAppointment: users._id })
