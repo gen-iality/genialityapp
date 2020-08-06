@@ -23,13 +23,13 @@
   }
   .ant-btn {
     position: fixed;
-    top: 400px;
+    top: 479px;
     background-color: rgba(0, 0, 0, 0.12);
     color: white;
-    font-size: 34px;
-    width: 217px;
+    font-size: 39px;
+    width: 193px;
     height: 69px;
-    margin-left: -98px;
+    margin-left: -91px;
   }
   .ant-btn:hover {
     background: rgba(0, 0, 0, 0.07);
@@ -39,5 +39,9 @@
   }
   iframe {
     height: 900px;
+  }
+  .anticon svg {
+    display: inline-block;
+    font-size: xxx-large;
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
-import {PlayCircleOutlined} from '@ant-design/icons'
+import {PlayCircleTwoTone} from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -43,12 +43,12 @@ class AnimateImg extends React.Component {
                             url={event.data_loader_page}
                             playing={autoplay}
                         />
+                        <Row justify="center">     
+                           <PlayCircleTwoTone twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={()=>this.setState({autoplay:true})}/>
+                        </Row> 
                         <Row justify="center">
-                            <Col span={4}>
+                            <Col >
                                 <Button className="button" onClick={showLanding}>Entrar</Button>
-                            </Col>
-                            <Col span={4}>
-                                <PlayCircleOutlined className="button" onClick={()=>this.setState({autoplay:true})}/>
                             </Col>
                         </Row>                        
                     </div>
