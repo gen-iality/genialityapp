@@ -1,4 +1,6 @@
 @import '~antd/dist/antd.css';
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
 .container_imgLoading {
   img {
     margin-top: -55px;
@@ -30,6 +32,10 @@
     width: 193px;
     height: 69px;
     margin-left: -91px;
+    @media only screen and (max-width: $breakpoint-mobile) {
+      position: absolute;
+      top: 200px;
+    }
   }
   .ant-btn:hover {
     background: rgba(0, 0, 0, 0.07);
@@ -44,4 +50,47 @@
     display: inline-block;
     font-size: 150px;
   }
+  @media only screen and (max-width: $breakpoint-mobile) {
+    .ant-btn {
+      position: absolute;
+      top: -79px;
+      background-color: rgba(0, 0, 0, 0.12);
+      color: white;
+      font-size: 26px;
+      width: 147px;
+      height: 42px;
+      margin-left: -67px;
+    }
+    .anticon{
+      position: absolute;
+      top: 108px;
+      margin-left: 8px;
+    }
+    .anticon svg {
+      display: inline-block;
+      font-size: 50px;
+    }
+  }
+  @media only (min-width: 800px) and (max-width: $breakpoint-tablet) {
+    .ant-btn {
+      position: absolute;
+      top: -79px;
+      background-color: rgba(0, 0, 0, 0.12);
+      color: white;
+      font-size: 26px;
+      width: 147px;
+      height: 42px;
+      margin-left: -67px;
+    }
+    .anticon{
+      position: absolute;
+      top: 108px;
+      margin-left: 8px;
+    }
+    .anticon svg {
+      display: inline-block;
+      font-size: 150px;
+    }
+  }
+
 }
