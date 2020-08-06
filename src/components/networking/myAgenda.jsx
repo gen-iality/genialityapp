@@ -11,7 +11,7 @@ const { TabPane } = Tabs
 const { Meta } = Card
 const { confirm } = Modal
 
-function MyAgenda({ event, currentEventUserId, eventUsers }) {
+function MyAgenda({ event, eventUser, currentEventUserId, eventUsers }) {
   const [loading, setLoading] = useState(true)
   const [acceptedAgendas, setAcceptedAgendas] = useState([])
 
@@ -85,11 +85,15 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
               >
                 {isNonEmptyArray(dayAgendas)
                   ? dayAgendas.map((acceptedAgenda) => (
+                    <>
+                    {eventUser && <div>{eventUser._id}</div>}
                     <AcceptedCard
                       key={`accepted-${acceptedAgenda.id}`}
                       eventId={event._id}
+                      eventUser={eventUser}
                       data={acceptedAgenda}
                     />
+                    </>
                   )) : (
                     <Card>{'No tienes citas agendadas para esta fecha'}</Card>
                   )}
@@ -104,11 +108,32 @@ function MyAgenda({ event, currentEventUserId, eventUsers }) {
   )
 }
 
-function AcceptedCard({ data, eventId }) {
+function AcceptedCard({ data, eventId, eventUser }) {
   const [loading, setLoading] = useState(false)
   const [deleted, setDeleted] = useState(false)
   const userName = pathOr('', ['otherEventUser', 'properties', 'names'], data)
   const userEmail = pathOr('', ['otherEventUser', 'properties', 'email'], data)
+
+/** Entramos a la sala 1 a 1 de la reunión 
+ * 
+*/
+  const accessMeetRoom = (data, eventUser)=> {
+    
+    if (!eventUser){
+      alert("Tenemos problemas con tu usuario, itenta recargar la página");
+      return;
+    }
+    let userName = eventUser.displayName || eventUser.properties.names || eventUser._id;
+    let roomName = data.id;
+
+    //Este passcode lo usa twillio to generate the token is not recomended but we are in a hurry
+    let passcode_security = "3976591496";
+
+    //Esta url es del servicio servless donde se esta alojando el proyecto de salas 1vs1
+    window.open('https://video-app-1496-dev.twil.io?UserName='+userName+'&URLRoomName='+roomName+'&passcode='+passcode_security, '_blank');
+   }
+
+
 
   const deleteThisAgenda = () => {
     if (!loading) {
@@ -172,6 +197,16 @@ function AcceptedCard({ data, eventId }) {
               </Row>
               {!deleted ? (
                 <Row>
+                  <Col>
+                  <Button
+                    type="primary"
+                    disabled={loading}
+                    loading={loading}
+                    onClick={() => {accessMeetRoom(data, eventUser)}}
+                  >
+                    {'Ingresar a reunión'}
+                  </Button>
+
                   <Button
                     type="danger"
                     disabled={loading}
@@ -188,6 +223,7 @@ function AcceptedCard({ data, eventId }) {
                   >
                     {'Cancelar'}
                   </Button>
+                  </Col>
                 </Row>
               ) : (
                   <Row>
