@@ -257,9 +257,8 @@ export default class ListEventUser extends Component {
                               </a>
                               }
                               hoverable={8}
-                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
+                              headStyle={(users.destacado && users.destacado == true)?{ backgroundColor: "#33FFEC"}:{ backgroundColor: event.styles.toolbarDefaultBg }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                              class={(users.destacado && users.destacado == true)?"asistentedestacado":""}
                               bordered={true}>
                               <Meta
                                 avatar={
@@ -382,14 +381,12 @@ export default class ListEventUser extends Component {
                               </a>                             
                               }
                               hoverable={8}
-                              headStyle={{ backgroundColor: event.styles.toolbarDefaultBg, color: "white" }}
+                              headStyle={(users.destacado && users.destacado == true)?{ backgroundColor: "#6ddab5"}:{ backgroundColor: event.styles.toolbarDefaultBg }}
                               style={{ width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" }}
-                              class={(users.destacado && users.destacado == true)?"asistentedestacado":""}
                               bordered={true}>
                               <Meta
                                 avatar={
-                                  <Avatar>
-                                    {console.log(users.properties)}
+                                  <Avatar>                                    
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
