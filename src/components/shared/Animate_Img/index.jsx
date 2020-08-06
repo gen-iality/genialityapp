@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
 import { Col, Row, Button } from 'antd';
-import {PlayCircleTwoTone} from '@ant-design/icons'
+import {PlayCircleTwoTone, PauseOutlined} from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -49,7 +49,15 @@ class AnimateImg extends React.Component {
                             playing={autoplay}
                         />
                         <Row justify="center">     
-                           <PlayCircleTwoTone twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={()=>this.setState({autoplay:true})}/>
+                        {
+                            autoplay ? (
+                                <PauseOutlined twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/>                                
+                            ):(
+                                <PlayCircleTwoTone twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/> 
+                            )
+                           
+                        }
+                           
                         </Row> 
                         <Row justify="center">
                             <Col >
