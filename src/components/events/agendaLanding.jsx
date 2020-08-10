@@ -354,7 +354,7 @@ class Agenda extends Component {
                             <br/>
                             <Row>
                               {item.hosts.map((speaker, key) => (
-                              <Col lg={12} style={{marginBottom:13}}>
+                              <Col lg={24} xl={12} xxl={12} style={{marginBottom:13}}>
                                 <span key={key} style={{ fontSize:17, fontWeight:500}}>
                                   <Avatar
                                     size={30}
