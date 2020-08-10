@@ -635,9 +635,17 @@ class Landing extends Component {
                 second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
               {
-                show_banner_footer && (
-                  <div style={{textAlign:"center"}}>
+                show_banner_footer && event._id === "5f0622f01ce76d5550058c32" && (
+                  <div style={{ textAlign: "center" }}>
                     <img src={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/footer-meet.png?alt=media&token=2bda06ca-87f8-4010-bcee-b834fd8eb85c"} />
+                  </div>
+                )
+              }
+
+              {
+                show_banner_footer && event._id === "5f21e0ace0231400f47ae0c2" && (
+                  <div style={{ textAlign: "center" }}>
+                    <img src={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Mesa%20de%20trabajo%202.png?alt=media&token=5b25196f-8c07-43e0-91d7-a99232304510"} />
                   </div>
                 )
               }
