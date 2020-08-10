@@ -533,17 +533,7 @@ class General extends Component {
                                 )
                             }
                         </div>
-
-                        <div>
-                            <label className="label">Muestra de banner de pie de pagina</label>
-                            <div className="select">
-                                <select defaultValue={event.show_banner_footer ? event.show_banner_footer : false} name="show_banner_footer" onChange={this.handleChange}>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
-                                </select>
-                            </div>
-                        </div>
-
+                        
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
                             <div className="control">

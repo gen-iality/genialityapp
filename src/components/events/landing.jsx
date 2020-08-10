@@ -486,6 +486,9 @@ class Landing extends Component {
                                   ? event.picture
                                   : "https://bulma.io/images/placeholders/1280x960.png"
                             }
+                            mobileBanner={event.styles && event.styles.mobile_banner &&(
+                              event.styles.mobile_banner)
+                            }
                             bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
                             title={event.name}
                             organizado={
@@ -635,9 +638,9 @@ class Landing extends Component {
                 second={{ title: "Cancelar", class: "", action: this.closeModal }}
               />
               {
-                show_banner_footer && event._id === "5f0622f01ce76d5550058c32" && (
+                event.styles && event.styles.banner_footer && (
                   <div style={{ textAlign: "center" }}>
-                    <img src={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/footer-meet.png?alt=media&token=2bda06ca-87f8-4010-bcee-b834fd8eb85c"} />
+                    <img src={event.styles.banner_footer} />
                   </div>
                 )
               }
