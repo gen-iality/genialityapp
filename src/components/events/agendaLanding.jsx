@@ -352,17 +352,21 @@ class Agenda extends Component {
                             {/* <b>Conferencista: </b> */}
                             <br/>
                             <br/>
-                            {item.hosts.map((speaker, key) => (
-                              <span key={key} style={{ fontSize:17, fontWeight:500}}>
-                                <Avatar
-                                  size={30}
-                                  src={speaker.image
-                                }/> {speaker.name}, &nbsp;</span>
+                            <Row>
+                              {item.hosts.map((speaker, key) => (
+                              <Col lg={12} style={{marginBottom:13}}>
+                                <span key={key} style={{ fontSize:17, fontWeight:500}}>
+                                  <Avatar
+                                    size={30}
+                                    src={speaker.image
+                                  }/> {speaker.name} &nbsp;</span>
+                              </Col>
                             ))}
+                            </Row>
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" >
+                              <Button type="primary" className="space-align-block" style={{backgroundColor:"#C44D17", borderColor:"#C44D17"}}>
                                 Detalle del Evento
                               </Button>
                               {
