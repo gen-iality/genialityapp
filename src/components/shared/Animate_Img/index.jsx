@@ -53,7 +53,7 @@ class AnimateImg extends React.Component {
                             autoplay ? (
                                 <></>
                             ):(
-                                <PlayCircleTwoTone twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/> 
+                                <PlayCircleTwoTone className="icono-play"twoToneColor="#1cdcb7" style={{position:"absolute", top:270, marginLeft:8, backgroundColor:"#f5f5f500" }} onClick={this.autoplayVideo}/> 
                             )
                            
                         }

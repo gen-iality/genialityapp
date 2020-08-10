@@ -320,22 +320,20 @@ class Agenda extends Component {
                 )}
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
+
                 <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
                   {days.map((date, key) => (
-                    <li onClick={() => this.selectDay(date)} key={key} className="is-active tab-day_calendar">
-                      <a className={`${date === day ? " select-day" : " unselect-day"}`}>
-                        <span className="level-item date">
-                          {this.capitalizeDate(Moment(date).format("MMMM DD"))}
-                        </span>
-                      </a>
-                    </li>
+                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"}  type={`${date === day ? "primary" : ""}`}>
+                      {this.capitalizeDate(Moment(date).format("MMMM DD"))}
+                    </Button>
+
                   ))}
                 </div>
 
                 {/* Contenedor donde se pinta la información de la agenda */}
 
-                {toShow.map((item) => (
-                  <div
+                {toShow.map((item, llave) => (
+                  <div key={llave}
                     className="container_agenda-information"
                     onClick={(e) => {
                       this.gotoActivity(item);
@@ -351,7 +349,7 @@ class Agenda extends Component {
                             <span className="card-header-title text-align-card">{item.name}</span>
                           </p>
                           <p className="text-align-card">
-                            <b>Conferencista: </b>
+                            {/* <b>Conferencista: </b> */}
                             <br/>
                             <br/>
                             {item.hosts.map((speaker, key) => (
@@ -364,7 +362,7 @@ class Agenda extends Component {
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block">
+                              <Button type="primary" className="space-align-block" >
                                 Detalle del Evento
                               </Button>
                               {

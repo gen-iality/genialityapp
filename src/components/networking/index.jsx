@@ -184,6 +184,7 @@ export default class ListEventUser extends Component {
       users,
       pageOfItems,
       eventUserId,
+      eventUser,
       asistantData,
       eventUserIdToMakeAppointment,
       activeTab,
@@ -471,6 +472,7 @@ export default class ListEventUser extends Component {
               {activeTab === 'mi-agenda' && (
                 <MyAgenda
                   event={event}
+                  eventUser={eventUser}
                   currentEventUserId={eventUserId}
                   eventUsers={users}
                 />
