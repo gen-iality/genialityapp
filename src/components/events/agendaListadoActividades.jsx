@@ -309,7 +309,7 @@ class AgendaListadoActividades extends Component {
 
                         {/* Conferencistas del evento */}
                         <p className="has-text-left is-size-6-desktop">
-                          <b>Conferencista:</b> &nbsp;
+                          {/* <b>Conferencista:</b> &nbsp; */}
                       {agenda.hosts.map((speaker, key) => (
                             <span key={key}>
                               {speaker.name}, &nbsp;
