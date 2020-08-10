@@ -73,6 +73,18 @@ class Styles extends Component {
         width: 320,
         height: 180
       },
+      {
+        title: "Elige una imagen para el footer del evento:",
+        imageFieldName: "banner_footer",
+        width: 320,
+        height: 180
+      },
+      {
+        title: "Elige una imagen para el banner en mobile:",
+        imageFieldName: "mobile_banner",
+        width: 320,
+        height: 180
+      },
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
 
 
@@ -82,6 +94,7 @@ class Styles extends Component {
   async componentDidMount() {
     const info = await Actions.getAll(`/api/events/${this.props.eventId}`);
     info.styles = info.styles ? info.styles : {};
+    console.log(info.styles)
 
     if (info.styles) {
       this.setState({
@@ -103,6 +116,8 @@ class Styles extends Component {
           menu_image: info.styles.menu_image || null,
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
+          banner_footer: info.styles.banner_footer || null,
+          mobile_banner: info.styles.mobile_banner || null
         },
       });
     }
@@ -174,6 +189,7 @@ class Styles extends Component {
 
     const self = this;
     this.state.data = { styles: this.state.styles };
+    console.log(this.state)
     try {
       const info = await Actions.put(`/api/events/${eventId}`, this.state.data);
       console.log(this.state.data);
