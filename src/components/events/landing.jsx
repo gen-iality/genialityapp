@@ -643,16 +643,7 @@ class Landing extends Component {
                     <img src={event.styles.banner_footer} />
                   </div>
                 )
-              }
-
-              {
-                show_banner_footer && event._id === "5f21e0ace0231400f47ae0c2" && (
-                  <div style={{ textAlign: "center" }}>
-                    <img src={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Mesa%20de%20trabajo%2036.png?alt=media&token=25e3518d-8e73-40a9-8fc2-4e402c2b468d"} />
-                  </div>
-                )
-              }
-
+              }              
             </React.Fragment >
           )
         }
