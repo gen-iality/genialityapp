@@ -351,7 +351,7 @@ class Agenda extends Component {
                             <span className="card-header-title text-align-card">{item.name}</span>
                           </p>
                           <p className="text-align-card">
-                            <b>Conferencista: </b>
+                            <b>Penalista: </b>
                             <br/>
                             <br/>
                             {item.hosts.map((speaker, key) => (
@@ -364,7 +364,7 @@ class Agenda extends Component {
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block">
+                              <Button type="primary" className="space-align-block" style={{backgroundColor:"#C44D17", borderColor:"#C44D17"}}>
                                 Detalle del Evento
                               </Button>
                               {
