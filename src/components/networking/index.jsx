@@ -184,6 +184,7 @@ export default class ListEventUser extends Component {
       users,
       pageOfItems,
       eventUserId,
+      eventUser,
       asistantData,
       eventUserIdToMakeAppointment,
       activeTab,
@@ -385,8 +386,7 @@ export default class ListEventUser extends Component {
                               bordered={true}>
                               <Meta
                                 avatar={
-                                  <Avatar>
-                                    {console.log(users.properties)}
+                                  <Avatar>                                    
                                     {users.properties.names
                                       ? users.properties.names.charAt(0).toUpperCase()
                                       : users.properties.names}
@@ -472,6 +472,7 @@ export default class ListEventUser extends Component {
               {activeTab === 'mi-agenda' && (
                 <MyAgenda
                   event={event}
+                  eventUser={eventUser}
                   currentEventUserId={eventUserId}
                   eventUsers={users}
                 />

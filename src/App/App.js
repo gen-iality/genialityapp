@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Provider } from "react-redux";
 import * as Cookie from "js-cookie";
 import { parseUrl } from "../helpers/constants";
-
+import './App.less';
 import { userContext } from "../containers/userContext";
 
 import privateInstance, { Actions } from "../helpers/request";

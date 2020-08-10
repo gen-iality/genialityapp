@@ -184,8 +184,8 @@ export default class ZoomComponent extends Component {
             this.state.event && (this.state.event.event_platform === "vimeo") &&
             (
               <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
-                <iframe
-                  src={`https://vimeo.com/event/${activity.vimeo_id}/embed/ea3234a09b`}
+                <iframe                  
+                  src={`https://player.vimeo.com/video/${activity.vimeo_id}`}
                   frameborder="0"
                   allow="autoplay; fullscreen; camera *;microphone *"
                   allowFullScreen
@@ -193,11 +193,11 @@ export default class ZoomComponent extends Component {
                   style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
                 ></iframe>
 
-                <iframe
-                  src={`https://vimeo.com/event/156201/${activity.vimeo_id}/ea3234a09b`}
+                <iframe                  
+                  src={`https://vimeo.com/live-chat/${activity.vimeo_id}`}
                   style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
                   frameborder=""
-                ></iframe>
+                ></iframe>               
               </div>
             )
           }
@@ -222,33 +222,6 @@ export default class ZoomComponent extends Component {
               ></iframe>}
             </>
           }
-
-          {(this.state.event && this.state.event.event_platform == "vimeo") && (
-
-            <div style={{ "padding": "39.3% 0 0 0", "width": "100%", "position": "relative" }}>
-              <iframe
-                src={"https://vimeo.com/event/176495/embed"}
-                frameborder="0"
-                allow="autoplay; fullscreen; camera *;microphone *"
-                allowFullScreen
-                allowUserMedia
-                style={{ "position": "absolute", "top": 0, "left": 0, "width": "70%", "height": "100%" }}
-              ></iframe>
-
-              <iframe
-                src={"https://vimeo.com/event/176495/chat"}
-                style={{ "position": "absolute", "top": 0, "right": 0, "width": "30%", "height": "100%" }}
-                frameborder=""
-              ></iframe>
-            </div>
-          )}
-
-          {/* // VIMEO LIVESTREAMING only chat not interactive */}
-
-
-
-
-
         </Fullscreen>
       </div>
     );

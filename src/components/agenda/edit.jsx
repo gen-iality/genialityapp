@@ -1068,10 +1068,22 @@ class AgendaEdit extends Component {
                               />
                             </div>
                           ) : (
-                              <div className="control">
-                                <label>id de videoconferencia Vimeo</label>
-                                <p>{vimeo_id}</p>
-                              </div>
+                              <>
+                                <div className="control">
+                                  <label>id de videoconferencia Vimeo</label>
+                                  <p>{vimeo_id}</p>
+                                </div>
+                                <div>
+                                  <label className="label">Estado de videoconferencia</label>
+                                  <div className="select">
+                                    <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                      <option value="open_meeting_room">Conferencia Abierta</option>
+                                      <option value="closed_meeting_room">Conferencia no Iniciada</option>
+                                      <option value="ended_meeting_room">Conferencia Terminada</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </>
                             )
                         }
                       </>

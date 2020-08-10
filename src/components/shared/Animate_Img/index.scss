@@ -1,4 +1,4 @@
-@import '~antd/dist/antd.css';
+//Esto me preocupa diana que hubieramos agregado estos breakpoints toca quitarlos
 $breakpoint-mobile: 768px;
 $breakpoint-tablet: 1024px;
 .container_imgLoading {
@@ -25,7 +25,7 @@ $breakpoint-tablet: 1024px;
   }
   .ant-btn {
     position: fixed;
-    top: 619px;
+    top: 521px;
     background-color: rgba(0, 0, 0, 0.12);
     color: white;
     font-size: 39px;
