@@ -24,6 +24,7 @@ let agendaActividadDetalle = (props) => {
   let [modalVisible, setModalVisible] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [showSurvey, setShowSurvey] = useState(false);
+  let [orderedHost,  setOrderedHost] = useState([])
 
   useEffect(() => {
     (async () => {
@@ -62,11 +63,21 @@ let agendaActividadDetalle = (props) => {
 
       }
 
+      orderHost()
+
     })();
   }, [props.match.params.event]);
 
   async function getSpeakers(idSpeaker) {
     setIdSpeaker(idSpeaker);
+  }
+
+  function orderHost() {
+    let hosts = props.currentActivity.hosts
+    hosts.sort(function (a, b) {
+      return a.order - b.order
+    })    
+    setOrderedHost(hosts) 
   }
 
   const { showDrawer, onClose, survey, currentActivity, gotoActivityList, toggleConference, visible } = props;
@@ -147,7 +158,7 @@ let agendaActividadDetalle = (props) => {
               </p>
 
               {/* Nombre del evento */}
-              
+
               {/* {currentActivity.meeting_video && (
                 <ReactPlayer
                   style={{
@@ -209,7 +220,7 @@ let agendaActividadDetalle = (props) => {
             />
 
             <Row>
-             <Col span={24}>
+              <Col span={24}>
                 <AttendeeNotAllowedCheck
                   event={event}
                   currentUser={currentUser}
@@ -243,10 +254,10 @@ let agendaActividadDetalle = (props) => {
                       <b>Conferencistas:</b>
                     </p>
                     <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
-                      <Card style={{ textAlign: "left", paddingBottom:17}}>
+                      <Card style={{ textAlign: "left", paddingBottom: 17 }}>
                         <List
                           itemLayout="horizontal"
-                          dataSource={currentActivity.hosts}
+                          dataSource={orderedHost}
                           renderItem={(item) => (
                             <List.Item>
                               <List.Item.Meta
@@ -263,7 +274,7 @@ let agendaActividadDetalle = (props) => {
                                 title={<strong>{item.name}</strong>}
                                 description={item.profession}
                               />
-                              <div className="btn-list-confencista"><Button className="button_lista"onClick={() => getSpeakers(item._id)}>Ver detalle</Button></div> 
+                              <div className="btn-list-confencista"><Button className="button_lista" onClick={() => getSpeakers(item._id)}>Ver detalle</Button></div>
                             </List.Item>
                           )}
                         />
