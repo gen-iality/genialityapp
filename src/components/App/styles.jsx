@@ -35,6 +35,11 @@ class Styles extends Component {
           fieldColorName: "bgButtonsEvent",
           editIsVisible: false,
         },
+        {
+          title: "Elige un color para seleccion de fecha de la agenda:",
+          fieldColorName: "bgCalendarDayEvent",
+          editIsVisible: false,
+        }
         /*                 
                 {
                   title: "Elige un color para los botones",
@@ -116,6 +121,7 @@ class Styles extends Component {
           textMenu: info.styles.textMenu || "#FFFFFF",
           activeText: info.styles.activeText || "#FFFFFF",
           bgButtonsEvent: info.styles.bgButtonsEvent || "#FFFFFF",
+          bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
           banner_image_email: info.styles.banner_email_image || null,
