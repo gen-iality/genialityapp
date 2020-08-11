@@ -366,7 +366,7 @@ class Agenda extends Component {
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" style={{backgroundColor:"#C44D17", borderColor:"#C44D17"}}>
+                              <Button type="primary" className="space-align-block">
                                 Detalle del Evento
                               </Button>
                               {
