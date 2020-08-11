@@ -55,11 +55,17 @@ class Styles extends Component {
 
     this.imageDrawer = [
       {
-        title: "Elige una imagen para el banner superior:",
+        title: "Elige una imagen para el banner superior en desktop:",
         description: "Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar",
         imageFieldName: "banner_image",
         width: 1920,
         height: 540
+      },
+      {
+        title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular):",
+        imageFieldName: "mobile_banner",
+        width: 320,
+        height: 180
       },
       {
         title: "Elige una imagen(textura) para el fondo:",
@@ -78,13 +84,7 @@ class Styles extends Component {
         imageFieldName: "banner_footer",
         width: 320,
         height: 180
-      },
-      {
-        title: "Elige una imagen para el banner en mobile:",
-        imageFieldName: "mobile_banner",
-        width: 320,
-        height: 180
-      },
+      }      
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
 
 

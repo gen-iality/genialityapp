@@ -197,6 +197,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     console.log("render", extraFields)
     if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
+      console.log(m)
       // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};
@@ -221,14 +222,17 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           }
         }
       }
-
       let input = (
         <Input
           {...props}
           addonBefore={
             labelPosition == "izquierda" ? (
               <span>
-                <span style={{ color: "red" }}>* </span>
+                {
+                  mandatory && (
+                    <span style={{ color: "red" }}>* </span>
+                  )
+                }
                 {label}
               </span>
             ) : (

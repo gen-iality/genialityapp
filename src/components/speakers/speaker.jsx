@@ -21,7 +21,8 @@ class Speaker extends Component {
             description_activity: "false",
             image: "",
             imageData: "",
-            networks: []
+            networks: [],
+            order:""
         }
         this.descriptionActivity = this.descriptionActivity.bind(this)
     }
@@ -62,8 +63,8 @@ class Speaker extends Component {
             sweetAlert.showLoading("Espera (:", "Guardando...");
             const { eventID, location: { state } } = this.props;
             this.setState({ isLoading: true });
-            const { name, profession, description_activity, description, image } = this.state;
-            const info = { name, image, description_activity, description, profession };
+            const { name, profession, description_activity, description, image, order} = this.state;
+            const info = { name, image, description_activity, description, profession, order: parseInt(order) };
             console.log(info)
             if (state.edit) await SpeakersApi.editOne(info, state.edit, eventID);
             else await SpeakersApi.create(eventID, info);
@@ -99,7 +100,7 @@ class Speaker extends Component {
 
     render() {
         const { matchUrl } = this.props;
-        const { redirect, loading, name, profession, description, image } = this.state;
+        const { redirect, loading, name, profession, description, image,order } = this.state;
         if (!this.props.location.state || redirect) return <Redirect to={matchUrl} />;
         return (
             <EventContent title={<span><Link to={matchUrl}><FaChevronLeft /></Link>Conferencista</span>}>
@@ -128,6 +129,10 @@ class Speaker extends Component {
                                         <option value="false">No</option>
                                     </select>
                                 </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Orden de conferencistas</label>
+                                <input className="input" type="number" name={"order"} value={order} onChange={this.handleChange} />
                             </div>
                             <div className="field">
                                 <label className="label">Descripción (opcional)</label>

@@ -55,7 +55,7 @@ class Agenda extends Component {
     const { event } = this.props;
 
     let surveysData = await SurveysApi.getAll(event._id);
-    let documentsData = await DocumentsApi.getAll(event._id)    
+    let documentsData = await DocumentsApi.getAll(event._id)
 
     if (surveysData.data.length >= 1) {
       this.setState({ showButtonSurvey: true })
@@ -136,8 +136,14 @@ class Agenda extends Component {
         (a, b) =>
           Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
           Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
-      );
+      );    
     this.setState({ listDay: list });
+
+    for(let i=0; list.length>i; i++){
+      list[i].hosts.sort((a,b)=>{
+        return a.order - b.order
+      })
+    }
 
     //Se mapea la lista para poder retornar los datos ya filtrados
     list.map((item) => {

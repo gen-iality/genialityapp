@@ -468,28 +468,11 @@ section.landing {
         background-position: left center;
       }
     }
-    .Imagen-quemada{
-      display: none;
-    }
-    @media only screen and (max-width: $breakpoint-mobile) {
-      a[href="https://storage.googleapis.com/herba-images/evius/events/BOAegLmbwcJTub4mWsnlSRHvoIYEqUCV7ZAh5SHj.png"]{
-        background-image: url(https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/imageACP.png?alt=media&token=400471f7-a781-4b10-8977-f97f5eacd652);
-        width: 100%;
-        height: 350px;
-        background-size: cover;
-        position: absolute;
-        top:0px;
-        left: 0px;
-        pointer-events:none ;
-        display: unset !important;
-      }
-    }
   }
 
   .banner-user-text-container {
     background-color: rgba(255, 255, 255, 0.829);
     width: 45%;
-
     @media only screen and (max-width: 500px) {
       width: 100%;
       top: 221px;
