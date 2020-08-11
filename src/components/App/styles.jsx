@@ -30,6 +30,11 @@ class Styles extends Component {
           fieldColorName: "toolbarDefaultBg",
           editIsVisible: false,
         },
+        {
+          title: "Elige un color para los botones:",
+          fieldColorName: "bgButtonsEvent",
+          editIsVisible: false,
+        },
         /*                 
                 {
                   title: "Elige un color para los botones",
@@ -110,6 +115,7 @@ class Styles extends Component {
           brandLight: info.styles.brandLight || "#FFFFFF",
           textMenu: info.styles.textMenu || "#FFFFFF",
           activeText: info.styles.activeText || "#FFFFFF",
+          bgButtonsEvent: info.styles.bgButtonsEvent || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
           banner_image_email: info.styles.banner_email_image || null,
@@ -117,7 +123,7 @@ class Styles extends Component {
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
           banner_footer: info.styles.banner_footer || null,
-          mobile_banner: info.styles.mobile_banner || null
+          mobile_banner: info.styles.mobile_banner || null          
         },
       });
     }
