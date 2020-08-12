@@ -68,6 +68,7 @@ class Styles extends Component {
         title: "Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)",
         description: "Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar",
         imageFieldName: "banner_image",
+        button: "Eliminar banner superior",
         width: 1920,
         height: 540
       },
@@ -75,40 +76,46 @@ class Styles extends Component {
         title: "Elige una imagen para el banner del email: (Tamaño recomendado 320x180)",
         description: "Por defecto se reduce la imagen automaticamente del banner superior",
         imageFieldName: "banner_image_email",
+        button: "Eliminar banner de email",
         width: 320,
         height: 180
       },
       {
         title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular): (Tamaño recomendado 320x180)",
         imageFieldName: "mobile_banner",
+        button: "eliminar banner en mobile",
         width: 320,
         height: 180
       },
       {
         title: "Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)",
         imageFieldName: "BackgroundImage",
+        button: "Eliminar textura de fondo",
         width: 1920,
         height: 2160
       },
       {
         title: "Elige una imagen para tu logo: (Tamaño recomendado 320x180)",
         imageFieldName: "event_image",
+        button: "Eliminar Logo",
         width: 320,
         height: 180
       },
       {
         title: "Elige una imagen para el footer del evento: (Tamaño recomendado 320x180)",
         imageFieldName: "banner_footer",
+        button: "Eliminar pie de pagina",
         width: 320,
         height: 180
-      },      
+      },
       {
         title: "Elige una imagen para el footer del email: (Tamaño recomendado 320x180)",
         description: "Por defecto se reduce la imagen automaticamente del footer del evento",
         imageFieldName: "banner_footer_email",
+        button: "Eliminar pie de pagina de email",
         width: 320,
         height: 180
-      }      
+      }
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
 
 
@@ -143,8 +150,8 @@ class Styles extends Component {
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
           banner_footer: info.styles.banner_footer || null,
-          mobile_banner: info.styles.mobile_banner || null,   
-          banner_footer_email: info.styles.banner_footer_email || null,            
+          mobile_banner: info.styles.mobile_banner || null,
+          banner_footer_email: info.styles.banner_footer_email || null,
         },
       });
     }
@@ -180,7 +187,7 @@ class Styles extends Component {
         temp[imageFieldName] = imageUrl;
 
         //Si estamos subiendo el banner_image generamos una más pequena de 600px para usar en los correos
-        if (imageFieldName == "banner_image" ) {
+        if (imageFieldName == "banner_image") {
           let imageObject = {
             "banner_image_email": imageUrl,
             type: "email"
@@ -190,7 +197,7 @@ class Styles extends Component {
           temp[image_event_name] = imageUrl_email;
         }
 
-        if (imageFieldName == "banner_footer" ) {
+        if (imageFieldName == "banner_footer") {
           let imageObject = {
             "banner_footer_email": imageUrl,
             type: "email"
@@ -217,8 +224,10 @@ class Styles extends Component {
 
   //Se realiza una funcion asincrona submit para enviar los datos a la api
   async submit(e) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e !== undefined) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     const { eventId } = this.state;
 
@@ -275,6 +284,29 @@ class Styles extends Component {
     this.setState({ colorDrawer: newColorDrawer });
   };
 
+
+  async deleteInfoBanner(value) {
+    let styles = { ...this.state.styles };
+    let empty = null
+    styles[value] = empty;
+
+    const stylesToSave = { styles }
+    console.log(stylesToSave)
+
+    this.setState({ styles: styles })
+
+    const info = await Actions.put(`/api/events/${this.state.eventId}`, stylesToSave);
+    console.log(info);
+    this.setState({ loading: false });
+
+    if (info._id) {
+      toast.success(<FormattedMessage id="toast.success" defaultMessage="Ok!" />);
+    } else {
+      toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
+      this.setState({ msg: "Cant Create", create: false });
+    }
+
+  }
   render() {
     const { timeout } = this.state;
 
@@ -324,6 +356,11 @@ class Styles extends Component {
                     }}
                     errImg={this.state.errImg}
                   />
+                  {
+                    this.state.styles[item.imageFieldName] && (
+                      <Button onClick={() => this.deleteInfoBanner(item.imageFieldName)}>{item.button}</Button>
+                    )
+                  }
                 </div>
                 {this.state.fileMsg && <p className="help is-success">{this.state.fileMsg}</p>}
               </div>
