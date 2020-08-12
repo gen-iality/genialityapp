@@ -269,7 +269,7 @@ class Agenda extends Component {
   }
 
   render() {
-    const { toggleConference } = this.props;
+    const { toggleConference, event } = this.props;
     const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
@@ -369,19 +369,22 @@ class Agenda extends Component {
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block">
+                              <Button type="primary" className="space-align-block" 
+                                 style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
                                 Detalle del Evento
                               </Button>
                               {
                                 showButtonDocuments && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" className="space-align-block"
+                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
                                     Documentos
                                   </Button>
                                 )
                               }
                               {
                                 showButtonSurvey && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" className="space-align-block"
+                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
                                     Encuestas
                                   </Button>
                                 )

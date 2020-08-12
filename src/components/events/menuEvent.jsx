@@ -10,14 +10,16 @@ import { Actions } from "../../helpers/request";
 import { Component } from "react";
 import * as Cookie from "js-cookie";
 import API, { UsersApi } from "../../helpers/request";
+import { AntCloudOutlined } from "@ant-design/icons";
 
 const { Sider } = Layout;
 
 const stylesMenuItems = {
   height: "100%",
   padding: "30px 0",
-  backgroundColor: "transparent"
+  backgroundColor: "transparent",
 }
+
 class MenuEvent extends Component {
   constructor( props ) {
     super( props );
@@ -198,8 +200,10 @@ class MenuEvent extends Component {
         mode="inline"
         // theme="dark"
         defaultSelectedKeys={ [ "1" ] }
-        // defaultOpenKeys={['sub1']}
-        style={ stylesMenuItems }>
+       // defaultOpenKeys={['sub1']}
+        style={stylesMenuItems}
+        >
+        
 
         { loading &&(
           <div className="columns is-centered">

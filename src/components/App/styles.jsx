@@ -35,6 +35,11 @@ class Styles extends Component {
           fieldColorName: "bgButtonsEvent",
           editIsVisible: false,
         },
+        {
+          title: "Elige un color para seleccion de fecha de la agenda:",
+          fieldColorName: "bgCalendarDayEvent",
+          editIsVisible: false,
+        }
         /*                 
                 {
                   title: "Elige un color para los botones",
@@ -60,33 +65,47 @@ class Styles extends Component {
 
     this.imageDrawer = [
       {
-        title: "Elige una imagen para el banner superior en desktop:",
+        title: "Elige una imagen para el banner superior en desktop: (Tamaño recomendado 1920x540)",
         description: "Por defecto en el baner superior se muestra la imagen prinicpal del evento aqui la puedes cambiar",
         imageFieldName: "banner_image",
         width: 1920,
         height: 540
       },
       {
-        title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular):",
+        title: "Elige una imagen para el banner del email: (Tamaño recomendado 320x180)",
+        description: "Por defecto se reduce la imagen automaticamente del banner superior",
+        imageFieldName: "banner_image_email",
+        width: 320,
+        height: 180
+      },
+      {
+        title: "Elige una imagen para el banner en mobile (opcional en caso de no observar bien el banner superior en celular): (Tamaño recomendado 320x180)",
         imageFieldName: "mobile_banner",
         width: 320,
         height: 180
       },
       {
-        title: "Elige una imagen(textura) para el fondo:",
+        title: "Elige una imagen(textura) para el fondo: (Tamaño recomendado 1920x2160)",
         imageFieldName: "BackgroundImage",
         width: 1920,
         height: 2160
       },
       {
-        title: "Elige una imagen para tu logo:",
+        title: "Elige una imagen para tu logo: (Tamaño recomendado 320x180)",
         imageFieldName: "event_image",
         width: 320,
         height: 180
       },
       {
-        title: "Elige una imagen para el footer del evento:",
+        title: "Elige una imagen para el footer del evento: (Tamaño recomendado 320x180)",
         imageFieldName: "banner_footer",
+        width: 320,
+        height: 180
+      },      
+      {
+        title: "Elige una imagen para el footer del email: (Tamaño recomendado 320x180)",
+        description: "Por defecto se reduce la imagen automaticamente del footer del evento",
+        imageFieldName: "banner_footer_email",
         width: 320,
         height: 180
       }      
@@ -116,15 +135,16 @@ class Styles extends Component {
           textMenu: info.styles.textMenu || "#FFFFFF",
           activeText: info.styles.activeText || "#FFFFFF",
           bgButtonsEvent: info.styles.bgButtonsEvent || "#FFFFFF",
+          // bgCalendarDayEvent: info.style.bgCalendarDayEvent || "#FFFFFF",
           event_image: info.styles.event_image || null,
           banner_image: info.styles.banner_image || null,
-          banner_image_email: info.styles.banner_email_image || null,
+          banner_image_email: info.styles.banner_image_email || null,
           menu_image: info.styles.menu_image || null,
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
           banner_footer: info.styles.banner_footer || null,
-          mobile_banner: info.styles.mobile_banner || null,
-          banner_footer_email: info.styles.banner_footer_email || null          
+          mobile_banner: info.styles.mobile_banner || null,   
+          banner_footer_email: info.styles.banner_footer_email || null,            
         },
       });
     }

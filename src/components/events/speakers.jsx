@@ -59,6 +59,7 @@ class Speakers extends Component {
   }
 
   render() {
+    const { event } = this.props;
     const { speakers, infoSpeaker, activityesBySpeaker } = this.state;
     return (
       <div className="container-calendar-speaker calendar-speakers">
@@ -83,6 +84,7 @@ class Speakers extends Component {
                   <Button
                     type="primary"
                     className="modal-button"
+                    style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}
                     onClick={() =>
                       this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
                     }
