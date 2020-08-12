@@ -31,15 +31,15 @@ class Footer extends Component {
                   </Link>
                 </div>
                 <div>
-                  <a href="https://nervous-austin-4cb375.netlify.app/" className="has-text-grey-light">
-                    Mundo Virtual para Eventos
-                  </a>
-                </div>
-                <div>
                   <a onClick={this.logout} className="has-text-grey-light">
                     Login
                   </a>
                 </div>
+                <div>
+                  <a href="https://nervous-austin-4cb375.netlify.app/" className="has-text-grey-light">
+                    Mundo Virtual para Eventos
+                  </a>
+                </div>                
                 {/* <div><Link to={"#"} className="has-text-grey-light">Boletería</Link></div>
                                 <div><Link to={"#"} className="has-text-grey-light">Eventos</Link></div> */}
               </div>
