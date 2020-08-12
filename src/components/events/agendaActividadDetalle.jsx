@@ -251,7 +251,7 @@ let agendaActividadDetalle = (props) => {
                 <div className="List-conferencistas">
                   <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
                     <p>
-                      <b>Conferencistas:</b>
+                      <b>Panelistas:</b>
                     </p>
                     <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
                       <Card style={{ textAlign: "left", paddingBottom: 17 }}>

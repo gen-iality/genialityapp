@@ -25,7 +25,7 @@ class SendRsvp extends Component {
     }
 
     componentDidMount() {
-        let default_header = ' Hola "INVITADO", has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
+        let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
         console.log("evento", this.props.event);
         this.setState({
             rsvp: {
@@ -33,7 +33,7 @@ class SendRsvp extends Component {
                 message: this.props.event.description,
                 image: this.props.event.picture,
                 image_header: (this.props.event.styles && this.props.event.styles.banner_image_email) ? this.props.event.styles.banner_image_email : ((this.props.event.styles.banner_image) ? (this.props.event.styles.banner_image) : this.props.event.picture),
-                image_footer: (this.props.event.styles && this.props.event.styles.event_image) ? this.props.event.styles.event_image : this.props.event.picture,
+                image_footer: (this.props.event.styles && this.props.event.styles.banner_footer) ? this.props.event.styles.banner_footer : this.props.event.picture,
             }
         })
     }
@@ -327,7 +327,7 @@ class SendRsvp extends Component {
 
                         <div className="column is-10">
                             <div className="rsvp-pic">
-                                <p className="rsvp-pic-txt">Sube una imagen <br /> <small>(Por defecto será el logo del evento ú  Organizador, la que este disponible)</small></p>
+                                <p className="rsvp-pic-txt">Sube una imagen <br /> <small>(Por defecto será la imagen footer del evento o la image del organizador, la que este disponible)</small></p>
                                 <ImageInput picture={this.state.rsvp.image_footer} imageFile={this.state.imageFileFooter}
                                     divClass={'rsvp-pic-img'} content={<img src={this.state.rsvp.image_footer} alt={'Imagen Perfil'} />}
                                     classDrop={'dropzone'} contentDrop={<button className={`button is-primary is-inverted is-outlined ${this.state.imageFileFooter ? 'is-loading' : ''}`}>Cambiar foto</button>}

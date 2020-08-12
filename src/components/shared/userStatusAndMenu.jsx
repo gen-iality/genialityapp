@@ -62,7 +62,7 @@ let userStatusAndMenu = props => {
 
   let loggedOutUser = (
     <div style={MenuStyle}>
-      <Button type="primary" onClick={logout}>
+      <Button type="primary" className="btn-log">
         <FormattedMessage id="header.login" defaultMessage="Sign In" />
       </Button>
     </div>

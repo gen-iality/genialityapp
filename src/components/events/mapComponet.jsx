@@ -60,7 +60,7 @@ class mapComponent extends Component {
                                             </div>
                                         </div>
                                     </Card>
-                                    <div style={{ height: "400px", width: "100%" }}>
+                                    <div style={{ width: "100%" }}>
                                         <GoogleMapReact
                                             bootstrapURLKeys={{ key: EVIUS_GOOGLE_MAPS_KEY }}
                                             defaultCenter={{
