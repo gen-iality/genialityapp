@@ -123,7 +123,8 @@ class Styles extends Component {
           BackgroundImage: info.styles.BackgroundImage || null,
           FooterImage: info.styles.FooterImage || null,
           banner_footer: info.styles.banner_footer || null,
-          mobile_banner: info.styles.mobile_banner || null          
+          mobile_banner: info.styles.mobile_banner || null,
+          banner_footer_email: info.styles.banner_footer_email || null          
         },
       });
     }
@@ -159,7 +160,7 @@ class Styles extends Component {
         temp[imageFieldName] = imageUrl;
 
         //Si estamos subiendo el banner_image generamos una más pequena de 600px para usar en los correos
-        if (imageFieldName == "banner_image") {
+        if (imageFieldName == "banner_image" ) {
           let imageObject = {
             "banner_image_email": imageUrl,
             type: "email"
@@ -169,7 +170,15 @@ class Styles extends Component {
           temp[image_event_name] = imageUrl_email;
         }
 
-
+        if (imageFieldName == "banner_footer" ) {
+          let imageObject = {
+            "banner_footer_email": imageUrl,
+            type: "email"
+          }
+          let image_event_name = "banner_footer_email";
+          let imageFooter_email = await Actions.post(`/api/files/uploadbase/${image_event_name}`, imageObject);
+          temp[image_event_name] = imageFooter_email;
+        }
 
         this.setState({ styles: temp, isLoading: false });
 
