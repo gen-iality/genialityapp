@@ -1,11 +1,19 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { AuthUrl } from "../helpers/constants";
+import * as Cookie from "js-cookie";
 
 class Footer extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  logout = () => {
+    Cookie.remove("token");
+    Cookie.remove("evius_token");
+    window.location.replace(`${AuthUrl}/logout`);
+  };
 
   render() {
     const icon =
@@ -25,6 +33,11 @@ class Footer extends Component {
                 <div>
                   <a href="https://nervous-austin-4cb375.netlify.app/" className="has-text-grey-light">
                     Mundo Virtual para Eventos
+                  </a>
+                </div>
+                <div>
+                  <a onClick={this.logout} className="has-text-grey-light">
+                    Login
                   </a>
                 </div>
                 {/* <div><Link to={"#"} className="has-text-grey-light">Boletería</Link></div>

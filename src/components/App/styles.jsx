@@ -73,7 +73,7 @@ class Styles extends Component {
         height: 540
       },
       {
-        title: "Elige una imagen para el banner del email: (Tamaño recomendado 320x180)",
+        title: "Elige una imagen para el banner del email: (Tamaño recomendado 600x280)",
         description: "Por defecto se reduce la imagen automaticamente del banner superior",
         imageFieldName: "banner_image_email",
         button: "Eliminar banner de email",
@@ -102,19 +102,19 @@ class Styles extends Component {
         height: 180
       },
       {
-        title: "Elige una imagen para el footer del evento: (Tamaño recomendado 320x180)",
+        title: "Elige una imagen para el footer del evento: (Tamaño recomendado 1920x280)",
         imageFieldName: "banner_footer",
         button: "Eliminar pie de pagina",
-        width: 320,
-        height: 180
+        width: 1920,
+        height: 280
       },
       {
-        title: "Elige una imagen para el footer del email: (Tamaño recomendado 320x180)",
+        title: "Elige una imagen para el footer del email: (Tamaño recomendado 600x220)",
         description: "Por defecto se reduce la imagen automaticamente del footer del evento",
         imageFieldName: "banner_footer_email",
         button: "Eliminar pie de pagina de email",
-        width: 320,
-        height: 180
+        width: 600,
+        height: 220
       }
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
 
