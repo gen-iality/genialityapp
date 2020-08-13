@@ -30,6 +30,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: "",
       openSurvey: false,
       allow_gradable_survey: false,
+      show_horizontal_bar: true,
       allow_vote_value_per_user: false,
       activity_id: "",
       dataAgenda: [],
@@ -72,10 +73,11 @@ class triviaEdit extends Component {
         publish: Update.publish,
         openSurvey: Update.open || "false",
         allow_gradable_survey: Update.allow_gradable_survey || "false",
+        show_horizontal_bar: Update.show_horizontal_bar || true,
         allow_vote_value_per_user: Update.allow_vote_value_per_user || "false",
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
-        freezeGame: Update.freezeGame === true ? "true": "false",
+        freezeGame: Update.freezeGame === true ? "true" : "false",
         dataAgenda: dataAgenda.data,
         points: Update.points ? Update.points : 1,
         initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, "\n") : null,
@@ -113,6 +115,7 @@ class triviaEdit extends Component {
       open: "false",
       allow_anonymous_answers: "false",
       allow_gradable_survey: "false",
+      show_horizontal_bar: this.state.show_horizontal_bar === "true" ? true : false,
       allow_vote_value_per_user: "false",
       freezeGame: this.state.freezeGame === "true" ? true : false,
       event_id: this.props.event._id,
@@ -147,6 +150,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
+      show_horizontal_bar: this.state.show_horizontal_bar === "true" ? true : false,
       allow_vote_value_per_user: this.state.allow_vote_value_per_user,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
@@ -312,6 +316,7 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      show_horizontal_bar,
       allow_vote_value_per_user,
       freezeGame,
     } = this.state;
@@ -389,6 +394,17 @@ class triviaEdit extends Component {
               <Switch
                 checked={freezeGame == "true"}
                 onChange={(checked) => this.setState({ freezeGame: checked ? "true" : "false" })}
+              />
+            </div>
+          )}
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Mostrar grafica de barras Vertical
+              </label>
+              <Switch
+                checked={show_horizontal_bar == "true"}
+                onChange={(checked) => this.setState({ show_horizontal_bar: checked ? "true" : "false" })}
               />
             </div>
           )}
