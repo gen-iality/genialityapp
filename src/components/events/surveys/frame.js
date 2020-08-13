@@ -50,7 +50,7 @@ export const graphicsFrame = {
       labels: [],
       datasets: [
         {
-          label: "# de Votos",
+          label: "% de Votos",
           labelColor: "black",
           ...colorBars,
           data: [],

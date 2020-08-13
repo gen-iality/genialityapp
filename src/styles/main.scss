@@ -70,9 +70,14 @@ iframe {
 }
 
 .sv-container-modern__title {
+  text-align: center;
   padding-top: 3em !important;
 }
 
+// ajuste del texto de la pregunta del la encuesta
+.sv-question__title {
+  padding: 0px !important;
+}
 .sv-question__content {
   margin-top: 2em;
 }
