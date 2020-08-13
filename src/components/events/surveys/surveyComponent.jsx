@@ -33,6 +33,8 @@ const imageGraphics = {
 class SurveyComponent extends Component {
   constructor(props) {
     super(props);
+    this.survey = null;
+
     this.state = {
       surveyData: {},
       rankingList: [],
@@ -48,7 +50,7 @@ class SurveyComponent extends Component {
       currentPage: null,
       surveyRealTime: null,
       timerPausa: null,
-      survey: null
+      survey: null,
     };
   }
 
@@ -67,6 +69,7 @@ class SurveyComponent extends Component {
     sino se presentar comportamientos raros.
     */
     self.setState({ surveyData, idSurvey, survey });
+    self.survey = survey;
 
     console.log("CARGADO todo");
     // Esto permite obtener datos para la grafica de gamificacion
@@ -353,8 +356,16 @@ class SurveyComponent extends Component {
     }
   };
 
+
+
+  onSurveyCompleted = async (values) =>{
+    this.sendData(values);
+  }
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
   sendData = async (values) => {
+
+
+
     const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
     let { surveyData, questionsAnswered, aux, currentPage } = this.state;
 
@@ -511,6 +522,9 @@ class SurveyComponent extends Component {
     if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
       SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
 
+    
+     
+
 
   }
 
@@ -541,8 +555,9 @@ class SurveyComponent extends Component {
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
     return (
-      console.log(surveyData),
+
       <div style={surveyStyle}>
+
         {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
           <>
             <div style={{ marginTop: 5 }}>
@@ -550,12 +565,19 @@ class SurveyComponent extends Component {
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
             </div>            
-            < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/>
+            {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
+            {this.state.survey && this.state.survey.state =="completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+  }
           </>
         ) : (
-            <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+          <>{
+            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+        }</>
           ))}
-
+        
+        {
+            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+        }        
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         {
@@ -582,7 +604,7 @@ class SurveyComponent extends Component {
                     <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
                       {(this.state.survey && <Survey.Survey
                         model={this.state.survey}
-                        onComplete={this.sendData}
+                        onComplete={this.onSurveyCompleted}
                         onPartialSend={this.sendData}
                         onCompleting={this.setFinalMessage}
                         onTimerPanelInfoText={this.setCounterMessage}

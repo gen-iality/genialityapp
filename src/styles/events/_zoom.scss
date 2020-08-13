@@ -124,10 +124,12 @@
   .sv-body__footer {
     padding: 0;
   }
-
+  
+  /* Tener cuidado ser más estrategicos al estilizar esto se tira el diseno */
   .ant-card-body canvas {
     padding: 13px !important;
-    height: 205px !important;
+    /*estas constantes arbitrarias tan especificas dentro del código generalmente implicar un error */
+    min-height: 205px !important;
   }
 
   .ant-card-body {
