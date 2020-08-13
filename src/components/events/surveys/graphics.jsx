@@ -8,7 +8,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
-import { SurveysApi } from "../../../helpers/request";
+import { SurveysApi, UsersApi } from "../../../helpers/request";
 import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
@@ -20,6 +20,7 @@ class Graphics extends Component {
       graphicsFrame,
       chart: {},
       chartCreated: false,
+      usersRegistered: 0
     };
   }
 
@@ -48,7 +49,9 @@ class Graphics extends Component {
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-    this.setState({ dataSurvey }, this.mountChart);
+    const usersRegistered = await UsersApi.getAll(this.props.eventId)
+
+    this.setState({ dataSurvey, usersRegistered: usersRegistered.data.length }, this.mountChart);
   };
 
   setCurrentPage = (page) => {
@@ -56,8 +59,15 @@ class Graphics extends Component {
   };
 
   updateData = ({ options, answer_count }) => {
-    let { graphicsFrame, chartCreated, chart } = this.state;
+    let { graphicsFrame, chartCreated, chart, usersRegistered } = this.state;
     let { horizontalBar } = graphicsFrame;
+    let total = []
+    console.log(answer_count)
+
+    for (let i = 0; answer_count.length > i; i++) {
+      total.push((answer_count[i] * 100) / usersRegistered)
+      console.log(answer_count[i])
+    }    
 
     let formatterTitle = options.title;
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
@@ -91,7 +101,7 @@ class Graphics extends Component {
             }
           }],
         }
-      }      
+      }
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
@@ -120,7 +130,7 @@ class Graphics extends Component {
     SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData);
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.loadData();
   }
 
