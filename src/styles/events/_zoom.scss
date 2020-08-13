@@ -21,8 +21,9 @@
     bottom: 7%;
     height: 90%;
     min-width: 90%;
-    min-height: 80%;
+    min-height: 100%;
     width: 100%;
+    overflow-y: scroll;
   }
   @media only screen and (max-width: $breakpoint-mobile) and (orientation: landscape) {
     bottom: 11%;
@@ -53,6 +54,9 @@
       font-size: 12.5px;
       background-color: red;
     }
+  }
+  .tab-button{
+    width: 297px;
   }
 }
 
@@ -105,11 +109,23 @@
   }
 
   .ant-card-body canvas {
-    padding: 15px !important;
+    padding: 13px !important;
   }
 
   .ant-card-body {
     text-align: initial;
+    margin-bottom: 15px;
+  }
+  @media only screen and (max-width: $breakpoint-mobile) {
+    .ant-card-body {
+      padding: 0px !important;
+    }
+    .sv-body{
+      padding: 20px !important;
+    }
+    canvas{
+      height: 201px !important;
+    }
   }
 }
 
