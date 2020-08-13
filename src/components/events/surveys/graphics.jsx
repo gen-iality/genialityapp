@@ -20,7 +20,8 @@ class Graphics extends Component {
       graphicsFrame,
       chart: {},
       chartCreated: false,
-      usersRegistered: 0
+      usersRegistered: 0,
+      titleQuestion: ""
     };
   }
 
@@ -45,8 +46,7 @@ class Graphics extends Component {
   };
 
   loadData = async () => {
-    const { idSurvey, eventId } = this.props;
-    console.log(idSurvey)
+    const { idSurvey, eventId } = this.props;    
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
@@ -83,6 +83,7 @@ class Graphics extends Component {
     }
     
     let formatterTitle = options.title;
+    this.setState({titleQuestion: formatterTitle})
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
 
     // Se condiciona si el grafico ya fue creado
@@ -148,7 +149,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage, horizontalBar, referenceChart } = this.state;
+    let { dataSurvey, currentPage, horizontalBar, referenceChart, titleQuestion} = this.state;
     const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)
@@ -160,7 +161,8 @@ class Graphics extends Component {
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
             </div>
-            <Card>
+            <Card>     
+              <strong>{titleQuestion}</strong>
               <canvas id="chart"></canvas>
             </Card>
             <br />
