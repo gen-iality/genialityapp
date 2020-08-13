@@ -46,6 +46,7 @@ class Graphics extends Component {
 
   loadData = async () => {
     const { idSurvey, eventId } = this.props;
+    console.log(idSurvey)
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
