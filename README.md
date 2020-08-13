@@ -72,6 +72,9 @@ La edicion de las encuestas posee varias alternativas:
 - Encuesta calificable (sera una encuesta con contador y se podra asignar la respuesta correcta)
 - Relacionar encuesta a actividad (se podra asignar una encuesta a alguna actividad)
 
+
+https://video-app-1496-dev.twil.io?passcode=1494731496&UserName=vincent&URLRoomName=otra
+
 Dentro de la edicion de cada pregunta se podra asignar el tipo de pregunta (seleccion multiple o unica), titulo, y las opciones o respuestas que tendra (maximo 5,
 si se desea cambiar ese valor, se podra actualizar dentro del componente de formEdit).
 La edicion de cada pregunta dependera de una propiedad en particular.

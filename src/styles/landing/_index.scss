@@ -443,7 +443,7 @@ section.landing {
   }
   @media only screen and (max-width: 500px) {
     overflow-y: visible;
-    margin-bottom: 92px
+    margin-bottom: 123px
   }
   .banner-user-elem {
     text-align: left;
@@ -468,7 +468,6 @@ section.landing {
         background-position: left center;
       }
     }
-    
   }
 
   .banner-user-text-container {
@@ -512,4 +511,8 @@ section.landing {
   @media only screen and (min-width: 500px) {
     display: none;
   }
+}
+
+ant-btn-primary{
+  background-color: blue;
 }

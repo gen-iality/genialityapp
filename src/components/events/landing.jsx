@@ -643,7 +643,7 @@ class Landing extends Component {
                     <img src={event.styles.banner_footer} />
                   </div>
                 )
-              }                            
+              }              
             </React.Fragment >
           )
         }
