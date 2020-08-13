@@ -30,6 +30,7 @@ class triviaEdit extends Component {
       allow_anonymous_answers: "",
       openSurvey: false,
       allow_gradable_survey: false,
+      show_horizontal_bar: true,
       allow_vote_value_per_user: false,
       activity_id: "",
       dataAgenda: [],
@@ -42,6 +43,7 @@ class triviaEdit extends Component {
       key: Date.now(),
       currentQuestion: [], // Variable que se usa para obtener datos de una pregunta y editarla en el modal
       initialMessage: null,
+      freezeGame: true
     };
     this.submit = this.submit.bind(this);
     this.submitWithQuestions = this.submitWithQuestions.bind(this);
@@ -71,9 +73,11 @@ class triviaEdit extends Component {
         publish: Update.publish,
         openSurvey: Update.open || "false",
         allow_gradable_survey: Update.allow_gradable_survey || "false",
+        show_horizontal_bar: Update.show_horizontal_bar || true,
         allow_vote_value_per_user: Update.allow_vote_value_per_user || "false",
         allow_anonymous_answers: Update.allow_anonymous_answers,
         activity_id: Update.activity_id,
+        freezeGame: Update.freezeGame === true ? "true" : "false",
         dataAgenda: dataAgenda.data,
         points: Update.points ? Update.points : 1,
         initialMessage: Update.initialMessage ? Update.initialMessage.replace(/<br \/>/g, "\n") : null,
@@ -111,7 +115,9 @@ class triviaEdit extends Component {
       open: "false",
       allow_anonymous_answers: "false",
       allow_gradable_survey: "false",
+      show_horizontal_bar: this.state.show_horizontal_bar === "true" ? true : false,
       allow_vote_value_per_user: "false",
+      freezeGame: this.state.freezeGame === "true" ? true : false,
       event_id: this.props.event._id,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
@@ -126,7 +132,7 @@ class triviaEdit extends Component {
     // Esto permite almacenar los estados en firebase
     let setDataInFire = await createOrUpdateSurvey(
       idSurvey,
-      { isPublished: data.publish, isOpened: "false" },
+      { isPublished: data.publish, isOpened: "false", freezeGame: data.freezeGame },
       { eventId: this.props.event._id, name: save.survey, category: "none" }
     );
     console.log("Fire:", setDataInFire);
@@ -144,10 +150,12 @@ class triviaEdit extends Component {
       allow_anonymous_answers: this.state.allow_anonymous_answers === "true" ? "true" : "false",
       open: this.state.openSurvey,
       allow_gradable_survey: this.state.allow_gradable_survey,
+      show_horizontal_bar: this.state.show_horizontal_bar === "true" ? true : false,
       allow_vote_value_per_user: this.state.allow_vote_value_per_user,
       activity_id: this.state.activity_id,
       points: this.state.points ? parseInt(this.state.points) : 1,
       initialMessage: this.state.initialMessage,
+      freezeGame: this.state.freezeGame === "true" ? true : false
     };
     console.log(data);
 
@@ -157,7 +165,7 @@ class triviaEdit extends Component {
         // Esto permite almacenar los estados en firebase
         let setDataInFire = await createOrUpdateSurvey(
           this.state.idSurvey,
-          { isPublished: data.publish, isOpened: data.open, allow_anonymous_answers: data.allow_anonymous_answers },
+          { isPublished: data.publish, isOpened: data.open, allow_anonymous_answers: data.allow_anonymous_answers, freezeGame: data.freezeGame },
           { eventId: this.props.event._id, name: data.survey, category: "none" }
         );
 
@@ -172,7 +180,7 @@ class triviaEdit extends Component {
   // Funcion para generar un id a cada pregunta 'esto es temporal'
   generateUUID = () => {
     let d = new Date().getTime();
-    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
       return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
@@ -308,7 +316,9 @@ class triviaEdit extends Component {
       currentQuestion,
       allow_anonymous_answers,
       allow_gradable_survey,
+      show_horizontal_bar,
       allow_vote_value_per_user,
+      freezeGame,
     } = this.state;
     const columns = [
       {
@@ -372,6 +382,29 @@ class triviaEdit extends Component {
               <Switch
                 checked={publish == "true"}
                 onChange={(checked) => this.setState({ publish: checked ? "true" : "false" })}
+              />
+            </div>
+          )}
+
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Pausar Encuesta
+              </label>
+              <Switch
+                checked={freezeGame == "true"}
+                onChange={(checked) => this.setState({ freezeGame: checked ? "true" : "false" })}
+              />
+            </div>
+          )}
+          {this.state.idSurvey && (
+            <div>
+              <label style={{ marginTop: "3%" }} className="label">
+                Mostrar grafica de barras Vertical
+              </label>
+              <Switch
+                checked={show_horizontal_bar == "true"}
+                onChange={(checked) => this.setState({ show_horizontal_bar: checked ? "true" : "false" })}
               />
             </div>
           )}
@@ -447,12 +480,12 @@ class triviaEdit extends Component {
               </button>
             </div>
           ) : (
-            <div className="column">
-              <button onClick={this.submit} className="columns is-pulled-right button is-primary">
-                Guardar
+              <div className="column">
+                <button onClick={this.submit} className="columns is-pulled-right button is-primary">
+                  Guardar
               </button>
-            </div>
-          )}
+              </div>
+            )}
 
           {this.state.idSurvey && (
             <div>

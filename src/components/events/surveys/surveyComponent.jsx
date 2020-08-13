@@ -14,6 +14,7 @@ import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
 import { validateSurveyCreated } from "../../trivia/services";
 
 import GraphicGamification from "./graphicsGamification";
+import Graphics from "./graphics"
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
 Survey.StylesManager.applyTheme("modern");
@@ -53,15 +54,13 @@ class SurveyComponent extends Component {
 
   async componentDidMount() {
     var self = this;
-    const { eventId, idSurvey } = this.props;
-
+    const { eventId, idSurvey } = this.props;    
     //console.log("CARGANDO INICIAL");
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
     //console.log("CARGADO surveyData");
-
     await this.listenAndUpdateStateSurveyRealTime(idSurvey);
-    //console.log("CARGADO surveyRealTime");
+    //console.log("CARGADO surveyRealTime");    
 
     /* El render se produce antes que se cargue toda la info para que funcione bien tenemos q
     que renderizar condicionalmente el compontente de la encuesta solo cuando  surveyRealTime y survey esten cargados 
@@ -544,16 +543,18 @@ class SurveyComponent extends Component {
     return (
       console.log(surveyData),
       <div style={surveyStyle}>
-        {
-          showListSurvey && (
+        {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
+          <>
             <div style={{ marginTop: 5 }}>
               <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
-            </div>
-          )
-        }
-        {surveyData.allow_gradable_survey === "true" && < GraphicGamification data={this.state.rankingList} eventId={eventId} />}
+            </div>            
+            < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/>
+          </>
+        ) : (
+            <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+          ))}
 
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
