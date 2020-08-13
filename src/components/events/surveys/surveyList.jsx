@@ -56,7 +56,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   );
 };
 
-export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
+const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
   const [surveyList, setSurveyList] = useState([]);
   const [anonymousSurveyList, setAnonymousSurveyList] = useState([]);
 
@@ -102,7 +102,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
                         }`}
                         onClick={() => showSurvey(survey)}
                         loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted
+                        {(!survey.userHasVoted &&  usuarioRegistrado && usuarioRegistrado.rol && usuarioRegistrado.rol.name != "Speaker")
                           ? `Ir a ${
                               surveyLabel.name
                                 ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
@@ -135,3 +135,5 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
     </Card>
   );
 };
+
+export default surveyList
