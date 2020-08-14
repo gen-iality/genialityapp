@@ -205,7 +205,7 @@ class Landing extends Component {
 
 
 
-    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.data_loader_page && event.loader_page !== "no" ? true : false })
+    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
@@ -477,7 +477,7 @@ class Landing extends Component {
                 ) : (
                     <>
                       {
-                        event.show_banner && event.show_banner === "true" ? (
+                        event.styles.show_banner && event.styles.show_banner === "true" ? (
                           <BannerEvent
                             bgImage={
                               event.styles && event.styles.banner_image
@@ -509,7 +509,7 @@ class Landing extends Component {
                         ) : (
                             <div>
                               {
-                                event.show_banner === undefined && this.state.headerVisible && (
+                                event.styles.show_banner === undefined && this.state.headerVisible && (
                                   <BannerEvent
                                     bgImage={
                                       event.styles && event.styles.banner_image

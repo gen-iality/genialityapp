@@ -6,7 +6,11 @@ import { Actions } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
 import LogOut from "../shared/logOut";
 import { SketchPicker } from "react-color";
-import { Button } from "antd"
+import { Button, Select } from "antd";
+import ReactQuill from "react-quill";
+import { toolbarEditor } from "../../helpers/constants";
+
+const { Option } = Select;
 
 class Styles extends Component {
   constructor(props) {
@@ -17,7 +21,7 @@ class Styles extends Component {
       styles: {},
       isLoading: false,
       editIsVisible: false,
-      //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente
+      //Se realizan estas constantes para optimizar mas el codigo,de esta manera se mapea en el markup para utilizarlo posteriormente      
       colorDrawer: [
         {
           title: "Elige un color de fondo:",
@@ -61,6 +65,7 @@ class Styles extends Component {
     };
     //Se establecen las funciones para su posterior uso
     this.saveEventImage = this.saveEventImage.bind(this);
+    this.getDataLoaderPage = this.getDataLoaderPage.bind(this)
     this.submit = this.submit.bind(this);
 
     this.imageDrawer = [
@@ -117,9 +122,40 @@ class Styles extends Component {
         height: 220
       }
       //{ title: "Elige una imagen de encabezado de menu", imageFieldName: "menu_image" },
-
-
     ];
+    this.selectsDrawer = [
+      {
+        label: "Introduccion de inicio",
+        defaultValue: "no",
+        name: "loader_page",
+        options: [
+          {
+            label: "No",
+            value: "no"
+          }, {
+            label: "Video",
+            value: "text"
+          }, {
+            label: "Texto / Imagen",
+            value: "code"
+          }
+        ]
+      },
+      {
+        label: "Habilitar banner Superior",
+        name: "show_banner",
+        defaultValue: "true",
+        options: [
+          {
+            label: "Si",
+            value: true,
+          }, {
+            label: "No",
+            value: false
+          }
+        ]
+      }
+    ]
   }
   //Se consulta la api para traer los datos ya guardados y enviarlos al state
   async componentDidMount() {
@@ -152,6 +188,9 @@ class Styles extends Component {
           banner_footer: info.styles.banner_footer || null,
           mobile_banner: info.styles.mobile_banner || null,
           banner_footer_email: info.styles.banner_footer_email || null,
+          show_banner: info.styles.show_banner || false,
+          loader_page: info.styles.loader_page || "no",
+          data_loader_page: info.styles.data_loader_page || ""
         },
       });
     }
@@ -305,8 +344,25 @@ class Styles extends Component {
       toast.warn(<FormattedMessage id="toast.warning" defaultMessage="Idk" />);
       this.setState({ msg: "Cant Create", create: false });
     }
-
   }
+
+  handleChange(e) {
+    let name = e.target.name
+    let value = e.target.value
+
+    let styles = { ...this.state.styles }
+    styles[name] = value
+
+    this.setState({ styles: styles })
+  }
+
+  getDataLoaderPage(data) {
+    let styles = { ...this.state.styles }
+    styles["data_loader_page"] = data
+    this.setState({ styles: styles })
+  }
+
+
   render() {
     const { timeout } = this.state;
 
@@ -339,8 +395,37 @@ class Styles extends Component {
                 </div>
               </div>
             ))}
-
-
+            {
+              this.selectsDrawer.map((item, key) => (
+                <div className="column inner-column" key={key}>
+                  <p className="label">{item.label}</p>
+                  {
+                    <div className="select">
+                      <select value={this.state.styles[item.name]} name={item.name} onChange={(e) => this.handleChange(e)} style={{ width: 120 }}>
+                        {
+                          item.options.map((item2, key) => (
+                            <option key={key} value={item2.value}>{item2.label}</option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  }
+                  {
+                    item.name === "loader_page" && this.state.styles.loader_page === "text" && (
+                      <div>
+                        <label className="label">Link de video</label>
+                        <input defaultValue={this.state.styles["data_loader_page"]} type="text" className="input" onChange={(e) => this.getDataLoaderPage(e.target.value)} />
+                      </div>
+                    )
+                  }
+                  {
+                    item.name === "loader_page" && this.state.styles.loader_page === "code" && (
+                      <ReactQuill onChange={this.getDataLoaderPage} defaultValue={this.state.styles.data_loader_page} style={{ marginTop: "5%" }} modules={toolbarEditor} />
+                    )
+                  }
+                </div>
+              ))
+            }
             {this.imageDrawer.map((item, key) => (
               <div className="column inner-column" key={key}>
                 <p className="label ">{item.title}</p>
