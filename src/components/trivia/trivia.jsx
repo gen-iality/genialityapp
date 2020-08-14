@@ -7,6 +7,7 @@ import { deleteSurvey } from "./services";
 import { sweetAlert } from "../../helpers/utils";
 import EvenTable from "../events/shared/table";
 import "react-tabs/style/react-tabs.css";
+import { Table } from 'antd';
 import { toast } from "react-toastify";
 
 import { message } from "antd";
@@ -76,6 +77,7 @@ class trivia extends Component {
               <spa>Nueva Encuesta</spa>
             </button>
           </Link>
+          <Table dataSource={data} columns={trivia.survey}/>;
           <EvenTable style={{ marginTop: "5%" }} head={["Nombre de encuesta", "Publicada", ""]}>
             {data.map((trivia, key) => (
               <tr key={key}>
