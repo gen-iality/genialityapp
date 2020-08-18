@@ -383,19 +383,19 @@ class UsersRsvp extends Component {
   filterByTicket(ticket) {
     toString(ticket)
     console.log(ticket)
-    const { users } = this.state
-    console.log(users)
+    const { resp } = this.state
+    console.log(this.state)
     const filter = []
-    for (let i = 0; users.length > i; i++) {
-      if (users[i].properties.ticketid) {
-        if (users[i].properties.ticketid === ticket) {
-          filter.push(users[i])
+    for (let i = 0; resp.data.length > i; i++) {
+      if (resp.data[i].properties.ticketid) {
+        if (resp.data[i].properties.ticketid === ticket) {
+          filter.push(resp.data[i])
         } else {
           console.log("no hay")
         }
       } else {
-        if (users[i].properties.ticket_id === ticket) {
-          filter.push(users[i])
+        if (resp.data[i].properties.ticket_id === ticket) {          
+          filter.push(resp.data[i])
         } else {
           console.log("no hay")
         }
