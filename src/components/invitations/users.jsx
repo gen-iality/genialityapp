@@ -353,7 +353,7 @@ class UsersRsvp extends Component {
     columnsKey.unshift("updated_at");
 
     const data = await parseData2Excel(this.state.exportUsers, this.state.columnsKey);
-    console.log(data)
+
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
@@ -383,24 +383,18 @@ class UsersRsvp extends Component {
   filterByTicket(ticket) {
     toString(ticket)
     console.log(ticket)
-    const { users } = this.state
+    const { resp } = this.state
     console.log(this.state)
     const filter = []
-    for (let i = 0; users.length > i; i++) {
-      if (users[i].properties.ticketid) {      
-        if (users[i].properties.ticketid === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
-      } else {      
-        if (users[i].properties.ticket_id === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
+    for (let i = 0; resp.data.length > i; i++) {
+      if (resp.data[i].user.ticket_id === ticket || resp.data[i].user.ticketid === ticket) {
+        filter.push({
+          id: resp.data[i].user._id,
+          properties: resp.data[i].user
+        })
+      } else {
+        console.log("no hay")
       }
-
     }
     console.log(filter)
     this.setState({ users: filter })
@@ -585,11 +579,11 @@ class UsersRsvp extends Component {
               )} */}
             <div className="table-invite-asistente">
               <EvenTable head={columns}>
-                {pageOfItems.map(user => (
-                  <tr key={user.id}>
-                    <td>
+                {pageOfItems.map((user,key) => (
+                  <tr key={key}>
+                    {/* <td>
                       {"checkinUser" + user.id}
-                    </td>
+                    </td> */}
                     {Object.keys(user.properties).map(prop => (
                       <td key={prop}>
                         {parseInt() || typeof user.properties[prop] == "string"
