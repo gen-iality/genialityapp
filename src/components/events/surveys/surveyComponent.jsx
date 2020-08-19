@@ -75,7 +75,7 @@ class SurveyComponent extends Component {
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
-    this.getCurrentEvenUser();
+    await this.getCurrentEvenUser();
   }
 
   /**
@@ -105,7 +105,7 @@ class SurveyComponent extends Component {
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-
+    console.log("response",response);
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
@@ -519,13 +519,13 @@ class SurveyComponent extends Component {
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
-    if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
-      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
-
-    
-     
 
 
+    //Se comentarea if para evitar regresar a la pagina en que quedó el usuario al desconectarse
+
+
+    // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
+    //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
   }
 
   checkCurrentPage = (survey) => {

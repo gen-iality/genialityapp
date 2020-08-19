@@ -8,7 +8,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
-import { SurveysApi } from "../../../helpers/request";
+import { SurveysApi, UsersApi } from "../../../helpers/request";
 import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
@@ -20,6 +20,8 @@ class Graphics extends Component {
       graphicsFrame,
       chart: {},
       chartCreated: false,
+      usersRegistered: 0,
+      titleQuestion: ""
     };
   }
 
@@ -44,22 +46,44 @@ class Graphics extends Component {
   };
 
   loadData = async () => {
-    const { idSurvey, eventId } = this.props;
+    const { idSurvey, eventId } = this.props;    
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-    this.setState({ dataSurvey }, this.mountChart);
+    const usersRegistered = await UsersApi.getAll(this.props.eventId)    
+    let totalUsersRegistered =0
+
+    //Se realiza sumatoria de usuarios checkeados para realizar calculo de porcentaje
+    for(let i =0; usersRegistered.data.length > i; i++){
+      if(usersRegistered.data[i].checkedin_at){
+        totalUsersRegistered = totalUsersRegistered + 1
+      }
+    }
+
+    this.setState({ dataSurvey, usersRegistered: totalUsersRegistered }, this.mountChart);
   };
 
   setCurrentPage = (page) => {
     this.setState({ currentPage: page }, this.mountChart);
   };
 
-  updateData = ({ options, answer_count }) => {
-    let { graphicsFrame, chartCreated, chart } = this.state;
+  updateData = ({ options, answer_count }) => {    
+    let { graphicsFrame, chartCreated, chart, usersRegistered } = this.state;
     let { horizontalBar } = graphicsFrame;
-
+    
+    let totalPercentResponse = new Object()
+    //se realiza iteracion para calcular porcentaje
+    for (let i in answer_count) {      
+      totalPercentResponse[i] =  parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))     
+    }     
+      
+    //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
+    for (let a = 0; options.choices.length > a; a++){
+      options.choices[a] = `${options.choices[a]}: ${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
+    }
+    
     let formatterTitle = options.title;
+    this.setState({titleQuestion: formatterTitle})
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
 
     // Se condiciona si el grafico ya fue creado
@@ -68,7 +92,7 @@ class Graphics extends Component {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
       horizontalBar.data.labels = options.choices;
-      horizontalBar.data.datasets[0].data = Object.values(answer_count || []);
+      horizontalBar.data.datasets[0].data = Object.values(totalPercentResponse || []);
       horizontalBar.options.title.text = formatterTitle;
 
 
@@ -91,7 +115,7 @@ class Graphics extends Component {
             }
           }],
         }
-      }      
+      }
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
@@ -101,7 +125,7 @@ class Graphics extends Component {
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
       chart.data.labels = options.choices;
-      chart.data.datasets[0].data = Object.values(answer_count || []);
+      chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
       chart.options.title.text = formatterTitle;
 
       chart.update();
@@ -120,12 +144,12 @@ class Graphics extends Component {
     SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData);
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.loadData();
   }
 
   render() {
-    let { dataSurvey, currentPage, horizontalBar, referenceChart } = this.state;
+    let { dataSurvey, currentPage, horizontalBar, referenceChart, titleQuestion} = this.state;
     const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)
@@ -137,7 +161,8 @@ class Graphics extends Component {
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
             </div>
-            <Card>
+            <Card>     
+              <strong>{titleQuestion}</strong>
               <canvas id="chart"></canvas>
             </Card>
             <br />

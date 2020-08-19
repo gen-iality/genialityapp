@@ -383,28 +383,21 @@ class UsersRsvp extends Component {
   filterByTicket(ticket) {
     toString(ticket)
     console.log(ticket)
-    const { users } = this.state
-    console.log(users)
+    const { resp } = this.state
+    console.log(this.state)
     const filter = []
-    for (let i = 0; users.length > i; i++) {
-      if (users[i].properties.ticketid) {
-        if (users[i].properties.ticketid === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
+    for (let i = 0; resp.data.length > i; i++) {
+      if (resp.data[i].user.ticket_id === ticket || resp.data[i].user.ticketid === ticket) {
+        filter.push({
+          id: resp.data[i].user._id,
+          properties: resp.data[i].user
+        })
       } else {
-        if (users[i].properties.ticket_id === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
+        console.log("no hay")
       }
-
     }
     console.log(filter)
     this.setState({ users: filter })
-
   }
   render() {
     if (this.state.redirect) return <Redirect to={{ pathname: this.state.url_redirect }} />;
