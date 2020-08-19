@@ -25,7 +25,7 @@ class SendRsvp extends Component {
     }
 
     componentDidMount() {
-        let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
+        let default_header = ' Has sido invitado a: <br /> <span className="\strong\">' + this.props.event.name + '</span> '
         console.log("evento", this.props.event);
         this.setState({
             rsvp: {
