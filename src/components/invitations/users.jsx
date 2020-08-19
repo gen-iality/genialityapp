@@ -361,41 +361,41 @@ class UsersRsvp extends Component {
   };
 
 
-  filterBytipoAsistente(tipoAsistente){
+  filterBytipoAsistente(tipoAsistente) {
 
     const { users } = this.state
-    if (!tipoAsistente){
-      this.setState({ users: users }) 
-      return;  
+    if (!tipoAsistente) {
+      this.setState({ users: users })
+      return;
     }
     const filter = []
     for (let i = 0; users.length > i; i++) {
       if (users[i].properties.asistecomo) {
         if (users[i].properties.asistecomo === tipoAsistente) {
           filter.push(users[i])
-        } 
+        }
       }
 
     }
-    this.setState({ users: filter })    
+    this.setState({ users: filter })
   }
 
   filterByTicket(ticket) {
     toString(ticket)
     console.log(ticket)
-    const { resp } = this.state
+    const { users } = this.state
     console.log(this.state)
     const filter = []
-    for (let i = 0; resp.data.length > i; i++) {
-      if (resp.data[i].properties.ticketid) {
-        if (resp.data[i].properties.ticketid === ticket) {
-          filter.push(resp.data[i])
+    for (let i = 0; users.length > i; i++) {
+      if (users[i].properties.ticketid) {      
+        if (users[i].properties.ticketid === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }
-      } else {
-        if (resp.data[i].properties.ticket_id === ticket) {          
-          filter.push(resp.data[i])
+      } else {      
+        if (users[i].properties.ticket_id === ticket) {
+          filter.push(users[i])
         } else {
           console.log("no hay")
         }
@@ -541,12 +541,12 @@ class UsersRsvp extends Component {
                 <div className="select">
                   {
 
-                      <select onChange={(e) => this.filterBytipoAsistente(e.target.value)} >
-                        <option value="">Selecciona...</option>
-                        <option value="Persona">Persona</option>
-                        <option value="Empresa">Empresa</option>
-                      </select>
-}
+                    <select onChange={(e) => this.filterBytipoAsistente(e.target.value)} >
+                      <option value="">Selecciona...</option>
+                      <option value="Persona">Persona</option>
+                      <option value="Empresa">Empresa</option>
+                    </select>
+                  }
 
                 </div>
               </div>
@@ -584,22 +584,22 @@ class UsersRsvp extends Component {
                 </div>
               )} */}
             <div className="table-invite-asistente">
-            <EvenTable head={columns}>
-              {pageOfItems.map(user => (
-                <tr key={user.id}>
-                  <td>
-                  {"checkinUser" + user.id} 
-                  </td>
-                  {Object.keys(user.properties).map(prop => (
-                    <td key={prop}>
-                      {parseInt() || typeof user.properties[prop] == "string"
-                        ? user.properties[prop]
-                        : JSON.stringify(user.properties[prop])}
+              <EvenTable head={columns}>
+                {pageOfItems.map(user => (
+                  <tr key={user.id}>
+                    <td>
+                      {"checkinUser" + user.id}
                     </td>
-                  ))}
-                </tr>
-              ))}
-            </EvenTable>
+                    {Object.keys(user.properties).map(prop => (
+                      <td key={prop}>
+                        {parseInt() || typeof user.properties[prop] == "string"
+                          ? user.properties[prop]
+                          : JSON.stringify(user.properties[prop])}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </EvenTable>
             </div>
             <Pagination items={users} onChangePage={this.onChangePage} />
           </div>
