@@ -79,7 +79,7 @@ class Graphics extends Component {
 
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
-      options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
+      options.choices[a] = `${options.choices[a]}`
     }
 
     let formatterTitle = options.title;

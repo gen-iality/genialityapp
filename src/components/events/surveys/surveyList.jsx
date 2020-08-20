@@ -19,8 +19,8 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
       {anonymousSurveyList && anonymousSurveyList.length > 0 && (
         <List
           dataSource={anonymousSurveyList}
-          renderItem={(survey) =>
-            survey.open == "true" ? (
+          renderItem={(survey) =>            
+            survey.open == "true" ? (              
               <List.Item key={survey._id}>
                 <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                 {survey.userHasVoted && (
@@ -35,7 +35,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                       !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
                     }`}
                     onClick={() => showSurvey(survey)}
-                    loading={survey.userHasVoted == undefined}>
+                    loading={survey.userHasVoted == undefined}>                    
                     {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                   </Button>
                 </div>
