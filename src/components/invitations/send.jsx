@@ -127,7 +127,8 @@ class SendRsvp extends Component {
                 include_date: include_date
 
             };
-            await EventsApi.sendRsvp(data, event._id);
+            console.log(JSON.stringify(data))
+            await EventsApi.sendRsvp(JSON.stringify(data), event._id);
             toast.success(<FormattedMessage id="toast.email_sent" defaultMessage="Ok!" />);
             this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' })
         } catch (e) {

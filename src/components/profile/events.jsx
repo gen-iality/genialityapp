@@ -30,11 +30,11 @@ class Events extends Component {
             const categories = await CategoriesApi.getAll();
             const events = await EventsApi.mine();
             const user = await UsersApi.getProfile(userId, true);
-            this.setState({ loading: false, user, events, categories, valid: false }, this.handleScroll);
+            this.setState({ loading: false, user, events: events || [], categories, valid: false }, this.handleScroll);
 
             console.log(events)
         } catch (e) {
-            console.log(e.response);
+            console.log(e);
             this.setState({ timeout: true, loading: false, errorData: { status: e.response.status, message: JSON.stringify(e.response.data) } });
         }
     }
@@ -54,9 +54,6 @@ class Events extends Component {
 
     render() {
         const { loading, timeout, events, errorData } = this.state;
-
-
-
         return (
             <section className="section profile">
                 {
