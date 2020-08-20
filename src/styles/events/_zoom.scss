@@ -45,6 +45,7 @@
       padding-bottom: 3px;
     }
   }
+ 
   button {
     .icon-close {
       color: white;
@@ -144,14 +145,25 @@
   min-height: 75%;
   min-width: 70%;
   height: 75%;
+  .parpadea{
+    position: absolute;
+  }
 }
 
 // Estilos para minimizar la pantalla
 .minimizeScreen {
   height: 0%;
   top: 95%;
+  .parpadea{
+    position: absolute;
+  }
 }
 
+.fullscreen {
+  .parpadea{
+    position: absolute;
+  }
+}
 // Boton de encuestas
 
 .parpadea {

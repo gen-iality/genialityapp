@@ -99,11 +99,7 @@ class Graphics extends Component {
       horizontalBar.options = {
         plugins: {
           datalabels: {
-<<<<<<< HEAD
-            color: '#fff',
-=======
             color: '#777',
->>>>>>> e3512b5c1e4ba104f85ed0936caaac3d8c7dfd6d
           }
         },
         scales: {
