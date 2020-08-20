@@ -99,12 +99,13 @@ class Graphics extends Component {
       horizontalBar.options = {
         plugins: {
           datalabels: {
-            color: '#777'
+            color: '#fff',
           }
         },
         scales: {
           yAxes: [{
             ticks: {
+              fontSize: 15,
               fontColor: '#777',
               minor: { display: false }
             }
@@ -167,7 +168,7 @@ class Graphics extends Component {
             </Card>
             <br />
             <Pagination
-              defaultCurrent={currentPage}
+              defaultCurrent={currentPage}  
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />
