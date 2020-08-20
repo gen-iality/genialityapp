@@ -353,7 +353,7 @@ class UsersRsvp extends Component {
     columnsKey.unshift("updated_at");
 
     const data = await parseData2Excel(this.state.exportUsers, this.state.columnsKey);
-    console.log(data)
+
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
@@ -361,46 +361,39 @@ class UsersRsvp extends Component {
   };
 
 
-  filterBytipoAsistente(tipoAsistente){
+  filterBytipoAsistente(tipoAsistente) {
 
     const { users } = this.state
-    if (!tipoAsistente){
-      this.setState({ users: users }) 
-      return;  
+    if (!tipoAsistente) {
+      this.setState({ users: users })
+      return;
     }
     const filter = []
     for (let i = 0; users.length > i; i++) {
       if (users[i].properties.asistecomo) {
         if (users[i].properties.asistecomo === tipoAsistente) {
           filter.push(users[i])
-        } 
+        }
       }
 
     }
-    this.setState({ users: filter })    
+    this.setState({ users: filter })
   }
 
   filterByTicket(ticket) {
-    toString(ticket)
-    console.log(ticket)
-    const { users } = this.state
-    console.log(users)
+    toString(ticket)    
+    const { resp } = this.state
+    console.log(resp)
     const filter = []
-    for (let i = 0; users.length > i; i++) {
-      if (users[i].properties.ticketid) {
-        if (users[i].properties.ticketid === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
+    for (let i = 0; resp.data.length > i; i++) {
+      if (resp.data[i].user.ticket_id === ticket || resp.data[i].user.ticketid === ticket) {
+        filter.push({
+          id: resp.data[i]._id,
+          properties: resp.data[i].user
+        })
       } else {
-        if (users[i].properties.ticket_id === ticket) {
-          filter.push(users[i])
-        } else {
-          console.log("no hay")
-        }
+        console.log("no hay")
       }
-
     }
     console.log(filter)
     this.setState({ users: filter })
@@ -518,7 +511,7 @@ class UsersRsvp extends Component {
                 <div className="select">
                   {
                     tickets.length > 0 ? (
-                      <select onClick={(e) => this.filterByTicket(e.target.value)} >
+                      <select onChange={(e) => this.filterByTicket(e.target.value)} >
                         <option>Selecciona...</option>
                         {
                           tickets.map((ticket, key) => (
@@ -541,12 +534,12 @@ class UsersRsvp extends Component {
                 <div className="select">
                   {
 
-                      <select onChange={(e) => this.filterBytipoAsistente(e.target.value)} >
-                        <option value="">Selecciona...</option>
-                        <option value="Persona">Persona</option>
-                        <option value="Empresa">Empresa</option>
-                      </select>
-}
+                    <select onChange={(e) => this.filterBytipoAsistente(e.target.value)} >
+                      <option value="">Selecciona...</option>
+                      <option value="Persona">Persona</option>
+                      <option value="Empresa">Empresa</option>
+                    </select>
+                  }
 
                 </div>
               </div>
@@ -584,22 +577,22 @@ class UsersRsvp extends Component {
                 </div>
               )} */}
             <div className="table-invite-asistente">
-            <EvenTable head={columns}>
-              {pageOfItems.map(user => (
-                <tr key={user.id}>
-                  <td>
-                  {"checkinUser" + user.id} 
-                  </td>
-                  {Object.keys(user.properties).map(prop => (
-                    <td key={prop}>
-                      {parseInt() || typeof user.properties[prop] == "string"
-                        ? user.properties[prop]
-                        : JSON.stringify(user.properties[prop])}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </EvenTable>
+              <EvenTable head={columns}>
+                {pageOfItems.map((user,key) => (
+                  <tr key={key}>
+                    {/* <td>
+                      {"checkinUser" + user.id}
+                    </td> */}
+                    {Object.keys(user.properties).map(prop => (
+                      <td key={prop}>
+                        {parseInt() || typeof user.properties[prop] == "string"
+                          ? user.properties[prop]
+                          : JSON.stringify(user.properties[prop])}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </EvenTable>
             </div>
             <Pagination items={users} onChangePage={this.onChangePage} />
           </div>

@@ -75,7 +75,7 @@ class SurveyComponent extends Component {
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
-    this.getCurrentEvenUser();
+    await this.getCurrentEvenUser();
   }
 
   /**
@@ -105,7 +105,7 @@ class SurveyComponent extends Component {
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-
+    console.log("response",response);
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {

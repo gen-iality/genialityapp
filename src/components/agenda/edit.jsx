@@ -101,6 +101,7 @@ class AgendaEdit extends Component {
     this.removeConference = this.removeConference.bind(this);
     this.onChange = this.onChange.bind(this);
     this.selectTickets = this.selectTickets.bind(this)
+    this.removeVimeoId = this.removeVimeoId.bind(this)
   }
 
   async componentDidMount() {
@@ -429,7 +430,8 @@ class AgendaEdit extends Component {
       image,
       meeting_id,
       video,
-      selectedTicket
+      selectedTicket,
+      vimeo_id
     } = this.state;
     const datetime_start = date + " " + Moment(hour_start).format("HH:mm");
     const datetime_end = date + " " + Moment(hour_end).format("HH:mm");
@@ -459,10 +461,19 @@ class AgendaEdit extends Component {
       timeConference: "",
       selected_document,
       meeting_id: meeting_id,
+      vimeo_id: vimeo_id,
       video,
       selectedTicket
     };
   };
+
+  async removeVimeoId(){
+    if (window.confirm("Esta seguro?")) {
+      this.setState({ vimeo_id: null }, function () {
+        this.submit();
+      });
+    }
+  }
 
   async removeConference() {
     if (window.confirm("Esta seguro?")) {
@@ -613,8 +624,19 @@ class AgendaEdit extends Component {
       selectedType,
       selectedCategories,
       video,
-    } = this.state;
-    const { hosts, spaces, categories, types, roles, documents, isLoading, start_url, join_url, availableText, vimeo_id, selectedTickets, platform } = this.state;
+      hosts, 
+      spaces, 
+      categories, 
+      types, 
+      roles, 
+      documents, 
+      isLoading, 
+      start_url, 
+      join_url, 
+      availableText, 
+      vimeo_id, 
+      selectedTickets, 
+      platform } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
@@ -1062,10 +1084,10 @@ class AgendaEdit extends Component {
                             <div className="control">
                               <label>Ingrese id de videoconferencia Vimeo</label>
                               <input
-                                type="text"
-                                name="vimeo_id"
-                              // onChange={(e) => this.handleChange(e)}
-                              />
+                                type="number"
+                                name="vimeo_id"  
+                                onChange={(e)=> this.setState({vimeo_id: e.target.value})}                              
+                              />                                
                             </div>
                           ) : (
                               <>
@@ -1082,6 +1104,12 @@ class AgendaEdit extends Component {
                                       <option value="ended_meeting_room">Conferencia Terminada</option>
                                     </select>
                                   </div>
+                                  <button
+                                    style={{ marginTop: "2%" }}
+                                    className="button is-primary"
+                                    onClick={this.removeVimeoId}>
+                                    Eliminar espacio virtual
+                                  </button>
                                 </div>
                               </>
                             )
