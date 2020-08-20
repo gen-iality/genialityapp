@@ -21,9 +21,10 @@ export default class RootPage extends Component {
   }
 
   loadData = (prevProps) => {
-    const { idSurvey, eventId, currentUser } = this.props;
+    const { idSurvey, eventId, currentUser, eventUser } = this.props;
+    console.log("surveydebug",currentUser, eventUser);
     if (!prevProps || idSurvey !== prevProps.idSurvey) {
-      this.setState({ idSurvey, eventId, currentUser }, this.seeIfUserHasVote);
+      this.setState({ idSurvey, eventId, currentUser, eventUser }, this.seeIfUserHasVote);
     }
   };
 
@@ -57,11 +58,11 @@ export default class RootPage extends Component {
   };
 
   render() {
-    let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter } = this.state;
+    let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter, eventUser } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
     console.log("DEBUG error muestra gráfica en firefox:", "idSurvey", "hasVote", hasVote, "guestVoteInSurvey", guestVoteInSurvey, "openSurvey", openSurvey);
     if (!isLoading)
-      return (openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
+      return ((eventUser && eventUser.rol && eventUser.rol.name == "Speaker") || openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
           <Card className="survyCard">

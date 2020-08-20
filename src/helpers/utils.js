@@ -73,12 +73,10 @@ export function parseData2Excel(data, fields) {
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });
 
-  console.log('data', data[0], fields);
   data.map((item, key) => {
     info[key] = {};
     info[key]['checked'] = item.checkedin_at ? 'TRUE' : 'FALSE';
-
-    console.log(item.checkedin_at);
+    
     info[key]['Hora checkIn'] = item.checked_at
       ? item.checked_at
         ? item.checked_at.toDate()

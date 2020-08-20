@@ -3,7 +3,7 @@ import { Route, Switch, withRouter, Link } from "react-router-dom";
 import * as Cookie from "js-cookie";
 
 import { SurveyAnswers } from "./services";
-import API, { Actions, SurveysApi } from "../../../helpers/request";
+import API, { Actions, SurveysApi,TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 
 import SurveyList from "./surveyList";
@@ -84,8 +84,15 @@ class SurveyForm extends Component {
   };
 
   async componentDidMount() {
+
+    let {event} = this.props;
     let user = await this.getCurrentUser();
-    this.setState({ currentUser: user }, this.listenSurveysData);
+    let eventUser = await this.getCurrentEvenUser(event._id);
+
+    
+
+    console.log("surveydebug eventUser",eventUser);
+    this.setState({ currentUser: user, eventUser:eventUser }, this.listenSurveysData);
     this.userVote();
     this.getItemsMenu();
   }
@@ -218,6 +225,15 @@ class SurveyForm extends Component {
     }
   };
 
+
+  getCurrentEvenUser = async (eventId) => {
+    let evius_token = Cookie.get("evius_token");
+    let response = await TicketsApi.getByEvent(eventId, evius_token);
+    return (response && response.data.length)?response.data[0]:null;
+
+  };
+
+
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = () => {
     let evius_token = Cookie.get("evius_token");
@@ -274,6 +290,7 @@ class SurveyForm extends Component {
       surveysData,
       currentUser,
       usuarioRegistrado,
+      eventUser,
       userVote,
       surveyVisible,
       surveyLabel,
@@ -289,6 +306,7 @@ class SurveyForm extends Component {
           toggleSurvey={this.toggleSurvey}
           eventId={event._id}
           currentUser={currentUser}
+          eventUser={eventUser}
           openSurvey={selectedSurvey.open}
           surveyLabel={surveyLabel}
         />
@@ -321,6 +339,7 @@ class SurveyForm extends Component {
             <SurveyList
               jsonData={surveysData}
               usuarioRegistrado={usuarioRegistrado}
+              eventUser={eventUser}
               showSurvey={this.toggleSurvey}
               surveyLabel={surveyLabel}
             />
