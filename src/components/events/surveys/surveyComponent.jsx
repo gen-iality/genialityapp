@@ -569,12 +569,13 @@ class SurveyComponent extends Component {
         {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
           <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
-            {this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+            {
+              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
             }
           </>
         ) : (
             <>{
-              this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
             }</>
           ))}
 
