@@ -381,15 +381,14 @@ class UsersRsvp extends Component {
   }
 
   filterByTicket(ticket) {
-    toString(ticket)
-    console.log(ticket)
+    toString(ticket)    
     const { resp } = this.state
-    console.log(this.state)
+    console.log(resp)
     const filter = []
     for (let i = 0; resp.data.length > i; i++) {
       if (resp.data[i].user.ticket_id === ticket || resp.data[i].user.ticketid === ticket) {
         filter.push({
-          id: resp.data[i].user._id,
+          id: resp.data[i]._id,
           properties: resp.data[i].user
         })
       } else {
@@ -512,7 +511,7 @@ class UsersRsvp extends Component {
                 <div className="select">
                   {
                     tickets.length > 0 ? (
-                      <select onClick={(e) => this.filterByTicket(e.target.value)} >
+                      <select onChange={(e) => this.filterByTicket(e.target.value)} >
                         <option>Selecciona...</option>
                         {
                           tickets.map((ticket, key) => (

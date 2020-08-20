@@ -25,7 +25,7 @@ class SendRsvp extends Component {
     }
 
     componentDidMount() {
-        let default_header = ' Has sido invitado a: <br /> <span className="strong">' + this.props.event.name + '</span> '
+        let default_header = ' Has sido invitado a: <br /> <span className=\"strong\">' + this.props.event.name + '</span> '
         console.log("evento", this.props.event);
         this.setState({
             rsvp: {
@@ -127,7 +127,8 @@ class SendRsvp extends Component {
                 include_date: include_date
 
             };
-            await EventsApi.sendRsvp(data, event._id);
+            console.log(JSON.stringify(data))
+            await EventsApi.sendRsvp(JSON.stringify(data), event._id);
             toast.success(<FormattedMessage id="toast.email_sent" defaultMessage="Ok!" />);
             this.setState({ disabled: false, redirect: true, url_redirect: '/event/' + event._id + '/messages' })
         } catch (e) {
