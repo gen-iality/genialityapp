@@ -124,7 +124,7 @@ export default class ZoomComponent extends Component {
     });
   };
 
-
+ 
 
   render() {
     const { toggleConference, event, activity } = this.props;

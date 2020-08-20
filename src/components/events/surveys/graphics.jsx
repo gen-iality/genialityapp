@@ -108,6 +108,7 @@ class Graphics extends Component {
         scales: {
           yAxes: [{
             ticks: {
+              fontSize: 15,
               fontColor: '#777',
               minor: { display: true },
             }            
@@ -170,7 +171,7 @@ class Graphics extends Component {
             </Card>
             <br />
             <Pagination
-              defaultCurrent={currentPage}
+              defaultCurrent={currentPage}  
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />
