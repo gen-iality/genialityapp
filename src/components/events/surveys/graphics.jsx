@@ -81,7 +81,7 @@ class Graphics extends Component {
     for (let a = 0; options.choices.length > a; a++) {
       options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
     }
-    
+
     let formatterTitle = options.title;
     this.setState({ titleQuestion: formatterTitle })
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
@@ -102,12 +102,15 @@ class Graphics extends Component {
             color: '#777',
           }
         },
+        legend:{
+          display: false
+        },
         scales: {
           yAxes: [{
             ticks: {
               fontColor: '#777',
-              minor: { display: true }
-            }
+              minor: { display: true },
+            }            
           }],
           xAxes: [{
             ticks: {

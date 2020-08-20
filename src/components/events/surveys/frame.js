@@ -49,7 +49,7 @@ export const graphicsFrame = {
     data: {
       labels: [],
       datasets: [
-        {          
+        {
           label: '% de Votos',
           labelColor: 'black',
           ...colorBars,
@@ -61,7 +61,7 @@ export const graphicsFrame = {
       title: {
         fontSize: 16,
         display: true,
-      },
+      },      
       responsive: true,
       animation: {
         duration: 2000,
@@ -76,18 +76,19 @@ export const graphicsFrame = {
         xAxes: [
           {
             ticks: {
-              beginAtZero: true,
+              beginAtZero: true,              
               stepSize: 1,
               fontSize: 14,
               fontColor: 'black',
               fontStyle: 'bold',
             },
-          },
+          }          
         ],
         yAxes: [
-          {
+          {            
             ticks: {
-              beginAtZero: true,
+              display: false,
+              beginAtZero: true,              
               stepSize: 1,
               fontSize: 14,
               fontColor: 'black',
@@ -128,14 +129,14 @@ export const graphicsFrame = {
       },
       scales: {
         xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              stepSize: 1,
-              fontSize: 14,
-              fontColor: 'white',
-              fontStyle: 'bold',
-            },
+          {            
+            // ticks: {
+            //   beginAtZero: true,
+            //   stepSize: 1,
+            //   fontSize: 14,
+            //   fontColor: 'white',
+            //   fontStyle: 'bold',
+            // },
           },
         ],
         yAxes: [
