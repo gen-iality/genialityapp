@@ -372,22 +372,19 @@ class Agenda extends Component {
                           </p>
                           <Row className="text-align-card">
                             <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" 
-                                 style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                              <Button type="primary" className="space-align-block" >
                                 Detalle del Evento
                               </Button>
                               {
                                 showButtonDocuments && (
-                                  <Button type="primary" className="space-align-block"
-                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                                  <Button type="primary" className="space-align-block">
                                     Documentos
                                   </Button>
                                 )
                               }
                               {
                                 showButtonSurvey && (
-                                  <Button type="primary" className="space-align-block"
-                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                                  <Button type="primary" className="space-align-block">
                                     Encuestas
                                   </Button>
                                 )
