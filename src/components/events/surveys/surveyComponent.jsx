@@ -56,7 +56,7 @@ class SurveyComponent extends Component {
 
   async componentDidMount() {
     var self = this;
-    const { eventId, idSurvey } = this.props;    
+    const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
@@ -105,7 +105,7 @@ class SurveyComponent extends Component {
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-    console.log("response",response);
+    console.log("response", response);
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
@@ -358,7 +358,7 @@ class SurveyComponent extends Component {
 
 
 
-  onSurveyCompleted = async (values) =>{
+  onSurveyCompleted = async (values) => {
     this.sendData(values);
   }
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
@@ -557,27 +557,30 @@ class SurveyComponent extends Component {
     return (
 
       <div style={surveyStyle}>
-
-        {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
-          <>
+        {
+          this.state.survey && this.state.survey.state !== "completed" && (
             <div style={{ marginTop: 5 }}>
               <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
-            </div>            
+            </div>
+          )
+        }
+        {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
+          <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
-            {this.state.survey && this.state.survey.state =="completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-  }
+            {this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+            }
           </>
         ) : (
-          <>{
-            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-        }</>
+            <>{
+              this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+            }</>
           ))}
-        
+
         {
-            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-        }        
+          this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+        }
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         {
