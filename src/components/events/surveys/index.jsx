@@ -121,10 +121,6 @@ class SurveyForm extends Component {
         $query = $query.where("eventId", "==", event._id);
       }
 
-      //Le agregamos el filtro por actividad, esto toca desde mongodb no esta este campo en el firebase
-      /*if (activity && activity._id) {
-        $query = $query.where("activityId", "==", activity._id);
-      }*/
 
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
@@ -165,7 +161,7 @@ class SurveyForm extends Component {
 
 
 
-        this.setState({ surveysData: surveysData }, this.seeIfUserHasVote);
+        this.setState({ surveysData: surveysData, surveyVisible:surveysData && surveysData.length }, this.seeIfUserHasVote);
       });
     }
   };

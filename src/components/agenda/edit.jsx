@@ -498,7 +498,7 @@ class AgendaEdit extends Component {
       activity_id: this.props.location.state.edit,
       activity_name: this.state.name,
       event_id: this.props.event._id,
-      agenda: this.props.event.description,
+      agenda: this.state.name,//this.props.event.description,
       host_id: this.state.host_id,
       host_name: host_name[0]
     };
