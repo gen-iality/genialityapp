@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import InvitedUsers from "./users";
+import InvitedUsers from "./eventUsersList";
 import CreateMessage from "./send";
 import { EventsApi, UsersApi } from "../../helpers/request";
 import ImportUsers from "../import-users/importUser";
