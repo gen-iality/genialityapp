@@ -566,7 +566,7 @@ class SurveyComponent extends Component {
             </div>
           )
         }
-        {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
+        {surveyData && surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
           <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
             {
