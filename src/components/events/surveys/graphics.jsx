@@ -74,13 +74,14 @@ class Graphics extends Component {
     let totalPercentResponse = new Object()
     //se realiza iteracion para calcular porcentaje
     for (let i in answer_count) {
-      totalPercentResponse[i] = parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
+      totalPercentResponse[i] = answer_count[i];//parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
     }
 
+    let generatedlabels = [];
     //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
     for (let a = 0; options.choices.length > a; a++) {
       // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
-      options.choices[a] = options.choices[a]
+      generatedlabels[a] = options.choices[a] + ` ${answer_count[a]} Voto(s)`;
     }
 
     let formatterTitle = options.title;
@@ -92,7 +93,7 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
-      horizontalBar.data.labels = options.choices;
+      horizontalBar.data.labels = generatedlabels;
       horizontalBar.data.datasets[0].data = Object.values(totalPercentResponse || []);
       horizontalBar.options.title.text = formatterTitle;
 
@@ -135,7 +136,7 @@ class Graphics extends Component {
       this.setState({ horizontalBar, chart, chartCreated: true });
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
-      chart.data.labels = options.choices;
+      chart.data.labels = generatedlabels;
       chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
       chart.options.title.text = formatterTitle;
 
