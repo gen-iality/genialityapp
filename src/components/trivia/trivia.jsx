@@ -11,7 +11,7 @@ import { Table } from 'antd';
 import { toast } from "react-toastify";
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import { message, Space } from "antd";
+import { message, Space, Button } from "antd";
 const { Column } = Table;
 
 class trivia extends Component {
@@ -100,12 +100,12 @@ class trivia extends Component {
       <Fragment className="columns is-12">
         <EventContent title={"Encuestas"}>
           <Link to={{ pathname: `${matchUrl}/encuesta` }}>
-            <button className="columns is-pulled-right button is-primary">
+            <Button style={{float:"right"}}>
               <span className="icon">
                 <i className="fas fa-plus-circle" />
               </span>
               <spa>Nueva Encuesta</spa>
-            </button>
+            </Button >
           </Link>
           <Table
             dataSource={data}
