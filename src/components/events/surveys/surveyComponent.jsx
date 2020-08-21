@@ -554,6 +554,8 @@ class SurveyComponent extends Component {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
+
+    if (!surveyData ) return "Cargando..."
     return (
 
       <div style={surveyStyle}>
@@ -566,7 +568,7 @@ class SurveyComponent extends Component {
             </div>
           )
         }
-        {surveyData && surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
+        {(surveyData && surveyData.allow_gradable_survey === "true") && (surveyData.show_horizontal_bar ? (
           <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
             {
@@ -586,7 +588,7 @@ class SurveyComponent extends Component {
 
         {
           //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-          surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true" ? (
+          surveyData && (surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true") ? (
             <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
               {(this.state.survey && <Survey.Survey
                 model={this.state.survey}
