@@ -1,17 +1,18 @@
 import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { UsersApi, eventTicketsApi } from "../../helpers/request";
-import { Table,Input,Button,Space } from 'antd';
+import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { complement } from "ramda";
 
 class eventUsersList extends Component {
     constructor(props) {
         super(props);
-        this.state = {            
+        this.state = {
             attendeesFormatedForTable: [],
-            columnsTable: [],       
-            eventUsersId: []     
+            columnsTable: [],
+            eventUsersId: []
         }
         this.loadData = this.loadData.bind(this)
         this.formattedAttendees = this.formattedAttendees.bind(this)
@@ -51,7 +52,7 @@ class eventUsersList extends Component {
                     attendeesForIterate[i].properties.updated_at = attendeesForIterate[i].updated_at
                     attendeesForIterate[i].properties.created_at = attendeesForIterate[i].created_at
                 }
-                attendeesOrganized.push(                
+                attendeesOrganized.push(
                     attendeesForIterate[i].properties,
                 )
                 // Se hace un else en caso de que no exista tiquete,
@@ -61,11 +62,11 @@ class eventUsersList extends Component {
                 attendeesForIterate[i].properties.key = attendeesForIterate[i]._id
                 attendeesForIterate[i].properties.updated_at = attendeesForIterate[i].updated_at
                 attendeesForIterate[i].properties.created_at = attendeesForIterate[i].created_at
-                attendeesOrganized.push(                  
+                attendeesOrganized.push(
                     attendeesForIterate[i].properties,
                 )
             }
-        }        
+        }
         this.setState({ attendeesFormatedForTable: attendeesOrganized })
         this.formattedAttendees(attendeesOrganized)
     }
@@ -73,12 +74,12 @@ class eventUsersList extends Component {
     formattedAttendees(attendeesFormatedForTable) {
         const { event } = this.props
         let propertiesTable = event.user_properties
-        let columnsTable = []        
+        let columnsTable = []
 
         // Se crea la validacion para saber si tiene ticket para asignar el campo al header de la tabla y mostrar el tiquete
         // para poder filtrar se pasa la funcion getColumnSearchProps
         // dentro del objeto donde se asigna el campo a mostrar en la tabla
-        // con el campo exacto del title
+        // con el campo exacto del dataIndex
 
         if (attendeesFormatedForTable[0].ticket) {
             columnsTable.push({
@@ -96,9 +97,9 @@ class eventUsersList extends Component {
                 title: propertiesTable[i].label,
                 dataIndex: propertiesTable[i].name,
                 width: '40%',
-                ...this.getColumnSearchProps(propertiesTable[i].label)
+                ...this.getColumnSearchProps(propertiesTable[i].name)
             })
-        }        
+        }
 
         //Se hace push al final de la iteracion anterior para crear al final del array de columnsTable los campos de timestamp
         columnsTable.push(
@@ -120,8 +121,8 @@ class eventUsersList extends Component {
     }
 
     //Funcion que reune los id de los usuarios para enviar al estado
-    onSelectChange(idEventUsers) {   
-        console.log(idEventUsers)   
+    onSelectChange(idEventUsers) {
+        console.log(idEventUsers)
         this.setState({ eventUsersId: idEventUsers })
     };
 
@@ -156,8 +157,7 @@ class eventUsersList extends Component {
             </div>
         ),
         filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-        onFilter: (value, record) =>
-            record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '',
+        onFilter: (value, record) => record[dataIndex] ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()) : '',
         onFilterDropdownVisibleChange: visible => {
             if (visible) {
                 setTimeout(() => this.searchInput.select(), 100);
