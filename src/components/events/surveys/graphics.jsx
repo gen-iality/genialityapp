@@ -96,6 +96,12 @@ class Graphics extends Component {
       horizontalBar.data.datasets[0].data = Object.values(totalPercentResponse || []);
       horizontalBar.options.title.text = formatterTitle;
 
+      //Si es un examen Marcamos la respuesta correcta en verde 
+      if (options.correctAnswerIndex) {
+        horizontalBar.data.datasets[0].backgroundColor = [];
+        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+        }      
+
 
       horizontalBar.options = {
         plugins: {
@@ -133,6 +139,11 @@ class Graphics extends Component {
       chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
       chart.options.title.text = formatterTitle;
 
+      //Si es un examen Marcamos la respuesta correcta en verde 
+      if (options.correctAnswerIndex) {
+        horizontalBar.data.datasets[0].backgroundColor = [];
+        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+        }      
       chart.update();
 
       this.setState({ chart });
