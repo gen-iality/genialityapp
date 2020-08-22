@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { UsersApi, eventTicketsApi } from "../../helpers/request";
 import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -12,7 +12,8 @@ class eventUsersList extends Component {
         this.state = {
             attendeesFormatedForTable: [],
             columnsTable: [],
-            eventUsersId: []
+            eventUsersId: [],
+            dropUser: false
         }
         this.loadData = this.loadData.bind(this)
         this.formattedAttendees = this.formattedAttendees.bind(this)
@@ -84,8 +85,7 @@ class eventUsersList extends Component {
         if (attendeesFormatedForTable[0].ticket) {
             columnsTable.push({
                 title: "Tiquete",
-                dataIndex: "ticket",
-                width: '40%',
+                dataIndex: "ticket",                
                 ...this.getColumnSearchProps("ticket")
             })
         }
@@ -95,8 +95,7 @@ class eventUsersList extends Component {
         for (let i = 0; propertiesTable.length > i; i++) {
             columnsTable.push({
                 title: propertiesTable[i].label,
-                dataIndex: propertiesTable[i].name,
-                width: '40%',
+                dataIndex: propertiesTable[i].name,                
                 ...this.getColumnSearchProps(propertiesTable[i].name)
             })
         }
@@ -105,14 +104,12 @@ class eventUsersList extends Component {
         columnsTable.push(
             {
                 title: "Creado",
-                dataIndex: "created_at",
-                width: '40%',
+                dataIndex: "created_at",                
                 ...this.getColumnSearchProps("created_at")
             },
             {
                 title: "Actualizado",
-                dataIndex: "updated_at",
-                width: '40%',
+                dataIndex: "updated_at",                
                 ...this.getColumnSearchProps("updated_at")
             }
         )
@@ -189,50 +186,27 @@ class eventUsersList extends Component {
         this.setState({ searchText: '' });
     };
 
+    modalUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add("is-clipped");
+        this.setState(prevState => {
+            return { addUser: !prevState.addUser, edit: false };
+        });
+    };
 
     render() {
-        const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
+        const { columnsTable, attendeesFormatedForTable, eventUsersId, dropUser } = this.state
         const rowSelection = {
             eventUsersId,
-            onChange: this.onSelectChange,
-            selections: [
-                Table.SELECTION_ALL,
-                Table.SELECTION_INVERT,
-                {
-                    key: 'odd',
-                    text: 'Select Odd Row',
-                    onSelect: changableIdEventUsers => {
-                        let newIdEventUsers = [];
-                        newIdEventUsers = changableIdEventUsers.filter((key, index) => {
-                            if (index % 2 !== 0) {
-                                return false;
-                            }
-                            return true;
-                        });
-                        this.setState({ eventUsersId: newIdEventUsers });
-                    },
-                },
-                {
-                    key: 'even',
-                    text: 'Select Even Row',
-                    onSelect: changableIdEventUsers => {
-                        let newIdEventUsers = [];
-                        newIdEventUsers = changableIdEventUsers.filter((key, index) => {
-                            if (index % 2 !== 0) {
-                                return true;
-                            }
-                            return false;
-                        });
-                        this.setState({ eventUsersId: newIdEventUsers });
-                    },
-                },
-            ],
+            onChange: this.onSelectChange,            
         };
         return (
-            <Fragment>
-                <p>Seleccionados: {eventUsersId.length}</p>
-                <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
-            </Fragment>
+            <>                
+                <Fragment>
+                    <p>Seleccionados: {eventUsersId.length}</p>
+                    <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
+                </Fragment>
+            </>
         )
     }
 }
