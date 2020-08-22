@@ -12,8 +12,7 @@ class eventUsersList extends Component {
         this.state = {
             attendeesFormatedForTable: [],
             columnsTable: [],
-            eventUsersId: [],
-            dropUser: false
+            eventUsersId: []    
         }
         this.loadData = this.loadData.bind(this)
         this.formattedAttendees = this.formattedAttendees.bind(this)
@@ -195,7 +194,7 @@ class eventUsersList extends Component {
     };
 
     render() {
-        const { columnsTable, attendeesFormatedForTable, eventUsersId, dropUser } = this.state
+        const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
         const rowSelection = {
             eventUsersId,
             onChange: this.onSelectChange,            
