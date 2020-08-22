@@ -231,7 +231,7 @@ class eventUsersList extends Component {
         return (
             <Fragment>
                 <p>Seleccionados: {eventUsersId.length}</p>
-                <Table style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
+                <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
             </Fragment>
         )
     }
