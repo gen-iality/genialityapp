@@ -98,15 +98,15 @@ class trivia extends Component {
     if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
     return (
       <Fragment className="columns is-12">
+        <Link to={{ pathname: `${matchUrl}/encuesta` }}>
+          <Button style={{ float: "right" }}>
+            <span className="icon">
+              <i className="fas fa-plus-circle" />
+            </span>
+            <spa>Nueva Encuesta</spa>
+          </Button >
+        </Link>
         <EventContent title={"Encuestas"}>
-          <Link to={{ pathname: `${matchUrl}/encuesta` }}>
-            <Button style={{float:"right"}}>
-              <span className="icon">
-                <i className="fas fa-plus-circle" />
-              </span>
-              <spa>Nueva Encuesta</spa>
-            </Button >
-          </Link>
           <Table
             dataSource={data}
             columns={columns} />
