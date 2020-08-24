@@ -1,100 +1,79 @@
 import React, { Component, Fragment } from "react";
 import { withRouter, Link } from "react-router-dom";
-import { UsersApi, eventTicketsApi } from "../../helpers/request";
+import { UsersApi } from "../../helpers/request";
 import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { complement } from "ramda";
+import { parseData2Excel } from "../../helpers/utils";
+import XLSX from "xlsx";
 
 class eventUsersList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            attendees: [],
             attendeesFormatedForTable: [],
             columnsTable: [],
-            eventUsersId: []    
+            eventUsersId: []
         }
-        this.loadData = this.loadData.bind(this)
-        this.formattedAttendees = this.formattedAttendees.bind(this)
+        this.createTableColumns = this.createTableColumns.bind(this)
         this.onSelectChange = this.onSelectChange.bind(this)
     }
 
-    componentDidMount() {
-        this.loadData()
+    async componentDidMount() {
+        const { eventID, event } = this.props
+        let attendees = await UsersApi.getAll(eventID)        
+        let columnsTable = this.createTableColumns(event)
+        let attendeesFormatedForTable = this.organizedDataAttendees(attendees.data)                     
+        this.setState({ attendees: attendees.data, columnsTable, attendeesFormatedForTable })
     }
 
-    //Funcion para llamar los datos de los usuarios
-    async loadData() {
-        const { eventID } = this.props
-
-        //Se consulta la información de los usuarios del evento y de los tickets
-        let attendees = await UsersApi.getAll(eventID)
-        let tickets = await eventTicketsApi.getAll(eventID)
-
-        let attendeesForIterate = attendees.data
-        let attendeesOrganized = []
-
-        // Se itera la informacion de los usuarios del evento para validar si tiene ticket_id, 
-        // de igual manera para introducir en el objeto properties el id del usuario, el timestamp y el ticket_id si tiene.
-        // Se envia al estado la informacion obtenida para usar en la tabla posteriormente
-
-        //Se itera la consulta de los tickets para cambiar 
-        // el ticket_id por el nombre del tiquete para mayor facilidad de filtro
-
-        for (let i = 0; attendeesForIterate.length > i; i++) {
-            if (attendeesForIterate[i].properties.ticket_id) {
-                for (let a = 0; tickets.length > a; a++) {
-                    if (attendeesForIterate[i].properties.ticket_id === tickets[a]._id) {
-                        attendeesForIterate[i].properties.ticket = tickets[a].title
-                    }
-                    attendeesForIterate[i].properties.id = attendeesForIterate[i]._id
-                    attendeesForIterate[i].properties.key = attendeesForIterate[i]._id
-                    attendeesForIterate[i].properties.updated_at = attendeesForIterate[i].updated_at
-                    attendeesForIterate[i].properties.created_at = attendeesForIterate[i].created_at
-                }
-                attendeesOrganized.push(
-                    attendeesForIterate[i].properties,
-                )
-                // Se hace un else en caso de que no exista tiquete,
-                // esto para obtener la data sin el tiquete y mostrar la información de igual manera
-            } else {
-                attendeesForIterate[i].properties.id = attendeesForIterate[i]._id
-                attendeesForIterate[i].properties.key = attendeesForIterate[i]._id
-                attendeesForIterate[i].properties.updated_at = attendeesForIterate[i].updated_at
-                attendeesForIterate[i].properties.created_at = attendeesForIterate[i].created_at
-                attendeesOrganized.push(
-                    attendeesForIterate[i].properties,
-                )
-            }
-        }
-        this.setState({ attendeesFormatedForTable: attendeesOrganized })
-        this.formattedAttendees(attendeesOrganized)
+    /*  Se aplanan los datos del array attendes para filtrar desde un solo array 
+        y de esta manera no romper la logica del filtro traida desde ant
+    */
+    organizedDataAttendees(attendees) {
+        let attendeesFormatedForTable = []
+        for (let i = 0; attendees.length > i; i++) {
+            attendees[i].properties.key = attendees[i]._id
+            attendees[i].properties.ticket = attendees[i].ticket ? attendees[i].ticket.title : ""
+            attendees[i].properties.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : ""
+            attendees[i].properties.created_at = attendees[i].created_at
+            attendees[i].properties.updated_at = attendees[i].updated_at
+            attendeesFormatedForTable.push(
+                attendees[i].properties
+            )
+        }        
+        return attendeesFormatedForTable
     }
 
-    formattedAttendees(attendeesFormatedForTable) {
-        const { event } = this.props
-        let propertiesTable = event.user_properties
+    /* El eventUser consta de varios campos basicos y un campo especial llamada properties donde almacenamos
+        diferentes propiedades dinamicas en formato JSON para poder mostrar esto en una tabla nos toca aplanar el eventUser
+        es decir aplanar los valores del campo properties
+    */
+    createTableColumns(event) {
+        let propertiesTable = event.user_properties        
         let columnsTable = []
 
-        // Se crea la validacion para saber si tiene ticket para asignar el campo al header de la tabla y mostrar el tiquete
-        // para poder filtrar se pasa la funcion getColumnSearchProps
-        // dentro del objeto donde se asigna el campo a mostrar en la tabla
-        // con el campo exacto del dataIndex
+        columnsTable.push({
+            title: "Chequeado",
+            dataIndex: "checkedin_at",
+            ...this.getColumnSearchProps("checkedin_at")
+        })
 
-        if (attendeesFormatedForTable[0].ticket) {
-            columnsTable.push({
-                title: "Tiquete",
-                dataIndex: "ticket",                
-                ...this.getColumnSearchProps("ticket")
-            })
-        }
+
+        columnsTable.push({
+            title: "Tiquete",
+            dataIndex: "ticket",
+            ...this.getColumnSearchProps("ticket")
+        })
+
 
         // Se iteran las propiedades del usuario (campos a recolectar) para mostrar la información 
         // que el usuario diligenció para registrarse al event
         for (let i = 0; propertiesTable.length > i; i++) {
             columnsTable.push({
                 title: propertiesTable[i].label,
-                dataIndex: propertiesTable[i].name,                
+                dataIndex: propertiesTable[i].name,
                 ...this.getColumnSearchProps(propertiesTable[i].name)
             })
         }
@@ -103,22 +82,20 @@ class eventUsersList extends Component {
         columnsTable.push(
             {
                 title: "Creado",
-                dataIndex: "created_at",                
+                dataIndex: "created_at",
                 ...this.getColumnSearchProps("created_at")
             },
             {
                 title: "Actualizado",
-                dataIndex: "updated_at",                
+                dataIndex: "updated_at",
                 ...this.getColumnSearchProps("updated_at")
             }
         )
-
-        this.setState({ columnsTable })
+        return columnsTable
     }
 
     //Funcion que reune los id de los usuarios para enviar al estado
     onSelectChange(idEventUsers) {
-        console.log(idEventUsers)
         this.setState({ eventUsersId: idEventUsers })
     };
 
@@ -185,22 +162,29 @@ class eventUsersList extends Component {
         this.setState({ searchText: '' });
     };
 
-    modalUser = () => {
-        const html = document.querySelector("html");
-        html.classList.add("is-clipped");
-        this.setState(prevState => {
-            return { addUser: !prevState.addUser, edit: false };
-        });
+    exportFile = async () => {
+        const columnsKey = this.props.event.user_properties
+        const { attendees } = this.state
+
+        const data = await parseData2Excel(attendees, columnsKey);
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Asistentes");
+        XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
     };
 
     render() {
         const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
         const rowSelection = {
             eventUsersId,
-            onChange: this.onSelectChange,            
+            onChange: this.onSelectChange,
         };
         return (
-            <>                
+            <>
+                <div>
+                    <Button onClick={this.exportFile}>Exportar</Button>
+                </div>
                 <Fragment>
                     <p>Seleccionados: {eventUsersId.length}</p>
                     <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
