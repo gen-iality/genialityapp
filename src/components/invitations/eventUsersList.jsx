@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { UsersApi } from "../../helpers/request";
-import { Table, Input, Button, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space, Menu, Dropdown, Row, Col } from 'antd';
+import { SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { parseData2Excel } from "../../helpers/utils";
 import XLSX from "xlsx";
+import AddUser from "../modal/addUser";
+import ModalAdvise from "./modal"
 
 class eventUsersList extends Component {
     constructor(props) {
@@ -22,27 +24,29 @@ class eventUsersList extends Component {
 
     async componentDidMount() {
         const { eventID, event } = this.props
-        let attendees = await UsersApi.getAll(eventID)        
+        let attendees = await UsersApi.getAll(eventID)
         let columnsTable = this.createTableColumns(event)
-        let attendeesFormatedForTable = this.organizedDataAttendees(attendees.data)                     
+        let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data)
         this.setState({ attendees: attendees.data, columnsTable, attendeesFormatedForTable })
     }
 
     /*  Se aplanan los datos del array attendes para filtrar desde un solo array 
         y de esta manera no romper la logica del filtro traida desde ant
     */
-    organizedDataAttendees(attendees) {
+    formatAttendeesForTable(attendees) {
         let attendeesFormatedForTable = []
         for (let i = 0; attendees.length > i; i++) {
-            attendees[i].properties.key = attendees[i]._id
-            attendees[i].properties.ticket = attendees[i].ticket ? attendees[i].ticket.title : ""
-            attendees[i].properties.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : ""
-            attendees[i].properties.created_at = attendees[i].created_at
-            attendees[i].properties.updated_at = attendees[i].updated_at
+            let attendeeFlattenedData = attendees[i].properties
+
+            attendeeFlattenedData.key = attendees[i]._id
+            attendeeFlattenedData.ticket = attendees[i].ticket ? attendees[i].ticket.title : ""
+            attendeeFlattenedData.checkedin_at = attendees[i].checkedin_at ? attendees[i].checkedin_at : ""
+            attendeeFlattenedData.created_at = attendees[i].created_at
+            attendeeFlattenedData.updated_at = attendees[i].updated_at
             attendeesFormatedForTable.push(
-                attendees[i].properties
+                attendeeFlattenedData
             )
-        }        
+        }
         return attendeesFormatedForTable
     }
 
@@ -51,7 +55,7 @@ class eventUsersList extends Component {
         es decir aplanar los valores del campo properties
     */
     createTableColumns(event) {
-        let propertiesTable = event.user_properties        
+        let propertiesTable = event.user_properties
         let columnsTable = []
 
         columnsTable.push({
@@ -96,7 +100,16 @@ class eventUsersList extends Component {
 
     //Funcion que reune los id de los usuarios para enviar al estado
     onSelectChange(idEventUsers) {
-        this.setState({ eventUsersId: idEventUsers })
+        const { attendees } = this.state
+        let attendeesForSendMessage = []
+
+        for (let i = 0; idEventUsers.length > i; i++) {
+            attendeesForSendMessage = attendees.filter(
+                item => idEventUsers.indexOf(item._id) !== -1
+            )
+        }        
+
+        this.setState({ eventUsersId: idEventUsers, attendeesForSendMessage })
     };
 
     //Funcion para filtrar los usuarios de la tabla
@@ -174,21 +187,88 @@ class eventUsersList extends Component {
         XLSX.writeFile(wb, `asistentes_${this.props.event.name}.xls`);
     };
 
+    modalUser = () => {
+        const html = document.querySelector("html");
+        html.classList.add("is-clipped");
+        this.setState(prevState => {
+            return { addUser: !prevState.addUser, edit: false };
+        });
+    };
+
+    closeModal = () => {
+        const html = document.querySelector("html");
+        html.classList.remove("is-clipped");
+        this.setState(prevState => {
+            return { addUser: !prevState.addUser, edit: undefined };
+        });
+    };
+
+    //Funcion para enviar la data de los usuarios al componente send.jsx
+    goToSendMessage = () => {
+        const { attendeesForSendMessage, visible } = this.state
+        //Actualizar el estado del padre
+        if (attendeesForSendMessage === undefined) {
+            this.setState({ visible: visible === true ? false : true })
+        } else {
+            this.props.setGuestSelected(attendeesForSendMessage);
+            this.props.history.push(`${this.props.matchUrl}/createmessage`);
+        }
+    };
+
     render() {
-        const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
+        const menu = (
+            <Menu >
+                <Menu.Item key="1" icon={<UserOutlined />} onClick={this.modalUser}>
+                    Crear Usuario
+                </Menu.Item>
+                <Link className="dropdown-item" to={`${this.props.matchUrl}/importar-excel`}>
+                    <Menu.Item key="2" icon={<UserOutlined />}>
+                        Importar usuarios de Excel
+                    </Menu.Item>
+                </Link>
+            </Menu >
+        );
+        const { columnsTable, attendeesFormatedForTable, eventUsersId, dropUser } = this.state
         const rowSelection = {
             eventUsersId,
             onChange: this.onSelectChange,
         };
         return (
             <>
-                <div>
-                    <Button onClick={this.exportFile}>Exportar</Button>
-                </div>
+                <Row justify="center">
+                    <Col span={8}>
+                        <Button onClick={() => this.goToSendMessage()}>
+                            Enviar comunicación / Correo
+                        </Button>
+                        <ModalAdvise visible={this.state.visible} />
+                    </Col>
+                    <Col span={8}>
+                        <Button onClick={this.exportFile}>Exportar</Button>
+                    </Col>
+                    <Col span={8}>
+                        <Dropdown overlay={menu}>
+                            <Button>
+                                Agregar Usuario <DownOutlined />
+                            </Button>
+                        </Dropdown>
+                    </Col>
+                </Row>
                 <Fragment>
                     <p>Seleccionados: {eventUsersId.length}</p>
                     <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
                 </Fragment>
+                {
+                    this.state.addUser && (
+                        <AddUser
+                            handleModal={this.closeModal}
+                            modal={this.state.addUser}
+                            eventId={this.props.eventID}
+                            value={this.state.selectedUser}
+                            extraFields={this.props.event.user_properties}
+                            edit={this.state.edit}
+                        />
+                    )
+                }
             </>
         )
     }
