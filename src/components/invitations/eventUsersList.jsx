@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { withRouter, Link } from "react-router-dom";
-import { UsersApi } from "../../helpers/request";
+import { UsersApi, eventTicketsApi } from "../../helpers/request";
 import { Table, Input, Button, Space, Menu, Dropdown, Row, Col } from 'antd';
 import { SearchOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -16,7 +16,8 @@ class eventUsersList extends Component {
             attendees: [],
             attendeesFormatedForTable: [],
             columnsTable: [],
-            eventUsersId: []
+            eventUsersId: [],
+            tickets: []
         }
         this.createTableColumns = this.createTableColumns.bind(this)
         this.onSelectChange = this.onSelectChange.bind(this)
@@ -25,9 +26,12 @@ class eventUsersList extends Component {
     async componentDidMount() {
         const { eventID, event } = this.props
         let attendees = await UsersApi.getAll(eventID)
-        let columnsTable = this.createTableColumns(event)
+        let tickets = await eventTicketsApi.getAll(eventID)
+        this.setState({tickets})
         let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data)
-        this.setState({ attendees: attendees.data, columnsTable, attendeesFormatedForTable })
+        let columnsTable = this.createTableColumns(event)
+
+        this.setState({ attendees: attendees.data, attendeesFormatedForTable, columnsTable })
     }
 
     /*  Se aplanan los datos del array attendes para filtrar desde un solo array 
@@ -55,6 +59,9 @@ class eventUsersList extends Component {
         es decir aplanar los valores del campo properties
     */
     createTableColumns(event) {
+        const { tickets } = this.state
+
+        let filterTickets = []
         let propertiesTable = event.user_properties
         let columnsTable = []
 
@@ -64,11 +71,21 @@ class eventUsersList extends Component {
             ...this.getColumnSearchProps("checkedin_at")
         })
 
+        if(tickets.length > 0){
+            for (let i = 0; tickets.length > i; i++) {
+                filterTickets.push({
+                    text: tickets[i].title,
+                    value: tickets[i].title,
+                })
+            }   
+        }
 
         columnsTable.push({
             title: "Tiquete",
             dataIndex: "ticket",
-            ...this.getColumnSearchProps("ticket")
+            filters: filterTickets,
+            onFilter: (value, record) => record.ticket.indexOf(value) === 0,
+
         })
 
 
@@ -76,7 +93,7 @@ class eventUsersList extends Component {
         // que el usuario diligenció para registrarse al event
         for (let i = 0; propertiesTable.length > i; i++) {
             columnsTable.push({
-                title: propertiesTable[i].label,
+                title: propertiesTable[i].label ? propertiesTable[i].label : propertiesTable[i].name,
                 dataIndex: propertiesTable[i].name,
                 ...this.getColumnSearchProps(propertiesTable[i].name)
             })
@@ -95,6 +112,7 @@ class eventUsersList extends Component {
                 ...this.getColumnSearchProps("updated_at")
             }
         )
+        console.log(columnsTable)
         return columnsTable
     }
 
@@ -107,7 +125,7 @@ class eventUsersList extends Component {
             attendeesForSendMessage = attendees.filter(
                 item => idEventUsers.indexOf(item._id) !== -1
             )
-        }        
+        }
 
         this.setState({ eventUsersId: idEventUsers, attendeesForSendMessage })
     };
@@ -205,13 +223,13 @@ class eventUsersList extends Component {
 
     //Funcion para enviar la data de los usuarios al componente send.jsx
     goToSendMessage = () => {
-        const { attendeesForSendMessage, visible } = this.state
+        const { attendeesForSendMessage, modalVisible } = this.state
         //Actualizar el estado del padre
-        if (attendeesForSendMessage === undefined) {
-            this.setState({ visible: visible === true ? false : true })
-        } else {
+        if (attendeesForSendMessage) {
             this.props.setGuestSelected(attendeesForSendMessage);
             this.props.history.push(`${this.props.matchUrl}/createmessage`);
+        } else {
+            this.setState({ modalVisible: modalVisible === true ? false : true })
         }
     };
 
@@ -240,7 +258,7 @@ class eventUsersList extends Component {
                         <Button onClick={() => this.goToSendMessage()}>
                             Enviar comunicación / Correo
                         </Button>
-                        <ModalAdvise visible={this.state.visible} />
+                        <ModalAdvise visible={this.state.modalVisible} />
                     </Col>
                     <Col span={8}>
                         <Button onClick={this.exportFile}>Exportar</Button>
@@ -254,8 +272,15 @@ class eventUsersList extends Component {
                     </Col>
                 </Row>
                 <Fragment>
-                    <p>Seleccionados: {eventUsersId.length}</p>
-                    <Table size="small" style={{ overflowX: "scroll" }} rowSelection={rowSelection} columns={columnsTable} dataSource={attendeesFormatedForTable} />
+                    <p style={{marginTop:"2%"}}>Seleccionados: {eventUsersId.length}</p>
+                    <Table
+                        scroll={{ x: 1500 }} 
+                        sticky                    
+                        pagination={{ position: ["bottomCenter"] }}
+                        size="small"                        
+                        rowSelection={rowSelection}
+                        columns={columnsTable}
+                        dataSource={attendeesFormatedForTable} />
                 </Fragment>
                 {
                     this.state.addUser && (
