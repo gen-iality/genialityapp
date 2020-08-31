@@ -242,7 +242,7 @@ class Landing extends Component {
       wall: <WallForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       documents: <DocumentsForm event={event} eventId={event._id} />,
       faqs: <FaqsForm event={event} eventId={event._id} />,
-      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,      
+      networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
@@ -254,36 +254,48 @@ class Landing extends Component {
               <EventLanding event={event} toggleConference={this.toggleConference} showSection={this.showSection} />
             }
             {(this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6") &&
-              <div className="the-lobby-video-column">
-                <div className="the-lobby-video">
-                  <div className="the-lobby-video-wrap-holder">
-                    <div className="the-lobby-video-holder">
-                      <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+              <>
+                <ReactPlayer
+                  width={"100%"}
+                  style={{
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                  url={event.video}
+                  //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                  controls
+                />
+                <div className="the-lobby-video-column">
+                  <div className="the-lobby-video">
+                    <div className="the-lobby-video-wrap-holder">
+                      <div className="the-lobby-video-holder">
+                        <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                      </div>
+                      <div className="the-lobby-video-holder">
+                        <img src="/lobby/TIRA_PANTALLA.png" alt="" />
+                      </div>
                     </div>
-                    <div className="the-lobby-video-holder">
-                      <img src="/lobby/TIRA_PANTALLA.png" alt="" />
-                    </div>
-                  </div>
-                  <div className="the-lobby-video-wrap">
-                    <div className="the-lobby-video-container">
-                      <ReactPlayer
+                    <div className="the-lobby-video-wrap">
+                      <div className="the-lobby-video-container">
+                        <ReactPlayer
 
-                        url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
-                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                        controls
-                      />
+                          url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                          controls
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-                {
-                  // Todo: Poner link a listado de empresas
-                }
-                {/*
+                  {
+                    // Todo: Poner link a listado de empresas
+                  }
+                  {/*
               <Button onClick={this.showSection('companies')} className="the-lobby-exhibitors-btn">
                 <img src="/lobby/BOTON_STANDS.png" alt=""/>
               </Button>
               */}
-              </div>
+                </div>
+              </>
             }
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
@@ -487,7 +499,7 @@ class Landing extends Component {
                                   ? event.picture
                                   : "https://bulma.io/images/placeholders/1280x960.png"
                             }
-                            mobileBanner={event.styles && event.styles.mobile_banner &&(
+                            mobileBanner={event.styles && event.styles.mobile_banner && (
                               event.styles.mobile_banner)
                             }
                             bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
@@ -644,7 +656,7 @@ class Landing extends Component {
                     <img src={event.styles.banner_footer} />
                   </div>
                 )
-              }              
+              }
             </React.Fragment >
           )
         }

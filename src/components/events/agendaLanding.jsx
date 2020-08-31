@@ -35,7 +35,8 @@ class Agenda extends Component {
       generalTab: true,
       loading: false,
       showButtonSurvey: false,
-      showButtonDocuments: false
+      showButtonDocuments: false,
+      status: "in_progress"
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -339,11 +340,7 @@ class Agenda extends Component {
                 {/* Contenedor donde se pinta la información de la agenda */}
 
                 {toShow.map((item, llave) => (
-                  <div key={llave}
-                    className="container_agenda-information"
-                    onClick={(e) => {
-                      this.gotoActivity(item);
-                    }}>
+                  <div key={llave} className="container_agenda-information">
                     <div className="card agenda_information">
                       <Row align="middle">
                         <Row>
@@ -357,7 +354,7 @@ class Agenda extends Component {
                         </Row>
                         <hr className="line-head" />
                         <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <div className="text-align-card" style={{marginBottom:"5%"}}>
+                          <div onClick={(e) => { this.gotoActivity(item) }} className="text-align-card" style={{ marginBottom: "5%" }}>
                             {
                               item.activity_categories.length > 0 && (
                                 <>
@@ -396,31 +393,60 @@ class Agenda extends Component {
                               )
                             }
                           </p>
-                          <Row className="text-align-card">
-                            <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" >
+                          <Col align="bottom" className="text-align-card">
+                            <div>
+                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
                               </Button>
                               {
                                 showButtonDocuments && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Documentos
                                   </Button>
                                 )
                               }
                               {
                                 showButtonSurvey && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Encuestas
                                   </Button>
                                 )
                               }
                             </div>
-                          </Row>
+                          </Col>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                           <div>
-                            <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                            {/* {
+                              this.state.status === "preview" && (
+                                <img src={this.props.event.styles.event_image} />
+                              )
+
+                            } */}
+
+                            <img onClick={() =>
+                                item.meeting_id && toggleConference(
+                                  true,
+                                  item.meeting_id,
+                                  item
+                                )
+                              } src={this.props.event.styles.menu_image} />
+                            <div>
+                              <Button
+                                block
+                                type="primary"
+                                disabled={item.meeting_id ? false : true}
+                                onClick={() =>
+                                  toggleConference(
+                                    true,
+                                    item.meeting_id,
+                                    item
+                                  )
+                                }
+                              >
+                                {item.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                              </Button>
+                            </div>
                           </div>
                         </Col>
                       </Row>
