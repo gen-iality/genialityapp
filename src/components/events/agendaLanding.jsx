@@ -381,9 +381,9 @@ class Agenda extends Component {
                                   <Row>
                                     {item.hosts.map((speaker, key) => (
                                       <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
-                                        <span key={key} style={{ fontSize: 17, fontWeight: 500 }}>
+                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
                                           <Avatar
-                                            size={30}
+                                            size={50}
                                             src={speaker.image
                                             } /> {speaker.name} &nbsp;</span>
                                       </Col>
@@ -430,7 +430,7 @@ class Agenda extends Component {
                                   item.meeting_id,
                                   item
                                 )
-                              } src={this.props.event.styles.menu_image} />
+                              } src={this.props.event.styles.event_image} />
                             <div>
                               <Button
                                 block
@@ -444,7 +444,7 @@ class Agenda extends Component {
                                   )
                                 }
                               >
-                                {item.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                                {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
                               </Button>
                             </div>
                           </div>
