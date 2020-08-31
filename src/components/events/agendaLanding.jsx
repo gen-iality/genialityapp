@@ -430,7 +430,7 @@ class Agenda extends Component {
                                   item.meeting_id,
                                   item
                                 )
-                              } src={this.props.event.styles.menu_image} />
+                              } src={this.props.event.styles.event_image} />
                             <div>
                               <Button
                                 block
