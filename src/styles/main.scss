@@ -129,7 +129,13 @@ iframe {
   overflow-x: scroll;
 }
 
-
+.line-head{
+  width: 100% !important;
+  background-color: gray !important;
+  border-bottom-color: gray !important;
+  height: 2px !important;
+  margin-bottom:2% !important;
+}
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";

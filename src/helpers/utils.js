@@ -69,6 +69,7 @@ export function handleRequestError(error) {
 }
 
 export function parseData2Excel(data, fields) {
+  console.log(fields)
   let info = [];
   // fields.unshift({ name: "created_at", type: "text", label: "created_at" });
   // fields.unshift({ name: "updated_at", type: "text", label: "updated_at" });

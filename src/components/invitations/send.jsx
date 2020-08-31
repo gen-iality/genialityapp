@@ -108,11 +108,11 @@ class SendRsvp extends Component {
 
 
     async submit() {
-        const { event, selection } = this.props;
+        const { event, selection } = this.props;        
         const { rsvp, include_date } = this.state;
         let users = [];
         selection.map(item => {
-            return users.push(item.id)
+            return users.push(item._id)
         });
         this.setState({ dataMail: users, disabled: true });
         try {

@@ -9,7 +9,7 @@ import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactPlayer from "react-player";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Space, Spin, Result, Avatar } from "antd";
+import { Button, Card, Row, Col, Tag, Spin, Result, Avatar } from "antd";
 import { DesktopOutlined } from "@ant-design/icons";
 
 class Agenda extends Component {
@@ -35,7 +35,8 @@ class Agenda extends Component {
       generalTab: true,
       loading: false,
       showButtonSurvey: false,
-      showButtonDocuments: false
+      showButtonDocuments: false,
+      status: "in_progress"
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -136,11 +137,11 @@ class Agenda extends Component {
         (a, b) =>
           Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
           Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
-      );    
+      );
     this.setState({ listDay: list });
 
-    for(let i=0; list.length>i; i++){
-      list[i].hosts.sort((a,b)=>{
+    for (let i = 0; list.length > i; i++) {
+      list[i].hosts.sort((a, b) => {
         return a.order - b.order
       })
     }
@@ -329,7 +330,7 @@ class Agenda extends Component {
 
                 <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
                   {days.map((date, key) => (
-                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"}  type={`${date === day ? "primary" : ""}`}>
+                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
                       {this.capitalizeDate(Moment(date).format("MMMM DD"))}
                     </Button>
 
@@ -339,62 +340,113 @@ class Agenda extends Component {
                 {/* Contenedor donde se pinta la información de la agenda */}
 
                 {toShow.map((item, llave) => (
-                  <div key={llave}
-                    className="container_agenda-information"
-                    onClick={(e) => {
-                      this.gotoActivity(item);
-                    }}>
+                  <div key={llave} className="container_agenda-information">
                     <div className="card agenda_information">
                       <Row align="middle">
-                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <span className="text-align-card">
+                        <Row>
+                          <span className="date-activity">
                             {Moment(item.datetime_start).format("h:mm a")} -{" "}
                             {Moment(item.datetime_end).format("h:mm a")}
                           </span>
                           <p>
                             <span className="card-header-title text-align-card">{item.name}</span>
                           </p>
+                        </Row>
+                        <hr className="line-head" />
+                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
+                          <div onClick={(e) => { this.gotoActivity(item) }} className="text-align-card" style={{ marginBottom: "5%" }}>
+                            {
+                              item.activity_categories.length > 0 && (
+                                <>
+                                  <b>Tags: </b>
+                                  {
+                                    item.activity_categories.map((item) => (
+                                      <>
+                                        <Tag color={item.color ? item.color : "#ffffff"}>{item.name}</Tag>
+                                      </>
+                                    ))
+                                  }
+                                </>
+                              )
+                            }
+
+                          </div>
                           <p className="text-align-card">
-                            {/* <b>Conferencista: </b> */}
-                            <br/>
-                            <br/>
-                            <Row>
-                              {item.hosts.map((speaker, key) => (
-                              <Col lg={24} xl={12} xxl={12} style={{marginBottom:13}}>
-                                <span key={key} style={{ fontSize:17, fontWeight:500}}>
-                                  <Avatar
-                                    size={30}
-                                    src={speaker.image
-                                  }/> {speaker.name} &nbsp;</span>
-                              </Col>
-                            ))}
-                            </Row>
+                            {
+                              item.hosts.length > 0 && (
+                                <>
+                                  <b>Presenta: </b>
+                                  <br />
+                                  <br />
+                                  <Row>
+                                    {item.hosts.map((speaker, key) => (
+                                      <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
+                                        <span key={key} style={{ fontSize: 17, fontWeight: 500 }}>
+                                          <Avatar
+                                            size={30}
+                                            src={speaker.image
+                                            } /> {speaker.name} &nbsp;</span>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                </>
+                              )
+                            }
                           </p>
-                          <Row className="text-align-card">
-                            <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" >
+                          <Col align="bottom" className="text-align-card">
+                            <div>
+                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
                               </Button>
                               {
                                 showButtonDocuments && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Documentos
                                   </Button>
                                 )
                               }
                               {
                                 showButtonSurvey && (
-                                  <Button type="primary" className="space-align-block">
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Encuestas
                                   </Button>
                                 )
                               }
                             </div>
-                          </Row>
+                          </Col>
                         </Col>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                        <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                           <div>
-                            <img src={item.image} />
+                            {/* {
+                              this.state.status === "preview" && (
+                                <img src={this.props.event.styles.event_image} />
+                              )
+
+                            } */}
+
+                            <img onClick={() =>
+                                item.meeting_id && toggleConference(
+                                  true,
+                                  item.meeting_id,
+                                  item
+                                )
+                              } src={this.props.event.styles.menu_image} />
+                            <div>
+                              <Button
+                                block
+                                type="primary"
+                                disabled={item.meeting_id ? false : true}
+                                onClick={() =>
+                                  toggleConference(
+                                    true,
+                                    item.meeting_id,
+                                    item
+                                  )
+                                }
+                              >
+                                {item.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                              </Button>
+                            </div>
                           </div>
                         </Col>
                       </Row>
