@@ -83,7 +83,13 @@
         justify-content: start;
         font-weight: 600;
       }
-
+      .date-activity {
+        display: block;
+        margin-right: 10%;
+        margin-bottom: 5%;
+        margin-left: 4%;
+        font-weight: 700;
+      }
       .card-header-title {
         justify-content: start;
         font-weight: bolder;
@@ -149,12 +155,10 @@
     }
   }
 }
-.btn-list-confencista{
+.btn-list-confencista {
   @media only screen and (max-width: $breakpoint-mobile) {
     position: absolute;
     top: 97px;
     left: -14px;
   }
 }
-
-
