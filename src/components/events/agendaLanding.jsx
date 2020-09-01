@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import * as Cookie from "js-cookie";
-import EvenTable from "../events/shared/table";
-import SearchComponent from "../shared/searchTable";
-import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
-import { Link, Redirect } from "react-router-dom";
-import ReactQuill from "react-quill";
-import { toolbarEditor } from "../../helpers/constants";
-import ReactPlayer from "react-player";
+import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Tag, Spin, Result, Avatar } from "antd";
-import { DesktopOutlined } from "@ant-design/icons";
+import { Button, Card, Row, Col, Tag, Spin, Avatar } from "antd";
+import { firestore } from "../../helpers/firebase";
+
 
 class Agenda extends Component {
   constructor(props) {
@@ -41,6 +36,24 @@ class Agenda extends Component {
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { data } = this.state
+    //Cargamos solamente los espacios virtuales de la agenda
+
+    //Si aún no ha cargado el evento no podemos hacer nada más
+    if (!this.props.event) return;
+
+    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
+    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+
+    this.listeningStateMeetingRoom(data);
+    //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+
+    this.setState({ data, filtered, toShow: filtered });
+
   }
 
   async componentDidMount() {
@@ -86,10 +99,29 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
-
     }
   }
 
+  async listeningStateMeetingRoom(list) {
+    list.forEach((activity, index, arr) => {
+      firestore
+        .collection("events")
+        .doc(this.props.event._id)
+        .collection("activities")
+        .doc(activity._id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          console.log("infoActivity:", infoActivity);
+          let { habilitar_ingreso } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+
+          arr[index] = updatedActivityInfo;
+          const filtered = this.filterByDay(this.state.days[0], arr);
+          this.setState({ list: arr, filtered, toShow: filtered });
+        });
+    });
+
+  }
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
     let evius_token = Cookie.get("evius_token");
@@ -113,13 +145,14 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(this.props.eventId);
-
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], data);
-    this.setState({ list: data, filtered, toShow: filtered, spaces: space });
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+    this.listeningStateMeetingRoom(data);
+
+    this.setState({ data, filtered, toShow: filtered, spaces: space });
   };
 
   returnList() {
@@ -417,36 +450,52 @@ class Agenda extends Component {
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                           <div>
-                            {/* {
-                              this.state.status === "preview" && (
-                                <img src={this.props.event.styles.event_image} />
+                            {
+                              item.habilitar_ingreso === "closed_meeting_room" && (
+                                <>
+                                  <img src={this.props.event.styles.event_image} />
+                                  <p>Conferencia Inciará pronto</p>
+                                </>
                               )
+                            }
 
-                            } */}
-
-                            <img onClick={() =>
-                                item.meeting_id && toggleConference(
-                                  true,
-                                  item.meeting_id,
-                                  item
-                                )
-                              } src={this.props.event.styles.event_image} />
-                            <div>
-                              <Button
-                                block
-                                type="primary"
-                                disabled={item.meeting_id ? false : true}
-                                onClick={() =>
-                                  toggleConference(
-                                    true,
-                                    item.meeting_id,
-                                    item
-                                  )
-                                }
-                              >
-                                {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                              </Button>
-                            </div>
+                            {
+                              item.habilitar_ingreso === "ended_meeting_room" && (
+                                <>
+                                  <img src={this.props.event.styles.event_image} />
+                                  <p>Conferencia Terminada</p>
+                                </>
+                              )
+                            }
+                            {
+                              item.habilitar_ingreso === "open_meeting_room" && (
+                                <>
+                                  <img onClick={() =>
+                                    item.meeting_id && toggleConference(
+                                      true,
+                                      item.meeting_id,
+                                      item
+                                    )
+                                  } src={this.props.event.styles.event_image} />
+                                  <div>
+                                    <Button
+                                      block
+                                      type="primary"
+                                      disabled={item.meeting_id ? false : true}
+                                      onClick={() =>
+                                        toggleConference(
+                                          true,
+                                          item.meeting_id,
+                                          item
+                                        )
+                                      }
+                                    >
+                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                                    </Button>
+                                  </div>
+                                </>
+                              )
+                            }
                           </div>
                         </Col>
                       </Row>
