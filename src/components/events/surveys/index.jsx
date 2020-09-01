@@ -67,19 +67,13 @@ class SurveyForm extends Component {
   };
 
   surveyVisible = () => {
-
-
-    if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
-      this.toggleSurvey(this.state.surveysData[0]);
-    }
-
+    // if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
+    //   this.toggleSurvey(this.state.surveysData[0]);
+    // }
 
     this.setState({
       surveyVisible: !this.state.surveyVisible,
     });
-
-
-
 
   };
 
@@ -203,9 +197,9 @@ class SurveyForm extends Component {
 
     this.setState({ surveysData: stateSurveys });
     console.log("stateSurveys", stateSurveys);
-    if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
-      this.toggleSurvey(stateSurveys[0]);
-    }
+    // if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
+    //   this.toggleSurvey(stateSurveys[0]);
+    // }
 
     // bucle que verifica si el usuario contesto las encuestas
   };
