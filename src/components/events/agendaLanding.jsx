@@ -3,9 +3,9 @@ import Moment from "moment";
 import * as Cookie from "js-cookie";
 import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Tag, Spin, Avatar } from "antd";
+import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert } from "antd";
 import { firestore } from "../../helpers/firebase";
-
+import ReactPlayer from "react-player";
 
 class Agenda extends Component {
   constructor(props) {
@@ -111,7 +111,6 @@ class Agenda extends Component {
         .doc(activity._id)
         .onSnapshot((infoActivity) => {
           if (!infoActivity.exists) return;
-          console.log("infoActivity:", infoActivity);
           let { habilitar_ingreso } = infoActivity.data();
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
@@ -161,8 +160,6 @@ class Agenda extends Component {
   }
 
   filterByDay = (day, agenda) => {
-    console.log("dia---", day);
-    console.log("agenda-----", agenda)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -428,9 +425,9 @@ class Agenda extends Component {
                           </p>
                           <Col align="bottom" className="text-align-card">
                             <div>
-                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
+                              {/* <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
-                              </Button>
+                              </Button> */}
                               {
                                 showButtonDocuments && (
                                   <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
@@ -453,8 +450,8 @@ class Agenda extends Component {
                             {
                               item.habilitar_ingreso === "closed_meeting_room" && (
                                 <>
-                                  <img src={this.props.event.styles.event_image} />
-                                  <p>Conferencia Inciará pronto</p>
+                                  <img src={this.props.event.styles.event_image} />                                 
+                                  <Alert message="La Conferencia Inciará pronto" type="warning" />                                   
                                 </>
                               )
                             }
@@ -462,8 +459,28 @@ class Agenda extends Component {
                             {
                               item.habilitar_ingreso === "ended_meeting_room" && (
                                 <>
-                                  <img src={this.props.event.styles.event_image} />
-                                  <p>Conferencia Terminada</p>
+                                  {item.video ? item.video && (
+                                    <>                                    
+                                    <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />                                   
+                                      <ReactPlayer
+                                        width={"100%"}                                        
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                        url={item.video}
+                                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                                        controls
+                                      />
+                                    </>
+                                  ) :
+                                    (
+                                      <>
+                                        <img src={this.props.event.styles.event_image} />
+                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />                                        
+                                      </>
+                                    )}
+
                                 </>
                               )
                             }
