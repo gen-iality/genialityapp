@@ -150,11 +150,11 @@ class Datos extends Component {
         }
     }
 
-    async privatePublic(id, field) {
+    async visibleByContacts(id, field) {
         try {
-            let privatePublic = !field
-            console.log(id, privatePublic)
-            await EventFieldsApi.editOne({ privatePublic }, id, this.eventID);
+            let visibleByContacts = !field
+            console.log(id, visibleByContacts)
+            await EventFieldsApi.editOne({ visibleByContacts }, id, this.eventID);
             this.fetchFields()
         } catch (e) {
             console.log(e)
@@ -170,7 +170,7 @@ class Datos extends Component {
                         <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"}
                             addAction={this.addField} addTitle={"Agregar dato"}>
                             {this.state.loading ? <Loading /> :
-                                <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Privado", "Visible", ""]}>
+                                <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Visible solo contactos", "Visible solo admin", ""]}>
                                     <tr className="has-text-grey-light ">
                                         
                                         <td />
@@ -197,17 +197,17 @@ class Datos extends Component {
                                             </td>
 
                                             <td>
-                                                <input className="is-checkradio is-primary" id={`privatePublic${field.label}`}
-                                                    type="checkbox" name={`privatePublic`} checked={field.privatePublic}
-                                                    onChange={event => this.privatePublic(field.uuid ? field.uuid : field._id, field.privatePublic)} />
-                                                <label htmlFor={`privatePublic${field.label}`}></label>
+                                                <input className="is-checkradio is-primary" id={`visibleByContacts${field.label}`}
+                                                    type="checkbox" name={`visibleByContacts`} checked={field.visibleByContacts}
+                                                    onChange={event => this.visibleByContacts(field.uuid ? field.uuid : field._id, field.visibleByContacts)} />
+                                                <label htmlFor={`visibleByContacts${field.label}`}></label>
                                             </td>
 
                                             <td>
-                                                <input className="is-checkradio is-primary" id={`visible${field.label}`}
-                                                    type="checkbox" name={`visible`} checked={field.visible}
-                                                    onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visible)} />
-                                                <label htmlFor={`visible${field.label}`}></label>
+                                                <input className="is-checkradio is-primary" id={`visibleByAdmin${field.label}`}
+                                                    type="checkbox" name={`visibleByAdmin`} checked={field.visibleByAdmin}
+                                                    onChange={event => this.toggleChange(field.uuid ? field.uuid : field._id, field.visibleByAdmin)} />
+                                                <label htmlFor={`visibleByAdmin${field.label}`}></label>
                                             </td>
 
                                             <td>
