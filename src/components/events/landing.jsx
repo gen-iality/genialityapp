@@ -6,10 +6,10 @@ import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
 import ReactPlayer from "react-player";
-import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
+import { Layout, Menu, Drawer, Button, Col, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar, Typography } from "antd";
-import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
+import { Typography } from "antd";
+
 //custom
 import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi, fireStoreApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";

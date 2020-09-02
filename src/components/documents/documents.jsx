@@ -5,7 +5,7 @@ import { DocumentsApi } from "../../helpers/request";
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import firebase from "firebase";
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 
 class documents extends Component {
   constructor(props) {
@@ -227,7 +227,7 @@ class documents extends Component {
           <EventContent title={"Documentos"} classes={"documents-list"}>
             <div className="column is-12">
               <div key={this.state.fileKey} style={{ float: "right", display: "inline-block" }} className="file has-name">
-                <label className="label" className="file-label">
+                <label className="label file-label">
                   <input className="file-input" type="file" id="file" name="file" onChange={this.saveDocument} />
                   <span className="file-cta">
                     <span className="file-icon">

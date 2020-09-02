@@ -6,7 +6,7 @@ import EventContent from "../events/shared/content";
 import { SurveysApi } from "../../helpers/request";
 import { getTotalVotes } from "./services";
 
-import { Input, List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from "antd";
+import {  List, Card, Button, Spin, Empty, Row, Col, Modal, notification } from "antd";
 
 
 class TriviaReport extends Component {
@@ -20,8 +20,8 @@ class TriviaReport extends Component {
   }
 
   loadData = async () => {
-    const { event, matchUrl, location } = this.props;
-    let { surveyQuestions } = this.state;
+    const { event,  location } = this.props;
+    
 
     SurveysApi.getOne(event._id, location.state.report)
       .then(async (response) => {
@@ -31,7 +31,7 @@ class TriviaReport extends Component {
           response.questions.forEach(async (question, index, arr) => {
             let infoQuestion = await getTotalVotes(location.state.report, question);
             questions.push(infoQuestion);
-            if (questions.length == arr.length) resolve(questions);
+            if (questions.length === arr.length) resolve(questions);
           });
         });
 
@@ -99,7 +99,7 @@ class TriviaReport extends Component {
                           state: { titleQuestion: item.title, surveyId: location.state.report },
                         }}>
                         <Card title={item.title ? item.title : "Pregunta sin Titulo"} hoverable>
-                          {item.quantityResponses == 0
+                          {item.quantityResponses === 0
                             ? "No se ha respondido aun la pregunta"
                             : `${item.quantityResponses} usuarios han respondido la pregunta`}
                         </Card>

@@ -124,10 +124,10 @@ class UserModal extends Component {
             snap.updated_at = new Date();
 
             //Mejor hacer un map pero no se como
-            if (snap.ticket_id == undefined || !snap.ticket_id || snap.ticket_id == "undefined") {
+            if (snap.ticket_id === undefined || !snap.ticket_id || snap.ticket_id === "undefined") {
                 snap.ticket_id = null;
             }
-            if (snap.rol_id == undefined || !snap.rol_id || snap.rol_id == "undefined") {
+            if (snap.rol_id === undefined || !snap.rol_id || snap.rol_id === "undefined") {
                 snap.rol_id = null;
             }
 
@@ -308,7 +308,7 @@ class UserModal extends Component {
     deleteUser = async () => {
         const { substractSyncQuantity } = this.props;
         let message = {};
-        let resultado = null;
+        // let resultado = null;
         const self = this;
         const userRef = firestore.collection(`${this.props.eventId}_event_attendees`);
         try {
@@ -321,7 +321,7 @@ class UserModal extends Component {
         } catch (e) {
             ///Esta condición se agrego porque algunas veces los datos no se sincronizan
             //bien de mongo a firebase y terminamos con asistentes que no existen
-            if (e.response && e.response.status == 404) {
+            if (e.response && e.response.status === 404) {
                 userRef.doc(this.state.userId).delete();
                 toast.info(<FormattedMessage id="toast.user_deleted" defaultMessage="Ok!" />);
             } else {

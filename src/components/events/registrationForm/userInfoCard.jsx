@@ -21,9 +21,9 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
         let userProperties = [];
 
         for (const key in info) {
-          if (key != "displayName" && key != "pesovoto") {
+          if (key !== "displayName" && key !== "pesovoto") {
             let fieldLabel = "";
-            fieldLabel = extraFields.filter((item) => key == item.name);
+            fieldLabel = extraFields.filter((item) => key === item.name);
             fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
             userProperties.push({ key: key, property: fieldLabel, value: info[key] });
           }
@@ -45,7 +45,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
       let result = await parseObjectToArray(item.properties);
       eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
 
-      if (index == arr.length - 1) setEventUserList(eventUsers);
+      if (index === arr.length - 1) setEventUserList(eventUsers);
     });
   };
 
@@ -55,7 +55,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
     let eventUserValues = {};
     ticket.data.forEach((item) => {
-      if (item.key == "names" || item.key == "email") return;
+      if (item.key === "names" || item.key === "email") return;
       eventUserValues = { ...eventUserValues, [item.key]: item.value };
     });
     // console.log("eventUserValues:", eventUserValues);
@@ -76,7 +76,7 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
   useEffect(() => {
     console.log("tickets originales:", userTickets);
-    if (!userTickets || userTickets.length == 0) return setLoading(false);
+    if (!userTickets || userTickets.length === 0) return setLoading(false);
     setEventUsers(userTickets);
   }, [currentUser]);
 
