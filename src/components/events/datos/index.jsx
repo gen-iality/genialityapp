@@ -48,11 +48,7 @@ class Datos extends Component {
             const { eventID } = this.props;
             this.eventID = eventID;
             let fields = await EventFieldsApi.getAll(eventID);
-            fields = this.orderFieldsByWeight(fields);
-
-            fields = fields.filter(item => item.name !== "names" && item.name !== "email");
-
-
+            fields = this.orderFieldsByWeight(fields);            
 
             this.setState({ fields, loading: false });
         } catch (e) {
@@ -176,13 +172,7 @@ class Datos extends Component {
                             {this.state.loading ? <Loading /> :
                                 <EvenTable head={["Dato", "Tipo de Dato", "Obligatorio", "Privado", "Visible", ""]}>
                                     <tr className="has-text-grey-light ">
-                                        <td className="has-text-grey-light ">Email</td>
-                                        <td className="has-text-grey-light ">Correo</td>
-                                        <td>
-                                            <input className="is-checkradio  has-text-grey-light" type="checkbox" id={"mandEmail"}
-                                                checked={true} disabled={true} />
-                                            <label className="checkbox has-text-grey-light" htmlFor={"mandEmail"} />
-                                        </td>
+                                        
                                         <td />
                                     </tr>
                                     <tr>
