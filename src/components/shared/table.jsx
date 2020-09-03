@@ -1,14 +1,5 @@
-import React, {Fragment, useState, useEffect} from 'react';
-import {
-    useTable,useBlockLayout,
-    useGroupBy,
-    useFilters,
-    useSortBy,
-    useExpanded,
-    usePagination,
-    useRowSelect
-  } from 'react-table'
-  import { FixedSizeList } from 'react-window'
+import React from 'react';
+import { useTable, usePagination, useRowSelect } from 'react-table'
 
 /**
  * 
@@ -57,7 +48,6 @@ const {
     pageOptions,
     pageCount,
     gotoPage,
-    getRowProps,
     nextPage,
     previousPage,
     setPageSize,

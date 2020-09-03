@@ -3,20 +3,17 @@ import { Link, withRouter } from "react-router-dom";
 import * as Cookie from "js-cookie";
 import { ApiUrl, AuthUrl, icon } from "../helpers/constants";
 import API, { OrganizationApi } from "../helpers/request";
-import { FormattedMessage } from "react-intl";
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
-import LetterAvatar from "../components/shared/letterAvatar";
 import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
-import { Logo } from "../../src/logo.svg";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
-import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { Menu, Drawer, Button, Col, Row, Layout } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { parseUrl } from "../helpers/constants";
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 const zIndex = {
   zIndex: "1"
 }

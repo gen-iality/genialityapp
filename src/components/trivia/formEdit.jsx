@@ -1,11 +1,11 @@
-import React, { Component, useState, useEffect, forwardRef } from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 
 import { fieldsFormQuestion, fieldsFormQuestionWithPoints, selectOptions, searchWithMultipleIndex } from "./constants";
 
 import { SurveysApi } from "../../helpers/request";
 
 import { toast } from "react-toastify";
-import { Form, Input, InputNumber, Button, Select, Spin, Radio, Checkbox } from "antd";
+import { Form, Input, Button, Select, Spin, Radio, Checkbox } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;

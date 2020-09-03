@@ -1,13 +1,5 @@
-import React, {Fragment, useState, useEffect} from 'react';
-import {
-    useTable,useBlockLayout,
-    useGroupBy,
-    useFilters,
-    useSortBy,
-    useExpanded,
-    usePagination
-  } from 'react-table'
-  import { FixedSizeList } from 'react-window'
+import React from 'react';
+import { useTable } from 'react-table'
 
 
 export default function EviusTable({ columns, data }) {

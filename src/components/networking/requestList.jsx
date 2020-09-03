@@ -1,13 +1,13 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from "antd";
-import { ScheduleOutlined, CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { ScheduleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as Cookie from "js-cookie";
 import { Networking, UsersApi } from "../../helpers/request";
-import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
+import { getCurrentUser, getCurrentEventUser } from "./services";
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
