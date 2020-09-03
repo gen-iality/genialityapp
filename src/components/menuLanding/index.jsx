@@ -1,12 +1,9 @@
 import React, { Component, Fragment } from "react"
-import * as iconComponents from "@ant-design/icons";
-import { Typography, Select, Checkbox, Card, Input, Button, Col, Row } from "antd";
+import { Typography, Select, Card, Input, Button, Col, Row } from "antd";
 import { Actions } from "../../helpers/request";
 import { toast } from "react-toastify";
-import { now } from "moment";
 const { Title } = Typography;
 const { Option } = Select;
-const { Meta } = Card;
 
 class menuLanding extends Component {
     constructor(props) {

@@ -23,8 +23,7 @@ class upload extends Component {
             fileName: '',
             document: '',
             disabled: true,
-            files: [],
-            data: [],
+            files: [],            
             infoRol: [],
             nameFile: "",
             users: [],
@@ -112,7 +111,7 @@ class upload extends Component {
     goBack = () => this.setState({ redirect: true });
 
     submit = async () => {
-        const { matchUrl } = this.state
+        
         if (this.state.file) {
             const data = {
                 name: this.state.title,
@@ -187,8 +186,7 @@ class upload extends Component {
         this.getDocuments();
     }
     stateUploadFile = (snapshot) => {
-        //Se valida el estado del archivo si esta en pausa y esta subiendo
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        
         // console.log('Upload is ' + progress + '% done');
         switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED:

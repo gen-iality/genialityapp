@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from "react";
+import React, { Component, Fragment } from "react";
 import axios from "axios";
 import { ApiEviusZoomServer } from "../../helpers/constants";
 import { Redirect, withRouter, Link } from "react-router-dom";
@@ -10,13 +10,10 @@ import Creatable from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { firestore } from "../../helpers/firebase";
-import { Checkbox, notification } from 'antd';
+import { notification } from 'antd';
 import { createOrUpdateActivity, getConfiguration } from './services'
-
 import {
   AgendaApi,
-  Actions,
   CategoriesAgendaApi,
   RolAttApi,
   SpacesApi,
@@ -30,26 +27,8 @@ import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
 import { Spin, Card } from "antd";
-import getHostList, { setHostState, getAllHost } from "./fireHost";
-
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
-
-const optionSelect = [
-  {
-    value: "open_meeting_room",
-    label: "Conferencia Abierta"
-  },
-  {
-    value: "closed_meeting_room",
-    label: "Conferencia Suspendida"
-  },
-  {
-    value: "ended_meeting_room",
-    label: "Conferencia Cerrada"
-  }
-]
-
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -519,11 +498,9 @@ class AgendaEdit extends Component {
     try {
       response = await axios(options);
       toast.success("Conferencia Creada");
-      console.log(this.state.host_id);
-      let result = await setHostState(this.state.host_id, true);
+      console.log(this.state.host_id);      
 
       const {
-        event,
         location: { state },
       } = this.props;
 
@@ -535,8 +512,7 @@ class AgendaEdit extends Component {
         name_host: info.name_host,
         key: new Date(),
       });
-    } catch (error) {
-      let response = "";
+    } catch (error) {      
       if (error.response) {
         response = JSON.stringify(error.response.data);
       }
@@ -611,7 +587,6 @@ class AgendaEdit extends Component {
       bigmaker_meeting_id,
       nameDocuments,
       selected_document,
-      has_date,
       date,
       hour_start,
       hour_end,
@@ -628,14 +603,12 @@ class AgendaEdit extends Component {
       spaces, 
       categories, 
       types, 
-      roles, 
-      documents, 
+      roles,  
       isLoading, 
       start_url, 
       join_url, 
       availableText, 
-      vimeo_id, 
-      selectedTickets, 
+      vimeo_id,        
       platform } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;

@@ -17,7 +17,7 @@ const registerForm = {
 };
 
 export const setSuccessMessageInRegisterForm = (statusResponse) => {
-  registerForm.successMessage = statusResponse == "CREATED" ? "Registrado" : "Actualizado";
+  registerForm.successMessage = statusResponse === "CREATED" ? "Registrado" : "Actualizado";
 };
 
 export default (formType) => {

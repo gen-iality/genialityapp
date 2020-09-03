@@ -24,7 +24,7 @@ const createAndInitializeCount = (surveyId, questionId, optionQuantity, optionIn
       if (optionIndex.length > 1) {
         firstData[idResponse] = optionIndex.includes(i) ? vote : 0;
       } else {
-        firstData[idResponse] = optionIndex == idResponse ? vote : 0;
+        firstData[idResponse] = optionIndex === idResponse ? vote : 0;
       }
     }
 
@@ -199,11 +199,10 @@ export const SurveyAnswers = {
   },
   // Servicio para obtener el conteo de las respuestas y las opciones de las preguntas
   getAnswersQuestion: async (surveyId, questionId, eventId, updateData) => {
-    let docs = [];
 
     return new Promise(async (resolve, reject) => {
       let dataSurvey = await SurveysApi.getOne(eventId, surveyId);
-      let options = dataSurvey.questions.find((question) => question.id == questionId);
+      let options = dataSurvey.questions.find((question) => question.id === questionId);
 
       firestore
         .collection("surveys")
@@ -236,7 +235,7 @@ export const SurveyAnswers = {
             resolve(counterDocuments);
           }
 
-          if (counterDocuments > 0 && counterDocuments == survey.questions.length) {
+          if (counterDocuments > 0 && counterDocuments === survey.questions.length) {
             resolve(true);
           } else {
             resolve(false);

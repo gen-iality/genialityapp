@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { NewsFeed, Actions } from "../../helpers/request";
 import Loading from "../loaders/loading";
 import Moment from "moment";
@@ -252,8 +251,7 @@ class News extends Component {
 
   goBack = () => this.props.history.goBack();
 
-  render() {
-    const { event } = this.state;
+  render() {    
     return (
       <React.Fragment>
         <div className="column is-12 is-desktop">

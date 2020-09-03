@@ -17,7 +17,6 @@ import { auth } from "../../helpers/firebase";
 import { DateTimePicker } from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import { FormattedMessage } from "react-intl";
-import * as Cookie from "js-cookie";
 import ErrorServe from "../modal/serverError";
 
 class Index extends Component {

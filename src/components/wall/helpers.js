@@ -73,13 +73,13 @@ export const saveFirebase = {
       idPost: postId,
     };
 
-    let result = await firestore
-      .collection("adminPost")
-      .doc(eventId)
-      .collection("comment")
-      .doc(postId)
-      .collection("comments")
-      .add(data);
+    // let result = await firestore
+    //   .collection("adminPost")
+    //   .doc(eventId)
+    //   .collection("comment")
+    //   .doc(postId)
+    //   .collection("comments")
+    //   .add(data);
     //return result;
 
     return doc;

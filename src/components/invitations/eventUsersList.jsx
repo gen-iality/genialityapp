@@ -246,7 +246,7 @@ class eventUsersList extends Component {
                 </Link>
             </Menu >
         );
-        const { columnsTable, attendeesFormatedForTable, eventUsersId, dropUser } = this.state
+        const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
         const rowSelection = {
             eventUsersId,
             onChange: this.onSelectChange,

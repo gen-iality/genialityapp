@@ -199,7 +199,7 @@ class MenuEvent extends Component {
         )}
 
         { Object.keys( itemsMenu ).map( ( key, i ) => {
-          if ( ( itemsMenu[ key ] && itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null }
+          if ( ( itemsMenu[ key ] && itemsMenu[ key ].permissions === "assistants" ) && !this.state.user ) { return null }
           let IconoComponente = iconComponents[ itemsMenu[ key ].icon ];
           return (
             <Menu.Item key={ itemsMenu[ key ].section } onClick={ e => this.state.showSection( itemsMenu[ key ].section ) }>

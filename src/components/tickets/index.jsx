@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import * as Cookie from "js-cookie";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import TimeStamp from "react-timestamp";
-import { TicketsApi, EventsApi, UsersApi } from "../../helpers/request";
+import { TicketsApi, EventsApi } from "../../helpers/request";
 import { Typography, Card, Col, Row, Button, message } from "antd";
 import EventImage from "../../eventimage.png";
 import { Link } from "react-router-dom";

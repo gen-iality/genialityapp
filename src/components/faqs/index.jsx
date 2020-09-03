@@ -1,5 +1,5 @@
-import React, { Component, useState, useCallback } from "react";
-import { FaqsApi, Actions } from "../../helpers/request";
+import React, { Component, useState } from "react";
+import { FaqsApi } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import ReactQuill from "react-quill";
 import Loading from "../loaders/loading";
@@ -8,8 +8,6 @@ import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import TableAction from "../events/shared/tableAction";
 import { handleRequestError, sweetAlert } from "../../helpers/utils";
-import axios from "axios/index";
-import ImageInput from "../shared/imageInput";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
 
@@ -161,7 +159,7 @@ class Faqs extends Component {
   };
 
   render() {
-    const { event } = this.state;
+    
     return (
       <React.Fragment>
         <div className="column is-12">

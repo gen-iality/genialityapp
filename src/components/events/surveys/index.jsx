@@ -1,14 +1,10 @@
-import React, { Component, Fragment } from "react";
-import { Route, Switch, withRouter, Link } from "react-router-dom";
+import React, { Component } from "react";
 import * as Cookie from "js-cookie";
-
 import { SurveyAnswers } from "./services";
 import API, { Actions, SurveysApi,TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-
 import SurveyList from "./surveyList";
 import RootPage from "./rootPage";
-
 import { Spin, Button, Card } from "antd";
 
 const surveyButtons = {
@@ -17,27 +13,27 @@ const surveyButtons = {
   },
 };
 
-function playFrequency(frequency) {
-  var audioContext = new AudioContext();
-  // create 2 second worth of audio buffer, with single channels and sampling rate of your device.
-  var sampleRate = audioContext.sampleRate;
-  var duration = 0.5 * sampleRate;
-  var numChannels = 1;
-  var buffer = audioContext.createBuffer(numChannels, duration, sampleRate);
-  // fill the channel with the desired frequency's data
-  var channelData = buffer.getChannelData(0);
-  for (var i = 0; i < sampleRate; i++) {
-    channelData[i] = Math.sin((2 * Math.PI * frequency * i) / sampleRate);
-  }
+// function playFrequency(frequency) {
+//   var audioContext = new AudioContext();
+//   // create 2 second worth of audio buffer, with single channels and sampling rate of your device.
+//   var sampleRate = audioContext.sampleRate;
+//   var duration = 0.5 * sampleRate;
+//   var numChannels = 1;
+//   var buffer = audioContext.createBuffer(numChannels, duration, sampleRate);
+//   // fill the channel with the desired frequency's data
+//   var channelData = buffer.getChannelData(0);
+//   for (var i = 0; i < sampleRate; i++) {
+//     channelData[i] = Math.sin((2 * Math.PI * frequency * i) / sampleRate);
+//   }
 
-  // create audio source node.
-  var source = audioContext.createBufferSource();
-  source.buffer = buffer;
-  source.connect(audioContext.destination);
+//   // create audio source node.
+//   var source = audioContext.createBufferSource();
+//   source.buffer = buffer;
+//   source.connect(audioContext.destination);
 
-  // finally start to play
-  source.start(0);
-}
+//   // finally start to play
+//   source.start(0);
+// }
 
 class SurveyForm extends Component {
   constructor(props) {
@@ -67,7 +63,7 @@ class SurveyForm extends Component {
   };
 
   surveyVisible = () => {
-    // if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
+    // if (this.state.surveysData.length === 1 && !this.state.surveyVisible) {
     //   this.toggleSurvey(this.state.surveysData[0]);
     // }
 
@@ -121,7 +117,7 @@ class SurveyForm extends Component {
 
         console.log("surveySnapShot", surveySnapShot, surveySnapShot.size);
 
-        if (surveySnapShot.size == 0) {
+        if (surveySnapShot.size === 0) {
           console.log("surveySnapShotINNER");
           this.setState({ selectedSurvey: {}, surveyVisible: false, surveysData: [] });
           return;
@@ -139,7 +135,7 @@ class SurveyForm extends Component {
 
         //Filtramos si la encuesta esta relacionada a una actividad y estamos en esa actividad
         if (activity && activity._id) {
-          surveysData = surveysData.filter((item) => item.activity_id == activity._id);
+          surveysData = surveysData.filter((item) => item.activity_id === activity._id);
         }
 
         surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) != -1);
@@ -184,7 +180,7 @@ class SurveyForm extends Component {
           surveys.push({ ...arr[index], userHasVoted: guestHasVote });
         }
 
-        if (surveys.length == arr.length) resolve(surveys);
+        if (surveys.length === arr.length) resolve(surveys);
       });
 
 
@@ -197,7 +193,7 @@ class SurveyForm extends Component {
 
     this.setState({ surveysData: stateSurveys });
     console.log("stateSurveys", stateSurveys);
-    // if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
+    // if (stateSurveys.length && stateSurveys.length === 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
     //   this.toggleSurvey(stateSurveys[0]);
     // }
 
@@ -259,9 +255,9 @@ class SurveyForm extends Component {
 
   // Funcion para cambiar entre los componentes 'ListSurveys y SurveyComponent'
   toggleSurvey = (data, reload) => {
-    if (typeof data == "boolean" || data == undefined) {
+    if (typeof data === "boolean" || data === undefined) {
       this.setState({ selectedSurvey: {} });
-      if (data == true) this.listenSurveysData();
+      if (data === true) this.listenSurveysData();
     } else if (data.hasOwnProperty("_id")) {
       let { _id, open, userHasVoted, questions } = data;
       let selectedSurvey = { _id, open, userHasVoted, questions };
