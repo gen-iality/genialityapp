@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Input } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
-import { getIn } from 'formik'
 import { concat, omit, pick } from 'ramda'
 import { Field } from 'formik'
 import FileInput from "../../shared/fileInput";
@@ -16,14 +15,12 @@ const NOT_PROPS_KEYS = concat( FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS )
 
 function FileField ( rawProps ) {
 
-  const [ picture, setPicture ] = useState( null );
 
 
   let ancho = "200";
   let alto = "200";
   let errorMsg = "";
   const props = omit( NOT_PROPS_KEYS, rawProps )
-  const formikProps = pick( FORMIK_PROPS_KEYS, rawProps )
   const formItemProps = pick( FORM_ITEM_PROPS_KEYS, rawProps )
 
   const { name } = rawProps
@@ -43,7 +40,7 @@ function FileField ( rawProps ) {
   const validate = useCallback( () => {
     return undefined
   } )
-  let saveEventImage = ( form, field, files, imageFieldName ) => {
+  let saveEventImage = ( form, field, files ) => {
     console.log( "itentando subir" );
 
     const file = files[ 0 ];
@@ -64,8 +61,6 @@ function FileField ( rawProps ) {
         return Actions.post( url, data ).then( ( image ) => {
           console.log( "image", image );
           if ( image ) {
-
-            setPicture( image );
 
             imageUrl = image;
 

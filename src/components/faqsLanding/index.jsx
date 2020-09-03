@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { FaqsApi } from "../../helpers/request"
 import { Collapse, Col } from 'antd'
-import { Background } from "react-parallax";
 
 const { Panel } = Collapse
 

@@ -68,18 +68,10 @@ class documents extends Component {
     });
     this.setState({ file });
 
-    const data = {
-      name: this.state.fileName,
-      title: this.state.fileName,
-      file: this.state.file,
-      type: "file",
-      format: this.state.format
-    };
 
     //console.log(uploadTask)
     //console.log(data)
 
-    const savedData = await DocumentsApi.create(this.props.event._id, data);
     //console.log(savedData)
     toast.success("Documento Guardado");
     this.setState({ file: "", fileKey: new Date() });
@@ -161,21 +153,13 @@ class documents extends Component {
         });
     });
 
-    let information = await DocumentsApi.deleteOne(this.props.event._id, id_folder);
-    //console.log(information);
 
     toast.success("Information Deleted");
     this.getDocuments();
   };
 
   createFolder = async () => {
-    let value = document.getElementById("folderName").value;
-
-    const data = {
-      type: "folder",
-      title: value
-    };
-    const savedData = await DocumentsApi.create(this.props.event._id, data);
+    
     this.getDocuments();
     this.setState({
       visible: false,

@@ -6,9 +6,8 @@ import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
 import ReactPlayer from "react-player";
-import { Layout, Menu, Drawer, Button, Col, Row } from "antd";
+import { Layout,  Drawer, Button, Col, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { Typography } from "antd";
 
 //custom
 import API, { Actions, EventsApi, TicketsApi, fireStoreApi } from "../../helpers/request";
@@ -52,12 +51,6 @@ const drawerButton = {
   fontSize: "10px",
 };
 
-const IconText = ({ icon, text }) => (
-  <span>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
-    {text}
-  </span>
-);
 const imageCenter = {
   maxWidth: "100%",
   minWidth: "66.6667%",
@@ -155,8 +148,8 @@ class Landing extends Component {
     let eventUsers = null;
 
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-      searchParams = new URLSearchParams(queryParamsString),
-      status = searchParams.get("status");
+      searchParams = new URLSearchParams(queryParamsString);
+      
     const id = this.props.match.params.event;
     console.log(id);
 
@@ -241,10 +234,10 @@ class Landing extends Component {
 
         <Row justify="center" >
           <Col sm={24} md={16} lg={18} xl={18}>
-            {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
+            {(this.state.event && this.state.event._id !== "5f0b95ca34c8116f9b21ebd6") &&
               <EventLanding event={event} toggleConference={this.toggleConference} showSection={this.showSection} />
             }
-            {(this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6") &&
+            {(this.state.event && this.state.event._id === "5f0b95ca34c8116f9b21ebd6") &&
               <>
                 <ReactPlayer
                   width={"100%"}
@@ -399,12 +392,12 @@ class Landing extends Component {
 
 
     console.log("checkin", state, meeting_id, this.state.eventUser);
-    if (meeting_id != undefined) {
+    if (meeting_id !== undefined) {
       this.setState({ meeting_id });
     }
 
     //Se usa para pasarle al componente de ZOOM la actividad actual que a su vez se la pasa a las SURVEYs
-    if (activity != undefined) {
+    if (activity !== undefined) {
       this.setState({ activity });
     }
 

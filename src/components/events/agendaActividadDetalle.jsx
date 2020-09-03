@@ -1,27 +1,19 @@
 import Moment from "moment";
 import ReactPlayer from "react-player";
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { FormattedDate, FormattedMessage, FormattedTime } from "react-intl";
 import * as Cookie from "js-cookie";
-import API, { OrganizationApi, EventsApi, SpeakersApi, SurveysApi } from "../../helpers/request";
-import { firestore } from "../../helpers/firebase";
-import { addLoginInformation, showMenu } from "../../redux/user/actions";
-
-import { NavLink, Link, withRouter } from "react-router-dom";
+import API, { EventsApi, SurveysApi } from "../../helpers/request";
+import { withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys";
-import { PageHeader, Alert, Row, Col, Tag, Button, List, Avatar, Card, Modal } from "antd";
+import { PageHeader, Row, Col, Button, List, Avatar, Card } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
-
 import DocumentsList from "../documents/documentsList";
-import { UserOutlined } from "@ant-design/icons";
 import ModalSpeaker from "./modalSpeakers";
 
 let agendaActividadDetalle = (props) => {
   let [usuarioRegistrado, setUsuarioRegistrado] = useState(false);
   let [currentUser, setCurrentUser] = useState(false);
   let [event, setEvent] = useState(false);
-  let [modalVisible, setModalVisible] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [showSurvey, setShowSurvey] = useState(false);
   let [orderedHost,  setOrderedHost] = useState([])
@@ -80,7 +72,7 @@ let agendaActividadDetalle = (props) => {
     setOrderedHost(hosts) 
   }
 
-  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, toggleConference, visible } = props;
+  const { currentActivity, gotoActivityList, toggleConference } = props;
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">

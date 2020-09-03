@@ -1,10 +1,7 @@
 import React, { Component, Fragment } from "react";
-
 import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select  } from "antd";
-
 import { SmileOutlined } from '@ant-design/icons';
-
 import AppointmentModal from "./appointmentModal";
 import MyAgenda from "./myAgenda";
 import AppointmentRequests from "./appointmentRequests";
@@ -14,9 +11,7 @@ import Loading from "../loaders/loading";
 import EventContent from "../events/shared/content";
 import * as Cookie from "js-cookie";
 import { EventsApi, EventFieldsApi } from "../../helpers/request";
-
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
-
 import ContactList from "./contactList";
 import RequestList from "./requestList";
 
@@ -70,7 +65,7 @@ export default class ListEventUser extends Component {
      * la administración por el momento este valor se esta quemando directamente en la base de datos
      */
     let destacados = [];
-    destacados = eventUserList.filter( asistente => ( asistente.destacado && asistente.destacado == true ) )
+    destacados = eventUserList.filter( asistente => ( asistente.destacado && asistente.destacado === true ) )
 
     if ( destacados && destacados.length >= 0 ) {
       eventUserList = [ ...destacados, ...eventUserList ]
@@ -270,7 +265,7 @@ export default class ListEventUser extends Component {
                                   </a>
                                 }
                                 hoverable={ 8 }
-                                headStyle={ ( users.destacado && users.destacado == true ) ? { backgroundColor: "#33FFEC" } : { backgroundColor: event.styles.toolbarDefaultBg } }
+                                headStyle={ ( users.destacado && users.destacado === true ) ? { backgroundColor: "#33FFEC" } : { backgroundColor: event.styles.toolbarDefaultBg } }
                                 style={ { width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" } }
                                 bordered={ true }>
                                 <Meta
@@ -411,7 +406,7 @@ export default class ListEventUser extends Component {
                                 </a>
                               }
                               hoverable={ 8 }
-                              headStyle={ ( users.destacado && users.destacado == true ) ? { backgroundColor: "#6ddab5" } : { backgroundColor: event.styles.toolbarDefaultBg } }
+                              headStyle={ ( users.destacado && users.destacado === true ) ? { backgroundColor: "#6ddab5" } : { backgroundColor: event.styles.toolbarDefaultBg } }
                               style={ { width: 500, marginTop: "2%", marginBottom: "2%", textAlign: "left" } }
                               bordered={ true }>
                               <Meta

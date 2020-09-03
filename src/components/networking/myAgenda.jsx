@@ -1,11 +1,5 @@
 import { Avatar, Button, Card, Col, Modal, notification, Row, Spin, Tabs } from 'antd'
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  matchPath,
   withRouter
 } from "react-router-dom";
 import moment from 'moment'
@@ -20,31 +14,6 @@ import { deleteAgenda, getAcceptedAgendasFromEventUser } from "./services";
 const { TabPane } = Tabs
 const { Meta } = Card
 const { confirm } = Modal
-
-const refConfig = ( eventId ) => `events/${ eventId }`;
-
-
-function ListadoCitas ( props ) {
-  const { match } = props // coming from React Router v4.
-  console.log( "props", props );
-  return ( <div>
-
-    <p>&gt;Listado citas</p>
-    <Link to={ `${ match.path }/reunion` }>reunion: { `${ match.path }/reunion` }</Link>
-
-
-  </div> )
-}
-
-function Reunion ( props ) {
-  const { match } = props // coming from React Router v4.
-  return ( <div>
-    <p>&gt;Reunión</p>
-
-    <Link to={ `${ match.path }/listadoCitas` }>listadoCitas: { `${ match.path }/listadoCitas` }</Link>
-
-  </div> )
-}
 
 function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props } ) {
   const [ loading, setLoading ] = useState( true )
@@ -232,8 +201,7 @@ function AcceptedCard ( { data, eventId, eventUser, enableMeetings, setCurrentRo
     if ( !eventUser ) {
       alert( "Tenemos problemas con tu usuario, itenta recargar la página" );
       return;
-    }
-    let userName = eventUser.displayName || eventUser.properties.names || eventUser._id;
+    }    
     let roomName = data.id;
 
     setCurrentRoom( roomName )

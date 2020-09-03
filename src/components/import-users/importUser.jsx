@@ -28,7 +28,7 @@ class ImportUsers extends Component {
 
         /* Agregamos el campo ticket_id sino hacemos esto, la validación de campos seleccionados para importar lo quita y finalmente se pierde */
         users = users.map((column) => {
-            if (column.key == 'ticket_id') { column.used = true; }
+            if (column.key === 'ticket_id') { column.used = true; }
             return column;
         })
 

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Moment from "moment";
 import "moment/locale/es";
 import { Actions } from "../../helpers/request";
 import * as Cookie from "js-cookie";
@@ -48,12 +47,12 @@ class TicketsForm extends Component {
     });
 
     //Se encunetra el primer stage que esté activo para mostrarlo
-    let stage = !this.props.stages ? null : this.props.stages.find((stage) => stage.status == "active");
+    let stage = !this.props.stages ? null : this.props.stages.find((stage) => stage.status === "active");
     //por si ninguna etapa se encuetra activa
     stage = !stage && this.props.stages && this.props.stages[0] ? this.props.stages[0] : null;
 
     const id = stage ? stage.stage_id : ""; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
-    const ticketstoshow = tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
+    const ticketstoshow = tickets.filter((ticket) => ticket.stage_id === id); //Filtrar los tiquetes del stage activo
     console.log("DEBUG", "ticketstoshow", tickets[0]);
     //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
@@ -81,7 +80,7 @@ class TicketsForm extends Component {
   //Función CLICK para los tabs stage
   selectStage = (stage) => {
     const id = stage.stage_id;
-    const ticketstoshow = this.state.tickets.filter((ticket) => ticket.stage_id == id); //Filtra tiquetes del stage
+    const ticketstoshow = this.state.tickets.filter((ticket) => ticket.stage_id === id); //Filtra tiquetes del stage
     this.setState({ active: id, ticketstoshow });
   };
 
@@ -156,7 +155,7 @@ class TicketsForm extends Component {
     //Construyo body de acuerdo a peticiones de api
     let tienesilla = false;
     this.state.summaryList.map((item) => {
-      if (item.name != "General") {
+      if (item.name !== "General") {
         tienesilla = true;
       }
     });
@@ -421,93 +420,93 @@ class TicketsForm extends Component {
   }
 }
 
-function ListadoTiquetes({ ...props }) {
-  const {
-    stages,
-    experience,
-    active,
-    selectStage,
-    ticketstoshow,
-    handleQuantity,
-    selectValues,
-    disabledSelect,
-    currencyFormatConfig,
-  } = props;
-  return (
-    <React.Fragment>
-      <div className="columns content-tabs">
-        {stages.map((stage, indice) => {
-          return (
-            <div
-              className={`column box has-text-weight-bold tab stage ${active === stage.stage_id ? "is-active" : ""} ${
-                "ended" === stage.status ? "is-disabled" : ""
-                }`}
-              key={stage.stage_id}
-              onClick={(event) => selectStage(stage)}>
-              <p>{stage.title}</p>
-              {!experience && (
-                <React.Fragment>
-                  <hr className="separador" />
-                  <div className="columns is-vcentered date-media">
-                    <div className="column is-5 date-etapa">
-                      <span className="is-size-5">{Moment(stage.start_sale_date).format("DD")}</span>
-                      <br />
-                      <span className="is-capitalized">{Moment(stage.start_sale_date).format("MMMM")}</span>
-                    </div>
-                    <div className="column is-2 date-etapa hasta">a</div>
-                    <div className="column is-5 date-etapa">
-                      <span className="is-size-5">{Moment(stage.end_sale_date).format("DD")}</span>
-                      <br />
-                      <span className="is-capitalized">{Moment(stage.end_sale_date).format("MMMM")}</span>
-                    </div>
-                  </div>
-                </React.Fragment>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      {ticketstoshow.map((ticket) => {
-        return (
-          <div className="box box-ticket" key={ticket._id}>
-            <div className="media content-ticket">
-              <div className="media-content">
-                <p className="title is-4">{ticket.title}</p>
-                <p className="subtitle is-6 has-text-weight-normal">{ticket.description}</p>
-              </div>
-              <div className="media-right">
-                <span className="title price">
-                  {ticket.price === "0"
-                    ? "Gratis"
-                    : new Intl.NumberFormat("es-CO", { currencyFormatConfig, currency: ticket.currency }).format(
-                      ticket.price
-                    )}
-                </span>
-                {ticket.options.length > 0 && (
-                  <div className="select">
-                    <select
-                      onChange={handleQuantity}
-                      name={`quantity_${ticket._id}`}
-                      value={selectValues[ticket._id]}
-                      disabled={disabledSelect.includes(ticket._id)}>
-                      <option value={0}>0</option>
-                      {ticket.options.map((item) => {
-                        return (
-                          <option value={item} key={item}>
-                            {item}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </React.Fragment>
-  );
-}
+// function ListadoTiquetes({ ...props }) {
+//   const {
+//     stages,
+//     experience,
+//     active,
+//     selectStage,
+//     ticketstoshow,
+//     handleQuantity,
+//     selectValues,
+//     disabledSelect,
+//     currencyFormatConfig,
+//   } = props;
+//   return (
+//     <React.Fragment>
+//       <div className="columns content-tabs">
+//         {stages.map((stage, indice) => {
+//           return (
+//             <div
+//               className={`column box has-text-weight-bold tab stage ${active === stage.stage_id ? "is-active" : ""} ${
+//                 "ended" === stage.status ? "is-disabled" : ""
+//                 }`}
+//               key={stage.stage_id}
+//               onClick={(event) => selectStage(stage)}>
+//               <p>{stage.title}</p>
+//               {!experience && (
+//                 <React.Fragment>
+//                   <hr className="separador" />
+//                   <div className="columns is-vcentered date-media">
+//                     <div className="column is-5 date-etapa">
+//                       <span className="is-size-5">{Moment(stage.start_sale_date).format("DD")}</span>
+//                       <br />
+//                       <span className="is-capitalized">{Moment(stage.start_sale_date).format("MMMM")}</span>
+//                     </div>
+//                     <div className="column is-2 date-etapa hasta">a</div>
+//                     <div className="column is-5 date-etapa">
+//                       <span className="is-size-5">{Moment(stage.end_sale_date).format("DD")}</span>
+//                       <br />
+//                       <span className="is-capitalized">{Moment(stage.end_sale_date).format("MMMM")}</span>
+//                     </div>
+//                   </div>
+//                 </React.Fragment>
+//               )}
+//             </div>
+//           );
+//         })}
+//       </div>
+//       {ticketstoshow.map((ticket) => {
+//         return (
+//           <div className="box box-ticket" key={ticket._id}>
+//             <div className="media content-ticket">
+//               <div className="media-content">
+//                 <p className="title is-4">{ticket.title}</p>
+//                 <p className="subtitle is-6 has-text-weight-normal">{ticket.description}</p>
+//               </div>
+//               <div className="media-right">
+//                 <span className="title price">
+//                   {ticket.price === "0"
+//                     ? "Gratis"
+//                     : new Intl.NumberFormat("es-CO", { currencyFormatConfig, currency: ticket.currency }).format(
+//                       ticket.price
+//                     )}
+//                 </span>
+//                 {ticket.options.length > 0 && (
+//                   <div className="select">
+//                     <select
+//                       onChange={handleQuantity}
+//                       name={`quantity_${ticket._id}`}
+//                       value={selectValues[ticket._id]}
+//                       disabled={disabledSelect.includes(ticket._id)}>
+//                       <option value={0}>0</option>
+//                       {ticket.options.map((item) => {
+//                         return (
+//                           <option value={item} key={item}>
+//                             {item}
+//                           </option>
+//                         );
+//                       })}
+//                     </select>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           </div>
+//         );
+//       })}
+//     </React.Fragment>
+//   );
+// }
 
 export default TicketsForm;

@@ -16,7 +16,6 @@ import Menu from "./shared/menu";
 import Datos from "./datos";
 import TipoAsistentes from "./tipoUsers";
 import ConfirmacionRegistro from "./registro/confirmacionRegistro";
-
 import ErrorServe from "../modal/serverError";
 import AgendaRoutes from "../agenda";
 import EmpresasRoutes from "../empresas";
@@ -31,7 +30,7 @@ import ReportNetworking from "../networking/report"
 //import Test from "../events/testButton"
 import { Layout } from "antd";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 //import Styles from '../App/styles';
 
 //Code Splitting
@@ -58,7 +57,6 @@ const Wall = asyncComponent(() => import("../wall/index"));
 const NewsApp = asyncComponent(() => import("../news/news"));
 
 const FAQS = asyncComponent(() => import("../faqs"));
-const Trivia = asyncComponent(() => import("../trivia/trivia"));
 const EventsTicket = asyncComponent(() => import("../ticketsEvent/index"));
 
 Moment.locale("es");

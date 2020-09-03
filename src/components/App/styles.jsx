@@ -6,7 +6,7 @@ import { Actions } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
 import LogOut from "../shared/logOut";
 import { SketchPicker } from "react-color";
-import { Button, Select } from "antd";
+import { Button } from "antd";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 
@@ -224,7 +224,7 @@ class Styles extends Component {
         temp[imageFieldName] = imageUrl;
 
         //Si estamos subiendo el banner_image generamos una más pequena de 600px para usar en los correos
-        if (imageFieldName == "banner_image") {
+        if (imageFieldName === "banner_image") {
           let imageObject = {
             "banner_image_email": imageUrl,
             type: "email"
@@ -234,7 +234,7 @@ class Styles extends Component {
           temp[image_event_name] = imageUrl_email;
         }
 
-        if (imageFieldName == "banner_footer") {
+        if (imageFieldName === "banner_footer") {
           let imageObject = {
             "banner_footer_email": imageUrl,
             type: "email"

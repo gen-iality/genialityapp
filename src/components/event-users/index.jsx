@@ -49,7 +49,6 @@ class ListEventUser extends Component {
       users: [],
       columns: null,
       usersReq: [],
-      users: [],
       pageOfItems: [],
       listTickets: [],
       usersRef: firestore.collection(`${props.event._id}_event_attendees`),
@@ -187,13 +186,9 @@ class ListEventUser extends Component {
 
       console.log(extraFields);
 
-      const listTickets = event.tickets ? [...event.tickets] : [];
-      let { totalCheckedIn, changeItem, localChanges } = this.state;
-
       this.setState({ extraFields, rolesList, badgeEvent });
-      const { usersRef, ticket, stage } = this.state;
+      const { usersRef} = this.state;
 
-      let newItems = [];
       //eventUserRealTime(usersRef);
       let userListener = null;//"cKjPCTW5j1sG1Y9nnFeW"
 
@@ -268,10 +263,9 @@ class ListEventUser extends Component {
   };
 
   checkIn = async (id) => {
-    const { users, usersReq, qrData } = this.state;
+    const { qrData } = this.state;
     const { event } = this.props;
     qrData.another = true;
-    const self = this;
 
     try {
       await TicketsApi.checkInAttendee(event._id, id);
@@ -455,7 +449,7 @@ class ListEventUser extends Component {
                 <span className="tag is-light">{Math.round(((totalCheckedIn / usersReq.length) * 100) * 100) / 100}</span>
 
                 {
-                  extraFields.reduce((acc, item) => acc || item.name == "pesovoto", false) &&
+                  extraFields.reduce((acc, item) => acc || item.name === "pesovoto", false) &&
                   (
                     <>
                       <span className="tag is-white">Total Pesos</span>
@@ -467,7 +461,7 @@ class ListEventUser extends Component {
             </div>
 
             {// localChanges &&
-              quantityUsersSync > 0 && localChanges == "Local" && (
+              quantityUsersSync > 0 && localChanges === "Local" && (
                 <div className="is-4 column">
                   <p className="is-size-7">Cambios sin sincronizar : {quantityUsersSync < 0 ? 0 : quantityUsersSync}</p>
                 </div>

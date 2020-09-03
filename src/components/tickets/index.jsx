@@ -1,19 +1,13 @@
 import React, { Component, Fragment } from "react";
 import * as Cookie from "js-cookie";
-import { ApiUrl } from "../../helpers/constants";
 import { fieldNameEmailFirst } from "../../helpers/utils";
-
 import TimeStamp from "react-timestamp";
 import { TicketsApi, EventsApi, UsersApi } from "../../helpers/request";
 import { Typography, Card, Col, Row, Button, message } from "antd";
-import Moment from "moment";
 import EventImage from "../../eventimage.png";
 import { Link } from "react-router-dom";
 import DetailTickets from "./detalleTickets";
 import { CheckCircleOutlined, WarningOutlined } from "@ant-design/icons";
-import { Modal } from "antd";
-
-import Form from "../events/registrationForm/form";
 
 const { Title } = Typography;
 
@@ -102,8 +96,6 @@ class TicketInfo extends Component {
     return new Promise(async (resolve, reject) => {
       const event = await EventsApi.getOne(eventId);
 
-      const eventUsers = await UsersApi.getAll(eventId, "?pageSize=10000");
-
       const properties = event.user_properties;
 
       // Trae la informacion para los input
@@ -119,7 +111,7 @@ class TicketInfo extends Component {
   //   -----------------------------------------------------------------------------------------
 
   render() {
-    const { usersInscription, currentEventId, extraFields } = this.state;
+    const { usersInscription } = this.state;
     return (
       <Fragment>
         <Title level={2}>Tus Tickets</Title>

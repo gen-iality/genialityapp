@@ -35,13 +35,9 @@ const keyHooks = hooks => {
 };
 
 const {
-    getTableProps, // table props from react-table
-    getTableBodyProps, // table body props from react-table
     headerGroups, // headerGroups if your table have groupings
     rows, // rows for the table based on the data passed
     prepareRow, 
-    totalColumnsWidth,// Prepare the row (this function need to called for each row before getting the row props)
-    page,
     // The rest of these things are super handy, too ;)
     canPreviousPage,
     canNextPage,

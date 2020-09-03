@@ -1,6 +1,5 @@
 import React from "react";
 import "react-tabs/style/react-tabs.css";
-import { Table } from 'antd';
 
 export default function EvenTable({...props}) {
     return (

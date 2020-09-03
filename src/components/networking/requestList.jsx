@@ -85,7 +85,7 @@ const InvitacionListSent = ({ list }) => {
                 <div>
                   <Tag
                     icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response == "rejected" && "error"}>
+                    color={item.response === "rejected" && "error"}>
                     {!item.response ? item.state : item.response}
                   </Tag>
                 </div>
@@ -132,7 +132,7 @@ export default ({ eventId }) => {
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         console.log("estas son las invitaciones enviadas :", data);
 
-        if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response == "rejected"));
+        if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === "rejected"));
       });
     });
   };
@@ -185,7 +185,7 @@ export default ({ eventId }) => {
   }, [eventId]);
 
   if (currentUserId)
-    return currentUserId == "guestUser" ? (
+    return currentUserId === "guestUser" ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: "0 auto" }}>
         <Alert
           message="Iniciar Sesión"

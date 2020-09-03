@@ -6,7 +6,7 @@ import { Card, Col, Row, Spin, Typography, Button, Modal, Result } from "antd";
 const { Text, Title } = Typography;
 
 export default ({ currentUser, extraFields, eventId, userTickets }) => {
-  const [infoUser, setInfoUser] = useState({});
+  
   const [eventUserList, setEventUserList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -33,7 +33,6 @@ export default ({ currentUser, extraFields, eventId, userTickets }) => {
 
       let result = await userProperties;
       resolve(result);
-      setInfoUser(result);
       setLoading(false);
     });
   };

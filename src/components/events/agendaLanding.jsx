@@ -46,7 +46,7 @@ class Agenda extends Component {
     if (!this.props.event) return;
 
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
-    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
     this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
@@ -300,8 +300,8 @@ class Agenda extends Component {
   }
 
   render() {
-    const { toggleConference, event } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { toggleConference } = this.props;
+    const { days, day, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
         {currentActivity && (

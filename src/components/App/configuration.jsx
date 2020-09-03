@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
-import ImageInput from "../shared/imageInput";
-import axios from "axios/index";
 import { toast } from 'react-toastify';
 import { Actions } from "../../helpers/request";
 import { FormattedMessage } from "react-intl";
-import { EventsApi } from "../../helpers/request";
-import { Link } from "react-router-dom";
-import LoadingEvent from "../loaders/loadevent";
-import EventCard from "../shared/eventCard";
 import LogOut from "../shared/logOut";
-import { app } from '../../helpers/firebase';
-import ImageUploader from 'react-images-upload';
 import * as Cookie from "js-cookie";
 import privateInstance from "../../helpers/request";
 import { parseUrl } from "../../helpers/constants";
@@ -259,9 +251,6 @@ class Configuration extends Component {
         e.preventDefault();
         e.stopPropagation();
 
-        const { event } = this.state;
-
-        const self = this;
         // this.state.data.push(this.state.styles);
         this.state.data = { styles: this.state.configuration };
         try {
@@ -411,10 +400,10 @@ class Configuration extends Component {
                                     <label className="label has-text-grey-light">{item.desc}</label>
                                     <input className="input is-primary" id={item.key} ref={item.reference} disabled type="text" placeholder={item.title} onChange={(e) => { this.updateStateTitle(item.name, e.target.value) }} />
                                     {
-                                        item.name == 'WebScreen' ?
+                                        item.name === 'WebScreen' ?
                                             <div>
                                                 <label>Agrega un espacio al final del texto </label>
-                                                <input name="WebScreen" className="input is-primary" style={{ marginTop: "2%" }} id="13" ref={item.reference}  ref={item.reference} type="text" placeholder="Url de pagina web" onChange={(e) => { this.changeInput(e.target.name, { title: item.title, config: item.config, name: item.name, icon: item.icon, key: item.key }) }} />
+                                                <input name="WebScreen" className="input is-primary" style={{ marginTop: "2%" }} id="13" ref={item.reference}  type="text" placeholder="Url de pagina web" onChange={(e) => { this.changeInput(e.target.name, { title: item.title, config: item.config, name: item.name, icon: item.icon, key: item.key }) }} />
                                             </div>
                                             
                                             : null

@@ -1,19 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
-import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result, Button, Spin } from "antd";
+import { Result, Button } from "antd";
 import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-
 import * as Cookie from "js-cookie";
-
-import graphicsImage from "../../../graficas.png";
-
-import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
+import { SurveysApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
-import { validateSurveyCreated } from "../../trivia/services";
-
-import GraphicGamification from "./graphicsGamification";
+import { SurveyAnswers, UserGamification } from "./services";
 import Graphics from "./graphics"
 import * as Survey from "survey-react";
 import "survey-react/modern.css";

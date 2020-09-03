@@ -1,11 +1,7 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Redirect } from 'react-router-dom';
-
-import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
-
+import React, { useState, useEffect } from "react";
+import  { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-
-import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+import { Collapse, Form, Input, Col, Row, message,  Checkbox, Alert, Card, Button, Result, Divider } from "antd";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -18,10 +14,6 @@ const center = {
 };
 
 // Grid para formulario
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
 
 const validateMessages = {
   required: "Este campo ${label} es obligatorio para completar el registro.",
@@ -34,7 +26,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   const [validateEmail, setValidateEmail] = useState(false);
-  const [value, setValue] = useState();
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -110,7 +101,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         if (resp.message === "OK") {
           console.log("RESP", resp);
           setSuccessMessageInRegisterForm(resp.status);
-          // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          // let statusMessage = resp.status === "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
           textMessage.content = "Usuario " + formMessage.successMessage;
 
@@ -159,14 +150,14 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       Object.keys(allFields).map((changedkey) => {
         if (changedkey === conditional.fieldToValidate) {
           console.log("cadena despues de if", changedkey, conditional, changedField[changedkey], allFields)
-          fulfillConditional = (conditional.value == allFields[changedkey])
+          fulfillConditional = (conditional.value === allFields[changedkey])
         }
       })
       if (fulfillConditional) {
         //Campos ocultados por la condicion
         newExtraFields = newExtraFields.filter((field, key) => {
           console.log(conditional.fields, field)
-          return conditional.fields.indexOf(field.name) == -1
+          return conditional.fields.indexOf(field.name) === -1
         })
       }
     })
@@ -181,7 +172,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
 
     conditionals.map((conditional, key) => {
       newExtraFields = newExtraFields.filter((field, key) => {
-        return conditional.fields.indexOf(field.name) == -1
+        return conditional.fields.indexOf(field.name) === -1
       })
     })
 
@@ -209,7 +200,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let target = name;
       let value = user[target];
 
-      if (m.visible == false) {
+      if (m.visible === false) {
         return (<div></div>);
       }
 
@@ -226,7 +217,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         <Input
           {...props}
           addonBefore={
-            labelPosition == "izquierda" ? (
+            labelPosition === "izquierda" ? (
               <span>
                 {
                   mandatory && (
@@ -302,28 +293,28 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
-      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
+      let rule = (name === "email" || name === "names") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
-      rule = (type == "email") ? { ...rule, type: "email" } : rule;
+      rule = (type === "email") ? { ...rule, type: "email" } : rule;
 
       // let hideFields =
-      //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+      //   mandatory === true || name === "email" || name === "names" ? { display: "block" } : { display: "none" };
 
-      if (type == "boolean" && mandatory) {
+      if (type === "boolean" && mandatory) {
         let textoError = "Debes llenar este  campo es obligatorio";
         rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
       }
 
       return (
         <div key={"g" + key} name="field">
-          {type == "tituloseccion" && input}
-          {type != "tituloseccion" && (
+          {type === "tituloseccion" && input}
+          {type !== "tituloseccion" && (
             <>
               <Form.Item
                 // style={eventUserId && hideFields}
-                valuePropName={type == "boolean" ? "checked" : "value"}
-                label={(labelPosition != "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition != "arriba" || !labelPosition)}
+                valuePropName={type === "boolean" ? "checked" : "value"}
+                label={(labelPosition !== "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition !== "arriba" || !labelPosition)}
                 name={name}
                 rules={[rule]}
                 key={"l" + key}

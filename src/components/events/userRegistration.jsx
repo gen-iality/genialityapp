@@ -1,15 +1,10 @@
-import React, { Component, useState, useEffect } from "react";
-
+import React, { Component, } from "react";
 import API, { EventsApi, UsersApi, TicketsApi } from "../../helpers/request";
 import { fieldNameEmailFirst } from "../../helpers/utils";
 import * as Cookie from "js-cookie";
-
 import UserInforCard from "./registrationForm/userInfoCard";
 import FormComponent from "./registrationForm/form";
-
-import SurveyComponent from "./surveys/surveyComponent";
-
-import { Spin, Col } from "antd";
+import { Spin } from "antd";
 
 class UserRegistration extends Component {
   constructor(props) {
@@ -58,7 +53,7 @@ class UserRegistration extends Component {
 
           const tickets = await TicketsApi.getByEvent(this.props.eventId, evius_token);
           //   Se valida si el usuario ya se encuentra registrado al evento
-          let existUser = eventUsers.find((user) => user.properties.email == data.email);
+          let existUser = eventUsers.find((user) => user.properties.email === data.email);
 
           this.setState({
             currentUser: data,
