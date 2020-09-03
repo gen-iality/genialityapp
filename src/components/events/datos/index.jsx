@@ -8,8 +8,6 @@ import EventModal from "../shared/eventModal";
 import DatosModal from "./modal";
 import Dialog from "../../modal/twoAction";
 import Loading from "../../loaders/loading";
-import { typeInputs } from "../../../helpers/constants";
-import DragDrop from "./dragDrop";
 import { Tabs } from 'antd';
 import RelationField from './relationshipFields'
 

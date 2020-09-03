@@ -12,9 +12,8 @@ import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import EventContent from "../events/shared/content";
-
 import * as Cookie from "js-cookie";
-import API, { EventsApi, RolAttApi, EventFieldsApi } from "../../helpers/request";
+import { EventsApi, EventFieldsApi } from "../../helpers/request";
 
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 
@@ -47,6 +46,7 @@ export default class ListEventUser extends Component {
   async componentDidMount () {
     await this.getInfoCurrentUser();
     this.loadData();
+    console.log("alert",this.state)
   }
 
   changeActiveTab = ( activeTab ) => {
@@ -123,6 +123,13 @@ export default class ListEventUser extends Component {
 
     }
   };
+  selectorSector=(value) => {
+    
+    let { userReq} = this.state;
+    const Info = userReq.filter(item => item.properties.sector === value)
+
+    this.setState({pageOfItems:Info})
+  }
 
   onChangePage = ( pageOfItems ) => {
     this.setState( { pageOfItems: pageOfItems } );
@@ -179,6 +186,9 @@ export default class ListEventUser extends Component {
     }
   }
 
+  
+
+
   render () {
     const { event } = this.props;
     const {
@@ -206,6 +216,7 @@ export default class ListEventUser extends Component {
                 targetEventUserId={ eventUserIdToMakeAppointment }
                 closeModal={ this.closeAppointmentModal }
               />
+              {console.log(this.state)}
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <h1> Encuentra aquí tus contactos sugeridos, basados en la información de registro al evento.</h1>
 
@@ -340,17 +351,18 @@ export default class ListEventUser extends Component {
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <h1> Busca aquí las personas que deseas contactar.</h1>
 
-                <Select defaultValue="lucy" style={{ width: 120 }} >
-                  <Option value="jack">Automotores</Option>
-                  <Option value="lucy">Tecnología y telecomunicaciones</Option>
-                  <Option value="Yiminghe">Artículos para el hogar</Option>
-                  <Option value="Yiminghe">Ferreterías y materiales de construcción</Option>
-                  <Option value="Yiminghe">Joyerías y accesorios de lujo</Option>
-                  <Option value="Yiminghe">Servicios al comercio</Option>
+                <Select defaultValue="Automotores" onChange={this.selectorSector} style={{ width: 120 }} >
+                  <Option value="Automotores">Automotores</Option>
+                  <Option value="Tecnología y telecomunicaciones">Tecnología y telecomunicaciones</Option>
+                  <Option value="Artículos para el hogar">Artículos para el hogar</Option>
+                  <Option value="Ferreterías y materiales de construcción">Ferreterías y materiales de construcción</Option>
+                  <Option value="Joyerías y accesorios de lujo">Joyerías y accesorios de lujo</Option>
+                  <Option value="Servicios al comercio">Servicios al comercio</Option>
                 </Select>
 
 
               </Col>
+              <br />
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <Alert
                   message="Información Adicicional"

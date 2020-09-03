@@ -7,17 +7,15 @@ import { BadgeApi, RolAttApi } from "../../helpers/request";
 import UserModal from "../modal/modalUser";
 import ErrorServe from "../modal/serverError";
 import SearchComponent from "../shared/searchTable";
-import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import "react-toastify/dist/ReactToastify.css";
 import QrModal from "./qrModal";
 import { fieldNameEmailFirst, handleRequestError, parseData2Excel, sweetAlert } from "../../helpers/utils";
 import EventContent from "../events/shared/content";
-import EvenTable from "../events/shared/table";
 import Moment from "moment";
-import { Actions, TicketsApi } from "../../helpers/request";
+import { TicketsApi } from "../../helpers/request";
 
-import { Table, Tag, Space, Badge } from 'antd';
+import { Table } from 'antd';
 
 
 import updateAttendees from "./eventUserRealTime";

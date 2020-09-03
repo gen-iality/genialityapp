@@ -1,14 +1,10 @@
-/*global seatsio*/
 import React, { Component } from "react";
-import { SeatsioSeatingChart } from "@seatsio/seatsio-react";
 import Moment from "moment";
 import "moment/locale/es";
 import { Actions } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import { toast } from "react-toastify";
 import UserRegistration from "../events/userRegistration";
-import Event from "../event-users/index";
-import Item from "antd/lib/list/Item";
 
 class TicketsForm extends Component {
   constructor(props) {
@@ -230,25 +226,25 @@ class TicketsForm extends Component {
   };
 
   render() {
-    const {
-      state: {
-        active,
-        ticketstoshow,
-        summaryList,
-        loading,
-        selectValues,
-        total,
-        step,
-        disabled,
-        listSeats,
-        disabledSelect,
-      },
-      props: { stages, seatsConfig, experience, fees },
-      selectStage,
-      handleQuantity,
-      onClick,
-      changeStep,
-    } = this;
+    // const {
+    //   state: {
+    //     active,
+    //     ticketstoshow,
+    //     summaryList,
+    //     loading,
+    //     selectValues,
+    //     total,
+    //     step,
+    //     disabled,
+    //     listSeats,
+    //     disabledSelect,
+    //   },
+    //   props: { stages, seatsConfig, experience, fees },
+    //   selectStage,
+    //   handleQuantity,
+    //   onClick,
+    //   changeStep,
+    // } = this;
     return (
       <>
         {/* Componente de registro gratis */}

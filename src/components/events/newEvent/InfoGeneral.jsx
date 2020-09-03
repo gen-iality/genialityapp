@@ -151,7 +151,7 @@ class InfoGeneral extends Component {
 
     render() {
         if (this.state.loading) return <Loading />;
-        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, error, valid } = this.state;
+        const { event, categories, organizers, types, selectedCategories, selectedOrganizer, selectedType, valid } = this.state;
         return (
             <React.Fragment>
                 <div className="columns">

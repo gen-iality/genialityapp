@@ -10,8 +10,6 @@ import { Button, Select } from "antd";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
 
-const { Option } = Select;
-
 class Styles extends Component {
   constructor(props) {
     super(props);
@@ -270,7 +268,6 @@ class Styles extends Component {
 
     const { eventId } = this.state;
 
-    const self = this;
     this.state.data = { styles: this.state.styles };
     console.log(this.state)
     try {

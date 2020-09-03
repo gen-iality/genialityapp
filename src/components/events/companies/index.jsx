@@ -3,8 +3,7 @@ import { isFunction, isNonEmptyArray } from 'ramda-adjunct'
 import React, { Component } from "react"
 import { toast } from "react-toastify"
 import { handleRequestError } from "../../../helpers/utils"
-import API, { fireStoreApi } from "../../../helpers/request"
-
+import { fireStoreApi } from "../../../helpers/request"
 import CompanyStand from './exhibitor/Exhibitor'
 import { getEventCompanies } from "../../empresas/services"
 import './Exhibitors.css';
@@ -161,7 +160,7 @@ class Company extends Component {
         <div className="scroll-down">
           <div className="scroll-down-label">Haz scroll para ver<br/>todos los stands</div>
           <div className="scroll-down-image">
-            <img src="/exhibitors/scdown.gif"/>
+            <img alt="scdown" src="/exhibitors/scdown.gif"/>
           </div>
         </div>
       </div>

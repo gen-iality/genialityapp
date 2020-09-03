@@ -29,7 +29,7 @@ function capitalizeMont(val) {
 
 
 
-let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
+let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, type_event }) => {
   
     return (
         <BannerAnim prefixCls="banner-user" style={{overflow:"visible"}}>

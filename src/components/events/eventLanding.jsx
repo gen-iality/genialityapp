@@ -3,10 +3,7 @@ import { withRouter } from "react-router-dom"
 import { Card } from "antd";
 import ReactQuill from "react-quill";
 import ReactPlayer from "react-player";
-import { Row, Col, Button } from 'antd';
-import NetworkingForm from "../networking";
-import AgendaForm from "./agendaLanding";
-import MyAgenda from "../networking/myAgenda"
+import { Row, Col} from 'antd';
 import { getCurrentUser, getCurrentEventUser, userRequest } from "../networking/services";
 import * as Cookie from "js-cookie";
 
@@ -47,7 +44,7 @@ class eventLanding extends Component {
 
     render() {
         const { event } = this.props
-        const { eventUserId, users } = this.state
+        // const { eventUserId, users } = this.state
 
         return (
             <div style={{ marginRight: 12, marginBottom: 12 }}>
@@ -77,16 +74,16 @@ class eventLanding extends Component {
                                     <Row gutter={[8, 16]}>
                                         <Col xs={16} sm={12} md={12} lg={12} xl={8}>
                                             <div className="imagen">
-                                                <img onClick={() => this.onChangePage("interviews")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                                                <img alt="interviews" onClick={() => this.onChangePage("interviews")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
                                             </div>
                                         </Col>
                                         <Col xs={16} sm={12} md={12} lg={12} xl={8}>
                                             <div className="imagen">
-                                                <img onClick={() => this.onChangePage("networking")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                                                <img alt="networking" onClick={() => this.onChangePage("networking")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
                                             </div>
                                         </Col>
                                         <Col xs={16} sm={12} md={12} lg={12} xl={8}>
-                                            <img onClick={() => this.onChangePage("agenda")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                                            <img alt="agenda" onClick={() => this.onChangePage("agenda")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
                                         </Col>
                                     </Row>
                                 </div>

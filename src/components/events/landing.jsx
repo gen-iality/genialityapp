@@ -11,11 +11,10 @@ import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
 
 //custom
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi, fireStoreApi } from "../../helpers/request";
+import API, { Actions, EventsApi, TicketsApi, fireStoreApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
-import Slider from "../shared/sliderImage";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
@@ -27,7 +26,6 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgendaIndepend from "../networking/myAgendaIndepend"
-import MyAgenda from "../my-agenda/index";
 import MySection from "./newSection/index"
 import Companies from "./companies/index";
 import WallForm from "../wall/index";
@@ -35,20 +33,13 @@ import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
 import VirtualConference from "./virtualConference";
-import SurveyNotification from "./surveyNotification";
 import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
-import { firestore } from "../../helpers/firebase";
-import { FaWheelchair } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { handleRequestError } from "../../helpers/utils";
 import Robapagina from "../shared/Animate_Img/index"
 
-const { Title } = Typography;
-
-
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 Moment.locale("es");
 momentLocalizer();
@@ -451,7 +442,6 @@ class Landing extends Component {
       meeting_id,
       currentUser,
       loader_page,
-      show_banner_footer
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
@@ -568,7 +558,7 @@ class Landing extends Component {
                               collapsed={this.state.collapsed}
                               width={250}>
                               <div className="items-menu_Landing ">
-                                {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                                {event.styles && <img alt="image-menu-landing" src={event.styles.event_image} style={imageCenter} />}
                                 <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                               </div>
                             </Sider>
@@ -608,7 +598,7 @@ class Landing extends Component {
                                   backgroundColor:
                                     event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
                                 }}>
-                                {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
+                                {event.styles && <img alt="image-drawer" src={event.styles.event_image} style={imageCenter} />}
                                 <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
                               </Drawer>
 
@@ -653,7 +643,7 @@ class Landing extends Component {
               {
                 event.styles && event.styles.banner_footer && (
                   <div style={{ textAlign: "center" }}>
-                    <img src={event.styles.banner_footer} />
+                    <img alt="image-dialog" src={event.styles.banner_footer} />
                   </div>
                 )
               }
