@@ -67,7 +67,7 @@ class eventUsersList extends Component {
 
         columnsTable.push({
             title: "Chequeado",
-            dataIndex: "checkedin_at",
+            dataIndex: "checkedin_at",            
             ...this.getColumnSearchProps("checkedin_at")
         })
 
@@ -281,7 +281,7 @@ class eventUsersList extends Component {
                 </Row>
                 <Fragment>
                     <p style={{ marginTop: "2%" }}>Seleccionados: {eventUsersId.length}</p>
-                    <Table
+                    <Table                        
                         scroll={{ x: 1500 }}
                         sticky
                         pagination={{ position: ["bottomCenter"] }}
