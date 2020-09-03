@@ -136,6 +136,11 @@ iframe {
   height: 2px !important;
   margin-bottom:2% !important;
 }
+
+.ant-table-selection {
+  position: relative;
+  width: 67px;
+  }
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";

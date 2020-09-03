@@ -16,7 +16,7 @@ class eventUsersList extends Component {
             attendees: [],
             attendeesFormatedForTable: [],
             columnsTable: [],
-            eventUsersId: [],
+            selectedRowKeys: [],
             tickets: []
         }
         this.createTableColumns = this.createTableColumns.bind(this)
@@ -67,7 +67,7 @@ class eventUsersList extends Component {
 
         columnsTable.push({
             title: "Chequeado",
-            dataIndex: "checkedin_at",            
+            dataIndex: "checkedin_at",                        
             ...this.getColumnSearchProps("checkedin_at")
         })
 
@@ -82,7 +82,7 @@ class eventUsersList extends Component {
 
         columnsTable.push({
             title: "Tiquete",
-            dataIndex: "ticket",
+            dataIndex: "ticket",            
             filters: filterTickets,
             onFilter: (value, record) => record.ticket.indexOf(value) === 0,
 
@@ -127,7 +127,7 @@ class eventUsersList extends Component {
             )
         }
 
-        this.setState({ eventUsersId: idEventUsers, attendeesForSendMessage })
+        this.setState({ selectedRowKeys: idEventUsers, attendeesForSendMessage })
     };
 
     //Funcion para filtrar los usuarios de la tabla
@@ -246,18 +246,22 @@ class eventUsersList extends Component {
                 </Link>
             </Menu >
         );
-        const { columnsTable, attendeesFormatedForTable, eventUsersId } = this.state
+        const { columnsTable, attendeesFormatedForTable, selectedRowKeys } = this.state
         const rowSelection = {
-            eventUsersId,
+            selectedRowKeys,
             onChange: this.onSelectChange,
             selections: [
                 Table.SELECTION_ALL,
-                Table.SELECTION_INVERT,
-                // {                    
-                //     text: 'Unselect All',
-                //     onSelect: () => { this.setState({ attendeesForSendMessage:[], eventUsersId:[] }) }
-                // },
-            ]
+                {
+                    key: 'deselect',
+                    text: 'Deselect all Data',
+                    width: '30%',
+                    onSelect: () => {
+                        let newSelectedRowKeys = [];
+                        this.setState({ selectedRowKeys: newSelectedRowKeys });
+                    },
+                },
+            ],
         };
         return (
             <>
@@ -280,8 +284,9 @@ class eventUsersList extends Component {
                     </Col>
                 </Row>
                 <Fragment>
-                    <p style={{ marginTop: "2%" }}>Seleccionados: {eventUsersId.length}</p>
-                    <Table                        
+                    <p style={{ marginTop: "2%" }}>Seleccionados: {selectedRowKeys.length}</p>
+                    <Table
+                        //style={{width:"67px"}}
                         scroll={{ x: 1500 }}
                         sticky
                         pagination={{ position: ["bottomCenter"] }}

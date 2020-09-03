@@ -461,7 +461,8 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
-    let { surveyData } = this.state;
+    let { surveyData , totalPoints } = this.state;
+
     let textOnCompleted = survey.completedHtml;
 
     survey.currentPage.questions.forEach((question) => {
