@@ -145,10 +145,8 @@ class Landing extends Component {
   async componentDidMount() {
     let user = null;
     let eventUser = null;
-    let eventUsers = null;
-
-    const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-      searchParams = new URLSearchParams(queryParamsString);
+    let eventUsers = null;    
+      // searchParams = new URLSearchParams(queryParamsString);
       
     const id = this.props.match.params.event;
     console.log(id);

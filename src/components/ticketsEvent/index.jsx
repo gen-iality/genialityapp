@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
 import TableAction from "../events/shared/tableAction";
@@ -64,8 +64,7 @@ let tickets = (props) => {
     }
 
     //Funcion asincrona para eliminar datos
-    async function removeItem(_id) {
-        const destroy = await eventTicketsApi.delete(props.eventId, _id)
+    async function removeItem(_id) {        
         message.info('Ticket Eliminado');
         getTickets()
     }

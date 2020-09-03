@@ -37,14 +37,14 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
   const [form] = Form.useForm();
 
   useEffect(() => {
-    let state = gradableSurvey == "true" ? true : false;
+    let state = gradableSurvey === "true" ? true : false;
 
     setDefaultValues(valuesQuestion);
     setQuestionId(valuesQuestion.id);
     setQuestionIndex(valuesQuestion.questionIndex);
 
     if (valuesQuestion.type) {
-      let choice = selectOptions.find((option) => option.text == valuesQuestion.type);
+      let choice = selectOptions.find((option) => option.text === valuesQuestion.type);
       setQuestionType(choice.value);
     }
 
@@ -64,7 +64,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
   const handleFunction = (value) => {
     setQuestionType(value);
-    setCorrectAnswerIndex(value == "radiogroup" ? null : []);
+    setCorrectAnswerIndex(value === "radiogroup" ? null : []);
   };
 
   const fieldValidation = (rule, value) => {
@@ -99,7 +99,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
 
     if (values.type.indexOf(" ") > 0) {
       selectOptions.forEach((option) => {
-        if (values.type == option.text) values.type = option.value;
+        if (values.type === option.text) values.type = option.value;
       });
     }
 
@@ -229,7 +229,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
           {(fields, { add, remove }) => {
             return (
               <div>
-                {questionType == "radiogroup" ? (
+                {questionType === "radiogroup" ? (
                   <Radio.Group
                     onChange={handleRadio}
                     disabled={!allowGradableSurvey}
@@ -268,7 +268,7 @@ const formEdit = ({ valuesQuestion, eventId, surveyId, closeModal, toggleConfirm
                     ))}
                   </Radio.Group>
                 ) : (
-                    questionType == "checkbox" && (
+                    questionType === "checkbox" && (
                       <Checkbox.Group
                         onChange={handleCheckbox}
                         disabled={!allowGradableSurvey}

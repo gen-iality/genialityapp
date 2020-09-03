@@ -301,7 +301,7 @@ class Agenda extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { days, day, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { days, day, spaces, toShow, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
         {currentActivity && (

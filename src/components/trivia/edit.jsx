@@ -182,8 +182,7 @@ class triviaEdit extends Component {
   };
 
   // Funcion para agregar el formulario de las preguntas
-  addNewQuestion = () => {
-    let { listQuestions, idSurvey } = this.state;
+  addNewQuestion = () => {    
     let uid = this.generateUUID();
     this.setState({ visibleModal: true, currentQuestion: { id: uid } });
   };
@@ -269,7 +268,7 @@ class triviaEdit extends Component {
     if (typeof e === "string") return this.setState({ initialMessage: e });
 
     // Este es para el input de los puntos de la encuesta
-    const { value, type } = e.target;
+    const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
       this.setState({ points: value });

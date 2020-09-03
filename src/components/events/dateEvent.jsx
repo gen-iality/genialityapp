@@ -7,15 +7,6 @@ import { Button, notification } from 'antd';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
-const container = {
-    width: '375px',
-    float: 'left',
-    marginRight: '50px',
-    marginBottom: '50px',
-    fontFamily: 'system-ui',
-}
-
-
 class DateEvent extends React.Component {
     constructor(props) {
         super(props)

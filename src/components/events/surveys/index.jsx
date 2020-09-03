@@ -138,7 +138,7 @@ class SurveyForm extends Component {
           surveysData = surveysData.filter((item) => item.activity_id === activity._id);
         }
 
-        surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) != -1);
+        surveysData = surveysData.filter((item) => publishedSurveysIds.indexOf(item._id) !== -1);
         this.setState({ surveyRecentlyChanged: true });
 
         if (surveysData && surveysData.length > 0) {

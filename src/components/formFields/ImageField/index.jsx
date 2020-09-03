@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Input } from 'antd'
 import FormItem from 'antd/es/form/FormItem'
-import { getIn } from 'formik'
 import { concat, omit, pick } from 'ramda'
 import { Field } from 'formik'
 import ImageInput from "../../shared/imageInput";
@@ -16,14 +15,10 @@ const NOT_PROPS_KEYS = concat( FORMIK_PROPS_KEYS, FORM_ITEM_PROPS_KEYS )
 
 function ImageField ( rawProps ) {
 
-  const [ picture, setPicture ] = useState( null );
-
-
   let ancho = "200";
   let alto = "200";
   let errorMsg = "";
-  const props = omit( NOT_PROPS_KEYS, rawProps )
-  const formikProps = pick( FORMIK_PROPS_KEYS, rawProps )
+  const props = omit( NOT_PROPS_KEYS, rawProps )  
   const formItemProps = pick( FORM_ITEM_PROPS_KEYS, rawProps )
 
   const { name } = rawProps
@@ -60,9 +55,7 @@ function ImageField ( rawProps ) {
         data.append( "file", file );
         return Actions.post( url, data ).then( ( image ) => {
           console.log( "image", image );
-          if ( image ) {
-
-            setPicture( image );
+          if ( image ) {            
 
             imageUrl = image;
 
