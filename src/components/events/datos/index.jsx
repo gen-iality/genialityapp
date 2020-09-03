@@ -21,7 +21,7 @@ class Datos extends Component {
             loading: true,
             deleteModal: false,
             edit: false,
-            fields: [],        
+            fields: [],
         };
         this.eventID = this.props.eventID
         this.html = document.querySelector("html");
@@ -41,7 +41,7 @@ class Datos extends Component {
     };
     // Funcion para traer la información
     fetchFields = async () => {
-        try {                   
+        try {
             let fields = await EventFieldsApi.getAll(this.eventID);
             fields = this.orderFieldsByWeight(fields);
 
@@ -92,18 +92,18 @@ class Datos extends Component {
 
     showError = (error) => {
         toast.error(<FormattedMessage id="toast.error" defaultMessage="Sry :(" />);
-        if (error.response) {        
-            const { status, data } = error.response;            
+        if (error.response) {
+            const { status, data } = error.response;
             if (status === 401) this.setState({ timeout: true, loader: false });
             else this.setState({ serverError: true, loader: false, errorData: data })
         } else {
-            let errorData = error.message;            
+            let errorData = error.message;
             if (error.request) {
                 errorData = error.request
             };
             errorData.status = 708;
             this.setState({ serverError: true, loader: false, errorData })
-        }        
+        }
     };
     //Funcion para cambiar el valor de los checkboxes
     async changeCheckBox(id, value, name) {
@@ -118,7 +118,7 @@ class Datos extends Component {
                 message: 'No se ha actualizado el campo',
                 description:
                     'El Campo no ha sido posible actualizarlo, intenta mas tarde',
-            })            
+            })
         }
     }
 
@@ -138,7 +138,11 @@ class Datos extends Component {
                 dataIndex: 'mandatory',
                 align: 'center',
                 render: (record, key) => (
-                    <Checkbox name="mandatory" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="mandatory" defaultChecked={record} />
+                    key.name !== "email" && key.name !== "names" ? (                        
+                        <Checkbox name="mandatory" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="mandatory" defaultChecked={record} />
+                    ):(
+                        <Checkbox checked/>
+                    )
                 )
             },
             {
@@ -154,15 +158,25 @@ class Datos extends Component {
                 dataIndex: 'visibleByAdmin',
                 align: 'center',
                 render: (record, key) => (
-                    <Checkbox name="visibleByAdmin" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="visibleByAdmin" defaultChecked={record} />
+                    key.name !== "email" && key.name !== "names" ?(                        
+                        <Checkbox name="visibleByAdmin" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="visibleByAdmin" defaultChecked={record} />
+                    ):(
+                        <Checkbox checked/>
+                    )
+                    
                 )
             },
             {
                 title: 'Action',
-                dataIndex: '',                
+                dataIndex: '',
                 render: (key) => <>
                     <EditOutlined style={{ float: "left" }} onClick={() => this.editField(key)} />
-                    <DeleteOutlined style={{ float: "right" }} onClick={() => this.setState({ deleteModal: key._id })} />
+                    {
+                        key.name !== "email" && key.name !== "names"&&(
+                            <DeleteOutlined style={{ float: "right" }} onClick={() => this.setState({ deleteModal: key._id })} />
+                        )
+                    }
+
                 </>,
             },
         ];
