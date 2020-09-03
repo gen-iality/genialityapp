@@ -218,7 +218,7 @@ class ListEventUser extends Component {
               updatedAttendees[i].payment = 
               "Status: " + updatedAttendees[i].payment.status + 
               " Fecha de transaccion: " + updatedAttendees[i].payment.date + 
-              " Referencia PayU " + updatedAttendees[i].payment.payuReference + 
+              " Referencia PayU: " + updatedAttendees[i].payment.payuReference + 
               " Transaccion #: " + updatedAttendees[i].payment.transactionID
             }
           }
