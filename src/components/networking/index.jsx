@@ -279,7 +279,7 @@ export default class ListEventUser extends Component {
                                           <div>
                                             {
                                               asistantData.map( ( data, dataIndex ) => (
-                                                !data.privatePublic && data.privatePublic !== undefined && users.properties[ data.name ] && (
+                                                !data.visibleByContacts && data.visibleByContacts !== undefined && users.properties[ data.name ] && (
                                                   <div key={ `public-field-${ userIndex }-${ dataIndex }` }>
                                                     <p><b>{ data.label }:</b> { users.properties[ data.name ] }</p>
                                                   </div>
@@ -419,7 +419,7 @@ export default class ListEventUser extends Component {
                                         <div>
                                           {
                                             asistantData.map( ( data, dataIndex ) => (
-                                              !data.privatePublic && data.privatePublic !== undefined && users.properties[ data.name ] && (
+                                              !data.visibleByContacts && data.visibleByContacts !== undefined && users.properties[ data.name ] && (
                                                 <div key={ `public-field-${ userIndex }-${ dataIndex }` }>
                                                   <p><b>{ data.label }:</b> { users.properties[ data.name ] }</p>
                                                 </div>
