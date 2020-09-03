@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import * as Cookie from "js-cookie";
-import EvenTable from "../events/shared/table";
-import SearchComponent from "../shared/searchTable";
-import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
-import { Link, Redirect } from "react-router-dom";
-import ReactQuill from "react-quill";
-import { toolbarEditor } from "../../helpers/constants";
-import ReactPlayer from "react-player";
+import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Tag, Spin, Result, Avatar } from "antd";
-import { DesktopOutlined } from "@ant-design/icons";
+import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert } from "antd";
+import { firestore } from "../../helpers/firebase";
+import ReactPlayer from "react-player";
 
 class Agenda extends Component {
   constructor(props) {
@@ -41,6 +36,24 @@ class Agenda extends Component {
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { data } = this.state
+    //Cargamos solamente los espacios virtuales de la agenda
+
+    //Si aún no ha cargado el evento no podemos hacer nada más
+    if (!this.props.event) return;
+
+    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
+    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+
+    this.listeningStateMeetingRoom(data);
+    //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+
+    this.setState({ data, filtered, toShow: filtered });
+
   }
 
   async componentDidMount() {
@@ -86,10 +99,28 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
-
     }
   }
 
+  async listeningStateMeetingRoom(list) {
+    list.forEach((activity, index, arr) => {
+      firestore
+        .collection("events")
+        .doc(this.props.event._id)
+        .collection("activities")
+        .doc(activity._id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          let { habilitar_ingreso } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+
+          arr[index] = updatedActivityInfo;
+          const filtered = this.filterByDay(this.state.days[0], arr);
+          this.setState({ list: arr, filtered, toShow: filtered });
+        });
+    });
+
+  }
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
     let evius_token = Cookie.get("evius_token");
@@ -113,13 +144,14 @@ class Agenda extends Component {
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(this.props.eventId);
-
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], data);
-    this.setState({ list: data, filtered, toShow: filtered, spaces: space });
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+    this.listeningStateMeetingRoom(data);
+
+    this.setState({ data, filtered, toShow: filtered, spaces: space });
   };
 
   returnList() {
@@ -128,8 +160,6 @@ class Agenda extends Component {
   }
 
   filterByDay = (day, agenda) => {
-    console.log("dia---", day);
-    console.log("agenda-----", agenda)
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -381,9 +411,9 @@ class Agenda extends Component {
                                   <Row>
                                     {item.hosts.map((speaker, key) => (
                                       <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
-                                        <span key={key} style={{ fontSize: 17, fontWeight: 500 }}>
+                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
                                           <Avatar
-                                            size={30}
+                                            size={50}
                                             src={speaker.image
                                             } /> {speaker.name} &nbsp;</span>
                                       </Col>
@@ -395,9 +425,9 @@ class Agenda extends Component {
                           </p>
                           <Col align="bottom" className="text-align-card">
                             <div>
-                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
+                              {/* <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
-                              </Button>
+                              </Button> */}
                               {
                                 showButtonDocuments && (
                                   <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
@@ -417,36 +447,72 @@ class Agenda extends Component {
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                           <div>
-                            {/* {
-                              this.state.status === "preview" && (
-                                <img src={this.props.event.styles.event_image} />
+                            {
+                              item.habilitar_ingreso === "closed_meeting_room" && (
+                                <>
+                                  <img src={this.props.event.styles.event_image} />                                 
+                                  <Alert message="La Conferencia Inciará pronto" type="warning" />                                   
+                                </>
                               )
+                            }
 
-                            } */}
+                            {
+                              item.habilitar_ingreso === "ended_meeting_room" && (
+                                <>
+                                  {item.video ? item.video && (
+                                    <>                                    
+                                    <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />                                   
+                                      <ReactPlayer
+                                        width={"100%"}                                        
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                        url={item.video}
+                                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                                        controls
+                                      />
+                                    </>
+                                  ) :
+                                    (
+                                      <>
+                                        <img src={this.props.event.styles.event_image} />
+                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />                                        
+                                      </>
+                                    )}
 
-                            <img onClick={() =>
-                                item.meeting_id && toggleConference(
-                                  true,
-                                  item.meeting_id,
-                                  item
-                                )
-                              } src={this.props.event.styles.event_image} />
-                            <div>
-                              <Button
-                                block
-                                type="primary"
-                                disabled={item.meeting_id ? false : true}
-                                onClick={() =>
-                                  toggleConference(
-                                    true,
-                                    item.meeting_id,
-                                    item
-                                  )
-                                }
-                              >
-                                {item.meeting_id ? "Ir Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                              </Button>
-                            </div>
+                                </>
+                              )
+                            }
+                            {
+                              item.habilitar_ingreso === "open_meeting_room" && (
+                                <>
+                                  <img onClick={() =>
+                                    item.meeting_id && toggleConference(
+                                      true,
+                                      item.meeting_id,
+                                      item
+                                    )
+                                  } src={this.props.event.styles.event_image} />
+                                  <div>
+                                    <Button
+                                      block
+                                      type="primary"
+                                      disabled={item.meeting_id ? false : true}
+                                      onClick={() =>
+                                        toggleConference(
+                                          true,
+                                          item.meeting_id,
+                                          item
+                                        )
+                                      }
+                                    >
+                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                                    </Button>
+                                  </div>
+                                </>
+                              )
+                            }
                           </div>
                         </Col>
                       </Row>

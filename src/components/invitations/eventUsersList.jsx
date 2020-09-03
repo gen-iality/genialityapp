@@ -27,7 +27,7 @@ class eventUsersList extends Component {
         const { eventID, event } = this.props
         let attendees = await UsersApi.getAll(eventID)
         let tickets = await eventTicketsApi.getAll(eventID)
-        this.setState({tickets})
+        this.setState({ tickets })
         let attendeesFormatedForTable = this.formatAttendeesForTable(attendees.data)
         let columnsTable = this.createTableColumns(event)
 
@@ -67,17 +67,17 @@ class eventUsersList extends Component {
 
         columnsTable.push({
             title: "Chequeado",
-            dataIndex: "checkedin_at",
+            dataIndex: "checkedin_at",            
             ...this.getColumnSearchProps("checkedin_at")
         })
 
-        if(tickets.length > 0){
+        if (tickets.length > 0) {
             for (let i = 0; tickets.length > i; i++) {
                 filterTickets.push({
                     text: tickets[i].title,
                     value: tickets[i].title,
                 })
-            }   
+            }
         }
 
         columnsTable.push({
@@ -225,7 +225,7 @@ class eventUsersList extends Component {
     goToSendMessage = () => {
         const { attendeesForSendMessage, modalVisible } = this.state
         //Actualizar el estado del padre
-        if (attendeesForSendMessage) {
+        if (attendeesForSendMessage && attendeesForSendMessage.length > 0) {
             this.props.setGuestSelected(attendeesForSendMessage);
             this.props.history.push(`${this.props.matchUrl}/createmessage`);
         } else {
@@ -250,6 +250,14 @@ class eventUsersList extends Component {
         const rowSelection = {
             eventUsersId,
             onChange: this.onSelectChange,
+            selections: [
+                Table.SELECTION_ALL,
+                Table.SELECTION_INVERT,
+                // {                    
+                //     text: 'Unselect All',
+                //     onSelect: () => { this.setState({ attendeesForSendMessage:[], eventUsersId:[] }) }
+                // },
+            ]
         };
         return (
             <>
@@ -272,12 +280,12 @@ class eventUsersList extends Component {
                     </Col>
                 </Row>
                 <Fragment>
-                    <p style={{marginTop:"2%"}}>Seleccionados: {eventUsersId.length}</p>
-                    <Table
-                        scroll={{ x: 1500 }} 
-                        sticky                    
+                    <p style={{ marginTop: "2%" }}>Seleccionados: {eventUsersId.length}</p>
+                    <Table                        
+                        scroll={{ x: 1500 }}
+                        sticky
                         pagination={{ position: ["bottomCenter"] }}
-                        size="small"                        
+                        size="small"
                         rowSelection={rowSelection}
                         columns={columnsTable}
                         dataSource={attendeesFormatedForTable} />

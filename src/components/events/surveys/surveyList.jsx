@@ -35,8 +35,9 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                       !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
                     }`}
                     onClick={() => showSurvey(survey)}
-                    loading={survey.userHasVoted == undefined}>                    
-                    {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
+                    loading={survey.userHasVoted == undefined}>        
+                    {console.log("iteracion de voto",survey)}            
+                    {survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                   </Button>
                 </div>
               </List.Item>
