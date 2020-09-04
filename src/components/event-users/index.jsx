@@ -218,9 +218,10 @@ class ListEventUser extends Component {
               " Fecha de transaccion: " + updatedAttendees[i].payment.date + 
               " Referencia PayU: " + updatedAttendees[i].payment.payuReference + 
               " Transaccion #: " + updatedAttendees[i].payment.transactionID
+            }else{
+              updatedAttendees[i].payment = "No se ha registrado el pago"
             }
-          }
-          console.log("updatedAttendees", updatedAttendees);
+          }          
           this.setState({ users: updatedAttendees, usersReq: updatedAttendees, auxArr: updatedAttendees, loading: false })
         },
         (error) => {
