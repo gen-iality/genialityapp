@@ -16,7 +16,7 @@ class eventUsersList extends Component {
             attendees: [],
             attendeesFormatedForTable: [],
             columnsTable: [],
-            selectedRowKeys: [],
+            selectedRowKeys: [], //Contiene los id de los usuarios, se llama de esta manera el array por funcionalidad de la tabla
             tickets: []
         }
         this.createTableColumns = this.createTableColumns.bind(this)
