@@ -96,7 +96,31 @@ class eventLanding extends Component {
                                         <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
                                     </div>
                                 )
-                     }
+                    }
+                    {
+                        event._id === "5f4e41d5eae9886d464c6bf4" ? (
+                            <div>
+                                <div className="containerGaming">
+                                    <Row gutter={[12, 12]}>
+                                        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                            <div className="imagen">
+                                                <img onClick={() => this.onChangePage("agenda")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/imageFirst.jpg?alt=media&token=5b5fe5a7-d76b-42d2-bea9-13292e138528" />
+                                            </div>
+                                        </Col>
+                                        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                                            <div className="imagen">
+                                                <img onClick={() => this.onChangePage("agenda")} style={{cursor:'pointer'}} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/callOfDutti.jpg?alt=media&token=920646aa-50b9-4a4b-97e9-d18d62f6a9ca" />
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </div>
+                            ) : (event.description && typeof event.description === "string") && ( 
+                                    <div>
+                                        <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
+                                    </div>
+                            )
+                    }
                 </Card>
 
             </div>
