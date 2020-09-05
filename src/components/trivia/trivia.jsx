@@ -7,9 +7,12 @@ import { deleteSurvey } from "./services";
 import { sweetAlert } from "../../helpers/utils";
 import EvenTable from "../events/shared/table";
 import "react-tabs/style/react-tabs.css";
+import { Table } from 'antd';
 import { toast } from "react-toastify";
+import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-import { message } from "antd";
+import { message, Space, Button } from "antd";
+const { Column } = Table;
 
 class trivia extends Component {
   constructor(props) {
@@ -32,6 +35,7 @@ class trivia extends Component {
   // Se realiza la funcion para obtener todos los datos necesarios tanto para encuesta como para agenda
   getInformation = async () => {
     const info = await SurveysApi.getAll(this.props.event._id);
+    console.log(info.data)
     const dataAgenda = await AgendaApi.byEvent(this.props.event._id);
     //Se envía al estado la data obtenida de las api
     this.setState({
@@ -62,49 +66,50 @@ class trivia extends Component {
   }
 
   render() {
+    const columns = [
+      {
+        title: 'Nombre de la encuesta',
+        dataIndex: 'survey',
+        key: 'survey',
+      },
+      {
+        title: 'Publicada',
+        dataIndex: 'publish',
+        key: 'publish',
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+          <Space size="middle">
+            <Link to={{ pathname: `${this.props.matchUrl}/report`, state: { report: record._id } }}>
+              <SearchOutlined />
+            </Link>
+            <Link to={{ pathname: `${this.props.matchUrl}/encuesta`, state: { edit: record._id } }}>
+              <EditOutlined />
+            </Link>
+            <DeleteOutlined onClick={this.destroy.bind(record.survey, record._id)} />
+          </Space>
+        ),
+      },
+    ];
     const { matchUrl } = this.props;
     const { data } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
     return (
       <Fragment className="columns is-12">
+        <Link to={{ pathname: `${matchUrl}/encuesta` }}>
+          <Button style={{ float: "right" }}>
+            <span className="icon">
+              <i className="fas fa-plus-circle" />
+            </span>
+            <spa>Nueva Encuesta</spa>
+          </Button >
+        </Link>
         <EventContent title={"Encuestas"}>
-          <Link to={{ pathname: `${matchUrl}/encuesta` }}>
-            <button className="columns is-pulled-right button is-primary">
-              <span className="icon">
-                <i className="fas fa-plus-circle" />
-              </span>
-              <spa>Nueva Encuesta</spa>
-            </button>
-          </Link>
-          <EvenTable style={{ marginTop: "5%" }} head={["Nombre de encuesta", "Publicada", ""]}>
-            {data.map((trivia, key) => (
-              <tr key={key}>
-                <td>{trivia.survey}</td>
-                <td>{trivia.publish === "true" ? "Publicada" : "No publicada"}</td>
-                <td>
-                  <Link to={{ pathname: `${this.props.matchUrl}/report`, state: { report: trivia._id } }}>
-                    <button>
-                      <span className="icon">
-                        <i className="fas fa-search" />
-                      </span>
-                    </button>
-                  </Link>
-                  <Link to={{ pathname: `${this.props.matchUrl}/encuesta`, state: { edit: trivia._id } }}>
-                    <button>
-                      <span className="icon">
-                        <i className="fas fa-edit" />
-                      </span>
-                    </button>
-                  </Link>
-                  <button onClick={this.destroy.bind(trivia.survey, trivia._id)}>
-                    <span className="icon">
-                      <i className="fas fa-trash-alt" />
-                    </span>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </EvenTable>
+          <Table
+            dataSource={data}
+            columns={columns} />
         </EventContent>
       </Fragment>
     );

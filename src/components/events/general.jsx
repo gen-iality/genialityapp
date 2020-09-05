@@ -50,8 +50,7 @@ class General extends Component {
         };
         this.specificDates = this.specificDates.bind(this);
         this.submit = this.submit.bind(this);
-        this.deleteEvent = this.deleteEvent.bind(this);
-        this.getDataReactQuill = this.getDataReactQuill.bind(this)
+        this.deleteEvent = this.deleteEvent.bind(this);        
         this.getInitialPage = this.getInitialPage.bind(this)
     }
 
@@ -361,11 +360,6 @@ class General extends Component {
 
     }
 
-    getDataReactQuill(data) {
-        console.log(data)
-        this.setState({ data_loader_page: data })
-    }
-
     getInitialPage(data) {
         this.setState({ event: { ...this.state.event, initial_page: data } })
     }
@@ -499,41 +493,7 @@ class General extends Component {
                                     </div>
                                 </div>
                             )
-                        }
-                        <div>
-                            <label className="label">Mostrar banner informativo</label>
-                            <div className="select is-primary">
-                                <select defaultValue={event.show_banner} name="show_banner" onChange={this.handleChange}>
-                                    <option value={true}>Si</option>
-                                    <option value={false}>No</option>
-
-                                </select>
-                            </div>
-                        </div>
-                        <div>
-                            <label className="label">Introduccion de inicio ?</label>
-                            <div className="select is-primary">
-                                <select defaultValue={event.loader_page} name="loader_page" onChange={this.handleChange}>
-                                    <option value="no">No</option>
-                                    <option value="text">Video</option>
-                                    <option value="code">Texto/ Codigo/ Imagen</option>
-                                </select>
-                            </div>
-                            {
-                                event.loader_page === "text" && (
-                                    <div style={{ marginTop: "5%" }}>
-                                        <label className="label">Link de video</label>
-                                        <input defaultValue={event.data_loader_page} type="text" className="input" onChange={(e) => this.setState({ data_loader_page: e.target.value })} />
-                                    </div>
-                                )
-                            }
-                            {
-                                event.loader_page === "code" && (
-                                    <ReactQuill defaultValue={event.data_loader_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getDataReactQuill} />
-                                )
-                            }
-                        </div>
-                        
+                        }                                                
                         <div className="field">
                             <label className="label has-text-grey-light">Dirección</label>
                             <div className="control">
@@ -638,18 +598,7 @@ class General extends Component {
 
                                 :
                                 <DateEvent eventId={this.props.event._id} />
-                        }
-                        <div className="field">
-                            <Checkbox
-                                checked={checked}
-                                onChange={this.onChangeCheck}
-                            >
-                                Codificación de pagina de personalizada
-                            </Checkbox>
-                            <div hidden={!checked}>
-                                <ReactQuill defaultValue={event.initial_page} style={{ marginTop: "5%" }} modules={toolbarEditor} onChange={this.getInitialPage} />
-                            </div>
-                        </div>
+                        }                        
                         <div className="field">
                             <label className="label has-text-grey-light">Descripción</label>
                             <div className="control">

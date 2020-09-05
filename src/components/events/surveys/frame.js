@@ -1,57 +1,57 @@
 const colorBars = {
   backgroundColor: [
-    "rgba(255, 99, 132, 0.7)",
-    "rgba(128, 182, 244, 0.7)",
-    "rgba(253, 208, 56, 0.7)",
-    "rgba(54, 162, 235, 0.7)",
-    "rgba(255, 206, 86, 0.7)",
-    "rgba(75, 192, 192, 0.7)",
-    "rgba(153, 102, 255, 0.7)",
-    "rgba(255, 159, 64, 0.7)",
+    'rgba(255, 99, 132, 0.7)',
+    'rgba(128, 182, 244, 0.7)',
+    'rgba(253, 208, 56, 0.7)',
+    'rgba(54, 162, 235, 0.7)',
+    'rgba(255, 206, 86, 0.7)',
+    'rgba(75, 192, 192, 0.7)',
+    'rgba(153, 102, 255, 0.7)',
+    'rgba(255, 159, 64, 0.7)',
   ],
   borderColor: [
-    "rgba(255, 99, 132, 1)",
-    "rgba(128, 182, 244, 1)",
-    "rgba(253, 208, 56, 1)",
-    "rgba(54, 162, 235, 1)",
-    "rgba(255, 206, 86, 1)",
-    "rgba(75, 192, 192, 1)",
-    "rgba(153, 102, 255, 1)",
-    "rgba(255, 159, 64, 1)",
+    'rgba(255, 99, 132, 1)',
+    'rgba(128, 182, 244, 1)',
+    'rgba(253, 208, 56, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
   ],
   borderWidth: 2,
   hoverBackgroundColor: [
-    "rgba(255, 99, 132)",
-    "rgba(128, 182, 244)",
-    "rgba(253, 208, 56)",
-    "rgba(54, 162, 235)",
-    "rgba(255, 206, 86)",
-    "rgba(75, 192, 192)",
-    "rgba(153, 102, 255)",
-    "rgba(255, 159, 64)",
+    'rgba(255, 99, 132)',
+    'rgba(128, 182, 244)',
+    'rgba(253, 208, 56)',
+    'rgba(54, 162, 235)',
+    'rgba(255, 206, 86)',
+    'rgba(75, 192, 192)',
+    'rgba(153, 102, 255)',
+    'rgba(255, 159, 64)',
   ],
 
   hoverBorderColor: [
-    "rgba(255, 99, 132)",
-    "rgba(128, 182, 244)",
-    "rgba(253, 208, 56)",
-    "rgba(54, 162, 235)",
-    "rgba(255, 206, 86)",
-    "rgba(75, 192, 192)",
-    "rgba(153, 102, 255)",
-    "rgba(255, 159, 64)",
+    'rgba(255, 99, 132)',
+    'rgba(128, 182, 244)',
+    'rgba(253, 208, 56)',
+    'rgba(54, 162, 235)',
+    'rgba(255, 206, 86)',
+    'rgba(75, 192, 192)',
+    'rgba(153, 102, 255)',
+    'rgba(255, 159, 64)',
   ],
 };
 
 export const graphicsFrame = {
   horizontalBar: {
-    type: "horizontalBar",
+    type: 'horizontalBar',
     data: {
       labels: [],
       datasets: [
         {
-          label: "# de Votos",
-          labelColor: "black",
+          label: '% de Votos',
+          labelColor: 'black',
           ...colorBars,
           data: [],
         },
@@ -61,37 +61,38 @@ export const graphicsFrame = {
       title: {
         fontSize: 16,
         display: true,
-      },
+      },      
       responsive: true,
       animation: {
         duration: 2000,
-        easing: "easeInOutQuint",
+        easing: 'easeInOutQuint',
       },
       legend: {
         labels: {
-          fontColor: "black",
+          fontColor: 'black',
         },
       },
       scales: {
         xAxes: [
           {
             ticks: {
-              beginAtZero: true,
+              beginAtZero: true,              
               stepSize: 1,
               fontSize: 14,
-              fontColor: "black",
-              fontStyle: "bold",
+              fontColor: 'black',
+              fontStyle: 'bold',
             },
-          },
+          }          
         ],
         yAxes: [
-          {
+          {            
             ticks: {
-              beginAtZero: true,
+              display: false,
+              beginAtZero: true,              
               stepSize: 1,
               fontSize: 14,
-              fontColor: "black",
-              fontStyle: "bold",
+              fontColor: 'black',
+              fontStyle: 'bold',
             },
           },
         ],
@@ -99,13 +100,13 @@ export const graphicsFrame = {
     },
   },
   verticalBar: {
-    type: "bar",
+    type: 'bar',
     data: {
       labels: [],
       datasets: [
         {
-          label: "# de Votos",
-          labelColor: "black",
+          label: '# de Votos',
+          labelColor: 'black',
           ...colorBars,
           data: [],
         },
@@ -119,23 +120,23 @@ export const graphicsFrame = {
       responsive: true,
       animation: {
         duration: 2000,
-        easing: "easeInOutQuint",
+        easing: 'easeInOutQuint',
       },
       legend: {
         labels: {
-          fontColor: "white",
+          fontColor: 'white',
         },
       },
       scales: {
         xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              stepSize: 1,
-              fontSize: 14,
-              fontColor: "white",
-              fontStyle: "bold",
-            },
+          {            
+            // ticks: {
+            //   beginAtZero: true,
+            //   stepSize: 1,
+            //   fontSize: 14,
+            //   fontColor: 'white',
+            //   fontStyle: 'bold',
+            // },
           },
         ],
         yAxes: [
@@ -144,8 +145,8 @@ export const graphicsFrame = {
               beginAtZero: true,
               stepSize: 1,
               fontSize: 14,
-              fontColor: "white",
-              fontStyle: "bold",
+              fontColor: 'white',
+              fontStyle: 'bold',
             },
           },
         ],

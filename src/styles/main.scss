@@ -70,9 +70,14 @@ iframe {
 }
 
 .sv-container-modern__title {
+  text-align: center;
   padding-top: 3em !important;
 }
 
+// ajuste del texto de la pregunta del la encuesta
+.sv-question__title {
+  padding: 0px !important;
+}
 .sv-question__content {
   margin-top: 2em;
 }
@@ -124,7 +129,18 @@ iframe {
   overflow-x: scroll;
 }
 
+.line-head{
+  width: 100% !important;
+  background-color: gray !important;
+  border-bottom-color: gray !important;
+  height: 2px !important;
+  margin-bottom:2% !important;
+}
 
+.ant-table-selection {
+  position: relative;
+  width: 67px;
+  }
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";

@@ -1,16 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
 import * as Cookie from "js-cookie";
-import EvenTable from "../events/shared/table";
-import SearchComponent from "../shared/searchTable";
-import API, { AgendaApi, SpacesApi, Actions, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
-import { Link, Redirect } from "react-router-dom";
-import ReactQuill from "react-quill";
-import { toolbarEditor } from "../../helpers/constants";
-import ReactPlayer from "react-player";
+import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Space, Spin, Result, Avatar } from "antd";
-import { DesktopOutlined } from "@ant-design/icons";
+import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert } from "antd";
+import { firestore } from "../../helpers/firebase";
+import ReactPlayer from "react-player";
 
 class Agenda extends Component {
   constructor(props) {
@@ -35,11 +30,30 @@ class Agenda extends Component {
       generalTab: true,
       loading: false,
       showButtonSurvey: false,
-      showButtonDocuments: false
+      showButtonDocuments: false,
+      status: "in_progress"
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { data } = this.state
+    //Cargamos solamente los espacios virtuales de la agenda
+
+    //Si aún no ha cargado el evento no podemos hacer nada más
+    if (!this.props.event) return;
+
+    //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
+    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+
+    this.listeningStateMeetingRoom(data);
+    //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
+    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+
+    this.setState({ data, filtered, toShow: filtered });
+
   }
 
   async componentDidMount() {
@@ -85,10 +99,28 @@ class Agenda extends Component {
         days.push(Moment(date[i]).format("YYYY-MM-DD"));
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
-
     }
   }
 
+  async listeningStateMeetingRoom(list) {
+    list.forEach((activity, index, arr) => {
+      firestore
+        .collection("events")
+        .doc(this.props.event._id)
+        .collection("activities")
+        .doc(activity._id)
+        .onSnapshot((infoActivity) => {
+          if (!infoActivity.exists) return;
+          let { habilitar_ingreso } = infoActivity.data();
+          let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
+
+          arr[index] = updatedActivityInfo;
+          const filtered = this.filterByDay(this.state.days[0], arr);
+          this.setState({ list: arr, filtered, toShow: filtered });
+        });
+    });
+
+  }
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = async () => {
     let evius_token = Cookie.get("evius_token");
@@ -111,14 +143,15 @@ class Agenda extends Component {
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
-    const { data } = await AgendaApi.byEvent(this.props.eventId);
-
+    const { data } = await AgendaApi.byEvent(this.props.eventId);    
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
     const filtered = this.filterByDay(this.state.days[0], data);
-    this.setState({ list: data, filtered, toShow: filtered, spaces: space });
+    this.listeningStateMeetingRoom(data);
+
+    this.setState({ data, filtered, toShow: filtered, spaces: space });
   };
 
   returnList() {
@@ -126,9 +159,7 @@ class Agenda extends Component {
     this.setState({ toShow: this.state.listDay, nameSpace: "inicio" });
   }
 
-  filterByDay = (day, agenda) => {
-    console.log("dia---", day);
-    console.log("agenda-----", agenda)
+  filterByDay = (day, agenda) => {    
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -136,11 +167,11 @@ class Agenda extends Component {
         (a, b) =>
           Moment(a.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY") -
           Moment(b.datetime_start, "h:mm:ss a").format("dddd, MMMM DD YYYY")
-      );    
+      );
     this.setState({ listDay: list });
 
-    for(let i=0; list.length>i; i++){
-      list[i].hosts.sort((a,b)=>{
+    for (let i = 0; list.length > i; i++) {
+      list[i].hosts.sort((a, b) => {
         return a.order - b.order
       })
     }
@@ -161,7 +192,7 @@ class Agenda extends Component {
 
   //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
   selectDay = (day) => {
-    const filtered = this.filterByDay(day, this.state.list);
+    const filtered = this.filterByDay(day, this.state.data);
     this.setState({ filtered, toShow: filtered, day });
   };
 
@@ -329,7 +360,7 @@ class Agenda extends Component {
 
                 <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
                   {days.map((date, key) => (
-                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"}  type={`${date === day ? "primary" : ""}`}>
+                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
                       {this.capitalizeDate(Moment(date).format("MMMM DD"))}
                     </Button>
 
@@ -339,65 +370,149 @@ class Agenda extends Component {
                 {/* Contenedor donde se pinta la información de la agenda */}
 
                 {toShow.map((item, llave) => (
-                  <div key={llave}
-                    className="container_agenda-information"
-                    onClick={(e) => {
-                      this.gotoActivity(item);
-                    }}>
+                  <div key={llave} className="container_agenda-information">
                     <div className="card agenda_information">
                       <Row align="middle">
-                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <span className="text-align-card">
+                        <Row>
+                          <span className="date-activity">
                             {Moment(item.datetime_start).format("h:mm a")} -{" "}
                             {Moment(item.datetime_end).format("h:mm a")}
                           </span>
                           <p>
                             <span className="card-header-title text-align-card">{item.name}</span>
                           </p>
+                        </Row>
+                        <hr className="line-head" />
+                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
+                          <div onClick={(e) => { this.gotoActivity(item) }} className="text-align-card" style={{ marginBottom: "5%" }}>
+                            {
+                              item.activity_categories.length > 0 && (
+                                <>
+                                  <b>Tags: </b>
+                                  {
+                                    item.activity_categories.map((item) => (
+                                      <>
+                                        <Tag color={item.color ? item.color : "#ffffff"}>{item.name}</Tag>
+                                      </>
+                                    ))
+                                  }
+                                </>
+                              )
+                            }
+
+                          </div>
                           <p className="text-align-card">
-                            {/* <b>Conferencista: </b> */}
-                            <br/>
-                            <br/>
-                            <Row>
-                              {item.hosts.map((speaker, key) => (
-                              <Col lg={24} xl={12} xxl={12} style={{marginBottom:13}}>
-                                <span key={key} style={{ fontSize:17, fontWeight:500}}>
-                                  <Avatar
-                                    size={30}
-                                    src={speaker.image
-                                  }/> {speaker.name} &nbsp;</span>
-                              </Col>
-                            ))}
-                            </Row>
+                            {
+                              item.hosts.length > 0 && (
+                                <>
+                                  <b>Presenta: </b>
+                                  <br />
+                                  <br />
+                                  <Row>
+                                    {item.hosts.map((speaker, key) => (
+                                      <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
+                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
+                                          <Avatar
+                                            size={50}
+                                            src={speaker.image
+                                            } /> {speaker.name} &nbsp;</span>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                </>
+                              )
+                            }
                           </p>
-                          <Row className="text-align-card">
-                            <div className="space-align-container">
-                              <Button type="primary" className="space-align-block" 
-                                 style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                          <Col align="bottom" className="text-align-card">
+                            <div>
+                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
                               </Button>
                               {
                                 showButtonDocuments && (
-                                  <Button type="primary" className="space-align-block"
-                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Documentos
                                   </Button>
                                 )
                               }
                               {
                                 showButtonSurvey && (
-                                  <Button type="primary" className="space-align-block"
-                                   style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}>
+                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
                                     Encuestas
                                   </Button>
                                 )
                               }
                             </div>
-                          </Row>
+                          </Col>
                         </Col>
-                        <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                        <Col xs={24} sm={24} md={12} lg={12} xl={8}>
                           <div>
-                            <img src={item.image} />
+                            {
+                              item.habilitar_ingreso === "closed_meeting_room" && (
+                                <>
+                                  <img src={this.props.event.styles.event_image} />                                 
+                                  <Alert message="La Conferencia Inciará pronto" type="warning" />                                   
+                                </>
+                              )
+                            }
+
+                            {
+                              item.habilitar_ingreso === "ended_meeting_room" && (
+                                <>
+                                  {item.video ? item.video && (
+                                    <>                                    
+                                    <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />                                   
+                                      <ReactPlayer
+                                        width={"100%"}                                        
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                        url={item.video}
+                                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                                        controls
+                                      />
+                                    </>
+                                  ) :
+                                    (
+                                      <>
+                                        <img src={this.props.event.styles.event_image} />
+                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />                                        
+                                      </>
+                                    )}
+
+                                </>
+                              )
+                            }
+                            {
+                              item.habilitar_ingreso === "open_meeting_room" && (
+                                <>
+                                  <img onClick={() =>
+                                    item.meeting_id && toggleConference(
+                                      true,
+                                      item.meeting_id,
+                                      item
+                                    )
+                                  } src={this.props.event.styles.event_image} />
+                                  <div>
+                                    <Button
+                                      block
+                                      type="primary"
+                                      disabled={item.meeting_id ? false : true}
+                                      onClick={() =>
+                                        toggleConference(
+                                          true,
+                                          item.meeting_id,
+                                          item
+                                        )
+                                      }
+                                    >
+                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
+                                    </Button>
+                                  </div>
+                                </>
+                              )
+                            }
                           </div>
                         </Col>
                       </Row>

@@ -3,7 +3,7 @@ import { Route, Switch, withRouter, Link } from "react-router-dom";
 import * as Cookie from "js-cookie";
 
 import { SurveyAnswers } from "./services";
-import API, { Actions, SurveysApi } from "../../../helpers/request";
+import API, { Actions, SurveysApi,TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
 
 import SurveyList from "./surveyList";
@@ -67,25 +67,26 @@ class SurveyForm extends Component {
   };
 
   surveyVisible = () => {
-
-
-    if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
-      this.toggleSurvey(this.state.surveysData[0]);
-    }
-
+    // if (this.state.surveysData.length == 1 && !this.state.surveyVisible) {
+    //   this.toggleSurvey(this.state.surveysData[0]);
+    // }
 
     this.setState({
       surveyVisible: !this.state.surveyVisible,
     });
 
-
-
-
   };
 
   async componentDidMount() {
+
+    let {event} = this.props;
     let user = await this.getCurrentUser();
-    this.setState({ currentUser: user }, this.listenSurveysData);
+    let eventUser = await this.getCurrentEvenUser(event._id);
+
+    
+
+    console.log("surveydebug eventUser",eventUser);
+    this.setState({ currentUser: user, eventUser:eventUser }, this.listenSurveysData);
     this.userVote();
     this.getItemsMenu();
   }
@@ -114,10 +115,6 @@ class SurveyForm extends Component {
         $query = $query.where("eventId", "==", event._id);
       }
 
-      //Le agregamos el filtro por actividad, esto toca desde mongodb no esta este campo en el firebase
-      /*if (activity && activity._id) {
-        $query = $query.where("activityId", "==", activity._id);
-      }*/
 
       let publishedSurveys = [];
       $query.onSnapshot(async (surveySnapShot) => {
@@ -158,7 +155,7 @@ class SurveyForm extends Component {
 
 
 
-        this.setState({ surveysData: surveysData }, this.seeIfUserHasVote);
+        this.setState({ surveysData: surveysData, surveyVisible:surveysData && surveysData.length }, this.seeIfUserHasVote);
       });
     }
   };
@@ -200,9 +197,9 @@ class SurveyForm extends Component {
 
     this.setState({ surveysData: stateSurveys });
     console.log("stateSurveys", stateSurveys);
-    if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
-      this.toggleSurvey(stateSurveys[0]);
-    }
+    // if (stateSurveys.length && stateSurveys.length == 1 && !stateSurveys[0].userHasVoted && this.state.availableSurveysBar) {
+    //   this.toggleSurvey(stateSurveys[0]);
+    // }
 
     // bucle que verifica si el usuario contesto las encuestas
   };
@@ -217,6 +214,15 @@ class SurveyForm extends Component {
       }
     }
   };
+
+
+  getCurrentEvenUser = async (eventId) => {
+    let evius_token = Cookie.get("evius_token");
+    let response = await TicketsApi.getByEvent(eventId, evius_token);
+    return (response && response.data.length)?response.data[0]:null;
+
+  };
+
 
   // Funcion para consultar la informacion del actual usuario
   getCurrentUser = () => {
@@ -274,6 +280,7 @@ class SurveyForm extends Component {
       surveysData,
       currentUser,
       usuarioRegistrado,
+      eventUser,
       userVote,
       surveyVisible,
       surveyLabel,
@@ -289,6 +296,7 @@ class SurveyForm extends Component {
           toggleSurvey={this.toggleSurvey}
           eventId={event._id}
           currentUser={currentUser}
+          eventUser={eventUser}
           openSurvey={selectedSurvey.open}
           surveyLabel={surveyLabel}
         />
@@ -321,6 +329,7 @@ class SurveyForm extends Component {
             <SurveyList
               jsonData={surveysData}
               usuarioRegistrado={usuarioRegistrado}
+              eventUser={eventUser}
               showSurvey={this.toggleSurvey}
               surveyLabel={surveyLabel}
             />

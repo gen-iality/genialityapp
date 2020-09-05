@@ -82,14 +82,7 @@ class menuLanding extends Component {
                     icon: "LaptopOutlined",
                     checked: false,
                     permissions: "public"
-                },
-                myAgenda: {
-                    name: "Mi Agenda",
-                    section: "my_agenda",
-                    icon: "BookOutlined",
-                    checked: false,
-                    permissions: "public"
-                },
+                },                
                 my_section: {
                     name: "Seccion Personalizada",
                     section: "my_section",

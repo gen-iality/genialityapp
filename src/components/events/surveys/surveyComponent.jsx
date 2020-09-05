@@ -56,7 +56,7 @@ class SurveyComponent extends Component {
 
   async componentDidMount() {
     var self = this;
-    const { eventId, idSurvey } = this.props;    
+    const { eventId, idSurvey } = this.props;
     //console.log("CARGANDO INICIAL");
     let surveyData = await this.loadSurvey(eventId, idSurvey);
     let survey = new Survey.Model(surveyData);
@@ -75,7 +75,7 @@ class SurveyComponent extends Component {
     // Esto permite obtener datos para la grafica de gamificacion
     UserGamification.getListPoints(eventId, this.getRankingList);
 
-    this.getCurrentEvenUser();
+    await this.getCurrentEvenUser();
   }
 
   /**
@@ -105,7 +105,7 @@ class SurveyComponent extends Component {
   getCurrentEvenUser = async () => {
     let evius_token = Cookie.get("evius_token");
     let response = await TicketsApi.getByEvent(this.props.eventId, evius_token);
-
+    console.log("response", response);
     if (response.data.length > 0) {
       let vote = 0;
       response.data.forEach((item) => {
@@ -358,7 +358,7 @@ class SurveyComponent extends Component {
 
 
 
-  onSurveyCompleted = async (values) =>{
+  onSurveyCompleted = async (values) => {
     this.sendData(values);
   }
   // Funcion para enviar la informacion de las respuestas ------------------------------------------------------------------
@@ -519,13 +519,13 @@ class SurveyComponent extends Component {
      *  cuando una persona entre a respodner una pregunta colocamos el currentPage en la siguiente pregunta por si me salgo y entro que no me vuelva a repetir
      *  la pregunta en la que ya estaba.
      */
-    if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
-      SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
-
-    
-     
 
 
+    //Se comentarea if para evitar regresar a la pagina en que quedó el usuario al desconectarse
+
+
+    // if (!currentPage || ((currentPage < survey.currentPageNo) && survey.PageCount >= survey.currentPageNo + 2))
+    //   SurveyPage.setCurrentPage(idSurvey, survey.currentPageNo);
   }
 
   checkCurrentPage = (survey) => {
@@ -554,35 +554,41 @@ class SurveyComponent extends Component {
     let { surveyData, sentSurveyAnswers, feedbackMessage, showMessageOnComplete, eventUsers } = this.state;
 
     const { showListSurvey, surveyLabel, eventId } = this.props;
+
+    if (!surveyData ) return "Cargando..."
     return (
 
       <div style={surveyStyle}>
-
-        {surveyData.allow_gradable_survey === "true" && (surveyData.show_horizontal_bar ? (
-          <>
+        {
+          this.state.survey && this.state.survey.state !== "completed" && (
             <div style={{ marginTop: 5 }}>
               <Button ghost shape="round" onClick={() => showListSurvey(sentSurveyAnswers)}>
                 <ArrowLeftOutlined /> Volver a  {surveyLabel ? surveyLabel.name : "encuestas"}
               </Button>
-            </div>            
+            </div>
+          )
+        }
+        {(surveyData && surveyData.allow_gradable_survey === "true") && (surveyData.show_horizontal_bar ? (
+          <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
-            {this.state.survey && this.state.survey.state =="completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-  }
+            {
+              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+            }
           </>
         ) : (
-          <>{
-            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-        }</>
+            <>{
+              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+            }</>
           ))}
-        
+
         {
-            this.state.survey && this.state.survey.state =="completed" &&  <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
-        }        
+          this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+        }
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 
         {
           //Se realiza la validacion si la variable allow_anonymous_answers es verdadera para responder la encuesta
-          surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true" ? (
+          surveyData && (surveyData.allow_anonymous_answers === "true" || surveyData.publish === "true") ? (
             <div style={{ display: feedbackMessage.hasOwnProperty("title") || showMessageOnComplete ? "none" : "block" }}>
               {(this.state.survey && <Survey.Survey
                 model={this.state.survey}

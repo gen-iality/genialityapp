@@ -19,8 +19,8 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
       {anonymousSurveyList && anonymousSurveyList.length > 0 && (
         <List
           dataSource={anonymousSurveyList}
-          renderItem={(survey) =>
-            survey.open == "true" ? (
+          renderItem={(survey) =>            
+            survey.open == "true" ? (              
               <List.Item key={survey._id}>
                 <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                 {survey.userHasVoted && (
@@ -35,8 +35,9 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                       !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
                     }`}
                     onClick={() => showSurvey(survey)}
-                    loading={survey.userHasVoted == undefined}>
-                    {!survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
+                    loading={survey.userHasVoted == undefined}>        
+                    {console.log("iteracion de voto",survey)}            
+                    {survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                   </Button>
                 </div>
               </List.Item>
@@ -56,7 +57,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   );
 };
 
-export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
+const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
   const [surveyList, setSurveyList] = useState([]);
   const [anonymousSurveyList, setAnonymousSurveyList] = useState([]);
 
@@ -102,7 +103,7 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
                         }`}
                         onClick={() => showSurvey(survey)}
                         loading={survey.userHasVoted == undefined}>
-                        {!survey.userHasVoted
+                        {(!survey.userHasVoted &&  usuarioRegistrado && usuarioRegistrado.rol && usuarioRegistrado.rol.name != "Speaker")
                           ? `Ir a ${
                               surveyLabel.name
                                 ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)
@@ -135,3 +136,5 @@ export default ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) => {
     </Card>
   );
 };
+
+export default surveyList

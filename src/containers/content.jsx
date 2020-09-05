@@ -46,6 +46,10 @@ class ContentContainer extends Component {
                         <Redirect to="/landing/5f1445482ef28320510a26e2" />
                     )} />
 
+                    <Route exact path='/evento/meetupsfenalco' render={() => (
+                        <Redirect to="/landing/5f0622f01ce76d5550058c32" />
+                    )} />                    
+
                     <Route exact path='/landing/5f0e16a66b0e49031810d6e2' render={() => (
                         <Redirect to="/landing/5f1445482ef28320510a26e2" />
                     )} />

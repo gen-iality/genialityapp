@@ -45,6 +45,7 @@
       padding-bottom: 3px;
     }
   }
+ 
   button {
     .icon-close {
       color: white;
@@ -114,7 +115,6 @@
 
 .survyCard {
   min-width: 45vw;
-  overflow: scroll;
 
   .ant-page-header {
     padding: 0 !important;
@@ -128,23 +128,14 @@
   /* Tener cuidado ser más estrategicos al estilizar esto se tira el diseno */
   .ant-card-body canvas {
     padding: 13px !important;
-    /*estas constantes arbitrarias tan especificas dentro del código generalmente implicar un error */
-    min-height: 205px !important;
   }
 
   .ant-card-body {
     text-align: initial;
     margin-bottom: 15px;
-  }
-  @media only screen and (max-width: $breakpoint-mobile) {
-    .ant-card-body {
+    // estilos para pantalla movil en el padding
+    @media only screen and (max-width: $breakpoint-mobile) {
       padding: 0px !important;
-    }
-    .sv-body{
-      padding: 20px !important;
-    }
-    canvas{
-      height: 201px !important;
     }
   }
 }
@@ -154,14 +145,25 @@
   min-height: 75%;
   min-width: 70%;
   height: 75%;
+  .parpadea{
+    position: absolute;
+  }
 }
 
 // Estilos para minimizar la pantalla
 .minimizeScreen {
   height: 0%;
   top: 95%;
+  .parpadea{
+    position: absolute;
+  }
 }
 
+.fullscreen {
+  .parpadea{
+    position: absolute;
+  }
+}
 // Boton de encuestas
 
 .parpadea {

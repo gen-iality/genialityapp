@@ -8,7 +8,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import Chart from "chart.js";
 
 import { SurveyAnswers } from "./services";
-import { SurveysApi } from "../../../helpers/request";
+import { SurveysApi, UsersApi } from "../../../helpers/request";
 import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
@@ -20,6 +20,8 @@ class Graphics extends Component {
       graphicsFrame,
       chart: {},
       chartCreated: false,
+      usersRegistered: 0,
+      titleQuestion: ""
     };
   }
 
@@ -48,7 +50,17 @@ class Graphics extends Component {
     let { dataSurvey } = this.state;
 
     dataSurvey = await SurveysApi.getOne(eventId, idSurvey);
-    this.setState({ dataSurvey }, this.mountChart);
+    const usersRegistered = await UsersApi.getAll(this.props.eventId)
+    let totalUsersRegistered = 0
+
+    //Se realiza sumatoria de usuarios checkeados para realizar calculo de porcentaje
+    for (let i = 0; usersRegistered.data.length > i; i++) {
+      if (usersRegistered.data[i].checkedin_at) {
+        totalUsersRegistered = totalUsersRegistered + 1
+      }
+    }
+
+    this.setState({ dataSurvey, usersRegistered: totalUsersRegistered }, this.mountChart);
   };
 
   setCurrentPage = (page) => {
@@ -56,10 +68,24 @@ class Graphics extends Component {
   };
 
   updateData = ({ options, answer_count }) => {
-    let { graphicsFrame, chartCreated, chart } = this.state;
+    let { graphicsFrame, chartCreated, chart, usersRegistered } = this.state;
     let { horizontalBar } = graphicsFrame;
 
+    let totalPercentResponse = new Object()
+    //se realiza iteracion para calcular porcentaje
+    for (let i in answer_count) {
+      totalPercentResponse[i] = answer_count[i];//parseFloat((answer_count[i] * 100 / usersRegistered).toFixed(1))
+    }
+
+    let generatedlabels = [];
+    //Se iguala options.choices[a] a una cadena string dinamica para agregar la cantidad de votos de la respuesta
+    for (let a = 0; options.choices.length > a; a++) {
+      // options.choices[a] = `${options.choices[a]}:` + `${answer_count[a]} Voto(s): ${totalPercentResponse[a]} %`
+      generatedlabels[a] = options.choices[a] + ` ${answer_count[a]} Voto(s)`;
+    }
+
     let formatterTitle = options.title;
+    this.setState({ titleQuestion: formatterTitle })
     if (options.title && options.title.length > 70) formatterTitle = this.divideString(options.title);
 
     // Se condiciona si el grafico ya fue creado
@@ -67,23 +93,33 @@ class Graphics extends Component {
     if (!chartCreated) {
       // Se asignan los valores obtenidos de los servicios
       // El nombre de las opciones y el conteo de las opciones
-      horizontalBar.data.labels = options.choices;
-      horizontalBar.data.datasets[0].data = Object.values(answer_count || []);
+      horizontalBar.data.labels = generatedlabels;
+      horizontalBar.data.datasets[0].data = Object.values(totalPercentResponse || []);
       horizontalBar.options.title.text = formatterTitle;
+
+      //Si es un examen Marcamos la respuesta correcta en verde 
+      if (options.correctAnswerIndex) {
+        horizontalBar.data.datasets[0].backgroundColor = [];
+        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+        }      
 
 
       horizontalBar.options = {
         plugins: {
           datalabels: {
-            color: '#777'
+            color: '#777',
           }
+        },
+        legend:{
+          display: false
         },
         scales: {
           yAxes: [{
             ticks: {
+              fontSize: 15,
               fontColor: '#777',
-              minor: { display: false }
-            }
+              minor: { display: true },
+            }            
           }],
           xAxes: [{
             ticks: {
@@ -91,7 +127,7 @@ class Graphics extends Component {
             }
           }],
         }
-      }      
+      }
 
       // Se obtiene el canvas del markup y se utiliza para crear el grafico
       const canvas = document.getElementById("chart").getContext("2d");
@@ -100,10 +136,15 @@ class Graphics extends Component {
       this.setState({ horizontalBar, chart, chartCreated: true });
     } else {
       // Se asignan los valores obtenidos directamente al "chart" ya creado y se actualiza
-      chart.data.labels = options.choices;
-      chart.data.datasets[0].data = Object.values(answer_count || []);
+      chart.data.labels = generatedlabels;
+      chart.data.datasets[0].data = Object.values(totalPercentResponse || []);
       chart.options.title.text = formatterTitle;
 
+      //Si es un examen Marcamos la respuesta correcta en verde 
+      if (options.correctAnswerIndex) {
+        horizontalBar.data.datasets[0].backgroundColor = [];
+        horizontalBar.data.datasets[0].backgroundColor[options.correctAnswerIndex] = 'rgba(50, 255, 50, 0.6)';
+        }      
       chart.update();
 
       this.setState({ chart });
@@ -120,12 +161,12 @@ class Graphics extends Component {
     SurveyAnswers.getAnswersQuestion(idSurvey, questions[currentPage - 1].id, eventId, this.updateData);
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.loadData();
   }
 
   render() {
-    let { dataSurvey, currentPage, horizontalBar, referenceChart } = this.state;
+    let { dataSurvey, currentPage, horizontalBar, referenceChart, titleQuestion } = this.state;
     const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)
@@ -138,11 +179,12 @@ class Graphics extends Component {
               </Button>
             </div>
             <Card>
+              <strong>{titleQuestion}</strong>
               <canvas id="chart"></canvas>
             </Card>
             <br />
             <Pagination
-              defaultCurrent={currentPage}
+              defaultCurrent={currentPage}  
               total={dataSurvey.questions.length * 10}
               onChange={this.setCurrentPage}
             />

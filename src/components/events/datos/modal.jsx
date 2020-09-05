@@ -10,7 +10,7 @@ class DatosModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            info: { name: '', mandatory: false, privatePublic: true, visible: false, label: '', description: '', type: '', options: [] },
+            info: { name: '', mandatory: false, visibleByContacts: false, visibleByAdmin: false, label: '', description: '', type: '', options: [] },
             valid: true
         }
     }
@@ -23,7 +23,7 @@ class DatosModal extends Component {
 
     generateFieldNameForLabel(name, value) {
         //.replace(/[\u0300-\u036f]/g, "") = quita unicamente las tildes, normalize("NFD") pasa la cadena de texto a formato utf-8 y el normalize quita caracteres alfanumericos
-        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9]+/gi, "")
+        const generatedFieldName = toCapitalizeLower(value).normalize("NFD").replace(/[^a-z0-9_]+/gi, "")        
         return generatedFieldName;
     }
 
@@ -55,9 +55,15 @@ class DatosModal extends Component {
         })
     };
 
-    changeFieldCheckVisible = (e) => {
+    changeFieldCheckVisibleByContacts = (e) => {
         this.setState(prevState => {
-            return { info: { ...this.state.info, visible: !prevState.info.visible } }
+            return { info: { ...this.state.info, visibleByContacts: !prevState.info.visibleByContacts } }
+        })
+    };
+
+    changeFieldCheckVisibleByAdmin = (e) => {
+        this.setState(prevState => {
+            return { info: { ...this.state.info, visibleByAdmin: !prevState.info.visibleByAdmin } }
         })
     };
     //Funciones para lista de opciones del campo
@@ -87,7 +93,7 @@ class DatosModal extends Component {
         info.name = toCapitalizeLower(info.name);
         if (info.type !== "list" && info.type !== "multiplelist") delete info.options;
         this.props.action(info);
-        const initModal = { name: '', mandatory: false, visible: false, label: '', description: '', type: '', options: [] };
+        const initModal = { name: '', mandatory: false, visibleByContacts: false, label: '', description: '', type: '', options: [] };
         this.setState({ info: initModal });
     };
 
@@ -191,10 +197,17 @@ class DatosModal extends Component {
                     </div>
 
                     <div className="field">
-                        <input className="is-checkradio is-primary" id={`visibleModal`}
-                            type="checkbox" name={`visible`} checked={info.visible}
-                            onChange={this.changeFieldCheckVisible} />
-                        <label htmlFor={`visibleModal`}>Visible en aplicativo</label>
+                        <input className="is-checkradio is-primary" id={`visibleByContactsModal`}
+                            type="checkbox" name={`visibleByContacts`} checked={info.visibleByContacts}
+                            onChange={this.changeFieldCheckVisibleByContacts} />
+                        <label htmlFor={`visibleByContactsModal`}>Visible para Contactos</label>
+                    </div>
+
+                    <div className="field">
+                        <input className="is-checkradio is-primary" id={`visibleByAdminModal`}
+                            type="checkbox" name={`visibleByAdmin`} checked={info.visibleByAdmin}
+                            onChange={this.changeFieldCheckVisibleByAdmin} />
+                        <label htmlFor={`visibleByAdminModal`}>Visible para Admin</label>
                     </div>
 
                     <div className="field">
