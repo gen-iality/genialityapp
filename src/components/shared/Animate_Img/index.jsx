@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { Link } from "react-router-dom"
+import React from 'react';
 import { Col, Row, Button } from 'antd';
-import { PlayCircleTwoTone, PauseOutlined } from '@ant-design/icons'
+import { PlayCircleTwoTone } from '@ant-design/icons'
 import ReactPlayer from 'react-player'
 import './index.scss';
 
@@ -25,7 +24,7 @@ class AnimateImg extends React.Component {
         this.setState({ autoplay: !this.state.autoplay })
     }
     render() {
-        const { eventId, event, autoplay } = this.state
+        const { event, autoplay } = this.state
         const { showLanding } = this.props
         return (
             <>

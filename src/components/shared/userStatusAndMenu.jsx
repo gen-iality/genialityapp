@@ -1,10 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { FormattedMessage } from "react-intl";
-import LetterAvatar from "./letterAvatar";
 import WithLoading from "./withLoading";
 import { Menu, Dropdown, Avatar, Button, Col, Row } from "antd";
-import { DownOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { Link, withRouter } from "react-router-dom";
+import { LogoutOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 const MenuStyle = {
   flex: 1,
@@ -13,12 +12,9 @@ const MenuStyle = {
 
 let userStatusAndMenu = props => {
   let user = props.user;
-  let menuOpen = props.menuOpen;
   let photo = props.photo;
   let name = props.name;
-
   let logout = props.logout;
-  let openMenu = props.openMenu;
   let eventId = props.eventId;
 
   let menu = (

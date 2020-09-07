@@ -9,26 +9,6 @@ import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
 
 const BgElement = Element.BgElement;
 
-function capitalize(val) {
-    val = Moment(val).format("DD MMMM YYYY")
-    return val.toLowerCase()
-        .trim()
-        .split(' ')
-        .map(v => v[0].toUpperCase() + v.substr(1))
-        .join(' ');
-}
-
-function capitalizeMont(val) {
-    val = Moment(val).format("MMMM YYYY")
-    return val.toLowerCase()
-        .trim()
-        .split(' ')
-        .map(v => v[0].toUpperCase() + v.substr(1))
-        .join(' ');
-}
-
-
-
 let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, type_event }) => {
   
     return (

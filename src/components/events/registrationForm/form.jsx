@@ -200,7 +200,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let target = name;
       let value = user[target];
 
-      if (m.visibleByAdmin == false) {
+      if (m.visibleByAdmin === false) {
         return (<div></div>);
       }
 

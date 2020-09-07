@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Alert, Tag, Button } from "antd";
 
 import { AuthUrl } from "../../../helpers/constants";
@@ -6,8 +6,7 @@ import { AuthUrl } from "../../../helpers/constants";
 export default (props) => {
   let event = props.event;
   let currentUser = props.currentUser;
-  let usuarioRegistrado = props.usuarioRegistrado;
-  let currentActivity = props.currentActivity;
+  let usuarioRegistrado = props.usuarioRegistrado;  
   return (
     <>
       <Tag color="geekblue">{event && event.allow_register ? "El Evento permite registro" : "Es Evento Privado"}</Tag>

@@ -1,9 +1,9 @@
-import React, { Component, Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { message, Button, Row, Col, Checkbox } from 'antd';
 import { FormattedMessage } from "react-intl";
 
 import ReactQuill from "react-quill";
-import { BaseUrl, toolbarEditor } from "../../../helpers/constants";
+import { toolbarEditor } from "../../../helpers/constants";
 
 import { Actions, EventsApi } from "../../../helpers/request";
 
@@ -13,9 +13,7 @@ import { Actions, EventsApi } from "../../../helpers/request";
 function ConfirmacionRegistro(props) {
     //Se definen las variables de useState para enviar y obtener datos
     let [event, setEvent] = useState(null);
-    let [validateEmail, setValidateEmail] = useState(false)
-
-    let valor = "asdf";
+    let [validateEmail, setValidateEmail] = useState(false)    
 
     //Funcion para cargar los datos al inicio de la carga del componente
     useEffect(() => {

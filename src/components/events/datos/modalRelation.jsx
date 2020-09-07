@@ -1,4 +1,4 @@
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import React, { Component } from "react"
 
 export default class ModalRelation extends Component {
