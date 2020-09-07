@@ -42,10 +42,12 @@ import { firestore } from "../../helpers/firebase";
 import { FaWheelchair } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { handleRequestError } from "../../helpers/utils";
-import Robapagina from "../shared/Animate_Img/index"
+import Robapagina from "../shared/Animate_Img/index";
+import Trophies from "./trophies";
+import InformativeSection from "./informativeSections/informativeSection"
+import InformativeSection2 from "./informativeSections/informativeSection2"
 
 const { Title } = Typography;
-
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -246,6 +248,9 @@ class Landing extends Component {
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
+      trophies: <Trophies event={event}/>,
+      informativeSection: <InformativeSection event={event} />,
+      informativeSection1: <InformativeSection2 event={event} />,
       evento: (
 
         <Row justify="center" >
