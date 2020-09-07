@@ -145,7 +145,7 @@ class MenuEvent extends Component {
   }
 
   async componentDidUpdate () {
-    console.log( "user data", this.props.user );
+    
     if ( this.props.user && !this.state.user ) {
       this.setState( { user: this.props.user } )
     }
@@ -157,7 +157,6 @@ class MenuEvent extends Component {
     //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio
     let items = event.itemsMenu || this.state.menuDefault
 
-    console.log( "items", items, this.props.user );
     this.setState( { itemsMenu: items } )
 
 
@@ -178,7 +177,7 @@ class MenuEvent extends Component {
 
     for ( const prop in items ) {
       if ( items[ prop ].permissions === "public" ) {
-        console.log( itemsMenu )
+        
         itemsMenu.push( items[ prop ] )
         this.setState( { itemsMenu } )
       }
@@ -218,6 +217,6 @@ class MenuEvent extends Component {
     );
   }
 
-};
+}
 
 export default WithLoading( MenuEvent );

@@ -180,7 +180,7 @@ class Landing extends Component {
 
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-
+    console.log('informacion del evento', event )
     this.loadDynamicEventStyles(id);
 
     if (event && user) {
