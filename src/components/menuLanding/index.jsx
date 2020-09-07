@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react"
 import { Typography, Select, Checkbox, Card, Input, Button, Col, Row } from "antd";
 import { Actions } from "../../helpers/request";
+import { toolbarEditor } from "../../helpers/constants";
+import ReactQuill from "react-quill";
 import { toast } from "react-toastify";
 const { Title } = Typography;
 const { Option } = Select;
@@ -105,14 +107,23 @@ class menuLanding extends Component {
                 trophies: {
                     name: "Trofeos",
                     section: "trophies",
-                    icon: "TrophyOutlined",                    
+                    icon: "TrophyOutlined",
                     checked: false,
                     permissions: "public"
                 },
-                termsAndComditions:{
-                    name: "Terminos y condiciones",
-                    section: "termsAndConditions",
+                informativeSection: {
+                    name: "Seccion Informativa",
+                    section: "informativeSection",
                     icon: "FileDoneOutlined",
+                    markup: "",
+                    checked: false,
+                    permissions: "public"
+                },
+                informativeSection1: {
+                    name: "Seccion Informativa Segunda",
+                    section: "informativeSection1",
+                    icon: "FileDoneOutlined",
+                    markup: "",
                     checked: false,
                     permissions: "public"
                 }
@@ -134,6 +145,9 @@ class menuLanding extends Component {
                 if (prop1 === prop) {
                     this.mapActiveItemsToAvailable(prop)
                     this.changeNameMenu(prop, menuLanding.itemsMenu[prop1].name)
+                    if (menuLanding.itemsMenu[prop1].markup) {
+                        this.changeMarkup(prop, menuLanding.itemsMenu[prop1].markup)
+                    }
                     this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions)
                 }
             }
@@ -142,9 +156,9 @@ class menuLanding extends Component {
 
     async submit() {
         const itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }
-        console.log(itemsMenu)
-        await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
+        const data = await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
         toast.success("Información guardada")
+        console.log(data)
     }
 
     async mapActiveItemsToAvailable(key) {
@@ -170,8 +184,17 @@ class menuLanding extends Component {
         this.setState({ itemsMenu: itemsMenuDB })
     }
 
+    changeMarkup(key, markup) {
+        let itemsMenuDB = { ...this.state.itemsMenu }
+        if (markup === "") {
+            itemsMenuDB[key].markup = itemsMenuDB[key].markup
+        } else {
+            itemsMenuDB[key].markup = markup
+        }
+        this.setState({ itemsMenu: itemsMenuDB })
+    }
+
     changePermissions(key, access) {
-        console.log(key, access)
         let itemsMenuDB = { ...this.state.itemsMenu }
         itemsMenuDB[key].permissions = access
         this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() })
@@ -214,6 +237,24 @@ class menuLanding extends Component {
                                 </div>
                             )
                         })}
+                </Row>
+                <Row>
+                    <div style={{ marginTop: "4%" }}>
+                        {this.state.menu["informativeSection"].checked === true && (
+                            <>
+                                <label>Información para insercion en Seccion</label>
+                                <ReactQuill value={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(content) => { this.changeMarkup("informativeSection", content) }} />
+                            </>
+                        )}
+                    </div>
+                    <div style={{ marginTop: "4%" }}>
+                        {this.state.menu["informativeSection1"].checked === true && (
+                            <>
+                                <label>Información para insercion en segunda Seccion</label>
+                                <ReactQuill value={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(content) => { this.changeMarkup("informativeSection1", content) }} />
+                            </>
+                        )}
+                    </div>
                 </Row>
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>

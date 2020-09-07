@@ -44,7 +44,8 @@ import { toast } from "react-toastify";
 import { handleRequestError } from "../../helpers/utils";
 import Robapagina from "../shared/Animate_Img/index";
 import Trophies from "./trophies";
-import TermsAndConditions from "./termsAndConditions"
+import InformativeSection from "./informativeSections/informativeSection"
+import InformativeSection2 from "./informativeSections/informativeSection2"
 
 const { Title } = Typography;
 
@@ -248,7 +249,8 @@ class Landing extends Component {
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event}/>,
-      termsAndConditions: <TermsAndConditions event={event} />,
+      informativeSection: <InformativeSection event={event} />,
+      informativeSection1: <InformativeSection2 event={event} />,
       evento: (
 
         <Row justify="center" >
