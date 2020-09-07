@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from "react"
-import * as iconComponents from "@ant-design/icons";
 import { Typography, Select, Checkbox, Card, Input, Button, Col, Row } from "antd";
 import { Actions } from "../../helpers/request";
 import { toast } from "react-toastify";
-import { now } from "moment";
 const { Title } = Typography;
 const { Option } = Select;
 const { Meta } = Card;
@@ -82,7 +80,7 @@ class menuLanding extends Component {
                     icon: "LaptopOutlined",
                     checked: false,
                     permissions: "public"
-                },                
+                },
                 my_section: {
                     name: "Seccion Personalizada",
                     section: "my_section",
@@ -96,13 +94,29 @@ class menuLanding extends Component {
                     icon: "ApartmentOutlined",
                     checked: false,
                     permissions: "public"
-                },interviews: {
+                },
+                interviews: {
                     name: "Vende / Mi agenda",
                     section: "interviews",
                     icon: "UserOutlined",
                     checked: false,
                     permissions: "public"
+                },
+                trophies: {
+                    name: "Trofeos",
+                    section: "trophies",
+                    icon: "TrophyOutlined",                    
+                    checked: false,
+                    permissions: "public"
+                },
+                termsAndComditions:{
+                    name: "Terminos y condiciones",
+                    section: "termsAndConditions",
+                    icon: "FileDoneOutlined",
+                    checked: false,
+                    permissions: "public"
                 }
+
             },
             values: {},
             itemsMenu: {},
