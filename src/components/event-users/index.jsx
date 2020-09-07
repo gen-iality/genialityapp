@@ -203,7 +203,8 @@ class ListEventUser extends Component {
           let totalCheckedIn = updatedAttendees.reduce((acc, item) => acc + (item.checkedin_at ? 1 : 0), 0);
 
           let totalCheckedInWithWeight = Math.round(updatedAttendees.reduce((acc, item) => acc + ((item.checkedin_at) ? parseFloat((item.pesovoto ? item.pesovoto : 1)) : 0), 0) * 100) / 100;
-          this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight })          
+          this.setState({ totalCheckedIn: totalCheckedIn, totalCheckedInWithWeight: totalCheckedInWithWeight })
+          console.log("updatedAttendees", updatedAttendees);
           for (let i = 0; i < updatedAttendees.length; i++) {
             if (updatedAttendees[i].payment) {              
               updatedAttendees[i].payment = 
@@ -211,9 +212,10 @@ class ListEventUser extends Component {
               " Fecha de transaccion: " + updatedAttendees[i].payment.date + 
               " Referencia PayU: " + updatedAttendees[i].payment.payuReference + 
               " Transaccion #: " + updatedAttendees[i].payment.transactionID
+            }else{
+              updatedAttendees[i].payment = "No se ha registrado el pago"
             }
-          }
-          console.log("updatedAttendees", updatedAttendees);
+          }          
           this.setState({ users: updatedAttendees, usersReq: updatedAttendees, auxArr: updatedAttendees, loading: false })
         },
         (error) => {

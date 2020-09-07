@@ -143,12 +143,12 @@ class Agenda extends Component {
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
-    const { data } = await AgendaApi.byEvent(this.props.eventId);
+    const { data } = await AgendaApi.byEvent(this.props.eventId);    
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
-    const filtered = this.filterByDay(this.state.days[0], this.state.list);
+    const filtered = this.filterByDay(this.state.days[0], data);
     this.listeningStateMeetingRoom(data);
 
     this.setState({ data, filtered, toShow: filtered, spaces: space });
@@ -159,7 +159,7 @@ class Agenda extends Component {
     this.setState({ toShow: this.state.listDay, nameSpace: "inicio" });
   }
 
-  filterByDay = (day, agenda) => {
+  filterByDay = (day, agenda) => {    
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -192,7 +192,7 @@ class Agenda extends Component {
 
   //Fn para manejar cuando se selecciona un dia, ejecuta el filtrado
   selectDay = (day) => {
-    const filtered = this.filterByDay(day, this.state.list);
+    const filtered = this.filterByDay(day, this.state.data);
     this.setState({ filtered, toShow: filtered, day });
   };
 
@@ -425,9 +425,9 @@ class Agenda extends Component {
                           </p>
                           <Col align="bottom" className="text-align-card">
                             <div>
-                              {/* <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
+                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                 Detalle del Evento
-                              </Button> */}
+                              </Button>
                               {
                                 showButtonDocuments && (
                                   <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
