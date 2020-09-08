@@ -43,6 +43,7 @@ class documentsDetail extends Component {
 
         try {
           documents = await getFiles(this.props.eventId);
+          console.log(documents)
 
           //Se itera para poder pasar un array al componente List de ant
           for (const document in documents) {

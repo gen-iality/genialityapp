@@ -7,8 +7,7 @@ import { Actions } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import { toast } from "react-toastify";
 import UserRegistration from "../events/userRegistration";
-import Event from "../event-users/index";
-import Item from "antd/lib/list/Item";
+
 
 class TicketsForm extends Component {
   constructor(props) {

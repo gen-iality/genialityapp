@@ -141,6 +141,14 @@ iframe {
   position: relative;
   width: 67px;
   }
+
+.countryCity-styles {
+    border-color: #d9d9d9;
+    background-color: white;
+    padding: 1%;
+    color: gray;
+    width: 100%;
+  }
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
