@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from "react";
 import { Card } from 'antd';
+import Parser from 'html-react-parser';
 
 class InformativeSection extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            markup: '',
             informativeSection: [],            
         }
     }
@@ -12,17 +14,18 @@ class InformativeSection extends Component {
     componentDidMount() {
         this.setState({
             informativeSection: this.props.event.itemsMenu.informativeSection,
+            markup: this.props.event.itemsMenu.informativeSection.markup,
         })       
     }
     render() {
-        const { informativeSection } = this.state
+        const { markup, informativeSection } = this.state
         return (
             <Fragment>
                 {
                     informativeSection && (
                         <div className="site-card-border-less-wrapper">
                             <Card title={informativeSection.name} bordered={false} style={{ width: 1000 }}>
-                                <div dangerouslySetInnerHTML={{ __html: informativeSection.markup }} />
+                                {Parser(markup)}
                             </Card>
                         </div>
                     )
