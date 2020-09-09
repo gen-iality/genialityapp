@@ -54,13 +54,6 @@ const drawerButton = {
   fontSize: "10px",
 };
 
-// const IconText = ({ icon, text }) => (
-//   <span>
-//     {React.createElement(icon, { style: { marginRight: 8 } })}
-//     {text}
-//   </span>
-// );
-
 const imageCenter = {
   maxWidth: "100%",
   minWidth: "66.6667%",
@@ -105,22 +98,7 @@ class Landing extends Component {
     this.setState({
       headerVisible: false,
     });
-  };
-
-  /*componentDidUpdate(prevProps) {
-        if (this.props.location === prevProps.location) {
-            window.scrollTo(0, 0)
-        }
-    }*/
-
-    switchSection(){
-      if(this.state.event._id === "5f0622f01ce76d5550058c32" && !this.state.user){
-        return this.state.sections['tickets'] 
-      }
-
-      return this.state.sections[this.state.section]
-          
-    }
+  };  
 
   showDrawer = () => {
     this.setState({
@@ -168,9 +146,6 @@ class Landing extends Component {
     let eventUser = null;
     let eventUsers = null;
 
-    const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-    searchParams = new URLSearchParams(queryParamsString),
-    status = searchParams.get("status");
     const id = this.props.match.params.event;
     
     try {
@@ -178,7 +153,9 @@ class Landing extends Component {
       if (resp.status !== 200 && resp.status !== 202) return;
       user = resp.data;
       this.setState({user: resp.data})
-    } catch { }
+    } catch(err){
+      console.error(err)
+     }
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
@@ -320,6 +297,10 @@ controls
     });
   }
 
+  setSection(section){
+    this.setState({ section })
+  }
+
   firebaseUI = () => {
     //FIREBSAE UI
     const firebaseui = global.firebaseui;
@@ -430,8 +411,6 @@ controls
 
     //Esta instrucción activa la conferencia interna en EVIUS
     this.setState({ toggleConferenceZoom: state });
-
-
   };
 
   showLanding() {
@@ -449,6 +428,7 @@ controls
       currentUser,
       loader_page
     } = this.state;
+    
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
         {this.state.showConfirm && (
@@ -565,7 +545,12 @@ controls
                               width={250}>
                               <div className="items-menu_Landing ">
                                 {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                                <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                                <MenuEvent 
+                                  itemsMenu={this.state.event.itemsMenu} 
+                                  user={currentUser} eventId={event._id} 
+                                  showSection={this.showSection} 
+                                  collapsed={this.state.collapsed} 
+                                />
                               </div>
                             </Sider>
                           </div>
@@ -611,8 +596,10 @@ controls
                               {/* Contenedor donde se mapea la información de cada seccion */}
 
                               <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                                {this.switchSection()}
-                                {/* {this.state.sections[this.state.section]} */}
+                                {this.state.sections[this.state.section]}
+                                
+                            
+                                
                               </div>
                             </Content>
                           </Layout>
