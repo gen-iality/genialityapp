@@ -1,12 +1,10 @@
 //Esto me preocupa diana que hubieramos agregado estos breakpoints toca quitarlos
-$breakpoint-mobile: 768px;
-$breakpoint-tablet: 1024px;
+
 .container_imgLoading {
   img {
     margin-top: -55px;
-    height: 100%;
-    width: 100%;
-    margin-bottom: -69px;
+    height: 100vh;
+    width: 100vw;
     animation-name: animacionImagenes;
     animation-duration: 3s;
     animation-delay: 1s;
@@ -46,7 +44,13 @@ $breakpoint-tablet: 1024px;
     display: inline-block;
     font-size: 150px;
   }
-  @media only screen and (max-width: $breakpoint-mobile) {
+  @media only screen and (max-width:768px) {
+    img {
+      margin-top: 0px;
+      height: 45vh;
+      width: 100vw;
+      margin-bottom: 0px;
+    }
     .ant-btn {
       position: absolute;
       top: -79px;
@@ -67,7 +71,7 @@ $breakpoint-tablet: 1024px;
       font-size: 50px;
     }
   }
-   @media only (min-width: 800px) and (max-width: $breakpoint-tablet) {
+   @media (min-width: 800px) and (max-width:1024px) {
     .ant-btn {
       position: absolute;
       top: -79px;
@@ -89,3 +93,4 @@ $breakpoint-tablet: 1024px;
     }
   }
 }
+

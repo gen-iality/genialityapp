@@ -236,7 +236,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                     <span style={{ color: "red" }}>* </span>
                   )
                 }
-                {label}
+                <strong>{label}</strong>
               </span>
             ) : (
                 ""
@@ -252,7 +252,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}><strong>{label}</strong></p>
             <Divider />
           </React.Fragment>
         );
@@ -264,7 +264,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             {mandatory ? (
               <span>
                 <span style={{ color: "red" }}>* </span>
-                {label}
+                <strong>{label}</strong>
               </span>
             ) : (
                 label
