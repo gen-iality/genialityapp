@@ -117,9 +117,9 @@ class Landing extends Component {
       if(this.state.event._id === "5f0622f01ce76d5550058c32" && !this.state.user){
         return this.state.sections['tickets'] 
       }
-      else{
-        return this.state.sections['evento']
-      }      
+
+      return this.state.sections[this.state.section]
+          
     }
 
   showDrawer = () => {
@@ -612,6 +612,7 @@ controls
 
                               <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
                                 {this.switchSection()}
+                                {/* {this.state.sections[this.state.section]} */}
                               </div>
                             </Content>
                           </Layout>
