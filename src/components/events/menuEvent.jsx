@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import WithLoading from "./../shared/withLoading";
-import { Link, withRouter } from "react-router-dom";
-import { Layout, Menu,Spin, Result,Card  } from "antd";
-import { firestore } from "../../helpers/firebase";
+import { Menu,Spin } from "antd";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
 import { Actions } from "../../helpers/request";
 import { Component } from "react";
-import * as Cookie from "js-cookie";
-import API, { UsersApi } from "../../helpers/request";
-import { AntCloudOutlined } from "@ant-design/icons";
-
-const { Sider } = Layout;
 
 const stylesMenuItems = {
   height: "100%",
