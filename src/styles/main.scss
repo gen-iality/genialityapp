@@ -150,6 +150,14 @@ iframe {
     width: 100%;
     border-radius: 3px;
   }
+// personalizacion de registro //
+  .ant-form-item-label{
+    font-weight: 700;
+  }
+  .ant-card-head-title{
+    font-weight: 700;
+  }
+
 @import "~bulma/bulma";
 @import "~react-widgets/lib/scss/react-widgets";
 @import "~bulma-extensions/bulma-switch/src/sass/index";
