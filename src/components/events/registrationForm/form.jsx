@@ -91,8 +91,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       try {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
         console.log("resp:", resp);
-    //     // textMessage.content = "Transferencia Realizada";
-    //     textMessage.content = formMessage.successMessage;
+        // textMessage.content = "Transferencia Realizada";
+        textMessage.content = formMessage.successMessage;
         setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
         setSubmittedForm(true);
@@ -113,7 +113,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         if (resp.message === "OK") {
           console.log("RESP", resp);
           setSuccessMessageInRegisterForm(resp.status);
-         // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
           textMessage.content = "Usuario " + formMessage.successMessage;
 
@@ -359,7 +359,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={["0"]}>
-                  <Panel header="Politica de privacidad, terminos y condiciones" key="1">
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
