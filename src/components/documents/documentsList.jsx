@@ -55,7 +55,7 @@ class documentsList extends Component {
     }
 
     removeLoader = () => {
-      this.setState({ loading: false })
+        this.setState({ loading: false })
     }
 
     componentDidMount() {
@@ -67,12 +67,16 @@ class documentsList extends Component {
         const documentDates = []
         for (let i = 0; i < data.length; i++) {
             if (data[i].activity_id) {
-                const agenda = await AgendaApi.getOne(data[i].activity_id, data[i].event_id)
-                documentDates.push({
-                    activity: agenda.name,
-                    document: data[i].title ? data[i].title : data[i].name,
-                    file: data[i].file
-                })
+                try {
+                    const agenda = await AgendaApi.getOne(data[i].activity_id, data[i].event_id)
+                    documentDates.push({
+                        activity: agenda.name,
+                        document: data[i].title ? data[i].title : data[i].name,
+                        file: data[i].file
+                    })
+                } catch (e) {
+                    console.log(e)
+                }
             }
         }
         this.setState({ documentDates }, this.removeLoader)

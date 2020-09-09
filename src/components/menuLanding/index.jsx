@@ -242,16 +242,18 @@ class menuLanding extends Component {
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection"].checked === true && (
                             <>
-                                <label>Información para insercion en Seccion</label>
-                                <ReactQuill value={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(content) => { this.changeMarkup("informativeSection", content) }} />
+                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
+                                <br></br>
+                                <textarea type="textbox" defaultValue={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection", e.target.value) }} />
                             </>
                         )}
                     </div>
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection1"].checked === true && (
                             <>
-                                <label>Información para insercion en segunda Seccion</label>
-                                <ReactQuill value={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(content) => { this.changeMarkup("informativeSection1", content) }} />
+                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
+                                <br/>
+                                <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
                             </>
                         )}
                     </div>
