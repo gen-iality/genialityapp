@@ -58,7 +58,7 @@ class TicketsForm extends Component {
 
     const id = stage ? stage.stage_id : ""; //Condición para traer el _id de stage. Se usa para prevenir que los datos del api vengan malos
     const ticketstoshow = tickets.filter((ticket) => ticket.stage_id == id); //Filtrar los tiquetes del stage activo
-    console.log("DEBUG", "ticketstoshow", tickets[0]);
+    
     //"5e835d9fd74d5c6cfd379992"
     //Persistencia de tiquetes seleccionados después de login
     let info = localStorage.getItem("info"); //Se trae info
@@ -205,7 +205,7 @@ class TicketsForm extends Component {
     try {
       data.code_discount = this.state.code_discount;
       const resp = await Actions.post(`/es/e/${this.props.eventId}/checkout`, data);
-      console.log(resp);
+      
       if (resp.status === "success") {
         //Si la peteción es correcta redirijo a la url que enviaron
         window.location.replace(resp.redirectUrl);
@@ -216,7 +216,7 @@ class TicketsForm extends Component {
       }
     } catch (err) {
       toast.error(JSON.stringify(err));
-      console.log(err);
+      console.error(err);
       this.setState({ loading: false });
     }
   }

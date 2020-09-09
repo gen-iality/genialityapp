@@ -115,7 +115,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         {/* Lugar del evento */}
                         <div>
                             {
-                                console.log(type_event),
+                                
                                 type_event === "onlineEvent" ?
                                     <div>
                                         <span><LaptopOutlined style={{ marginRight: "2%" }} />Virtual</span>

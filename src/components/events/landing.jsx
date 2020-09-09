@@ -6,16 +6,14 @@ import momentLocalizer from "react-widgets-moment";
 import firebase from "firebase";
 import app from "firebase/app";
 import ReactPlayer from "react-player";
-import { Layout, Menu, Affix, Drawer, Button, Col, Card, Row } from "antd";
+import { Layout, Drawer, Button, Col, Row } from "antd";
 import { MenuOutlined, RightOutlined, LeftOutlined } from "@ant-design/icons";
-import { List, Avatar, Typography } from "antd";
-import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons";
+
 //custom
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi, fireStoreApi } from "../../helpers/request";
+import API, { Actions, EventsApi, TicketsApi, fireStoreApi } from "../../helpers/request";
 import * as Cookie from "js-cookie";
 import Loading from "../loaders/loading";
 import { BaseUrl } from "../../helpers/constants";
-import Slider from "../shared/sliderImage";
 import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
@@ -27,7 +25,6 @@ import DocumentsForm from "../documents/front/documentsLanding";
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
 import MyAgendaIndepend from "../networking/myAgendaIndepend"
-import MyAgenda from "../my-agenda/index";
 import MySection from "./newSection/index"
 import Companies from "./companies/index";
 import WallForm from "../wall/index";
@@ -35,11 +32,8 @@ import ZoomComponent from "./zoomComponent";
 import MenuEvent from "./menuEvent";
 import BannerEvent from "./bannerEvent";
 import VirtualConference from "./virtualConference";
-import SurveyNotification from "./surveyNotification";
 import MapComponent from "./mapComponet"
 import EventLanding from "./eventLanding";
-import { firestore } from "../../helpers/firebase";
-import { FaWheelchair } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { handleRequestError } from "../../helpers/utils";
 import Robapagina from "../shared/Animate_Img/index";
@@ -47,10 +41,7 @@ import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
 
-const { Title } = Typography;
-
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 Moment.locale("es");
 momentLocalizer();
@@ -63,12 +54,13 @@ const drawerButton = {
   fontSize: "10px",
 };
 
-const IconText = ({ icon, text }) => (
-  <span>
-    {React.createElement(icon, { style: { marginRight: 8 } })}
-    {text}
-  </span>
-);
+// const IconText = ({ icon, text }) => (
+//   <span>
+//     {React.createElement(icon, { style: { marginRight: 8 } })}
+//     {text}
+//   </span>
+// );
+
 const imageCenter = {
   maxWidth: "100%",
   minWidth: "66.6667%",
@@ -85,7 +77,7 @@ class Landing extends Component {
       modal: false,
       editorState: "",
       sections: {},
-      section: "evento",
+      section: 'evento',
       toggleConferenceZoom: false,
       meeting_id: null,
       color: "",
@@ -97,7 +89,8 @@ class Landing extends Component {
       data: null,
       user: null,
       loader_page: false,
-      show_banner_footer: false
+      show_banner_footer: false, 
+      event: null
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -119,6 +112,15 @@ class Landing extends Component {
             window.scrollTo(0, 0)
         }
     }*/
+
+    switchSection(){
+      if(this.state.event._id === "5f0622f01ce76d5550058c32" && !this.state.user){
+        return this.state.sections['tickets'] 
+      }
+      else{
+        return this.state.sections['evento']
+      }      
+    }
 
   showDrawer = () => {
     this.setState({
@@ -159,40 +161,38 @@ class Landing extends Component {
     head.append(styleElement);
     /* Fin Carga */
   }
-
+  
   async componentDidMount() {
+
     let user = null;
     let eventUser = null;
     let eventUsers = null;
 
     const queryParamsString = this.props.location.search.substring(1), // remove the "?" at the start
-      searchParams = new URLSearchParams(queryParamsString),
-      status = searchParams.get("status");
+    searchParams = new URLSearchParams(queryParamsString),
+    status = searchParams.get("status");
     const id = this.props.match.params.event;
-    console.log(id);
-
-
+    
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
-      console.log("respuesta status", resp.status !== 202);
       if (resp.status !== 200 && resp.status !== 202) return;
       user = resp.data;
+      this.setState({user: resp.data})
     } catch { }
 
-
+    /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-    console.log('informacion del evento', event )
     this.loadDynamicEventStyles(id);
 
     if (event && user) {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
-
-      console.log("checkin eventUser interno", eventUser, event._id, user._id);
     }
-
-
+    
+    if (event._id  === '5f0622f01ce76d5550058c32' && !user){
+      this.setState({section: 'tickets'})
+    }
 
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
@@ -204,9 +204,7 @@ class Landing extends Component {
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
-
-
-
+    
     this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
 
     const sections = {
@@ -246,13 +244,13 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
-      companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
+      companies: <Companies event={event} eventId={event._id} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event}/>,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
       evento: (
-
+        
         <Row justify="center" >
           <Col sm={24} md={16} lg={18} xl={18}>
             {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
@@ -269,7 +267,7 @@ class Landing extends Component {
                   url={event.video}
                   //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                   controls
-                />
+                  />
                 <div className="the-lobby-video-column">
                   <div className="the-lobby-video">
                     <div className="the-lobby-video-wrap-holder">
@@ -284,10 +282,10 @@ class Landing extends Component {
                       <div className="the-lobby-video-container">
                         <ReactPlayer
 
-                          url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
-                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                          controls
-                        />
+url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+//url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+controls
+/>
                       </div>
                     </div>
                   </div>
@@ -296,9 +294,9 @@ class Landing extends Component {
                   }
                   {/*
               <Button onClick={this.showSection('companies')} className="the-lobby-exhibitors-btn">
-                <img src="/lobby/BOTON_STANDS.png" alt=""/>
+              <img src="/lobby/BOTON_STANDS.png" alt=""/>
               </Button>
-              */}
+            */}
                 </div>
               </>
             }
@@ -309,7 +307,7 @@ class Landing extends Component {
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
-            />
+              />
             <MapComponent event={event} />
           </Col>
         </Row>
@@ -336,7 +334,7 @@ class Landing extends Component {
       signInOptions: [app.auth.EmailAuthProvider.PROVIDER_ID],
       //Allow redirect
       callbacks: {
-        signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+        signInSuccessWithAuthResult: (authResult) => {
           const user = authResult.user;
           this.closeLogin(user);
           return false;
@@ -390,8 +388,8 @@ class Landing extends Component {
   showSection = (section) => {
     this.setState({ section });
     this.setState({ visible: false });
-    console.log(this.state.section);
   };
+
   addUser = (activity) => {
     let activity_id = activity._id
     let eventUser = this.state.eventUser
@@ -411,8 +409,6 @@ class Landing extends Component {
 
   toggleConference = async (state, meeting_id, activity) => {
 
-
-    console.log("checkin", state, meeting_id, this.state.eventUser);
     if (meeting_id != undefined) {
       this.setState({ meeting_id });
     }
@@ -421,8 +417,6 @@ class Landing extends Component {
     if (activity != undefined) {
       this.setState({ activity });
     }
-
-
 
     if (this.state.eventUser) {
       //this.state.eventUser.forEach((eventUser) => {
@@ -439,8 +433,8 @@ class Landing extends Component {
 
 
   };
+
   showLanding() {
-    console.log("entra")
     this.setState({ loader_page: false })
   }
 
@@ -450,13 +444,10 @@ class Landing extends Component {
       activity,
       modal,
       modalTicket,
-      section,
-      sections,
       toggleConferenceZoom,
       meeting_id,
       currentUser,
-      loader_page,
-      show_banner_footer
+      loader_page
     } = this.state;
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
@@ -464,7 +455,7 @@ class Landing extends Component {
           <div className="notification is-success">
             <button
               className="delete"
-              onClick={(e) => {
+              onClick={() => {
                 this.setState({ showConfirm: false });
               }}
             />
@@ -620,7 +611,7 @@ class Landing extends Component {
                               {/* Contenedor donde se mapea la información de cada seccion */}
 
                               <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                                {sections[section]}
+                                {this.switchSection()}
                               </div>
                             </Content>
                           </Layout>
@@ -637,7 +628,7 @@ class Landing extends Component {
                 <button
                   className="modal-close is-large"
                   aria-label="close"
-                  onClick={(e) => {
+                  onClick={() => {
                     this.closeLogin();
                   }}
                 />
