@@ -15,6 +15,7 @@ class menuLanding extends Component {
             menu: {
                 evento: {
                     name: "Evento",
+                    position: "1",
                     section: "evento",
                     icon: "CalendarOutlined",
                     checked: false,
@@ -22,6 +23,7 @@ class menuLanding extends Component {
                 },
                 agenda: {
                     name: "Agenda",
+                    position: "2",
                     section: "agenda",
                     icon: "ReadOutlined",
                     checked: false,
@@ -29,6 +31,7 @@ class menuLanding extends Component {
                 },
                 speakers: {
                     name: "Conferencistas",
+                    position: "3",
                     section: "speakers",
                     icon: "AudioOutlined",
                     checked: false,
@@ -36,6 +39,7 @@ class menuLanding extends Component {
                 },
                 tickets: {
                     name: "Boletería",
+                    position: "4",
                     section: "tickets",
                     icon: "CreditCardOutlined",
                     checked: false,
@@ -43,6 +47,7 @@ class menuLanding extends Component {
                 },
                 certs: {
                     name: "Certificados",
+                    position: "5",
                     section: "certs",
                     icon: "FileDoneOutlined",
                     checked: false,
@@ -50,6 +55,7 @@ class menuLanding extends Component {
                 },
                 documents: {
                     name: "Documentos",
+                    position: "6",
                     section: "documents",
                     icon: "FolderOutlined",
                     checked: false,
@@ -57,6 +63,7 @@ class menuLanding extends Component {
                 },
                 wall: {
                     name: "Muro",
+                    position: "7",
                     section: "wall",
                     icon: "TeamOutlined",
                     checked: false,
@@ -64,6 +71,7 @@ class menuLanding extends Component {
                 },
                 survey: {
                     name: "Encuestas",
+                    position: "8",
                     section: "survey",
                     icon: "FileUnknownOutlined",
                     checked: false,
@@ -71,6 +79,7 @@ class menuLanding extends Component {
                 },
                 faqs: {
                     name: "Preguntas Frecuentes",
+                    position: "9",
                     section: "faqs",
                     icon: "QuestionOutlined",
                     checked: false,
@@ -78,6 +87,7 @@ class menuLanding extends Component {
                 },
                 networking: {
                     name: "Networking",
+                    position: "10",
                     section: "networking",
                     icon: "LaptopOutlined",
                     checked: false,
@@ -85,6 +95,7 @@ class menuLanding extends Component {
                 },
                 my_section: {
                     name: "Seccion Personalizada",
+                    position: "11",
                     section: "my_section",
                     icon: "EnterOutlined",
                     checked: false,
@@ -92,6 +103,7 @@ class menuLanding extends Component {
                 },
                 companies: {
                     name: "Empresas",
+                    position: "12",
                     section: "companies",
                     icon: "ApartmentOutlined",
                     checked: false,
@@ -99,6 +111,7 @@ class menuLanding extends Component {
                 },
                 interviews: {
                     name: "Vende / Mi agenda",
+                    position: "13",
                     section: "interviews",
                     icon: "UserOutlined",
                     checked: false,
@@ -106,6 +119,7 @@ class menuLanding extends Component {
                 },
                 trophies: {
                     name: "Trofeos",
+                    position: "14",
                     section: "trophies",
                     icon: "TrophyOutlined",
                     checked: false,
@@ -113,6 +127,7 @@ class menuLanding extends Component {
                 },
                 informativeSection: {
                     name: "Seccion Informativa",
+                    position: "15",
                     section: "informativeSection",
                     icon: "FileDoneOutlined",
                     markup: "",
@@ -121,6 +136,7 @@ class menuLanding extends Component {
                 },
                 informativeSection1: {
                     name: "Seccion Informativa Segunda",
+                    position: "16",
                     section: "informativeSection1",
                     icon: "FileDoneOutlined",
                     markup: "",
@@ -155,10 +171,10 @@ class menuLanding extends Component {
     }
 
     async submit() {
-        const itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }
-        const data = await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
-        toast.success("Información guardada")
-        console.log(data)
+        let itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }        
+        
+        // await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
+        // toast.success("Información guardada")        
     }
 
     async mapActiveItemsToAvailable(key) {
@@ -199,6 +215,13 @@ class menuLanding extends Component {
         itemsMenuDB[key].permissions = access
         this.setState({ itemsMenu: itemsMenuDB, keySelect: Date.now() })
     }
+
+    orderPosition(key, order) {
+        let itemsMenuToOrder = { ...this.state.menu }
+        itemsMenuToOrder[key].position = order
+
+        this.setState({ itemsMenu: itemsMenuToOrder, keySelect: Date.now() })
+    }
     render() {
         return (
             <Fragment>
@@ -232,6 +255,10 @@ class menuLanding extends Component {
                                                     <Option value="assistants">Usuarios inscritos al evento</Option>
                                                 </Select>
                                             </div>
+                                            <div>
+                                                <label>Posición en el menú</label>
+                                                <Input type="number" disabled={this.state.menu[key].checked === true ? false : true} defaultValue={this.state.menu[key].permissions} onChange={(e) => this.orderPosition(key, e.target.value)} />
+                                            </div>
                                         </Card>
                                     </Col>
                                 </div>
@@ -252,7 +279,7 @@ class menuLanding extends Component {
                         {this.state.menu["informativeSection1"].checked === true && (
                             <>
                                 <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br/>
+                                <br />
                                 <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
                             </>
                         )}

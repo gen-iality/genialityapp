@@ -87,65 +87,65 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     let textMessage = {};
     textMessage.key = key;
 
-    // if (eventUserId) {
-    //   try {
-    //     let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
-    //     console.log("resp:", resp);
-    //     // textMessage.content = "Transferencia Realizada";
-    //     textMessage.content = formMessage.successMessage;
-    //     setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
+    if (eventUserId) {
+      try {
+        let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
+        console.log("resp:", resp);
+        // textMessage.content = "Transferencia Realizada";
+        textMessage.content = formMessage.successMessage;
+        setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
 
-    //     setSubmittedForm(true);
-    //     message.success(textMessage);
-    //     setTimeout(() => {
-    //       closeModal({ status: "sent_transfer", message: "Transferencia Hecha" });
-    //     }, 4000);
-    //   } catch (err) {
-    //     console.log("Se presento un problema", err);
-    //     // textMessage.content = "Error... Intentalo mas tarde";
-    //     textMessage.content = formMessage.errorMessage;
-    //     message.error(textMessage);
-    //   }
-    // } else {
-    //   try {
-    //     let resp = await UsersApi.createOne(snap, eventId);
+        setSubmittedForm(true);
+        message.success(textMessage);
+        setTimeout(() => {
+          closeModal({ status: "sent_transfer", message: "Transferencia Hecha" });
+        }, 4000);
+      } catch (err) {
+        console.log("Se presento un problema", err);
+        // textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.content = formMessage.errorMessage;
+        message.error(textMessage);
+      }
+    } else {
+      try {
+        let resp = await UsersApi.createOne(snap, eventId);
 
-    //     if (resp.message === "OK") {
-    //       console.log("RESP", resp);
-    //       setSuccessMessageInRegisterForm(resp.status);
-    //       // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
-    //       // textMessage.content = "Usuario " + statusMessage;
-    //       textMessage.content = "Usuario " + formMessage.successMessage;
+        if (resp.message === "OK") {
+          console.log("RESP", resp);
+          setSuccessMessageInRegisterForm(resp.status);
+          // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+          // textMessage.content = "Usuario " + statusMessage;
+          textMessage.content = "Usuario " + formMessage.successMessage;
 
-    //       setSuccessMessage(
-    //         Object.entries(initialValues).length > 0
-    //           ? `Fuiste registrado al evento exitosamente`
-    //           : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
-    //       );
+          setSuccessMessage(
+            Object.entries(initialValues).length > 0
+              ? `Fuiste registrado al evento exitosamente`
+              : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
+          );
 
-    //       setSubmittedForm(true);
-    //       message.success(textMessage);
-    //       //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
-    //       if (resp.data.user.initial_token) {
-    //         setTimeout(function () {
-    //           window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
-    //         }, 2000);
-    //       }
+          setSubmittedForm(true);
+          message.success(textMessage);
+          //Si validateEmail es verdadera redirigirá a la landing con el usuario ya logueado, esta quemado el token por pruebas
+          if (resp.data.user.initial_token) {
+            setTimeout(function () {
+              window.location.replace(`/landing/${eventId}?token=${resp.data.user.initial_token}`);
+            }, 2000);
+          }
 
-    //     } else {
-    //       textMessage.content = resp;
-    //       // Retorna un mensaje en caso de que ya se encuentre registrado el correo
-    //       setNotLoggedAndRegister(true);
-    //       message.success(textMessage);
-    //     }
-    //   } catch (err) {
-    //     // textMessage.content = "Error... Intentalo mas tarde";
-    //     textMessage.content = formMessage.errorMessage;
+        } else {
+          textMessage.content = resp;
+          // Retorna un mensaje en caso de que ya se encuentre registrado el correo
+          setNotLoggedAndRegister(true);
+          message.success(textMessage);
+        }
+      } catch (err) {
+        // textMessage.content = "Error... Intentalo mas tarde";
+        textMessage.content = formMessage.errorMessage;
 
-    //     textMessage.key = key;
-    //     message.error(textMessage);
-    //   }
-    // }
+        textMessage.key = key;
+        message.error(textMessage);
+      }
+    }
   };
 
   const fieldsChange = (changedField) => {
@@ -359,7 +359,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={["0"]}>
-                  <Panel header="Politica de privacidad, terminos y condiciones" key="1">
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
