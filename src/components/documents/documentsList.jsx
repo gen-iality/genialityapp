@@ -124,7 +124,7 @@ class documentsList extends Component {
                                             // </a>
                                         ]}
                                     >
-                                            <List.Item.Meta title={item.title ? item.title : item.name} /> 
+                                            <List.Item.Meta style={{marginRight:"10%"}} title={item.title ? item.title : item.name} /> 
                                         
                                     </List.Item>
                                 )}
