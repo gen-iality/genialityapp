@@ -1,5 +1,5 @@
-$accordion-content-padding-top: 1em !default
-$accordion-content-padding-left: 1.25em !default
+$accordion-content-padding-top: 1em !default;
+$accordion-content-padding-left: 1.25em !default;
 
 .accordions{
   .accordion{
@@ -93,8 +93,4 @@ $accordion-content-padding-left: 1.25em !default
   }
 }
 
-.collapse_question{
- .ant-collapse-header{
-  background-color:#d8c9a7;
- } 
-}
+
