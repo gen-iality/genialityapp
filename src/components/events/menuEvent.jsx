@@ -4,7 +4,6 @@ import { Menu,Spin } from "antd";
 
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
-import { Actions } from "../../helpers/request";
 import { Component } from "react";
 
 const stylesMenuItems = {
@@ -18,168 +17,152 @@ class MenuEvent extends Component {
     super( props );
     this.state = {
       loading:false,
-      itemsMenu: {},
+      itemsMenu: this.props.itemsMenu ? this.props.itemsMenu : this.menuDefault,
       user: null,
       showSection: this.props.showSection,
       logged: false,
       email: false,
-      menuDefault: {
-        evento: {
-          name: "Evento",
-          section: "evento",
-          icon: "CalendarOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        agenda: {
-          name: "Agenda",
-          section: "agenda",
-          icon: "ReadOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        speakers: {
-          name: "Conferencistas",
-          section: "speakers",
-          icon: "AudioOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        tickets: {
-          name: "Boletería",
-          section: "tickets",
-          icon: "CreditCardOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        certs: {
-          name: "Certificados",
-          section: "certs",
-          icon: "FileDoneOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        documents: {
-          name: "Documentos",
-          section: "documents",
-          icon: "FolderOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        wall: {
-          name: "Muro",
-          section: "wall",
-          icon: "TeamOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        survey: {
-          name: "Encuestas",
-          section: "survey",
-          icon: "FileUnknownOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        faqs: {
-          name: "Preguntas Frecuentes",
-          section: "faqs",
-          icon: "QuestionOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        networking: {
-          name: "Networking",
-          section: "networking",
-          icon: "LaptopOutlined",
-          checked: false,
-          permissions: "public"
-        },        
-        my_section: {
-          name: "Seccion Personalizada",
-          section: "my_section",
-          icon: "EnterOutlined",
-          checked: false,
-          permissions: "public"
-        },
-        companies: {
-          name: "Empresas",
-          section: "companies",
-          icon: "ApartmentOutlined", // ApartmentOutlined
-          checked: false,
-          permissions: "public"
-        },
-        interviews: {
-          name: "Vende / Mi agenda",
-          section: "interviews",
-          icon: "UserOutlined",
-          checked: false,
-          permissions: "public"
-        }
-      },
+      section: 'evento'     
     }
-    this.obtainUserFirebase = this.obtainUserFirebase.bind( this )
+    this.menuDefault = {
+      evento: {
+        name: "Evento",
+        section: "evento",
+        icon: "CalendarOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      agenda: {
+        name: "Agenda",
+        section: "agenda",
+        icon: "ReadOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      speakers: {
+        name: "Conferencistas",
+        section: "speakers",
+        icon: "AudioOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      tickets: {
+        name: "Boletería",
+        section: "tickets",
+        icon: "CreditCardOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      certs: {
+        name: "Certificados",
+        section: "certs",
+        icon: "FileDoneOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      documents: {
+        name: "Documentos",
+        section: "documents",
+        icon: "FolderOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      wall: {
+        name: "Muro",
+        section: "wall",
+        icon: "TeamOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      survey: {
+        name: "Encuestas",
+        section: "survey",
+        icon: "FileUnknownOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      faqs: {
+        name: "Preguntas Frecuentes",
+        section: "faqs",
+        icon: "QuestionOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      networking: {
+        name: "Networking",
+        section: "networking",
+        icon: "LaptopOutlined",
+        checked: false,
+        permissions: "public"
+      },        
+      my_section: {
+        name: "Seccion Personalizada",
+        section: "my_section",
+        icon: "EnterOutlined",
+        checked: false,
+        permissions: "public"
+      },
+      companies: {
+        name: "Empresas",
+        section: "companies",
+        icon: "ApartmentOutlined", // ApartmentOutlined
+        checked: false,
+        permissions: "public"
+      },
+      interviews: {
+        name: "Vende / Mi agenda",
+        section: "interviews",
+        icon: "UserOutlined",
+        checked: false,
+        permissions: "public"
+      }
+    }    
   }
 
   async componentDidMount () {
-    // console.log(this.props)
-    // const event = await Actions.getAll(`/api/events/${this.props.eventId}`)
-    // const menuEvent = event.itemsMenu || {};
-    // console.log("MENU LANDING", menuEvent);
-    // this.setState({ itemsMenu: menuEvent })
     if ( this.props.user ) {
       this.setState( { user: this.props.user } )
     }
 
     this.setState({ loading:true});
-    await this.obtainUserFirebase();
-
-    this.setState({ loading:false});
-
-  }
-
-  async componentDidUpdate () {
+    
+    await this.handleInitialSection()
+    
+    this.setState({ loading:false});   
+    
+    this.state.showSection(this.state.section)
+    
+}
+  
+handleInitialSection(){
+  
+  const itemsMenu = Object.keys(this.state.itemsMenu).map((key)=>{
+    
+    if ( ( this.state.itemsMenu[ key ] && this.state.itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null; }
+    
+    return this.state.itemsMenu[ key ].section
+  })
+  
+  const initialSection = itemsMenu.filter(item => item !== null)
+  this.setState({section: initialSection[0]})    
+  
+}
+  
+  
+  async componentDidUpdate (prevProps, prevState) {
     
     if ( this.props.user && !this.state.user ) {
       this.setState( { user: this.props.user } )
     }
-  }
-  async obtainUserFirebase () {
-    //Se trae el api que contiene el menu
-    const event = await Actions.getAll( `/api/events/${ this.props.eventId }` )
-
-    //Se declara una variable para poder salvar el menu, en caso de estar vacio será un objeto vacio
-    let items = event.itemsMenu || this.state.menuDefault
-
-    this.setState( { itemsMenu: items } )
+    if(prevState.section !== this.state.section){
+      this.handleInitialSection()
+    }   
+    
+  } 
 
 
-    //Cargar por defecto la primera opcion habilitada del MENU
-    let secciones = Object.keys( items );
-    if ( secciones && secciones.length >= 0 ) {
-      let defaultSeccion = items[ secciones[ 0 ] ].section;
-      this.state.showSection( defaultSeccion )
-    }
-
-
-  }
-
-  //Funcion que carga los items publicos del menu
-  publicItems ( event ) {
-    let items = event.itemsMenu || {}
-    let itemsMenu = []
-
-    for ( const prop in items ) {
-      if ( items[ prop ].permissions === "public" ) {
-        
-        itemsMenu.push( items[ prop ] )
-        this.setState( { itemsMenu } )
-      }
-    }
-  }
-  //let collapsed = props.collapsed;
-
-  render () {
-    const { itemsMenu,loading } = this.state
+    render () {
+    const { loading } = this.state
     return (
       <Menu
         mode="inline"
@@ -187,25 +170,21 @@ class MenuEvent extends Component {
         defaultSelectedKeys={ [ "1" ] }
        // defaultOpenKeys={['sub1']}
         style={stylesMenuItems}
-        >
-        
+        >       
 
-        { loading &&(
-          <div className="columns is-centered">
-              <Spin tip="Cargando Menú..."></Spin>
-         </div>
-        )}
-
-        { Object.keys( itemsMenu ).map( ( key, i ) => {
-          if ( ( itemsMenu[ key ] && itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null }
-          let IconoComponente = iconComponents[ itemsMenu[ key ].icon ];
+        { loading &&(<div className="columns is-centered"><Spin tip="Cargando Menú..."></Spin></div>)}
+        {Object.keys(this.state.itemsMenu).map((key)=>{
+          if ( ( this.state.itemsMenu[ key ] && this.state.itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) {
+            return null; 
+          }
+          let IconoComponente = iconComponents[ this.state.itemsMenu[ key ].icon ];
           return (
-            <Menu.Item key={ itemsMenu[ key ].section } onClick={ e => this.state.showSection( itemsMenu[ key ].section ) }>
+            <Menu.Item key={ this.state.itemsMenu[ key ].section } onClick={ () => this.state.showSection( this.state.itemsMenu[ key ].section ) }>
               <IconoComponente />
-              <span> { itemsMenu[ key ].name }</span>
-            </Menu.Item>
-          );
-        } ) }
+              <span> { this.state.itemsMenu[ key ].name }</span>
+        </Menu.Item>
+      );
+    })}        
       </Menu>
     );
   }
