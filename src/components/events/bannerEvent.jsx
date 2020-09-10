@@ -30,23 +30,26 @@ function capitalizeMont(val) {
 
 
 let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event }) => {
-  
+
     return (
-        <BannerAnim prefixCls="banner-user" style={{overflow:"visible"}}>
+        <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
             <Element
                 prefixCls="banner-user-elem"
                 key="0"
-                style={{overflow:"visible"}}
+                style={{ overflow: "visible" }}
             >
                 <BgElement
                     key="bg"
                     className="bg"
-                    style={(window.innerWidth <= 780) && mobileBanner !== undefined ? { backgroundImage: `url(${mobileBanner})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                    }:{ backgroundImage: `url(${bgImage})`,backgroundSize: 'cover',
-                    backgroundPosition: 'center'}}                    
-                />               
+                    style={(window.innerWidth <= 780) && mobileBanner !== undefined ? {
+                        backgroundImage: `url(${mobileBanner})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    } : {
+                            backgroundImage: `url(${bgImage})`, backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                />
                 <div className="banner-user-text-container"
                     style={{
                         backgroundSize: 'cover',
@@ -75,8 +78,19 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                                                 <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                 :
                                                 <div>
-                                                    <span>Del {Moment(dateStart).format("DD")}</span>
-                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                    {
+                                                        (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
+                                                            <>
+                                                                <span>Del {Moment(dateStart).format("DD")}</span>
+                                                                <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                            </>
+                                                        ) : (
+                                                                <>
+                                                                    <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                                </>
+                                                            )
+                                                    }
                                                 </div>
                                         }
                                     </>
