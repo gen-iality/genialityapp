@@ -167,10 +167,6 @@ class Landing extends Component {
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
     }
     
-    if (event._id  === '5f0622f01ce76d5550058c32' && !user){
-      this.setState({section: 'tickets'})
-    }
-
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
     event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
@@ -182,7 +178,16 @@ class Landing extends Component {
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
     
-    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
+    this.setState({ 
+      event, 
+      eventUser, 
+      show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, 
+      eventUsers, data: 
+      user, 
+      currentUser: user, 
+      namesUser: namesUser, 
+      loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false 
+    })
 
     const sections = {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
@@ -590,7 +595,11 @@ controls
                                     event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
                                 }}>
                                 {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                                <MenuEvent user={currentUser} eventId={event._id} showSection={this.showSection} collapsed={this.state.collapsed} />
+                                <MenuEvent 
+                                user={currentUser} 
+                                itemsMenu={this.state.event.itemsMenu}                                  
+                                showSection={this.showSection} 
+                                collapsed={this.state.collapsed} />
                               </Drawer>
 
                               {/* Contenedor donde se mapea la información de cada seccion */}
