@@ -213,7 +213,7 @@ class Landing extends Component {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
         <>
-          {(this.state.eventUser && <div className="columns is-centered">
+          {/* {(this.state.eventUser && <div className="columns is-centered">
 
             <VirtualConference
               event={this.state.event}
@@ -222,7 +222,7 @@ class Landing extends Component {
               toggleConference={this.toggleConference}
             />
 
-          </div>)}
+          </div>)} */}
           <div className="columns is-centered">
             <TicketsForm
               stages={event.event_stages}

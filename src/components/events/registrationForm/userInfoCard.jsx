@@ -1,120 +1,391 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
+import { Redirect } from 'react-router-dom';
 
-import FormComponent from "./form";
+import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 
-import { Card, Col, Row, Spin, Typography, Button, Modal, Result } from "antd";
-const { Text, Title } = Typography;
+import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 
-export default ({ currentUser, extraFields, eventId, userTickets }) => {
-  const [infoUser, setInfoUser] = useState({});
-  const [eventUserList, setEventUserList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [visibleModal, setVisibleModal] = useState(false);
-  const [eventUserSelected, setEventUserSelected] = useState({});
-  const [initialValues, setInitialValues] = useState({});
+import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider, Select } from "antd";
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+const { Panel } = Collapse;
+const { TextArea } = Input;
+const { Option } = Select;
 
-  //   console.log("currentuser", currentUser.properties, extraFields);
-  // Se obtiene las propiedades y se asignan a un array con el valor que contenga
-  const parseObjectToArray = (info) => {
-    return new Promise(async (resolve, reject) => {
-      let userProperties = new Promise((resolve, reject) => {
-        let userProperties = [];
+const textLeft = {
+  textAlign: "left",
+};
 
-        for (const key in info) {
-          if (key != "displayName" && key != "pesovoto") {
-            let fieldLabel = "";
-            fieldLabel = extraFields.filter((item) => key == item.name);
-            fieldLabel = fieldLabel && fieldLabel.length && fieldLabel[0].label ? fieldLabel[0].label : key;
-            userProperties.push({ key: key, property: fieldLabel, value: info[key] });
-          }
-        }
-        resolve(userProperties);
-      });
+const center = {
+  margin: "0 auto",
+};
 
-      let result = await userProperties;
-      resolve(result);
-      setInfoUser(result);
-      setLoading(false);
-    });
+// Grid para formulario
+const layout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 12 },
+};
+
+const validateMessages = {
+  required: "Este campo ${label} es obligatorio para completar el registro.",
+  types: {
+    email: "${label} no válido!",
+  },
+};
+
+export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, closeModal, conditionals }) => {
+  const [user, setUser] = useState({});
+  const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
+  const [validateEmail, setValidateEmail] = useState(false);
+  const [value, setValue] = useState();
+  const [submittedForm, setSubmittedForm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
+  const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
+  const [formMessage, setFormMessage] = useState({});
+  const [country, setCountry] = useState();
+  const [region, setRegion] = useState()
+
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    let formType = !eventUserId ? "register" : "transfer";
+    setFormMessage(FormTags(formType));
+    setSubmittedForm(false);
+    hideConditionalFieldsToDefault();
+    getEventData(eventId)
+    form.resetFields();
+  }, [eventUserId, initialValues]);
+
+  const showGeneralMessage = () => {
+    setGeneralFormErrorMessageVisible(true);
+    setTimeout(() => {
+      setGeneralFormErrorMessageVisible(false);
+    }, 3000);
   };
 
-  const setEventUsers = (list) => {
-    let eventUsers = [];
-    console.log(eventUsers);
-    list.forEach(async (item, index, arr) => {
-      let result = await parseObjectToArray(item.properties);
-      eventUsers.push({ eventUserId: item._id, data: result, infoTicket: item.ticket });
+  //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
+  const getEventData = async (eventId) => {
+    const data = await EventsApi.getOne(eventId)
+    //Para evitar errores se verifica si la variable existe
+    if (data.validateEmail !== undefined) {
+      setValidateEmail(data.validateEmail)
+    }
+  }
 
-      if (index == arr.length - 1) setEventUserList(eventUsers);
-    });
-  };
+  const onFinish = async (values) => {
+    setGeneralFormErrorMessageVisible(false);
 
-  const openModal = (ticket) => {
-    setEventUserSelected(ticket);
-    setVisibleModal(true);
+    const key = "registerUserService";
 
-    let eventUserValues = {};
-    ticket.data.forEach((item) => {
-      if (item.key == "names" || item.key == "email") return;
-      eventUserValues = { ...eventUserValues, [item.key]: item.value };
-    });
-    // console.log("eventUserValues:", eventUserValues);
-    setInitialValues(eventUserValues);
-  };
+    // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
+    message.loading({ content: "Actualizando Usuario", key }, 10);
 
-  const handleCancel = (e) => {
-    setVisibleModal(false);
-    if (e && e.status === "sent_transfer") {
-      setEventUserList([]);
-      console.log("antes:", eventUserList);
-      eventUserList.splice(eventUserSelected.index, 1);
-      console.log("DESPUES:", eventUserList);
+    const snap = { properties: values };
 
-      setEventUserList(eventUserList);
+    let textMessage = {};
+    textMessage.key = key;
+
+    try {
+      let resp = await UsersApi.createOne(snap, eventId);
+
+      if (resp.message === "OK") {
+        console.log("RESP", resp);
+        setSuccessMessageInRegisterForm(resp.status);
+        // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
+        // textMessage.content = "Usuario " + statusMessage;
+        textMessage.content = "Usuario " + formMessage.successMessage;
+
+        setSuccessMessage(
+          Object.entries(initialValues).length > 0
+            ? `Actualización de datos exitosa`
+            : `Fuiste registrado al evento con el correo ${values.email}, revisa tu correo para confirmar.`
+        );
+
+        setSubmittedForm(true);
+        message.success(textMessage);
+      } else {
+        textMessage.content = resp;
+        // Retorna un mensaje en caso de que ya se encuentre registrado el correo
+        setNotLoggedAndRegister(true);
+        message.success(textMessage);
+      }
+    } catch (err) {
+      // textMessage.content = "Error... Intentalo mas tarde";
+      textMessage.content = formMessage.errorMessage;
+
+      textMessage.key = key;
+      message.error(textMessage);
     }
   };
 
-  useEffect(() => {
-    console.log("tickets originales:", userTickets);
-    if (!userTickets || userTickets.length == 0) return setLoading(false);
-    setEventUsers(userTickets);
-  }, [currentUser]);
+  const fieldsChange = (changedField) => { }
 
-  if (!loading)
-    return eventUserList.length > 0 ? (
-      <Card>
-        <Title level={3}>Aquí puedes ver tus entradas, la información que ingresaste al momento de registro, Y si deseas transferir la entrada a otra persona (s).</Title>
-        {eventUserList.map((item, indiceArray) => (
-          <Card key={`Card_${indiceArray}`} title={item.infoTicket ? `Entrada: ${item.infoTicket.title}` : "Entrada"}>
-            {item.data.map((field, key) => (
-              <Row key={key} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Text strong>{field.property}</Text>
-                </Col>
-                <Col className="gutter-row" xs={24} sm={12} md={12} lg={12} xl={12}>
-                  <Text>{field.value}</Text>
+  const valuesChange = (changedField, allFields) => {
+    let newExtraFields = [...extraFieldsOriginal]
+
+    conditionals.map((conditional, key) => {
+      let fulfillConditional = true
+      Object.keys(allFields).map((changedkey) => {
+        if (changedkey === conditional.fieldToValidate) {
+          fulfillConditional = (conditional.value == allFields[changedkey])
+        }
+      })
+      if (fulfillConditional) {
+        //Campos ocultados por la condicion
+        newExtraFields = newExtraFields.filter((field, key) => {
+          return conditional.fields.indexOf(field.name) == -1
+        })
+      }
+    })
+
+    setExtraFields(newExtraFields)
+  }
+
+  const hideConditionalFieldsToDefault = () => {
+    let newExtraFields = [...extraFieldsOriginal]
+
+    conditionals.map((conditional, key) => {
+      newExtraFields = newExtraFields.filter((field, key) => {
+        return conditional.fields.indexOf(field.name) == -1
+      })
+    })
+
+    setExtraFields(newExtraFields)
+  }
+
+  /**
+   * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
+   */
+  const renderForm = () => {
+    if (!extraFields) return ""
+    let formUI = extraFields.map((m, key) => {
+      // if (m.label === "pesovoto") return;            
+      let type = m.type || "text";
+      let props = m.props || {};
+      let name = m.name;
+      let label = m.label;
+      let mandatory = m.mandatory;
+      let description = m.description;
+      let labelPosition = m.labelPosition;
+      let target = name;
+      let value = user[target];
+
+      if (m.visibleByAdmin == false) {
+        return (<div></div>);
+      }
+
+      if (conditionals.state === "enabled") {
+        if (label === conditionals.field) {
+          if (value === [conditionals.value]) {
+            label = conditionals.field
+          } else {
+            return
+          }
+        }
+      }
+      let input = (
+        <Input
+          // {...props}
+          addonBefore={
+            labelPosition == "izquierda" ? (
+              <span>
+                {
+                  mandatory && (
+                    <span style={{ color: "red" }}>* </span>
+                  )
+                }
+                <strong>{label}</strong>
+              </span>
+            ) : (
+                ""
+              )
+          }
+          type={type}
+          key={key}
+          name={name}
+          value={value}
+        />
+      );
+
+      if (type === "tituloseccion") {
+        input = (
+          <React.Fragment>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}><strong>{label}</strong></p>
+            <Divider />
+          </React.Fragment>
+        );
+      }
+
+      if (type === "boolean") {
+        input = (
+          <Checkbox {...props} key={key} name={name}>
+            {mandatory ? (
+              <span>
+                <span style={{ color: "red" }}>* </span>
+                <strong>{label}</strong>
+              </span>
+            ) : (
+                label
+              )}
+          </Checkbox>
+        );
+      }
+
+      if (type === "longtext") {
+        input = <TextArea rows={4} autoSize={{ minRows: 3, maxRows: 25 }} />;
+      }
+
+      if (type === "multiplelist") {
+
+        input = (
+          <Checkbox.Group
+            options={m.options}
+            onChange={(checkedValues) => { value = JSON.stringify(checkedValues); }}
+          />
+        );
+      }
+
+      if (type === "list") {
+        input = m.options.map((o, key) => {
+          return (
+            <Option key={key} value={o.value}>
+              {o.value}
+            </Option>
+          );
+        });
+        input = (
+          <Select defaultValue={value} style={{ width: "100%" }} name={name}>
+            <Option value={""}>Seleccione...</Option>
+            {input}
+          </Select>
+        );
+      }
+
+      if (type === "country") {
+        input = (
+          <CountryDropdown
+            className="countryCity-styles"
+            value={country}
+            onChange={(val) => setCountry(val)}
+            name={name}
+          />
+        )
+      }
+
+      if (type === "city") {
+        input = (
+          <RegionDropdown
+            className="countryCity-styles"
+            country={country}
+            value={region}
+            name={name}
+            onChange={(val) => setRegion(val)} />
+        )
+      }
+
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
+
+      //esogemos el tipo de validación para email
+      rule = (type == "email") ? { ...rule, type: "email" } : rule;
+
+      // let hideFields =
+      //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
+
+      if (type == "boolean" && mandatory) {
+        let textoError = "Debes llenar este  campo es obligatorio";
+        rule = { validator: (_, value) => (value ? Promise.resolve() : Promise.reject(textoError)) };
+      }
+
+      return (
+        <div key={"g" + key} name="field">
+          {type == "tituloseccion" && input}
+          {type != "tituloseccion" && (
+            <>
+              <Form.Item
+                // style={eventUserId && hideFields}
+                valuePropName={type == "boolean" ? "checked" : "value"}
+                label={(labelPosition != "izquierda" || !labelPosition) && type !== "tituloseccion" ? label : "" && (labelPosition != "arriba" || !labelPosition)}
+                name={name}
+                rules={[rule]}
+                key={"l" + key}
+                htmlFor={key}
+              >
+                {input}
+              </Form.Item>
+              {description && description.length < 500 && <p>{description}</p>}
+              {description && description.length > 500 && (
+                <Collapse defaultActiveKey={["0"]}>
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
+                    <pre>{description}</pre>
+                  </Panel>
+                </Collapse>
+              )}
+            </>
+          )}
+        </div>
+      );
+    });
+    return formUI;
+  };
+
+  return (
+    <>
+      {notLoggedAndRegister && (
+        <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+          <Alert
+            message="Datos actualizados"
+            description="Tus datos han sido actualizados correctamente"
+            type="info"
+            showIcon
+            closable
+          />
+        </Col>
+      )}
+
+      <br />
+      <Col xs={24} sm={22} md={18} lg={18} xl={18} style={center}>
+        {!submittedForm ? (
+          <Card title="Actualizacion de campos" bodyStyle={textLeft}>
+            {/* //Renderiza el formulario */}
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={onFinish}
+              validateMessages={validateMessages}
+              initialValues={initialValues}
+              onFinishFailed={showGeneralMessage}
+              onFieldsChange={fieldsChange}
+              onValuesChange={valuesChange}
+            >
+              {renderForm()}
+              <br />
+              <br />
+
+              <Row gutter={[24, 24]}>
+                <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+                  {generalFormErrorMessageVisible && (
+                    <Alert message="Falto por completar algunos campos. " type="warning" />
+                  )}
                 </Col>
               </Row>
-            ))}
-            <Button onClick={() => openModal({ ...item, index: indiceArray })}>Transferir</Button>
+
+              <Row gutter={[24, 24]}>
+                <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Actualizar Datos
+                    </Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
           </Card>
-        ))}
-
-        <Modal width={700} title="Transferir Ticket" visible={visibleModal} onCancel={handleCancel} footer={null}>
-          <FormComponent
-            initialValues={initialValues}
-            eventId={eventId}
-            extraFields={extraFields}
-            eventUserId={eventUserSelected.eventUserId}
-            closeModal={handleCancel}
-          />
-        </Modal>
-      </Card>
-    ) : (
-      <Card>
-        <Result title="No se han encontrado tickets" />
-      </Card>
-    );
-
-  return <Spin></Spin>;
+        ) : (
+            <Card>
+              <Result status="success" title="Datos Actualizados!" subTitle={successMessage} />
+            </Card>
+          )}
+      </Col>
+    </>
+  );
 };
