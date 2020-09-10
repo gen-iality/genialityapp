@@ -75,8 +75,19 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                                                 <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                 :
                                                 <div>
-                                                    <span>Del {Moment(dateStart).format("DD")}</span>
-                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                    {
+                                                        (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
+                                                            <>
+                                                                <span>Del {Moment(dateStart).format("DD")}</span>
+                                                                <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                            </>
+                                                        ) : (
+                                                                <>
+                                                                    <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                    <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                                </>
+                                                            )
+                                                    }
                                                 </div>
                                         }
                                     </>
