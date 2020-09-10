@@ -155,10 +155,9 @@ class menuLanding extends Component {
     }
 
     async submit() {
-        const itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }
-        const data = await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
-        toast.success("Información guardada")
-        console.log(data)
+        let itemsMenu = { itemsMenu: { ...this.state.itemsMenu } }                
+        await Actions.put(`api/events/${this.props.event._id}`, itemsMenu);
+        toast.success("Información guardada")        
     }
 
     async mapActiveItemsToAvailable(key) {
