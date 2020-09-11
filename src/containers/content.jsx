@@ -35,6 +35,11 @@ class ContentContainer extends Component {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/page/:id" component={HomeProfile} />
+                    
+                    <Route exact path='/evento/tpgamers' render={() => (
+                        <Redirect to="/landing/5f4e41d5eae9886d464c6bf4" />
+                    )} />   
+
                     <Route exact path="/landing/:event" component={Landing} />
 
 
@@ -47,9 +52,6 @@ class ContentContainer extends Component {
                         <Redirect to="/landing/5f0622f01ce76d5550058c32" />
                     )} />
 
-                    <Route exact path='/evento/tpgamers' render={() => (
-                        <Redirect to="/landing/5f4e41d5eae9886d464c6bf4" />
-                    )} />                    
                     
                     <PrivateRoute path="/my_events" component={Events} />
                     <PrivateRoute path="/event/:event" component={Event} />
