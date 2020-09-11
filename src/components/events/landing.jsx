@@ -40,6 +40,7 @@ import Robapagina from "../shared/Animate_Img/index";
 import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
+import UserLogin from './UserLogin'
 
 const { Content, Sider } = Layout;
 
@@ -231,6 +232,7 @@ class Landing extends Component {
       trophies: <Trophies event={event}/>,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
+      login: <UserLogin />,
       evento: (
         
         <Row justify="center" >
