@@ -193,7 +193,7 @@ class Landing extends Component {
       agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       tickets: (
         <>
-          {(this.state.eventUser && <div className="columns is-centered">
+          {/* {(this.state.eventUser && <div className="columns is-centered">
 
             <VirtualConference
               event={this.state.event}
@@ -202,7 +202,7 @@ class Landing extends Component {
               toggleConference={this.toggleConference}
             />
 
-          </div>)}
+          </div>)} */}
           <div className="columns is-centered">
             <TicketsForm
               stages={event.event_stages}
@@ -485,6 +485,7 @@ controls
                             }
                             bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
                             title={event.name}
+                            eventId={event._id}
                             organizado={
                               <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
                                 {event.organizer.name ? event.organizer.name : event.organizer.email}
