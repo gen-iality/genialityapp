@@ -206,7 +206,6 @@ class Landing extends Component {
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
 
-
     this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
 
     const sections = {
@@ -247,7 +246,10 @@ class Landing extends Component {
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
-      interviews: <MyAgendaIndepend event={event} />,
+
+      interviews: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      // Se comenta el item original de interviews para duplicar la agenda
+      // interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event}/>,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
