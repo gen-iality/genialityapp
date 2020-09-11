@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { app } from '../helpers/firebase'
 import * as Cookie from "js-cookie";
 import { ApiUrl, AuthUrl, icon } from "../helpers/constants";
 import API, { OrganizationApi } from "../helpers/request";
@@ -148,6 +149,11 @@ class Headers extends Component {
   logout = () => {
     Cookie.remove("token");
     Cookie.remove("evius_token");
+    app.auth().signOut().then(function() {
+      // Sign-out successful.
+    }).catch(function(error) {
+      // An error happened.
+    });
     window.location.replace(`${AuthUrl}/logout`);
   };
 

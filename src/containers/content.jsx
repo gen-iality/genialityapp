@@ -35,7 +35,8 @@ class ContentContainer extends Component {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/page/:id" component={HomeProfile} />
-                    <Route exact path="/landing/:event" component={Landing} />
+                    <Route exact path="/landing/:event" 
+                    render = {props => <Landing {...props} key={this.props.location.key} /> } />
 
 
                     {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}

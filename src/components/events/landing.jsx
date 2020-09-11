@@ -84,7 +84,8 @@ class Landing extends Component {
       user: null,
       loader_page: false,
       show_banner_footer: false, 
-      event: null
+      event: null,
+      requireValidation: false
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -232,7 +233,7 @@ class Landing extends Component {
       trophies: <Trophies event={event}/>,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin />,
+      login: <UserLogin eventId={event._id}/>,
       evento: (
         
         <Row justify="center" >
@@ -607,6 +608,10 @@ controls
                               {/* Contenedor donde se mapea la información de cada seccion */}
 
                               <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
+                                
+                                
+                                
+                                
                                 {this.state.sections[this.state.section]}
                                 
                             
