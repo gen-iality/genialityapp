@@ -83,8 +83,7 @@ class Speakers extends Component {
                 actions={[
                   <Button
                     type="primary"
-                    className="modal-button"
-                    style={{backgroundColor: event.styles.bgButtonsEvent,  borderColor:event.styles.bgButtonsEvent}}
+                    className="modal-button"                    
                     onClick={() =>
                       this.modal(speaker._id, speaker.image, speaker.name, speaker.profession, speaker.description)
                     }
