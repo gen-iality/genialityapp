@@ -148,8 +148,8 @@ class AgendaLandingComplete extends Component {
                                                 <Row align="middle">
                                                     <Row>
                                                         <span className="date-activity">
-                                                            {Moment(item.datetime_start).format("h:mm a")} -{" "}
-                                                            {Moment(item.datetime_end).format("h:mm a")}
+                                                            {Moment(item.datetime_start).format("DD MMMM YYYY h:mm a")} -{" "}
+                                                            {Moment(item.datetime_end).format("DD MMMM YYYY h:mm a")}
                                                         </span>
                                                         <p>
                                                             <span className="card-header-title text-align-card">{item.name}</span>
