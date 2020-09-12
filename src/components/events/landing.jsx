@@ -18,6 +18,7 @@ import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
+import AgendaFormComplete from "./agendaLandingComplete";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../documents/front/documentsLanding";
@@ -177,20 +178,16 @@ class Landing extends Component {
     event.organizer = event.organizer ? event.organizer : event.author;
     event.event_stages = event.event_stages ? event.event_stages : [];
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
-    
-    this.setState({ 
-      event, 
-      eventUser, 
-      show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, 
-      eventUsers, data: 
-      user, 
-      currentUser: user, 
-      namesUser: namesUser, 
-      loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false 
-    })
 
+
+    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
     const sections = {
-      agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      agenda: (
+        event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ?
+          <AgendaFormComplete event={event} eventId={event._id} toggleConference={this.toggleConference} />
+          :
+          <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />
+      ),
       tickets: (
         <>
           {/* {(this.state.eventUser && <div className="columns is-centered">
