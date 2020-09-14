@@ -51,7 +51,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         }}
                 />
                 {
-                    eventId === "5f5aa2f9ca44794d515f9b82" ? (
+                    eventId === "5f5aa2f9ca44794d515f9b82" || eventId === "5f59331584f7fe05933b8582" ? (
                         <></>
                     ) : (
                             <>
