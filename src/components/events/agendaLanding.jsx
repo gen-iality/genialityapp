@@ -6,6 +6,7 @@ import AgendaActividadDetalle from "./agendaActividadDetalle";
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert } from "antd";
 import { firestore } from "../../helpers/firebase";
 import ReactPlayer from "react-player";
+//import { AgendaApi } from '../../helpers/request'
 
 class Agenda extends Component {
   constructor(props) {
@@ -100,7 +101,8 @@ class Agenda extends Component {
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
     }
-  }
+
+ }
 
   async listeningStateMeetingRoom(list) {
     list.forEach((activity, index, arr) => {
@@ -240,10 +242,9 @@ class Agenda extends Component {
     let { uid } = this.state;
     Activity.Register(eventId, uid, activityKey)
       .then((result) => {
-        console.log("result:", result);
       })
       .catch((err) => {
-        console.log("err:", err);
+        console.error("err:", err);
       });
   };
 
@@ -283,7 +284,6 @@ class Agenda extends Component {
   };
 
   onClose = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });
@@ -371,6 +371,7 @@ class Agenda extends Component {
 
                 {toShow.map((item, llave) => (
                   <div key={llave} className="container_agenda-information">
+                    {console.log('info item', item) }
                     <div className="card agenda_information">
                       <Row align="middle">
                         <Row>
@@ -384,7 +385,11 @@ class Agenda extends Component {
                         </Row>
                         <hr className="line-head" />
                         <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <div onClick={(e) => { this.gotoActivity(item) }} className="text-align-card" style={{ marginBottom: "5%" }}>
+                          <div onClick={
+                            (e) => {
+                              
+                              this.gotoActivity(item) 
+                              }} className="text-align-card" style={{ marginBottom: "5%" }}>
                             {
                               item.activity_categories.length > 0 && (
                                 <>

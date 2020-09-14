@@ -33,7 +33,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
       .doc( event._id )
       .onSnapshot( function ( doc ) {
         console.log( "doc", doc.data() )
-        setEnableMeetings( ( doc.data().enableMeetings ) ? true : false );
+        setEnableMeetings( ( doc.data() && doc.data().enableMeetings ) ? true : false );
       } );
   }, [ event ] )
 
@@ -80,6 +80,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
     return (
       <Row align="middle" justify="center" style={ { height: 100 } }>
         <Spin />
+        <p>Aun no se encuentran reuniones activas, vuelve mas tarde</p>
       </Row>
     )
   }

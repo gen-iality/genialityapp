@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import  { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-import { Collapse, Form, Input, Col, Row, message,  Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+
+import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -31,6 +33,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
   const [notLoggedAndRegister, setNotLoggedAndRegister] = useState(false);
   const [formMessage, setFormMessage] = useState({});
+  const [country, setCountry] = useState();
+  const [region, setRegion] = useState()
 
   const [form] = Form.useForm();
   console.log("Formulario", form, extraFields)
@@ -224,7 +228,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                     <span style={{ color: "red" }}>* </span>
                   )
                 }
-                {label}
+                <strong>{label}</strong>
               </span>
             ) : (
                 ""
@@ -240,7 +244,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       if (type === "tituloseccion") {
         input = (
           <React.Fragment>
-            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}>{label}</p>
+            <p style={{ fontSize: "1.3em" }} className={`label has-text-grey ${mandatory ? "required" : ""}`}><strong>{label}</strong></p>
             <Divider />
           </React.Fragment>
         );
@@ -252,7 +256,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             {mandatory ? (
               <span>
                 <span style={{ color: "red" }}>* </span>
-                {label}
+                <strong>{label}</strong>
               </span>
             ) : (
                 label
@@ -293,7 +297,29 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         );
       }
 
-      let rule = (name === "email" || name === "names") ? { required: true } : { required: mandatory };
+      if (type === "country") {
+        input = (
+          <CountryDropdown
+            className="countryCity-styles"
+            value={country}
+            onChange={(val) => setCountry(val)}
+            name={name}
+          />
+        )
+      }
+
+      if (type === "city") {
+        input = (
+          <RegionDropdown
+            className="countryCity-styles"
+            country={country}
+            value={region}
+            name={name}
+            onChange={(val) => setRegion(val)} />
+        )
+      }
+
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
       rule = (type === "email") ? { ...rule, type: "email" } : rule;
@@ -325,7 +351,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
                 <Collapse defaultActiveKey={["0"]}>
-                  <Panel header="Politica de privacidad, terminos y condiciones" key="1">
+                  <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
                 </Collapse>
