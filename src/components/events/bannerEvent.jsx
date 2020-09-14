@@ -45,9 +45,9 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         backgroundImage: `url(${mobileBanner})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
-                    } : {
-                            backgroundImage: `url(${bgImage})`, backgroundSize: 'cover',
-                            backgroundPosition: 'center'
+                        } : {
+                        backgroundImage: `url(${bgImage})`, backgroundSize: 'cover',
+                        backgroundPosition: 'center'
                         }}
                 />
                 <div className="banner-user-text-container"

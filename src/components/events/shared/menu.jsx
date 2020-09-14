@@ -62,7 +62,7 @@ class MenuConfig extends Component {
     const { contentTab, generalTab, peopleTab, commTab, checkInTab, ticketTab, guestTab, stylesTab, url } = this.state;
     return (
       <Fragment>
-        <div>
+        <div style={{width:256}}>
           <Menu
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["sub1"]}
@@ -187,6 +187,7 @@ class MenuConfig extends Component {
             {/* Configuración de Asistentes */}
 
             <SubMenu
+              style={{padding:"17"}}
               key="sub3"
               title={
                 <span>

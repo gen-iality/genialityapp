@@ -69,6 +69,10 @@
     margin-bottom: 3%;
     .site-page-header {
       border: 1px solid rgb(255, 255, 255);
+      .ant-page-header-heading-title {
+        overflow: visible;
+        white-space: normal;
+      }
     }
     .agenda_information {
       padding: 20px;
