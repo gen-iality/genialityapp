@@ -62,14 +62,13 @@ class MenuConfig extends Component {
     const { contentTab, generalTab, peopleTab, commTab, checkInTab, ticketTab, guestTab, stylesTab, url } = this.state;
     return (
       <Fragment>
-        <div style={{width:256}}>
           <Menu
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["sub1"]}
             mode="inline"
             inlineCollapsed={this.state.collapsed}>
             {/* Configuración de contenido */}
-
+           
             <SubMenu
               key="sub1"
               title={
@@ -187,7 +186,7 @@ class MenuConfig extends Component {
             {/* Configuración de Asistentes */}
 
             <SubMenu
-              style={{padding:"17"}}
+              className="SubMenuCofigASIS"
               key="sub3"
               title={
                 <span>
@@ -359,7 +358,6 @@ class MenuConfig extends Component {
               </Menu.Item>
             </SubMenu>
           </Menu>
-        </div>
       </Fragment>
     );
   }
