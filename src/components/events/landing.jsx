@@ -20,6 +20,7 @@ import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
+import AgendaFormComplete from "./agendaLandingComplete";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../documents/front/documentsLanding";
@@ -182,7 +183,7 @@ class Landing extends Component {
 
     const event = await EventsApi.landingEvent(id);
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
-    console.log('informacion del evento', event )
+    console.log('informacion del evento', event)
     this.loadDynamicEventStyles(id);
 
     if (event && user) {
@@ -206,11 +207,14 @@ class Landing extends Component {
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
 
-
     this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
-
     const sections = {
-      agenda: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      agenda: (
+        event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ?
+          <AgendaFormComplete event={event} eventId={event._id} toggleConference={this.toggleConference} />
+          :
+          <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />
+      ),
       tickets: (
         <>
           {/* {(this.state.eventUser && <div className="columns is-centered">
@@ -247,8 +251,11 @@ class Landing extends Component {
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
       companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
-      interviews: <MyAgendaIndepend event={event} />,
-      trophies: <Trophies event={event}/>,
+
+      interviews: <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
+      // Se comenta el item original de interviews para duplicar la agenda
+      // interviews: <MyAgendaIndepend event={event} />,
+      trophies: <Trophies event={event} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
       evento: (
@@ -509,6 +516,7 @@ class Landing extends Component {
                             }
                             bgImageText={event.styles && event.styles.event_image ? event.styles.event_image : ""}
                             title={event.name}
+                            eventId={event._id}
                             organizado={
                               <Link to={`/page/${event.organizer_id}?type=${event.organizer_type}`}>
                                 {event.organizer.name ? event.organizer.name : event.organizer.email}

@@ -168,14 +168,10 @@ class menuLanding extends Component {
                     this.changePermissions(prop, menuLanding.itemsMenu[prop1].permissions)
                 }
             }
-        }
-        if (this.state.itemsMenu.length === menuLanding.itemsMenu.length ) {
-            let items = this.orderItemsMenu(this.state.itemsMenu)
-            this.setState({ menu: items })
-        }
+        }        
     }
 
-    orderItemsMenu(itemsMenu) {        
+    orderItemsMenu(itemsMenu) {
         let itemsMenuData = {}
         let itemsMenuToSave = {}
         let items = Object.values(itemsMenu);
@@ -194,13 +190,12 @@ class menuLanding extends Component {
     }
 
     async submit() {
-        const { menu } = this.state
-        let itemsMenu = this.orderItemsMenu(menu)
-        let items = { itemsMenu }
+        const { itemsMenu } = this.state
+        let menu = this.orderItemsMenu(itemsMenu)
+        const newMenu = { itemsMenu: { ...menu } }
 
-        this.setState({ menu: itemsMenu })
-        await Actions.put(`api/events/${this.props.event._id}`, items);
-        toast.success("Información guardada")
+        await Actions.put(`api/events/${this.props.event._id}`, newMenu);
+        toast.success("Información guardada")        
     }
 
     async mapActiveItemsToAvailable(key) {
@@ -253,8 +248,8 @@ class menuLanding extends Component {
     }
 
     orderPosition(key, order) {
-        console.log("order", order, "menu state",this.state.menu[key].position)        
-        let itemsMenuToOrder = { ...this.state.menu }
+        console.log("order", order, "menu state", this.state.menu[key].position)
+        let itemsMenuToOrder = { ...this.state.itemsMenu }
         itemsMenuToOrder[key].position = order
 
         this.setState({ itemsMenu: itemsMenuToOrder })
@@ -304,16 +299,16 @@ class menuLanding extends Component {
                 </Row>
                 <Row>
                     <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection"].checked === true && (
+                        {this.state.menu["informativeSection"].checked && (
                             <>
-                                <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
+                                <label>Información para insercion en {this.state.menu["informativeSection"].name}</label>
                                 <br></br>
                                 <textarea type="textbox" defaultValue={this.state.menu["informativeSection"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection", e.target.value) }} />
                             </>
                         )}
                     </div>
                     <div style={{ marginTop: "4%" }}>
-                        {this.state.menu["informativeSection1"].checked === true && (
+                        {this.state.menu["informativeSection1"].checked && (
                             <>
                                 <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
                                 <br />
