@@ -41,7 +41,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                 <BgElement
                     key="bg"
                     className="bg"
-                    style={(window.innerWidth <= 780) && mobileBanner !== undefined ? {
+                    style={(window.innerWidth <= 780) && mobileBanner !== undefined && mobileBanner !== null ? {
                         backgroundImage: `url(${mobileBanner})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center'
