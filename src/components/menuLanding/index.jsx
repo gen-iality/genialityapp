@@ -125,24 +125,24 @@ class menuLanding extends Component {
                     checked: false,
                     permissions: "public"
                 },
-                informativeSection: {
-                    name: "Seccion Informativa",
-                    position: "",
-                    section: "informativeSection",
-                    icon: "FileDoneOutlined",
-                    markup: "",
-                    checked: false,
-                    permissions: "public"
-                },
-                informativeSection1: {
-                    name: "Seccion Informativa Segunda",
-                    position: "",
-                    section: "informativeSection1",
-                    icon: "FileDoneOutlined",
-                    markup: "",
-                    checked: false,
-                    permissions: "public"
-                }
+                // informativeSection: {
+                //     name: "Seccion Informativa",
+                //     position: "",
+                //     section: "informativeSection",
+                //     icon: "FileDoneOutlined",
+                //     markup: "",
+                //     checked: false,
+                //     permissions: "public"
+                // },
+                // informativeSection1: {
+                //     name: "Seccion Informativa Segunda",
+                //     position: "",
+                //     section: "informativeSection1",
+                //     icon: "FileDoneOutlined",
+                //     markup: "",
+                //     checked: false,
+                //     permissions: "public"
+                // }
 
             },
             values: {},
@@ -297,7 +297,7 @@ class menuLanding extends Component {
                             )
                         })}
                 </Row>
-                <Row>
+                {/* <Row>
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection"].checked && (
                             <>
@@ -319,7 +319,7 @@ class menuLanding extends Component {
                 </Row>
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
-                </Row>
+                </Row> */}
             </Fragment >
         )
     }
