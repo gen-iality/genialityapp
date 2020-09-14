@@ -316,10 +316,10 @@ class menuLanding extends Component {
                             </>
                         )}
                     </div>
-                </Row>
+                </Row> */}
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
-                </Row> */}
+                </Row> 
             </Fragment >
         )
     }
