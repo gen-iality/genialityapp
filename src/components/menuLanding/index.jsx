@@ -110,7 +110,7 @@ class menuLanding extends Component {
                     permissions: "public"
                 },
                 interviews: {
-                    name: "Vende / Mi agenda",
+                    name: "Citas",
                     position: "",
                     section: "interviews",
                     icon: "UserOutlined",
@@ -122,6 +122,14 @@ class menuLanding extends Component {
                     position: "",
                     section: "trophies",
                     icon: "TrophyOutlined",
+                    checked: false,
+                    permissions: "public"
+                },
+                my_sesions: {
+                    name: "Mis Actividades",
+                    position: "",
+                    section: "my_sesions",
+                    icon: "TeamOutlined",
                     checked: false,
                     permissions: "public"
                 },
@@ -142,7 +150,15 @@ class menuLanding extends Component {
                     markup: "",
                     checked: false,
                     permissions: "public"
-                }
+                },
+                login: {
+                    name: "Inicio de sesion",
+                    position: "",
+                    section: "login",
+                    icon: "LoginOutlined",
+                    checked: false,
+                    permissions: "public"
+                },
 
             },
             values: {},
