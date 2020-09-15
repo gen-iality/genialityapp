@@ -95,6 +95,7 @@ export const typeInputs = [
   { value: "file", label: "Archivo" },
   { value: "complex", label: "JSON" },
   { value: "tituloseccion", label: "Titulo para indicar campos relacionados" },
+  { value: "password", label: "Password" },
 ];
 export const toolbarEditor = {
   toolbar: [

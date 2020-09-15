@@ -1,14 +1,14 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Redirect } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 
 import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 
-import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Space } from "antd";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 const { Panel } = Collapse;
-const { TextArea } = Input;
+const { TextArea, Password } = Input;
 
 const textLeft = {
   textAlign: "left",
@@ -66,7 +66,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   //Funcion para traer los datos del event para obtener la variable validateEmail y enviarla al estado
   const getEventData = async (eventId) => {
     const data = await EventsApi.getOne(eventId)
-    console.log(data)
     //Para evitar errores se verifica si la variable existe
     if (data.validateEmail !== undefined) {
       setValidateEmail(data.validateEmail)
@@ -200,7 +199,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     //console.log("render", extraFields)
     if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
-      //console.log(m)
+      console.log('formulario campos', m)
       // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};
@@ -324,6 +323,35 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             value={region}
             name={name}
             onChange={(val) => setRegion(val)} />
+        )
+      }
+
+      if (type === "password") {
+        input = (
+            <>
+              <Password 
+              name={`${name}`}
+              style={{ marginBottom: '15px'}}
+              placeholder="Ingrese su password"
+              key={key}  
+              />
+            </>
+
+          // <>
+          //   <Password 
+          //   name={`${name}`}
+          //   style={{ marginBottom: '15px'}}
+          //   placeholder="Ingrese su password"
+          //   key={key}  
+          //   />
+          //   <Password
+          //   name={`${name}Validation`}
+          //   placeholder="Ingrese nuevamente su password"
+          //   key={key+1}
+          //   />
+            
+          // </>
+          
         )
       }
 
