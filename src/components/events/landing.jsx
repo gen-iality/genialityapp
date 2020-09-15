@@ -22,6 +22,7 @@ import AgendaFormComplete from "./agendaLandingComplete";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../documents/front/documentsLanding";
+import AgendaInscriptions from "./agendaInscriptions"
 
 import FaqsForm from "../faqsLanding";
 import NetworkingForm from "../networking";
@@ -225,9 +226,10 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
-      companies: <Companies event={event} eventId={event._id} eventUser={this.state.eventUser} />,
+      companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,      
       interviews: <MyAgendaIndepend event={event} />,
-      trophies: <Trophies event={event}/>,
+      trophies: <Trophies event={event} />,
+      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference}/>,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
       login: <UserLogin eventId={event._id}/>,

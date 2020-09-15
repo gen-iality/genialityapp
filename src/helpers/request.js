@@ -596,6 +596,12 @@ export const Activity = {
     var info = { user_id, activity_id };
     return await Actions.create(`api/events/${event}/activity/activity_attendee`, info);
   },
+  GetUserActivity: async (event)=>{
+    return await Actions.get(`api/events/${event}/activity_attendee`)
+  },
+  DeleteRegister: async (event, id) =>{
+    return await Actions.post(`api/events/${event}/activity_attendee/${id}`)
+  }
 };
 
 export const Networking = {

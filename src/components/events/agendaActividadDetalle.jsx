@@ -10,7 +10,7 @@ import { addLoginInformation, showMenu } from "../../redux/user/actions";
 
 import { NavLink, Link, withRouter } from "react-router-dom";
 import SurveyComponent from "./surveys";
-import { PageHeader, Alert, Row, Col, Tag, Button, List, Avatar, Card, Modal } from "antd";
+import { PageHeader, Row, Col, Tag, Button, List, Avatar, Card, Modal } from "antd";
 import AttendeeNotAllowedCheck from "./shared/attendeeNotAllowedCheck";
 
 import DocumentsList from "../documents/documentsList";
@@ -24,7 +24,7 @@ let agendaActividadDetalle = (props) => {
   let [modalVisible, setModalVisible] = useState(false);
   let [idSpeaker, setIdSpeaker] = useState(false);
   let [showSurvey, setShowSurvey] = useState(false);
-  let [orderedHost,  setOrderedHost] = useState([])
+  let [orderedHost, setOrderedHost] = useState([])
 
   useEffect(() => {
     (async () => {
@@ -76,11 +76,11 @@ let agendaActividadDetalle = (props) => {
     let hosts = props.currentActivity.hosts
     hosts.sort(function (a, b) {
       return a.order - b.order
-    })    
-    setOrderedHost(hosts) 
+    })
+    setOrderedHost(hosts)
   }
 
-  const { showDrawer, onClose, survey, currentActivity, gotoActivityList, toggleConference, visible } = props;
+  const { currentActivity, gotoActivityList, toggleConference, image_event } = props;
   return (
     <div className="columns container-calendar-section is-centered">
       <div className=" container_agenda-information container-calendar is-three-fifths">
@@ -108,7 +108,7 @@ let agendaActividadDetalle = (props) => {
                 )
               }
 
-              {currentActivity.video && (
+              {currentActivity.video ? (
                 <div className="column is-centered mediaplayer">
                   <ReactPlayer
                     width={"100%"}
@@ -121,6 +121,9 @@ let agendaActividadDetalle = (props) => {
                     controls
                   />
                 </div>
+              ):
+              (
+                <img className="activity_image" src={currentActivity.image ? currentActivity.image :image_event} />
               )}
 
               {currentActivity.secondvideo && (
@@ -170,11 +173,7 @@ let agendaActividadDetalle = (props) => {
                   url={currentActivity.meeting_video}
                   controls
                 />
-              )} */}
-
-              {!currentActivity.meeting_video && currentActivity.image && (
-                <img className="activity_image" src={currentActivity.image} />
-              )}
+              )} */}              
             </div>
           </header>
 
@@ -250,37 +249,45 @@ let agendaActividadDetalle = (props) => {
             ) : (
                 <div className="List-conferencistas">
                   <p style={{ marginTop: "5%", marginBottom: "5%" }} className="has-text-left is-size-6-desktop">
-                    <p>
-                      <b>Panelistas:</b>
-                    </p>
-                    <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
-                      <Card style={{ textAlign: "left", paddingBottom: 17 }}>
-                        <List
-                          itemLayout="horizontal"
-                          dataSource={orderedHost}
-                          renderItem={(item) => (
-                            <List.Item>
-                              <List.Item.Meta
-                                avatar={
-                                  <Avatar
-                                    size={80}
-                                    src={
-                                      item.image
-                                        ? item.image
-                                        : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                    }
-                                  />
-                                }
-                                title={<strong>{item.name}</strong>}
-                                description={item.profession}
+                    {
+                      orderedHost.length > 0 ? (
+                        <>
+                          <p>
+                            <b>Panelistas:</b>
+                          </p>
+                          <Col xs={24} sm={22} md={18} lg={18} xl={22} style={{ margin: "0 auto" }}>
+                            <Card style={{ textAlign: "left", paddingBottom: 17 }}>
+                              <List
+                                itemLayout="horizontal"
+                                dataSource={orderedHost}
+                                renderItem={(item) => (
+                                  <List.Item>
+                                    <List.Item.Meta
+                                      avatar={
+                                        <Avatar
+                                          size={80}
+                                          src={
+                                            item.image
+                                              ? item.image
+                                              : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                          }
+                                        />
+                                      }
+                                      title={<strong>{item.name}</strong>}
+                                      description={item.profession}
+                                    />
+                                    <div className="btn-list-confencista"><Button className="button_lista" onClick={() => getSpeakers(item._id)}>Ver detalle</Button></div>
+                                  </List.Item>
+                                )}
                               />
-                              <div className="btn-list-confencista"><Button className="button_lista" onClick={() => getSpeakers(item._id)}>Ver detalle</Button></div>
-                            </List.Item>
-                          )}
-                        />
-                        {idSpeaker ? <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} /> : <></>}
-                      </Card>
-                    </Col>
+                              {idSpeaker ? <ModalSpeaker showModal={true} eventId={event._id} speakerId={idSpeaker} /> : <></>}
+                            </Card>
+                          </Col>
+                        </>
+                      ) : (
+                          <></>
+                        )
+                    }
                   </p>
                 </div>
               )}
