@@ -32,7 +32,7 @@ class MainRouter extends Component {
               <>
                 <Header user={user} />
                 <ContentContainer />
-                {/* <Footer user={user}/> */}
+                <Footer />
                 <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange />
               </>
             )
