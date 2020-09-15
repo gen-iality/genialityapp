@@ -330,7 +330,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         input = (
             <>
               <Password 
-              name={`${name}`}
+              name='password'
               style={{ marginBottom: '15px'}}
               placeholder="Ingrese su password"
               key={key}  
