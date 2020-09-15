@@ -83,13 +83,13 @@ class UserRegistration extends Component {
     const properties = event.user_properties;
     const conditionals = event.fields_conditions ? event.fields_conditions : []
 
-    console.log("PROPS", properties);
+    //console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
     this.setState({ extraFields, eventUsers: eventUsers.data, conditionals }, this.getCurrentUser);
-    console.log("extraFields", properties);
+    //console.log("extraFields", properties);
   }
 
   render() {

@@ -35,23 +35,23 @@ class ContentContainer extends Component {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/page/:id" component={HomeProfile} />
-                    <Route exact path="/landing/:event" 
-                    render = {props => <Landing {...props} key={this.props.location.key} /> } />
 
 
                     {/* Arreglo temporal de mastercard para que tenga una url bonita, evius aún no soporta esto*/}
                     <Route exact path='/mentoriamastercard' render={() => (
                         <Redirect to="/landing/5ef49fd9c6c89039a14c6412" />
-                    )} />   
+                        )} />   
 
                     <Route exact path='/meetupsfenalco' render={() => (
                         <Redirect to="/landing/5f0622f01ce76d5550058c32" />
-                    )} />
+                        )} />
 
                     <Route exact path='/evento/tpgamers' render={() => (
                         <Redirect to="/landing/5f4e41d5eae9886d464c6bf4" />
-                    )} />                    
+                        )} />                    
                     
+                    <Route exact path="/landing/:event" 
+                    render = {matchProps => <Landing {...matchProps} {...this.props}  key={this.props.location.key} /> } />
                     <PrivateRoute path="/my_events" component={Events} />
                     <PrivateRoute path="/event/:event" component={Event} />
                     <PrivateRoute path="/create-event" component={NewEvent} />

@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
-import { Form, Input, Col, Row, Button, Spin } from "antd";
+import { Form, Input, Col, Row, Button, Spin, Card } from "antd";
 import { app } from "../../../helpers/firebase";
 import * as Cookie from "js-cookie";
+import FormTags from "./constants";
+
+const textLeft = {
+  textAlign: "left",
+};
+
 
 class UserLogin extends Component {
 
@@ -24,7 +30,8 @@ class UserLogin extends Component {
       enabledVerificationForm: false,
       errorLogin: false,
       errorValidation: false,
-      eventId: this.props.eventId   
+      eventId: this.props.eventId,
+      formTexts: FormTags('login')
     };
   }  
 
@@ -61,9 +68,9 @@ class UserLogin extends Component {
   initializeCaptcha = () => {
     let { initialValues } = this.state;
     if ( Object.entries( initialValues ).length == 0 ) {
-      console.log( "this.reCaptchaRef:", this.reCaptchaRef, this.reCaptchaRef.current, this.reCaptchaRef.current.id );
+      //console.log( "this.reCaptchaRef:", this.reCaptchaRef, this.reCaptchaRef.current, this.reCaptchaRef.current.id );
       window.recaptchaVerifier = new app.auth.RecaptchaVerifier( this.reCaptchaRef.current.id, {
-        size: "normal",
+        size: "invisible",
         callback: function ( response ) {
           console.log( "response,", response );
         },
@@ -81,8 +88,8 @@ class UserLogin extends Component {
   handleLoginWithPhoneNumber = ( values ) => {
     app.auth().signInWithEmailAndPassword(values.email, values.password).catch(function(error) {
       // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      console.error(error.code);
+      console.error(error.message);
       // ...
     });
     
@@ -113,14 +120,21 @@ class UserLogin extends Component {
     //   this.setState({enabledVerificationForm: true})
     // },1000)
   };
-
-  handleLoginEmailPassword = (values) => {
-    app.auth().signInWithEmailAndPassword(values.email, values.password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ...
+  
+  loginEmailPassword = (data) => {
+    
+    this.setState({errorLogin: false })
+    app.auth().signInWithEmailAndPassword(data.email, data.password)
+    .catch(()=>{
+      console.error('Error: Email or password invalid')
+      this.setState({errorLogin: true })
+      this.setState({loading: false})
     });
+  }
+  
+  handleLoginEmailPassword = async (values) => {
+    this.setState({loading: true})
+    await this.loginEmailPassword(values)
   }
 
   handleVerificationWithPhoneNumber= (values) =>{
@@ -150,14 +164,12 @@ class UserLogin extends Component {
     //  console.error(error)
     // });
   }
-
   
   render(){
-
+    const {formTexts} = this.state
     return (
-  <div style={{background: '#ffffff', padding: '50px', width: '450px', borderRadius: '15px', margin: 'auto'}}>
-    {this.state.loading && <Spin />}
-    
+    //<div style={{background: '#ffffff', padding: '50px', width: '450px', borderRadius: '15px', margin: 'auto'}}>
+    <Card title={formTexts.titleForm} bodyStyle={textLeft}>
     {/* {this.state.enabledLoginForm && (
       <Form onFinish={this.handleLoginWithPhoneNumber}>
         <Row gutter={[24, 24]}>
@@ -200,8 +212,8 @@ class UserLogin extends Component {
       </Form>
     )} */}
 
-
-{this.state.enabledLoginForm && (
+    {/* Inicio  de formulario para autenticación con Email y contraseña */}
+    {this.state.enabledLoginForm && (
       <Form onFinish={this.handleLoginEmailPassword}>
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
@@ -215,7 +227,7 @@ class UserLogin extends Component {
                 },
               ]}
               >
-                <Input />
+                <Input style={{ width: "300px" }} />
             </Form.Item>
           </Col>
         </Row>
@@ -227,48 +239,47 @@ class UserLogin extends Component {
               rules={[
                 {
                   required: true,
-                  message: 'Ingrese E-Mail',
+                  message: 'Ingrese su password',
                   
                 },
               ]}
               >
-                <Input type='password'/>
+                <Input type='password' style={{ width: "300px" }}/>
             </Form.Item>
           </Col>
         </Row>  
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <div ref={ this.reCaptchaRef } id="este-test"></div>
-          </Col>
-        </Row>
         {this.state.errorLogin && (
           <Row gutter={[24, 24]}>
             <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <span style={{color: 'red'}}>Sucedió un error, verifique la información ingresada</span>
+              <span style={{color: 'red'}}>{formTexts.errorLoginEmailPassword}</span>
             </Col>
           </Row> 
         )}    
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item>
+            {this.state.loading ?  <Spin /> : (
               <Button type="primary" htmlType="submit">
-                Ingresar
-              </Button>
+              Ingresar
+            </Button>
+            )}
             </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={[24, 24]}>
+          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+            <div ref={ this.reCaptchaRef } id="este-test"></div>
           </Col>
         </Row>
       </Form>
     )}
-    
-    
-    
-    
-    {this.state.enabledVerificationForm && ( 
-    
+
+    {/* Inicio del formulario de verificación del código envia al celular */}
+    {this.state.enabledVerificationForm && (
     <Form onFinish={this.handleVerificationWithPhoneNumber}>
-  <Row gutter={[24, 24]}>
-    <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-      <Form.Item
+      <Row gutter={[24, 24]}>
+        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+          <Form.Item
           label="Código de verificación"
           name="verificationCode"
           rules={[
@@ -277,24 +288,23 @@ class UserLogin extends Component {
               message: 'Ingrese el código de verificación',
           },
           ]}
-      >
-        <Input />
-        </Form.Item>
+          >
+            <Input />
+            </Form.Item>
         </Col>
-        </Row>
-         
+      </Row>         
+      <Row gutter={[24, 24]}>
+        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+          <div ref={ this.reCaptchaRef } id="este-test"></div>
+        </Col>
+      </Row>
+      {this.state.errorValidation && (
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <div ref={ this.reCaptchaRef } id="este-test"></div>
+            <span style={{color: 'red'}}>Código de verificación invalido</span>
           </Col>
-        </Row>
-        {this.state.errorValidation && (
-          <Row gutter={[24, 24]}>
-            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <span style={{color: 'red'}}>Código de verificación invalido</span>
-            </Col>
-          </Row> 
-        )}  
+        </Row> 
+      )}  
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item>
@@ -305,21 +315,9 @@ class UserLogin extends Component {
           </Col>
         </Row>
       </Form>
-
-
-     )}
-          
-
-
-  
-
-
-    
-    
-
-
-    </div>
-      )
+    )}
+    </Card>
+    )
   }
 }
 
