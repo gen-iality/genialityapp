@@ -54,9 +54,12 @@ class AgendaInscriptions extends Component {
       let space = await SpacesApi.byEvent(event._id);
       for (let i = 0; info.data.length > i; i++) {
         if (info.data[i].user_id = user_id && info.data[i].event_id === event._id) {
-          console.log("entré a if")
-          let infoAgenda = await AgendaApi.getOne(info.data[i].activity_id, event._id)
-          agendaData.push(infoAgenda)
+          try {
+            let infoAgenda = await AgendaApi.getOne(info.data[i].activity_id, event._id)
+            agendaData.push(infoAgenda)
+          } catch (e) {
+            console.log(e)
+          }
         }
       }
       const data = await this.listeningStateMeetingRoom(agendaData);
