@@ -30,29 +30,6 @@ class AgendaInscriptions extends Component {
     if (documentsData.data.length >= 1) {
       this.setState({ showButtonDocuments: true })
     }
-
-    if (!event.dates || event.dates.length === 0) {
-      let days = [];
-      const init = Moment(event.date_start);
-      const end = Moment(event.date_end);
-      const diff = end.diff(init, "days");
-      //Se hace un for para sacar los días desde el inicio hasta el fin, inclusivos
-      for (let i = 0; i < diff + 1; i++) {
-        days.push(Moment(init).add(i, "d"));
-      }
-
-      this.setState({ days, day: days[0] }, this.fetchAgenda);
-      //Si existe dates, entonces envia al array push las fechas del array dates del evento
-    } else {
-      const days = [];
-      let date = event.dates;
-      Date.parse(date);
-
-      for (var i = 0; i < date.length; i++) {
-        days.push(Moment(date[i]).format("YYYY-MM-DD"));
-      }
-      this.setState({ days, day: days[0] }, this.fetchAgenda);
-    }
   }
 
   async componentDidUpdate(prevProps) {
@@ -76,13 +53,15 @@ class AgendaInscriptions extends Component {
       const info = await Activity.GetUserActivity(event._id)
       let space = await SpacesApi.byEvent(event._id);
       for (let i = 0; info.data.length > i; i++) {
-        if (info.data[i].user_id = user_id) {
+        if (info.data[i].user_id = user_id && info.data[i].event_id === event._id) {
+          console.log("entré a if")
           let infoAgenda = await AgendaApi.getOne(info.data[i].activity_id, event._id)
           agendaData.push(infoAgenda)
         }
       }
-      this.listeningStateMeetingRoom(agendaData);
-      this.setState({ spaces: space })
+      const data = await this.listeningStateMeetingRoom(agendaData);
+      console.log(data)
+      data === undefined ? this.setState({ agendaData, spaces: space }) : this.setState({ agendaData: data, spaces: space })
     } catch (e) {
       console.log(e)
     }
@@ -101,7 +80,7 @@ class AgendaInscriptions extends Component {
           let updatedActivityInfo = { ...arr[index], habilitar_ingreso };
 
           arr[index] = updatedActivityInfo;
-          this.setState({ agendaData: arr });
+          return arr
         });
     });
 
@@ -184,6 +163,7 @@ class AgendaInscriptions extends Component {
             matchUrl={this.props.matchUrl}
             survey={survey}
             currentActivity={currentActivity}
+            image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
           />
@@ -309,6 +289,11 @@ class AgendaInscriptions extends Component {
                           </Row>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+                          {
+                            !item.habilitar_ingreso && (
+                              <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                            )
+                          }
                           <div>
                             {
                               item.habilitar_ingreso === "closed_meeting_room" && (
@@ -339,7 +324,7 @@ class AgendaInscriptions extends Component {
                                   ) :
                                     (
                                       <>
-                                        <img src={this.props.event.styles.event_image} />
+                                        <img src={item.image ? item.image : this.props.event.styles.event_image} />
                                         <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />
                                       </>
                                     )}
@@ -356,7 +341,7 @@ class AgendaInscriptions extends Component {
                                       item.meeting_id,
                                       item
                                     )
-                                  } src={this.props.event.styles.event_image} />
+                                  } src={item.image ? item.image : this.props.event.styles.event_image} />
                                   <div>
                                     <Button
                                       block

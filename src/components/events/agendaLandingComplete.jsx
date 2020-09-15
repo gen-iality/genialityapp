@@ -154,6 +154,7 @@ class AgendaLandingComplete extends Component {
             matchUrl={this.props.matchUrl}
             survey={survey}
             currentActivity={currentActivity}
+            image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
           />
@@ -288,6 +289,11 @@ class AgendaLandingComplete extends Component {
                             </Row>
                           </Col>
                           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+                            {
+                              !item.habilitar_ingreso && (
+                                <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                              )
+                            }                            
                             <div>
                               {
                                 item.habilitar_ingreso === "closed_meeting_room" && (
@@ -318,7 +324,7 @@ class AgendaLandingComplete extends Component {
                                     ) :
                                       (
                                         <>
-                                          <img src={this.props.event.styles.event_image} />
+                                          <img src={item.image ? item.image : this.props.event.styles.event_image} />
                                           <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />
                                         </>
                                       )}
@@ -335,7 +341,7 @@ class AgendaLandingComplete extends Component {
                                         item.meeting_id,
                                         item
                                       )
-                                    } src={this.props.event.styles.event_image} />
+                                    } src={item.image ? item.image : this.props.event.styles.event_image} />
                                     <div>
                                       <Button
                                         block

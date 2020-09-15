@@ -317,6 +317,7 @@ class Agenda extends Component {
             matchUrl={this.props.matchUrl}
             survey={survey}
             currentActivity={currentActivity}
+            image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
           />
