@@ -5,8 +5,7 @@ import { fetchCategories } from "../redux/categories/actions";
 import { fetchTypes } from "../redux/types/actions";
 import Header from "./header";
 import ContentContainer from "./content";
-import Footer from "./footer";
-import { ToastContainer } from "react-toastify";
+
 import { Layout } from "antd";
 import { userContext } from './userContext';
 //const { Header, Footer, Sider, Content } = Layout;
@@ -32,8 +31,7 @@ class MainRouter extends Component {
               <>
                 <Header user={user} />
                 <ContentContainer />
-                <Footer />
-                <ToastContainer autoClose={2000} newestOnTop pauseOnVisibilityChange />
+                
               </>
             )
           }
