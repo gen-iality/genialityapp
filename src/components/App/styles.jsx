@@ -154,6 +154,20 @@ class Styles extends Component {
             value: false
           }
         ]
+      },
+      {
+        label: "Ocular fechas de la seccion de agenda",
+        name: "hideDatesAgenda",
+        defaultValue: false,
+        options: [
+          {
+            label: "Si",
+            value: true,
+          }, {
+            label: "No",
+            value: false
+          }
+        ]
       }
     ]
   }
@@ -189,6 +203,7 @@ class Styles extends Component {
           mobile_banner: info.styles.mobile_banner || null,
           banner_footer_email: info.styles.banner_footer_email || null,
           show_banner: info.styles.show_banner || false,
+          hideDatesAgenda: info.styles.hideDatesAgenda || false,
           loader_page: info.styles.loader_page || "no",
           data_loader_page: info.styles.data_loader_page || ""
         },
@@ -401,7 +416,7 @@ class Styles extends Component {
                   <p className="label">{item.label}</p>
                   {
                     <div className="select">
-                      <select value={this.state.styles[item.name]} name={item.name} onChange={(e) => this.handleChange(e)} style={{ width: 120 }}>
+                      <select defaultValue={item.defaultValue} value={this.state.styles[item.name]} name={item.name} onChange={(e) => this.handleChange(e)} style={{ width: 120 }}>
                         {
                           item.options.map((item2, key) => (
                             <option key={key} value={item2.value}>{item2.label}</option>

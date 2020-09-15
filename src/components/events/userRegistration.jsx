@@ -110,10 +110,7 @@ class UserRegistration extends Component {
         </React.Fragment>
       ) : (
           <UserInforCard
-            currentUser={currentUser}
-            userTickets={userTickets}
-            eventId={eventId}
-            extraFields={extraFields}
+            initialValues={currentUser} eventId={eventId} extraFieldsOriginal={extraFields} conditionals={conditionals}
           />
         );
     return <Spin></Spin>;
