@@ -29,8 +29,8 @@ function capitalizeMont(val) {
 
 
 
-let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
-
+let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
+    console.log("muestra de banner",styles.show_card_banner)
     return (
         <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
             <Element
@@ -51,7 +51,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         }}
                 />
                 {
-                    eventId === "5f5aa2f9ca44794d515f9b82" || eventId === "5f59331584f7fe05933b8582" ? (
+                    styles.show_card_banner && styles.show_card_banner === "false" ? (
                         <></>
                     ) : (
                             <>
