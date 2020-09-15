@@ -60,7 +60,6 @@ export default class RootPage extends Component {
   render() {
     let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter, eventUser } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
-    console.log("DEBUG error muestra gráfica en firefox:", "idSurvey", "hasVote", hasVote, "guestVoteInSurvey", guestVoteInSurvey, "openSurvey", openSurvey);
     if (!isLoading)
       return ((eventUser && eventUser.rol && eventUser.rol.name == "Speaker") || openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />

@@ -45,7 +45,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [region, setRegion] = useState()
 
   const [form] = Form.useForm();
-  console.log("Formulario", form, extraFields)
+  //console.log("Formulario", form, extraFields)
 
   useEffect(() => {
     let formType = !eventUserId ? "register" : "transfer";
@@ -189,18 +189,18 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     })
 
     setExtraFields(newExtraFields)
-    console.log("ExtraFields", extraFields)
-    console.log("Condicionales", conditionals)
+    //console.log("ExtraFields", extraFields)
+    //console.log("Condicionales", conditionals)
   }
 
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = () => {
-    console.log("render", extraFields)
+    //console.log("render", extraFields)
     if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
-      console.log(m)
+      //console.log(m)
       // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};

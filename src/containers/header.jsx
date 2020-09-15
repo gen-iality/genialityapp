@@ -1,22 +1,20 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { app } from '../helpers/firebase'
 import * as Cookie from "js-cookie";
-import { ApiUrl, AuthUrl, icon } from "../helpers/constants";
+import { ApiUrl, icon, BaseUrl } from "../helpers/constants";
 import API, { OrganizationApi } from "../helpers/request";
-import { FormattedMessage } from "react-intl";
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
-import LetterAvatar from "../components/shared/letterAvatar";
 import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
-import { Logo } from "../../src/logo.svg";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
-import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { Menu, Drawer, Button, Col, Row, Layout } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { parseUrl } from "../helpers/constants";
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 const zIndex = {
   zIndex: "1"
 }
@@ -24,7 +22,7 @@ const zIndex = {
 class Headers extends Component {
   constructor(props) {
     super(props);
-    this.props.history.listen((location, action) => {
+    this.props.history.listen((location) => {
       this.handleMenu(location);
     });
 
@@ -43,8 +41,13 @@ class Headers extends Component {
       showAdmin: false,
       showEventMenu: false,
       tabEvtType: true,
-      tabEvtCat: true
+      tabEvtCat: true,
+      eventId: null
+
     };
+
+    this.setEventId = this.setEventId.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
   showDrawer = () => {
@@ -59,7 +62,17 @@ class Headers extends Component {
     });
   };
 
+  setEventId = () => {
+    const path = window.location.pathname.split('/')
+    const eventId = path[path.length - 1]
+    return eventId
+  }
+
   async componentDidMount() {
+
+    const eventId = this.setEventId()
+    this.setState({eventId})    
+
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
     let dataUrl = parseUrl(document.URL);
@@ -143,12 +156,30 @@ class Headers extends Component {
       const photo = this.props.loginInfo.picture;
       this.setState({ name, photo, user: true });
     }
+
+    // if(prevProps.eventId !== this.state.eventId){
+
+    // }
   }
 
   logout = () => {
     Cookie.remove("token");
     Cookie.remove("evius_token");
-    window.location.replace(`${AuthUrl}/logout`);
+    window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
+    window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
+    
+    app.auth().signOut().catch(function(error) {
+      // An error happened.
+      console.error(error.message)
+    });
+
+    if(this.state.eventId){
+      window.location.replace(`${BaseUrl}/landing/${this.state.eventId}`);      
+    }
+    else{
+      window.location.replace(`${BaseUrl}`);      
+    }
+    //window.location.replace(`${AuthUrl}/logout`);
   };
 
   openMenu = () => {
@@ -173,6 +204,7 @@ class Headers extends Component {
     const { eventMenu, location } = this.props;
     return (
       <React.Fragment>
+        {console.log('---------------------EVENT ID', this.state.eventId)}
         <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
           <Menu theme="light" mode="horizontal">
             <Row justify="space-between" align="middle">
@@ -181,7 +213,7 @@ class Headers extends Component {
 
               <Row className="logo-header" justify="space-between" align="middle">
                 <Link to={"/"}>
-                  <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} />
+                  {/* <div className="icon-header" dangerouslySetInnerHTML={{ __html: icon }} /> */}
                 </Link>
 
                 {/* Menú de administrar un evento (esto debería aparecer en un evento no en todo lado) */}
