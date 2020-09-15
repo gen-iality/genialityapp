@@ -313,7 +313,7 @@ class menuLanding extends Component {
                             )
                         })}
                 </Row>
-                <Row>
+                {/* <Row>
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection"].checked && (
                             <>
@@ -327,15 +327,15 @@ class menuLanding extends Component {
                         {this.state.menu["informativeSection1"].checked && (
                             <>
                                 <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br />
+                                <br/>
                                 <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
                             </>
                         )}
                     </div>
-                </Row>
+                </Row> */}
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
-                </Row>
+                </Row> 
             </Fragment >
         )
     }

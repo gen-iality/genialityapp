@@ -377,7 +377,7 @@ class Agenda extends Component {
 
                 {toShow.map((item, llave) => (
                   <div key={llave} className="container_agenda-information">
-                    {console.log('info item', item)}
+                    {/* {console.log('info item', item) } */}
                     <div className="card agenda_information">
                       <Row align="middle">
                         <Row>

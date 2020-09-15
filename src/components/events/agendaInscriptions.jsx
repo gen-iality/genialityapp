@@ -18,6 +18,10 @@ class AgendaInscriptions extends Component {
   }
 
   async componentDidMount() {
+    this.getData()
+  }
+
+  async getData() {
     const { event } = this.props;
     this.getAgendaByUser()
 
@@ -47,24 +51,37 @@ class AgendaInscriptions extends Component {
 
   async getAgendaByUser() {
     const { event } = this.props
-    let user_id = this.getCurrentUser()
+    let user_id = await this.getCurrentUser()
+    try {
+      let infoAgenda = await AgendaApi.byEvent(event._id)
+      const infoUserAgenda = await Activity.GetUserActivity(event._id, user_id)
+      let space = await SpacesApi.byEvent(event._id);
+      let agendaData = this.filterUserAgenda(infoAgenda, infoUserAgenda)
+      const data = await this.listeningStateMeetingRoom(agendaData);
+      data === undefined ? this.setState({ agendaData, spaces: space }) : this.setState({ agendaData: data, spaces: space })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  filterUserAgenda(agenda, userAgenda) {
     let agendaData = []
     try {
-      const info = await Activity.GetUserActivity(event._id)
-      let space = await SpacesApi.byEvent(event._id);
-      for (let i = 0; info.data.length > i; i++) {
-        if (info.data[i].user_id = user_id && info.data[i].event_id === event._id) {
-          try {
-            let infoAgenda = await AgendaApi.getOne(info.data[i].activity_id, event._id)
-            agendaData.push(infoAgenda)
-          } catch (e) {
-            console.log(e)
+      for (let i = 0; agenda.data.length > i; i++) {
+        for (let a = 0; userAgenda.data.length > a; a++) {
+          if (agenda.data[i]._id === userAgenda.data[a].activity_id) {
+            agendaData.push(agenda.data[i])
           }
         }
       }
-      const data = await this.listeningStateMeetingRoom(agendaData);
-      console.log(data)
-      data === undefined ? this.setState({ agendaData, spaces: space }) : this.setState({ agendaData: data, spaces: space })
+
+      for (let i = 0; agendaData.length > i; i++) {
+        for (let a = 0; userAgenda.data.length > a; a++) {
+          agendaData[a].attendee_id = userAgenda.data[a]._id
+        }
+      }
+
+      return agendaData
     } catch (e) {
       console.log(e)
     }
@@ -121,9 +138,8 @@ class AgendaInscriptions extends Component {
     this.setState({ survey: survey });
   }
 
-  deleteRegisterInActivity = (activityKey) => {
+  deleteRegisterInActivity = async (activityKey) => {
     const { eventId } = this.props;
-    let { uid } = this.state;
 
     Activity.DeleteRegister(eventId, activityKey)
       .then(() => {
@@ -132,10 +148,10 @@ class AgendaInscriptions extends Component {
         });
       })
       .catch((err) => {
-        notification.open({
-          message: "No se ha logrado eliminar, intenta mas tarde",
-        });
+        console.log(err)
       });
+
+    this.getData()
   };
   onClose = (e) => {
     this.setState({
@@ -263,7 +279,7 @@ class AgendaInscriptions extends Component {
                                </Button>
                               </Row>
                               <Row>
-                                <Button type="primary" onClick={() => this.deleteRegisterInActivity(item._id)} className="space-align-block">
+                                <Button type="primary" onClick={(e) => { this.deleteRegisterInActivity(item.attendee_id) }} className="space-align-block">
                                   Eliminar Inscripción
                                 </Button>
                               </Row>

@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { getFiles } from "./services";
 import { ApiGoogleDocuments } from "../../helpers/constants";
 import { List, Col, Row, Card, Button, Table } from 'antd';
-import { LikeOutlined, EyeOutlined, DownloadOutlined } from '@ant-design/icons';
+import { LikeOutlined, EyeOutlined, DownloadOutlined, FileTextOutlined} from '@ant-design/icons';
 import { AgendaApi } from "../../helpers/request"
 
 const columns = [
@@ -123,8 +123,9 @@ class documentsList extends Component {
                                             //     />
                                             // </a>
                                         ]}
-                                    >
-                                            <List.Item.Meta style={{marginRight:"10%"}} title={item.title ? item.title : item.name} /> 
+
+                                    > 
+                                         <List.Item.Meta style={{marginRight:"10%"}} avatar={<FileTextOutlined/>} title={item.title ? item.title : item.name} /> 
                                         
                                     </List.Item>
                                 )}

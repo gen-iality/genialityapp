@@ -1,14 +1,9 @@
 import React, { Component } from "react"
-import { FaqsApi } from "../../helpers/request"
+import { FaqsApi, Actions } from "../../helpers/request"
 import { Collapse, Col } from 'antd'
 import { Background } from "react-parallax";
 
 const { Panel } = Collapse
-
-const faqs = {
-    textAlign: "left",
-    fontWeight: 500
-};
 
 const center = {
     margin: "0 auto"
@@ -18,7 +13,8 @@ class Faqs extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            faqsData: []
+            faqsData: [],
+            styles:{}
         }
     }
 
@@ -28,12 +24,21 @@ class Faqs extends Component {
 
     async getFaqs() {
         const faqsData = await FaqsApi.byEvent(this.props.eventId)
-
+        const info = await Actions.getAll(`/api/events/${this.props.eventId}`)
+        if(info.styles !== {}){
+            this.setState({
+                styles: {
+                textAlign: "left",
+                fontWeight: 500,
+                backgroundColor: info.styles.toolbarDefaultBg !== "#ffffff" ? info.styles.toolbarDefaultBg : "#7d8485d4"
+                }
+                })
+        }
         this.setState({ faqsData })
         console.log(faqsData)
     }
     render() {
-        const { faqsData } = this.state
+        const { faqsData, styles } = this.state
         return (
             <Col
                 xs={22}
@@ -43,7 +48,7 @@ class Faqs extends Component {
                 xl={18}
                 style={center}
             >
-                <Collapse className="collapse_question" style={faqs} defaultActiveKey={['0']}>
+                <Collapse className="collapse_question" style={styles} defaultActiveKey={['3']}>
                     {
                         faqsData.map((faqs, key) => (
                             <Panel key={key} header={faqs.title}>
