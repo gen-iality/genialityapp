@@ -13,7 +13,7 @@ class UserLogin extends Component {
 
   constructor( props ) {
     super( props );
-    this.reCaptchaRef = React.createRef();
+    //this.reCaptchaRef = React.createRef();
     this.state = {
       user: {},
       emailError: false,
@@ -38,7 +38,7 @@ class UserLogin extends Component {
   async componentDidMount(){
     const {eventId} = this.props
 
-    this.initializeCaptcha();    
+    //this.initializeCaptcha();    
     
     await app.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -60,7 +60,7 @@ class UserLogin extends Component {
     if ( prevState.loading !== loading ){
       if ( !loading ){
         // Inicializa el captcha para la autenticacion por SMS
-        this.initializeCaptcha();
+        //this.initializeCaptcha();
       }
     }
   }    
@@ -133,6 +133,7 @@ class UserLogin extends Component {
   }
   
   handleLoginEmailPassword = async (values) => {
+    //console.log('handles',values)
     // Cookie.remove("token");
     // Cookie.remove("evius_token");
     // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
@@ -273,11 +274,11 @@ class UserLogin extends Component {
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={[24, 24]}>
+        {/* <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <div ref={ this.reCaptchaRef } id="este-test"></div>
           </Col>
-        </Row>
+        </Row> */}
       </Form>
     )}
 
@@ -300,11 +301,11 @@ class UserLogin extends Component {
             </Form.Item>
         </Col>
       </Row>         
-      <Row gutter={[24, 24]}>
+      {/* <Row gutter={[24, 24]}>
         <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
           <div ref={ this.reCaptchaRef } id="este-test"></div>
         </Col>
-      </Row>
+      </Row> */}
       {this.state.errorValidation && (
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
