@@ -133,8 +133,15 @@ class UserLogin extends Component {
   }
   
   handleLoginEmailPassword = async (values) => {
+    // Cookie.remove("token");
+    // Cookie.remove("evius_token");
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
+    // window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
     this.setState({loading: true})
     await this.loginEmailPassword(values)
+    setTimeout(()=>{
+      this.setState({loading: false})      
+    },3000)
   }
 
   handleVerificationWithPhoneNumber= (values) =>{
