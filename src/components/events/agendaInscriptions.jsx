@@ -74,7 +74,7 @@ class AgendaInscriptions extends Component {
           }
         }
       }
-
+      
       for (let i = 0; agendaData.length > i; i++) {
         for (let a = 0; userAgenda.data.length > a; a++) {
           agendaData[a].attendee_id = userAgenda.data[a]._id
