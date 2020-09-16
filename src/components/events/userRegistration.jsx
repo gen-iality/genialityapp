@@ -30,6 +30,7 @@ class UserRegistration extends Component {
       field["label"] = field["label"] ? field["label"] : field["name"];
       return field;
     });
+    console.log('ExtraFields in userRegistration: ', extraFields)
     return extraFields;
   };
 
@@ -88,6 +89,10 @@ class UserRegistration extends Component {
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
+    console.log('final process extrafields', extraFields)
+    console.log('final process eventUsers', eventUsers)
+    console.log('final process conditional', conditionals)
+    console.log('final process properties', properties)
     this.setState({ extraFields, eventUsers: eventUsers.data, conditionals }, this.getCurrentUser);
     //console.log("extraFields", properties);
   }
@@ -95,6 +100,7 @@ class UserRegistration extends Component {
   render() {
     let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets, conditionals } = this.state;
     const { eventId } = this.props;
+    console.log('extrafields', extraFields)
     if (!loading)
       return !registeredUser ? (
         <React.Fragment>

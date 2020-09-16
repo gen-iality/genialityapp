@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-
-import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
-
+import { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-
-import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Space } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider } from "antd";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+
 const { Panel } = Collapse;
 const { TextArea, Password } = Input;
 
@@ -18,16 +15,11 @@ const center = {
   margin: "0 auto",
 };
 
-// Grid para formulario
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
-};
-
 const validateMessages = {
   required: "Este campo ${label} es obligatorio para completar el registro.",
   types: {
     email: "${label} no válido!",
+    regexp: "malo"
   },
 };
 
@@ -43,10 +35,20 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [formMessage, setFormMessage] = useState({});
   const [country, setCountry] = useState();
   const [region, setRegion] = useState()
+  const [password, setPassword] = useState('')
 
   const [form] = Form.useForm();
-  //console.log("Formulario", form, extraFields)
-
+  
+  useEffect(()=>{
+    console.log('form methods', form)
+    form.setFields([
+      {
+        name: 'password',
+        errors: ['Ingrese un password'],
+      },
+   ]);
+  },[form])
+  
   useEffect(() => {
     let formType = !eventUserId ? "register" : "transfer";
     setFormMessage(FormTags(formType));
@@ -73,11 +75,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   }
 
   const onFinish = async (values) => {
+    
+    values.password = password
+    
     setGeneralFormErrorMessageVisible(false);
 
     const key = "registerUserService";
-    console.log("values", values);
-
+    
     // message.loading({ content: !eventUserId ? "Registrando Usuario" : "Realizando Transferencia", key }, 10);
     message.loading({ content: formMessage.loadingMessage, key }, 10);
 
@@ -89,7 +93,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     if (eventUserId) {
       try {
         let resp = await TicketsApi.transferToUser(eventId, eventUserId, snap);
-        console.log("resp:", resp);
         // textMessage.content = "Transferencia Realizada";
         textMessage.content = formMessage.successMessage;
         setSuccessMessage(`Se ha realizado la transferencia del ticket al correo ${values.email}`);
@@ -100,7 +103,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
           closeModal({ status: "sent_transfer", message: "Transferencia Hecha" });
         }, 4000);
       } catch (err) {
-        console.log("Se presento un problema", err);
+        console.error("Se presento un problema", err);
         // textMessage.content = "Error... Intentalo mas tarde";
         textMessage.content = formMessage.errorMessage;
         message.error(textMessage);
@@ -110,7 +113,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         let resp = await UsersApi.createOne(snap, eventId);
 
         if (resp.message === "OK") {
-          console.log("RESP", resp);
           setSuccessMessageInRegisterForm(resp.status);
           // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
           // textMessage.content = "Usuario " + statusMessage;
@@ -148,34 +150,28 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   };
 
   const fieldsChange = (changedField) => {
-    console.log("propiedades de fieldsChange", changedField)
-
+    
   }
 
   const valuesChange = (changedField, allFields) => {
-    console.log("propiedades de valuesChange", changedField, allFields)
     let newExtraFields = [...extraFieldsOriginal]
-
+    //debugger
     conditionals.map((conditional, key) => {
       let fulfillConditional = true
       Object.keys(allFields).map((changedkey) => {
         if (changedkey === conditional.fieldToValidate) {
-          console.log("cadena despues de if", changedkey, conditional, changedField[changedkey], allFields)
           fulfillConditional = (conditional.value == allFields[changedkey])
         }
       })
       if (fulfillConditional) {
         //Campos ocultados por la condicion
         newExtraFields = newExtraFields.filter((field, key) => {
-          console.log(conditional.fields, field)
           return conditional.fields.indexOf(field.name) == -1
         })
       }
     })
 
     setExtraFields(newExtraFields)
-    console.log("ExtraFields", extraFields)
-    console.log("Condicionales", conditionals)
   }
 
   const hideConditionalFieldsToDefault = () => {
@@ -188,19 +184,20 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
     })
 
     setExtraFields(newExtraFields)
-    //console.log("ExtraFields", extraFields)
-    //console.log("Condicionales", conditionals)
+ 
   }
+
+  const handleChangePassword = e => {
+    setPassword(e.target.value)
+    form.setFieldsValue({password: password})
+  };
 
   /**
    * Crear inputs usando ant-form, ant se encarga de los onChange y de actualizar los valores
    */
   const renderForm = () => {
-    //console.log("render", extraFields)
     if (!extraFields) return ""
     let formUI = extraFields.map((m, key) => {
-      console.log('formulario campos', m)
-      // if (m.label === "pesovoto") return;            
       let type = m.type || "text";
       let props = m.props || {};
       let name = m.name;
@@ -333,33 +330,31 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               name='password'
               style={{ marginBottom: '15px'}}
               placeholder="Ingrese su password"
-              key={key}  
+              onChange={handleChangePassword}
+              key={key}
+              value={password}
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{9,}"
+              title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
               />
+              
             </>
-
-          // <>
-          //   <Password 
-          //   name={`${name}`}
-          //   style={{ marginBottom: '15px'}}
-          //   placeholder="Ingrese su password"
-          //   key={key}  
-          //   />
-          //   <Password
-          //   name={`${name}Validation`}
-          //   placeholder="Ingrese nuevamente su password"
-          //   key={key+1}
-          //   />
-            
-          // </>
-          
         )
       }
+
+      
 
       let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
       rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
+      rule = (type == "password") ? {
+        required: true,
+        type: "regexp",
+        pattern: new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{10,}$/),
+        message: "El formato del password no es valido"
+      }: rule;
+      
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
