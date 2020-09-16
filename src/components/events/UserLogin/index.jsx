@@ -242,12 +242,12 @@ class UserLogin extends Component {
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item
-              label="Password"
+              label="Contraseña"
               name="password"
               rules={[
                 {
                   required: true,
-                  message: 'Ingrese su password',
+                  message: 'Ingrese su contraseña',
                   
                 },
               ]}

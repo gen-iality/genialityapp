@@ -328,12 +328,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
             <>
               <Password 
               name='password'
-              style={{ marginBottom: '15px'}}
+              style={{ margin: '15px'}}
               placeholder="Ingrese su password"
               onChange={handleChangePassword}
               key={key}
               value={password}
-              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{9,}"
+              pattern="(?=^.{9,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
               title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
               />
               
@@ -375,13 +375,13 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
                 name={name}
                 rules={[rule]}
                 key={"l" + key}
-                htmlFor={key}
+                htmlFor={key}                
               >
                 {input}
               </Form.Item>
               {description && description.length < 500 && <p>{description}</p>}
               {description && description.length > 500 && (
-                <Collapse defaultActiveKey={["0"]}>
+                <Collapse defaultActiveKey={["0"]} style={{margingBotton: '15px'}}>
                   <Panel header="Política de privacidad, términos y condiciones" key="1">
                     <pre>{description}</pre>
                   </Panel>
