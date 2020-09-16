@@ -333,7 +333,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
               onChange={handleChangePassword}
               key={key}
               value={password}
-              pattern="(?=^.{9,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+              pattern="(?=^.{10,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
               title="El password debe tener mínimo 10 caracteres, una mayúscula, una minúscula y un número"
               />
               

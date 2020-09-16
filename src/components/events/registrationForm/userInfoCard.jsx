@@ -284,22 +284,22 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         )
       }
 
-      if (type === "password") {
-        input = (
-            <>
-              <Password 
-              name='password'
-              style={{ marginBottom: '15px'}}
-              placeholder="Ingrese su password"
-              key={key}
-              onChange={val => setPassword(val)}
-              type={type}
-              value={value}
-              {...props}
-              />
-            </>
-        )
-      }
+      // if (type === "password") {
+      //   input = (
+      //       <>
+      //         <Password 
+      //         name='password'
+      //         style={{ marginBottom: '15px'}}
+      //         placeholder="Ingrese su password"
+      //         key={key}
+      //         onChange={val => setPassword(val)}
+      //         type={type}
+      //         value={value}
+      //         {...props}
+      //         />
+      //       </>
+      //   )
+      // }
 
       let rule = (name == "email" || name == "names" || name == "password") ? { required: true } : { required: mandatory };
 
