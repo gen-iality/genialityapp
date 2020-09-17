@@ -54,12 +54,12 @@ function ConfirmacionRegistro(props) {
                 <Checkbox defaultChecked={event.validateEmail} style={{ marginRight: "2%" }} onChange={(e) => setValidateEmail(e.target.checked)} />
                 <label>Autologuearse despues de registrarse</label>
             </Row>
-            <Row>
+            {/* <Row>
                 <Tooltip placement="top" title={text}>
                     <Checkbox defaultChecked={event.send_custom_email} style={{ marginRight: "2%" }} onChange={(e) => setSendCustomEmail(e.target.checked)} />                    
                 </Tooltip>
                 <label>Usar plantilla de email personalizada</label>
-            </Row>
+            </Row> */}
             <Row >
                 <Col span={12}>
                     <Button type="primary" onClick={saveData}>Guardar</Button>
