@@ -74,10 +74,11 @@ class AgendaInscriptions extends Component {
           }
         }
       }
-      
+
       for (let i = 0; agendaData.length > i; i++) {
         for (let a = 0; userAgenda.data.length > a; a++) {
-          agendaData[a].attendee_id = userAgenda.data[a]._id
+          if (agendaData[a] !== undefined)
+            agendaData[a].attendee_id = userAgenda.data[a]._id
         }
       }
 
@@ -247,7 +248,25 @@ class AgendaInscriptions extends Component {
                                 </>
                               )
                             }
-
+                          </div>
+                          <div className="text-align-card">
+                            {
+                              <>
+                                {item.description.length > 15 && (
+                                  <>
+                                    <b>Descripción: </b>
+                                  </>
+                                )}
+                                <br />
+                                <br />
+                                <Row>
+                                  <div
+                                    className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
+                                    dangerouslySetInnerHTML={{ __html: item.description }}
+                                  />
+                                </Row>
+                              </>
+                            }
                           </div>
                           <div className="text-align-card">
                             {
