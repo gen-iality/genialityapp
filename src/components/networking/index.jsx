@@ -12,6 +12,7 @@ import SearchComponent from "../shared/searchTable";
 import Pagination from "../shared/pagination";
 import Loading from "../loaders/loading";
 import EventContent from "../events/shared/content";
+import FilterNetworking from './FilterNetworking'
 
 import * as Cookie from "js-cookie";
 import API, { EventsApi, RolAttApi, EventFieldsApi } from "../../helpers/request";
@@ -45,6 +46,7 @@ export default class ListEventUser extends Component {
   }
 
   async componentDidMount () {
+
     await this.getInfoCurrentUser();
     this.loadData();
   }
@@ -339,17 +341,10 @@ export default class ListEventUser extends Component {
               </Col>
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <h1> Busca aquí las personas que deseas contactar.</h1>
-
-                <Select defaultValue="lucy" style={{ width: 120 }} >
-                  <Option value="jack">Automotores</Option>
-                  <Option value="lucy">Tecnología y telecomunicaciones</Option>
-                  <Option value="Yiminghe">Artículos para el hogar</Option>
-                  <Option value="Yiminghe">Ferreterías y materiales de construcción</Option>
-                  <Option value="Yiminghe">Joyerías y accesorios de lujo</Option>
-                  <Option value="Yiminghe">Servicios al comercio</Option>
-                </Select>
-
-
+                <FilterNetworking 
+                  properties={this.props.event.user_properties}
+                  filterProperty={'sector'}
+                />
               </Col>
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <Alert
