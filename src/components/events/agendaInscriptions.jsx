@@ -252,13 +252,6 @@ class AgendaInscriptions extends Component {
                           <div className="text-align-card">
                             {
                               <>
-                                {item.description.length > 15 && (
-                                  <>
-                                    <b>Descripción: </b>
-                                  </>
-                                )}
-                                <br />
-                                <br />
                                 <Row>
                                   <div
                                     className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
@@ -337,7 +330,7 @@ class AgendaInscriptions extends Component {
                               item.habilitar_ingreso === "closed_meeting_room" && (
                                 <>
                                   <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia Inciará pronto" type="warning" />
+                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
                                 </>
                               )
                             }
