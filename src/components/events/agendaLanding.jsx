@@ -476,7 +476,7 @@ class Agenda extends Component {
                               item.habilitar_ingreso === "closed_meeting_room" && (
                                 <>
                                   <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia Inciará pronto" type="warning" />
+                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
                                 </>
                               )
                             }
