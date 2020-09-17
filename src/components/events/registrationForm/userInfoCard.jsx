@@ -301,12 +301,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       //   )
       // }
 
-      let rule = (name == "email" || name == "names" || name == "password") ? { required: true } : { required: mandatory };
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
       rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
-      rule = (type == "password") ? { ...rule, type: "password" } : rule;
+      //rule = (type == "password") ? { ...rule, type: "password" } : rule;
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 

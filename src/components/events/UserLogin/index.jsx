@@ -122,17 +122,20 @@ class UserLogin extends Component {
   };
   
   loginEmailPassword = (data) => {
-    
+    //console.log('Start signInWithEmailAndPassword...', data)
     this.setState({errorLogin: false })
-    app.auth().signInWithEmailAndPassword(data.email, data.password)
+    const respuesta = app.auth().signInWithEmailAndPassword(data.email, data.password)
+    .then(response => console.log('response login', response))
     .catch(()=>{
       console.error('Error: Email or password invalid')
       this.setState({errorLogin: true })
       this.setState({loading: false})
     });
+    //console.log('repuesta', respuesta)
   }
   
   handleLoginEmailPassword = async (values) => {
+    //console.log('Start Login...')
     //console.log('handles',values)
     // Cookie.remove("token");
     // Cookie.remove("evius_token");
@@ -172,6 +175,11 @@ class UserLogin extends Component {
     //  console.error(error)
     // });
   }
+
+  onFinishFailed = (errorInfo) => {
+    console.error('Failed:', errorInfo);
+  };
+
   
   render(){
     const {formTexts} = this.state
@@ -222,7 +230,7 @@ class UserLogin extends Component {
 
     {/* Inicio  de formulario para autenticación con Email y contraseña */}
     {this.state.enabledLoginForm && (
-      <Form onFinish={this.handleLoginEmailPassword}>
+      <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
         <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item
