@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select  } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification } from "antd";
 
 import { SmileOutlined } from '@ant-design/icons';
 
@@ -15,14 +15,13 @@ import EventContent from "../events/shared/content";
 import FilterNetworking from './FilterNetworking'
 
 import * as Cookie from "js-cookie";
-import API, { EventsApi, RolAttApi, EventFieldsApi } from "../../helpers/request";
+import { EventsApi, EventFieldsApi } from "../../helpers/request";
 
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
 
 import ContactList from "./contactList";
 import RequestList from "./requestList";
 
-const { Option } = Select;
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
@@ -77,6 +76,7 @@ export default class ListEventUser extends Component {
     if ( destacados && destacados.length >= 0 ) {
       eventUserList = [ ...destacados, ...eventUserList ]
     }
+
     //Finaliza destacados
 
     //Búscamos usuarios sugeridos según el campo sector esto es para el proyecto FENALCO
@@ -85,14 +85,6 @@ export default class ListEventUser extends Component {
       let meproperties = this.state.eventUser.properties;
       matches = eventUserList.filter( asistente => ( asistente.properties.sector && asistente.properties && meproperties && meproperties.priorizarsectoresdeinteres && ( meproperties.priorizarsectoresdeinteres.match( new RegExp( asistente.properties.sector, 'gi' ) ) || asistente.properties.sector.match( new RegExp( meproperties.priorizarsectoresdeinteres, 'gi' ) ) ) ) )
     }
-
-    console.log( "eventUserList: Matched", matches, eventUserList, this.state.eventUser );
-
-
-
-
-
-
 
     let asistantData = await EventFieldsApi.getAll( event._id )
 
@@ -130,6 +122,14 @@ export default class ListEventUser extends Component {
     this.setState( { pageOfItems: pageOfItems } );
   };
 
+  handleSelectFilter = (value) => {
+    let inputSearch = document.getElementById('inputSearch')
+    let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    nativeInputValueSetter.call(inputSearch, value);
+    let ev2 = new Event('input', { bubbles: true});
+    inputSearch.dispatchEvent(ev2);
+  }
+
   //Search records at third column
   searchResult = ( data ) => {
     !data ? this.setState( { users: [] } ) : this.setState( { users: data } );
@@ -157,8 +157,7 @@ export default class ListEventUser extends Component {
 
         // Se ejecuta el servicio del api de evius
         try {
-          const response = await EventsApi.sendInvitation( this.props.event._id, data );
-          console.log( "Esta es la respuesta:", response );
+          await EventsApi.sendInvitation( this.props.event._id, data );
           notification.open( {
             message: 'Solicitud enviada',
             description:
@@ -274,7 +273,7 @@ export default class ListEventUser extends Component {
                                   }
                                   title={ users.properties.names ? users.properties.names : "No registra Nombre" }
                                   description={ [
-                                    <div>
+                                    <div key={`ui-${ userIndex }`}>
                                       <br />
                                       <Row>
                                         <Col xs={ 24 }>
@@ -339,13 +338,17 @@ export default class ListEventUser extends Component {
 
 
               </Col>
+              
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
-                <h1> Busca aquí las personas que deseas contactar.</h1>
+               
+                <h2> Busca aquí las personas que deseas contactar.</h2>
                 <FilterNetworking 
                   properties={this.props.event.user_properties}
                   filterProperty={'sector'}
+                  handleSelect={this.handleSelectFilter}
                 />
               </Col>
+
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <Alert
                   message="Información Adicicional"
@@ -407,7 +410,7 @@ export default class ListEventUser extends Component {
                                 }
                                 title={ users.properties.names ? users.properties.names : "No registra Nombre" }
                                 description={ [
-                                  <div>
+                                  <div key={`ug-${ userIndex }`}>
                                     <br />
                                     <Row>
                                       <Col xs={ 24 }>
