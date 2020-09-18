@@ -183,10 +183,18 @@ class Landing extends Component {
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
 
-    this.setState({ event, eventUser, show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, eventUsers, data: user, currentUser: user, namesUser: namesUser, loader_page: event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
+    this.setState({ 
+      event, 
+      eventUser, 
+      show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, 
+      eventUsers, 
+      data: user, 
+      currentUser: user, 
+      namesUser: namesUser, 
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
     const sections = {
       agenda: (
-        event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ?
+        event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ?
           <AgendaFormComplete event={event} eventId={event._id} toggleConference={this.toggleConference} />
           :
           <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />
@@ -473,7 +481,7 @@ controls
                 ) : (
                     <>
                       {
-                        event.styles.show_banner && event.styles.show_banner === "true" ? (
+                        event.styles && event.styles.show_banner && event.styles.show_banner === "true" ? (
                           <BannerEvent
                             bgImage={
                               event.styles && event.styles.banner_image
@@ -507,7 +515,7 @@ controls
                         ) : (
                             <div>
                               {
-                                event.styles.show_banner === undefined && this.state.headerVisible && (
+                                event.styles && event.styles.show_banner === undefined && this.state.headerVisible && (
                                   <BannerEvent
                                     bgImage={
                                       event.styles && event.styles.banner_image

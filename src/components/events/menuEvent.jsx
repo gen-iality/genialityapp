@@ -135,8 +135,9 @@ class MenuEvent extends Component {
 }
   
 handleInitialSection(){
-  
-  const itemsMenu = Object.keys(this.state.itemsMenu).map((key)=>{
+  let itemsMenu = this.state.itemsMenu || {}
+
+  itemsMenu = Object.keys(itemsMenu).map((key)=>{
     
     if ( ( this.state.itemsMenu[ key ] && this.state.itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) { return null; }
     
@@ -173,7 +174,7 @@ handleInitialSection(){
         >       
 
         { loading &&(<div className="columns is-centered"><Spin tip="Cargando Menú..."></Spin></div>)}
-        {Object.keys(this.state.itemsMenu).map((key)=>{
+        {this.state.itemsMenu && Object.keys(this.state.itemsMenu).map((key)=>{
           if ( ( this.state.itemsMenu[ key ] && this.state.itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) {
             return null; 
           }
