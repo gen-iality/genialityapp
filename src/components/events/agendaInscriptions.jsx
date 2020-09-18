@@ -77,7 +77,8 @@ class AgendaInscriptions extends Component {
 
       for (let i = 0; agendaData.length > i; i++) {
         for (let a = 0; userAgenda.data.length > a; a++) {
-          agendaData[a].attendee_id = userAgenda.data[a]._id
+          if (agendaData[a] !== undefined)
+            agendaData[a].attendee_id = userAgenda.data[a]._id
         }
       }
 
@@ -247,7 +248,18 @@ class AgendaInscriptions extends Component {
                                 </>
                               )
                             }
-
+                          </div>
+                          <div className="text-align-card">
+                            {
+                              <>
+                                <Row>
+                                  <div
+                                    className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
+                                    dangerouslySetInnerHTML={{ __html: item.description }}
+                                  />
+                                </Row>
+                              </>
+                            }
                           </div>
                           <div className="text-align-card">
                             {
@@ -318,7 +330,7 @@ class AgendaInscriptions extends Component {
                               item.habilitar_ingreso === "closed_meeting_room" && (
                                 <>
                                   <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia Inciará pronto" type="warning" />
+                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
                                 </>
                               )
                             }

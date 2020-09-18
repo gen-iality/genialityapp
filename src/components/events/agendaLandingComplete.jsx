@@ -191,6 +191,7 @@ class AgendaLandingComplete extends Component {
                   {/* Contenedor donde se pinta la información de la agenda */}
 
                   {data.map((item, llave) => (
+                    console.log(item),
                     <div key={llave} className="container_agenda-information">
                       <div className="card agenda_information">
                         <Row align="middle">
@@ -228,9 +229,8 @@ class AgendaLandingComplete extends Component {
                                   </>
                                 )
                               }
-
                             </div>
-                            <p className="text-align-card">
+                            <div className="text-align-card">
                               {
                                 item.hosts.length > 0 && (
                                   <>
@@ -251,14 +251,26 @@ class AgendaLandingComplete extends Component {
                                   </>
                                 )
                               }
-                            </p>
+                            </div>
+                            <div className="text-align-card">
+                              {
+                                <>
+                                  <Row>
+                                    <div
+                                      className="is-size-5-desktop has-margin-top-10 has-margin-bottom-10"
+                                      dangerouslySetInnerHTML={{ __html: item.description }}
+                                    />
+                                  </Row>
+                                </>
+                              }
+                            </div>
                             <Row>
                               <Col span={12}>
-                                <Row>
+                                {/* <Row>
                                   <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                     Detalle del Evento
                                   </Button>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                   <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
                                     Inscribirme
@@ -293,13 +305,13 @@ class AgendaLandingComplete extends Component {
                               !item.habilitar_ingreso && (
                                 <img src={item.image ? item.image : this.props.event.styles.event_image} />
                               )
-                            }                            
+                            }
                             <div>
                               {
                                 item.habilitar_ingreso === "closed_meeting_room" && (
                                   <>
                                     <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                    <Alert message="La Conferencia Inciará pronto" type="warning" />
+                                    <Alert message="La Conferencia iniciará pronto" type="warning" />
                                   </>
                                 )
                               }
