@@ -285,11 +285,11 @@ class AgendaInscriptions extends Component {
                           </div>
                           <Row>
                             <Col span={12}>
-                              <Row>
+                              {/* <Row>
                                 <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
                                   Detalle del Evento
                                </Button>
-                              </Row>
+                              </Row> */}
                               <Row>
                                 <Button type="primary" onClick={(e) => { this.deleteRegisterInActivity(item.attendee_id) }} className="space-align-block">
                                   Eliminar Inscripción
