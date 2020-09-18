@@ -21,9 +21,9 @@ class AgendaLandingComplete extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount() {    
     this.getCurrentUser()
-    this.getDataAgenda()
+    this.getDataAgenda()    
   }
 
   getCurrentUser = async () => {
@@ -46,7 +46,9 @@ class AgendaLandingComplete extends Component {
   };
 
   async getDataAgenda() {
-    const { eventId } = this.props
+    const { eventId, event } = this.props    
+
+    this.setState({ showInscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false })
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(eventId);
     this.listeningStateMeetingRoom(data)
@@ -143,7 +145,7 @@ class AgendaLandingComplete extends Component {
   };
   render() {
     const { toggleConference } = this.props;
-    const { data, showButtonSurvey, showButtonDocuments, spaces, currentActivity, survey, visible, loading } = this.state
+    const { data, showInscription, showButtonSurvey, showButtonDocuments, spaces, currentActivity, survey, visible, loading } = this.state
     return (
       <Fragment>
         {currentActivity && (
@@ -266,11 +268,13 @@ class AgendaLandingComplete extends Component {
                             </div>
                             <Row>
                               <Col span={12}>
-                                {/* <Row>
-                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
-                                    Detalle del Evento
+                              {showInscription && (
+                                <Row>
+                                  <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
+                                    Inscribirme
                                   </Button>
-                                </Row> */}
+                                </Row>
+                              )}
                                 <Row>
                                   <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
                                     Inscribirme

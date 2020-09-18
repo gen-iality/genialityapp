@@ -22,6 +22,7 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
+      data:[],
       value: "",
       currentActivity: null,
       survey: [],
@@ -33,6 +34,7 @@ class Agenda extends Component {
       loading: false,
       showButtonSurvey: false,
       showButtonDocuments: false,
+      show_inscription: false,
       status: "in_progress"
     };
     this.returnList = this.returnList.bind(this);
@@ -69,6 +71,8 @@ class Agenda extends Component {
     this.setState({ loading: false });
 
     const { event } = this.props;
+
+    this.setState({ showInscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false })
 
     let surveysData = await SurveysApi.getAll(event._id);
     let documentsData = await DocumentsApi.getAll(event._id)
@@ -305,8 +309,8 @@ class Agenda extends Component {
   }
 
   render() {
-    const { toggleConference, eventId } = this.props;
-    const { days, day, uid, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { toggleConference, eventId, event } = this.props;
+    const { days, day, showInscription, spaces, toShow, data, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -363,19 +367,21 @@ class Agenda extends Component {
                 )}
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
+                {
+                  event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "false" && (
+                    <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
+                      {days.map((date, key) => (
+                        <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
+                          {this.capitalizeDate(Moment(date).format("MMMM DD"))}
+                        </Button>
 
-                <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
-                  {days.map((date, key) => (
-                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
-                      {this.capitalizeDate(Moment(date).format("MMMM DD"))}
-                    </Button>
+                      ))}
+                    </div>
+                  )
+                }
 
-                  ))}
-                </div>
-
-                {/* Contenedor donde se pinta la información de la agenda */}
-
-                {toShow.map((item, llave) => (
+                {/* Contenedor donde se pinta la información de la agenda */}                
+                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => (
                   <div key={llave} className="container_agenda-information">
                     {/* {console.log('info item', item) } */}
                     <div className="card agenda_information">
@@ -441,11 +447,13 @@ class Agenda extends Component {
                                   Detalle del Evento
                                </Button>
                               </Row>
-                              <Row>
-                                <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
-                                  Inscribirme
-                                </Button>
-                              </Row>
+                              {showInscription && (
+                                <Row>
+                                  <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
+                                    Inscribirme
+                                  </Button>
+                                </Row>
+                              )}
                             </Col>
 
                             <Col span={12}>
