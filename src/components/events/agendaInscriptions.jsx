@@ -50,6 +50,8 @@ class AgendaInscriptions extends Component {
   }
 
   async getAgendaByUser() {
+
+    console.log('-----------start agenda by user-')
     const { event } = this.props
     let user_id = await this.getCurrentUser()
     try {
