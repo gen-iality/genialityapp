@@ -280,6 +280,9 @@ export default class ListEventUser extends Component {
                                           <div>
                                             {
                                               !asistantData.map((data, dataIndex) => (
+                                                /*Condicion !data.visible para poder tener en cuenta el campo visible en los datos que llegan, 
+                                                  esto ya que visibleByContacst es variable nueva, ambas realizan la misma funcionalidad
+                                                */
                                                 !data.visible || !data.visibleByContacts && data.visibleByContacts !== undefined && users.properties[data.name] && (
                                                   <div key={`public-field-${userIndex}-${dataIndex}`}>
                                                     <p><b>{data.label}:</b> {users.properties[data.name]}</p>
