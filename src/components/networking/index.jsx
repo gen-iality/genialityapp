@@ -341,7 +341,7 @@ export default class ListEventUser extends Component {
               
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                
-                <h2> Busca aquí las personas que deseas contactar.</h2>
+                <h2> Selecciona el sector de tu interés para encontrar las personas que deseas contactar</h2>
                 <FilterNetworking 
                   properties={this.props.event.user_properties}
                   filterProperty={'sector'}
