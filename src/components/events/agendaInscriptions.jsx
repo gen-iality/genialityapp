@@ -50,11 +50,16 @@ class AgendaInscriptions extends Component {
   }
 
   async getAgendaByUser() {
+
+    console.log('-----------start agenda by user-')
     const { event } = this.props
     let user_id = await this.getCurrentUser()
     try {
       let infoAgenda = await AgendaApi.byEvent(event._id)
       const infoUserAgenda = await Activity.GetUserActivity(event._id, user_id)
+      
+      console.log('info user agenda-------------------', infoUserAgenda)
+
       let space = await SpacesApi.byEvent(event._id);
       let agendaData = this.filterUserAgenda(infoAgenda, infoUserAgenda)
       const data = await this.listeningStateMeetingRoom(agendaData);
