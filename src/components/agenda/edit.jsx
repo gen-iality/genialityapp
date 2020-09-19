@@ -29,6 +29,7 @@ import Dropzone from "react-dropzone";
 import { Spin, Card } from "antd";
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
+import getHostList, { setHostState, getAllHost } from "./fireHost";
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class AgendaEdit extends Component {
       bigmaker_meeting_id: null,
       has_date: "",
       description: "",
+      registration_message: "",
       hour_start: new Date(),
       hour_end: new Date(),
       key: new Date(),
@@ -103,8 +105,7 @@ class AgendaEdit extends Component {
       }
 
       vimeo_id = info.vimeo_id ? info.vimeo_id : ""
-      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id })
-      console.log(this.state)
+      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id })   
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
       if (info.dates && info.dates.length > 0) {
@@ -134,8 +135,7 @@ class AgendaEdit extends Component {
 
 
     let documents = await DocumentsApi.byEvent(this.props.event._id);
-    let hostAvailable = await EventsApi.hostAvailable();
-    console.log(hostAvailable)
+    let hostAvailable = await EventsApi.hostAvailable();    
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
@@ -205,8 +205,7 @@ class AgendaEdit extends Component {
   //FN general para cambio en input
   handleChange = (e) => {
     const { name } = e.target;
-    const { value } = e.target;
-    console.log(e, e.target);
+    const { value } = e.target;  
     this.setState({ [name]: value, host_id: e.target.value });
   };
   //FN para cambio en campo de fecha
@@ -273,6 +272,9 @@ class AgendaEdit extends Component {
   //FN para el editor enriquecido
   chgTxt = (content) => this.setState({ description: content });
 
+  registrationMessage = (content) => {
+    this.setState({ registration_message: content })
+  }
   //Envío de información
   submit = async () => {
     if (this.validForm()) {
@@ -286,18 +288,16 @@ class AgendaEdit extends Component {
         const {
           selected_document
         } = this.state
-        this.setState({ isLoading: true });
-        console.log("AGUARDAR", info, state.edit);
+        this.setState({ isLoading: true });        
 
         if (state.edit) {
           const data = {
             activity_id: state.edit
-          }
+          }      
           await AgendaApi.editOne(info, state.edit, event._id);
 
           for (let i = 0; i < selected_document.length; i++) {
-            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)
-            console.log(documentsUpdate)
+            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)         
           }
         }
         else {
@@ -357,6 +357,7 @@ class AgendaEdit extends Component {
       selectedType,
       selectedRol,
       description,
+      registration_message,
       selected_document,
       image,
     } = this.state;
@@ -376,6 +377,7 @@ class AgendaEdit extends Component {
       space_id,
       image,
       description,
+      registration_message,
       capacity: parseInt(capacity, 10),
       activity_categories_ids,
       access_restriction_type,
@@ -405,6 +407,7 @@ class AgendaEdit extends Component {
       selectedType,
       selectedRol,
       description,
+      registration_message,
       selected_document,
       image,
       meeting_id,
@@ -430,6 +433,7 @@ class AgendaEdit extends Component {
       space_id,
       image,
       description,
+      registration_message,
       capacity: parseInt(capacity, 10),
       activity_categories_ids,
       access_restriction_type,
@@ -446,7 +450,7 @@ class AgendaEdit extends Component {
     };
   };
 
-  async removeVimeoId(){
+  async removeVimeoId() {
     if (window.confirm("Esta seguro?")) {
       this.setState({ vimeo_id: null }, function () {
         this.submit();
@@ -482,8 +486,6 @@ class AgendaEdit extends Component {
       host_name: host_name[0]
     };
 
-    console.log(zoomData)
-
     const options = {
       method: "POST",
       headers: {
@@ -497,8 +499,8 @@ class AgendaEdit extends Component {
     axios.defaults.timeout = 10000;
     try {
       response = await axios(options);
-      toast.success("Conferencia Creada");
-      console.log(this.state.host_id);      
+      toast.success("Conferencia Creada");     
+      let result = await setHostState(this.state.host_id, true);
 
       const {
         location: { state },
@@ -568,8 +570,7 @@ class AgendaEdit extends Component {
   async onChange(e) {
     this.setState({ availableText: e.target.value })
 
-    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)
-    console.log(result)
+    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)    
 
     notification.open({
       message: result.message
@@ -599,16 +600,18 @@ class AgendaEdit extends Component {
       selectedType,
       selectedCategories,
       video,
-      hosts, 
-      spaces, 
-      categories, 
-      types, 
-      roles,  
-      isLoading, 
-      start_url, 
-      join_url, 
-      availableText, 
-      vimeo_id,        
+      hosts,
+      spaces,
+      categories,
+      types,
+      roles,
+      documents,
+      isLoading,
+      start_url,
+      join_url,
+      availableText,
+      vimeo_id,
+      selectedTickets,
       platform } = this.state;
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
@@ -648,8 +651,7 @@ class AgendaEdit extends Component {
                 </div>
                 <div className="field">
                   <label className="label">Día</label>
-                  <div className="columns">
-                    {console.log(this.state.days)}
+                  <div className="columns">                
                     {this.state.days.map((day, key) => {
                       return (
                         <div key={key} className="column">
@@ -661,8 +663,7 @@ class AgendaEdit extends Component {
                             checked={day === date}
                             value={day}
                             onChange={this.handleChange}
-                          />
-                          {console.log(day)}
+                          />                       
                           <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
                         </div>
                       );
@@ -845,11 +846,18 @@ class AgendaEdit extends Component {
                 </div>
 
                 <div className="field">
+                  <label className="label">Texto de email para confirmación de registro </label>
+                  <div className="control">
+                    <ReactQuill value={this.state.registration_message} modules={toolbarEditor} onChange={this.registrationMessage} />
+                  </div>
+                </div>
+
+                <div className="field">
                   <label className="label">Descripción</label>
                   <div className="control">
                     <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
                   </div>
-                </div>
+                </div>                
               </div>
               <div className="column is-4 general">
                 <div className="field is-grouped">
@@ -925,10 +933,7 @@ class AgendaEdit extends Component {
                         onCreateOption={(value) => this.handleCreate(value, "types")}
                         options={types}
                         value={selectedType}
-                      />
-                      {
-                        console.log(selectedType)
-                      }
+                      />                      
                     </div>
                     <div className="column is-2">
                       <Link to={`${matchUrl}/tipos`}>
@@ -1058,9 +1063,9 @@ class AgendaEdit extends Component {
                               <label>Ingrese id de videoconferencia Vimeo</label>
                               <input
                                 type="number"
-                                name="vimeo_id"  
-                                onChange={(e)=> this.setState({vimeo_id: e.target.value})}                              
-                              />                                
+                                name="vimeo_id"
+                                onChange={(e) => this.setState({ vimeo_id: e.target.value })}
+                              />
                             </div>
                           ) : (
                               <>

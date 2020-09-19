@@ -593,9 +593,15 @@ export const SpeakersApi = {
 
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
-    var info = { user_id, activity_id };
-    return await Actions.create(`api/events/${event}/activity/activity_attendee`, info);
+    var info = { event_id: event, user_id, activity_id };
+    return await Actions.create(`api/events/${event}/activities_attendees`, info);
   },
+  GetUserActivity: async (event, user_id)=>{
+    return await Actions.get(`api/events/${event}/activities_attendees?user_id=${user_id}`)
+  },
+  DeleteRegister: async (event, id) =>{
+    return await Actions.delete(`api/events/${event}/activities_attendees`,id)
+  }
 };
 
 export const Networking = {

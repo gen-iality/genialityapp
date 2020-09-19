@@ -154,6 +154,20 @@ class Styles extends Component {
         ]
       },
       {
+        label: "Habilitar tarjeta informativa del banner",
+        name: "show_card_banner",
+        defaultValue: "true",
+        options: [
+          {
+            label: "Si",
+            value: true,
+          }, {
+            label: "No",
+            value: false
+          }
+        ]
+      },
+      {
         label: "Ocular fechas de la seccion de agenda",
         name: "hideDatesAgenda",
         defaultValue: false,
@@ -201,6 +215,7 @@ class Styles extends Component {
           mobile_banner: info.styles.mobile_banner || null,
           banner_footer_email: info.styles.banner_footer_email || null,
           show_banner: info.styles.show_banner || false,
+          show_card_banner: info.styles.show_card_banner || true,
           hideDatesAgenda: info.styles.hideDatesAgenda || false,
           loader_page: info.styles.loader_page || "no",
           data_loader_page: info.styles.data_loader_page || ""

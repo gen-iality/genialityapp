@@ -143,7 +143,7 @@ class VirtualConference extends Component {
                 {
                     <div>
                         <Card bordered={true}>
-                            <span>Salas</span>
+                            <span>Sesiones</span>
                         </Card>
                         {infoAgendaArr.map((item, key) => (
                             <div key={key}>

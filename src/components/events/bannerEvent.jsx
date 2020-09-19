@@ -29,8 +29,7 @@ const BgElement = Element.BgElement;
 
 
 
-let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
-
+let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {    
     return (
         <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
             <Element
@@ -51,7 +50,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         }}
                 />
                 {
-                    eventId === "5f5aa2f9ca44794d515f9b82" ? (
+                    styles && styles.show_card_banner && styles.show_card_banner === "false" ? (
                         <></>
                     ) : (
                             <>

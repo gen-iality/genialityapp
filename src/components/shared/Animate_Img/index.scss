@@ -44,6 +44,8 @@
     display: inline-block;
     font-size: 150px;
   }
+
+
   @media only screen and (max-width:768px) {
     img {
       margin-top: 0px;
@@ -71,7 +73,23 @@
       font-size: 50px;
     }
   }
-   @media (min-width: 800px) and (max-width:1024px) {
+  
+  @media only screen and (max-width:768px) and (orientation: landscape)  {
+    img {
+      margin-top: 0px;
+      height: 85vh;
+      width: 100vw;
+      margin-bottom: 0px;
+    }
+  }
+  
+   @media (min-width: 800px) and (max-width:1024px){
+    img {
+      margin-top: 0px;
+      height: 80vh;
+      width: 100vw;
+      margin-bottom: 0px;
+    }
     .ant-btn {
       position: absolute;
       top: -79px;

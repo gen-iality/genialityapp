@@ -8,7 +8,7 @@ import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
 import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider, Select } from "antd";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 const { Panel } = Collapse;
-const { TextArea } = Input;
+const { TextArea, Password } = Input;
 const { Option } = Select;
 
 const textLeft = {
@@ -44,6 +44,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [formMessage, setFormMessage] = useState({});
   const [country, setCountry] = useState();
   const [region, setRegion] = useState()
+  const [password, setPassword] = useState(null)
 
   const [form] = Form.useForm();
 
@@ -283,11 +284,29 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
         )
       }
 
-      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
+      // if (type === "password") {
+      //   input = (
+      //       <>
+      //         <Password 
+      //         name='password'
+      //         style={{ marginBottom: '15px'}}
+      //         placeholder="Ingrese su password"
+      //         key={key}
+      //         onChange={val => setPassword(val)}
+      //         type={type}
+      //         value={value}
+      //         {...props}
+      //         />
+      //       </>
+      //   )
+      // }
+
+      let rule = (name == "email" || name == "names" || name == "password") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
       rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
+      rule = (type == "password") ? { ...rule, type: "password" } : rule;
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 
