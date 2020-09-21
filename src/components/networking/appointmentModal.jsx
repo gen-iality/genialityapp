@@ -12,38 +12,38 @@ const { Option } = Select;
 
 // TODO: -> eliminar fakeEventTimetable
 const fakeEventTimetable = {
-  '2020-08-06': [
+  '2020-09-24': [
     {
-      timestamp_start: '2020-08-06T21:00:00Z',
-      timestamp_end: '2020-08-06T21:15:00Z',
+      timestamp_start: '2020-09-24T21:00:00Z',
+      timestamp_end: '2020-09-24T21:15:00Z',
     },
     {
-      timestamp_start: '2020-08-06T21:15:00Z',
-      timestamp_end: '2020-08-06T21:30:00Z',
+      timestamp_start: '2020-09-24T21:15:00Z',
+      timestamp_end: '2020-09-24T21:30:00Z',
     },
     {
-      timestamp_start: '2020-08-06T21:30:00Z',
-      timestamp_end: '2020-08-06T21:45:00Z',
+      timestamp_start: '2020-09-24T21:30:00Z',
+      timestamp_end: '2020-09-24T21:45:00Z',
     },
     {
-      timestamp_start: '2020-08-06T21:45:00Z',
-      timestamp_end: '2020-08-06T22:00:00Z',
+      timestamp_start: '2020-09-24T21:45:00Z',
+      timestamp_end: '2020-09-24T22:00:00Z',
     },
     {
-      timestamp_start: '2020-08-06T22:00:00Z',
-      timestamp_end: '2020-08-06T22:15:00Z',
+      timestamp_start: '2020-09-24T22:00:00Z',
+      timestamp_end: '2020-09-24T22:15:00Z',
     },
     {
-      timestamp_start: '2020-08-06T22:15:00Z',
-      timestamp_end: '2020-08-06T22:30:00Z',
+      timestamp_start: '2020-09-24T22:15:00Z',
+      timestamp_end: '2020-09-24T22:30:00Z',
     },
     {
-      timestamp_start: '2020-08-06T22:30:00Z',
-      timestamp_end: '2020-08-06T22:45:00Z',
+      timestamp_start: '2020-09-24T22:30:00Z',
+      timestamp_end: '2020-09-24T22:45:00Z',
     },
     {
-      timestamp_start: '2020-08-06T22:45:00Z',
-      timestamp_end: '2020-08-06T23:00:00Z',
+      timestamp_start: '2020-09-24T22:45:00Z',
+      timestamp_end: '2020-09-24T23:00:00Z',
     }
   ]
 }
