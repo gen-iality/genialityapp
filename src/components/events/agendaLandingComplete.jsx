@@ -22,10 +22,9 @@ class AgendaLandingComplete extends Component {
     }
   }
 
-  async componentDidMount() {
-    await this.getCurrentUser()
-    await this.getDataAgenda()
-    await this.getAgendaUser()
+  componentDidMount() {    
+    this.getCurrentUser()
+    this.getDataAgenda()    
   }
 
   getCurrentUser = async () => {
@@ -51,7 +50,9 @@ class AgendaLandingComplete extends Component {
   };
 
   async getDataAgenda() {
-    const { eventId } = this.props
+    const { eventId, event } = this.props    
+
+    this.setState({ showInscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false })
     // Se consulta a la api de agenda
     const { data } = await AgendaApi.byEvent(eventId);
     this.listeningStateMeetingRoom(data)
@@ -166,7 +167,7 @@ class AgendaLandingComplete extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { data, showButtonSurvey, showButtonDocuments, spaces, currentActivity, survey, visible, loading } = this.state
+    const { data, showInscription, showButtonSurvey, showButtonDocuments, spaces, currentActivity, survey, visible, loading } = this.state
     return (
       <Fragment>
         {currentActivity && (

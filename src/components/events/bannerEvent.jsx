@@ -29,7 +29,7 @@ const BgElement = Element.BgElement;
 
 
 
-let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {    
+let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
     return (
         <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
             <Element
@@ -66,7 +66,7 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, da
                                         {/* Fecha del evento */}
                                         <div>
                                             {
-                                                dates ?
+                                                dates && dates.length > 0 ?
                                                     <>
                                                         {
                                                             dates.map((item, key) => (
@@ -79,24 +79,28 @@ let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, da
                                                     :
                                                     <>
                                                         {
-                                                            dateStart === dateEnd ?
+                                                            dateStart === dateEnd ? (
+                                                                console.log("Fechas Iguales"),
                                                                 <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                :
-                                                                <div>
-                                                                    {
-                                                                        (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
-                                                                            <>
-                                                                                <span>Del {Moment(dateStart).format("DD")}</span>
-                                                                                <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                            </>
-                                                                        ) : (
+                                                            )
+                                                                : (
+                                                                    console.log("Fechas diferentes"),
+                                                                    <div>
+                                                                        {
+                                                                            (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
                                                                                 <>
-                                                                                    <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                                    <span>Del {Moment(dateStart).format("DD")}</span>
                                                                                     <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                                                 </>
-                                                                            )
-                                                                    }
-                                                                </div>
+                                                                            ) : (
+                                                                                    <>
+                                                                                        <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                                        <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                                                    </>
+                                                                                )
+                                                                        }
+                                                                    </div>
+                                                                )
                                                         }
                                                     </>
 

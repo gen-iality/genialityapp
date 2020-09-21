@@ -154,8 +154,22 @@ class Styles extends Component {
         ]
       },
       {
-        label: "Habilitar tarjeta informativa del banner",
+        label: "Habilitar Informacíon sobre el banner superior",
         name: "show_card_banner",
+        defaultValue: "true",
+        options: [
+          {
+            label: "Si",
+            value: true,
+          }, {
+            label: "No",
+            value: false
+          }
+        ]
+      },
+      {
+        label: "Habilitar inscripción de agenda",
+        name: "show_inscription",
         defaultValue: "true",
         options: [
           {
@@ -170,6 +184,20 @@ class Styles extends Component {
       {
         label: "Ocular fechas de la seccion de agenda",
         name: "hideDatesAgenda",
+        defaultValue: false,
+        options: [
+          {
+            label: "Si",
+            value: true,
+          }, {
+            label: "No",
+            value: false
+          }
+        ]
+      },
+      {
+        label: "Mostrar boton de detalle de la agenda",
+        name: "hideBtnDetailAgenda",
         defaultValue: false,
         options: [
           {
@@ -216,7 +244,9 @@ class Styles extends Component {
           banner_footer_email: info.styles.banner_footer_email || null,
           show_banner: info.styles.show_banner || false,
           show_card_banner: info.styles.show_card_banner || true,
+          show_inscription: info.show_inscription || false,
           hideDatesAgenda: info.styles.hideDatesAgenda || false,
+          hideBtnDetailAgenda: info.styles.hideBtnDetailAgenda || true,
           loader_page: info.styles.loader_page || "no",
           data_loader_page: info.styles.data_loader_page || ""
         },

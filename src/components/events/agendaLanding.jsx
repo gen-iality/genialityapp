@@ -6,7 +6,7 @@ import AgendaActividadDetalle from "./agendaActividadDetalle";
 import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, Tabs, notification } from "antd";
 import { firestore } from "../../helpers/firebase";
 import ReactPlayer from "react-player";
-//import { AgendaApi } from '../../helpers/request'
+import AgendaActivityItem from './AgendaActivityItem'
 
 class Agenda extends Component {
   constructor(props) {
@@ -21,6 +21,7 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
+      data: [],
       value: "",
       currentActivity: null,
       survey: [],
@@ -32,7 +33,9 @@ class Agenda extends Component {
       loading: false,
       showButtonSurvey: false,
       showButtonDocuments: false,
-      status: "in_progress"
+      show_inscription: false,
+      status: "in_progress",
+      hideBtnDetailAgenda: true
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -68,6 +71,11 @@ class Agenda extends Component {
     this.setState({ loading: false });
 
     const { event } = this.props;
+
+    this.setState({
+      showInscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+    })
 
     let surveysData = await SurveysApi.getAll(event._id);
     let documentsData = await DocumentsApi.getAll(event._id)
@@ -303,9 +311,15 @@ class Agenda extends Component {
       .join(" ");
   }
 
+  checkInscriptionStatus(activityId = '') {
+    const { toShow } = this.state
+    const checkInscription = toShow.filter((activity) => activity.activity_id === activityId)
+    const statusInscription = checkInscription.length ? true : false
+    return statusInscription
+  }
   render() {
-    const { toggleConference } = this.props;
-    const { days, day, spaces, toShow, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { toggleConference, eventId, event } = this.props;
+    const { days, day, hideBtnDetailAgenda, spaces, toShow, data, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -318,7 +332,7 @@ class Agenda extends Component {
             currentActivity={currentActivity}
             image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
-            toggleConference={toggleConference}
+            toggleConference={toggleConference}            
           />
         )}
 
@@ -362,187 +376,38 @@ class Agenda extends Component {
                 )}
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
+                {
+                  event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "false" && (
+                    <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
+                      {days.map((date, key) => (
+                        <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
+                          {this.capitalizeDate(Moment(date).format("MMMM DD"))}
+                        </Button>
 
-                <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
-                  {days.map((date, key) => (
-                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
-                      {this.capitalizeDate(Moment(date).format("MMMM DD"))}
-                    </Button>
-
-                  ))}
-                </div>
+                      ))}
+                    </div>
+                  )
+                }
 
                 {/* Contenedor donde se pinta la información de la agenda */}
-
-                {toShow.map((item, llave) => (
+                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => (
                   <div key={llave} className="container_agenda-information">
-                    {/* {console.log('info item', item) } */}
-                    <div className="card agenda_information">
-                      <Row align="middle">
-                        <Row>
-                          <span className="date-activity">
-                            {Moment(item.datetime_start).format("h:mm a")} -{" "}
-                            {Moment(item.datetime_end).format("h:mm a")}
-                          </span>
-                          <p>
-                            <span className="card-header-title text-align-card">{item.name}</span>
-                          </p>
-                        </Row>
-                        <hr className="line-head" />
-                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <div onClick={
-                            (e) => {
-
-                              this.gotoActivity(item)
-                            }} className="text-align-card" style={{ marginBottom: "5%" }}>
-                            {
-                              item.activity_categories.length > 0 && (
-                                <>
-                                  <b>Tags: </b>
-                                  {
-                                    item.activity_categories.map((item) => (
-                                      <>
-                                        <Tag color={item.color ? item.color : "#ffffff"}>{item.name}</Tag>
-                                      </>
-                                    ))
-                                  }
-                                </>
-                              )
-                            }
-
-                          </div>
-                          <p className="text-align-card">
-                            {
-                              item.hosts.length > 0 && (
-                                <>
-                                  <b>Presenta: </b>
-                                  <br />
-                                  <br />
-                                  <Row>
-                                    {item.hosts.map((speaker, key) => (
-                                      <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
-                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
-                                          <Avatar
-                                            size={50}
-                                            src={speaker.image
-                                            } /> {speaker.name} &nbsp;</span>
-                                      </Col>
-                                    ))}
-                                  </Row>
-                                </>
-                              )
-                            }
-                          </p>
-                          <Row>
-                            <Col span={12}>
-                              <Row>
-                                <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
-                                  Detalle del Evento
-                               </Button>
-                              </Row>
-                              <Row>
-                                <Button type="primary" onClick={() => this.registerInActivity(item._id)} className="space-align-block">
-                                  Inscribirme
-                                </Button>
-                              </Row>
-                            </Col>
-
-                            <Col span={12}>
-                              <Row>
-                                {
-                                  showButtonDocuments && (
-                                    <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
-                                      Documentos
-                                    </Button>
-                                  )
-                                }
-                              </Row>
-                              <Row>
-                                {
-                                  showButtonSurvey && (
-                                    <Button type="primary" onClick={() => { this.gotoActivity(item) }} className="space-align-block">
-                                      Encuestas
-                                    </Button>
-                                  )
-                                }
-                              </Row>
-                            </Col>
-                          </Row>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-                          <div>
-                            {
-                              item.habilitar_ingreso === "closed_meeting_room" && (
-                                <>
-                                  <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
-                                </>
-                              )
-                            }
-
-                            {
-                              item.habilitar_ingreso === "ended_meeting_room" && (
-                                <>
-                                  {item.video ? item.video && (
-                                    <>
-                                      <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />
-                                      <ReactPlayer
-                                        width={"100%"}
-                                        style={{
-                                          display: "block",
-                                          margin: "0 auto",
-                                        }}
-                                        url={item.video}
-                                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                                        controls
-                                      />
-                                    </>
-                                  ) :
-                                    (
-                                      <>
-                                        <img src={this.props.event.styles.event_image} />
-                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />
-                                      </>
-                                    )}
-
-                                </>
-                              )
-                            }
-                            {
-                              item.habilitar_ingreso === "open_meeting_room" && (
-                                <>
-                                  <img onClick={() =>
-                                    item.meeting_id && toggleConference(
-                                      true,
-                                      item.meeting_id,
-                                      item
-                                    )
-                                  } src={this.props.event.styles.event_image} />
-                                  <div>
-                                    <Button
-                                      block
-                                      type="primary"
-                                      disabled={item.meeting_id ? false : true}
-                                      onClick={() =>
-                                        toggleConference(
-                                          true,
-                                          item.meeting_id,
-                                          item
-                                        )
-                                      }
-                                    >
-                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                                    </Button>
-                                  </div>
-                                </>
-                              )
-                            }
-                          </div>
-                        </Col>
-                      </Row>
-                    </div>
+                    <AgendaActivityItem
+                      item={item}
+                      key={llave}
+                      showButtonDocuments={showButtonDocuments}
+                      showButtonSurvey={showButtonSurvey}
+                      toggleConference={toggleConference}
+                      event_image={this.props.event.event_image}
+                      gotoActivity={this.gotoActivity}
+                      registerInActivity={this.registerInActivity}
+                      registerStatus={this.checkInscriptionStatus(item._id)}
+                      eventId={this.props.eventId}
+                      userId={this.state.userId}
+                      btnDetailAgenda={hideBtnDetailAgenda}
+                    />
                   </div>
-                ))}                
+                ))}
               </div>
             </div>
           </div>
