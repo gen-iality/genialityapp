@@ -166,7 +166,7 @@ export default class ZoomComponent extends Component {
               </iframe>
             )
           }
-          {/* // VIMEO LIVESTREAMING only chat not interactive */}
+          {/* VIMEO LIVESTREAMING */}
           {
             this.state.event && (this.state.event.event_platform === "vimeo") &&
             (

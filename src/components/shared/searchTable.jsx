@@ -117,6 +117,7 @@ class SearchComponent extends Component {
       <div className={this.props.classes} style={{ width: "100%" }}>
         <Form.Item rules={[{ required: true }]} onSubmit={this.searchCert}>
           <Input
+            id='inputSearch'
             type="text"
             size="large"
             onChange={this.handleFilter}

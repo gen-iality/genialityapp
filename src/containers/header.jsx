@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { app } from '../helpers/firebase'
 import * as Cookie from "js-cookie";
-import { ApiUrl, icon, BaseUrl } from "../helpers/constants";
+import { ApiUrl, BaseUrl } from "../helpers/constants";
 import API, { OrganizationApi } from "../helpers/request";
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
@@ -95,8 +95,7 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
-      console.log("respuesta del server", resp);
-
+      
       if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
         const data = resp.data;
         const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
@@ -116,24 +115,22 @@ class Headers extends Component {
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
         const { status, data } = error.response;
-        console.log("STATUS", status, status === 401);
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = {};
-        console.log("Error", error.message);
+        console.error("Error", error.message);
         if (error.message) {
           errorData.message = error.message;
         } else if (error.request) {
-          console.log(error.request);
+          console.error(error.request);
           errorData.message = JSON.stringify(error.request);
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.log(error.config);
+      console.error(error.config);
     }
   }
 
@@ -204,7 +201,6 @@ class Headers extends Component {
     const { eventMenu, location } = this.props;
     return (
       <React.Fragment>
-        {console.log('---------------------EVENT ID', this.state.eventId)}
         <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
           <Menu theme="light" mode="horizontal">
             <Row justify="space-between" align="middle">
@@ -230,14 +226,6 @@ class Headers extends Component {
                   </Col>
                 )}
               </Row>
-
-              {/* Items para la barra del menu */}
-
-              {/* <Menu theme="light" mode="horizontal" defaultSelectedKeys={["3"]}>
-                  <Menu.Item key="1">nav 1</Menu.Item>
-                  <Menu.Item key="2">nav 2</Menu.Item>
-                  <Menu.Item key="3">nav 3</Menu.Item>
-                </Menu> */}
 
               {/* Dropdown de navegacion para el usuario  */}
 

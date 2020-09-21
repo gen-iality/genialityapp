@@ -128,6 +128,8 @@ class VirtualConference extends Component {
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
+            }else if((infoAgenda.data[prop].vimeo_id)){
+                infoAgendaArr.push(infoAgenda.data[prop]);
             }
         }
 

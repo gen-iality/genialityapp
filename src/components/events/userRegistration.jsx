@@ -25,7 +25,6 @@ class UserRegistration extends Component {
       field["label"] = field["label"] ? field["label"] : field["name"];
       return field;
     });
-    console.log('ExtraFields in userRegistration: ', extraFields)
     return extraFields;
   };
 
@@ -65,7 +64,7 @@ class UserRegistration extends Component {
           });
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   };
@@ -79,23 +78,16 @@ class UserRegistration extends Component {
     const properties = event.user_properties;
     const conditionals = event.fields_conditions ? event.fields_conditions : []
 
-    //console.log("PROPS", properties);
     // Trae la informacion para los input
     let extraFields = fieldNameEmailFirst(properties);
     extraFields = this.addDefaultLabels(extraFields);
     extraFields = this.orderFieldsByWeight(extraFields);
-    console.log('final process extrafields', extraFields)
-    console.log('final process eventUsers', eventUsers)
-    console.log('final process conditional', conditionals)
-    console.log('final process properties', properties)
     this.setState({ extraFields, eventUsers: eventUsers.data, conditionals }, this.getCurrentUser);
-    //console.log("extraFields", properties);
   }
 
   render() {
     let { registeredUser, loading, initialValues, extraFields, currentUser, userTickets, conditionals } = this.state;
     const { eventId } = this.props;
-    console.log('extrafields', extraFields)
     if (!loading)
       return !registeredUser ? (
         <React.Fragment>

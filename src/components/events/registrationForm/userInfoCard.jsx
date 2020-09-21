@@ -1,14 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react";
-import { Redirect } from 'react-router-dom';
-
-import API, { UsersApi, TicketsApi, EventsApi } from "../../../helpers/request";
-
+import React, { useState, useEffect } from "react";
+import { UsersApi, EventsApi } from "../../../helpers/request";
 import FormTags, { setSuccessMessageInRegisterForm } from "./constants";
-
-import { Collapse, Form, Input, Col, Row, message, Typography, Checkbox, Alert, Card, Button, Result, Divider, Select } from "antd";
+import { Collapse, Form, Input, Col, Row, message, Checkbox, Alert, Card, Button, Result, Divider, Select } from "antd";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 const { Panel } = Collapse;
-const { TextArea, Password } = Input;
+const { TextArea } = Input;
 const { Option } = Select;
 
 const textLeft = {
@@ -17,12 +13,6 @@ const textLeft = {
 
 const center = {
   margin: "0 auto",
-};
-
-// Grid para formulario
-const layout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 12 },
 };
 
 const validateMessages = {
@@ -36,7 +26,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [user, setUser] = useState({});
   const [extraFields, setExtraFields] = useState(extraFieldsOriginal);
   const [validateEmail, setValidateEmail] = useState(false);
-  const [value, setValue] = useState();
   const [submittedForm, setSubmittedForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [generalFormErrorMessageVisible, setGeneralFormErrorMessageVisible] = useState(false);
@@ -44,7 +33,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const [formMessage, setFormMessage] = useState({});
   const [country, setCountry] = useState();
   const [region, setRegion] = useState()
-  const [password, setPassword] = useState(null)
+
 
   const [form] = Form.useForm();
 
@@ -90,7 +79,6 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let resp = await UsersApi.createOne(snap, eventId);
 
       if (resp.message === "OK") {
-        console.log("RESP", resp);
         setSuccessMessageInRegisterForm(resp.status);
         // let statusMessage = resp.status == "CREATED" ? "Registrado" : "Actualizado";
         // textMessage.content = "Usuario " + statusMessage;
@@ -124,7 +112,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const valuesChange = (changedField, allFields) => {
     let newExtraFields = [...extraFieldsOriginal]
 
-    conditionals.map((conditional, key) => {
+    conditionals.map((conditional) => {
       let fulfillConditional = true
       Object.keys(allFields).map((changedkey) => {
         if (changedkey === conditional.fieldToValidate) {
@@ -133,7 +121,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       })
       if (fulfillConditional) {
         //Campos ocultados por la condicion
-        newExtraFields = newExtraFields.filter((field, key) => {
+        newExtraFields = newExtraFields.filter((field) => {
           return conditional.fields.indexOf(field.name) == -1
         })
       }
@@ -145,8 +133,8 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
   const hideConditionalFieldsToDefault = () => {
     let newExtraFields = [...extraFieldsOriginal]
 
-    conditionals.map((conditional, key) => {
-      newExtraFields = newExtraFields.filter((field, key) => {
+    conditionals.map((conditional) => {
+      newExtraFields = newExtraFields.filter((field) => {
         return conditional.fields.indexOf(field.name) == -1
       })
     })
@@ -301,12 +289,12 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       //   )
       // }
 
-      let rule = (name == "email" || name == "names" || name == "password") ? { required: true } : { required: mandatory };
+      let rule = (name == "email" || name == "names") ? { required: true } : { required: mandatory };
 
       //esogemos el tipo de validación para email
       rule = (type == "email") ? { ...rule, type: "email" } : rule;
 
-      rule = (type == "password") ? { ...rule, type: "password" } : rule;
+      //rule = (type == "password") ? { ...rule, type: "password" } : rule;
       // let hideFields =
       //   mandatory == true || name == "email" || name == "names" ? { display: "block" } : { display: "none" };
 

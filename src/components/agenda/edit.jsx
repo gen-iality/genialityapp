@@ -10,7 +10,7 @@ import Creatable from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { notification } from 'antd';
+import { Tabs, notification } from 'antd';
 import { createOrUpdateActivity, getConfiguration } from './services'
 import {
   AgendaApi,
@@ -30,6 +30,9 @@ import { Spin, Card } from "antd";
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
 import getHostList, { setHostState, getAllHost } from "./fireHost";
+import AgendaLanguaje from "./language/index";
+
+const { TabPane } = Tabs;
 
 class AgendaEdit extends Component {
   constructor(props) {
@@ -105,7 +108,7 @@ class AgendaEdit extends Component {
       }
 
       vimeo_id = info.vimeo_id ? info.vimeo_id : ""
-      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id })   
+      this.setState({ tickets: ticketEvent, platform: info.event_platform, vimeo_id: vimeo_id })
 
       //Si existe dates, itera sobre el array de fechas especificas, dandole el formato especifico
       if (info.dates && info.dates.length > 0) {
@@ -135,7 +138,7 @@ class AgendaEdit extends Component {
 
 
     let documents = await DocumentsApi.byEvent(this.props.event._id);
-    let hostAvailable = await EventsApi.hostAvailable();    
+    let hostAvailable = await EventsApi.hostAvailable();
     let nameDocuments = [];
     for (var i = 0; i < documents.length; i += 1) {
       nameDocuments.push({ ...documents[i], value: documents[i].title, label: documents[i].title });
@@ -205,7 +208,7 @@ class AgendaEdit extends Component {
   //FN general para cambio en input
   handleChange = (e) => {
     const { name } = e.target;
-    const { value } = e.target;  
+    const { value } = e.target;
     this.setState({ [name]: value, host_id: e.target.value });
   };
   //FN para cambio en campo de fecha
@@ -288,16 +291,16 @@ class AgendaEdit extends Component {
         const {
           selected_document
         } = this.state
-        this.setState({ isLoading: true });        
+        this.setState({ isLoading: true });
 
         if (state.edit) {
           const data = {
             activity_id: state.edit
-          }      
+          }
           await AgendaApi.editOne(info, state.edit, event._id);
 
           for (let i = 0; i < selected_document.length; i++) {
-            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)         
+            const documentsUpdate = await DocumentsApi.editOne(event._id, data, selected_document[i]._id)
           }
         }
         else {
@@ -499,7 +502,7 @@ class AgendaEdit extends Component {
     axios.defaults.timeout = 10000;
     try {
       response = await axios(options);
-      toast.success("Conferencia Creada");     
+      toast.success("Conferencia Creada");
       let result = await setHostState(this.state.host_id, true);
 
       const {
@@ -514,7 +517,7 @@ class AgendaEdit extends Component {
         name_host: info.name_host,
         key: new Date(),
       });
-    } catch (error) {      
+    } catch (error) {
       if (error.response) {
         response = JSON.stringify(error.response.data);
       }
@@ -570,7 +573,7 @@ class AgendaEdit extends Component {
   async onChange(e) {
     this.setState({ availableText: e.target.value })
 
-    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)    
+    let result = await createOrUpdateActivity(this.props.location.state.edit, this.props.event._id, e.target.value)
 
     notification.open({
       message: result.message
@@ -616,219 +619,221 @@ class AgendaEdit extends Component {
     const { matchUrl } = this.props;
     if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;
     return (
-      <EventContent title="Actividad" closeAction={this.goBack}>
-        {loading ? (
-          <Loading />
-        ) : (
-            <div className="columns">
-              <div className="column is-8">
-                <div className="field">
-                  <label className="label required">Nombre</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="text"
-                      name={"name"}
-                      value={name}
-                      onChange={this.handleChange}
-                      placeholder="Nombre de la actividad"
-                    />
-                  </div>
-                </div>
-
-                <div className="field">
-                  <label className="label">Subtítulo</label>
-                  <div className="control">
-                    <input
-                      className="input"
-                      type="text"
-                      name={"subtitle"}
-                      value={subtitle}
-                      onChange={this.handleChange}
-                      placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
-                    />
-                  </div>
-                </div>
-                <div className="field">
-                  <label className="label">Día</label>
-                  <div className="columns">                
-                    {this.state.days.map((day, key) => {
-                      return (
-                        <div key={key} className="column">
-                          <input
-                            type="radio"
-                            name="date"
-                            id={`radioDay${key}`}
-                            className="is-checkradio"
-                            checked={day === date}
-                            value={day}
-                            onChange={this.handleChange}
-                          />                       
-                          <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Agenda" key="1">
+          <EventContent title="Actividad" closeAction={this.goBack}>
+            {loading ? (
+              <Loading />
+            ) : (
                 <div className="columns">
-
-                  <div className="column">
+                  <div className="column is-8">
                     <div className="field">
-                      <label className="label">Hora Inicio</label>
-                      <DateTimePicker
-                        value={hour_start}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleDate(value, "hour_start")}
-                      />
+                      <label className="label required">Nombre</label>
+                      <div className="control">
+                        <input
+                          className="input"
+                          type="text"
+                          name={"name"}
+                          value={name}
+                          onChange={this.handleChange}
+                          placeholder="Nombre de la actividad"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="column">
                     <div className="field">
-                      <label className="label">Hora Fin</label>
-                      <DateTimePicker
-                        value={hour_end}
-                        dropUp
-                        step={15}
-                        date={false}
-                        onChange={(value) => this.handleDate(value, "hour_end")}
-                      />
+                      <label className="label">Subtítulo</label>
+                      <div className="control">
+                        <input
+                          className="input"
+                          type="text"
+                          name={"subtitle"}
+                          value={subtitle}
+                          onChange={this.handleChange}
+                          placeholder="Ej: Salón 1, Zona Norte, Área de juegos"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <label className="label">Conferencista</label>
-                <div className="columns">
-                  <div className="column is-10">
-                    <Select
-                      isClearable
-                      isMulti
-                      styles={creatableStyles}
-                      onChange={this.selectHost}
-                      options={hosts}
-                      value={selectedHosts}
-                    />
-                  </div>
-                  <div className="column is-2">
-                    <button
-                      onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
-                      className="button">
-                      <FaWhmcs />
-                    </button>
-                  </div>
-                </div>
-                <label className="label required">Espacio</label>
-                <div className="field has-addons">
-                  <div className="control">
-                    <div className="select">
-                      <select name={"space_id"} value={space_id} onChange={this.handleChange}>
-                        <option value={""}>Seleccione un lugar/salón ...</option>
-                        {spaces.map((space) => {
+                    <div className="field">
+                      <label className="label">Día</label>
+                      <div className="columns">
+                        {this.state.days.map((day, key) => {
                           return (
-                            <option key={space.value} value={space.value}>
-                              {space.label}
-                            </option>
+                            <div key={key} className="column">
+                              <input
+                                type="radio"
+                                name="date"
+                                id={`radioDay${key}`}
+                                className="is-checkradio"
+                                checked={day === date}
+                                value={day}
+                                onChange={this.handleChange}
+                              />
+                              <label htmlFor={`radioDay${key}`}>{Moment(day, ["YYYY-MM-DD"]).format("MMMM-DD")}</label>
+                            </div>
                           );
                         })}
-                      </select>
+                      </div>
                     </div>
-                  </div>
-                  <div className="control">
-                    <Link to={matchUrl.replace("agenda", "espacios")}>
-                      <button className="button">
-                        <FaWhmcs />
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-                <div className="field">
-                  <label className={`label`}>Clasificar actividad como:</label>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioOpen"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "OPEN"}
-                      className="is-checkradio"
-                      value={"OPEN"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioOpen"}>
-                      <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
-                  </label>
-                  </div>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioSuggested"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "SUGGESTED"}
-                      className="is-checkradio"
-                      value={"SUGGESTED"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioSuggested"}>
-                      <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
-                  </label>
-                  </div>
-                  <div className="control">
-                    <input
-                      type="radio"
-                      id={"radioExclusive"}
-                      name="access_restriction_type"
-                      checked={access_restriction_type === "EXCLUSIVE"}
-                      className="is-checkradio"
-                      value={"EXCLUSIVE"}
-                      onChange={this.handleChange}
-                    />
-                    <label htmlFor={"radioExclusive"}>
-                      <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
-                  </label>
-                  </div>
-                </div>
-                {access_restriction_type !== "OPEN" && (
-                  <Fragment>
-                    <div style={{ display: "flex" }}>
-                      <label className="label required">Asginar a :</label>
-                      <button className="button is-text is-small" onClick={this.addRoles}>
-                        todos los roles
-                    </button>
+                    <div className="columns">
+
+                      <div className="column">
+                        <div className="field">
+                          <label className="label">Hora Inicio</label>
+                          <DateTimePicker
+                            value={hour_start}
+                            dropUp
+                            step={15}
+                            date={false}
+                            onChange={(value) => this.handleDate(value, "hour_start")}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="column">
+                        <div className="field">
+                          <label className="label">Hora Fin</label>
+                          <DateTimePicker
+                            value={hour_end}
+                            dropUp
+                            step={15}
+                            date={false}
+                            onChange={(value) => this.handleDate(value, "hour_end")}
+                          />
+                        </div>
+                      </div>
                     </div>
+                    <label className="label">Conferencista</label>
                     <div className="columns">
                       <div className="column is-10">
                         <Select
                           isClearable
                           isMulti
                           styles={creatableStyles}
-                          onChange={this.selectRol}
-                          options={roles}
-                          placeholder={"Seleccione al menos un rol..."}
-                          value={selectedRol}
+                          onChange={this.selectHost}
+                          options={hosts}
+                          value={selectedHosts}
                         />
                       </div>
                       <div className="column is-2">
                         <button
-                          onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
+                          onClick={() => this.goSection(matchUrl.replace("agenda", "speakers"), { child: true })}
                           className="button">
                           <FaWhmcs />
                         </button>
                       </div>
                     </div>
-                  </Fragment>
-                )}
-                <div className="field">
-                  <label className="label">Documentos</label>
-                  <Select
-                    isClearable
-                    isMulti
-                    styles={creatableStyles}
-                    onChange={this.selectDocuments}
-                    options={nameDocuments}
-                    value={selected_document}
-                  />
-                </div>
-                {/* <label className="label">Ticket</label>
+                    <label className="label">Espacio</label>
+                    <div className="field has-addons">
+                      <div className="control">
+                        <div className="select">
+                          <select name={"space_id"} value={space_id} onChange={this.handleChange}>
+                            <option value={""}>Seleccione un lugar/salón ...</option>
+                            {spaces.map((space) => {
+                              return (
+                                <option key={space.value} value={space.value}>
+                                  {space.label}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="control">
+                        <Link to={matchUrl.replace("agenda", "espacios")}>
+                          <button className="button">
+                            <FaWhmcs />
+                          </button>
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="field">
+                      <label className={`label`}>Clasificar actividad como:</label>
+                      <div className="control">
+                        <input
+                          type="radio"
+                          id={"radioOpen"}
+                          name="access_restriction_type"
+                          checked={access_restriction_type === "OPEN"}
+                          className="is-checkradio"
+                          value={"OPEN"}
+                          onChange={this.handleChange}
+                        />
+                        <label htmlFor={"radioOpen"}>
+                          <strong>ABIERTA</strong>: Todos los asistentes (roles) pueden participar en la actividad
+                  </label>
+                      </div>
+                      <div className="control">
+                        <input
+                          type="radio"
+                          id={"radioSuggested"}
+                          name="access_restriction_type"
+                          checked={access_restriction_type === "SUGGESTED"}
+                          className="is-checkradio"
+                          value={"SUGGESTED"}
+                          onChange={this.handleChange}
+                        />
+                        <label htmlFor={"radioSuggested"}>
+                          <strong>RECOMENDADA</strong>: Actividad sugerida para algunos asistentes (roles)
+                  </label>
+                      </div>
+                      <div className="control">
+                        <input
+                          type="radio"
+                          id={"radioExclusive"}
+                          name="access_restriction_type"
+                          checked={access_restriction_type === "EXCLUSIVE"}
+                          className="is-checkradio"
+                          value={"EXCLUSIVE"}
+                          onChange={this.handleChange}
+                        />
+                        <label htmlFor={"radioExclusive"}>
+                          <strong>EXCLUSIVA</strong>: Solo algunos asistentes (roles) pueden participar en la actividad
+                  </label>
+                      </div>
+                    </div>
+                    {access_restriction_type !== "OPEN" && (
+                      <Fragment>
+                        <div style={{ display: "flex" }}>
+                          <label className="label required">Asginar a :</label>
+                          <button className="button is-text is-small" onClick={this.addRoles}>
+                            todos los roles
+                    </button>
+                        </div>
+                        <div className="columns">
+                          <div className="column is-10">
+                            <Select
+                              isClearable
+                              isMulti
+                              styles={creatableStyles}
+                              onChange={this.selectRol}
+                              options={roles}
+                              placeholder={"Seleccione al menos un rol..."}
+                              value={selectedRol}
+                            />
+                          </div>
+                          <div className="column is-2">
+                            <button
+                              onClick={() => this.goSection(matchUrl.replace("agenda", "tipo-asistentes"))}
+                              className="button">
+                              <FaWhmcs />
+                            </button>
+                          </div>
+                        </div>
+                      </Fragment>
+                    )}
+                    <div className="field">
+                      <label className="label">Documentos</label>
+                      <Select
+                        isClearable
+                        isMulti
+                        styles={creatableStyles}
+                        onChange={this.selectDocuments}
+                        options={nameDocuments}
+                        value={selected_document}
+                      />
+                    </div>
+                    {/* <label className="label">Ticket</label>
                 <div>
                   <Select
                     isClearable
@@ -840,266 +845,277 @@ class AgendaEdit extends Component {
                   />
                 </div> */}
 
-                <div className="field">
-                  <label className="label">Link del video</label>
-                  <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
-                </div>
+                    <div className="field">
+                      <label className="label">Link del video</label>
+                      <input className="input" name="video" type="text" value={video} onChange={this.handleChange} />
+                    </div>
 
-                <div className="field">
-                  <label className="label">Texto de email para confirmación de registro </label>
-                  <div className="control">
-                    <ReactQuill value={this.state.registration_message} modules={toolbarEditor} onChange={this.registrationMessage} />
-                  </div>
-                </div>
+                    <div className="field">
+                      <label className="label">Texto de email para confirmación de registro </label>
+                      <div className="control">
+                        <ReactQuill value={this.state.registration_message} modules={toolbarEditor} onChange={this.registrationMessage} />
+                      </div>
+                    </div>
 
-                <div className="field">
-                  <label className="label">Descripción</label>
-                  <div className="control">
-                    <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                    <div className="field">
+                      <label className="label">Descripción</label>
+                      <div className="control">
+                        <ReactQuill value={this.state.description} modules={toolbarEditor} onChange={this.chgTxt} />
+                      </div>
+                    </div>
                   </div>
-                </div>                
-              </div>
-              <div className="column is-4 general">
-                <div className="field is-grouped">
-                  <button className="button is-text" onClick={this.remove}>
-                    x Eliminar actividad
+                  <div className="column is-4 general">
+                    <div className="field is-grouped">
+                      <button className="button is-text" onClick={this.remove}>
+                        x Eliminar actividad
                 </button>
-                  <button onClick={this.submit} className="button is-primary">
-                    Guardar
+                      <button onClick={this.submit} className="button is-primary">
+                        Guardar
                 </button>
-                </div>
-                <div className="field is-grouped">
-                  <button onClick={this.submit2} className="button is-primary">
-                    Duplicar para traducir
+                    </div>
+                    <div className="field is-grouped">
+                      <button onClick={this.submit2} className="button is-primary">
+                        Duplicar para traducir
                 </button>
-                </div>
-
-                <div className="section-gray">
-                  <div className="field">
-                    <label className="label has-text-grey-light">Imagen</label>
-                    <p>Dimensiones: 1000px x 278px</p>
-                    <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
-                      <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
-                    </Dropzone>
-                    {image && <img src={image} alt={`activity_${name}`} />}
-                  </div>
-                  <div className="field">
-                    <label className={`label`}>Capacidad</label>
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="number"
-                        min={0}
-                        name={"capacity"}
-                        value={capacity}
-                        onChange={this.handleChange}
-                        placeholder="Cupo total"
-                      />
                     </div>
-                  </div>
-                  <label className="label">Categorías</label>
-                  <div className="columns">
-                    <div className="column is-10">
-                      <Creatable
-                        isClearable
-                        styles={catStyles}
-                        onChange={this.selectCategory}
-                        onCreateOption={(value) => this.handleCreate(value, "categories")}
-                        isDisabled={isLoading.categories}
-                        isLoading={isLoading.categories}
-                        isMulti
-                        options={categories}
-                        placeholder={"Sin categoría...."}
-                        value={selectedCategories}
-                      />
+
+                    <div className="section-gray">
+                      <div className="field">
+                        <label className="label has-text-grey-light">Imagen</label>
+                        <p>Dimensiones: 1000px x 278px</p>
+                        <Dropzone onDrop={this.changeImg} accept="image/*" className="zone">
+                          <button className="button is-text">{image ? "Cambiar imagen" : "Subir imagen"}</button>
+                        </Dropzone>
+                        {image && <img src={image} alt={`activity_${name}`} />}
+                      </div>
+                      <div className="field">
+                        <label className={`label`}>Capacidad</label>
+                        <div className="control">
+                          <input
+                            className="input"
+                            type="number"
+                            min={0}
+                            name={"capacity"}
+                            value={capacity}
+                            onChange={this.handleChange}
+                            placeholder="Cupo total"
+                          />
+                        </div>
+                      </div>
+                      <label className="label">Categorías</label>
+                      <div className="columns">
+                        <div className="column is-10">
+                          <Creatable
+                            isClearable
+                            styles={catStyles}
+                            onChange={this.selectCategory}
+                            onCreateOption={(value) => this.handleCreate(value, "categories")}
+                            isDisabled={isLoading.categories}
+                            isLoading={isLoading.categories}
+                            isMulti
+                            options={categories}
+                            placeholder={"Sin categoría...."}
+                            value={selectedCategories}
+                          />
+                        </div>
+                        <div className="column is-2">
+                          <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
+                            <FaWhmcs />
+                          </button>
+                        </div>
+                      </div>
+                      <label className="label">Tipo de actividad</label>
+                      <div className="columns">
+                        <div className="control column is-10">
+                          <Creatable
+                            isClearable
+                            styles={creatableStyles}
+                            className="basic-multi-select"
+                            classNamePrefix="select"
+                            isDisabled={isLoading.types}
+                            isLoading={isLoading.types}
+                            onChange={this.selectType}
+                            onCreateOption={(value) => this.handleCreate(value, "types")}
+                            options={types}
+                            value={selectedType}
+                          />
+                        </div>
+                        <div className="column is-2">
+                          <Link to={`${matchUrl}/tipos`}>
+                            <button className="button">
+                              <FaWhmcs />
+                            </button>
+                          </Link>
+                        </div>
+                      </div>
                     </div>
-                    <div className="column is-2">
-                      <button onClick={() => this.goSection(`${matchUrl}/categorias`)} className="button">
-                        <FaWhmcs />
-                      </button>
-                    </div>
-                  </div>
-                  <label className="label">Tipo de actividad</label>
-                  <div className="columns">
-                    <div className="control column is-10">
-                      <Creatable
-                        isClearable
-                        styles={creatableStyles}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        isDisabled={isLoading.types}
-                        isLoading={isLoading.types}
-                        onChange={this.selectType}
-                        onCreateOption={(value) => this.handleCreate(value, "types")}
-                        options={types}
-                        value={selectedType}
-                      />                      
-                    </div>
-                    <div className="column is-2">
-                      <Link to={`${matchUrl}/tipos`}>
-                        <button className="button">
-                          <FaWhmcs />
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
 
-                <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
-                  {!this.props.location.state.edit && (
-                    <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
-                  )}
-
-                  {platform === "zoom" && (
-                    <>
-                      {this.props.location.state.edit && (
-                        <>
-                          {!this.state.meeting_id && (
-                            <Fragment>
-                              <div className="control">
-                                <div className="select">
-                                  <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
-                                    <option>Seleccione host</option>
-                                    {this.state.hostAvailable.length > 0 &&
-                                      this.state.hostAvailable.map((host) => {
-                                        return (
-                                          host.state &&
-                                          host.state === "available" && (
-                                            <option value={host.id} key={host.id}>
-                                              {host.email}
-                                            </option>
-                                          )
-                                        );
-                                      })}
-                                  </select>
-                                </div>
-                              </div>
-                              <div>
-                                {!this.state.creatingConference && (
-                                  <button
-                                    style={{ marginTop: "2%" }}
-                                    className="button is-primary"
-                                    disabled={!this.state.host_id}
-                                    onClick={this.createConference}>
-                                    Crear espacio virtual
-                                  </button>
-                                )}
-                                {this.state.creatingConference && <Spin tip="Creando..." />}
-                              </div>
-                            </Fragment>
-                          )}
-                          <div className="field">
-                            <label className="label">bigmaker_meeting_id</label>
-                            <div className="control">
-                              <input
-                                className="input"
-                                type="text"
-                                name={"bigmaker_meeting_id"}
-                                value={bigmaker_meeting_id}
-                                onChange={this.handleChange}
-                                placeholder=""
-                              />
-                            </div>
-                          </div>
-
-
-                          {this.state.meeting_id && (
-                            <div>
-                              <div style={{ marginTop: "2%" }}>
-                                <div>
-                                  <p>El id de la conferencia virtual es:</p>
-                                  <p>{this.state.meeting_id}</p>
-                                </div>
-
-                                <div>
-                                  <p>El host encargado es:</p>
-                                  <p>{this.state.name_host}</p>
-                                </div>
-                                <div key={this.state.key}>
-                                  <p>
-                                    <b>Accessos</b>
-                                  </p>
-                                  <hr />
-                                  <p>
-                                    <a target="_blank" href={start_url}>
-                                      Acceso para hosts
-                              </a>
-                                  </p>
-                                  <p>
-                                    <a target="_blank" href={join_url}>
-                                      Acceso para asistentes
-                              </a>
-                                  </p>
-                                </div>
-                              </div>
-                              <div>
-                                <label className="label">Estado de videoconferencia</label>
-                                <div className="select">
-                                  <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                    <option value="open_meeting_room">Conferencia Abierta</option>
-                                    <option value="closed_meeting_room">Conferencia no Iniciada</option>
-                                    <option value="ended_meeting_room">Conferencia Terminada</option>
-                                  </select>
-                                </div>
-                              </div>
-                              <button
-                                style={{ marginTop: "2%" }}
-                                className="button is-primary"
-                                onClick={this.removeConference}>
-                                Eliminar espacio virtual
-                        </button>
-                            </div>
-                          )}
-                        </>
+                    <Card style={{ marginTop: "4%" }} title="Conferencia virtual">
+                      {!this.props.location.state.edit && (
+                        <div>Primero cree la actividad y luego podrá crear una conferencia virtual asociada</div>
                       )}
-                    </>
-                  )}
-                  {
-                    platform === "vimeo" && (
-                      <>
-                        {
-                          vimeo_id === "" ? (
-                            <div className="control">
-                              <label>Ingrese id de videoconferencia Vimeo</label>
-                              <input
-                                type="number"
-                                name="vimeo_id"
-                                onChange={(e) => this.setState({ vimeo_id: e.target.value })}
-                              />
-                            </div>
-                          ) : (
-                              <>
+
+                      {platform === "zoom" && (
+                        <>
+                          {this.props.location.state.edit && (
+                            <>
+                              {!this.state.meeting_id && (
+                                <Fragment>
+                                  <div className="control">
+                                    <div className="select">
+                                      <select name={"host_id"} value={this.state.host_id} onChange={this.handleChange}>
+                                        <option>Seleccione host</option>
+                                        {this.state.hostAvailable.length > 0 &&
+                                          this.state.hostAvailable.map((host) => {
+                                            return (
+                                              host.state &&
+                                              host.state === "available" && (
+                                                <option value={host.id} key={host.id}>
+                                                  {host.email}
+                                                </option>
+                                              )
+                                            );
+                                          })}
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    {!this.state.creatingConference && (
+                                      <button
+                                        style={{ marginTop: "2%" }}
+                                        className="button is-primary"
+                                        disabled={!this.state.host_id}
+                                        onClick={this.createConference}>
+                                        Crear espacio virtual
+                                      </button>
+                                    )}
+                                    {this.state.creatingConference && <Spin tip="Creando..." />}
+                                  </div>
+                                </Fragment>
+                              )}
+                              <div className="field">
+                                <label className="label">bigmaker_meeting_id</label>
                                 <div className="control">
-                                  <label>id de videoconferencia Vimeo</label>
-                                  <p>{vimeo_id}</p>
+                                  <input
+                                    className="input"
+                                    type="text"
+                                    name={"bigmaker_meeting_id"}
+                                    value={bigmaker_meeting_id}
+                                    onChange={this.handleChange}
+                                    placeholder=""
+                                  />
                                 </div>
+                              </div>
+
+
+                              {this.state.meeting_id && (
                                 <div>
-                                  <label className="label">Estado de videoconferencia</label>
-                                  <div className="select">
-                                    <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
-                                      <option value="open_meeting_room">Conferencia Abierta</option>
-                                      <option value="closed_meeting_room">Conferencia no Iniciada</option>
-                                      <option value="ended_meeting_room">Conferencia Terminada</option>
-                                    </select>
+                                  <div style={{ marginTop: "2%" }}>
+                                    <div>
+                                      <p>El id de la conferencia virtual es:</p>
+                                      <p>{this.state.meeting_id}</p>
+                                    </div>
+
+                                    <div>
+                                      <p>El host encargado es:</p>
+                                      <p>{this.state.name_host}</p>
+                                    </div>
+                                    <div key={this.state.key}>
+                                      <p>
+                                        <b>Accessos</b>
+                                      </p>
+                                      <hr />
+                                      <p>
+                                        <a target="_blank" href={start_url}>
+                                          Acceso para hosts
+                              </a>
+                                      </p>
+                                      <p>
+                                        <a target="_blank" href={join_url}>
+                                          Acceso para asistentes
+                              </a>
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <label className="label">Estado de videoconferencia</label>
+                                    <div className="select">
+                                      <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                        <option value="open_meeting_room">Conferencia Abierta</option>
+                                        <option value="closed_meeting_room">Conferencia no Iniciada</option>
+                                        <option value="ended_meeting_room">Conferencia Terminada</option>
+                                      </select>
+                                    </div>
                                   </div>
                                   <button
                                     style={{ marginTop: "2%" }}
                                     className="button is-primary"
-                                    onClick={this.removeVimeoId}>
+                                    onClick={this.removeConference}>
                                     Eliminar espacio virtual
-                                  </button>
+                        </button>
                                 </div>
-                              </>
-                            )
-                        }
-                      </>
-                    )
-                  }
-                </Card>
-              </div>
-            </div>
-          )}
-      </EventContent>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
+                      {
+                        platform === "vimeo" && (
+                          <>
+                            {
+                              vimeo_id === "" ? (
+                                <div className="control">
+                                  <label>Ingrese id de videoconferencia Vimeo</label>
+                                  <input
+                                    type="number"
+                                    name="vimeo_id"
+                                    onChange={(e) => this.setState({ vimeo_id: e.target.value })}
+                                  />
+                                </div>
+                              ) : (
+                                  <>
+                                    <div className="control">
+                                      <label>id de videoconferencia Vimeo</label>
+                                      <p>{vimeo_id}</p>
+                                    </div>
+                                    <div>
+                                      <label className="label">Estado de videoconferencia</label>
+                                      <div className="select">
+                                        <select defaultValue={availableText} styles={creatableStyles} onChange={this.onChange}>
+                                          <option value="open_meeting_room">Conferencia Abierta</option>
+                                          <option value="closed_meeting_room">Conferencia no Iniciada</option>
+                                          <option value="ended_meeting_room">Conferencia Terminada</option>
+                                        </select>
+                                      </div>
+                                      <button
+                                        style={{ marginTop: "2%" }}
+                                        className="button is-primary"
+                                        onClick={this.removeVimeoId}>
+                                        Eliminar espacio virtual
+                                  </button>
+                                    </div>
+                                  </>
+                                )
+                            }
+                          </>
+                        )
+                      }
+                    </Card>
+                  </div>
+                </div>
+              )}
+          </EventContent>
+        </TabPane>
+        <TabPane tab="Seleccion de lenguaje" key="2">
+          {
+            this.props.location.state.edit ?(
+              <AgendaLanguaje platform={platform} eventId={this.props.event._id} activityId={this.props.location.state.edit}/>
+            ):(
+              <p>Por favor primero crear la actividad, paso seguido edite la misma para crear las conferencias en diferentes idiomas</p>
+            )
+          }            
+        </TabPane>
+      </Tabs>
     );
   }
 }
