@@ -39,7 +39,6 @@ export const getCurrentEventUser = (eventId, userId) => {
 export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token) => {
-
     return new Promise((resolve) => {
       // Se obtiene el id del token recibido
       getCurrentUser(token).then(async (currentUser) => {
@@ -54,7 +53,7 @@ export const userRequest = {
         resolve(docs);
       });
     });
-  },
+  }
 };
 
 export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
@@ -71,7 +70,7 @@ export const getAgendasFromEventUser = (eventId, targetEventUserId) => {
         result.docs.forEach((doc) => {
           data.push({
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           });
         });
 
@@ -98,7 +97,7 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
       existingAgendaResult.docs.forEach((doc) => {
         existingAgendas.push({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         });
       });
 
@@ -117,20 +116,21 @@ export const createAgendaToEventUser = ({ eventId, currentEventUserId, targetEve
             type: 'meeting',
             timestamp_start: timetableItem.timestamp_start,
             timestamp_end: timetableItem.timestamp_end,
-            message,
+            message
           });
-          // enviamos notificaciones por correo
-          let data = {
-            "id_user_requested":targetEventUserId,
-            "id_user_requesting":currentEventUserId,
-            "user_name_requesting":"Juan Carlos",
-            "event_id":eventId,
-            "state":"send",
-            "request_type":"meeting",
-            "start_time": new Date(timetableItem.timestamp_start).toLocaleTimeString()
-          }
+        // enviamos notificaciones por correo
+        let data = {
+          id_user_requested: targetEventUserId,
+          id_user_requesting: currentEventUserId,
+          request_id: newAgendaResult.id,
+          user_name_requesting: 'Juan Carlos',
+          event_id: eventId,
+          state: 'send',
+          request_type: 'meeting',
+          start_time: new Date(timetableItem.timestamp_start).toLocaleTimeString()
+        };
 
-         EventsApi.sendMeetingRequest(eventId, data);
+        EventsApi.sendMeetingRequest(eventId, data);
 
         resolve(newAgendaResult.id);
       }
@@ -153,7 +153,7 @@ export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
         const rawData = [];
 
         result.docs.forEach((doc) => {
-          const newDataItem = {id: doc.id,...doc.data()};
+          const newDataItem = { id: doc.id, ...doc.data() };
 
           if (newDataItem.owner_id !== currentEventUserId) {
             rawData.push(newDataItem);
@@ -180,7 +180,7 @@ export const getPendingAgendasSent = (eventId, currentEventUserId) => {
         const rawData = [];
 
         result.docs.forEach((doc) => {
-          const newDataItem = {id: doc.id,...doc.data()};
+          const newDataItem = { id: doc.id, ...doc.data() };
 
           if (newDataItem.owner_id === currentEventUserId) {
             rawData.push(newDataItem);
@@ -194,11 +194,28 @@ export const getPendingAgendasSent = (eventId, currentEventUserId) => {
   });
 };
 
+export const getMeeting = (eventId, meeting_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await firestore
+        .collection('event_agendas')
+        .doc(eventId)
+        .collection('agendas')
+        .doc(meeting_id)
+        .get();
+
+      let meeting = result.data();
+      resolve(meeting);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
 export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newStatus) => {
-  const agendaId = agenda.id
-  const timestampStart = agenda.timestamp_start
-  const timestampEnd = agenda.timestamp_end
+  const agendaId = agenda.id;
+  const timestampStart = agenda.timestamp_start;
+  const timestampEnd = agenda.timestamp_end;
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -217,13 +234,13 @@ export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newSta
         .where('timestamp_start', '==', timestampStart)
         .where('timestamp_end', '==', timestampEnd)
         .get();
-      const acceptedAgendasAtSameTime = []
+      const acceptedAgendasAtSameTime = [];
       const existingAgenda = existingAgendaResult.data();
 
       acceptedAgendasAtSameTimeResult.docs.forEach((doc) => {
         const newDataItem = {
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         };
 
         if (newDataItem.owner_id !== currentEventUserId) {
@@ -265,7 +282,7 @@ export const getAcceptedAgendasFromEventUser = (eventId, currentEventUserId) => 
         result.docs.forEach((doc) => {
           const newDataItem = {
             id: doc.id,
-            ...doc.data(),
+            ...doc.data()
           };
 
           if (newDataItem.type !== 'reserved') {
