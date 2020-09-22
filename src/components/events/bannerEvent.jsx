@@ -9,28 +9,27 @@ import { EnvironmentOutlined, LaptopOutlined } from "@ant-design/icons";
 
 const BgElement = Element.BgElement;
 
-function capitalize(val) {
-    val = Moment(val).format("DD MMMM YYYY")
-    return val.toLowerCase()
-        .trim()
-        .split(' ')
-        .map(v => v[0].toUpperCase() + v.substr(1))
-        .join(' ');
-}
+// function capitalize(val) {
+//     val = Moment(val).format("DD MMMM YYYY")
+//     return val.toLowerCase()
+//         .trim()
+//         .split(' ')
+//         .map(v => v[0].toUpperCase() + v.substr(1))
+//         .join(' ');
+// }
 
-function capitalizeMont(val) {
-    val = Moment(val).format("MMMM YYYY")
-    return val.toLowerCase()
-        .trim()
-        .split(' ')
-        .map(v => v[0].toUpperCase() + v.substr(1))
-        .join(' ');
-}
+// function capitalizeMont(val) {
+//     val = Moment(val).format("MMMM YYYY")
+//     return val.toLowerCase()
+//         .trim()
+//         .split(' ')
+//         .map(v => v[0].toUpperCase() + v.substr(1))
+//         .join(' ');
+// }
 
 
 
-let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
-
+let bannerEvent = ({ styles, bgImage, mobileBanner, title, organizado, place, dateStart, dateEnd, dates, bgImageText, type_event, eventId }) => {
     return (
         <BannerAnim prefixCls="banner-user" style={{ overflow: "visible" }}>
             <Element
@@ -51,7 +50,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                         }}
                 />
                 {
-                    eventId === "5f5aa2f9ca44794d515f9b82" ? (
+                    styles && styles.show_card_banner && styles.show_card_banner === "false" ? (
                         <></>
                     ) : (
                             <>
@@ -67,7 +66,7 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                                         {/* Fecha del evento */}
                                         <div>
                                             {
-                                                dates ?
+                                                dates && dates.length > 0 ?
                                                     <>
                                                         {
                                                             dates.map((item, key) => (
@@ -80,24 +79,28 @@ let bannerEvent = ({ bgImage, mobileBanner, title, organizado, place, dateStart,
                                                     :
                                                     <>
                                                         {
-                                                            dateStart === dateEnd ?
+                                                            dateStart === dateEnd ? (
+                                                                console.log("Fechas Iguales"),
                                                                 <span>{Moment(dateStart).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                :
-                                                                <div>
-                                                                    {
-                                                                        (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
-                                                                            <>
-                                                                                <span>Del {Moment(dateStart).format("DD")}</span>
-                                                                                <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
-                                                                            </>
-                                                                        ) : (
+                                                            )
+                                                                : (
+                                                                    console.log("Fechas diferentes"),
+                                                                    <div>
+                                                                        {
+                                                                            (Moment(dateStart).format("MMMM") === Moment(dateEnd).format("MMMM")) ? (
                                                                                 <>
-                                                                                    <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                                    <span>Del {Moment(dateStart).format("DD")}</span>
                                                                                     <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
                                                                                 </>
-                                                                            )
-                                                                    }
-                                                                </div>
+                                                                            ) : (
+                                                                                    <>
+                                                                                        <span>Del {Moment(dateStart).format("DD")}{" de"} {(Moment(dateStart).format("MMMM"))}</span>
+                                                                                        <span> al {Moment(dateEnd).format("DD")}{" de "} {(Moment(dateEnd).format("MMMM YYYY"))}</span>
+                                                                                    </>
+                                                                                )
+                                                                        }
+                                                                    </div>
+                                                                )
                                                         }
                                                     </>
 

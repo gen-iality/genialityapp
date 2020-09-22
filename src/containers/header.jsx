@@ -1,22 +1,20 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
+import { app } from '../helpers/firebase'
 import * as Cookie from "js-cookie";
-import { ApiUrl, AuthUrl, icon } from "../helpers/constants";
+import { ApiUrl, BaseUrl } from "../helpers/constants";
 import API, { OrganizationApi } from "../helpers/request";
-import { FormattedMessage } from "react-intl";
 import LogOut from "../components/shared/logOut";
 import ErrorServe from "../components/modal/serverError";
-import LetterAvatar from "../components/shared/letterAvatar";
 import UserStatusAndMenu from "../components/shared/userStatusAndMenu";
 import { connect } from "react-redux";
 import { addLoginInformation, showMenu } from "../redux/user/actions";
-import { Logo } from "../../src/logo.svg";
 import MenuOld from "../components/events/shared/menu";
-import { Menu, Dropdown, Avatar, Drawer, Button, Col, Row, Layout } from "antd";
-import { DownOutlined, UserOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { Menu, Drawer, Button, Col, Row, Layout } from "antd";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { parseUrl } from "../helpers/constants";
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 const zIndex = {
   zIndex: "1"
 }
@@ -24,7 +22,7 @@ const zIndex = {
 class Headers extends Component {
   constructor(props) {
     super(props);
-    this.props.history.listen((location, action) => {
+    this.props.history.listen((location) => {
       this.handleMenu(location);
     });
 
@@ -43,8 +41,13 @@ class Headers extends Component {
       showAdmin: false,
       showEventMenu: false,
       tabEvtType: true,
-      tabEvtCat: true
+      tabEvtCat: true,
+      eventId: null
+
     };
+
+    this.setEventId = this.setEventId.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
   showDrawer = () => {
@@ -59,7 +62,17 @@ class Headers extends Component {
     });
   };
 
+  setEventId = () => {
+    const path = window.location.pathname.split('/')
+    const eventId = path[path.length - 1]
+    return eventId
+  }
+
   async componentDidMount() {
+
+    const eventId = this.setEventId()
+    this.setState({eventId})    
+
     /** ESTO ES TEMPORAL Y ESTA MAL EL USUARIO DEBERIA MAJEARSE DE OTRA MANERA */
     let evius_token = null;
     let dataUrl = parseUrl(document.URL);
@@ -82,8 +95,7 @@ class Headers extends Component {
     //Si existe el token consultamos la información del usuario
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${evius_token}`);
-      console.log("respuesta del server", resp);
-
+      
       if (resp.status === 200 || resp.status === 201 || resp.status === 202) {
         const data = resp.data;
         const name = data.name ? data.name : data.displayName ? data.displayName : data.email;
@@ -103,24 +115,22 @@ class Headers extends Component {
       }
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
         const { status, data } = error.response;
-        console.log("STATUS", status, status === 401);
         if (status === 401) this.setState({ timeout: true, loader: false });
         else this.setState({ serverError: true, loader: false, errorData: data });
       } else {
         let errorData = {};
-        console.log("Error", error.message);
+        console.error("Error", error.message);
         if (error.message) {
           errorData.message = error.message;
         } else if (error.request) {
-          console.log(error.request);
+          console.error(error.request);
           errorData.message = JSON.stringify(error.request);
         }
         errorData.status = 708;
         this.setState({ serverError: true, loader: false, errorData });
       }
-      console.log(error.config);
+      console.error(error.config);
     }
   }
 
@@ -143,12 +153,30 @@ class Headers extends Component {
       const photo = this.props.loginInfo.picture;
       this.setState({ name, photo, user: true });
     }
+
+    // if(prevProps.eventId !== this.state.eventId){
+
+    // }
   }
 
   logout = () => {
     Cookie.remove("token");
     Cookie.remove("evius_token");
-    window.location.replace(`${AuthUrl}/logout`);
+    window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
+    window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
+    
+    app.auth().signOut().catch(function(error) {
+      // An error happened.
+      console.error(error.message)
+    });
+
+    if(this.state.eventId){
+      window.location.replace(`${BaseUrl}/landing/${this.state.eventId}`);      
+    }
+    else{
+      window.location.replace(`${BaseUrl}`);      
+    }
+    //window.location.replace(`${AuthUrl}/logout`);
   };
 
   openMenu = () => {
@@ -198,14 +226,6 @@ class Headers extends Component {
                   </Col>
                 )}
               </Row>
-
-              {/* Items para la barra del menu */}
-
-              {/* <Menu theme="light" mode="horizontal" defaultSelectedKeys={["3"]}>
-                  <Menu.Item key="1">nav 1</Menu.Item>
-                  <Menu.Item key="2">nav 2</Menu.Item>
-                  <Menu.Item key="3">nav 3</Menu.Item>
-                </Menu> */}
 
               {/* Dropdown de navegacion para el usuario  */}
 

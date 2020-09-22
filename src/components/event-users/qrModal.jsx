@@ -54,7 +54,7 @@ class QrModal extends Component {
         let value = String(this.state.newCC).toLowerCase();
 
         // Conditional to show modal (QR or Document scanner)
-        if (Scanner == 'qr') {
+        if (Scanner === 'qr') {
             usersRef.where('_id', '==', `${value}`)
                 .get()
                 .then((querySnapshot) => {
@@ -127,7 +127,7 @@ class QrModal extends Component {
                 <div className="modal-background" />
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">{typeScanner == 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}</p>
+                        <p className="modal-card-title">{typeScanner === 'scanner-qr' ? 'Lector QR' : 'Lector de Documento'}</p>
                         <button className="delete is-large" aria-label="close" onClick={this.closeQr} />
                     </header>
                     <section className="modal-card-body">
@@ -144,7 +144,7 @@ class QrModal extends Component {
                                         return <p key={key}>{obj.label}: {val}</p>
                                     })}
                                 </div> :
-                                typeScanner == 'scanner-qr' ?
+                                typeScanner === 'scanner-qr' ?
                                     <React.Fragment>
                                         <div className="tabs is-centered tab-qr">
                                             <ul>

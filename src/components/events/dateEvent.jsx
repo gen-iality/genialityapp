@@ -1,29 +1,11 @@
 
 import React from 'react'
-import Calendar from 'react-calendar-multiday'
-import { omit } from 'ramda'
 import moment from 'moment'
 import { EventsApi } from "../../helpers/request";
 import { Button, notification } from 'antd';
 
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-
-const container = {
-    width: '375px',
-    float: 'left',
-    marginRight: '50px',
-    marginBottom: '50px',
-    fontFamily: 'system-ui',
-}
-
-const buttonStyle = {
-    border: 'none',
-    fontSize: '.75em',
-    outline: 'none',
-    marginLeft: '10px',
-    cursor: 'pointer',
-}
 
 class DateEvent extends React.Component {
     constructor(props) {
@@ -90,8 +72,7 @@ class DateEvent extends React.Component {
     }
 
     async save() {
-        const info = await EventsApi.editOne(this.state.properties, this.props.eventId)
-
+        
         notification.open({
             message: 'Datos guardados',
             description:

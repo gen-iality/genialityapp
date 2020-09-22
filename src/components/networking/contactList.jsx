@@ -1,9 +1,7 @@
-import React, { Fragment, useState, useEffect } from "react";
-
-import { Spin, Alert, Col, Divider, List, Card, Avatar, Row } from "antd";
-
+import React, { useState, useEffect } from "react";
+import { Spin, Alert, Col, Card, Avatar, Row } from "antd";
 import * as Cookie from "js-cookie";
-import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
+import { getCurrentUser, getCurrentEventUser } from "./services";
 import { Networking } from "../../helpers/request";
 import { EventFieldsApi } from "../../helpers/request";
 
@@ -49,7 +47,7 @@ export default ({ eventId }) => {
 
 
   if (currentUserId)
-    return currentUserId == "guestUser" ? (
+    return currentUserId === "guestUser" ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: "0 auto" }}>
         <Alert
           message="Iniciar Sesión"

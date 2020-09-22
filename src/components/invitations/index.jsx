@@ -1,41 +1,39 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import InvitedUsers from "./eventUsersList";
 import CreateMessage from "./send";
-import { EventsApi, UsersApi } from "../../helpers/request";
 import ImportUsers from "../import-users/importUser";
-import EviusTable from "./eviustable";
 
-function Tabla(props) {
-  const [guests, setGuests] = useState([]);
+// function Tabla(props) {
+//   const [guests, setGuests] = useState([]);
 
-  const columns = [
-    {
-      Header: "Email",
-      accessor: "email" // accessor is the "key" in the data
-    },
-    {
-      Header: "Names",
-      accessor: "names"
-    }
-  ];
+//   const columns = [
+//     {
+//       Header: "Email",
+//       accessor: "email" // accessor is the "key" in the data
+//     },
+//     {
+//       Header: "Names",
+//       accessor: "names"
+//     }
+//   ];
 
-  useEffect(() => {
-    console.log("mounted", props);
+//   useEffect(() => {
+//     console.log("mounted", props);
 
-    async function fetchData(props) {
-      const guestsResult = await UsersApi.getAll(
-        props.event._id,
-        "?pageSize=1000"
-      );
-      setGuests(guestsResult.data);
-      console.log("resultado", props, guestsResult);
-    }
-    fetchData(props);
-  }, []);
+//     async function fetchData(props) {
+//       const guestsResult = await UsersApi.getAll(
+//         props.event._id,
+//         "?pageSize=1000"
+//       );
+//       setGuests(guestsResult.data);
+//       console.log("resultado", props, guestsResult);
+//     }
+//     fetchData(props);
+//   }, []);
 
-  return <EviusTable columns={columns} data={guests} />;
-}
+//   return <EviusTable columns={columns} data={guests} />;
+// }
 
 function ListaInvitados({ ...props }) {
 

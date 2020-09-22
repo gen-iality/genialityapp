@@ -1,19 +1,11 @@
 import React, { Component } from "react";
 import Moment from "moment";
-import { toast } from "react-toastify";
-import { PageHeader, message, notification, Modal, Result, Button, Spin } from "antd";
+import { Result, Button } from "antd";
 import { FrownOutlined, SmileOutlined, MehOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-
 import * as Cookie from "js-cookie";
-
-import graphicsImage from "../../../graficas.png";
-
-import { SurveysApi, AgendaApi, TicketsApi } from "../../../helpers/request";
+import { SurveysApi, TicketsApi } from "../../../helpers/request";
 import { firestore } from "../../../helpers/firebase";
-import { SurveyAnswers, UserGamification, SurveyPage } from "./services";
-import { validateSurveyCreated } from "../../trivia/services";
-
-import GraphicGamification from "./graphicsGamification";
+import { SurveyAnswers, UserGamification } from "./services";
 import Graphics from "./graphics"
 import * as Survey from "survey-react";
 import "survey-react/modern.css";
@@ -22,12 +14,6 @@ Survey.StylesManager.applyTheme("modern");
 const surveyStyle = {
   overFlowX: "hidden",
   overFlowY: "scroll",
-};
-
-const imageGraphics = {
-  display: "block",
-  margin: "0 auto",
-  maxWidth: "100%",
 };
 
 class SurveyComponent extends Component {
@@ -161,7 +147,7 @@ class SurveyComponent extends Component {
     // Asigna textos al completar encuesta y al ver la encuesta vacia
     dataSurvey.completedHtml = "Gracias por completar la encuesta!";
 
-    if (dataSurvey.allow_gradable_survey == "true" && dataSurvey.initialMessage) {
+    if (dataSurvey.allow_gradable_survey === "true" && dataSurvey.initialMessage) {
       // Permite mostrar el contador y asigna el tiempo limite de la encuesta y por pagina
       dataSurvey.showTimerPanel = "top";
 
@@ -189,7 +175,7 @@ class SurveyComponent extends Component {
       dataSurvey.pages[index] = {
         name: `page${index + 1}`,
         key: `page${index + 1}`,
-        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey == "true" ? false : true }],
+        questions: [{ ...rest, isRequired: dataSurvey.allow_gradable_survey === "true" ? false : true }],
       };
     });
 
@@ -218,15 +204,15 @@ class SurveyComponent extends Component {
       // Valida si se marco alguna opcion
       if (question) {
         //Hack rÃƒÂ¡pido para permitir preguntas tipo texto (abiertas)
-        if (question.inputType == "text") {
+        if (question.inputType === "text") {
         } else {
           // se valida si question value posee un arreglo 'Respuesta de opcion multiple' o un texto 'Respuesta de opcion unica'
-          if (typeof question.value == "object") {
+          if (typeof question.value === "object") {
             correctAnswer = question.correctAnswer !== undefined ? question.isAnswerCorrect() : undefined;
 
             if (correctAnswer) rankingPoints += surveyPoints;
             question.value.forEach((value) => {
-              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue == value)];
+              optionIndex = [...optionIndex, question.choices.findIndex((item) => item.itemValue === value)];
             });
           } else {
             // Funcion que retorna si la opcion escogida es la respuesta correcta
@@ -234,13 +220,13 @@ class SurveyComponent extends Component {
 
             if (correctAnswer) rankingPoints += surveyPoints;
             // Busca el index de la opcion escogida
-            optionIndex = question.choices.findIndex((item) => item.itemValue == question.value);
+            optionIndex = question.choices.findIndex((item) => item.itemValue === question.value);
           }
           optionQuantity = question.choices.length;
         }
 
         let infoOptionQuestion =
-          surveyData.allow_gradable_survey == "true"
+          surveyData.allow_gradable_survey === "true"
             ? { optionQuantity, optionIndex, correctAnswer }
             : { optionQuantity, optionIndex };
 
@@ -257,7 +243,7 @@ class SurveyComponent extends Component {
                 uid: infoUser._id,
                 email: infoUser.email,
                 names: infoUser.names || infoUser.displayName,
-                voteValue: surveyData.allow_vote_value_per_user == "true" && eventUsers.length > 0 && voteWeight,
+                voteValue: surveyData.allow_vote_value_per_user === "true" && eventUsers.length > 0 && voteWeight,
               },
               infoOptionQuestion
             )
@@ -366,8 +352,8 @@ class SurveyComponent extends Component {
 
 
 
-    const { showListSurvey, eventId, currentUser, idSurvey } = this.props;
-    let { surveyData, questionsAnswered, aux, currentPage } = this.state;
+    const { eventId, currentUser } = this.props;
+    let { surveyData, questionsAnswered, aux } = this.state;
 
     let isLastPage = values.isLastPage;
     let countDown = isLastPage ? 3 : 0;
@@ -375,7 +361,7 @@ class SurveyComponent extends Component {
     // Esta condicion se hace debido a que al final de la encuesta, la funcion se ejecuta una ultima vez
     if (aux > 0) return;
 
-    if (surveyData.allow_gradable_survey == "true") {
+    if (surveyData.allow_gradable_survey === "true") {
 
       if (isLastPage) this.setState((prevState) => ({ showMessageOnComplete: isLastPage, aux: prevState.aux + 1 }));
 
@@ -423,7 +409,7 @@ class SurveyComponent extends Component {
 
       // Solo intenta registrar puntos si la encuesta es calificable
       // Actualiza puntos del usuario
-      if (surveyData.allow_gradable_survey == "true") {
+      if (surveyData.allow_gradable_survey === "true") {
 
         // Muestra modal de retroalimentacion
         if (rankingPoints !== undefined) {
@@ -475,7 +461,8 @@ class SurveyComponent extends Component {
 
   // Funcion que se ejecuta antes del evento onComplete y que muestra un texto con los puntos conseguidos
   setFinalMessage = (survey, options) => {
-    let { surveyData, totalPoints } = this.state;
+    let { surveyData , totalPoints } = this.state;
+
     let textOnCompleted = survey.completedHtml;
 
     survey.currentPage.questions.forEach((question) => {
@@ -483,7 +470,7 @@ class SurveyComponent extends Component {
       if (correctAnswer) totalPoints += parseInt(question.points);
     });
 
-    if (surveyData.allow_gradable_survey == "true") {
+    if (surveyData.allow_gradable_survey === "true") {
       let text = "";
       //totalPoints > 0 ? `Has obtenido ${totalPoints} puntos` : "No has obtenido puntos. Suerte para la prÃƒÂ³xima";
       survey.completedHtml = `${textOnCompleted}<br>${text}`;
@@ -506,10 +493,9 @@ class SurveyComponent extends Component {
   /* handler cuando la encuesta cambio de pregunta */
   onCurrentPageChanged = (survey, o) => {
 
-    let { surveyData, currentPage } = this.state;
-    let { idSurvey } = this.props;
+    let { surveyData, currentPage } = this.state;    
     console.log("onCurrentPageChanged", currentPage, "current", survey.currentPageNo)
-    if (surveyData.allow_gradable_survey != "true") return;
+    if (surveyData.allow_gradable_survey !== "true") return;
 
     /** Esta parte actualiza la pagina(pregunta) actual, que es la que se va a usar cuando una persona
      * se caiga del sistema y vuelva a conectarse la idea es que se conecte a esta pregunta.
@@ -531,11 +517,10 @@ class SurveyComponent extends Component {
   checkCurrentPage = (survey) => {
 
 
-    let { currentPage, surveyData } = this.state;
-    const { responseCounter } = this.props;
+    let { currentPage, surveyData } = this.state;    
 
     // Este condicional sirve para retomar la encuesta donde vayan todos los demas usuarios
-    if (surveyData.allow_gradable_survey == "true") {
+    if (surveyData.allow_gradable_survey === "true") {
 
       if (currentPage !== 0) survey.currentPageNo = currentPage;
 
@@ -572,17 +557,17 @@ class SurveyComponent extends Component {
           <>
             {/* < GraphicGamification data={this.state.rankingList} eventId={eventId} showListSurvey={showListSurvey}/> */}
             {
-              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
             }
           </>
         ) : (
             <>{
-              // this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+              // this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
             }</>
           ))}
 
         {
-          this.state.survey && this.state.survey.state == "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
+          this.state.survey && this.state.survey.state === "completed" && <Graphics idSurvey={this.props.idSurvey} eventId={eventId} surveyLabel={surveyLabel} showListSurvey={showListSurvey} />
         }
         {feedbackMessage.hasOwnProperty("title") && <Result {...feedbackMessage} extra={null} />}
 

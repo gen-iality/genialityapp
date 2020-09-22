@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 import { ApiUrl } from "../../helpers/constants";
 
@@ -8,7 +7,7 @@ export function getFiles(EventID) {
     await axios
       .get(`${ApiUrl}/api/events/${EventID}/getallfiles`)
       .then((docs) => {
-        response = docs.data.data.length != 0 ? docs.data.data : false;
+        response = docs.data.data.length !== 0 ? docs.data.data : false;
       })
       .catch((err) => {
         console.log(err);

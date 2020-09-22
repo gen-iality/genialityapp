@@ -1,14 +1,11 @@
 import React, { Component, Fragment, useState, useEffect } from "react";
 import { Card, Button, Alert } from "antd";
 import WithUserEventRegistered from "../shared/withUserEventRegistered";
-import { AgendaApi, SurveysApi, TicketsApi } from "../../helpers/request";
+import { AgendaApi } from "../../helpers/request";
 import { firestore } from "../../helpers/firebase";
-import TimeStamp from "react-timestamp";
 import Moment from "moment";
 import { Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 
-const { Meta } = Card;
 
 const MeetingConferenceButton = ({ activity, toggleConference, usuarioRegistrado }) => {
     const [infoActivity, setInfoActivity] = useState({});
@@ -81,8 +78,7 @@ class VirtualConference extends Component {
         };
     }
 
-    async componentDidUpdate(prevProps) {
-        let { infoAgendaArr } = this.state;
+    async componentDidUpdate(prevProps) {        
 
         //Cargamos solamente los espacios virtuales de la agenda
         
@@ -90,7 +86,7 @@ class VirtualConference extends Component {
         if (!this.props.event) return;
 
         //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
-        if (prevProps.event &&  this.props.event._id == prevProps.event._id) return;
+        if (prevProps.event &&  this.props.event._id === prevProps.event._id) return;
 
         let filteredAgenda = await this.filterVirtualActivities(this.props.event._id);
         this.setState({ infoAgendaArr: filteredAgenda }, this.listeningStateMeetingRoom);
@@ -132,6 +128,8 @@ class VirtualConference extends Component {
         for (const prop in infoAgenda.data) {
             if (infoAgenda.data[prop].meeting_id) {
                 infoAgendaArr.push(infoAgenda.data[prop]);
+            }else if((infoAgenda.data[prop].vimeo_id)){
+                infoAgendaArr.push(infoAgenda.data[prop]);
             }
         }
 
@@ -139,15 +137,15 @@ class VirtualConference extends Component {
     }
 
     render() {
-        const { infoAgendaArr, survey } = this.state;
-        const { toggleConference, currentUser, usuarioRegistrado, event } = this.props;
+        const { infoAgendaArr} = this.state;
+        const { toggleConference} = this.props;
         if (!infoAgendaArr || infoAgendaArr.length <= 0) return null;
         return (
             <Fragment>
                 {
                     <div>
                         <Card bordered={true}>
-                            <span>Salas</span>
+                            <span>Sesiones</span>
                         </Card>
                         {infoAgendaArr.map((item, key) => (
                             <div key={key}>

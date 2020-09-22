@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 
-import { List, Button, Card, Col, Tag, Spin, Result, Empty } from "antd";
+import { List, Button, Card, Tag, Result } from "antd";
 import { MehOutlined } from "@ant-design/icons";
 const headStyle = {
   fontWeight: 300,
@@ -12,7 +12,7 @@ const headStyle = {
 const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
   return (
     <Fragment>
-      {anonymousSurveyList && anonymousSurveyList.length == 0 && (
+      {anonymousSurveyList && anonymousSurveyList.length === 0 && (
         <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />
       )}
       {/* {console.log("anonymousSurveyList:", anonymousSurveyList)} */}
@@ -20,7 +20,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
         <List
           dataSource={anonymousSurveyList}
           renderItem={(survey) =>            
-            survey.open == "true" ? (              
+            survey.open === "true" ? (              
               <List.Item key={survey._id}>
                 <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                 {survey.userHasVoted && (
@@ -35,7 +35,7 @@ const AnonymousList = ({ anonymousSurveyList, showSurvey }) => {
                       !survey.userHasVoted ? "animate__animated  animate__pulse animate__slower animate__infinite" : ""
                     }`}
                     onClick={() => showSurvey(survey)}
-                    loading={survey.userHasVoted == undefined}>        
+                    loading={survey.userHasVoted === undefined}>        
                     {console.log("iteracion de voto",survey)}            
                     {survey.userHasVoted ? "Ir a la Encuesta" : " Ver Resultados"}
                   </Button>
@@ -68,7 +68,7 @@ const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =
   }, [jsonData]);
 
   const pluralToSingular = (char, t1, t2) => {
-    if (t1 != undefined) return `${t1}${t2}`;
+    if (t1 !== undefined) return `${t1}${t2}`;
     return "";
   };
 
@@ -76,7 +76,7 @@ const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =
     <Card title={`Lista de ${surveyLabel.name}`} className="survyCard" headStyle={headStyle}>
       {usuarioRegistrado ? (
         <Fragment>
-          {surveyList && surveyList.length == 0 && (
+          {surveyList && surveyList.length === 0 && (
             <Result icon={<MehOutlined />} title="Aún no se han publicado encuestas" />
           )}
 
@@ -84,7 +84,7 @@ const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =
             <List
               dataSource={surveyList}
               renderItem={(survey) =>
-                survey.open == "true" ? (
+                survey.open === "true" ? (
                   <List.Item key={survey._id}>
                     <List.Item.Meta title={survey.survey} style={{ textAlign: "left" }} />
                     {survey.userHasVoted && (
@@ -102,8 +102,8 @@ const surveyList =  ({ jsonData, showSurvey, usuarioRegistrado, surveyLabel }) =
                             : ""
                         }`}
                         onClick={() => showSurvey(survey)}
-                        loading={survey.userHasVoted == undefined}>
-                        {(!survey.userHasVoted &&  usuarioRegistrado && usuarioRegistrado.rol && usuarioRegistrado.rol.name != "Speaker")
+                        loading={survey.userHasVoted === undefined}>
+                        {(!survey.userHasVoted &&  usuarioRegistrado && usuarioRegistrado.rol && usuarioRegistrado.rol.name !== "Speaker")
                           ? `Ir a ${
                               surveyLabel.name
                                 ? surveyLabel.name.replace(/([^aeiou]{2})?(e)?s\b/gi, pluralToSingular)

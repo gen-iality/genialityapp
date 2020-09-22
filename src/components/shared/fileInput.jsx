@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 let FileInput = ( props ) => {
   //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
   const [ stillOldImage, setStillOldImage ] = useState( false );
-  if ( stillOldImage && stillOldImage != props.picture ) {
+  if ( stillOldImage && stillOldImage !== props.picture ) {
     setStillOldImage( false );
   }
 
@@ -31,7 +31,7 @@ let FileInput = ( props ) => {
       Cambiar Archivo
     </button>
   );
-  let divClass = props.divClass || "drop-img";
+  // let divClass = props.divClass || "drop-img";
   let classDrop = props.classDrop || "dropzone";
 
   const ContainerDropzone = {
@@ -43,7 +43,7 @@ let FileInput = ( props ) => {
     <div className="inputImage" style={ ContainerDropzone }>
       <p>{ props.picture } </p>
       {/* el #FFF es por un error que se nos fue a la base de datos*/ }
-      { props.picture && props.picture != "#FFF" ? (
+      { props.picture && props.picture !== "#FFF" ? (
         <div style={ ContainerDropzone }>
 
           <Dropzone

@@ -21,7 +21,7 @@ class CheckSpace extends Component {
 
     changeType = (type) => {
         this.setState({tabActive:type},()=>{
-            if(type == "qr")this.txtInput.current.focus();
+            if(type === "qr")this.txtInput.current.focus();
         });
     };
 

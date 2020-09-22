@@ -1,11 +1,10 @@
-import React, { Component, Fragment } from "react"
-import { Select, Form, Divider, Button, Table, Input, Space } from 'antd';
+import React, { Component } from "react"
+import { Form, Divider, Button, Table, Input, Space } from 'antd';
 import { EventsApi } from "../../../helpers/request"
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Modal from "./modalRelation"
 
-const { Option, OptGroup } = Select;
 
 class RelationshipFields extends Component {
     constructor(props) {

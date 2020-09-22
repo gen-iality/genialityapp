@@ -1,8 +1,6 @@
 import 'chartjs-plugin-datalabels';
 import React, { Component } from "react";
-
-import { Bar } from "react-chartjs-2";
-import { Pagination, Spin, Card, PageHeader, Button } from "antd";
+import { Pagination, Spin, Card,  Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 import Chart from "chart.js";
@@ -68,7 +66,7 @@ class Graphics extends Component {
   };
 
   updateData = ({ options, answer_count }) => {
-    let { graphicsFrame, chartCreated, chart, usersRegistered } = this.state;
+    let { graphicsFrame, chartCreated, chart } = this.state;
     let { horizontalBar } = graphicsFrame;
 
     let totalPercentResponse = new Object()
@@ -153,8 +151,7 @@ class Graphics extends Component {
 
   mountChart = async () => {
     const { idSurvey, eventId } = this.props;
-    let { dataSurvey, currentPage, graphicsFrame, chartCreated, chart } = this.state;
-    let { horizontalBar } = graphicsFrame;
+    let { dataSurvey, currentPage} = this.state;
     let { questions } = dataSurvey;
 
     // Se ejecuta servicio para tener el conteo de las respuestas
@@ -166,7 +163,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataSurvey, currentPage, horizontalBar, referenceChart, titleQuestion } = this.state;
+    let { dataSurvey, currentPage,  titleQuestion } = this.state;
     const { showListSurvey, surveyLabel } = this.props;
 
     if (dataSurvey.questions)

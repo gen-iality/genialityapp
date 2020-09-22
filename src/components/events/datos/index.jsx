@@ -9,6 +9,7 @@ import Dialog from "../../modal/twoAction";
 import { Tabs, Table, Checkbox, notification } from 'antd';
 import RelationField from './relationshipFields';
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import DragDrop from "./dragDrop"
 
 const { TabPane } = Tabs;
 
@@ -123,7 +124,7 @@ class Datos extends Component {
     }
 
     render() {
-        const { fields, modal, edit, info } = this.state;
+        const { fields, modal, edit, info } = this.state;        
         const columns = [
             {
                 title: 'Dato',
@@ -181,32 +182,36 @@ class Datos extends Component {
             },
         ];
         return (
-            <Tabs defaultActiveKey="1">
-                <TabPane tab="Configuración General" key="1">
-                    <Fragment>
-                        <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"} addAction={this.addField} addTitle={"Agregar dato"}>
-                            <Table columns={columns} dataSource={fields} />
-                        </EventContent>
-                        {
-                            modal &&
-                            <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
-                                <DatosModal edit={edit} info={info} action={this.saveField} />
-                            </EventModal>
-                        }
-                        {
-                            this.state.deleteModal &&
-                            <Dialog modal={this.state.deleteModal} title={'Borrar Dato'}
-                                content={<p>Seguro de borrar este dato?</p>}
-                                first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
-                                message={this.state.message}
-                                second={{ title: 'Cancelar', class: '', action: this.closeDelete }} />
-                        }
-                    </Fragment >
-                </TabPane>
-                <TabPane tab="Campos Relacionados" key="2">
-                    <RelationField eventId={this.props.eventID} fields={fields} />
-                </TabPane>
-            </Tabs>
+            <div>
+                <Tabs defaultActiveKey="1">
+                    <TabPane tab="Configuración General" key="1">
+                        <Fragment>
+                            <EventContent title={"Recopilación de datos"} description={"Configure los datos que desea recolectar de los asistentes del evento"} addAction={this.addField} addTitle={"Agregar dato"}>
+                                <Table columns={columns} dataSource={fields} />
+                            </EventContent>
+                            {
+                                modal &&
+                                <EventModal modal={modal} title={edit ? 'Editar Dato' : 'Agregar Dato'} closeModal={this.closeModal}>
+                                    <DatosModal edit={edit} info={info} action={this.saveField} />
+                                </EventModal>
+                            }
+                            {
+                                this.state.deleteModal &&
+                                <Dialog modal={this.state.deleteModal} title={'Borrar Dato'}
+                                    content={<p>Seguro de borrar este dato?</p>}
+                                    first={{ title: 'Borrar', class: 'is-dark has-text-danger', action: this.removeField }}
+                                    message={this.state.message}
+                                    second={{ title: 'Cancelar', class: '', action: this.closeDelete }} />
+                            }
+                        </Fragment >
+                    </TabPane>
+                    <TabPane tab="Campos Relacionados" key="2">
+                        <RelationField eventId={this.props.eventID} fields={fields} />
+                    </TabPane>
+                    
+                </Tabs>
+                <DragDrop eventId={this.props.eventID} list={fields}/>
+            </div>
         )
     }
 }

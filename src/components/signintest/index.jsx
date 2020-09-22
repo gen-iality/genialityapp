@@ -2,7 +2,7 @@ import React from 'react';
 import { userContext } from '../../containers/userContext';
 export default () => {
 
-    http://localhost:3000/?apiKey=AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc&oobCode=e4W2VepAbeejxCxZZyD4sM-YmdQO5sT2P6lpGv_N068AAAFxrAyQag&mode=signIn&lang=es
+    // http://localhost:3000/?apiKey=AIzaSyATmdx489awEXPhT8dhTv4eQzX3JW308vc&oobCode=e4W2VepAbeejxCxZZyD4sM-YmdQO5sT2P6lpGv_N068AAAFxrAyQag&mode=signIn&lang=es
     // Confirm the link is a sign-in with email link.
     // if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
     //     Additional state parameters can also be passed via URL.

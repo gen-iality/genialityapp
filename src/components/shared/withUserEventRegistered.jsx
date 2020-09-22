@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Tag } from "antd";
+import { Alert, Button } from "antd";
 import { AuthUrl } from "../../helpers/constants";
-import * as Cookie from "js-cookie";
-import API from "../../helpers/request";
 
 function WithUserEventRegistered(Component) {
 
@@ -13,7 +11,7 @@ function WithUserEventRegistered(Component) {
 
         useEffect(() => {
             (async () => {
-                let user = null;
+                
                 try {
                     setCurrentUser(props.currentUser)
                     setUsuarioRegistrado(props.usuarioRegistrado)

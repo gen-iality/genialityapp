@@ -16,7 +16,7 @@ import { DateTimePicker } from "react-widgets";
 import SelectInput from "../shared/selectInput";
 import Loading from "../loaders/loading";
 import DateEvent from "./dateEvent";
-import { Switch, Checkbox } from 'antd';
+import { Switch } from 'antd';
 Moment.locale('es');
 
 
@@ -374,7 +374,7 @@ class General extends Component {
         if (this.state.loading) return <Loading />;
         const { event, categories, organizers, types,
             selectedCategories, selectedOrganizer, selectedType,
-            valid, timeout, errorData, serverError, specificDates, checked } = this.state;
+            valid, timeout, errorData, serverError, specificDates} = this.state;
         return (
             <React.Fragment>
                 <div className="columns general">

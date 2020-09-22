@@ -6,7 +6,6 @@ import ReactQuill from "react-quill";
 import { toast } from "react-toastify";
 const { Title } = Typography;
 const { Option } = Select;
-const { Meta } = Card;
 
 class menuLanding extends Component {
     constructor(props) {
@@ -110,7 +109,7 @@ class menuLanding extends Component {
                     permissions: "public"
                 },
                 interviews: {
-                    name: "Vende / Mi agenda",
+                    name: "Citas",
                     position: "",
                     section: "interviews",
                     icon: "UserOutlined",
@@ -122,6 +121,14 @@ class menuLanding extends Component {
                     position: "",
                     section: "trophies",
                     icon: "TrophyOutlined",
+                    checked: false,
+                    permissions: "public"
+                },
+                my_sesions: {
+                    name: "Mis Actividades",
+                    position: "",
+                    section: "my_sesions",
+                    icon: "TeamOutlined",
                     checked: false,
                     permissions: "public"
                 },
@@ -142,7 +149,15 @@ class menuLanding extends Component {
                     markup: "",
                     checked: false,
                     permissions: "public"
-                }
+                },
+                login: {
+                    name: "Inicio de sesion",
+                    position: "",
+                    section: "login",
+                    icon: "LoginOutlined",
+                    checked: false,
+                    permissions: "public"
+                },
 
             },
             values: {},
@@ -297,7 +312,7 @@ class menuLanding extends Component {
                             )
                         })}
                 </Row>
-                <Row>
+                {/* <Row>
                     <div style={{ marginTop: "4%" }}>
                         {this.state.menu["informativeSection"].checked && (
                             <>
@@ -311,15 +326,15 @@ class menuLanding extends Component {
                         {this.state.menu["informativeSection1"].checked && (
                             <>
                                 <label>Información para insercion en {this.state.menu["informativeSection1"].name}</label>
-                                <br />
+                                <br/>
                                 <textarea defaultValue={this.state.menu["informativeSection1"].markup} modules={toolbarEditor} onChange={(e) => { this.changeMarkup("informativeSection1", e.target.value) }} />
                             </>
                         )}
                     </div>
-                </Row>
+                </Row> */}
                 <Row>
                     <Button style={{ marginTop: "1%" }} type="primary" size="large" onClick={this.submit}>Guardar</Button>
-                </Row>
+                </Row> 
             </Fragment >
         )
     }

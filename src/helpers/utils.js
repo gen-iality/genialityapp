@@ -2,7 +2,6 @@
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { Actions } from './request';
-import React from 'react';
 
 export function uniqueID() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>

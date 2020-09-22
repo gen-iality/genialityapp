@@ -16,10 +16,10 @@ const privateInstance = axios.create({
   withCredentials: true,
 });
 
-const privateInstancePush = axios.create({
-  // pushURL: 'https://104.248.125.133:6477/pushNotification',
-  withCredentials: false,
-});
+// const privateInstancePush = axios.create({
+//   // pushURL: 'https://104.248.125.133:6477/pushNotification',
+//   withCredentials: false,
+// });
 
 /* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
 PRIMERO MIRAMOS  si viene en la URL
@@ -554,6 +554,9 @@ export const AgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/activities`);
   },
+  usersByActivities: async (event)=>{
+    return await Actions.getAll(`api/events/${event}/activities_attendees`)
+  },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/activities/`, id);
   },
@@ -593,9 +596,15 @@ export const SpeakersApi = {
 
 export const Activity = {
   Register: async (event, user_id, activity_id) => {
-    var info = { user_id, activity_id };
-    return await Actions.create(`api/events/${event}/activity/activity_attendee`, info);
+    var info = { event_id: event, user_id, activity_id };
+    return await Actions.create(`api/events/${event}/activities_attendees`, info);
   },
+  GetUserActivity: async (event, user_id)=>{
+    return await Actions.get(`api/events/${event}/activities_attendees?user_id=${user_id}`)
+  },
+  DeleteRegister: async (event, id) =>{
+    return await Actions.delete(`api/events/${event}/activities_attendees`,id)
+  }
 };
 
 export const Networking = {

@@ -8,13 +8,11 @@ import Creatable from "react-select";
 import { FaWhmcs } from "react-icons/fa";
 import EventContent from "../events/shared/content";
 import Loading from "../loaders/loading";
-import { AgendaApi, EventsApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi } from "../../helpers/request";
+import { AgendaApi, CategoriesAgendaApi, RolAttApi, SpacesApi, SpeakersApi, TypesAgendaApi } from "../../helpers/request";
 import { toolbarEditor } from "../../helpers/constants";
 import { fieldsSelect, handleRequestError, handleSelect, sweetAlert, uploadImage } from "../../helpers/utils";
 import Dropzone from "react-dropzone";
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import AgendaLanguage from './language'
 
 class AgendaEdit extends Component {
     constructor(props) {
@@ -257,7 +255,7 @@ class AgendaEdit extends Component {
     goBack = () => this.setState({ redirect: true });
 
     render() {
-        const { loading, name, subtitle, has_date, idActivity, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
+        const { loading, name, subtitle, date, hour_start, hour_end, image, access_restriction_type, capacity, space_id, selectedRol, selectedHosts, selectedType, selectedCategories } = this.state;
         const { hosts, spaces, categories, types, roles, isLoading } = this.state;
         const { matchUrl } = this.props;
         if (!this.props.location.state || this.state.redirect) return <Redirect to={matchUrl} />;

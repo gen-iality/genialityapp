@@ -1,6 +1,6 @@
-import React, { Component, useEffect, useState, Fragment } from "react"
+import React, { Component } from "react"
 import { firestore } from "../../helpers/firebase";
-import { Avatar, Button, message, Form, List, Card, Input, Row, Col, Spin, Alert, Popconfirm } from "antd";
+import { Avatar, List, Card, Spin } from "antd";
 import TimeStamp from "react-timestamp";
 
 
@@ -58,7 +58,7 @@ class CommentsList extends Component {
             <div style={{ textAlign: "left" }}>
                 {!dataComment && <Spin tip="Loading..." />}
 
-                {dataComment && dataComment.length == 0 && (
+                {dataComment && dataComment.length === 0 && (
                     <Card style={{ display: "block", margin: "0 auto", textAlign: "left", padding: "0px 30px" }}>
                         Aún sin comentarios
                     </Card>

@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import Moment from "moment";
 import EventContent from "../events/shared/content";
-import ConfigApp from "./configApp"
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
-import { AgendaApi, EventsApi, Actions } from "../../helpers/request";
+import { AgendaApi, EventsApi } from "../../helpers/request";
 import { Tabs, Tab, TabList, TabPanel } from "react-tabs";
 import AgendaLanguage from './language'
 

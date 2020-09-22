@@ -1,13 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import EventContent from '../events/shared/content';
 import { Redirect, withRouter } from "react-router-dom";
-import firebase from 'firebase';
-import EvenTable from "../events/shared/table";
-import { Link } from "react-router-dom";
 import { DocumentsApi, RolAttApi, UsersApi } from '../../helpers/request';
-import { toast } from 'react-toastify';
-import Select, { Creatable } from "react-select";
-import Files from 'react-files'
+import Select from "react-select";
 
 class filePermission extends Component {
 
@@ -25,7 +20,6 @@ class filePermission extends Component {
             name: "",
             file: "",
             type: "",
-            title: "",
             format: "",
             event_id: "",
             state: ""

@@ -3,9 +3,9 @@ import {NavLink, withRouter, Switch, Route, Redirect} from "react-router-dom";
 import InfoGeneral from "./newEvent/InfoGeneral";
 import InfoAsistentes from "./newEvent/infoAsistentes";
 import Moment from "moment";
-import InfoTiquetes from "./newEvent/infoTiquetes";
-import Pages from "../pages";
-import {Actions, EventsApi} from "../../helpers/request";
+
+
+import {Actions} from "../../helpers/request";
 import {toast} from "react-toastify";
 import {FormattedMessage} from "react-intl";
 import {BaseUrl} from "../../helpers/constants";
@@ -38,7 +38,7 @@ class NewEvent extends Component {
 
     async saveEvent(fields) {
         const { info } = this.state;
-        const self = this;
+        // const self = this;
         //this.setState({loading:true});
         const hour_start = Moment(info.hour_start).format('HH:mm');
         const date_start = Moment(info.date_start).format('YYYY-MM-DD');

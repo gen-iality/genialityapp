@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {Link, Redirect} from "react-router-dom";
 import Moment from "moment";
 import EventContent from "../events/shared/content";
-import ConfigApp from "./configApp"
 import EvenTable from "../events/shared/table";
 import SearchComponent from "../shared/searchTable";
 import {Actions} from "../../helpers/request";

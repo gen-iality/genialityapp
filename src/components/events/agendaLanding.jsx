@@ -3,10 +3,10 @@ import Moment from "moment";
 import * as Cookie from "js-cookie";
 import API, { AgendaApi, SpacesApi, Activity, SurveysApi, DocumentsApi } from "../../helpers/request";
 import AgendaActividadDetalle from "./agendaActividadDetalle";
-import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert } from "antd";
+import { Button, Card, Row, Col, Tag, Spin, Avatar, Alert, Tabs, notification } from "antd";
 import { firestore } from "../../helpers/firebase";
 import ReactPlayer from "react-player";
-//import { AgendaApi } from '../../helpers/request'
+import AgendaActivityItem from './AgendaActivityItem'
 
 class Agenda extends Component {
   constructor(props) {
@@ -21,6 +21,8 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
+      userAgenda: [],
+      data: [],
       value: "",
       currentActivity: null,
       survey: [],
@@ -30,13 +32,17 @@ class Agenda extends Component {
       disabled: false,
       generalTab: true,
       loading: false,
-      showButtonSurvey: false,
-      showButtonDocuments: false,
-      status: "in_progress"
+      survey: [],
+      documents: [],
+      show_inscription: false,
+      status: "in_progress",
+      hideBtnDetailAgenda: true
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
+    this.gotoActivity = this.gotoActivity.bind(this);
+    this.gotoActivityList = this.gotoActivityList.bind(this)
   }
 
   async componentDidUpdate(prevProps) {
@@ -47,7 +53,7 @@ class Agenda extends Component {
     if (!this.props.event) return;
 
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
-    if (prevProps.event && this.props.event._id == prevProps.event._id) return;
+    if (prevProps.event && this.props.event._id === prevProps.event._id) return;
 
     this.listeningStateMeetingRoom(data);
     //Después de traer la info se filtra por el primer día por defecto y se mandan los espacios al estado
@@ -63,20 +69,26 @@ class Agenda extends Component {
     await this.fetchAgenda();
 
     // Se obtiene informacion del usuario actual
-    this.getCurrentUser();
+    this.getCurrentUser();    
 
     this.setState({ loading: false });
 
     const { event } = this.props;
 
+    this.setState({
+      show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+    })
+
     let surveysData = await SurveysApi.getAll(event._id);
     let documentsData = await DocumentsApi.getAll(event._id)
 
-    if (surveysData.data.length >= 1) {
-      this.setState({ showButtonSurvey: true })
+    if (surveysData.data.length >= 1) {      
+      console.log("Encuestas", surveysData.data)
+      this.setState({ survey: surveysData.data})
     }
     if (documentsData.data.length >= 1) {
-      this.setState({ showButtonDocuments: true })
+      this.setState({ documents: documentsData.data })
     }
 
     if (!event.dates || event.dates.length === 0) {
@@ -101,8 +113,8 @@ class Agenda extends Component {
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
     }
-
- }
+    this.getAgendaUser()
+  }
 
   async listeningStateMeetingRoom(list) {
     list.forEach((activity, index, arr) => {
@@ -145,7 +157,7 @@ class Agenda extends Component {
 
   fetchAgenda = async () => {
     // Se consulta a la api de agenda
-    const { data } = await AgendaApi.byEvent(this.props.eventId);    
+    const { data } = await AgendaApi.byEvent(this.props.eventId);
     //se consulta la api de espacios para
     let space = await SpacesApi.byEvent(this.props.event._id);
 
@@ -161,7 +173,7 @@ class Agenda extends Component {
     this.setState({ toShow: this.state.listDay, nameSpace: "inicio" });
   }
 
-  filterByDay = (day, agenda) => {    
+  filterByDay = (day, agenda) => {
     //Se trae el filtro de dia para poder filtar por fecha y mostrar los datos
     const list = agenda
       .filter((a) => day && day.format && a.datetime_start && a.datetime_start.includes(day.format("YYYY-MM-DD")))
@@ -240,8 +252,12 @@ class Agenda extends Component {
   registerInActivity = (activityKey) => {
     const { eventId } = this.props;
     let { uid } = this.state;
+
     Activity.Register(eventId, uid, activityKey)
-      .then((result) => {
+      .then(() => {
+        notification.open({
+          message: 'Inscripción realizada',
+        });
       })
       .catch((err) => {
         console.error("err:", err);
@@ -299,9 +315,27 @@ class Agenda extends Component {
       .join(" ");
   }
 
+  async getAgendaUser() {
+    const { event } = this.props
+    const { uid } = this.state    
+    try {
+      const infoUserAgenda = await Activity.GetUserActivity(event._id, uid)    
+      this.setState({ userAgenda: infoUserAgenda.data })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+
+  checkInscriptionStatus(activityId = '') {
+    const { userAgenda } = this.state
+    const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
+    const statusInscription = checkInscription.length ? true : false
+    return statusInscription
+  }
   render() {
-    const { toggleConference, event } = this.props;
-    const { days, day, nameSpace, spaces, toShow, generalTab, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { toggleConference, eventId, event } = this.props;
+    const { days, day, hideBtnDetailAgenda, show_inscription, spaces, toShow, data, currentActivity, loading, survey, documents } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -312,6 +346,7 @@ class Agenda extends Component {
             matchUrl={this.props.matchUrl}
             survey={survey}
             currentActivity={currentActivity}
+            image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
             toggleConference={toggleConference}
           />
@@ -357,173 +392,42 @@ class Agenda extends Component {
                 )}
 
                 {/* Contenedor donde se iteran los tabs de las fechas */}
+                {
+                  event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "false" && (
+                    <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
+                      {days.map((date, key) => (
+                        <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
+                          {this.capitalizeDate(Moment(date).format("MMMM DD"))}
+                        </Button>
 
-                <div className="container-day_calendar tabs is-toggle is-centered is-fullwidth is-medium has-margin-bottom-60">
-                  {days.map((date, key) => (
-                    <Button key={key} onClick={() => this.selectDay(date)} size={"large"} type={`${date === day ? "primary" : ""}`}>
-                      {this.capitalizeDate(Moment(date).format("MMMM DD"))}
-                    </Button>
-
-                  ))}
-                </div>
+                      ))}
+                    </div>
+                  )
+                }
 
                 {/* Contenedor donde se pinta la información de la agenda */}
-
-                {toShow.map((item, llave) => (
-                  <div key={llave} className="container_agenda-information">
-                    {console.log('info item', item) }
-                    <div className="card agenda_information">
-                      <Row align="middle">
-                        <Row>
-                          <span className="date-activity">
-                            {Moment(item.datetime_start).format("h:mm a")} -{" "}
-                            {Moment(item.datetime_end).format("h:mm a")}
-                          </span>
-                          <p>
-                            <span className="card-header-title text-align-card">{item.name}</span>
-                          </p>
-                        </Row>
-                        <hr className="line-head" />
-                        <Col className="has-text-left" xs={24} sm={12} md={12} lg={12} xl={16}>
-                          <div onClick={
-                            (e) => {
-                              
-                              this.gotoActivity(item) 
-                              }} className="text-align-card" style={{ marginBottom: "5%" }}>
-                            {
-                              item.activity_categories.length > 0 && (
-                                <>
-                                  <b>Tags: </b>
-                                  {
-                                    item.activity_categories.map((item) => (
-                                      <>
-                                        <Tag color={item.color ? item.color : "#ffffff"}>{item.name}</Tag>
-                                      </>
-                                    ))
-                                  }
-                                </>
-                              )
-                            }
-
-                          </div>
-                          <p className="text-align-card">
-                            {
-                              item.hosts.length > 0 && (
-                                <>
-                                  <b>Presenta: </b>
-                                  <br />
-                                  <br />
-                                  <Row>
-                                    {item.hosts.map((speaker, key) => (
-                                      <Col lg={24} xl={12} xxl={12} style={{ marginBottom: 13 }}>
-                                        <span key={key} style={{ fontSize: 20, fontWeight: 500 }}>
-                                          <Avatar
-                                            size={50}
-                                            src={speaker.image
-                                            } /> {speaker.name} &nbsp;</span>
-                                      </Col>
-                                    ))}
-                                  </Row>
-                                </>
-                              )
-                            }
-                          </p>
-                          <Col align="bottom" className="text-align-card">
-                            <div>
-                              <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
-                                Detalle del Evento
-                              </Button>
-                              {
-                                showButtonDocuments && (
-                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
-                                    Documentos
-                                  </Button>
-                                )
-                              }
-                              {
-                                showButtonSurvey && (
-                                  <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
-                                    Encuestas
-                                  </Button>
-                                )
-                              }
-                            </div>
-                          </Col>
-                        </Col>
-                        <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-                          <div>
-                            {
-                              item.habilitar_ingreso === "closed_meeting_room" && (
-                                <>
-                                  <img src={this.props.event.styles.event_image} />                                 
-                                  <Alert message="La Conferencia Inciará pronto" type="warning" />                                   
-                                </>
-                              )
-                            }
-
-                            {
-                              item.habilitar_ingreso === "ended_meeting_room" && (
-                                <>
-                                  {item.video ? item.video && (
-                                    <>                                    
-                                    <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />                                   
-                                      <ReactPlayer
-                                        width={"100%"}                                        
-                                        style={{
-                                          display: "block",
-                                          margin: "0 auto",
-                                        }}
-                                        url={item.video}
-                                        //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-                                        controls
-                                      />
-                                    </>
-                                  ) :
-                                    (
-                                      <>
-                                        <img src={this.props.event.styles.event_image} />
-                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />                                        
-                                      </>
-                                    )}
-
-                                </>
-                              )
-                            }
-                            {
-                              item.habilitar_ingreso === "open_meeting_room" && (
-                                <>
-                                  <img onClick={() =>
-                                    item.meeting_id && toggleConference(
-                                      true,
-                                      item.meeting_id,
-                                      item
-                                    )
-                                  } src={this.props.event.styles.event_image} />
-                                  <div>
-                                    <Button
-                                      block
-                                      type="primary"
-                                      disabled={item.meeting_id ? false : true}
-                                      onClick={() =>
-                                        toggleConference(
-                                          true,
-                                          item.meeting_id,
-                                          item
-                                        )
-                                      }
-                                    >
-                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                                    </Button>
-                                  </div>
-                                </>
-                              )
-                            }
-                          </div>
-                        </Col>
-                      </Row>
+                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => {
+                  const isRegistered = this.checkInscriptionStatus(item._id)
+                  return (
+                    <div key={llave} className="container_agenda-information" >
+                      <AgendaActivityItem
+                        item={item}
+                        key={llave}
+                        Documents={documents}
+                        Surveys={survey}
+                        toggleConference={toggleConference}
+                        event_image={this.props.event.styles.event_image}
+                        gotoActivity={this.gotoActivity}
+                        registerInActivity={this.registerInActivity}
+                        registerStatus={isRegistered}
+                        eventId={this.props.eventId}
+                        userId={this.state.userId}
+                        btnDetailAgenda={hideBtnDetailAgenda}
+                        show_inscription={show_inscription}                        
+                      />
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>

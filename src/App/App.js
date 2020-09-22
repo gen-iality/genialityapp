@@ -4,13 +4,10 @@ import * as Cookie from "js-cookie";
 import { parseUrl } from "../helpers/constants";
 import './App.less';
 import { userContext } from "../containers/userContext";
-
 import privateInstance, { Actions } from "../helpers/request";
 import store from "../redux/store";
 import MainRouter from "../containers/router";
 import "bulma-spacing/css/bulma-spacing.min.css";
-
-import API from "../helpers/request";
 
 class App extends Component {
   constructor(props) {

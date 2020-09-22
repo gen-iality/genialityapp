@@ -5,7 +5,7 @@ import { SurveyAnswers } from "./services";
 import Graphics from "./graphics";
 import SurveyComponent from "./surveyComponent";
 
-import { List, Button, Card, Col, Spin } from "antd";
+import { Card,  Spin } from "antd";
 
 export default class RootPage extends Component {
   constructor(props) {
@@ -37,7 +37,7 @@ export default class RootPage extends Component {
   }
 
   seeIfUserHasVote = async () => {
-    let { idSurvey, hasVote, eventId, currentUser } = this.state;
+    let { idSurvey,  eventId, currentUser } = this.state;
     const { userHasVoted, selectedSurvey } = this.props;
 
     if (currentUser) {
@@ -60,9 +60,8 @@ export default class RootPage extends Component {
   render() {
     let { idSurvey, hasVote, eventId, isLoading, currentUser, guestVoteInSurvey, responseCounter, eventUser } = this.state;
     const { toggleSurvey, openSurvey, surveyLabel } = this.props;
-    console.log("DEBUG error muestra gráfica en firefox:", "idSurvey", "hasVote", hasVote, "guestVoteInSurvey", guestVoteInSurvey, "openSurvey", openSurvey);
     if (!isLoading)
-      return ((eventUser && eventUser.rol && eventUser.rol.name == "Speaker") || openSurvey == "false" || hasVote || guestVoteInSurvey) ? (
+      return ((eventUser && eventUser.rol && eventUser.rol.name === "Speaker") || openSurvey === "false" || hasVote || guestVoteInSurvey) ? (
         <Graphics idSurvey={idSurvey} showListSurvey={toggleSurvey} eventId={eventId} surveyLabel={surveyLabel} />
       ) : (
           <Card className="survyCard">

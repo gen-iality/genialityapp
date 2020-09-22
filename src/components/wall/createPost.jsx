@@ -1,18 +1,14 @@
-import React, { Component, Fragment } from "react"
-import TimeStamp from "react-timestamp";
+import React, { Component } from "react"
 import CameraFeed from "./cameraFeed";
 import * as Cookie from "js-cookie";
 
-
-
 //custom
 import { AuthUrl } from "../../helpers/constants";
-import { firestore } from "../../helpers/firebase";
 import API from "../../helpers/request";
 import { saveFirebase } from "./helpers";
-import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal, Alert } from "antd";
-import { CloudUploadOutlined, MessageOutlined, CameraOutlined, LikeOutlined, SendOutlined } from "@ant-design/icons";
-import { message, Space } from 'antd';
+import { Comment, Form, Button, Input, Card, Row, Col, Modal, Alert } from "antd";
+import { CloudUploadOutlined,  CameraOutlined } from "@ant-design/icons";
+import { message } from 'antd';
 const { TextArea } = Input;
 
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
@@ -154,8 +150,7 @@ class CreatePost extends Component {
     };
 
     render() {
-        const { user, visible, hidden, image, submitting, value } = this.state;
-        const { event } = this.props
+        const { user, visible, hidden, image, submitting, value } = this.state;        
         return (
 
 

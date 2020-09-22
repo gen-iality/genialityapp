@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { typeInputs } from "../../../helpers/constants";
 import CreatableSelect from "react-select/lib/Creatable";
-import { Radio } from "antd";
-import { normalizeUnits } from "moment";
 
 
 const html = document.querySelector("html");
@@ -125,7 +123,7 @@ class DatosModal extends Component {
                                     name="labelPosition"
                                     value="arriba"
                                     className="form-check-input"
-                                    checked={info.labelPosition == "arriba" || !info.labelPosition}
+                                    checked={info.labelPosition === "arriba" || !info.labelPosition}
                                     onChange={this.handleChange}
                                 />
     Arriba &nbsp;</label>
@@ -136,7 +134,7 @@ class DatosModal extends Component {
                                     name="labelPosition"
                                     value="izquierda"
                                     className="form-check-input"
-                                    checked={info.labelPosition == "izquierda"}
+                                    checked={info.labelPosition === "izquierda"}
                                     onChange={this.handleChange}
                                 />
     Izquierda &nbsp;</label>
@@ -146,7 +144,7 @@ class DatosModal extends Component {
                                     name="labelPosition"
                                     value="derecha"
                                     className="form-check-input"
-                                    checked={info.labelPosition == "derecha"}
+                                    checked={info.labelPosition === "derecha"}
                                     onChange={this.handleChange}
                                 />
    Derecha &nbsp;</label>
