@@ -46,9 +46,9 @@ export default function AgendaActivityItem({
           </Row>
           <hr className='line-head' />
           <Col className='has-text-left' xs={24} sm={12} md={12} lg={12} xl={16}>
-            <span className='tag category_calendar-tag'>
+            {/* <span className='tag category_calendar-tag'>
               {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
-            </span>
+            </span> */}
             <div
               onClick={() => {
                 gotoActivity(item);
@@ -182,7 +182,7 @@ export default function AgendaActivityItem({
               {item.habilitar_ingreso === 'closed_meeting_room' && (
                 <>
                   <img src={item.image ? item.image : event_image} />
-                  <Alert message='La Conferencia iniciará pronto' type='warning' />
+                  <Alert message={`La sesión inicia: ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${" - "} ${Moment(item.datetime_end).format('h:mm a')}`} type='warning' />
                 </>
               )}
 
@@ -207,7 +207,7 @@ export default function AgendaActivityItem({
                   ) : (
                     <>
                       <img src={item.image ? item.image : event_image} />
-                      <Alert message='Conferencia Terminada. Observa el video Mas tarde' type='info' />
+                      <Alert message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${" - "} ${Moment(item.datetime_end).format('h:mm a')}`} type='info' />
                     </>
                   )}
                 </>
