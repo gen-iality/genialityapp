@@ -40,7 +40,7 @@ export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token) => {
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // Se obtiene el id del token recibido
       getCurrentUser(token).then(async (currentUser) => {
         let docs = [];
@@ -153,10 +153,7 @@ export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
         const rawData = [];
 
         result.docs.forEach((doc) => {
-          const newDataItem = {
-            id: doc.id,
-            ...doc.data(),
-          };
+          const newDataItem = {id: doc.id,...doc.data()};
 
           if (newDataItem.owner_id !== currentEventUserId) {
             rawData.push(newDataItem);
@@ -169,6 +166,34 @@ export const getPendingAgendasFromEventUser = (eventId, currentEventUserId) => {
       .catch(reject);
   });
 };
+
+export const getPendingAgendasSent = (eventId, currentEventUserId) => {
+  return new Promise((resolve, reject) => {
+    firestore
+      .collection('event_agendas')
+      .doc(eventId)
+      .collection('agendas')
+      .where('attendees', 'array-contains', currentEventUserId)
+      .where('request_status', '==', 'pending')
+      .get()
+      .then((result) => {
+        const rawData = [];
+
+        result.docs.forEach((doc) => {
+          const newDataItem = {id: doc.id,...doc.data()};
+
+          if (newDataItem.owner_id === currentEventUserId) {
+            rawData.push(newDataItem);
+          }
+        });
+
+        const data = sortBy(prop('timestamp_start'), rawData);
+        resolve(data);
+      })
+      .catch(reject);
+  });
+};
+
 
 export const acceptOrRejectAgenda = (eventId, currentEventUserId, agenda, newStatus) => {
   const agendaId = agenda.id
