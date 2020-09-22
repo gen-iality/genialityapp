@@ -14,12 +14,13 @@ export default function FilterNetWorking({properties, filterProperty, handleSele
     
     return (
         <Select
-        style={{ width: '330px', marginBottom: '15px' }}
+        style={{ width: '330px', marginBottom: '15px', textAlign: "left" }}
         onChange={handleSelect}
         placeholder={`Seleccione ${filterProperty}`}
         >
+            <option key={0} value=''>Ver todo</option>
             {options.map((option, index)=>{
-                return <Option key={index} value={option.value}>{option.label}</Option>               
+                return <Option key={index + 1} value={option.value}>{option.label}</Option>               
             })}
         </Select>
     )
