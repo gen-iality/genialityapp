@@ -21,6 +21,7 @@ class Agenda extends Component {
       nameSpace: "",
       filtered: [],
       toShow: [],
+      userAgenda: [],
       data: [],
       value: "",
       currentActivity: null,
@@ -31,8 +32,8 @@ class Agenda extends Component {
       disabled: false,
       generalTab: true,
       loading: false,
-      showButtonSurvey: false,
-      showButtonDocuments: false,
+      survey: [],
+      documents: [],
       show_inscription: false,
       status: "in_progress",
       hideBtnDetailAgenda: true
@@ -40,6 +41,8 @@ class Agenda extends Component {
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
     this.survey = this.survey.bind(this);
+    this.gotoActivity = this.gotoActivity.bind(this);
+    this.gotoActivityList = this.gotoActivityList.bind(this)
   }
 
   async componentDidUpdate(prevProps) {
@@ -66,7 +69,7 @@ class Agenda extends Component {
     await this.fetchAgenda();
 
     // Se obtiene informacion del usuario actual
-    this.getCurrentUser();
+    this.getCurrentUser();    
 
     this.setState({ loading: false });
 
@@ -80,11 +83,12 @@ class Agenda extends Component {
     let surveysData = await SurveysApi.getAll(event._id);
     let documentsData = await DocumentsApi.getAll(event._id)
 
-    if (surveysData.data.length >= 1) {
-      this.setState({ showButtonSurvey: true })
+    if (surveysData.data.length >= 1) {      
+      console.log("Encuestas", surveysData.data)
+      this.setState({ survey: surveysData.data})
     }
     if (documentsData.data.length >= 1) {
-      this.setState({ showButtonDocuments: true })
+      this.setState({ documents: documentsData.data })
     }
 
     if (!event.dates || event.dates.length === 0) {
@@ -109,7 +113,7 @@ class Agenda extends Component {
       }
       this.setState({ days, day: days[0] }, this.fetchAgenda);
     }
-
+    this.getAgendaUser()
   }
 
   async listeningStateMeetingRoom(list) {
@@ -311,15 +315,27 @@ class Agenda extends Component {
       .join(" ");
   }
 
+  async getAgendaUser() {
+    const { event } = this.props
+    const { uid } = this.state    
+    try {
+      const infoUserAgenda = await Activity.GetUserActivity(event._id, uid)    
+      this.setState({ userAgenda: infoUserAgenda.data })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+
   checkInscriptionStatus(activityId = '') {
-    const { toShow } = this.state
-    const checkInscription = toShow.filter((activity) => activity.activity_id === activityId)
+    const { userAgenda } = this.state
+    const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
     const statusInscription = checkInscription.length ? true : false
     return statusInscription
   }
   render() {
     const { toggleConference, eventId, event } = this.props;
-    const { days, day, hideBtnDetailAgenda, spaces, toShow, data, currentActivity, survey, loading, showButtonSurvey, showButtonDocuments } = this.state;
+    const { days, day, hideBtnDetailAgenda, show_inscription, spaces, toShow, data, currentActivity, loading, survey, documents } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -332,7 +348,7 @@ class Agenda extends Component {
             currentActivity={currentActivity}
             image_event={this.props.event.styles.event_image}
             gotoActivityList={this.gotoActivityList}
-            toggleConference={toggleConference}            
+            toggleConference={toggleConference}
           />
         )}
 
@@ -390,24 +406,28 @@ class Agenda extends Component {
                 }
 
                 {/* Contenedor donde se pinta la información de la agenda */}
-                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => (
-                  <div key={llave} className="container_agenda-information">
-                    <AgendaActivityItem
-                      item={item}
-                      key={llave}
-                      showButtonDocuments={showButtonDocuments}
-                      showButtonSurvey={showButtonSurvey}
-                      toggleConference={toggleConference}
-                      event_image={this.props.event.event_image}
-                      gotoActivity={this.gotoActivity}
-                      registerInActivity={this.registerInActivity}
-                      registerStatus={this.checkInscriptionStatus(item._id)}
-                      eventId={this.props.eventId}
-                      userId={this.state.userId}
-                      btnDetailAgenda={hideBtnDetailAgenda}
-                    />
-                  </div>
-                ))}
+                {(event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ? data : toShow).map((item, llave) => {
+                  const isRegistered = this.checkInscriptionStatus(item._id)
+                  return (
+                    <div key={llave} className="container_agenda-information" >
+                      <AgendaActivityItem
+                        item={item}
+                        key={llave}
+                        Documents={documents}
+                        Surveys={survey}
+                        toggleConference={toggleConference}
+                        event_image={this.props.event.styles.event_image}
+                        gotoActivity={this.gotoActivity}
+                        registerInActivity={this.registerInActivity}
+                        registerStatus={isRegistered}
+                        eventId={this.props.eventId}
+                        userId={this.state.userId}
+                        btnDetailAgenda={hideBtnDetailAgenda}
+                        show_inscription={show_inscription}                        
+                      />
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>

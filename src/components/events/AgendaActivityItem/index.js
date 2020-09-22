@@ -5,8 +5,8 @@ import Moment from 'moment';
 
 export default function AgendaActivityItem({
   item,
-  showButtonSurvey,
-  showButtonDocuments,
+  Surveys,
+  Documents,
   btnDetailAgenda,
   toggleConference,
   event_image,
@@ -15,12 +15,12 @@ export default function AgendaActivityItem({
   registerInActivity,
   eventId,
   userId,
+  show_inscription,
 }) {
   const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
     setIsRegistered(registerStatus);
-    console.log('boton detalle', btnDetailAgenda);
   }, [registerStatus]);
 
   return (
@@ -46,6 +46,9 @@ export default function AgendaActivityItem({
           </Row>
           <hr className='line-head' />
           <Col className='has-text-left' xs={24} sm={12} md={12} lg={12} xl={16}>
+            <span className='tag category_calendar-tag'>
+              {item.meeting_id || item.vimeo_id ? 'Tiene espacio virtual' : 'No tiene espacio Virtual'}
+            </span>
             <div
               onClick={() => {
                 gotoActivity(item);
@@ -96,13 +99,15 @@ export default function AgendaActivityItem({
             <Row>
               <Col span={12}>
                 <Row>
-                  <Button
-                    type='primary'
-                    onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
-                    className='space-align-block'
-                    disabled={isRegistered}>
-                    {isRegistered ? 'Inscrito' : 'Inscribirme'}
-                  </Button>
+                  {show_inscription && (
+                    <Button
+                      type='primary'
+                      onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
+                      className='space-align-block'
+                      disabled={isRegistered}>
+                      {isRegistered ? 'Inscrito' : 'Inscribirme'}
+                    </Button>
+                  )}
                 </Row>
                 <Row>
                   {btnDetailAgenda === true && (
@@ -120,7 +125,7 @@ export default function AgendaActivityItem({
 
               <Col span={12}>
                 <Row>
-                  {showButtonDocuments && (
+                  {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
                       onClick={() => {
@@ -132,7 +137,7 @@ export default function AgendaActivityItem({
                   )}
                 </Row>
                 <Row>
-                  {showButtonSurvey && (
+                  {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
                       onClick={() => {
@@ -156,15 +161,15 @@ export default function AgendaActivityItem({
                           }
                           type='primary'
                           key={key}>
-                          Sesion en {item.language}
+                          Sesión en {item.language}
                         </Button>
                       )}
                       {item.state === 'closed_meeting_room' && (
-                        <Alert message={`La sesion en ${item.language} Iniciará pronto`} type='info' />
+                        <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
                       )}
 
                       {item.state === 'ended_meeting_room' && (
-                        <Alert message={`La sesion en ${item.language} ha terminado`} type='info' />
+                        <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
                       )}
                     </Row>
                   </Col>
