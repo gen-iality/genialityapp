@@ -92,7 +92,8 @@ class trivia extends Component {
     const { data } = this.state;
     if (this.state.redirect) return <Redirect to={{ pathname: `${matchUrl}`, state: { new: true } }} />;
     return (
-      <Fragment className="columns is-12">
+      <Fragment >
+        <div className="columns is-12">
         <Link to={{ pathname: `${matchUrl}/encuesta` }}>
           <Button style={{ float: "right" }}>
             <span className="icon">
@@ -106,6 +107,7 @@ class trivia extends Component {
             dataSource={data}
             columns={columns} />
         </EventContent>
+        </div>
       </Fragment>
     );
   }

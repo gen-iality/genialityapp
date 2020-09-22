@@ -32,7 +32,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
       .collection( 'events' )
       .doc( event._id )
       .onSnapshot( function ( doc ) {
-        console.log( "doc", doc.data() )
+       
         setEnableMeetings( ( doc.data() && doc.data().enableMeetings ) ? true : false );
       } );
   }, [ event ] )
@@ -88,7 +88,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
   if ( currentRoom ) {
     let userName = (eventUser && eventUser.properties)?eventUser.properties.names: "Anonimo"+new Date().getTime()
     //https://video-app-1496-dev.twil.io/?UserName=vincent&URLRoomName=hola2&passcode=2877841496
-    console.log("params",eventUser,currentRoom );
+    //console.log("params",eventUser,currentRoom );
 
     return (
       <Row align="middle" justify="center" >
@@ -160,7 +160,6 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
                 { isNonEmptyArray( dayAgendas )
                   ? dayAgendas.map( ( acceptedAgenda ) => (
                     <>
-                      { eventUser && <div>{ eventUser._id }</div> }
                       <AcceptedCard
                         key={ `accepted-${ acceptedAgenda.id }` }
                         eventId={ event._id }

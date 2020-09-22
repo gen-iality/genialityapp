@@ -160,7 +160,7 @@ export default ({ initialValues, eventId, extraFieldsOriginal, eventUserId, clos
       let value = user[target];
 
       if (m.visibleByAdmin == false) {
-        return (<div></div>);
+        return (<div key={key}></div>);
       }
 
       if (conditionals.state === "enabled") {
