@@ -76,7 +76,7 @@ class Agenda extends Component {
     const { event } = this.props;
 
     this.setState({
-      showInscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
+      show_inscription: event.styles && event.styles.show_inscription ? event.styles.show_inscription : false,
       hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
     })
 
