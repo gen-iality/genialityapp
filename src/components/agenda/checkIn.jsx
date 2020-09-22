@@ -30,7 +30,7 @@ class CheckAgenda extends Component {
             clearSearch: false,
             changeItem: false
         };
-        this.firestoreRef = firestore.collection(`event_activity_attendees/${this.props.event._id}/activities/${this.props.match.params.id}/attendees`);
+        this.firestoreRef = firestore.collection(`/${this.props.event._id}_event_attendees`);
     }
 
     async componentDidMount() {
