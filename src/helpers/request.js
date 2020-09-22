@@ -16,10 +16,10 @@ const privateInstance = axios.create({
   withCredentials: true,
 });
 
-const privateInstancePush = axios.create({
-  // pushURL: 'https://104.248.125.133:6477/pushNotification',
-  withCredentials: false,
-});
+// const privateInstancePush = axios.create({
+//   // pushURL: 'https://104.248.125.133:6477/pushNotification',
+//   withCredentials: false,
+// });
 
 /* SI EL USUARIO ESTA LOGUEADO POR DEFECTO AGREGAMOS EL TOKEN A LAS PETICIONES 
 PRIMERO MIRAMOS  si viene en la URL

@@ -1,10 +1,7 @@
-import React, { Component, useEffect, useState, Fragment } from "react"
-import { firestore } from "../../helpers/firebase";
-import { Avatar, Button, message, Form, List, Card, Input, Row, Col, Spin, Alert, Popconfirm } from "antd";
+import React, { Component, Fragment } from "react"
+import { Avatar, Button, message, List, Card, Spin, Alert, Popconfirm } from "antd";
 import TimeStamp from "react-timestamp";
-import { toast } from "react-toastify";
-import { MessageOutlined, LikeOutlined, SendOutlined, DeleteOutlined } from "@ant-design/icons";
-import { saveFirebase } from "./helpers";
+import { MessageOutlined, LikeOutlined,  DeleteOutlined } from "@ant-design/icons";
 import CommentEditor from "./commentEditor";
 import Comments from "./comments";
 import * as Cookie from "js-cookie";
@@ -28,8 +25,7 @@ class WallList extends Component {
             avatar: "https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/avatar0.png?alt=media&token=26ace5bb-f91f-45ca-8461-3e579790f481",
             dataPost: this.props.dataPost || undefined,
             dataComment: [],
-            dataPostFilter: [],
-            submitting: false,
+            dataPostFilter: [],            
             value: "",
             valueCommit: "",
             currentCommet: null,
@@ -43,8 +39,7 @@ class WallList extends Component {
 
 
     innerCreateComment = async (post, comment) => {
-        await this.setState({ commenting: post.id });
-        var result = await this.props.createComment(post.id, comment);
+        await this.setState({ commenting: post.id });        
         await this.setState({ commenting: null });
         message.success("Comentario creado.")
         this.innershowComments(post.id, post.comments + 1);
@@ -70,8 +65,7 @@ class WallList extends Component {
 
     innerDeletePost = async (postId) => {
 
-        await this.setState({ deleting: postId });
-        var result = await this.props.deletePost(postId);
+        await this.setState({ deleting: postId });        
         await this.setState({ deleting: null });
         message.success("Publicación eliminada.")
     }
@@ -111,14 +105,14 @@ class WallList extends Component {
     }
 
     render() {
-        const { dataPost, submitting, valueCommit, currentCommet, dataComment, user } = this.state;
+        const { dataPost, user } = this.state;
         return (
             <Fragment>
                 <div>
 
                     {!dataPost && <Spin size="large" tip="Cargando..." />}
 
-                    {dataPost && dataPost.length == 0 && <Alert
+                    {dataPost && dataPost.length === 0 && <Alert
                         message="Listos para la primera publicación"
                         description="Aún esta el lienzo el blanco para crear la primera publicación, aprovecha"
                         type="info"
@@ -155,7 +149,7 @@ class WallList extends Component {
                                             }}
                                         />,
                                         <>
-                                            {(user && (user._id == item.author || user.email == item.author)) && (
+                                            {(user && (user._id === item.author || user.email === item.author)) && (
                                                 <>
                                                     <Popconfirm
                                                         title="Seguro deseas eliminar este mensaje?"
@@ -163,7 +157,7 @@ class WallList extends Component {
                                                     >
                                                         <Button key="list-vertical-message" shape="circle" icon={<DeleteOutlined />} />
                                                     </Popconfirm>
-                                                    {(this.state.deleting == item.id) && <Spin />}
+                                                    {(this.state.deleting === item.id) && <Spin />}
                                                 </>
                                             )}
                                         </>

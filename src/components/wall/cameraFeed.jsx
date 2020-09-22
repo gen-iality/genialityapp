@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { saveFirebase } from './helpers'
 import { toast } from "react-toastify";
 //custom
 import { Button } from 'antd';
-import { CameraOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CameraOutlined } from '@ant-design/icons';
 
 
 const imageWidh = 1280;

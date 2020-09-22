@@ -1,9 +1,6 @@
 import { sortBy, prop } from 'ramda';
-
 import { firestore } from '../../helpers/firebase';
 import API, { UsersApi, EventsApi } from '../../helpers/request';
-
-const refUsersList = (eventId) => `${eventId}_event_attendees`;
 
 const filterList = (list, currentUser) => list.find((item) => item.account_id === currentUser);
 
@@ -42,7 +39,6 @@ export const getCurrentEventUser = (eventId, userId) => {
 export const userRequest = {
   //   Obtiene la lista de los asistentes al evento -------------------------------------------
   getEventUserList: async (eventId, token) => {
-    let refEventUser = refUsersList(eventId);
 
     return new Promise((resolve, reject) => {
       // Se obtiene el id del token recibido
@@ -54,7 +50,7 @@ export const userRequest = {
           resolve(docs);
         }
 
-        docs = users.data.filter((user) => user.account_id != currentUser._id);
+        docs = users.data.filter((user) => user.account_id !== currentUser._id);
         resolve(docs);
       });
     });

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 //custom
-import { AgendaApi, SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
+import {SpeakersApi, ActivityBySpeaker } from "../../helpers/request";
 import Moment from "moment";
 import { Card, Avatar, Button, Modal, Row, Col } from "antd";
 import { UserOutlined } from "@ant-design/icons";

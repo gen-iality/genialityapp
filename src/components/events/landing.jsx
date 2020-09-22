@@ -18,7 +18,6 @@ import Dialog from "../modal/twoAction";
 import TicketsForm from "../tickets/formTicket";
 import CertificadoLanding from "../certificados/cerLanding";
 import AgendaForm from "./agendaLanding";
-import AgendaFormComplete from "./agendaLandingComplete";
 import SpeakersForm from "./speakers";
 import SurveyForm from "./surveys";
 import DocumentsForm from "../documents/front/documentsLanding";
@@ -85,7 +84,7 @@ class Landing extends Component {
       data: null,
       user: null,
       loader_page: false,
-      show_banner_footer: false, 
+      show_banner_footer: false,
       event: null,
       requireValidation: false
     };
@@ -102,7 +101,7 @@ class Landing extends Component {
     this.setState({
       headerVisible: false,
     });
-  };  
+  };
 
   showDrawer = () => {
     this.setState({
@@ -143,7 +142,7 @@ class Landing extends Component {
     head.append(styleElement);
     /* Fin Carga */
   }
-  
+
   async componentDidMount() {
 
     let user = null;
@@ -151,15 +150,15 @@ class Landing extends Component {
     let eventUsers = null;
 
     const id = this.props.match.params.event;
-    
+
     try {
       const resp = await API.get(`/auth/currentUser?evius_token=${Cookie.get("evius_token")}`);
       if (resp.status !== 200 && resp.status !== 202) return;
       user = resp.data;
-      this.setState({user: resp.data})
-    } catch(err){
+      this.setState({ user: resp.data })
+    } catch (err) {
       console.error(err)
-     }
+    }
 
     /* Trae la información del evento con la instancia pública*/
     const event = await EventsApi.landingEvent(id);
@@ -170,7 +169,7 @@ class Landing extends Component {
       eventUser = await EventsApi.getcurrentUserEventUser(event._id);
       eventUsers = await EventsApi.getcurrentUserEventUsers(event._id);
     }
-    
+
     const dateFrom = event.datetime_from.split(" ");
     const dateTo = event.datetime_to.split(" ");
     event.hour_start = Moment(dateFrom[1], "HH:mm").toDate();
@@ -183,22 +182,18 @@ class Landing extends Component {
     let namesUser = (user) ? (user.names || user.displayName || "Anónimo") : "Anónimo";
 
 
-    this.setState({ 
-      event, 
-      eventUser, 
-      show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false, 
-      eventUsers, 
-      data: user, 
-      currentUser: user, 
-      namesUser: namesUser, 
-      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false })
+    this.setState({
+      event,
+      eventUser,
+      show_banner_footer: event.show_banner_footer ? event.show_banner_footer : false,
+      eventUsers,
+      data: user,
+      currentUser: user,
+      namesUser: namesUser,
+      loader_page: event.styles && event.styles.data_loader_page && event.styles.loader_page !== "no" ? true : false
+    })
     const sections = {
-      agenda: (
-        event.styles && event.styles.hideDatesAgenda && event.styles.hideDatesAgenda === "true" ?
-          <AgendaFormComplete event={event} eventId={event._id} toggleConference={this.toggleConference} />
-          :
-          <AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />
-      ),
+      agenda: (<AgendaForm event={event} eventId={event._id} toggleConference={this.toggleConference} />),
       tickets: (
         <>
           {/* {(this.state.eventUser && <div className="columns is-centered">
@@ -234,21 +229,21 @@ class Landing extends Component {
       faqs: <FaqsForm event={event} eventId={event._id} />,
       networking: <NetworkingForm event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       my_section: <MySection event={event} eventId={event._id} />,
-      companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,      
+      companies: <Companies event={event} eventId={event._id} goBack={this.showEvent} eventUser={this.state.eventUser} />,
       interviews: <MyAgendaIndepend event={event} />,
       trophies: <Trophies event={event} />,
-      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference}/>,
+      my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id}/>,
+      login: <UserLogin eventId={event._id} />,
       evento: (
-        
+
         <Row justify="center" >
           <Col sm={24} md={16} lg={18} xl={18}>
-            {(this.state.event && this.state.event._id != "5f0b95ca34c8116f9b21ebd6") &&
+            {(this.state.event && this.state.event._id !== "5f0b95ca34c8116f9b21ebd6") &&
               <EventLanding event={event} toggleConference={this.toggleConference} showSection={this.showSection} />
             }
-            {(this.state.event && this.state.event._id == "5f0b95ca34c8116f9b21ebd6") &&
+            {(this.state.event && this.state.event._id === "5f0b95ca34c8116f9b21ebd6") &&
               <>
                 <ReactPlayer
                   width={"100%"}
@@ -259,7 +254,7 @@ class Landing extends Component {
                   url={event.video}
                   //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                   controls
-                  />
+                />
                 <div className="the-lobby-video-column">
                   <div className="the-lobby-video">
                     <div className="the-lobby-video-wrap-holder">
@@ -274,10 +269,10 @@ class Landing extends Component {
                       <div className="the-lobby-video-container">
                         <ReactPlayer
 
-url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
-//url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
-controls
-/>
+                          url={"https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/WhatsApp%20Video%202020-07-26%20at%2018.57.30.mp4?alt=media&token=d304d8b9-530d-4972-9a00-373bd19b0158"}
+                          //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
+                          controls
+                        />
                       </div>
                     </div>
                   </div>
@@ -299,7 +294,7 @@ controls
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
-              />
+            />
             <MapComponent event={event} />
           </Col>
         </Row>
@@ -312,7 +307,7 @@ controls
     });
   }
 
-  setSection(section){
+  setSection(section) {
     this.setState({ section })
   }
 
@@ -410,7 +405,7 @@ controls
     }
 
     //Se usa para pasarle al componente de ZOOM la actividad actual que a su vez se la pasa a las SURVEYs
-    if (activity != undefined) {
+    if (activity !== undefined) {
       this.setState({ activity });
     }
 
@@ -443,7 +438,7 @@ controls
       currentUser,
       loader_page
     } = this.state;
-    
+
     return (
       <section className="section landing" style={{ backgroundColor: this.state.color, height: "100%" }}>
         {this.state.showConfirm && (
@@ -562,11 +557,11 @@ controls
                               width={250}>
                               <div className="items-menu_Landing ">
                                 {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                                <MenuEvent 
-                                  itemsMenu={this.state.event.itemsMenu} 
-                                  user={currentUser} eventId={event._id} 
-                                  showSection={this.showSection} 
-                                  collapsed={this.state.collapsed} 
+                                <MenuEvent
+                                  itemsMenu={this.state.event.itemsMenu}
+                                  user={currentUser} eventId={event._id}
+                                  showSection={this.showSection}
+                                  collapsed={this.state.collapsed}
                                 />
                               </div>
                             </Sider>
@@ -607,24 +602,24 @@ controls
                                     event.styles && event.styles.toolbarDefaultBg ? event.styles.toolbarDefaultBg : "white",
                                 }}>
                                 {event.styles && <img src={event.styles.event_image} style={imageCenter} />}
-                                <MenuEvent 
-                                user={currentUser} 
-                                itemsMenu={this.state.event.itemsMenu}                                  
-                                showSection={this.showSection} 
-                                collapsed={this.state.collapsed} />
+                                <MenuEvent
+                                  user={currentUser}
+                                  itemsMenu={this.state.event.itemsMenu}
+                                  showSection={this.showSection}
+                                  collapsed={this.state.collapsed} />
                               </Drawer>
 
                               {/* Contenedor donde se mapea la información de cada seccion */}
 
                               <div style={{ margin: "40px 6px", overflow: "initial", textAlign: "center" }}>
-                                
-                                
-                                
-                                
+
+
+
+
                                 {this.state.sections[this.state.section]}
-                                
-                            
-                                
+
+
+
                               </div>
                             </Content>
                           </Layout>
@@ -662,7 +657,7 @@ controls
               {
                 event.styles && event.styles.banner_footer && (
                   <div style={{ textAlign: "center" }}>
-                    <img src={event.styles.banner_footer} />
+                    <img alt="image-dialog" src={event.styles.banner_footer} />
                   </div>
                 )
               }

@@ -1,22 +1,15 @@
-import React, { Component, Fragment, useEffect, useState } from "react";
-
+import React, { Component, Fragment } from "react";
 import EventContent from "../events/shared/content";
-
 import { selectOptions } from "./constants";
-
 import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { createOrUpdateSurvey } from "./services";
-
 import { withRouter } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { toolbarEditor } from "../../helpers/constants";
-
 import { toast } from "react-toastify";
-import { Button, Row, Col, Table, Divider, Modal, Form, Input, Switch, message, Tooltip } from "antd";
-
+import { Button, Row, Col, Table, Modal, Input, Switch, message } from "antd";
 import FormQuestionEdit from "./formEdit";
 
-const { TextArea } = Input;
 
 class triviaEdit extends Component {
   constructor(props) {
@@ -98,7 +91,7 @@ class triviaEdit extends Component {
     const question = [];
     for (const prop in Update.questions) {
       selectOptions.forEach((option) => {
-        if (Update.questions[prop].type == option.value) Update.questions[prop].type = option.text;
+        if (Update.questions[prop].type === option.value) Update.questions[prop].type = option.text;
       });
 
       question.push(Update.questions[prop]);
@@ -183,14 +176,13 @@ class triviaEdit extends Component {
     let uuid = "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       let r = (d + Math.random() * 16) % 16 | 0;
       d = Math.floor(d / 16);
-      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
     });
     return uuid;
   };
 
   // Funcion para agregar el formulario de las preguntas
-  addNewQuestion = () => {
-    let { listQuestions, idSurvey } = this.state;
+  addNewQuestion = () => {    
     let uid = this.generateUUID();
     this.setState({ visibleModal: true, currentQuestion: { id: uid } });
   };
@@ -202,11 +194,11 @@ class triviaEdit extends Component {
     let { question, _id } = this.state;
     const { event } = this.props;
 
-    let questionIndex = question.findIndex((question) => question.id == questionId);
+    let questionIndex = question.findIndex((question) => question.id === questionId);
 
     SurveysApi.deleteQuestion(event._id, _id, questionIndex).then((response) => {
       // Se actualiza el estado local, borrando la pregunta de la tabla
-      let newListQuestion = question.filter((infoQuestion) => infoQuestion.id != questionId);
+      let newListQuestion = question.filter((infoQuestion) => infoQuestion.id !== questionId);
 
       this.setState({ question: newListQuestion });
       toast.success(response);
@@ -216,9 +208,9 @@ class triviaEdit extends Component {
   // Editar pregunta
   editQuestion = (questionId) => {
     let { question, currentQuestion } = this.state;
-    let questionIndex = question.findIndex((question) => question.id == questionId);
+    let questionIndex = question.findIndex((question) => question.id === questionId);
 
-    currentQuestion = question.find((infoQuestion) => infoQuestion.id == questionId);
+    currentQuestion = question.find((infoQuestion) => infoQuestion.id === questionId);
     currentQuestion["questionIndex"] = questionIndex;
 
     this.setState({ visibleModal: true, currentQuestion });
@@ -243,7 +235,7 @@ class triviaEdit extends Component {
 
       // Se iteran las opciones y se asigna el texto para el tipo de pregunta
       selectOptions.forEach((option) => {
-        if (data.type == option.value) data.type = option.text;
+        if (data.type === option.value) data.type = option.text;
       });
 
       switch (state) {
@@ -273,10 +265,10 @@ class triviaEdit extends Component {
 
   onChange = (e) => {
     // Este es para el editor de texto enriquecido. El mensaje para la pagina principal de la encuesta
-    if (typeof e == "string") return this.setState({ initialMessage: e });
+    if (typeof e === "string") return this.setState({ initialMessage: e });
 
     // Este es para el input de los puntos de la encuesta
-    const { value, type } = e.target;
+    const { value } = e.target;
     const reg = /^-?\d*(\.\d*)?$/;
     if ((!isNaN(value) && reg.test(value)) || value === "" || value === "-") {
       this.setState({ points: value });
@@ -287,13 +279,13 @@ class triviaEdit extends Component {
     let { allow_gradable_survey, allow_vote_value_per_user } = this.state;
     switch (variable) {
       case "allow_gradable_survey":
-        if (state && allow_vote_value_per_user == "true")
+        if (state && allow_vote_value_per_user === "true")
           return this.setState({ allow_gradable_survey: "true", allow_vote_value_per_user: "false" });
         this.setState({ allow_gradable_survey: state ? "true" : "false" });
         break;
 
       case "allow_vote_value_per_user":
-        if (state && allow_gradable_survey == "true")
+        if (state && allow_gradable_survey === "true")
           return this.setState({ allow_vote_value_per_user: "true", allow_gradable_survey: "false" });
         this.setState({ allow_vote_value_per_user: state ? "true" : "false" });
         break;
@@ -368,7 +360,7 @@ class triviaEdit extends Component {
                 Permitir usuarios anonimos
               </label>
               <Switch
-                checked={allow_anonymous_answers == "true"}
+                checked={allow_anonymous_answers === "true"}
                 onChange={(checked) => this.setState({ allow_anonymous_answers: checked ? "true" : "false" })}
               />
             </div>
@@ -380,7 +372,7 @@ class triviaEdit extends Component {
                 Publicar encuesta
               </label>
               <Switch
-                checked={publish == "true"}
+                checked={publish === "true"}
                 onChange={(checked) => this.setState({ publish: checked ? "true" : "false" })}
               />
             </div>
@@ -392,7 +384,7 @@ class triviaEdit extends Component {
                 Pausar Encuesta
               </label>
               <Switch
-                checked={freezeGame == "true"}
+                checked={freezeGame === "true"}
                 onChange={(checked) => this.setState({ freezeGame: checked ? "true" : "false" })}
               />
             </div>
@@ -403,7 +395,7 @@ class triviaEdit extends Component {
                 Mostrar grafica de barras Vertical
               </label>
               <Switch
-                checked={show_horizontal_bar == "true"}
+                checked={show_horizontal_bar === "true"}
                 onChange={(checked) => this.setState({ show_horizontal_bar: checked ? "true" : "false" })}
               />
             </div>
@@ -415,7 +407,7 @@ class triviaEdit extends Component {
                 Encuesta abierta
               </label>
               <Switch
-                checked={openSurvey == "true"}
+                checked={openSurvey === "true"}
                 onChange={(checked) => this.setState({ openSurvey: checked ? "true" : "false" })}
               />
             </div>
@@ -427,7 +419,7 @@ class triviaEdit extends Component {
                 Permitir valor del voto por usuario
               </label>
               <Switch
-                checked={allow_vote_value_per_user == "true"}
+                checked={allow_vote_value_per_user === "true"}
                 onChange={(checked) => this.toggleSwitch("allow_vote_value_per_user", checked)}
               />
             </div>
@@ -439,13 +431,13 @@ class triviaEdit extends Component {
                 Encuesta calificable
               </label>
               <Switch
-                checked={allow_gradable_survey == "true"}
+                checked={allow_gradable_survey === "true"}
                 onChange={(checked) => this.toggleSwitch("allow_gradable_survey", checked)}
               />
             </div>
           )}
 
-          {allow_gradable_survey == "true" && (
+          {allow_gradable_survey === "true" && (
             <Fragment>
               <div>
                 <label style={{ marginTop: "3%" }} className="label">

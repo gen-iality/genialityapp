@@ -1,4 +1,3 @@
-import firebase from "firebase";
 import { firestore, fireStorage } from "../../helpers/firebase";
 import { toast } from "react-toastify";
 
@@ -65,21 +64,13 @@ export const saveFirebase = {
     doc["id"] = docRef.id;
     await docRef.update(doc);
 
-    const data = {
-      authorId: authorId,
-      authorName: authorName || "Anónimo",
-      comment: comment,
-      date: new Date().toString(),
-      idPost: postId,
-    };
-
-    let result = await firestore
-      .collection("adminPost")
-      .doc(eventId)
-      .collection("comment")
-      .doc(postId)
-      .collection("comments")
-      .add(data);
+    // let result = await firestore
+    //   .collection("adminPost")
+    //   .doc(eventId)
+    //   .collection("comment")
+    //   .doc(postId)
+    //   .collection("comments")
+    //   .add(data);
     //return result;
 
     return doc;

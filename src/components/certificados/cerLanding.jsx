@@ -5,10 +5,10 @@ import Moment from "moment";
 import Swal from "sweetalert2";
 import { firestore } from "../../helpers/firebase";
 import { CertsApi, RolAttApi } from "../../helpers/request";
-import { Button, Card, Col, Form, Input, Row, Alert } from 'antd';
-import { LikeOutlined, DownloadOutlined } from '@ant-design/icons';
-import withUserEventRegistered from "../shared/withUserEventRegistered";
-import UserRegistration from "../events/userRegistration"
+import { Button, Card, Col, Alert } from 'antd';
+import {  DownloadOutlined } from '@ant-design/icons';
+
+
 import { withRouter } from "react-router";
 
 // Estructura de boton para descargar certificados
@@ -163,7 +163,7 @@ class CertificadoLanding extends Component {
     }
 
     render() {
-        const { dataUser } = this.state;
+        
         const { currentUser, usuarioRegistrados } = this.props
         { console.log("usuarioRegistrados", usuarioRegistrados, "usuario Recurrente", currentUser) }
         const checkedInUsers = (usuarioRegistrados && usuarioRegistrados.length) ? usuarioRegistrados.filter(eventUser => eventUser.checkedin_at) : [];

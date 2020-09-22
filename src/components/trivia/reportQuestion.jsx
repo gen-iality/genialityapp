@@ -8,7 +8,7 @@ import { getAnswersByQuestion } from "./services";
 import EventContent from "../events/shared/content";
 
 import { Table, Divider, Button } from "antd";
-import { isArray } from "core-js/fn/array";
+
 
 const columns = [
   {
@@ -38,7 +38,7 @@ class ReportQuestion extends Component {
   }
 
   loadData = async () => {
-    const { location, match, event } = this.props;
+    const { location, match } = this.props;
 
     this.setState({ nameQuestion: location.state.titleQuestion });
     let response = await getAnswersByQuestion(location.state.surveyId, match.params.id);

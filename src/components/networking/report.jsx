@@ -3,10 +3,10 @@ import { Row, Col, Button, Table, Input, Space } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
-import { InvitationsApi, UsersApi } from "../../helpers/request";
+import { InvitationsApi } from "../../helpers/request";
 import ExportReport from "./exportReport";
 
-const style = { background: '#0092ff', padding: '8px 0' };
+// const style = { background: '#0092ff', padding: '8px 0' };
 
 class Report extends Component {
     constructor(props) {

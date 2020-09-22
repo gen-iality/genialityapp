@@ -12,7 +12,8 @@ class AgendaInscriptions extends Component {
     super(props);
     this.state = {
       user_id: null,
-      agendaData: []
+      agendaData: [],
+      hideBtnDetailAgenda: false
     }
     this.survey = this.survey.bind(this);
   }
@@ -34,14 +35,19 @@ class AgendaInscriptions extends Component {
     if (documentsData.data.length >= 1) {
       this.setState({ showButtonDocuments: true })
     }
+
+    this.setState({
+      hideBtnDetailAgenda: event.styles && event.styles.hideBtnDetailAgenda ? event.styles.hideBtnDetailAgenda : true
+    })
   }
 
   async componentDidUpdate(prevProps) {
     const { agendaData } = this.state
+    const { event } = this.props
     //Cargamos solamente los espacios virtuales de la agenda
 
     //Si aún no ha cargado el evento no podemos hacer nada más
-    if (!this.props.event) return;
+    if (!event) return;
 
     //Revisamos si el evento sigue siendo el mismo, no toca cargar nada 
     if (prevProps.event && this.props.event._id == prevProps.event._id) return;
@@ -57,7 +63,7 @@ class AgendaInscriptions extends Component {
     try {
       let infoAgenda = await AgendaApi.byEvent(event._id)
       const infoUserAgenda = await Activity.GetUserActivity(event._id, user_id)
-      
+
       console.log('info user agenda-------------------', infoUserAgenda)
 
       let space = await SpacesApi.byEvent(event._id);
@@ -176,8 +182,8 @@ class AgendaInscriptions extends Component {
   };
 
   render() {
-    const { toggleConference, event } = this.props;
-    const { currentActivity, survey, loading, showButtonSurvey, showButtonDocuments, agendaData } = this.state;
+    const { toggleConference } = this.props;
+    const { currentActivity, survey, hideBtnDetailAgenda, loading, showButtonSurvey, showButtonDocuments, agendaData } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -290,15 +296,25 @@ class AgendaInscriptions extends Component {
                           </div>
                           <Row>
                             <Col span={12}>
-                              {/* <Row>
-                                <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block" >
-                                  Detalle del Evento
-                               </Button>
-                              </Row> */}
                               <Row>
                                 <Button type="primary" onClick={(e) => { this.deleteRegisterInActivity(item.attendee_id) }} className="space-align-block">
                                   Eliminar Inscripción
                                 </Button>
+                              </Row>
+                            </Col>
+
+                            <Col span={12}>
+                              <Row>
+                                {hideBtnDetailAgenda === true && (
+                                  <Button
+                                    type='primary'
+                                    onClick={() => {
+                                      this.gotoActivity(item);
+                                    }}
+                                    className='space-align-block'>
+                                    Detalle de actividad
+                                  </Button>
+                                )}
                               </Row>
                             </Col>
 
@@ -312,6 +328,9 @@ class AgendaInscriptions extends Component {
                                   )
                                 }
                               </Row>
+                            </Col>
+
+                            <Col span={12}>
                               <Row>
                                 {
                                   showButtonSurvey && (
@@ -322,6 +341,22 @@ class AgendaInscriptions extends Component {
                                 }
                               </Row>
                             </Col>
+                            {
+                              item.related_meetings && item.related_meetings.map((item, key) => (
+                                <Col span={12}>
+                                  <Row>
+                                    <Button
+                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                      onClick={() => toggleConference(
+                                        true,
+                                        item.meeting_id ? item.meeting_id : item.vimeo_id,
+                                        item
+                                      )}
+                                      type="primary" key={key}>Sesion en {item.language}</Button>
+                                  </Row>
+                                </Col>
+                              ))
+                            }
                           </Row>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>

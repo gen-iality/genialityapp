@@ -3,27 +3,27 @@ import React, { Component } from "react";
 
 //custom
 import { getFiles } from "../services";
-import { ApiGoogleDocuments } from "../../../helpers/constants";
-import { List, Col, Row, Card, Button, Result } from 'antd';
-import { LikeOutlined, DownloadOutlined } from '@ant-design/icons';
+
+import { Col, Card, Result } from 'antd';
+
 import Loading from '../../loaders/loading'
 
 import DocumentsList from "../documentsList";
 
 // Estructura de boton para descargar documentos
 
-const IconText = ({ icon, text, onSubmit }) => (
-    <Button
-        htmlType="submit"
-        type="link"
-        href={onSubmit}
-        target="_blank"
-    >
+// const IconText = ({ icon, text, onSubmit }) => (
+//     <Button
+//         htmlType="submit"
+//         type="link"
+//         href={onSubmit}
+//         target="_blank"
+//     >
 
-        {React.createElement(icon, { style: { marginRight: 8 } })}
-        {text}
-    </Button>
-);
+//         {React.createElement(icon, { style: { marginRight: 8 } })}
+//         {text}
+//     </Button>
+// );
 
 class documentsDetail extends Component {
     constructor(props) {

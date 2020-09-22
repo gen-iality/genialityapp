@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState, Fragment } from "react"
-import { Avatar, Button, message, Form, List, Card, Input, Row, Col, Spin, Alert, Popconfirm, Modal } from "antd";
+import React, { useState } from "react"
+import { Button, Form, Input, Row, Col, Modal } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import { AuthUrl } from "../../helpers/constants";
 

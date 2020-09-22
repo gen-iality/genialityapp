@@ -1,5 +1,4 @@
 import { firestore } from "../../helpers/firebase";
-import Moment from "moment";
 
 const refActivity = firestore.collection("events");
 

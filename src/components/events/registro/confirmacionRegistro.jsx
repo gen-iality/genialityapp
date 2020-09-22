@@ -14,7 +14,7 @@ function ConfirmacionRegistro(props) {
     let [validateEmail, setValidateEmail] = useState();
     let [sendCustomEmail, setSendCustomEmail] = useState();
 
-    let valor = "asdf";
+    
 
     //Funcion para cargar los datos al inicio de la carga del componente
     useEffect(() => {

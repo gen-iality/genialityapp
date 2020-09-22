@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 
 //custom
-import { getFiles } from "./services";
-import { ApiGoogleDocuments } from "../../helpers/constants";
-import { List, Col, Row, Card, Button, Table } from 'antd';
-import { LikeOutlined, EyeOutlined, DownloadOutlined, FileTextOutlined} from '@ant-design/icons';
+import { List, Card, Button, Table } from 'antd';
+import { DownloadOutlined , FileTextOutlined} from '@ant-design/icons';
 import { AgendaApi } from "../../helpers/request"
 
 const columns = [

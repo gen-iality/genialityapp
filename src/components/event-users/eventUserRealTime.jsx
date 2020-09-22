@@ -23,13 +23,9 @@
 // }
 
 function updateAttendees(currentAttendees, snapshot) {
-
-    let checkIn = 0;
-    let newItems = currentAttendees;
-    let changeItem = false;
-
-    // Set data localChanges with hasPendingWrites
-    let localChanges = snapshot.metadata.hasPendingWrites ? "Local" : "Server";
+    
+    let newItems = currentAttendees;    
+    
     //this.setState({ localChanges });
     console.log("snapshot", snapshot);
     let user, acompanates = 0;

@@ -1,13 +1,11 @@
-/*global google*/
 import React, { Component } from 'react';
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 //redux
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { addLoginInformation } from "../../redux/user/actions";
 //Libraries and stuffs
 import { Actions, CategoriesApi, EventsApi, UsersApi } from "../../helpers/request";
-import Geosuggest from 'react-geosuggest'
 import Loading from "../loaders/loading";
 import Moment from "moment"
 import ImageInput from "../shared/imageInput";
@@ -19,7 +17,6 @@ import { auth } from "../../helpers/firebase";
 import { DateTimePicker } from "react-widgets";
 import FormNetwork from "../shared/networkForm";
 import { FormattedMessage } from "react-intl";
-import * as Cookie from "js-cookie";
 import ErrorServe from "../modal/serverError";
 
 class Index extends Component {
@@ -112,7 +109,7 @@ class Index extends Component {
     };
 
     valid = () => {
-        const { user: { email, name, phoneNumber, dni_number, location } } = this.state;
+        const { user: { email, name, phoneNumber, dni_number } } = this.state;
         const error = {};
         let nameValid, emailValid, phoneValid, dniValid, locationValid = false;
         if (name.length <= 0) {
@@ -188,9 +185,9 @@ class Index extends Component {
     };
 
     render() {
-        const { loading, timeout, events, user, valid, error, errorData } = this.state;
-        let userId = this.props.match.params.id;
-        const evius_token = Cookie.get('evius_token');
+        const { loading, timeout, user, valid, error, errorData } = this.state;
+        // let userId = this.props.match.params.id;
+        // const evius_token = Cookie.get('evius_token');
         return (
             <section className="section profile">
                 {

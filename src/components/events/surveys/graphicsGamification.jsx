@@ -1,13 +1,8 @@
 import 'chartjs-plugin-datalabels'
 import React, { Component } from "react";
-
-import { Bar } from "react-chartjs-2";
-import { Pagination, Spin, Card, PageHeader } from "antd";
+import { Spin, Card } from "antd";
 import Chart from "chart.js";
-
-import { SurveyAnswers, Users } from "./services";
-import { SurveysApi } from "../../../helpers/request";
-import { firestore } from "../../../helpers/firebase";
+import { Users } from "./services";
 import { graphicsFrame } from "./frame";
 
 class Graphics extends Component {
@@ -66,7 +61,6 @@ class Graphics extends Component {
   }
 
   mountChart = async () => {
-    const { eventId } = this.props;
     let { graphicsFrame, chartCreated, chart, dataGamification } = this.state;
     // Se ejecuta servicio para tener la informacion del ranking
     let { verticalBar } = graphicsFrame;
@@ -126,8 +120,7 @@ class Graphics extends Component {
   }
 
   render() {
-    let { dataGamification, currentPage, verticalBar, referenceChart } = this.state;
-    const { showListSurvey } = this.props;
+    let { dataGamification } = this.state;    
 
     if (dataGamification !== null)
       return (

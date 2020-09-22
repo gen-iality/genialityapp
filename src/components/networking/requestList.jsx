@@ -1,13 +1,13 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Spin, Alert, Col, Divider, Card, List, Button, Avatar, Tag } from "antd";
-import { ScheduleOutlined, CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { ScheduleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as Cookie from "js-cookie";
 import { Networking, UsersApi } from "../../helpers/request";
-import { userRequest, getCurrentUser, getCurrentEventUser } from "./services";
+import { getCurrentUser, getCurrentEventUser } from "./services";
 
 // Componente que lista las invitaciones recibidas -----------------------------------------------------------
 const InvitacionListReceived = ({ list, sendResponseToInvitation }) => {
@@ -85,7 +85,7 @@ const InvitacionListSent = ({ list }) => {
                 <div>
                   <Tag
                     icon={!item.response ? <ScheduleOutlined /> : <CloseCircleOutlined />}
-                    color={item.response == "rejected" && "error"}>
+                    color={item.response === "rejected" && "error"}>
                     {!item.response ? item.state : item.response}
                   </Tag>
                 </div>
@@ -132,7 +132,7 @@ export default ({ eventId }) => {
       Networking.getInvitationsSent(eventId, eventUser._id).then(({ data }) => {
         console.log("estas son las invitaciones enviadas :", data);
 
-        if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response == "rejected"));
+        if (data.length > 0) setRequestListSent(data.filter((item) => !item.response || item.response === "rejected"));
       });
     });
   };
@@ -185,7 +185,7 @@ export default ({ eventId }) => {
   }, [eventId]);
 
   if (currentUserId)
-    return currentUserId == "guestUser" ? (
+    return currentUserId === "guestUser" ? (
       <Col xs={22} sm={22} md={15} lg={15} xl={15} style={{ margin: "0 auto" }}>
         <Alert
           message="Iniciar Sesión"

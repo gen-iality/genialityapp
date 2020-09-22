@@ -1,23 +1,10 @@
 import React, { Component } from "react";
-import { Button, Card, Result, Spin } from "antd";
+import { Button, Result, Spin } from "antd";
 import Fullscreen from "react-full-screen";
-import { FullscreenOutlined, SwitcherOutlined, LineOutlined } from "@ant-design/icons";
+import { FullscreenOutlined, LineOutlined } from "@ant-design/icons";
 import SurveyComponent from "../surveys";
-import axios from "axios";
-import API, { Actions, EventsApi, AgendaApi, SpeakersApi, TicketsApi } from "../../../helpers/request";
+import API from "../../../helpers/request";
 
-const closeFullScreen = {
-  position: "absolute",
-  top: "7px",
-  right: "7px",
-  bottom: 0,
-};
-
-const surveyButtons = {
-  text: {
-    color: "#42A8FC",
-  }
-};
 
 export default class ZoomComponent extends Component {
   constructor(props) {
@@ -56,7 +43,7 @@ export default class ZoomComponent extends Component {
 
     let urllogin_bigmarker = null;
     let error_bigmarker = null;
-    if (this.state.event && this.state.event.event_platform == "bigmarker") {
+    if (this.state.event && this.state.event.event_platform === "bigmarker") {
 
       console.log("activity", this.props.activity)
       let data = {
@@ -92,7 +79,7 @@ export default class ZoomComponent extends Component {
 
   async componentDidUpdate(prevProps) {
 
-    if (prevProps.meetingId == this.props.meetingId) { return }
+    if (prevProps.meetingId === this.props.meetingId) { return }
 
     this.setUpUserForConference();
 
@@ -128,7 +115,7 @@ export default class ZoomComponent extends Component {
 
   render() {
     const { toggleConference, event, activity } = this.props;
-    let { url_conference, meeting_id, userEntered, isMedium, isFull, isMinimize, displayName, email } = this.state;
+    let { url_conference, meeting_id, isMedium, isFull, isMinimize, displayName, email } = this.state;
     return (
       <div
         className={`content-zoom ${isMedium === true ? "mediumScreen" : ""} ${
@@ -179,7 +166,7 @@ export default class ZoomComponent extends Component {
               </iframe>
             )
           }
-          {/* // VIMEO LIVESTREAMING only chat not interactive */}
+          {/* VIMEO LIVESTREAMING */}
           {
             this.state.event && (this.state.event.event_platform === "vimeo") &&
             (

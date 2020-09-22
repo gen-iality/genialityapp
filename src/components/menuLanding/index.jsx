@@ -6,7 +6,6 @@ import ReactQuill from "react-quill";
 import { toast } from "react-toastify";
 const { Title } = Typography;
 const { Option } = Select;
-const { Meta } = Card;
 
 class menuLanding extends Component {
     constructor(props) {

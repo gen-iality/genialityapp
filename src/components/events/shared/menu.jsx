@@ -2,16 +2,14 @@ import React, { Component, Fragment } from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { rolPermissions } from "../../../helpers/constants";
-import { Menu, Button } from "antd";
+import { Menu } from "antd";
 import {
-  AppstoreOutlined,
   EditOutlined,
   SettingOutlined,
   SolutionOutlined,
   UserAddOutlined,
   NotificationOutlined,
   IdcardOutlined,
-  CreditCardOutlined,
   LineChartOutlined
 } from "@ant-design/icons";
 
@@ -59,7 +57,7 @@ class MenuConfig extends Component {
 
   render() {
     const { permissions } = this.props;
-    const { contentTab, generalTab, peopleTab, commTab, checkInTab, ticketTab, guestTab, stylesTab, url } = this.state;
+    const { url } = this.state;
     return (
       <Fragment>
         <div>

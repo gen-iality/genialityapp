@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import { Button, Card, Col, Form, Input, Row, Alert, Tooltip } from "antd";
+import { Form, Input, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 class SearchComponent extends Component {

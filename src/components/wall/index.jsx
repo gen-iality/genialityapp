@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { Comment, Avatar, Form, Button, List, Input, Card, Row, Col, Modal, Alert } from "antd";
+import { Row, Col } from "antd";
 import CreatePost from "./createPost"
 import ListWall from "./listWall"
 import { firestore } from "../../helpers/firebase";
 import { saveFirebase } from "./helpers";
-
-import { toast } from "react-toastify";
 import * as Cookie from "js-cookie";
 import API from "../../helpers/request";
 
@@ -54,7 +52,7 @@ class Wall extends Component {
     await saveFirebase.deletePost(postId, this.props.event._id)
 
     //se borra local
-    var updatedPost = this.state.dataPost.filter(function (value, index, arr) { return value.id != postId; });
+    var updatedPost = this.state.dataPost.filter(function (value, index, arr) { return value.id !== postId; });
     this.setState({ dataPost: updatedPost });
     return true;
 
@@ -64,7 +62,7 @@ class Wall extends Component {
 
     var updatedPost = await saveFirebase.increaseLikes(postId, this.props.event._id)
     //se actualiza local
-    var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id != postId) ? value : updatedPost });
+    var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id !== postId) ? value : updatedPost });
     this.setState({ dataPost: updatedPost });
     return true;
 
@@ -73,7 +71,7 @@ class Wall extends Component {
 
     var updatedPost = await saveFirebase.createComment(postId, this.props.event._id, message, this.state.user._id, this.state.user.names)
     //se actualiza local
-    var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id != postId) ? value : updatedPost });
+    var updatedPost = this.state.dataPost.map(function (value, index, arr) { return (value.id !== postId) ? value : updatedPost });
     this.setState({ dataPost: updatedPost });
     return true;
 

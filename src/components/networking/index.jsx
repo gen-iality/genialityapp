@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from "react";
-
 import "react-toastify/dist/ReactToastify.css";
 import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select } from "antd";
 
 import { SmileOutlined } from '@ant-design/icons';
-
 import AppointmentModal from "./appointmentModal";
 import MyAgenda from "./myAgenda";
 import AppointmentRequests from "./appointmentRequests";
@@ -18,7 +16,6 @@ import * as Cookie from "js-cookie";
 import { EventsApi, EventFieldsApi } from "../../helpers/request";
 
 import { getCurrentUser, getCurrentEventUser, userRequest } from "./services";
-
 import ContactList from "./contactList";
 import RequestList from "./requestList";
 
@@ -48,6 +45,7 @@ export default class ListEventUser extends Component {
 
     await this.getInfoCurrentUser();
     this.loadData();
+    console.log("alert",this.state)
   }
 
   changeActiveTab = (activeTab) => {
@@ -117,6 +115,13 @@ export default class ListEventUser extends Component {
 
     }
   };
+  selectorSector=(value) => {
+    
+    let { userReq} = this.state;
+    const Info = userReq.filter(item => item.properties.sector === value)
+
+    this.setState({pageOfItems:Info})
+  }
 
   onChangePage = (pageOfItems) => {
 

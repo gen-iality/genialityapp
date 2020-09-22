@@ -1,18 +1,13 @@
 import React, { Component, Fragment } from "react";
-import { Redirect, withRouter, Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import EventContent from "../events/shared/content";
 import { SurveysApi, AgendaApi } from "../../helpers/request";
 import { deleteSurvey } from "./services";
-
-import { sweetAlert } from "../../helpers/utils";
-import EvenTable from "../events/shared/table";
 import "react-tabs/style/react-tabs.css";
 import { Table } from 'antd';
-import { toast } from "react-toastify";
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-
 import { message, Space, Button } from "antd";
-const { Column } = Table;
+
 
 class trivia extends Component {
   constructor(props) {

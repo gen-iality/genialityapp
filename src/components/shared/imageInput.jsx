@@ -4,12 +4,12 @@ import Dropzone from "react-dropzone";
 let ImageInput = (props) => {
   //Esto es para detectar cuando despues de cargar una imagen, la imagen efectivamente cargo y quitar el loading
   const [stillOldImage, setStillOldImage] = useState(false);
-  if (stillOldImage && stillOldImage != props.picture) {
+  if (stillOldImage && stillOldImage !== props.picture) {
     setStillOldImage(false);
   }
 
-  let width = (props.width) / 2 || 640;
-  let height = (props.height) / 2 || 320;
+  // let width = (props.width) / 2 || 640;
+  // let height = (props.height) / 2 || 320;
 
   let widthText = props.width || 1280;
   let heighText = props.height || 960;
@@ -47,7 +47,7 @@ let ImageInput = (props) => {
   return (
     <div className="inputImage" style={ContainerDropzone}>
       {/* el #FFF es por un error que se nos fue a la base de datos*/}
-      {props.picture && props.picture != "#FFF" ? (
+      {props.picture && props.picture !== "#FFF" ? (
         <div className={divClass} style={ContainerDropzone}>
           <img src={props.picture} alt={"Imagen"} />
           <Dropzone

@@ -6,7 +6,7 @@ import Loading from "../loaders/loading";
 import { handleRequestError, sweetAlert } from "../../helpers/utils";
 import EventContent from "../events/shared/content";
 import EvenTable from "../events/shared/table";
-import TableAction from "../events/shared/tableAction";
+
 
 class pushNotification extends Component {
     constructor(props) {
