@@ -102,7 +102,11 @@ export default function AgendaActivityItem({
                   {show_inscription === "true" && (
                     <Button
                       type='primary'
-                      onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
+                      onClick={() => registerInActivity(
+                        item._id, 
+                        eventId, 
+                        userId, 
+                        setIsRegistered)}
                       className='space-align-block'
                       disabled={isRegistered}>
                       {isRegistered ? 'Inscrito' : 'Inscribirme'}

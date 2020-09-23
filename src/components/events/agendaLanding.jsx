@@ -36,7 +36,8 @@ class Agenda extends Component {
       documents: [],
       show_inscription: false,
       status: "in_progress",
-      hideBtnDetailAgenda: true
+      hideBtnDetailAgenda: true,
+      userId: null
     };
     this.returnList = this.returnList.bind(this);
     this.selectionSpace = this.selectionSpace.bind(this);
@@ -148,6 +149,7 @@ class Agenda extends Component {
           const data = resp.data;
           // Solo se desea obtener el id del usuario
           this.setState({ uid: data._id });
+          this.setState({ userId: data._id })
         }
       } catch (error) {
         const { status } = error.response;
@@ -249,19 +251,19 @@ class Agenda extends Component {
   searchResult = (data) => this.setState({ toShow: !data ? [] : data });
 
   // Funcion para registrar usuario en la actividad
-  registerInActivity = (activityKey) => {
-    const { eventId } = this.props;
-    let { uid } = this.state;
-
-    Activity.Register(eventId, uid, activityKey)
-      .then(() => {
-        notification.open({
-          message: 'Inscripción realizada',
-        });
-      })
-      .catch((err) => {
-        console.error("err:", err);
+  registerInActivity = async (activityId, eventId, userId, callback) => {
+    Activity.Register(eventId, userId, activityId)
+    .then(() => {
+      notification.open({
+        message: 'Inscripción realizada',
       });
+      callback(true)
+    })
+    .catch((err) => {
+      notification.open({
+        message: err,
+      });
+    });
   };
 
   //Fn para el resultado de la búsqueda
