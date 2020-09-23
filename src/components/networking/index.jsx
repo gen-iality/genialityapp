@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select, Option } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select, Form } from "antd";
 
 import { SmileOutlined } from '@ant-design/icons';
 import AppointmentModal from "./appointmentModal";
@@ -22,12 +22,13 @@ import RequestList from "./requestList";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 
-export default class ListEventUser extends Component {
+class ListEventUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userReq: [],
-      users: [],
+      userReq: [], //Almacena el request original
+      usersFiltered: [],
+      users: [],  //contiene los usuarios filtrados
       pageOfItems: [],
       clearSearch: false,
       loading: true,
@@ -88,7 +89,8 @@ export default class ListEventUser extends Component {
 
     this.setState((prevState) => {
       return {
-        userReq: eventUserList,
+        userReq: eventUserList, //request original
+        usersFiltered: eventUserList,
         users: eventUserList,
         changeItem,
         loading: false,
@@ -117,8 +119,8 @@ export default class ListEventUser extends Component {
   };
   selectorSector=(value) => {
     
-    let { userReq} = this.state;
-    const Info = userReq.filter(item => item.properties.sector === value)
+    let { users} = this.state;
+    const Info = users.filter(item => item.properties.sector === value)
 
     this.setState({pageOfItems:Info})
   }
@@ -135,7 +137,7 @@ export default class ListEventUser extends Component {
     let ev2 = new Event('input', { bubbles: true});
     inputSearch.dispatchEvent(ev2);
   }
-
+  
   //Search records at third column
   searchResult = (data) => {
     !data ? this.setState({ users: [] }) : this.setState({ users: data });
@@ -186,10 +188,32 @@ export default class ListEventUser extends Component {
     }
   }
 
+  handleSelectTypeUser = async (typeUser) => {
+
+    const { userReq } = this.state
+    if(typeUser === ''){
+      this.setState({usersFiltered: userReq})
+      this.searchResult(userReq)
+    }
+    else{
+      const listByTypeuser = await userReq.filter( item => item.properties.asistecomo === typeUser)
+      this.setState({usersFiltered: listByTypeuser})
+      this.searchResult(listByTypeuser)
+    }
+    
+    // let inputSearch = document.getElementById('inputSearch')
+    // let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    // nativeInputValueSetter.call(inputSearch, '*');
+    // let ev2 = new Event('input', { bubbles: true});
+    // inputSearch.dispatchEvent(ev2);
+    
+  }
+
   render() {
     const { event } = this.props;
+    
     const {
-      userReq,
+      usersFiltered,
       users,
       pageOfItems,
       eventUserId,
@@ -201,7 +225,7 @@ export default class ListEventUser extends Component {
     } = this.state;
 
     return (
-      <React.Fragment style={{ width: "86.66667%" }}>
+      <div style={{ width: "86.66667%" }}>
         <EventContent>
           {/* Componente de busqueda */}
           <Tabs activeKey={activeTab} onChange={this.changeActiveTab}>
@@ -333,40 +357,60 @@ export default class ListEventUser extends Component {
                 targetEventUserId={eventUserIdToMakeAppointment}
                 closeModal={this.closeAppointmentModal}
               />
-              <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
-                <h1> Busca aquí las personas que deseas contactar.</h1>
+              <Form>
+              <Row>
+                <Form.Item 
+                label='Busca aquí las personas que deseas contactar'
+                name="searchInput"
+                
+                >
+                <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                  
+                  <SearchComponent
+                    id='searchInput'
+                    placeholder={""}
+                    data={usersFiltered}
+                    kind={"user"}
+                    event={this.props.event._id}
+                    searchResult={this.searchResult}
+                    clear={this.state.clearSearch}
+                    styles={{width: '300px'}}
+                  />
+                </Col>
 
-                <SearchComponent
-                  placeholder={""}
-                  data={userReq}
-                  kind={"user"}
-                  event={this.props.event._id}
-                  searchResult={this.searchResult}
-                  clear={this.state.clearSearch}
-                />
+                </Form.Item>
+              </Row>
+              <Form.Item 
+                label='Tipo de asistente'
+                name="filterTypeUser"
+                
+                >
+                  <Select 
+                  style={{marginBottom: '15px', width: '150px', textAlign: 'left'}} 
+                  defaultValue=''
+                  onChange={this.handleSelectTypeUser}
+                  >
+                    <option value=''>Ver todo</option>                  
+                    <option value='Empresa'>Empresa</option>
+                    <option value='Persona'>Persona</option>
+                  </Select>
+                </Form.Item>
+                <Form.Item 
+                label='Sector'
+                name="filterTypeUser"
+                
+                >
+                  <FilterNetworking
+                    name='filterSector' 
+                    properties={this.props.event.user_properties}
+                    filterProperty={'sector'}
+                    handleSelect={this.handleSelectFilter}
+                  />
 
+                </Form.Item>
+             </Form>
 
-              </Col>
-
-              <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
-               
-                <h2> Selecciona tipo de participante</h2>
-                <Select style={{marginBottom: '15px', width: '150px'}} defaultValue=''>
-                  <option value=''>Ver todo</option>                  
-                  <option value='empresa'>Empresa</option>
-                  <option value='persona'>Persona</option>
-                </Select>
-              </Col>
               
-              <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
-               
-                <h2> Selecciona el sector de tu interés para encontrar las personas que deseas contactar</h2>
-                <FilterNetworking 
-                  properties={this.props.event.user_properties}
-                  filterProperty={'sector'}
-                  handleSelect={this.handleSelectFilter}
-                />
-              </Col>
 
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
                 <Alert
@@ -515,7 +559,8 @@ export default class ListEventUser extends Component {
             </TabPane>
           </Tabs>
         </EventContent>
-      </React.Fragment>
+      </div>
     );
   }
 }
+export default ListEventUser;
