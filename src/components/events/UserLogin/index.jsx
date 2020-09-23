@@ -41,6 +41,7 @@ class UserLogin extends Component {
     //this.initializeCaptcha();    
     
     await app.auth().onAuthStateChanged((user) => {
+      console.log("deteccion",user);
       if (user) {
         user.getIdToken().then(async function (idToken) {
           if(idToken){
@@ -135,7 +136,7 @@ class UserLogin extends Component {
   }
   
   handleLoginEmailPassword = async (values) => {
-    //console.log('Start Login...')
+    console.log('Start Login........')
     //console.log('handles',values)
     // Cookie.remove("token");
     // Cookie.remove("evius_token");
@@ -290,48 +291,6 @@ class UserLogin extends Component {
       </Form>
     )}
 
-    {/* Inicio del formulario de verificación del código envia al celular */}
-    {this.state.enabledVerificationForm && (
-    <Form onFinish={this.handleVerificationWithPhoneNumber}>
-      <Row gutter={[24, 24]}>
-        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          <Form.Item
-          label="Código de verificación"
-          name="verificationCode"
-          rules={[
-          {
-              required: true,
-              message: 'Ingrese el código de verificación',
-          },
-          ]}
-          >
-            <Input />
-            </Form.Item>
-        </Col>
-      </Row>         
-      {/* <Row gutter={[24, 24]}>
-        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          <div ref={ this.reCaptchaRef } id="este-test"></div>
-        </Col>
-      </Row> */}
-      {this.state.errorValidation && (
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <span style={{color: 'red'}}>Código de verificación invalido</span>
-          </Col>
-        </Row> 
-      )}  
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Verificar
-              </Button>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    )}
     </Card>
     )
   }
