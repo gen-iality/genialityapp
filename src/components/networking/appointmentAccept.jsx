@@ -14,11 +14,14 @@ import React from 'react'
 
 
  //props
-  const AppointmentAccept = (  ) => {
-    // const {event_id, meeting_id, eventUser_id} = props.match.params
+  const AppointmentAccept = async (  ) => {
+    // const {event_id, meeting_id, id_receiver} = props.match.params
     // let data = {};
     // let newStatus =  "accepted";
-    //changeAgendaStatus(event_id, eventUser_id, data,newStatus)
+        // let meeting = await getMeeting (eventId, meeting_id)
+    //changeAgendaStatus(event_id, id_receiver, meeting,newStatus)
+    // llamar al api con la agenda, id_receiver, id_sender, hora_agenda,
+    //
     return (<h1> Trabajo en progreso. para la aceptación de reuniones de forma rápida</h1>);
   }
 

@@ -67,7 +67,7 @@ class ContentContainer extends Component {
                         <Route exact path="/api/generatorQr/:id" component={QRedirect} />
                         <Route exact path="/transition/:event" component={Transition} />
 
-                        <Route exact path="/meetings/:event_id/acceptmeeting/:meeting_id" component={AppointmentAccept} /> 
+                        <Route exact path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver" component={AppointmentAccept} /> 
                     </WithFooter>
                    
                 </Switch>
