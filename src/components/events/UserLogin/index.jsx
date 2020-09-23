@@ -31,36 +31,9 @@ class UserLogin extends Component {
       errorLogin: false,
       errorValidation: false,
       eventId: this.props.eventId,
-      formTexts: FormTags('login'),
-      email:null,
-      password:null,
-      errortemporal:null,
+      formTexts: FormTags('login')
     };
-
-    this.handleChange1 = this.handleChange1.bind(this);
-    this.handleChange2 = this.handleChange2.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-
-    
-  } 
-  
-  
-  handleChange1(event) {
-    this.setState({email: event.target.value});
-  }
-  handleChange2(event) {
-    this.setState({password: event.target.value});
-  }
-
-  async handleSubmit(event) {
-    console.log("UN CLICK asdf");
-    event.preventDefault();
-    
-    let data = {email:this.state.email,password:this.state.password}
-    await this.loginEmailPassword(data);
-    event.preventDefault();   
-  }
+  }  
 
   async componentDidMount(){
     const {eventId} = this.props
@@ -113,7 +86,12 @@ class UserLogin extends Component {
   };
 
   handleLoginWithPhoneNumber = ( values ) => {
-
+    app.auth().signInWithEmailAndPassword(values.email, values.password).catch(function(error) {
+      // Handle Errors here.
+      console.error(error.code);
+      console.error(error.message);
+      // ...
+    });
     
     
     /* El script comentariado en este método corresponde al método de autenticacion con celular
@@ -148,17 +126,21 @@ class UserLogin extends Component {
     this.setState({errorLogin: false })
     const respuesta = app.auth().signInWithEmailAndPassword(data.email, data.password)
     .then(response => console.log('response login', response))
-    .catch((e)=>{
+    .catch(()=>{
       console.error('Error: Email or password invalid')
       this.setState({errorLogin: true })
       this.setState({loading: false})
-      this.setState({errortemporal:e.message});
     });
     //console.log('repuesta', respuesta)
   }
   
   handleLoginEmailPassword = async (values) => {
-    console.log('Start Login...')
+    //console.log('Start Login...')
+    //console.log('handles',values)
+    // Cookie.remove("token");
+    // Cookie.remove("evius_token");
+    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
+    // window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
     this.setState({loading: true})
     await this.loginEmailPassword(values)
     setTimeout(()=>{
@@ -246,15 +228,12 @@ class UserLogin extends Component {
       </Form>
     )} */}
 
-
-
-
-    {this.state.enabledLoginForm &&
-<>
-<form onSubmit={this.handleSubmit}>
-<Row gutter={[24, 24]}>
+    {/* Inicio  de formulario para autenticación con Email y contraseña */}
+    {this.state.enabledLoginForm && (
+      <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
+        <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          <Form.Item
+            <Form.Item
               label="E-Mail"
               name="email"
               rules={[
@@ -264,13 +243,13 @@ class UserLogin extends Component {
                 },
               ]}
               >
-                <input type="text" value={this.state.value} onChange={this.handleChange1} />
-            </Form.Item>            
+                <Input style={{ width: "300px" }} />
+            </Form.Item>
           </Col>
-</Row>
-<Row gutter={[24, 24]}>
+        </Row>
+        <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          <Form.Item
+            <Form.Item
               label="Contraseña"
               name="password"
               rules={[
@@ -281,66 +260,78 @@ class UserLogin extends Component {
                 },
               ]}
               >
-                <input type="password" value={this.state.value} onChange={this.handleChange2} />
-            </Form.Item>           
+                <Input type='password' style={{ width: "300px" }}/>
+            </Form.Item>
           </Col>
-</Row>
-<Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              {this.state.errortemporal }
-          </Col>
-        </Row>
-<Row gutter={[24, 24]}>
+        </Row>  
+        {this.state.errorLogin && (
+          <Row gutter={[24, 24]}>
+            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+              <span style={{color: 'red'}}>{formTexts.errorLoginEmailPassword}</span>
+            </Col>
+          </Row> 
+        )}    
+        <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item>
             {this.state.loading ?  <Spin /> : (
-              <input type="submit" value="Ingresar" ></input>
+              <Button type="primary" htmlType="submit">
+              Ingresar
+            </Button>
             )}
             </Form.Item>
           </Col>
         </Row>
+        {/* <Row gutter={[24, 24]}>
+          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+            <div ref={ this.reCaptchaRef } id="este-test"></div>
+          </Col>
+        </Row> */}
+      </Form>
+    )}
 
-
-
-</form>
-
-<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-</>
-    }
-
-
-{this.state.enabledLoginForm &&
-
-<form onSubmit={this.handleSubmit}>
-<input type="text" value={this.state.email} onChange={this.handleChange1} />
-<input type="password" value={this.state.password} onChange={this.handleChange2} />
-
-<input type="submit" value="Ingresar"></input>
-</form>
-
-    }
-
-
+    {/* Inicio del formulario de verificación del código envia al celular */}
+    {this.state.enabledVerificationForm && (
+    <Form onFinish={this.handleVerificationWithPhoneNumber}>
+      <Row gutter={[24, 24]}>
+        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+          <Form.Item
+          label="Código de verificación"
+          name="verificationCode"
+          rules={[
+          {
+              required: true,
+              message: 'Ingrese el código de verificación',
+          },
+          ]}
+          >
+            <Input />
+            </Form.Item>
+        </Col>
+      </Row>         
+      {/* <Row gutter={[24, 24]}>
+        <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+          <div ref={ this.reCaptchaRef } id="este-test"></div>
+        </Col>
+      </Row> */}
+      {this.state.errorValidation && (
+        <Row gutter={[24, 24]}>
+          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+            <span style={{color: 'red'}}>Código de verificación invalido</span>
+          </Col>
+        </Row> 
+      )}  
+        <Row gutter={[24, 24]}>
+          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Verificar
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    )}
     </Card>
     )
   }
