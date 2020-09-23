@@ -5,6 +5,8 @@ import { Menu,Spin } from "antd";
 //Se importan todos los iconos a  un Objeto para llamarlos dinámicamente
 import * as iconComponents from "@ant-design/icons";
 import { Component } from "react";
+import * as Cookie from "js-cookie";
+
 
 const stylesMenuItems = {
   height: "100%",
@@ -16,6 +18,7 @@ class MenuEvent extends Component {
   constructor( props ) {
     super( props );
     this.state = {
+      isEnabledLogin: true,
       loading:false,
       itemsMenu: this.props.itemsMenu ? this.props.itemsMenu : this.menuDefault,
       user: null,
@@ -120,6 +123,13 @@ class MenuEvent extends Component {
   }
 
   async componentDidMount () {
+
+    const isExistCookie = Cookie.get('evius_token');
+
+    if(isExistCookie){
+      this.setState({isEnabledLogin: false})
+    }
+
     if ( this.props.user ) {
       this.setState( { user: this.props.user } )
     }
@@ -178,6 +188,11 @@ handleInitialSection(){
           if ( ( this.state.itemsMenu[ key ] && this.state.itemsMenu[ key ].permissions == "assistants" ) && !this.state.user ) {
             return null; 
           }
+
+          if(this.state.itemsMenu[ key ].section === 'login' && !this.state.isEnabledLogin){
+            return null; 
+          }
+
           let IconoComponente = iconComponents[ this.state.itemsMenu[ key ].icon ];
           return (
             <Menu.Item key={ this.state.itemsMenu[ key ].section } onClick={ () => this.state.showSection( this.state.itemsMenu[ key ].section ) }>

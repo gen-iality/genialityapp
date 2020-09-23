@@ -38,7 +38,8 @@ class UserLogin extends Component {
   async componentDidMount(){
     const {eventId} = this.props
 
-    //this.initializeCaptcha();    
+    //this.initializeCaptcha();  
+    console.log('estado del usuario ', Cookie.get('evius_token'))  
     
     await app.auth().onAuthStateChanged((user) => {
       if (user) {
