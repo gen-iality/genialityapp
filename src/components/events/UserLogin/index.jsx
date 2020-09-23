@@ -54,13 +54,12 @@ class UserLogin extends Component {
   }
 
   async handleSubmit(event) {
-    event.preventDefault();   
+    console.log("UN CLICK asdf");
+    event.preventDefault();
     
     let data = {email:this.state.email,password:this.state.password}
     await this.loginEmailPassword(data);
-
-   
-
+    event.preventDefault();   
   }
 
   async componentDidMount(){
@@ -69,7 +68,6 @@ class UserLogin extends Component {
     //this.initializeCaptcha();    
     
     await app.auth().onAuthStateChanged((user) => {
-      console.log("deteccion",user);
       if (user) {
         user.getIdToken().then(async function (idToken) {
           if(idToken){
@@ -257,7 +255,7 @@ class UserLogin extends Component {
 
 
     {this.state.enabledLoginForm &&
-
+<>
 <form onSubmit={this.handleSubmit}>
 <Row gutter={[24, 24]}>
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
@@ -301,120 +299,52 @@ class UserLogin extends Component {
           <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
             <Form.Item>
             {this.state.loading ?  <Spin /> : (
-              <Button type="primary" htmlType="submit" >
-              Ingresar
-            </Button>
+              <input type="submit" value="Ingresar" ></input>
             )}
             </Form.Item>
           </Col>
         </Row>
 
-<Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-          </Col>
-</Row>
+
 
 </form>
+
+<br/>
+<br/>
+<br/><br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</>
     }
-<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 
 
-    {/* Inicio  de formulario para autenticación con Email y contraseña */}
-    {this.state.enabledLoginForm && (
-      <Form onFinish={this.handleLoginEmailPassword} onFinishFailed={this.onFinishFailed}>
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item
-              label="E-Mail"
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: 'Ingrese E-Mail',
-                },
-              ]}
-              >
-                <Input style={{ width: "300px" }} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item
-              label="Contraseña"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Ingrese su contraseña',
-                  
-                },
-              ]}
-              >
-                <Input type='password' style={{ width: "300px" }}/>
-            </Form.Item>
-          </Col>
-        </Row>  
-        {this.state.errorLogin && (
-          <Row gutter={[24, 24]}>
-            <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-              <span style={{color: 'red'}}>{formTexts.errorLoginEmailPassword}</span>
-            </Col>
-          </Row> 
-        )}    
-        <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <Form.Item>
-            {this.state.loading ?  <Spin /> : (
-              <Button type="primary" htmlType="submit" onClick={()=>{console.log("CLICK en el formulario");}}>
-              Ingresar
-            </Button>
-            )}
-            </Form.Item>
-          </Col>
-        </Row>
-        {/* <Row gutter={[24, 24]}>
-          <Col span={24} style={{ display: "inline-flex", justifyContent: "center" }}>
-            <div ref={ this.reCaptchaRef } id="este-test"></div>
-          </Col>
-        </Row> */}
-      </Form>
-    )}
+{this.state.enabledLoginForm &&
+
+<form onSubmit={this.handleSubmit}>
+<input type="text" value={this.state.email} onChange={this.handleChange1} />
+<input type="password" value={this.state.password} onChange={this.handleChange2} />
+
+<input type="submit" value="Ingresar"></input>
+</form>
+
+    }
+
 
     </Card>
     )
