@@ -23,7 +23,7 @@ const About = asyncComponent(() => import("../components/policies/about"));
 const Faqs = asyncComponent(() => import("../components/faqs/index"));
 const SinginTest = asyncComponent(() => import("../components/signintest"));
 const Tickets = asyncComponent(() => import("../components/tickets"))
-
+const AppointmentAccept = asyncComponent(() => import("../components/networking/appointmentAccept"))
 
 class ContentContainer extends Component {
     componentDidMount() {
@@ -66,6 +66,8 @@ class ContentContainer extends Component {
                         <Route exact path="/singintest" component={SinginTest} />
                         <Route exact path="/api/generatorQr/:id" component={QRedirect} />
                         <Route exact path="/transition/:event" component={Transition} />
+
+                        <Route exact path="/meetings/:event_id/acceptmeeting/:meeting_id/id_receiver/:id_receiver" component={AppointmentAccept} /> 
                     </WithFooter>
                    
                 </Switch>

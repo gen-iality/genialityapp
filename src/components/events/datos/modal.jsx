@@ -90,6 +90,7 @@ class DatosModal extends Component {
         const info = Object.assign({}, this.state.info);
         info.name = toCapitalizeLower(info.name);
         if (info.type !== "list" && info.type !== "multiplelist") delete info.options;
+        console.log(info)
         this.props.action(info);
         const initModal = { name: '', mandatory: false, visibleByContacts: false, label: '', description: '', type: '', options: [] };
         this.setState({ info: initModal });

@@ -75,6 +75,7 @@ export function parseData2Excel(data, fields) {
 
   data.map((item, key) => {
     info[key] = {};
+    info[key]['_id'] = item._id ? item._id : 'UNDEFINED';
     info[key]['checked'] = item.checkedin_at ? 'TRUE' : 'FALSE';
     
     info[key]['Hora checkIn'] = item.checked_at
