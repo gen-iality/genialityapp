@@ -13,9 +13,12 @@ class AgendaInscriptions extends Component {
     this.state = {
       user_id: null,
       agendaData: [],
-      hideBtnDetailAgenda: false
+      hideBtnDetailAgenda: false,
+      Surveys: [],
+      Documents: []
     }
     this.survey = this.survey.bind(this);
+    this.gotoActivity = this.gotoActivity.bind(this)
   }
 
   async componentDidMount() {
@@ -30,10 +33,10 @@ class AgendaInscriptions extends Component {
     let documentsData = await DocumentsApi.getAll(event._id)
 
     if (surveysData.data.length >= 1) {
-      this.setState({ showButtonSurvey: true })
+      this.setState({ Surveys: surveysData.data })
     }
     if (documentsData.data.length >= 1) {
-      this.setState({ showButtonDocuments: true })
+      this.setState({ Documents: documentsData.data })
     }
 
     this.setState({
@@ -183,7 +186,7 @@ class AgendaInscriptions extends Component {
 
   render() {
     const { toggleConference } = this.props;
-    const { currentActivity, survey, hideBtnDetailAgenda, loading, showButtonSurvey, showButtonDocuments, agendaData } = this.state;
+    const { currentActivity, survey, hideBtnDetailAgenda, loading, Surveys, Documents, agendaData } = this.state;
     return (
       <div>
         {currentActivity && (
@@ -320,25 +323,31 @@ class AgendaInscriptions extends Component {
 
                             <Col span={12}>
                               <Row>
-                                {
-                                  showButtonDocuments && (
-                                    <Button type="primary" onClick={(e) => { this.gotoActivity(item) }} className="space-align-block">
-                                      Documentos
-                                    </Button>
-                                  )
-                                }
+                                {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
+                                  <Button
+                                    type='primary'
+                                    onClick={() => {
+                                      this.gotoActivity(item);
+                                    }}
+                                    className='space-align-block'>
+                                    Documentos
+                                  </Button>
+                                )}
                               </Row>
                             </Col>
 
                             <Col span={12}>
                               <Row>
-                                {
-                                  showButtonSurvey && (
-                                    <Button type="primary" onClick={() => { this.gotoActivity(item) }} className="space-align-block">
-                                      Encuestas
-                                    </Button>
-                                  )
-                                }
+                                {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
+                                  <Button
+                                    type='primary'
+                                    onClick={() => {
+                                      this.gotoActivity(item);
+                                    }}
+                                    className='space-align-block'>
+                                    Encuestas
+                                  </Button>
+                                )}
                               </Row>
                             </Col>
                             {
