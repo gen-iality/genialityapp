@@ -158,12 +158,7 @@ class UserLogin extends Component {
   }
   
   handleLoginEmailPassword = async (values) => {
-    console.log('Start Login........')
-    //console.log('handles',values)
-    // Cookie.remove("token");
-    // Cookie.remove("evius_token");
-    // window.indexedDB.deleteDatabase('firebaseLocalStorageDb')
-    // window.indexedDB.deleteDatabase('firestore/[DEFAULT]/eviusauth/main')
+    console.log('Start Login...')
     this.setState({loading: true})
     await this.loginEmailPassword(values)
     setTimeout(()=>{
