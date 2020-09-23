@@ -38,15 +38,15 @@ class ListEventUser extends Component {
       currentUserName: null,
       eventUserIdToMakeAppointment: '',
       asistantData: [],
-      matches: []
+      matches: [],
+      filterSector : null, 
+      typeAssistant: null
     };
-  }
+}
 
   async componentDidMount () {
-
     await this.getInfoCurrentUser();
     this.loadData();
-    console.log("alert",this.state)
   }
 
   changeActiveTab = (activeTab) => {
@@ -117,19 +117,13 @@ class ListEventUser extends Component {
 
     }
   };
-  selectorSector=(value) => {
-    
-    let { users} = this.state;
-    const Info = users.filter(item => item.properties.sector === value)
-
-    this.setState({pageOfItems:Info})
-  }
 
   onChangePage = (pageOfItems) => {
-
     this.setState({ pageOfItems: pageOfItems });
   };
 
+
+  //Se ejecuta cuando se selecciona el filtro
   handleSelectFilter = (value) => {
     let inputSearch = document.getElementById('inputSearch')
     let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
@@ -188,7 +182,8 @@ class ListEventUser extends Component {
     }
   }
 
-  handleSelectTypeUser = async (typeUser) => {
+  //Método que se ejecuta cuando se selecciona el tipo de usuario
+  handleSelectTypeUser = async (typeUser) => {       
 
     const { userReq } = this.state
     if(typeUser === ''){
@@ -201,13 +196,18 @@ class ListEventUser extends Component {
       this.searchResult(listByTypeuser)
     }
     
-    // let inputSearch = document.getElementById('inputSearch')
-    // let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-    // nativeInputValueSetter.call(inputSearch, '*');
-    // let ev2 = new Event('input', { bubbles: true});
-    // inputSearch.dispatchEvent(ev2);
+    let inputSearch = document.getElementById('inputSearch')
+    let nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    nativeInputValueSetter.call(inputSearch, '');
+    let ev1 = new Event('input', { bubbles: true});
+    inputSearch.dispatchEvent(ev1);
     
-  }
+    // let filterSector = document.getElementById('filterSector')
+    // let nativeInputValueSetter2 = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value").set;
+    // nativeInputValueSetter2.call(filterSector, '');
+    // let ev2 = new Event('select', { bubbles: true});
+    // filterSector.dispatchEvent(ev2);
+}
 
   render() {
     const { event } = this.props;
@@ -359,55 +359,62 @@ class ListEventUser extends Component {
               />
               <Form>
               <Row>
-                <Form.Item 
-                label='Busca aquí las personas que deseas contactar'
-                name="searchInput"
-                
-                >
-                <Col xs={22} sm={22} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                <Col xs={11} sm={11} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                  <Form.Item 
+                  label='Busca aquí las personas que deseas contactar'
+                  name="searchInput"
                   
-                  <SearchComponent
-                    id='searchInput'
-                    placeholder={""}
-                    data={usersFiltered}
-                    kind={"user"}
-                    event={this.props.event._id}
-                    searchResult={this.searchResult}
-                    clear={this.state.clearSearch}
-                    styles={{width: '300px'}}
-                  />
-                </Col>
-
-                </Form.Item>
-              </Row>
-              <Form.Item 
-                label='Tipo de asistente'
-                name="filterTypeUser"
-                
-                >
-                  <Select 
-                  style={{marginBottom: '15px', width: '150px', textAlign: 'left'}} 
-                  defaultValue=''
-                  onChange={this.handleSelectTypeUser}
                   >
-                    <option value=''>Ver todo</option>                  
-                    <option value='Empresa'>Empresa</option>
-                    <option value='Persona'>Persona</option>
-                  </Select>
-                </Form.Item>
-                <Form.Item 
-                label='Sector'
-                name="filterTypeUser"
-                
-                >
-                  <FilterNetworking
-                    name='filterSector' 
-                    properties={this.props.event.user_properties}
-                    filterProperty={'sector'}
-                    handleSelect={this.handleSelectFilter}
-                  />
+                    
+                    <SearchComponent
+                      id='searchInput'
+                      placeholder={""}
+                      data={usersFiltered}
+                      kind={"user"}
+                      event={this.props.event._id}
+                      searchResult={this.searchResult}
+                      clear={this.state.clearSearch}
+                      styles={{width: '300px'}}
+                    />
 
-                </Form.Item>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={5} sm={5} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                  <Form.Item 
+                    label='Tipo de asistente'
+                    name="filterTypeUser"
+                    
+                    >
+                      <Select 
+                      style={{marginBottom: '15px', width: '150px', textAlign: 'left'}} 
+                      defaultValue=''
+                      onChange={this.handleSelectTypeUser}
+                      id="filterTypeUser"
+                      >
+                        <option key={'option1'} value=''>Ver todo</option>                  
+                        <option key={'option2'} value='Empresa'>Empresa</option>
+                        <option key={'option3'} value='Persona'>Persona</option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col xs={11} sm={11} md={10} lg={10} xl={10} style={{ margin: "0 auto" }}>
+                    <Form.Item 
+                    label='Sector'
+                    name="filterSector"
+                    >
+                      <FilterNetworking
+                        id="filterSector"
+                        properties={this.props.event.user_properties}
+                        filterProperty={'sector'}
+                        handleSelect={this.handleSelectFilter}
+                       
+                      />
+
+                  </Form.Item>
+                </Col>
+              </Row>
              </Form>
 
               
