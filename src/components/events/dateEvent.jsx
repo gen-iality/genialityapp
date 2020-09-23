@@ -72,7 +72,8 @@ class DateEvent extends React.Component {
     }
 
     async save() {
-        
+        await EventsApi.editOne(this.state.properties, this.props.eventId)
+
         notification.open({
             message: 'Datos guardados',
             description:
