@@ -554,6 +554,9 @@ export const AgendaApi = {
   byEvent: async (event) => {
     return await Actions.getAll(`api/events/${event}/activities`);
   },
+  usersByActivities: async (event)=>{
+    return await Actions.getAll(`api/events/${event}/activities_attendees`)
+  },
   getOne: async (id, event) => {
     return await Actions.getOne(`api/events/${event}/activities/`, id);
   },

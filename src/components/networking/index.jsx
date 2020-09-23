@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select } from "antd";
+import { Row, Button, Col, Card, Avatar, Alert, Tabs, message, notification, Select, Option } from "antd";
 
 import { SmileOutlined } from '@ant-design/icons';
 import AppointmentModal from "./appointmentModal";
@@ -346,6 +346,16 @@ export default class ListEventUser extends Component {
                 />
 
 
+              </Col>
+
+              <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>
+               
+                <h2> Selecciona tipo de participante</h2>
+                <Select style={{marginBottom: '15px', width: '150px'}} defaultValue=''>
+                  <option value=''>Ver todo</option>                  
+                  <option value='empresa'>Empresa</option>
+                  <option value='persona'>Persona</option>
+                </Select>
               </Col>
               
               <Col xs={ 22 } sm={ 22 } md={ 10 } lg={ 10 } xl={ 10 } style={ { margin: "0 auto" } }>

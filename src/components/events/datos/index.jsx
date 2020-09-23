@@ -57,14 +57,13 @@ class Datos extends Component {
         this.setState({ edit: false, modal: true })
     };
     //Guardar campo en el evento
-    saveField = async (field) => {
+    saveField = async(field) => {
         try {
-            if (this.state.edit)
-                await EventFieldsApi.editOne(field, field._id, this.eventID);
+            if(this.state.edit) await EventFieldsApi.editOne(field, field._id, this.eventID);
             else await EventFieldsApi.createOne(field, this.eventID);
             await this.fetchFields();
-            this.setState({ modal: false, edit: false, newField: false })
-        } catch (e) {
+            this.setState({modal:false,edit:false,newField:false})
+        }catch (e) {
             this.showError(e)
         }
     };
@@ -124,7 +123,7 @@ class Datos extends Component {
     }
 
     render() {
-        const { fields, modal, edit, info } = this.state;        
+        const { fields, modal, edit, info } = this.state;
         const columns = [
             {
                 title: 'Dato',
@@ -139,11 +138,11 @@ class Datos extends Component {
                 dataIndex: 'mandatory',
                 align: 'center',
                 render: (record, key) => (
-                    key.name !== "email" && key.name !== "names" ? (                        
+                    key.name !== "email" && key.name !== "names" ? (
                         <Checkbox name="mandatory" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="mandatory" defaultChecked={record} />
-                    ):(
-                        <Checkbox checked/>
-                    )
+                    ) : (
+                            <Checkbox checked />
+                        )
                 )
             },
             {
@@ -159,12 +158,12 @@ class Datos extends Component {
                 dataIndex: 'visibleByAdmin',
                 align: 'center',
                 render: (record, key) => (
-                    key.name !== "email" && key.name !== "names" ?(                        
+                    key.name !== "email" && key.name !== "names" ? (
                         <Checkbox name="visibleByAdmin" onChange={(e) => this.changeCheckBox(key._id ? key._id : key.uuid, e.target.checked, e.target.name)} name="visibleByAdmin" defaultChecked={record} />
-                    ):(
-                        <Checkbox checked/>
-                    )
-                    
+                    ) : (
+                            <Checkbox checked />
+                        )
+
                 )
             },
             {
@@ -173,7 +172,7 @@ class Datos extends Component {
                 render: (key) => <>
                     <EditOutlined style={{ float: "left" }} onClick={() => this.editField(key)} />
                     {
-                        key.name !== "email" && key.name !== "names"&&(
+                        key.name !== "email" && key.name !== "names" && (
                             <DeleteOutlined style={{ float: "right" }} onClick={() => this.setState({ deleteModal: key._id })} />
                         )
                     }
@@ -208,9 +207,9 @@ class Datos extends Component {
                     <TabPane tab="Campos Relacionados" key="2">
                         <RelationField eventId={this.props.eventID} fields={fields} />
                     </TabPane>
-                    
+
                 </Tabs>
-                <DragDrop eventId={this.props.eventID} list={fields}/>
+                <DragDrop eventId={this.props.eventID} list={fields} />
             </div>
         )
     }

@@ -30,7 +30,7 @@ class CheckAgenda extends Component {
             clearSearch: false,
             changeItem: false
         };
-        this.firestoreRef = firestore.collection(`event_activity_attendees/${this.props.event._id}/activities/${this.props.match.params.id}/attendees`);
+        this.firestoreRef = firestore.collection(`/${this.props.event._id}_event_attendees`);
     }
 
     async componentDidMount() {
@@ -132,7 +132,7 @@ class CheckAgenda extends Component {
         const user = attendees.find(({ attendee_id }) => attendee_id === id);
         //Sino está chequeado se chequea
         if (!user.checked_in) {
-            const userRef = firestore.collection(`event_activity_attendees/${eventID}/activities/${agendaID}/attendees`).doc(user._id);
+            const userRef = firestore.collection(`/${this.props.event._id}_event_attendees`).doc(user._id);
             userRef.update({
                 updated_at: new Date(),
                 checked_in: true,
