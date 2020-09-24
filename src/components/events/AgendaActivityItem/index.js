@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Row, Col, Tag, Avatar, Alert } from 'antd';
 import ReactPlayer from 'react-player';
 import Moment from 'moment';
-
+import "./style.scss"
 export default function AgendaActivityItem({
   item,
   Surveys,
@@ -95,64 +95,56 @@ export default function AgendaActivityItem({
                   </Row>
                 </>
               }
-            </div>
+            </div> 
             <Row>
               <Col span={12}>
-                <Row>
-                  {show_inscription === "true" && (
+               {show_inscription === "true" && (
                     <Button
                       type='primary'
                       onClick={() => registerInActivity(item._id, eventId, userId, setIsRegistered)}
-                      className='space-align-block'
+                      className='space-align-block button-Agenda'
                       disabled={isRegistered}>
                       {isRegistered ? 'Inscrito' : 'Inscribirme'}
                     </Button>
                   )}
-                </Row>
-                <Row>
+
                   {btnDetailAgenda === true && (
                     <Button
                       type='primary'
                       onClick={() => {
                         gotoActivity(item);
                       }}
-                      className='space-align-block'>
+                      className='space-align-block button-Agenda'>
                       Detalle de actividad
                     </Button>
                   )}
-                </Row>
-              </Col>
-
-              <Col span={12}>
-                <Row>
                   {Documents.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
                       onClick={() => {
                         gotoActivity(item);
                       }}
-                      className='space-align-block'>
+                      className='space-align-block button-Agenda'>
                       Documentos
                     </Button>
                   )}
-                </Row>
-                <Row>
                   {Surveys.filter((element) => element.activity_id === item._id).length > 0 && (
                     <Button
                       type='primary'
                       onClick={() => {
                         gotoActivity(item);
                       }}
-                      className='space-align-block'>
+                      className='space-align-block button-Agenda'>
                       Encuestas
                     </Button>
-                  )}
-                </Row>
+                )}
+                
               </Col>
+              <Col span={24}>
+              <Row>
               {item.related_meetings &&
                 item.related_meetings.map((item, key) => (
-                  <Col span={12}>
-                    <Row>
+                  <>
                       {item.state === 'open_meeting_room' && (
                         <Button
                           disabled={item.meeting_id || item.vimeo_id ? false : true}
@@ -160,6 +152,7 @@ export default function AgendaActivityItem({
                             toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
                           }
                           type='primary'
+                          className='button-Agenda'
                           key={key}>
                           Sesión en {item.language}
                         </Button>
@@ -171,9 +164,10 @@ export default function AgendaActivityItem({
                       {item.state === 'ended_meeting_room' && (
                         <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
                       )}
-                    </Row>
-                  </Col>
+                  </>
                 ))}
+                </Row>
+                </Col>
             </Row>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
