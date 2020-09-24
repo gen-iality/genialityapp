@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { AgendaApi } from "../../../helpers/request";
-
-import { Typography, Select, Form, Table, Button, InputNumber, notification } from "antd";
-import { DeleteOutlined } from "@ant-design/icons"
+import { Typography, Select, Form, Table, Button, InputNumber, notification, Input, Modal } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -11,7 +10,8 @@ class ActividadLanguage extends Component {
         super(props);
         this.state = {
             activity: {},
-            related_meetings: []
+            related_meetings: [],
+            visible: false
         }
         this.onFinish = this.onFinish.bind(this)
         this.deleteObject = this.deleteObject.bind(this)
@@ -79,8 +79,34 @@ class ActividadLanguage extends Component {
         this.loadData()
     }
 
+    async editObject(object) {
+        console.log(this.state.related_meetings)
+        console.log(object)
+        this.setState({ dataToEdit: object, visible: true })
+    }
+
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
+    handleCancel = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
     render() {
-        const { activity, related_meetings } = this.state
+        const { activity, related_meetings, dataToEdit } = this.state
         const { platform } = this.props
         const columns = [{
             title: "Lenguaje",
@@ -128,75 +154,115 @@ class ActividadLanguage extends Component {
             }
         },
         {
+            title: "Texto Informativo",
+            dataIndex: "informative_text",
+            key: "informative_text"
+        },
+        {
             title: 'Action',
             render: (row) => (
-                <DeleteOutlined onClick={() => this.deleteObject(row)} />
+                <>
+                    <DeleteOutlined onClick={() => this.deleteObject(row)} />
+                    <EditOutlined onClick={() => this.editObject(row)} />
+                </>
             ),
         }]
         return (
-            <Fragment>
-                <Title>Lenguaje para {activity.name}</Title>
-                <Form
-                    onFinish={this.onFinish}
-                >
-                    <Form.Item
-                        label="Lenguaje"
-                        name="language"
-                        rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}
+            <>
+                <Fragment>
+                    <Title>Lenguaje para {activity.name}</Title>
+                    <Form
+                        onFinish={this.onFinish}
                     >
-                        <Select>
+                        <Form.Item
+                            label="Lenguaje"
+                            name="language"
+                            rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}
+                        >
+                            <Select>
+                                <Option value="Ingles">Ingles</Option>
+                                <Option value="Español">Español</Option>
+                                <Option value="Frances">Frances</Option>
+                                <Option value="Portugués">Portugués</Option>
+                                <Option value="Aleman"> Aleman</Option>
+                            </Select>
+                        </Form.Item>
+                        {
+                            platform === "zoom" && (
+                                <Form.Item
+                                    label="Id de conferencia"
+                                    name="meeting_id"
+                                    rules={[{ required: true, message: 'Por favor ingrese un id' }]}
+                                >
+                                    <InputNumber style={{ width: "100%" }} />
+                                </Form.Item>
+                            )
+                        }
+                        {
+                            platform === "vimeo" && (
+                                <Form.Item
+                                    label="Id de conferencia"
+                                    name="vimeo_id"
+                                    rules={[{ required: true, message: 'Por favor ingrese un id' }]}
+                                >
+                                    <InputNumber style={{ display: "block" }} />
+                                </Form.Item>
+                            )
+                        }
+
+                        <Form.Item
+                            label="estado"
+                            name="state"
+                            rules={[{ required: true, message: 'Por favor seleccione un estado' }]}
+                        >
+                            <Select>
+                                <Option value="open_meeting_room">Conferencia Abierta</Option>
+                                <Option value="closed_meeting_room">Conferencia no Iniciada</Option>
+                                <Option value="ended_meeting_room">Conferencia Terminada</Option>
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Texto informativo "
+                            name="informative_text"
+                            rules={[{ required: true, message: 'Por favor seleccione un idioma' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Guardar
+                        </Button>
+                        </Form.Item>
+                    </Form>
+                    {related_meetings && (
+                        <Table dataSource={related_meetings} columns={columns} />
+                    )}
+                </Fragment>
+
+                <Modal
+                    title="Basic Modal"
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                    <div>
+                        <label style={{marginRight:"4%"}}>Lenguaje</label>
+                        <Select defaultValue={dataToEdit && dataToEdit.language}>
                             <Option value="Ingles">Ingles</Option>
                             <Option value="Español">Español</Option>
                             <Option value="Frances">Frances</Option>
                             <Option value="Portugués">Portugués</Option>
                             <Option value="Aleman"> Aleman</Option>
                         </Select>
-                    </Form.Item>
-                    {
-                        platform === "zoom" && (
-                            <Form.Item
-                                label="Id de conferencia"
-                                name="meeting_id"
-                                rules={[{ required: true, message: 'Por favor ingrese un id' }]}
-                            >
-                                <InputNumber style={{ width: "100%" }} />
-                            </Form.Item>
-                        )
-                    }
-                    {
-                        platform === "vimeo" && (
-                            <Form.Item
-                                label="Id de conferencia"
-                                name="vimeo_id"
-                                rules={[{ required: true, message: 'Por favor ingrese un id' }]}
-                            >
-                                <InputNumber style={{ display: "block" }} />
-                            </Form.Item>
-                        )
-                    }
-
-                    <Form.Item
-                        label="estado"
-                        name="state"
-                        rules={[{ required: true, message: 'Por favor seleccione un estado' }]}
-                    >
-                        <Select>
-                            <Option value="open_meeting_room">Conferencia Abierta</Option>
-                            <Option value="closed_meeting_room">Conferencia no Iniciada</Option>
-                            <Option value="ended_meeting_room">Conferencia Terminada</Option>
-                        </Select>
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Guardar
-                        </Button>
-                    </Form.Item>
-                </Form>
-                {related_meetings && (
-                    <Table dataSource={related_meetings} columns={columns} />
-                )}
-            </Fragment>
+                    </div>
+                    <div>
+                        <label style={{marginRight:"4%"}}>Id de conferencia</label>                        
+                        <InputNumber defaultValue={(dataToEdit !== undefined && dataToEdit.vimeo_id ? dataToEdit.vimeo_id : dataToEdit.meeting_id)} style={{ width: "100%" }} />
+                    </div>
+                </Modal>
+            </>
         )
     }
 }
