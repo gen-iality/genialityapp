@@ -113,7 +113,7 @@ function MyAgenda ( { event, eventUser, currentEventUserId, eventUsers, ...props
           </div>
           </div>
           
-          {userName && <iframe  style={{position:"fixed",bottom:'5%', right:0, width:"18%",height:"50%",zIndex:999999999}}
+          {userName && <iframe  style={{position:"fixed",bottom:'5%', right:0, width:"18%",height:"40%",minWidth:"300px",zIndex:999999999}}
           src={"https://chatevius.web.app?nombre="+userName+"&chatid="+currentRoom}
           >
             
