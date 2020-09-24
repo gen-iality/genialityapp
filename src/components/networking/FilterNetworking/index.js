@@ -17,6 +17,7 @@ export default function FilterNetWorking({properties, filterProperty, handleSele
         style={{ width: '330px', marginBottom: '15px', textAlign: "left" }}
         onChange={handleSelect}
         placeholder={`Seleccione ${filterProperty}`}
+        defaultValue=''
         >
             <option key={0} value=''>Ver todo</option>
             {options.map((option, index)=>{

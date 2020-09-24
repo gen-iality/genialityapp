@@ -83,7 +83,14 @@ class eventLanding extends Component {
 
         <Card className="event-description" bodyStyle={{ padding: "25px 5px" }} bordered={true}>
           {
-            event._id === "5f0622f01ce76d5550058c32" ? <></> : <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
+            event._id === "5f0622f01ce76d5550058c32" ?
+              <></> :
+              (
+                <>
+                  <h1 className="is-size-4-desktop has-text-weight-semibold">{event.name}</h1>
+                  <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
+                </>
+              )
           }
 
           {/* Si event video existe */}
@@ -101,16 +108,39 @@ class eventLanding extends Component {
                 />
               </div>
             )}
-          {
+          {/* {
             (event._id !== "5f0622f01ce76d5550058c32" && !this.state.activityId) && (
               <div>
                 <ReactQuill value={event.description} modules={{ toolbar: false }} readOnly={true} theme="bubble" />
               </div>
             )
-          }
+          } */}
           {/*Contenedor personalizado FENALCO*/}
           {
-            event._id === "5f0622f01ce76d5550058c32" || event._id === "5f282d98c32fa03a4299582d" && (
+            event._id === "5f0622f01ce76d5550058c32" && (
+              <div>
+                <div className="containerfenalco">
+                  <Row gutter={[8, 16]} justify="center">
+                    <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                      <div className="imagen">
+                        <img onClick={() => this.onChangePage("interviews")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-A3.png?alt=media&token=3ff840dc-d9a6-4ea1-9e9c-a623cb796ef5" />
+                      </div>
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                      <div className="imagen">
+                        <img onClick={() => this.onChangePage("networking")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-B3.png?alt=media&token=d9a64548-1fed-43d8-9adf-3aaee0e719f5" />
+                      </div>
+                    </Col>
+                    <Col xs={24} sm={12} md={12} lg={12} xl={8}>
+                      <img onClick={() => this.onChangePage("agenda")} style={{ cursor: 'pointer' }} src="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/Btn-C3.png?alt=media&token=615fb718-af55-478f-b444-d8486edfc24a" />
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+            )
+          }
+          {
+            event._id === "5f282d98c32fa03a4299582d" && (
               <div>
                 <div className="containerfenalco">
                   <Row gutter={[8, 16]} justify="center">
