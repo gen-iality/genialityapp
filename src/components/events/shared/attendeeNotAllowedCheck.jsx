@@ -1,9 +1,9 @@
 import React from "react";
 import { Alert, Tag, Button } from "antd";
-
 import { AuthUrl } from "../../../helpers/constants";
 
-export default (props) => {
+const AttendeeNotAllowedCheck = (props) => {
+  
   let event = props.event;
   let currentUser = props.currentUser;
   let usuarioRegistrado = props.usuarioRegistrado;  
@@ -15,16 +15,16 @@ export default (props) => {
 
       {!currentUser && (
         <Alert
-          onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
+          //onClick={() => (window.location.href = "https://eviusauth.netlify.com")}
           message="Evento restringido. requiere usuario"
           description={
             <p>
               <b>Evento Restringido:</b> debes estar previamente registrado al evento para acceder al espacio en vivo,
               si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento,
               &nbsp;&nbsp;
-              <Button type="primary">
+              {/* <Button type="primary">
                 <a href={AuthUrl}>Ir a Ingreso</a>
-              </Button>
+              </Button> */}
             </p>
           }
           type="info"
@@ -48,3 +48,4 @@ export default (props) => {
     </>
   );
 };
+export default AttendeeNotAllowedCheck
