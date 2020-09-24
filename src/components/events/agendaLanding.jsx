@@ -321,6 +321,7 @@ class Agenda extends Component {
     const { event } = this.props
     const { uid } = this.state    
     try {
+
       const infoUserAgenda = await Activity.GetUserActivity(event._id, uid)    
       this.setState({ userAgenda: infoUserAgenda.data })
     } catch (e) {
@@ -331,6 +332,7 @@ class Agenda extends Component {
 
   checkInscriptionStatus(activityId = '') {
     const { userAgenda } = this.state
+    if (!userAgenda) return false;
     const checkInscription = userAgenda.filter((activity) => activity.activity_id === activityId)
     const statusInscription = checkInscription.length ? true : false
     return statusInscription
