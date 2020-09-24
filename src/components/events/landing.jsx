@@ -41,7 +41,7 @@ import Robapagina from "../shared/Animate_Img/index";
 import Trophies from "./trophies";
 import InformativeSection from "./informativeSections/informativeSection"
 import InformativeSection2 from "./informativeSections/informativeSection2"
-import UserLogin from './UserLogin'
+import UserLogin from './UserLoginContainer'
 
 const { Content, Sider } = Layout;
 
