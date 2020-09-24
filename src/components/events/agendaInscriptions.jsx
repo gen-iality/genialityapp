@@ -350,98 +350,95 @@ class AgendaInscriptions extends Component {
                                 )}
                               </Row>
                             </Col>
-                            {
-                              item.related_meetings && item.related_meetings.map((item, key) => (
-                                <Col span={12}>
-                                  <Row>
-                                    <Button
-                                      disabled={item.meeting_id || item.vimeo_id ? false : true}
-                                      onClick={() => toggleConference(
-                                        true,
-                                        item.meeting_id ? item.meeting_id : item.vimeo_id,
-                                        item
-                                      )}
-                                      type="primary" key={key}>Sesion en {item.language}</Button>
-                                  </Row>
-                                </Col>
-                              ))
-                            }
                           </Row>
                         </Col>
                         <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-                          {
-                            !item.habilitar_ingreso && (
-                              <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                            )
-                          }
+                          {!item.habilitar_ingreso && <img src={item.image ? item.image : this.props.event.styles.event_image} />}
                           <div>
-                            {
-                              item.habilitar_ingreso === "closed_meeting_room" && (
-                                <>
-                                  <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <Alert message="La Conferencia iniciará pronto" type="warning" />
-                                </>
-                              )
-                            }
+                            {item.habilitar_ingreso === 'closed_meeting_room' && (
+                              <>
+                                <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                                <Alert
+                                  message={`La sesión inicia: ${Moment(item.datetime_start).format(
+                                    'DD MMMM YYYY h:mm a'
+                                  )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                                  type='warning'
+                                />
+                              </>
+                            )}
 
-                            {
-                              item.habilitar_ingreso === "ended_meeting_room" && (
-                                <>
-                                  {item.video ? item.video && (
+                            {item.habilitar_ingreso === 'ended_meeting_room' && (
+                              <>
+                                {item.video ? (
+                                  item.video && (
                                     <>
-                                      <Alert message="Conferencia Terminada. Observa el video Aquí" type="success" />
+                                      <Alert message='Conferencia Terminada. Observa el video Aquí' type='success' />
                                       <ReactPlayer
-                                        width={"100%"}
+                                        width={'100%'}
                                         style={{
-                                          display: "block",
-                                          margin: "0 auto",
+                                          display: 'block',
+                                          margin: '0 auto',
                                         }}
                                         url={item.video}
                                         //url="https://firebasestorage.googleapis.com/v0/b/eviusauth.appspot.com/o/eviuswebassets%2FLa%20asamblea%20de%20copropietarios_%20una%20pesadilla%20para%20muchos.mp4?alt=media&token=b622ad2a-2d7d-4816-a53a-7f743d6ebb5f"
                                         controls
                                       />
                                     </>
-                                  ) :
-                                    (
-                                      <>
-                                        <img src={item.image ? item.image : this.props.event.styles.event_image} />
-                                        <Alert message="Conferencia Terminada. Observa el video Mas tarde" type="info" />
-                                      </>
-                                    )}
-
-                                </>
-                              )
-                            }
-                            {
-                              item.habilitar_ingreso === "open_meeting_room" && (
-                                <>
-                                  <img onClick={() =>
-                                    item.meeting_id && toggleConference(
-                                      true,
-                                      item.meeting_id,
-                                      item
-                                    )
-                                  } src={item.image ? item.image : this.props.event.styles.event_image} />
-                                  <div>
-                                    <Button
-                                      block
-                                      type="primary"
-                                      disabled={item.meeting_id ? false : true}
-                                      onClick={() =>
-                                        toggleConference(
-                                          true,
-                                          item.meeting_id,
-                                          item
-                                        )
-                                      }
-                                    >
-                                      {item.meeting_id ? "Observa aquí la Conferencia en Vivo" : "Aún no empieza Conferencia Virtual"}
-                                    </Button>
-                                  </div>
-                                </>
-                              )
-                            }
+                                  )
+                                ) : (
+                                    <>
+                                      <img src={item.image ? item.image : this.props.event.styles.event_image} />
+                                      <Alert
+                                        message={`La Conferencia ha Terminado: ${Moment(item.datetime_start).format(
+                                          'DD MMMM YYYY h:mm a'
+                                        )} ${' - '} ${Moment(item.datetime_end).format('h:mm a')}`}
+                                        type='info'
+                                      />
+                                    </>
+                                  )}
+                              </>
+                            )}
+                            {item.habilitar_ingreso === 'open_meeting_room' && (
+                              <>
+                                <img
+                                  onClick={() => item.meeting_id && toggleConference(true, item.meeting_id, item)}
+                                  src={item.image ? item.image : this.props.event.styles.event_image}
+                                />
+                                <div>
+                                  <Button
+                                    block
+                                    type='primary'
+                                    disabled={item.meeting_id ? false : true}
+                                    onClick={() => toggleConference(true, item.meeting_id, item)}>
+                                    {item.meeting_id ? 'Observa aquí la Conferencia en Vivo' : 'Aún no empieza Conferencia Virtual'}
+                                  </Button>
+                                </div>
+                              </>
+                            )}
                           </div>
+
+                          {item.related_meetings &&
+                            item.related_meetings.map((item, key) => (
+                              <Row style={{ marginTop: '5%' }}>
+                                {item.state === 'open_meeting_room' && (
+                                  <Button
+                                    disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                    onClick={() => toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)}
+                                    type='primary'
+                                    key={key}
+                                    style={{ marginBottom: '3%' }}>
+                                    {item.informative_text ? item.informative_text : <>Sesión en {item.language}</>}
+                                  </Button>
+                                )}
+                                {item.state === 'closed_meeting_room' && (
+                                  <Alert message={`${item.informative_text} no ha iniciado`} type='info' />
+                                )}
+
+                                {item.state === 'ended_meeting_room' && (
+                                  <Alert message={`${item.informative_text} ha terminado`} type='info' />
+                                )}
+                              </Row>
+                            ))}
                         </Col>
                       </Row>
                     </div>

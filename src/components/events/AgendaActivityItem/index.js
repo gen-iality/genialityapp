@@ -234,11 +234,11 @@ export default function AgendaActivityItem({
                     </Button>
                   )}
                   {item.state === 'closed_meeting_room' && (
-                    <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
+                    <Alert message={`${item.informative_text} no ha iniciado`} type='info' />
                   )}
 
                   {item.state === 'ended_meeting_room' && (
-                    <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
+                    <Alert message={`${item.informative_text} ha terminado`} type='info' />
                   )}
                 </Row>
               ))}
