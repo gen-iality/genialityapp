@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { AgendaApi } from "../../../helpers/request";
 import { Typography, Select, Form, Table, Button, InputNumber, notification, Input, Modal } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import ModalEdit from "./modalEdit"
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -15,7 +16,9 @@ class ActividadLanguage extends Component {
         }
         this.onFinish = this.onFinish.bind(this)
         this.deleteObject = this.deleteObject.bind(this)
+        this.onFinishModal = this.onFinishModal.bind(this)
     }
+
 
     async componentDidMount() {
         this.loadData()
@@ -60,7 +63,6 @@ class ActividadLanguage extends Component {
         dataToFilter = dataToFilter.filter(function (i) { return i !== object });
 
         let info = ({ related_meetings: dataToFilter })
-        console.log(info)
 
         this.setState({ related_meetings: dataToFilter });
         try {
@@ -79,35 +81,54 @@ class ActividadLanguage extends Component {
         this.loadData()
     }
 
-    async editObject(object) {
-        console.log(this.state.related_meetings)
-        console.log(object)
-        this.setState({ dataToEdit: object, visible: true })
+    async editObject(key, object) {
+
+        this.setState({ dataToEdit: object, visible: true, idConference: key })
     }
 
-    showModal = () => {
-        this.setState({
-            visible: true,
-        });
-    };
+    async onFinishModal(related_meetings_selected) {
+        const { eventId, activityId } = this.props
+        let related_meetings = this.state.related_meetings
 
-    handleOk = e => {
-        console.log(e);
-        this.setState({
-            visible: false,
-        });
-    };
+        for (let i = 0; i < related_meetings.length; i++) {            
+            if (related_meetings[i].meeting_id) {
+                if (related_meetings[i].meeting_id.toString() === related_meetings_selected.meeting_id.toString()) {
+                    related_meetings[i].language = related_meetings_selected.language
+                    related_meetings[i].state = related_meetings_selected.state
+                    related_meetings[i].informative_text = related_meetings_selected.informative_text
+                }
+            }
 
-    handleCancel = e => {
-        console.log(e);
-        this.setState({
-            visible: false,
-        });
-    };
+            if (related_meetings[i].vimeo_id) {
+                if (related_meetings[i].vimeo_id.toString() === related_meetings_selected.vimeo_id.toString()) {
+                    related_meetings[i].language = related_meetings_selected.language
+                    related_meetings[i].state = related_meetings_selected.state
+                    related_meetings[i].informative_text = related_meetings_selected.informative_text
+                }
+            }
+        }
 
+        let info = ({ related_meetings: related_meetings })        
+
+        try {
+            await AgendaApi.editOne(info, activityId, eventId)
+            notification.open({
+                message: 'Dato Actualizado',
+            })
+        } catch (e) {
+            console.log(e)
+            notification.open({
+                message: 'Hubo un error',
+                description:
+                    'No se ha logrado actualizar la información, intente mas tarde',
+            })
+        }
+
+        this.setState({visible: false})
+    }
     render() {
-        const { activity, related_meetings, dataToEdit } = this.state
-        const { platform } = this.props
+        const { activity, related_meetings, dataToEdit, visible, idConference } = this.state
+        const { platform, eventId, activityId } = this.props
         const columns = [{
             title: "Lenguaje",
             dataIndex: "language",
@@ -160,10 +181,14 @@ class ActividadLanguage extends Component {
         },
         {
             title: 'Action',
-            render: (row) => (
+            render: (text, record) => (
                 <>
-                    <DeleteOutlined onClick={() => this.deleteObject(row)} />
-                    <EditOutlined onClick={() => this.editObject(row)} />
+                    <div>
+                        <DeleteOutlined onClick={() => this.deleteObject(record)} />
+                    </div>
+                    <div>
+                        <EditOutlined onClick={() => this.editObject(text.meeting_id ? text.meeting_id : text.vimeo_id, record)} />
+                    </div>
                 </>
             ),
         }]
@@ -239,29 +264,9 @@ class ActividadLanguage extends Component {
                     {related_meetings && (
                         <Table dataSource={related_meetings} columns={columns} />
                     )}
-                </Fragment>
 
-                <Modal
-                    title="Basic Modal"
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                >
-                    <div>
-                        <label style={{marginRight:"4%"}}>Lenguaje</label>
-                        <Select defaultValue={dataToEdit && dataToEdit.language}>
-                            <Option value="Ingles">Ingles</Option>
-                            <Option value="Español">Español</Option>
-                            <Option value="Frances">Frances</Option>
-                            <Option value="Portugués">Portugués</Option>
-                            <Option value="Aleman"> Aleman</Option>
-                        </Select>
-                    </div>
-                    <div>
-                        <label style={{marginRight:"4%"}}>Id de conferencia</label>                        
-                        <InputNumber defaultValue={(dataToEdit !== undefined && dataToEdit.vimeo_id ? dataToEdit.vimeo_id : dataToEdit.meeting_id)} style={{ width: "100%" }} />
-                    </div>
-                </Modal>
+                    <ModalEdit eventId={eventId} activityId={activityId} onFinish={this.onFinishModal} related_meetings={related_meetings} visible={visible} data={dataToEdit} />
+                </Fragment>
             </>
         )
     }
