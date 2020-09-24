@@ -47,7 +47,16 @@ export default class ModalEdit extends Component {
         const { dataToEdit } = this.state
         const { onFinish } = this.props
         return (
-            <Modal title="Basic Modal" visible={this.state.visible} onCancel={this.handleCancel}>
+            <Modal 
+                title="Editar" 
+                visible={this.state.visible} 
+                onCancel={this.handleCancel}
+                footer={[
+                    <Button key="back" onClick={this.handleCancel}>
+                      Cerrar
+                    </Button>
+                  ]}
+                >
                 <Form
                     onFinish={onFinish}
                     initialValues={dataToEdit}
