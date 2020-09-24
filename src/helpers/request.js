@@ -606,6 +606,10 @@ export const Activity = {
   getActivyAssitants: async (event, activity_id)=>{
     return await Actions.get(`api/events/${event}/activities_attendees?activity_id=`+activity_id)
   },
+  getActivyAssitantsAdmin: async (event, activity_id)=>{
+    return await Actions.get(`api/events/${event}/activities_attendeesAdmin?activity_id=`+activity_id)
+  },
+  
   DeleteRegister: async (event, id) =>{
     return await Actions.delete(`api/events/${event}/activities_attendees`,id)
   }
