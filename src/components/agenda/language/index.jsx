@@ -81,34 +81,38 @@ class ActividadLanguage extends Component {
         this.loadData()
     }
 
-    async editObject(key, object) {
+    async editObject(object) {
 
-        this.setState({ dataToEdit: object, visible: true, idConference: key })
+        this.setState({ dataToEdit: { ...object }, visible: true })
     }
 
     async onFinishModal(related_meetings_selected) {
         const { eventId, activityId } = this.props
-        let related_meetings = this.state.related_meetings
+        let related_meetings_original = this.state.related_meetings
 
-        for (let i = 0; i < related_meetings.length; i++) {            
-            if (related_meetings[i].meeting_id) {
-                if (related_meetings[i].meeting_id.toString() === related_meetings_selected.meeting_id.toString()) {
-                    related_meetings[i].language = related_meetings_selected.language
-                    related_meetings[i].state = related_meetings_selected.state
-                    related_meetings[i].informative_text = related_meetings_selected.informative_text
+        for (let i = 0; i < related_meetings_original.length; i++) {
+            if (related_meetings_original[i].meeting_id) {
+                if (related_meetings_selected.meeting_id !== 0) {
+                    if (related_meetings_original[i].meeting_id.toString() === related_meetings_selected.meeting_id.toString()) {
+                        related_meetings_original[i].language = related_meetings_selected.language
+                        related_meetings_original[i].state = related_meetings_selected.state
+                        related_meetings_original[i].informative_text = related_meetings_selected.informative_text
+                    }
                 }
             }
 
-            if (related_meetings[i].vimeo_id) {
-                if (related_meetings[i].vimeo_id.toString() === related_meetings_selected.vimeo_id.toString()) {
-                    related_meetings[i].language = related_meetings_selected.language
-                    related_meetings[i].state = related_meetings_selected.state
-                    related_meetings[i].informative_text = related_meetings_selected.informative_text
+            if (related_meetings_original[i].vimeo_id) {
+                if (related_meetings_original[i].vimeo_id.toString() === related_meetings_selected.vimeo_id.toString()) {
+                    if (related_meetings_selected.vimeo_id !== 0) {
+                        related_meetings_original[i].language = related_meetings_selected.language
+                        related_meetings_original[i].state = related_meetings_selected.state
+                        related_meetings_original[i].informative_text = related_meetings_selected.informative_text
+                    }
                 }
             }
         }
 
-        let info = ({ related_meetings: related_meetings })        
+        let info = ({ related_meetings: related_meetings_original })
 
         try {
             await AgendaApi.editOne(info, activityId, eventId)
@@ -124,7 +128,9 @@ class ActividadLanguage extends Component {
             })
         }
 
-        this.setState({visible: false})
+        this.setState({ visible: false })
+
+        this.loadData()
     }
     render() {
         const { activity, related_meetings, dataToEdit, visible, idConference } = this.state
@@ -181,13 +187,13 @@ class ActividadLanguage extends Component {
         },
         {
             title: 'Action',
-            render: (text, record) => (
+            render: (record) => (
                 <>
                     <div>
                         <DeleteOutlined onClick={() => this.deleteObject(record)} />
                     </div>
                     <div>
-                        <EditOutlined onClick={() => this.editObject(text.meeting_id ? text.meeting_id : text.vimeo_id, record)} />
+                        <EditOutlined onClick={() => this.editObject(record)} />
                     </div>
                 </>
             ),
@@ -258,14 +264,14 @@ class ActividadLanguage extends Component {
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
                                 Guardar
-                        </Button>
+                            </Button>
                         </Form.Item>
                     </Form>
                     {related_meetings && (
                         <Table dataSource={related_meetings} columns={columns} />
                     )}
 
-                    <ModalEdit eventId={eventId} activityId={activityId} onFinish={this.onFinishModal} related_meetings={related_meetings} visible={visible} data={dataToEdit} />
+                    <ModalEdit onFinish={this.onFinishModal} visible={visible} data={dataToEdit} />
                 </Fragment>
             </>
         )
