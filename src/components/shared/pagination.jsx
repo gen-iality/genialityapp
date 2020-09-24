@@ -22,7 +22,7 @@ class Pagination extends Component {
     }
 
     setPage = (page, items) => {
-        const pageSize = 10;
+        const pageSize = 100;
         let pageOfItems;
         const pager = this.getPager(items.length, page, pageSize);
 
