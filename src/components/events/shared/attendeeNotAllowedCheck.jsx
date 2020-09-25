@@ -19,7 +19,7 @@ const AttendeeNotAllowedCheck = (props) => {
           message="Evento restringido. requiere usuario"
           description={
             <p>
-              <b>Evento Restringido:</b> debes estar previamente registrado al evento para acceder al espacio en vivo,
+              <b>Evento Restringido: </b> Debes estar previamente registrado al evento para acceder al espacio en vivo,
               si estas registrado en el evento ingresa al sistema con tu usuario para poder acceder al evento,
               &nbsp;&nbsp;
               {/* <Button type="primary">
