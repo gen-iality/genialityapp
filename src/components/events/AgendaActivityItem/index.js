@@ -144,34 +144,6 @@ export default function AgendaActivityItem({
                 )}
                 
               </Col>
-              <Col span={24}>
-              <Row>
-              {item.related_meetings &&
-                item.related_meetings.map((item, key) => (
-                  <>
-                      {item.state === 'open_meeting_room' && (
-                        <Button
-                          disabled={item.meeting_id || item.vimeo_id ? false : true}
-                          onClick={() =>
-                            toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
-                          }
-                          type='primary'
-                          className='button-Agenda'
-                          key={key}>
-                          Sesión en {item.language}
-                        </Button>
-                      )}
-                      {item.state === 'closed_meeting_room' && (
-                        <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
-                      )}
-
-                      {item.state === 'ended_meeting_room' && (
-                        <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
-                      )}
-                  </>
-                ))}
-                </Row>
-                </Col>
             </Row>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={8}>
@@ -181,6 +153,32 @@ export default function AgendaActivityItem({
                 <>
                   <img src={item.image ? item.image : event_image} />
                   <Alert message={`La sesión inicia: ${Moment(item.datetime_start).format('DD MMMM YYYY h:mm a')} ${" - "} ${Moment(item.datetime_end).format('h:mm a')}`} type='warning' />
+                  <Row>
+                    {item.related_meetings &&
+                      item.related_meetings.map((item, key) => (
+                        <>
+                            {item.state === 'open_meeting_room' && (
+                              <Button
+                                disabled={item.meeting_id || item.vimeo_id ? false : true}
+                                onClick={() =>
+                                  toggleConference(true, item.meeting_id ? item.meeting_id : item.vimeo_id, item)
+                                }
+                                type='primary'
+                                className='button-Agenda'
+                                key={key}>
+                                Sesión en {item.language}
+                              </Button>
+                            )}
+                            {item.state === 'closed_meeting_room' && (
+                              <Alert message={`La sesión ${item.language} no ha iniciado`} type='info' />
+                            )}
+
+                            {item.state === 'ended_meeting_room' && (
+                              <Alert message={`La sesión en ${item.language} ha terminado`} type='info' />
+                            )}
+                        </>
+                      ))}
+                 </Row>
                 </>
               )}
 
