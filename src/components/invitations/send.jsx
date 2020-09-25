@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect, Link, withRouter } from 'react-router-dom';
 import Moment from "moment"
 import 'moment/locale/es-us';
 import { Actions, EventsApi } from "../../helpers/request";
@@ -18,7 +18,8 @@ class SendRsvp extends Component {
         super(props);
         this.state = {
             rsvp: {},
-            include_date: true
+            include_date: true,
+            selection: []
         };
         this.submit = this.submit.bind(this);
         this.onChangeDate = this.onChangeDate.bind(this);
@@ -26,7 +27,7 @@ class SendRsvp extends Component {
 
     componentDidMount() {
         let default_header = ' Has sido invitado a: <br /> <span className=\"strong\">' + this.props.event.name + '</span> '
-        console.log("evento", this.props.event);
+        console.log("evento", this.props.event);        
         this.setState({
             rsvp: {
                 ...this.state.rsvp, content_header: default_header, subject: this.props.event.name,
@@ -34,7 +35,8 @@ class SendRsvp extends Component {
                 image: this.props.event.picture,
                 image_header: (this.props.event.styles && this.props.event.styles.banner_image_email) ? this.props.event.styles.banner_image_email : ((this.props.event.styles.banner_image) ? (this.props.event.styles.banner_image) : this.props.event.picture),
                 image_footer: (this.props.event.styles && this.props.event.styles.banner_footer) ? this.props.event.styles.banner_footer : this.props.event.picture,
-            }
+            },
+            selection: this.props.selection.length > 0 ? this.props.selection : this.props.location.selection
         })
     }
 
@@ -108,7 +110,7 @@ class SendRsvp extends Component {
 
 
     async submit() {
-        const { event, selection } = this.props;        
+        const { event, selection } = this.props;
         const { rsvp, include_date } = this.state;
         let users = [];
         selection.map(item => {
@@ -352,14 +354,14 @@ class SendRsvp extends Component {
                     <div className="box rsvp-send">
                         <div className="columns is-centered-is-multiline">
                             <div className="column">
-                                <p className="rsvp-send-title">Seleccionados <span>{this.props.selection.length}</span></p>
-                                <p>{this.props.selection.map(el => { return el.properties.email + ", " })}</p>
+                                <p className="rsvp-send-title">Seleccionados <span>{this.state.selection.length}</span></p>
+                                <p>{this.state.selection.map(el => { return el.properties.email + ", " })}</p>
                             </div>
                         </div>
 
                         <div className="column rsvp-send-users">
                             {
-                                this.props.selection.map((item, key) => {
+                                this.state.selection.map((item, key) => {
                                     return <p key={key} className="selection">{item.email}</p>
                                 })
                             }
@@ -375,7 +377,7 @@ class SendRsvp extends Component {
                     </div>
                 </div>
                 <Dialog modal={this.state.modal} title={'Confirmación'}
-                    content={<p>Se van a enviar {this.props.selection.length} invitaciones</p>}
+                    content={<p>Se van a enviar {this.state.selection.length} invitaciones</p>}
                     first={{ title: 'Enviar', class: 'is-info', action: this.submit, disabled: disabled }}
                     second={{ title: 'Cancelar', class: '', action: this.closeModal }}
                     message={{ class: '', content: '' }} />
@@ -385,4 +387,4 @@ class SendRsvp extends Component {
     }
 }
 
-export default SendRsvp;
+export default withRouter(SendRsvp);
