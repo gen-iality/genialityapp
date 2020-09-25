@@ -86,7 +86,7 @@ class Landing extends Component {
       loader_page: false,
       show_banner_footer: false,
       event: null,
-      requireValidation: false      
+      requireValidation: false
     };
     this.showLanding = this.showLanding.bind(this)
   }
@@ -161,7 +161,7 @@ class Landing extends Component {
     }
 
     /* Trae la información del evento con la instancia pública*/
-    const event = await EventsApi.landingEvent(id);
+    const event = await EventsApi.landingEvent(id);    
     const sessions = await Actions.getAll(`api/events/${id}/sessions`);
     this.loadDynamicEventStyles(id);
 
@@ -235,7 +235,7 @@ class Landing extends Component {
       my_sesions: <AgendaInscriptions event={event} eventId={event._id} toggleConference={this.toggleConference} />,
       informativeSection: <InformativeSection event={event} />,
       informativeSection1: <InformativeSection2 event={event} />,
-      login: <UserLogin eventId={event._id}/>, 
+      login: <UserLogin eventId={event._id} />,
       evento: (
 
         <Row justify="center" >
@@ -290,10 +290,10 @@ class Landing extends Component {
           </Col>
           <Col sm={24} md={8} lg={6} xl={6}>
             <VirtualConference
-              event={this.state.event}
               currentUser={this.state.currentUser}
               usuarioRegistrado={this.state.eventUser}
               toggleConference={this.toggleConference}
+              event={event}
             />
             <MapComponent event={event} />
           </Col>

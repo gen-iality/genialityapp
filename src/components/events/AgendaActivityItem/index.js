@@ -114,7 +114,7 @@ export default function AgendaActivityItem({
                   )}
                 </Row>
                 <Row>
-                  {btnDetailAgenda === true && (
+                  {btnDetailAgenda === "true"&& (
                     <Button
                       type='primary'
                       onClick={() => {
