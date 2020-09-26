@@ -71,6 +71,7 @@ class General extends Component {
             const categories = await CategoriesApi.getAll();
             const types = await TypesApi.getAll();
             let organizers = await OrganizationApi.mine();
+            console.log(organizers)
             organizers = organizers.map(item => {
                 return { value: item.id, label: item.name }
             });

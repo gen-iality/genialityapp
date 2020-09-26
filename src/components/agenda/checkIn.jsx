@@ -225,7 +225,7 @@ class CheckAgenda extends Component {
             this.props.history.push({
                 pathname: `/event/${this.props.match.params.id}/invitados/createmessage`,
                 selection: attendeesForSendMessage
-            });            
+            });
         } else {
             this.setState({ modalVisible: modalVisible === true ? false : true })
         }
@@ -267,28 +267,7 @@ class CheckAgenda extends Component {
         if (!this.props.location.state) return this.goBack();
         return (
             <Fragment>
-                <EventContent title={`CheckIn: ${this.props.location.state.name}`} closeAction={this.goBack} classes={"checkin"}>
-                    <div className="columns is-mobile buttons-g">
-                        <div className="checkin-warning ">
-
-                        </div>
-                        <div className="columns checkin-tags-wrapper">
-                            <div className="checkin-tags is-5 columns">
-                                <div className="is-2">
-                                    <div className="tags is-centered">
-                                        <span className="tag is-primary">{checkIn}</span>
-                                        <span className="tag is-white">Ingresados</span>
-                                    </div>
-                                </div>
-                                <div className="is-2">
-                                    <div className="tags is-centered">
-                                        <span className="tag is-light">{total}</span>
-                                        <span className="tag is-white">Total</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <EventContent title={`CheckIn: ${this.props.location.state.name}`} closeAction={this.goBack} classes={"checkin"}>                    
                     <div className="columns">
                         <div className="is-flex-touch columns">
                             {
@@ -316,6 +295,14 @@ class CheckAgenda extends Component {
                                     Enviar comunicación / Correo
                                 </Button>
                             </div>
+                            <div className="tags is-centered">
+                                <span className="tag is-light">{total}</span>
+                                <span className="tag is-white">Total</span>
+                            </div>
+                            <div className="tags is-centered">
+                                <span className="tag is-primary">{checkIn}</span>
+                                <span className="tag is-white">Ingresados</span>
+                            </div>
                         </div>
                     </div>
 
@@ -333,7 +320,6 @@ class CheckAgenda extends Component {
                             dataSource={usersData}
                         />
                     }
-
                 </EventContent>
                 {qrModal && <CheckSpace list={attendees} closeModal={this.closeQRModal} eventID={eventID} agendaID={agendaID} checkIn={this.checkIn} />}
             </Fragment>
