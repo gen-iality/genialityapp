@@ -29,7 +29,7 @@ import Dropzone from "react-dropzone";
 import { Spin, Card } from "antd";
 import "react-tabs/style/react-tabs.css";
 import { toast } from "react-toastify";
-import getHostList, { setHostState, getAllHost } from "./fireHost";
+import { setHostState } from "./fireHost";
 import AgendaLanguaje from "./language/index";
 
 const { TabPane } = Tabs;
@@ -99,7 +99,7 @@ class AgendaEdit extends Component {
     try {
       const info = await EventsApi.getOne(event._id)
       const tickets = await eventTicketsApi.getAll(event._id)
-      for (i = 0; tickets.length > i; i++) {
+      for (let i = 0; tickets.length > i; i++) {
         ticketEvent.push({
           item: tickets[i],
           label: tickets[i].title,

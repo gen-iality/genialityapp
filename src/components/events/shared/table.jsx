@@ -1,5 +1,5 @@
-import React from "react";
-import "react-tabs/style/react-tabs.css";
+import React from "react"
+import "react-tabs/style/react-tabs.css"
 
 export default function EvenTable({...props}) {
     return (
